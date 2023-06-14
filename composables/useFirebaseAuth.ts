@@ -1,61 +1,31 @@
-import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, User} from 'firebase/auth'
+import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword} from 'firebase/auth';
+  
+export const registerUser = async (email: string, password: string) => {
+  const auth = getAuth();
+  const credentials = await createUserWithEmailAndPassword(auth, email, password)
+    .catch((error) => {
+        console.error(error.code, error.message);
+      return false
+    });
+    return credentials;
+  }
+  
+export const signinUser = async (email: string, password: string) => {
+  const auth = getAuth();
+  const credentials = await signInWithEmailAndPassword(auth, email, password)
+  .catch((error) => {
+      console.error(error.code, error.message);
+    return false
+  });
+  return credentials;  
+}
 
-export default function() {
-  const auth = getAuth()
-
-  const user = useState<User | null>("fb_user", () => null)
-
+export const initUser = async () => {
+  const auth = getAuth();
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/auth.user
       const uid = user.uid;
-      // ...
-      console.info("User is signed in")
-    } else {
-      // User is signed out
-      // ...
-      console.info("User is signed out")
-    }
-  });
-  
-  const registerUser = (email: string, password: string) => {
-    return createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredentials) => {
-        if (userCredentials) {
-          user.value = userCredentials.user;
-          return true
-        }
-        return false
-      })
-      .catch((error: unknown) => {
-        if (error instanceof Error) {
-          console.error(error.message);
-        }
-        return false
-      })
-  }
-
-  const signinUser = (email: string, password: string) => {
-    return signInWithEmailAndPassword(auth, email, password)
-      .then((userCredentials) => {
-        if (userCredentials) {
-          user.value = userCredentials.user;
-          return true
-        }
-        return false
-      })
-      .catch((error: unknown) => {
-        if (error instanceof Error) {
-          console.error(error.message);
-        }
-        return false
-      })
-  }
-
-  return {
-    user,
-    registerUser,
-    signinUser
-  }
+      console.info("User state changed", user)
+    } else {}
+  })
 }
