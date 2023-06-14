@@ -13,6 +13,7 @@
     "nuxt": "^3.5.2"
   },
   "dependencies": {
+    "dotenv": "^16.1.4",
     "firebase": "^9.22.2"
   }
 }
