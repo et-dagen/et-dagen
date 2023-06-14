@@ -2,6 +2,8 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
+import { getDatabase } from "firebase/database";
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -25,6 +27,8 @@ export default defineNuxtPlugin((nuxtApp) => {
   
   const analytics = getAnalytics(app);
   const auth = getAuth(app)
+
+  const database = getDatabase(app);
 
   nuxtApp.vueApp.provide('auth', auth)
   nuxtApp.provide('auth', auth)
