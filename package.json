@@ -12,6 +12,14 @@
     "lint": "npm run lint:js && npm run lint:prettier",
     "lintfix": "prettier --write --list-different . && npm run lint:js --fix"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,vue,ts,tsx}": "npm run lintfix"
+  },
   "devDependencies": {
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "@types/node": "^18",
