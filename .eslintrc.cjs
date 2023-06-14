@@ -38,7 +38,7 @@ module.exports = {
     'func-call-spacing': ["error", "never"],
     'key-spacing': ["error", { "beforeColon": false, "afterColon": true, "mode": "strict" }],
     'keyword-spacing': ["error", { "before": true, "after": false}],
-    "max-len": ["error", {
+    "vue/max-len": ["error", {
       "code": 80,
       "template": 80,
       "tabWidth": 2,
@@ -54,7 +54,7 @@ module.exports = {
       "ignoreHTMLTextContents": false,
     }],
     'no-constant-condition': "error",
-    "no-irregular-whitespace": ["error", {
+    "vue/no-irregular-whitespace": ["error", {
       "skipStrings": true,
       "skipComments": false,
       "skipRegExps": false,
