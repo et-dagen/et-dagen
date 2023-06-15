@@ -12,4 +12,16 @@ export default defineNuxtConfig({
       FB_MEASUREMENT_ID: process.env.NUXT_FB_MEASUREMENT_ID,
     },
   },
+
+  modules: ['@invictus.codes/nuxt-vuetify'],
+
+  vuetify: {
+    vuetifyOptions: {
+      // custom themes and defaults go here
+    },
+
+    moduleOptions: {
+      // module options go here
+    },
+  },
 });
