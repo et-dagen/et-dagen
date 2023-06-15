@@ -35,8 +35,10 @@ export const initUser = () => {
   const auth = getAuth();
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      const uid = user.uid;
-      console.info('User state changed', uid);
+      // const uid = user.uid;
+      console.log('User state changed', user);
+    } else {
+      console.log('User state changed', user);
     }
   });
 };

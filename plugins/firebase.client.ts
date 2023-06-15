@@ -34,4 +34,6 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   nuxtApp.vueApp.provide('auth', auth);
   nuxtApp.provide('auth', auth);
+
+  initUser();
 });
