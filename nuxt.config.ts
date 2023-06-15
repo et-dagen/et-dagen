@@ -15,6 +15,10 @@ export default defineNuxtConfig({
     },
   },
 
+  imports: {
+    dirs: ['stores'],
+  },
+
   modules: ['@invictus.codes/nuxt-vuetify', '@pinia/nuxt'],
 
   vuetify: {
@@ -29,5 +33,13 @@ export default defineNuxtConfig({
     moduleOptions: {
       // module options go here
     },
+  },
+
+  pinia: {
+    autoImports: [
+      // automatically imports `defineStore`
+      'defineStore', // import { defineStore } from 'pinia'
+      ['defineStore', 'definePiniaStore'], // import { defineStore as definePiniaStore } from 'pinia'
+    ],
   },
 })
