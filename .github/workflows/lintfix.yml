@@ -23,3 +23,7 @@ jobs:
 
       - name: Run lint and fix
         run: npm run lintfix
+
+      - name: Cancel push on failure
+        if: ${{ failure() }}
+        run: echo "Linting and fixing failed. Cancelling push." && exit 1
