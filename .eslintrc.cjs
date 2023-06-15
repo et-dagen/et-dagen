@@ -106,13 +106,7 @@ module.exports = {
     'no-loss-of-precision': 'error',
     'no-sparse-arrays': 'error',
     'no-useless-concat': 'error',
-    'object-curly-newline': [
-      'error',
-      {
-        multiline: true,
-        minProperties: 2,
-      },
-    ],
+    'object-curly-newline': 'off',
     'object-curly-spacing': [
       'error',
       'always',
