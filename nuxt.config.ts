@@ -15,7 +15,11 @@ export default defineNuxtConfig({
     },
   },
 
-  modules: ['@invictus.codes/nuxt-vuetify'],
+  imports: {
+    dirs: ['stores'],
+  },
+
+  modules: ['@invictus.codes/nuxt-vuetify', '@pinia/nuxt'],
 
   vuetify: {
     vuetifyOptions: {
@@ -29,5 +33,9 @@ export default defineNuxtConfig({
     moduleOptions: {
       // module options go here
     },
+  },
+
+  pinia: {
+    autoImports: ['defineStore', ['defineStore', 'definePiniaStore']],
   },
 })
