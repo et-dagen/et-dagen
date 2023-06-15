@@ -3,4 +3,4 @@ export default {
   VBtn: {
     style: 'text-transform: none',
   },
-};
+}
