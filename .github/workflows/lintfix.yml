@@ -1,4 +1,4 @@
-name: Lint Fix
+name: Lint and Fix
 
 on:
   push:
@@ -6,20 +6,20 @@ on:
       - '*'
 
 jobs:
-  lint:
+  lintfix:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: '16'
+
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Run linting with --fix
+      - name: Run lint and fix
         run: npm run lintfix
