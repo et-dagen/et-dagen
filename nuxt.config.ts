@@ -1,3 +1,5 @@
+import { themes, defaults } from './config/vuetify'
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   runtimeConfig: {
@@ -12,4 +14,20 @@ export default defineNuxtConfig({
       FB_MEASUREMENT_ID: process.env.NUXT_FB_MEASUREMENT_ID,
     },
   },
-});
+
+  modules: ['@invictus.codes/nuxt-vuetify'],
+
+  vuetify: {
+    vuetifyOptions: {
+      // custom themes and defaults go here
+      theme: {
+        themes,
+      },
+      defaults,
+    },
+
+    moduleOptions: {
+      // module options go here
+    },
+  },
+})
