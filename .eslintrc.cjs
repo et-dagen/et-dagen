@@ -55,7 +55,7 @@ module.exports = {
       },
     ],
     'comma-style': ['error', 'last'],
-    'dot-notation': ['error', { allowKeywords: false }],
+    'dot-notation': ['error', { allowKeywords: true }],
     eqeqeq: ['error', 'smart'],
     'func-call-spacing': ['error', 'never'],
     'key-spacing': [
@@ -70,7 +70,7 @@ module.exports = {
       'error',
       {
         before: true,
-        after: false,
+        after: true,
       },
     ],
     'vue/max-len': [
