@@ -1,3 +1,5 @@
+import { defaults } from './config/vuetify';
+
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   runtimeConfig: {
@@ -18,6 +20,7 @@ export default defineNuxtConfig({
   vuetify: {
     vuetifyOptions: {
       // custom themes and defaults go here
+      defaults: defaults,
     },
 
     moduleOptions: {
