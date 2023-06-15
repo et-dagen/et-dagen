@@ -20,7 +20,7 @@ module.exports = {
       'warn',
       {
         singleQuote: true,
-        semi: true,
+        semi: false,
         tabWidth: 2,
         vueIndentScriptAndStyle: true,
       },
@@ -133,4 +133,4 @@ module.exports = {
     ],
     'no-mixed-spaces-and-tabs': ['error', 'smart-tabs'],
   },
-};
+}
