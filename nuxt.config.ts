@@ -1,4 +1,4 @@
-import { defaults } from './config/vuetify';
+import { themes, defaults } from './config/vuetify';
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
@@ -20,7 +20,10 @@ export default defineNuxtConfig({
   vuetify: {
     vuetifyOptions: {
       // custom themes and defaults go here
-      defaults: defaults,
+      theme: {
+        themes,
+      },
+      defaults,
     },
 
     moduleOptions: {
