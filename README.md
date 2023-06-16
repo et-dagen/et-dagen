@@ -1,5 +1,6 @@
 # E&T-dagen v2
 The second version of the [E&T-dagen website](https://etdagen.no). This time built with Nuxt 3 instead of Django.
+***NB!*** *You can find further reading materials in the [repository wiki](../../wiki) if the content in this README is not satisfactory*
 
 ## Getting started
 
