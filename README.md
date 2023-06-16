@@ -79,7 +79,7 @@ When the issue is completed, create a pull request and assign the pull request t
 When the pull request is approved, merge it into the `main` branch and close the issue.
 
 ### Branches
-*NB! All branches created working on issues should be branched off of `main`*
+*NB! All branches created working on issues should be branched off of `main`.*
 
 The project uses the following branch naming conventions:
 
@@ -101,3 +101,11 @@ The project uses the following branch naming conventions:
 ### Pull requests
 
 - Pull requests should be created for all new features and bugs. The pull request should be assigned to the person who should review it. The pull request should be labeled with the appropriate label(s).
+
+## Deployment
+
+*To be improved.*
+
+## Testing
+
+*To be improved.*
