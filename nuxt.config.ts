@@ -19,8 +19,7 @@ export default defineNuxtConfig({
     dirs: ['stores'],
   },
 
-  modules: ['@invictus.codes/nuxt-vuetify', '@pinia/nuxt'],
-
+  modules: ['@invictus.codes/nuxt-vuetify', '@pinia/nuxt', 'nuxt-vitest'],
   vuetify: {
     vuetifyOptions: {
       // custom themes and defaults go here
