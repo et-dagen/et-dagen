@@ -7,7 +7,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "lint:js": "eslint --ext \".ts,.vue\" --ignore-path .gitignore .",
+    "lint:js": "eslint --ext \".ts,.vue,.js,.cjs,.mjs\" --ignore-path .gitignore .",
     "lint:prettier": "prettier --check .",
     "lint": "npm run lint:js && npm run lint:prettier",
     "lintfix": "prettier --write --list-different . && npm run lint:js --fix"
@@ -31,6 +31,7 @@
     "husky": "^8.0.3",
     "lint-staged": "^13.2.2",
     "nuxt": "^3.5.2",
+    "nuxt-vitest": "^0.8.5",
     "prettier": "^2.8.8",
     "typescript": "^5.1.3"
   },
