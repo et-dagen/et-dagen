@@ -34,7 +34,7 @@ export const signinUser = async (email: string, password: string) => {
 export const initUser = () => {
   const auth = getAuth()
 
-  onAuthStateChanged(auth, async (user) => {
+  onAuthStateChanged(auth, (user) => {
     const authStore = useAuthStore()
 
     if (user) {

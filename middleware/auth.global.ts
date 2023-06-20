@@ -1,4 +1,4 @@
-export default defineNuxtRouteMiddleware((to, from) => {
+export default defineNuxtRouteMiddleware((to) => {
   // route is not protected
   if (!to.meta.protected) return
 
@@ -10,7 +10,8 @@ export default defineNuxtRouteMiddleware((to, from) => {
   // user is not logged in
   authStore.pendingRoute = to.fullPath
 
-  // for some reason using navigateTo('/') resets the store value on the initial page load
+  // for some reason using navigateTo('/') resets
+  // the store value on the initial page load
   // return navigateTo('/')
   return useRouter().push({ path: '/' })
 })
