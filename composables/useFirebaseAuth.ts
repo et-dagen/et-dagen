@@ -33,12 +33,15 @@ export const signinUser = async (email: string, password: string) => {
 
 export const initUser = () => {
   const auth = getAuth()
-  onAuthStateChanged(auth, (user) => {
+
+  onAuthStateChanged(auth, async (user) => {
+    const authStore = useAuthStore()
+
     if (user) {
-      // const uid = user.uid;
-      console.log('User state changed', user)
+      authStore.user = formatUser(user)
+      if (authStore.pendingRoute) return navigateTo(authStore.pendingRoute)
     } else {
-      console.log('User state changed', user)
+      authStore.user = null
     }
   })
 }
