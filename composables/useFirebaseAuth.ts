@@ -34,14 +34,19 @@ export const signinUser = async (email: string, password: string) => {
 export const initUser = () => {
   const auth = getAuth()
 
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     const authStore = useAuthStore()
+    const token = useCookie('token')
 
     if (user) {
+      // store idToken in cookie for use on server
+      token.value = await user.getIdToken()
+
+      // save user data in store for use on client
       authStore.user = formatUser(user)
-      if (authStore.pendingRoute) return navigateTo(authStore.pendingRoute)
     } else {
       authStore.user = null
+      token.value = null
     }
   })
 }
