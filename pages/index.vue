@@ -1,6 +1,10 @@
 <template>
   <div>
-    <VBtn color="success" @click="signIn">Sign in</VBtn>
+    <!-- Sign in/out buttons -->
+    <VBtn v-if="!authStore.isLoggedIn" color="success" @click="signIn"
+      >Sign in</VBtn
+    >
+    <VBtn v-else color="error" @click="signOut">Sign out</VBtn>
     {{ user }}
   </div>
 </template>
@@ -12,4 +16,5 @@
   const { user } = storeToRefs(authStore)
 
   const signIn = () => signinUser('email', 'password')
+  const signOut = () => signoutUser()
 </script>
