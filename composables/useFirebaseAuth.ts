@@ -31,6 +31,11 @@ export const signinUser = async (email: string, password: string) => {
   return credentials
 }
 
+export const signoutUser = async () => {
+  const auth = getAuth()
+  await auth.signOut()
+}
+
 export const initUser = () => {
   const auth = getAuth()
 
