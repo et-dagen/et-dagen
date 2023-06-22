@@ -1,17 +1,21 @@
-export default defineNuxtRouteMiddleware((to) => {
-  // route is not protected
+export default defineNuxtRouteMiddleware(async (to) => {
+  // skip middleware if app is hydrating
+  const nuxtApp = useNuxtApp()
+  if (nuxtApp.isHydrating) return
+
+  // route is protected
   if (!to.meta.protected) return
 
-  const authStore = useAuthStore()
+  const headers = useRequestHeaders(['cookie'])
 
-  // user is logged in
-  if (authStore.isLoggedIn) return
+  const isLoggedIn = process.client
+    ? useAuthStore().isLoggedIn
+    : // check auth server side
+      await $fetch('/api/getAuth', { headers })
 
-  // user is not logged in
-  authStore.pendingRoute = to.fullPath
+  // user is authenticated
+  if (isLoggedIn) return
 
-  // for some reason using navigateTo('/') resets
-  // the store value on the initial page load
-  // return navigateTo('/')
-  return useRouter().push({ path: '/' })
+  // user is not authenticated
+  return navigateTo('/')
 })
