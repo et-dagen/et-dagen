@@ -41,7 +41,9 @@ export const initUser = () => {
 
   onAuthStateChanged(auth, async (user) => {
     const authStore = useAuthStore()
-    const token = useCookie('token')
+    const token = useCookie('token', {
+      maxAge: 60 * 60 * 24, // 24 hours
+    })
 
     if (user) {
       // store idToken in cookie for use on server
