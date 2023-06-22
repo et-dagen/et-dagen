@@ -1,5 +1,3 @@
-import { auth } from '~~/server/lib/firebase'
-
 export default defineEventHandler(async (event) => {
   // get idToken from cookie
   const idToken = getCookie(event, 'token')
