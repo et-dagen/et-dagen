@@ -32,15 +32,16 @@ npm install
 
 ### Setup
 
-Create a `.env` file in the project root by copying the .env.example file:
+Create a `.env` and a `firebase-admin.key.json` file in the project root by copying the .env.example and firebase-admin.key.json.example files:
 
 ```bash
 cp .env.example .env
+cp firebase-admin.key.json.example firebase-admin.key.json
 ```
 
 Replace `xxxxx` in the `.env` file with the correct value: *d1f82*.
 
-Add missing environment variables to the `.env` file, provided by the project manager.
+Add missing environment variables to the `.env` file and Firebase admin SDK credentials, provided by the project manager.
 
 ### Development
 
