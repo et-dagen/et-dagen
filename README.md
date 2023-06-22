@@ -1,7 +1,8 @@
 # E&T-dagen v2
+
 The second version of the [E&T-dagen website](https://etdagen.no). This time built with Nuxt 3 instead of Django.
 
-***NB!*** *You can find further reading materials in the [repository wiki](https://github.com/ipeglin/et-dagen-v2/wiki) if the content in this README is not satisfactory*
+**_NB!_** _You can find further reading materials in the [repository wiki](https://github.com/ipeglin/et-dagen-v2/wiki) if the content in this README is not satisfactory_
 
 ## Getting started
 
@@ -39,7 +40,7 @@ cp .env.example .env
 cp firebase-admin.key.json.example firebase-admin.key.json
 ```
 
-Replace `xxxxx` in the `.env` file with the correct value: *d1f82*.
+Replace `xxxxx` in the `.env` file with the correct value: _d1f82_.
 
 Add missing environment variables to the `.env` file and Firebase admin SDK credentials, provided by the project manager.
 
@@ -82,7 +83,8 @@ When the issue is completed, create a pull request and assign the pull request t
 When the pull request is approved, merge it into the `main` branch and close the issue.
 
 ### Branches
-*NB! All branches created working on issues should be branched off of `main`.*
+
+_NB! All branches created working on issues should be branched off of `main`._
 
 The project uses the following branch naming conventions:
 
@@ -92,8 +94,7 @@ The project uses the following branch naming conventions:
 - `fix/...` - A branch for a bug fix.
 - `refactor/...` - A branch for refactoring.
 - `chore/...` - A branch for miscellaneous tasks.
-- *More may be added in the future.*
-
+- _More may be added in the future._
 
 ### Commits
 
@@ -107,8 +108,8 @@ The project uses the following branch naming conventions:
 
 ## Deployment
 
-*To be improved.*
+_To be improved._
 
 ## Testing
 
-*To be improved.*
+_To be improved._

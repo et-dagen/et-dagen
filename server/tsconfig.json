@@ -1,7 +1,4 @@
 {
   "extends": "../.nuxt/tsconfig.server.json",
-  "exclude": [
-    "../node_modules",
-    "../vitest.config.mjs"
-  ]
+  "exclude": ["../node_modules", "../vitest.config.mjs"]
 }
