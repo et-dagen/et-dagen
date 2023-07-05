@@ -6,8 +6,12 @@ export default defineNuxtRouteMiddleware(async (to) => {
   // route is protected
   if (!to.meta.protected) return
 
+  // makes sure that the token cookie is included
+  // in the initial request headers
   const headers = useRequestHeaders(['cookie'])
 
+  // when navigating client side the auth state is
+  // collected from the auth store
   const isLoggedIn = process.client
     ? useAuthStore().isLoggedIn
     : // check auth server side
