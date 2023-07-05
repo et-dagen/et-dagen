@@ -1,3 +1,0 @@
-export const useTestStore = defineStore('test', {
-  // other options...
-})

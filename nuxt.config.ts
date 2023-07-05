@@ -3,6 +3,8 @@ import { themes, defaults } from './config/vuetify'
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   runtimeConfig: {
+    // used by firebase admin sdk
+    GOOGLE_APPLICATION_CREDENTIALS: process.env.GOOGLE_APPLICATION_CREDENTIALS,
     public: {
       FB_API_KEY: process.env.NUXT_FB_API_KEY,
       FB_AUTH_DOMAIN: process.env.NUXT_FB_AUTH_DOMAIN,
@@ -31,10 +33,28 @@ export default defineNuxtConfig({
 
     moduleOptions: {
       // module options go here
+      treeshaking: true,
     },
   },
 
   pinia: {
     autoImports: ['defineStore', ['defineStore', 'definePiniaStore']],
+  },
+
+  hooks: {
+    // automatically adds meta data to pages
+    // in the @proteced folder
+    'pages:extend': (pages) => {
+      pages.forEach((page) => {
+        if (!page.path.includes('@protected')) return
+
+        // update nuxt page
+        page.name = page.name?.split('@protected-')[1]
+        page.path = page.path?.split('/@protected')[1]
+        page.meta = {
+          protected: true,
+        }
+      })
+    },
   },
 })

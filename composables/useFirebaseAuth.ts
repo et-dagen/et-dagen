@@ -5,6 +5,9 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth'
 
+// 60sec * 60min * 24h = 1 day
+const DAY_s = 60 * 60 * 24
+
 export const registerUser = async (email: string, password: string) => {
   const auth = getAuth()
   const credentials = await createUserWithEmailAndPassword(
@@ -31,14 +34,29 @@ export const signinUser = async (email: string, password: string) => {
   return credentials
 }
 
+export const signoutUser = async () => {
+  const auth = getAuth()
+  await auth.signOut()
+}
+
 export const initUser = () => {
   const auth = getAuth()
-  onAuthStateChanged(auth, (user) => {
+
+  onAuthStateChanged(auth, async (user) => {
+    const authStore = useAuthStore()
+    const token = useCookie('token', {
+      maxAge: DAY_s * 1, // 24 hours
+    })
+
     if (user) {
-      // const uid = user.uid;
-      console.log('User state changed', user)
+      // store idToken in cookie for use on server
+      token.value = await user.getIdToken()
+
+      // save user data in store for use on client
+      authStore.user = formatUser(user)
     } else {
-      console.log('User state changed', user)
+      authStore.user = null
+      token.value = null
     }
   })
 }

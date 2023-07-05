@@ -39,6 +39,7 @@
     "@pinia/nuxt": "^0.4.11",
     "dotenv": "^16.1.4",
     "firebase": "^9.22.2",
+    "firebase-admin": "^11.9.0",
     "pinia": "^2.1.4"
   },
   "overrides": {
