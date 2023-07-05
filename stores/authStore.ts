@@ -1,4 +1,4 @@
-import type { User } from '~~/models/User'
+import type { User } from '@/models/User'
 
 interface State {
   user: User | null

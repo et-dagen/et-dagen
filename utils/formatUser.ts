@@ -1,5 +1,5 @@
 import type { User as FirebaseUser } from 'firebase/auth'
-import type { User } from '~~/models/User'
+import type { User } from '@/models/User'
 
 export default (user: FirebaseUser): User => {
   return {
