@@ -40,4 +40,21 @@ export default defineNuxtConfig({
   pinia: {
     autoImports: ['defineStore', ['defineStore', 'definePiniaStore']],
   },
+
+  hooks: {
+    // automatically adds meta data to pages
+    // in the @proteced folder
+    'pages:extend': (pages) => {
+      pages.forEach((page) => {
+        if (!page.path.includes('@protected')) return
+
+        // update nuxt page
+        page.name = page.name?.split('@protected-')[1]
+        page.path = page.path?.split('/@protected')[1]
+        page.meta = {
+          protected: true,
+        }
+      })
+    },
+  },
 })
