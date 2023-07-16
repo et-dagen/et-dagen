@@ -27,8 +27,32 @@ export default defineNuxtConfig({
     'nuxt-vitest',
     '@nuxtjs/i18n',
   ],
-  i18n: {},
-  
+  i18n: {
+    locales: [
+      {
+        code: 'no',
+        iso: 'nb-NO',
+        file: 'nb-NO.json',
+        name: 'Norsk',
+      },
+      {
+        code: 'en',
+        iso: 'en-US',
+        file: 'en-US.json',
+        name: 'English',
+      },
+    ],
+    vueI18n: './i18n.config.ts',
+    lazy: true,
+    langDir: 'lang',
+    defaultLocale: 'no',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_redirected',
+      redirectOn: 'root', // recommended
+    },
+  },
+
   vuetify: {
     vuetifyOptions: {
       // custom themes and defaults go here
