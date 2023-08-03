@@ -28,6 +28,8 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
   ],
   i18n: {
+    lazy: true,
+    langDir: 'locales',
     locales: [
       {
         code: 'no',
@@ -43,8 +45,6 @@ export default defineNuxtConfig({
       },
     ],
     vueI18n: './i18n.config.ts',
-    lazy: true,
-    langDir: 'lang',
     defaultLocale: 'no',
     detectBrowserLanguage: {
       useCookie: true,
