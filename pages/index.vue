@@ -1,9 +1,9 @@
 <template>
   <div>
     <!-- Sign in/out buttons -->
-    <VBtn v-if="!authStore.isLoggedIn" color="success" @click="signIn"
-      >Sign in</VBtn
-    >
+    <VBtn v-if="!authStore.isLoggedIn" color="success" @click="signIn">{{
+      $t('sign_in')
+    }}</VBtn>
     <VBtn v-else color="error" @click="signOut">Sign out</VBtn>
     {{ user }}
   </div>

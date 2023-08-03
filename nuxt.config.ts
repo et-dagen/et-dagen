@@ -21,7 +21,40 @@ export default defineNuxtConfig({
     dirs: ['stores'],
   },
 
-  modules: ['@invictus.codes/nuxt-vuetify', '@pinia/nuxt', 'nuxt-vitest'],
+  modules: [
+    '@invictus.codes/nuxt-vuetify',
+    '@pinia/nuxt',
+    'nuxt-vitest',
+    '@nuxtjs/i18n',
+  ],
+  i18n: {
+    lazy: true,
+    langDir: 'locales',
+    strategy: 'prefix_except_default',
+    locales: [
+      {
+        code: 'no',
+        iso: 'nb-NO',
+        name: 'Norsk Bokmål',
+        file: 'nb-NO.json',
+        isCatchallLocale: true,
+      },
+      {
+        code: 'en',
+        iso: 'en-US',
+        name: 'English (United States)',
+        file: 'en-US.json',
+      },
+    ],
+    defaultLocale: 'no',
+    vueI18n: 'i18n.config.ts',
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieKey: 'i18n_redirected',
+      redirectOn: 'root', // recommended
+    },
+  },
+
   vuetify: {
     vuetifyOptions: {
       // custom themes and defaults go here
