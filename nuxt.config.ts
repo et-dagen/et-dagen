@@ -32,20 +32,19 @@ export default defineNuxtConfig({
     langDir: 'locales',
     locales: [
       {
-        code: 'no',
+        code: 'nb-NO',
         iso: 'nb-NO',
+        name: 'Norsk Bokmål',
         file: 'nb-NO.json',
-        name: 'Norsk',
       },
       {
-        code: 'en',
+        code: 'en-US',
         iso: 'en-US',
+        name: 'English(US)',
         file: 'en-US.json',
-        name: 'English',
       },
     ],
-    vueI18n: './i18n.config.ts',
-    defaultLocale: 'no',
+    defaultLocale: 'nb-NO',
     detectBrowserLanguage: {
       useCookie: true,
       cookieKey: 'i18n_redirected',
