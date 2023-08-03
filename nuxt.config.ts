@@ -30,22 +30,24 @@ export default defineNuxtConfig({
   i18n: {
     lazy: true,
     langDir: 'locales',
-    strategy: 'no_prefix',
+    strategy: 'prefix_except_default',
     locales: [
       {
-        code: 'nb-NO',
+        code: 'no',
         iso: 'nb-NO',
         name: 'Norsk Bokmål',
         file: 'nb-NO.json',
+        isCatchallLocale: true,
       },
       {
-        code: 'en-US',
+        code: 'en',
         iso: 'en-US',
-        name: 'English(US)',
+        name: 'English (United States)',
         file: 'en-US.json',
       },
     ],
-    defaultLocale: 'nb-NO',
+    defaultLocale: 'no',
+    vueI18n: 'i18n.config.ts',
     detectBrowserLanguage: {
       useCookie: true,
       cookieKey: 'i18n_redirected',
