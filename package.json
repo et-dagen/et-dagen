@@ -41,7 +41,8 @@
     "dotenv": "^16.1.4",
     "firebase": "^9.22.2",
     "firebase-admin": "^11.9.0",
-    "pinia": "^2.1.4"
+    "pinia": "^2.1.4",
+    "vuetify-nuxt-module": "^0.5.6"
   },
   "overrides": {
     "vue": "3.3.4"
