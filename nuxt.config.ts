@@ -21,12 +21,7 @@ export default defineNuxtConfig({
     dirs: ['stores'],
   },
 
-  modules: [
-    '@invictus.codes/nuxt-vuetify',
-    '@pinia/nuxt',
-    'nuxt-vitest',
-    '@nuxtjs/i18n',
-  ],
+  modules: ['@pinia/nuxt', 'nuxt-vitest', '@nuxtjs/i18n'],
   i18n: {
     lazy: true,
     langDir: 'locales',
@@ -52,21 +47,6 @@ export default defineNuxtConfig({
       useCookie: true,
       cookieKey: 'i18n_redirected',
       redirectOn: 'root', // recommended
-    },
-  },
-
-  vuetify: {
-    vuetifyOptions: {
-      // custom themes and defaults go here
-      theme: {
-        themes,
-      },
-      defaults,
-    },
-
-    moduleOptions: {
-      // module options go here
-      treeshaking: true,
     },
   },
 

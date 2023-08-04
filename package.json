@@ -22,7 +22,6 @@
     "*.{js,vue,ts,tsx}": "npm run lintfix"
   },
   "devDependencies": {
-    "@invictus.codes/nuxt-vuetify": "^0.2.20",
     "@nuxtjs/eslint-config-typescript": "^12.0.0",
     "@nuxtjs/i18n": "^8.0.0-rc.2",
     "@types/node": "^18",
