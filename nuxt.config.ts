@@ -21,7 +21,14 @@ export default defineNuxtConfig({
     dirs: ['stores'],
   },
 
-  modules: ['@pinia/nuxt', 'nuxt-vitest', '@nuxtjs/i18n'],
+  css: ['vuetify/styles'],
+
+  modules: [
+    '@pinia/nuxt',
+    'nuxt-vitest',
+    '@nuxtjs/i18n',
+    'vuetify-nuxt-module',
+  ],
   i18n: {
     lazy: true,
     langDir: 'locales',
@@ -54,6 +61,15 @@ export default defineNuxtConfig({
     autoImports: ['defineStore', ['defineStore', 'definePiniaStore']],
   },
 
+  vuetify: {
+    moduleOptions: {
+      styles: {
+        configFile: '/assets/scss/settings.scss',
+      },
+    },
+    vuetifyOptions: './config/vuetify/vuetify.config.ts',
+  },
+
   hooks: {
     // automatically adds meta data to pages
     // in the @proteced folder
@@ -69,5 +85,16 @@ export default defineNuxtConfig({
         }
       })
     },
+  },
+
+  // nuxt inlineSSRStyles not compatiable with Vuetify :(
+  // https://github.com/userquin/vuetify-nuxt-module/issues/74
+  experimental: {
+    inlineSSRStyles: false,
+  },
+
+  // enable nuxt devtools
+  devtools: {
+    enabled: true,
   },
 })
