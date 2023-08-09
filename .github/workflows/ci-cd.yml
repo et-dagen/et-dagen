@@ -28,7 +28,7 @@ jobs:
         run: npm install
 
       - name: Run linting and testing
-        run: ./lint-test.sh
+        run: bash lint-test.sh
 
       - name: Deploy to Digital Ocean
         run: ./ci.sh
