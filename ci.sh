@@ -11,7 +11,7 @@ echo "Installing dependencies..."
 npm install
 
 # Run linting and testing script
-./lint-test.sh
+bash lint-test.sh
 
 # TODO: #36 Configure deployment script to Digital Ocean
 # Deploy to Digital Ocean
