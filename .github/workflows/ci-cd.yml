@@ -22,7 +22,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v2
         with:
-          node-version: 20.x # May need to be downgraded
+          node-version: 18.x # May need to be downgraded
 
       - name: Install dependencies
         run: npm install
