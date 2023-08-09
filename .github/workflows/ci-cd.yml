@@ -1,0 +1,34 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20.x # May need to be downgraded
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run linting and testing
+        run: ./lint-test.sh
+
+      - name: Deploy to Digital Ocean
+        run: ./ci.sh
