@@ -5,7 +5,7 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth'
 
-// 60sec * 60min * 24h = 1 day
+// 60sec * 60min * 24h = 1 day in seconds
 const dayInSeconds = 60 * 60 * 24
 
 export const registerUser = async (email: string, password: string) => {
