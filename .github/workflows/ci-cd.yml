@@ -31,4 +31,4 @@ jobs:
         run: bash lint-test.sh
 
       - name: Deploy to Digital Ocean
-        run: ./ci.sh
+        run: bash ci.sh
