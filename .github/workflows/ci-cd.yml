@@ -17,15 +17,15 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: 14.x # May need to be downgraded
+          node-version: 18 # May need to be downgraded
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Run linting and testing
         run: bash lint-test.sh
