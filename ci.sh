@@ -11,7 +11,7 @@ export PATH="$PATH:$(npm bin)"
 
 # Install dependencies
 echo "Installing dependencies..."
-npm install
+npm ci
 
 # Run linting and testing script
 ./lint-test.sh
