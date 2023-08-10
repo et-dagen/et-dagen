@@ -10,7 +10,7 @@ npm run lint
 # TODO: #35 Setup component- and composable testing with vitest
 # Run test
 # echo "Running tests..."
-# npm test
+# npm run test
 
 # Build app
 npm run build
