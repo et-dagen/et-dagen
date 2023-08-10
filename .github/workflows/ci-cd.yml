@@ -5,7 +5,7 @@ on:
     branches:
       - main
       - dev
-  
+
   pull_request:
     branches:
       - main
@@ -22,13 +22,13 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v2
         with:
-          node-version: 20.x # May need to be downgraded
+          node-version: 18.x # May need to be downgraded
 
       - name: Install dependencies
         run: npm install
 
       - name: Run linting and testing
-        run: ./lint-test.sh
+        run: bash lint-test.sh
 
       - name: Deploy to Digital Ocean
-        run: ./ci.sh
+        run: bash ci.sh
