@@ -7,7 +7,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxi prepare",
+    "postinstall": "npx nuxi prepare",
     "lint:js": "eslint --ext \".ts,.vue,.js,.cjs,.mjs\" --ignore-path .gitignore .",
     "lint:prettier": "prettier --check .",
     "lint": "npm run lint:js && npm run lint:prettier",
