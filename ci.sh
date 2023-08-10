@@ -6,6 +6,9 @@ set -e
 # Define environment variables
 export NODE_ENV=production
 
+# Modify the PATH to include the node_modules/.bin directory
+export PATH="$PATH:$(npm bin)"
+
 # Install dependencies
 echo "Installing dependencies..."
 npm install
