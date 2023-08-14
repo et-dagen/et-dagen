@@ -1,3 +1,3 @@
 export default defineEventHandler((event) => {
-  return !!event.context.auth
+  return !!event.context.decodedToken
 })
