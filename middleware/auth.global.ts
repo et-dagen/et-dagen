@@ -15,7 +15,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
   const isLoggedIn = process.client
     ? useAuthStore().isLoggedIn
     : // check auth server side
-      await $fetch('/api/getAuth', { headers })
+      await $fetch('/api/auth', { headers })
 
   // user is authenticated
   if (isLoggedIn) return
