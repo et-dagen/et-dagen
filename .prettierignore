@@ -9,3 +9,5 @@ dist
 .DS_Store
 .fleet
 .idea
+package.json
+package-lock.json
