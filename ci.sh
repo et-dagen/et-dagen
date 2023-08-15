@@ -9,9 +9,10 @@ export NODE_ENV=production
 # Modify the PATH to include the node_modules/.bin directory
 # export PATH="$PATH:$(npm bin)"
 
+# TODO!: #40 Fix ci.sh deployment bug resulting in pipeline error 'sh: 1: nuxt: not found'
 # Install dependencies
-echo "Installing dependencies..."
-npm ci
+# echo "Installing dependencies..."
+# npm ci
 
 # Run linting and testing script
 ./lint-test.sh
