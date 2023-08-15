@@ -12,5 +12,9 @@ export default defineEventHandler(async (event) => {
     event.context.decodedToken = decodedToken
   } catch (error) {
     // idToken invalid, the user is not authenticated
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Invalid idToken',
+    })
   }
 })
