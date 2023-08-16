@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
   if (!data) return
 
   event.context.user = {
-    ...formatTokenData(decodedToken),
+    ...formatFirebaseUser(decodedToken),
     ...data[decodedToken.sub],
   }
 })
