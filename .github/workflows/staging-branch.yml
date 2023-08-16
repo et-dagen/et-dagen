@@ -47,3 +47,5 @@ jobs:
       - name: Deploy to Staging
         run: |
           # Replace with deployment script
+
+# TODO: #45 Add E2E testing
