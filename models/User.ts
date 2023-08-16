@@ -7,4 +7,5 @@ export interface TokenData {
 export interface User extends TokenData {
   accessLevel?: string[]
   studyProgram: string
+  updated: number
 }
