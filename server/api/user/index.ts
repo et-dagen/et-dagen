@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
   // get scope from query params
   const { scope } = getQuery(event)
 
-  // only admins can get other users then their own
+  // only admins can get other users than their own
   if (!hasAccessLevel(user, 'admin') || !scope) return user
 
   // reference to users
