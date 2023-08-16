@@ -1,8 +1,6 @@
 // GET /api/user
 // endpoint for fetching user data from database
 
-import { format } from 'path'
-
 export default defineEventHandler(async (event) => {
   const { decodedToken, user } = event.context
 
