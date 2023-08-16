@@ -1,0 +1,49 @@
+name: Staging Deployment and E2E testing
+
+on:
+  pull_request:
+    branches:
+      - dev
+    types:
+      - closed
+  pull_request_review:
+    types:
+     - submitted
+
+jobs:
+  check_pr_approval:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check PR status
+        id: pr_status
+        run: echo "::set-output name=merged::${{ github.event.pull_request.merged }}"
+
+      - name: Check PR approvals
+        id: pr_approvals
+        run: echo "::set-output name=approvals::${{ github.event.pull_request.reviews[0].state }}"
+
+      - name: Validate PR status and approvals
+        id: validate_pr
+        run: |
+          if [[ "${{ steps.pr_status.outputs.merged }}" != "true" || "${{ steps.pr_approvals.outputs.approvals }}" -lt 2 ]]; then
+            echo "PR is not merged or approved by 2 reviewers"
+            exit 1
+          fi
+
+  deploy_staging:
+    needs: [check_pr_approval]
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Deploy to Staging
+        run: |
+          # Replace with deployment script
