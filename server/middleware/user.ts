@@ -1,5 +1,3 @@
-import formatUser from '../utils/formatTokenData'
-
 export default defineEventHandler(async (event) => {
   const { decodedToken } = event.context
 

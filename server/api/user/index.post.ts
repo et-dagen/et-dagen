@@ -34,4 +34,7 @@ export default defineEventHandler(async (event) => {
     accessLevel,
     studyProgram,
   })
+
+  // user successfully modified
+  sendNoContent(event, 201)
 })
