@@ -21,7 +21,7 @@
   const authStore = useAuthStore()
   const { user } = storeToRefs(authStore)
 
-  const signIn = () => signinUser('aasmund@cot.as', 'abc123+A')
+  const signIn = () => signinUser('email', 'password')
   const signOut = () => signoutUser()
 
   const { data, error, refresh } = await useFetch('/api/user', {
@@ -31,7 +31,7 @@
 
   const createUser = async () => {
     try {
-      const data = await $fetch('/api/user', {
+      await $fetch('/api/user', {
         method: 'POST',
         body: {
           // sub: 'mogus',
@@ -46,7 +46,7 @@
 
   const deleteUser = async () => {
     try {
-      const data = await $fetch('/api/user', {
+      await $fetch('/api/user', {
         method: 'DELETE',
         body: {
           sub: 'mogus',
