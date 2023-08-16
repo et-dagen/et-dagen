@@ -1,5 +1,3 @@
-import { themes, defaults } from './config/vuetify'
-
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   runtimeConfig: {
@@ -21,11 +19,13 @@ export default defineNuxtConfig({
     dirs: ['stores'],
   },
 
+  css: ['vuetify/styles'],
+
   modules: [
-    '@invictus.codes/nuxt-vuetify',
     '@pinia/nuxt',
     'nuxt-vitest',
     '@nuxtjs/i18n',
+    'vuetify-nuxt-module',
   ],
   i18n: {
     lazy: true,
@@ -55,23 +55,17 @@ export default defineNuxtConfig({
     },
   },
 
-  vuetify: {
-    vuetifyOptions: {
-      // custom themes and defaults go here
-      theme: {
-        themes,
-      },
-      defaults,
-    },
-
-    moduleOptions: {
-      // module options go here
-      treeshaking: true,
-    },
-  },
-
   pinia: {
     autoImports: ['defineStore', ['defineStore', 'definePiniaStore']],
+  },
+
+  vuetify: {
+    moduleOptions: {
+      styles: {
+        configFile: '/assets/scss/settings.scss',
+      },
+    },
+    vuetifyOptions: './config/vuetify/vuetify.config.ts',
   },
 
   hooks: {
@@ -89,5 +83,16 @@ export default defineNuxtConfig({
         }
       })
     },
+  },
+
+  // nuxt inlineSSRStyles not compatiable with Vuetify :(
+  // https://github.com/userquin/vuetify-nuxt-module/issues/74
+  experimental: {
+    inlineSSRStyles: false,
+  },
+
+  // enable nuxt devtools
+  devtools: {
+    enabled: true,
   },
 })
