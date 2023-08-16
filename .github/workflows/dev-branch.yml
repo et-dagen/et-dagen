@@ -7,6 +7,7 @@ on:
 
 jobs:
   lint_build:
+    name: Lint code and build
     runs-on: ubuntu-latest
 
     steps:
@@ -23,9 +24,9 @@ jobs:
 
       - name: Run linting and testing
         run: |
-          npm run lintfix
+          npm run lint
           npm run build
-  DeployDev:
+  deploy_dev:
     name: Deploy to dev
     if: github.event_name == 'pull_request'
     needs: [lint_build]
