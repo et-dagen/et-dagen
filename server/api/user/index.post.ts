@@ -33,6 +33,7 @@ export default defineEventHandler(async (event) => {
   usersRef.child(sub).set({
     accessLevel,
     studyProgram,
+    updated: Date.now(),
   })
 
   // user successfully modified
