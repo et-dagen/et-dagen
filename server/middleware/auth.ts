@@ -7,7 +7,6 @@ export default defineEventHandler(async (event) => {
   try {
     // check validity of idToken
     const decodedToken = await auth.verifyIdToken(idToken)
-
     // place decoded token on h3 event context
     event.context.decodedToken = decodedToken
   } catch (error) {

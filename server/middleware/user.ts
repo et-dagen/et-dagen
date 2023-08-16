@@ -1,4 +1,4 @@
-import formatUser from '@/utils/formatUser'
+import formatUser from '../utils/formatTokenData'
 
 export default defineEventHandler(async (event) => {
   const { decodedToken } = event.context
@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
   if (!data) return
 
   event.context.user = {
-    ...formatUser(decodedToken),
+    ...formatTokenData(decodedToken),
     ...data[decodedToken.sub],
   }
 })

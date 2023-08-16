@@ -3,7 +3,7 @@
 
 export default defineEventHandler(async (event) => {
   const { user } = event.context
-
+  
   // user is not authenticated
   if (!user)
     throw createError({
