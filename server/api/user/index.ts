@@ -1,5 +1,7 @@
 // GET /api/user
-// endpoint for fetching a users data from database
+// endpoint for fetching user data from database
+
+import { format } from 'path'
 
 export default defineEventHandler(async (event) => {
   const { decodedToken, user } = event.context
@@ -17,6 +19,27 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'User data not found',
     })
 
-  // return user data
-  return user
+  // get scope from query params
+  const { scope } = getQuery(event)
+
+  // only admins can get other users then their own
+  if (!hasAccessLevel(user, 'admin') || !scope) return user
+
+  // reference to users
+  const usersRef = db.ref('users')
+
+  // get all users from db
+  const snapshot = await usersRef.once('value')
+  const dbUsers = snapshot.val()
+
+  // get the first 1000 users from firebase auth
+  const firebaseUsers = await auth.listUsers()
+
+  // combine users from db and firebase auth
+  const users = firebaseUsers.users.map((firebaseUser) => ({
+    ...formatFirebaseUser(firebaseUser),
+    ...dbUsers[firebaseUser.uid],
+  }))
+
+  return users
 })
