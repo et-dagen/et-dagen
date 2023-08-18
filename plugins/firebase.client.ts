@@ -23,10 +23,7 @@ export default defineNuxtPlugin((nuxtApp) => {
   // Initialize Firebase
   const app = initializeApp(firebaseConfig)
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const auth = getAuth(app)
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
 
   nuxtApp.vueApp.provide('auth', auth)
   nuxtApp.provide('auth', auth)

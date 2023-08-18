@@ -1,4 +1,4 @@
-export default defineNuxtPlugin(async (nuxtApp: any) => {
+export default defineNuxtPlugin((nuxtApp: any) => {
   const authStore = useAuthStore(nuxtApp.$pinia)
 
   // get h3 event context

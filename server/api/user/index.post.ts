@@ -12,6 +12,7 @@ export default defineEventHandler(async (event) => {
     })
 
   // get request body
+  // eslint-disable-next-line prefer-const
   let { uid, accessLevel, studyProgram } = await readBody(event)
 
   if (!studyProgram)
