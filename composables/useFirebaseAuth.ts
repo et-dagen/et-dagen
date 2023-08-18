@@ -5,8 +5,8 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth'
 
-// 60sec * 60min * 24h = 1 day
-const daySeconds = 60 * 60 * 24
+// 60sec * 60min * 24h = 1 day in seconds
+const dayInSeconds = 60 * 60 * 24
 
 export const registerUser = async (email: string, password: string) => {
   const auth = getAuth()
@@ -45,7 +45,7 @@ export const initUser = () => {
   onAuthStateChanged(auth, async (user) => {
     const authStore = useAuthStore()
     const token = useCookie('token', {
-      maxAge: daySeconds * 1, // 24 hours
+      maxAge: dayInSeconds * 1, // 24 hours
     })
 
     if (user) {
