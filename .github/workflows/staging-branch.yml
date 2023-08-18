@@ -16,8 +16,8 @@ jobs:
         if: github.event.pull_request.merged != true || github.event.review.state != 'approved'
         id: validate_pr
         run: |
-            echo "PR is not merged or approved by 2 reviewers"
-            exit 1
+          echo "PR is not merged or approved by 2 reviewers"
+          exit 1
 
   deploy_staging:
     name: Deploy to Staging
