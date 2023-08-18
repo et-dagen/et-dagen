@@ -28,7 +28,7 @@ export default defineNuxtConfig({
     'nuxt-vitest',
   ],
   i18n: {
-    lazy: true,
+    lazy: false,
     langDir: 'locales',
     strategy: 'prefix_except_default',
     locales: [
