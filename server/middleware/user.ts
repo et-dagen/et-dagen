@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   // get user data
   const snapshot = await usersRef
     .orderByKey()
-    .equalTo(decodedToken.sub)
+    .equalTo(decodedToken.uid)
     .once('value')
 
   // get user object
@@ -20,6 +20,6 @@ export default defineEventHandler(async (event) => {
 
   event.context.user = {
     ...formatFirebaseUser(decodedToken),
-    ...data[decodedToken.sub],
+    ...data[decodedToken.uid],
   }
 })

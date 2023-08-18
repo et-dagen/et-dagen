@@ -26,7 +26,7 @@
 
   const { data, error, refresh } = await useFetch('/api/user', {
     // add scope to get all users
-    params: { scope: 'all' },
+    // params: { scope: 'all' },
   })
 
   const createUser = async () => {
@@ -34,9 +34,9 @@
       await $fetch('/api/user', {
         method: 'POST',
         body: {
-          // sub: 'mogus',
-          // accessLevel: [],
-          studyProgram: 'data',
+          uid: 'mogus',
+          accessLevel: [],
+          studyProgram: 'elsys',
         },
       })
     } catch (error) {
@@ -49,7 +49,7 @@
       await $fetch('/api/user', {
         method: 'DELETE',
         body: {
-          sub: 'mogus',
+          uid: 'mogus',
         },
       })
     } catch (error) {

@@ -12,7 +12,7 @@ export default defineEventHandler(async (event) => {
     })
 
   // get request body
-  let { sub, accessLevel, studyProgram } = await readBody(event)
+  let { uid, accessLevel, studyProgram } = await readBody(event)
 
   if (!studyProgram)
     throw createError({
@@ -21,8 +21,8 @@ export default defineEventHandler(async (event) => {
     })
 
   // only admins can modify user access levels
-  if (!hasAccessLevel(user, 'admin') || !sub || !accessLevel) {
-    sub = decodedToken.sub
+  if (!hasAccessLevel(user, 'admin') || !uid || !accessLevel) {
+    uid = decodedToken.uid
     accessLevel = []
   }
 
@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
   const usersRef = db.ref('users')
 
   // add or update user in database
-  usersRef.child(sub).set({
+  usersRef.child(uid).set({
     accessLevel,
     studyProgram,
     updated: Date.now(),

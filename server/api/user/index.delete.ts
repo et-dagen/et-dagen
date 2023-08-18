@@ -12,18 +12,18 @@ export default defineEventHandler(async (event) => {
     })
 
   // get request body
-  let { sub } = await readBody(event)
+  let { uid } = await readBody(event)
 
   // only admins can remove other users
-  if (!hasAccessLevel(user, 'admin') || !sub) {
-    sub = user.sub
+  if (!hasAccessLevel(user, 'admin') || !uid) {
+    uid = user.uid
   }
 
   // reference to users
   const usersRef = db.ref('users')
 
   // remove user
-  usersRef.child(sub).remove()
+  usersRef.child(uid).remove()
 
   // user successfully removed
   sendNoContent(event, 204)
