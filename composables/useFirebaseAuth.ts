@@ -52,8 +52,8 @@ export const initUser = () => {
       // store idToken in cookie for use on server
       token.value = await user.getIdToken()
 
-      // save user data in store for use on client
-      authStore.user = formatUser(user)
+      // fetch user data if user is not already signed in after server render
+      if (!authStore.isLoggedIn) authStore.user = await $fetch('/api/user')
     } else {
       authStore.user = null
       token.value = null
