@@ -22,10 +22,10 @@ export default defineNuxtConfig({
   css: ['vuetify/styles'],
 
   modules: [
-    '@pinia/nuxt',
-    'nuxt-vitest',
     '@nuxtjs/i18n',
+    '@pinia/nuxt',
     'vuetify-nuxt-module',
+    'nuxt-vitest',
   ],
   i18n: {
     lazy: true,
@@ -48,11 +48,7 @@ export default defineNuxtConfig({
     ],
     defaultLocale: 'no',
     vueI18n: 'i18n.config.ts',
-    detectBrowserLanguage: {
-      useCookie: true,
-      cookieKey: 'i18n_redirected',
-      redirectOn: 'root', // recommended
-    },
+    detectBrowserLanguage: false,
   },
 
   pinia: {
