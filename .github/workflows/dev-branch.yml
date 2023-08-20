@@ -25,7 +25,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm clean install
+        run: pnpm install
 
       - name: Run linting and testing
         run: |
@@ -54,7 +54,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm clean install
+        run: pnpm install
 
       - name: Deploy to live dev
         run: |
