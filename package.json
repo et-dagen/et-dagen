@@ -20,8 +20,8 @@
     }
   },
   "lint-staged": {
-    "*.{js,ts,vue,css,scss,md,json,yml}": "prettier --write",
-    "*.{js,ts,vue,json}": "eslint"
+    "*.{js,ts,vue,css,scss,md,yml}": "prettier --write",
+    "*.{js,ts,vue}": "eslint"
   },
   "devDependencies": {
     "@nuxt/devtools": "^0.7.4",

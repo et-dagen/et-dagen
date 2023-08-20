@@ -2,9 +2,12 @@
   <div>
     <!-- Sign in/out buttons -->
     <VBtn v-if="!authStore.isLoggedIn" color="success" @click="signIn">
-      Logg inn
+      {{ $t('sign_in') }}
     </VBtn>
-    <VBtn v-else color="error" @click="signOut">Sign out</VBtn>
+
+    <VBtn v-else color="error" @click="signOut">
+      {{ $t('sign_out') }}
+    </VBtn>
 
     <p>User from store: {{ user }}</p>
     <p>User from api: {{ data }} {{ error }}</p>
@@ -12,6 +15,11 @@
     <VBtn color="info" @click="createUser">Create user</VBtn>
     <VBtn color="error" @click="deleteUser">Delete user</VBtn>
     <VBtn color="success" @click="refresh">Refresh user data</VBtn>
+
+    <select v-model="locale" style="cursor: pointer">
+      <option value="en">English</option>
+      <option value="no">Norsk</option>
+    </select>
   </div>
 </template>
 
@@ -21,12 +29,14 @@
   const authStore = useAuthStore()
   const { user } = storeToRefs(authStore)
 
+  const { locale } = useI18n()
+
   const signIn = () => signinUser('email', 'password')
   const signOut = () => signoutUser()
 
   const { data, error, refresh } = await useFetch('/api/user', {
     // add scope to get all users
-    // params: { scope: 'all' },
+    params: { scope: 'all' },
   })
 
   const createUser = async () => {
