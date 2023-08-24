@@ -1,13 +1,15 @@
 export default defineNuxtRouteMiddleware((to) => {
-  // route is protected
+  // check if route is protected
   if (!to.meta.protected) return
 
-  // when navigating client side the auth state is
-  // collected from the auth store
-  const isLoggedIn = useAuthStore().isLoggedIn
+  // get auth state from store
+  const auth = useAuthStore()
+  const isLoggedIn = auth.isLoggedIn
 
-  // user is authenticated
-  if (isLoggedIn) return
+  const accessLevel = to.meta.accessLevel
+
+  // user is authenticated and has the required access level
+  if (isLoggedIn && auth.hasAccessLevel(accessLevel)) return
 
   // user is not authenticated
   return navigateTo('/')
