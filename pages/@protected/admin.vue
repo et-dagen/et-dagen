@@ -1,5 +1,5 @@
 <template>
-  <div>Admin page</div>
+  <NuxtPage />
 </template>
 
 <script setup lang="ts">

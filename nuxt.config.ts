@@ -81,6 +81,10 @@ export default defineNuxtConfig({
     },
   },
 
+  routeRules: {
+    '/admin': { redirect: '/admin/companies' },
+  },
+
   // nuxt inlineSSRStyles not compatiable with Vuetify :(
   // https://github.com/userquin/vuetify-nuxt-module/issues/74
   experimental: {
