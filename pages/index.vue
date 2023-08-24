@@ -31,12 +31,12 @@
 
   const { locale } = useI18n()
 
-  const signIn = () => signinUser('email', 'password')
+  const signIn = () => signinUser('aasmund@cot.as', 'abc123+A')
   const signOut = () => signoutUser()
 
   const { data, error, refresh } = await useFetch('/api/user', {
     // add scope to get all users
-    params: { scope: 'all' },
+    // params: { scope: 'all' },
   })
 
   const createUser = async () => {

@@ -85,6 +85,10 @@ export default defineNuxtConfig({
     '/admin': { redirect: '/admin/companies' },
   },
 
+  app: {
+    pageTransition: { name: 'page', mode: 'out-in' },
+  },
+
   // nuxt inlineSSRStyles not compatiable with Vuetify :(
   // https://github.com/userquin/vuetify-nuxt-module/issues/74
   experimental: {
