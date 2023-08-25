@@ -4,14 +4,15 @@
       v-for="(route, index) in routes"
       :key="index"
       :to="localePath(route.route)"
+      class="ma-1"
     >
       <VBtn
         width="100%"
         color="black"
         variant="text"
+        rounded="lg"
         :active="($route.name as string).includes(route.name)"
         size="x-large"
-        class="ma-1"
       >
         {{ $t(`nav.${route.name}`) }}
       </VBtn>
