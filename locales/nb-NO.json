@@ -1,4 +1,10 @@
 {
   "sign_in": "Logg inn",
-  "sign_out": "Logg ut"
+  "sign_out": "Logg ut",
+  "nav": {
+    "index": "Hjem",
+    "program": "Program",
+    "jobs": "Jobber",
+    "contact": "Kontakt"
+  }
 }

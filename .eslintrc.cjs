@@ -73,6 +73,7 @@ module.exports = {
         after: true,
       },
     ],
+    'vue/multi-word-component-names': 'off',
     'vue/max-len': [
       'error',
       {

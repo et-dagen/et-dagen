@@ -1,15 +1,16 @@
 <template>
-  <VMain>
-    <div>
-      <nuxt-link to="/">Home</nuxt-link>
-      <nuxt-link to="/protected">Protected</nuxt-link>
-      <nuxt-link v-if="isAdmin" to="/admin/companies">Admin</nuxt-link>
+  <div>
+    <!-- navigation menu -->
+    <NavVertical v-model="drawer" />
+    <NavHorizontal @toggleDrawer="() => (drawer = !drawer)" />
+
+    <!-- main content -->
+    <VMain class="ma-10" style="min-height: 2000px">
       <slot />
-    </div>
-  </VMain>
+    </VMain>
+  </div>
 </template>
 
 <script setup lang="ts" ?>
-  const auth = useAuthStore()
-  const isAdmin = computed(() => auth.hasAccessLevel('admin'))
+  const drawer = ref(false)
 </script>
