@@ -12,5 +12,10 @@
 </template>
 
 <script setup lang="ts" ?>
+  const { mobile } = useDisplay()
+  const { currentRoute } = useRouter()
+
   const drawer = ref(false)
+
+  watch([mobile, currentRoute], () => (drawer.value = false))
 </script>
