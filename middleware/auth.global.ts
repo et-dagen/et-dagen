@@ -12,5 +12,5 @@ export default defineNuxtRouteMiddleware((to) => {
   if (isLoggedIn && auth.hasAccessLevel(accessLevel)) return
 
   // user is not authenticated
-  return navigateTo('/')
+  return navigateTo('/user/login')
 })
