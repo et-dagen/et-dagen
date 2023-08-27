@@ -3,8 +3,6 @@
 </template>
 
 <script setup lang="ts">
-  import { storeToRefs } from 'pinia'
-
   definePageMeta({
     protected: true,
   })

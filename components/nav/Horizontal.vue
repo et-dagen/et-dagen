@@ -1,5 +1,10 @@
 <template>
-  <VAppBar scroll-behavior="hide" :elevation="1" :height="90" class="px-12">
+  <VAppBar
+    scroll-behavior="hide"
+    :elevation="1"
+    :height="90"
+    :class="mobile ? 'px-4' : 'px-12'"
+  >
     <!-- logo -->
     <template #prepend>
       <NuxtLink :to="localePath('/')">
@@ -12,8 +17,31 @@
       <NavButtons v-if="!mobile" :routes="routes" direction="horizontal" />
     </VFadeTransition>
 
-    <!-- open vertical nav -->
     <template #append>
+      <!-- admin nav button -->
+      <VFadeTransition mode="out-in">
+        <NavButton
+          v-if="auth.hasAccessLevel('admin') && !mobile"
+          :route="{
+            name: 'admin',
+            route: '/admin/companies',
+          }"
+        />
+      </VFadeTransition>
+
+      <!-- divider -->
+      <VFadeTransition mode="out-in">
+        <VDivider
+          v-if="auth.hasAccessLevel('admin') && !mobile"
+          vertical
+          inset
+          :thickness="2"
+          length="75%"
+          class="my-4 mx-2"
+        />
+      </VFadeTransition>
+
+      <!-- user icon and hamburger menu -->
       <VFadeTransition mode="out-in">
         <VBtn
           v-if="mobile"
@@ -21,7 +49,14 @@
           size="x-large"
           @click="$emit('toggleDrawer')"
         />
-        <VBtn v-else icon="mdi-account-outline" size="x-large" />
+        <NavButton
+          v-else
+          :route="{
+            name: 'user',
+            route: '/user/login',
+          }"
+          icon="mdi-account-outline"
+        />
       </VFadeTransition>
     </template>
   </VAppBar>
@@ -30,6 +65,8 @@
 <script setup lang="ts">
   const localePath = useLocalePath()
   const { mobile } = useDisplay()
+
+  const auth = useAuthStore()
 
   const routes = [
     {

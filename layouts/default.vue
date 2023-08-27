@@ -2,7 +2,7 @@
   <div>
     <!-- navigation menu -->
     <NavVertical v-model="drawer" />
-    <NavHorizontal @toggleDrawer="() => (drawer = !drawer)" />
+    <NavHorizontal @toggle-drawer="() => (drawer = !drawer)" />
 
     <!-- main content -->
     <VMain class="ma-10" style="min-height: 2000px">
@@ -11,7 +11,7 @@
   </div>
 </template>
 
-<script setup lang="ts" ?>
+<script setup lang="ts">
   const { mobile } = useDisplay()
   const { currentRoute } = useRouter()
 

@@ -52,7 +52,11 @@ export default defineNuxtConfig({
   },
 
   pinia: {
-    autoImports: ['defineStore', ['defineStore', 'definePiniaStore']],
+    autoImports: [
+      'defineStore',
+      ['defineStore', 'definePiniaStore'],
+      'storeToRefs',
+    ],
   },
 
   vuetify: {
@@ -62,10 +66,6 @@ export default defineNuxtConfig({
       },
     },
     vuetifyOptions: './config/vuetify/vuetify.config.ts',
-  },
-
-  routeRules: {
-    '/admin': { redirect: '/admin/companies' },
   },
 
   app: {
