@@ -53,7 +53,7 @@
           v-else
           :route="{
             name: 'user',
-            route: '/user/login',
+            route: auth.isLoggedIn ? '/user' : '/user/login',
           }"
           icon="mdi-account-outline"
         />
