@@ -5,4 +5,3 @@
     </NuxtLayout>
   </VApp>
 </template>
-<!-- Comment -->
