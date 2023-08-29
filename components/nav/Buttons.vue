@@ -10,17 +10,15 @@
 </template>
 
 <script setup lang="ts">
-  interface Routes {
-    name: string
-    route: string
-  }
+  import type { Route } from '@/models/Nav'
 
-  export interface Props {
-    direction: 'horizontal' | 'vertical'
-    routes: Routes[]
-  }
+  type Routes = Route[]
+  type Direction = 'horizontal' | 'vertical'
 
-  const props = defineProps<Props>()
+  const props = defineProps({
+    direction: { type: String as PropType<Direction>, required: true },
+    routes: { type: Array as PropType<Routes>, required: true },
+  })
 
   const flexDirection = computed(() => {
     switch (props.direction) {
