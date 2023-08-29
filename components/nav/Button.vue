@@ -15,7 +15,7 @@
     </VBtn>
   </NuxtLink>
 </template>
-`
+
 <script setup lang="ts">
   import type { Route } from '@/models/Nav'
 
