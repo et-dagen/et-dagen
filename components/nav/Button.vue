@@ -3,13 +3,13 @@
     <VBtn
       color="black"
       variant="text"
-      :rounded="!icon ? 'lg' : undefined"
-      :width="!icon ? '100%' : undefined"
+      :rounded="!route.icon ? 'lg' : undefined"
+      :width="!route.icon ? '100%' : undefined"
       :active="($route.name as string).includes(route.name)"
       size="x-large"
-      :icon="icon"
+      :icon="route.icon"
     >
-      <template v-if="!icon" #default>
+      <template v-if="!route.icon" #default>
         {{ $t(`nav.${route.name}`) }}
       </template>
     </VBtn>
@@ -20,14 +20,11 @@
   import type { Route } from '@/models/Nav'
 
   const localePath = useLocalePath()
+
   defineProps({
     route: {
       type: Object as PropType<Route>,
       required: true,
-    },
-    icon: {
-      type: String,
-      default: undefined,
     },
   })
 </script>

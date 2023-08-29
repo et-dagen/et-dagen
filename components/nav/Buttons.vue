@@ -4,7 +4,7 @@
       v-for="(route, index) in routes"
       :key="index"
       :route="route"
-      class="ma-1"
+      :class="direction === 'horizontal' ? 'ma-2' : 'my-2'"
     />
   </div>
 </template>
