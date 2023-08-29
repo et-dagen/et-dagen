@@ -122,7 +122,6 @@ module.exports = {
     'prefer-template': 'error',
     'quote-props': 'error',
     'space-in-parens': 'error',
-    'template-curly-spacing': ['error', 'always'],
     '@typescript-eslint/quotes': [
       'error',
       'single',
