@@ -8,7 +8,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "lint:js": "eslint --ext \".ts,.vue,.js,.cjs,.mjs\" --ignore-path .gitignore .",
+    "lint:js": "eslint --ext \".ts,.vue,.js,.cjs,.mjs,.yml,\" --ignore-path .gitignore .",
     "lint:prettier": "prettier --check .",
     "lint": "pnpm lint:js && pnpm lint:prettier",
     "lintfix": "prettier --write --list-different . && pnpm lint:js --fix",
@@ -20,8 +20,8 @@
     }
   },
   "lint-staged": {
-    "*.{js,ts,vue,css,scss,md,json}": "prettier --write",
-    "*.{js,ts,vue,json}": "eslint"
+    "*.{js,ts,vue,css,scss,md,yml}": "prettier --write",
+    "*.{js,ts,vue}": "eslint"
   },
   "devDependencies": {
     "@nuxt/devtools": "^0.7.4",
