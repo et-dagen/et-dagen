@@ -22,26 +22,31 @@
 
     <template #append>
       <!-- nav btn to user page -->
-      <NavButton
+      <NavButtons
         v-if="auth.isLoggedIn"
-        class="my-2"
-        :route="{
-          name: 'user',
-          route: '/user',
-        }"
+        direction="vertical"
+        :routes="[
+          {
+            name: 'user',
+            route: '/user',
+          },
+        ]"
       />
 
       <!-- navigate to admin page -->
-      <NavButton
+      <NavButtons
         v-if="auth.hasAccessLevel('admin')"
-        :route="{
-          name: 'admin',
-          route: '/admin/companies',
-        }"
+        direction="vertical"
+        :routes="[
+          {
+            name: 'admin',
+            route: '/admin/companies',
+          },
+        ]"
       />
 
       <!-- divider -->
-      <VDivider />
+      <VDivider class="mt-2 mb-4" />
 
       <div w-100 class="d-flex justify-space-between">
         <!-- sign out btn -->
