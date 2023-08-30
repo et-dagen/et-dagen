@@ -80,6 +80,6 @@ export default defineNuxtConfig({
 
   // enable nuxt devtools
   devtools: {
-    enabled: true,
+    enabled: false,
   },
 })
