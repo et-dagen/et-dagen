@@ -5,8 +5,7 @@
       variant="text"
       :rounded="!route.icon ? 'lg' : undefined"
       :width="!route.icon ? '100%' : undefined"
-      :active="($route.name as string).includes(route.name)"
-      size="x-large"
+      :active="active && ($route.name as string).includes(route.name)"
       :icon="route.icon"
     >
       <template v-if="!route.icon" #default>
@@ -25,6 +24,10 @@
     route: {
       type: Object as PropType<Route>,
       required: true,
+    },
+    active: {
+      type: Boolean,
+      default: true,
     },
   })
 </script>
