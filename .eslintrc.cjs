@@ -23,6 +23,7 @@ module.exports = {
         semi: false,
         tabWidth: 2,
         vueIndentScriptAndStyle: true,
+        endOfLine: 'auto',
       },
     ],
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
@@ -123,7 +124,6 @@ module.exports = {
     'prefer-template': 'error',
     'quote-props': 'error',
     'space-in-parens': 'error',
-    'template-curly-spacing': ['error', 'always'],
     '@typescript-eslint/quotes': [
       'error',
       'single',
