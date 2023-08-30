@@ -1,11 +1,14 @@
 {
-  "sign_in": "Sign in",
-  "sign_out": "Sign out",
   "nav": {
     "index": "Home",
     "program": "Program",
     "jobs": "Jobs",
     "contact": "Contact",
-    "admin": "Administration"
+    "admin": "Administration",
+    "user": "My profile"
+  },
+  "user": {
+    "sign_in": "Sign in",
+    "sign_out": "Sign out"
   }
 }
