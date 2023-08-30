@@ -5,7 +5,7 @@
     <NavHorizontal :routes="routes" />
 
     <!-- main content -->
-    <VMain class="ma-4">
+    <VMain class="ma-10">
       <slot />
     </VMain>
   </div>

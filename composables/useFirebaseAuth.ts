@@ -37,11 +37,12 @@ export const signinUser = async (email: string, password: string) => {
 export const signoutUser = async () => {
   const auth = getAuth()
   const app = useAppStore()
+  const localePath = useLocalePath()
 
   app.drawer = false
 
   // sign out user and navigate to home page
-  await navigateTo('/')
+  await navigateTo(localePath('/'))
   await auth.signOut()
 }
 

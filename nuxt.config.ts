@@ -19,7 +19,7 @@ export default defineNuxtConfig({
     dirs: ['stores'],
   },
 
-  css: ['vuetify/styles'],
+  css: ['vuetify/styles', '@/assets/scss/main.scss'],
 
   modules: [
     '@nuxtjs/i18n',
@@ -27,6 +27,7 @@ export default defineNuxtConfig({
     'vuetify-nuxt-module',
     'nuxt-vitest',
   ],
+
   i18n: {
     lazy: false,
     langDir: 'locales',
@@ -68,10 +69,6 @@ export default defineNuxtConfig({
     vuetifyOptions: './config/vuetify/vuetify.config.ts',
   },
 
-  app: {
-    pageTransition: { name: 'page', mode: 'out-in' },
-  },
-
   // nuxt inlineSSRStyles not compatiable with Vuetify :(
   // https://github.com/userquin/vuetify-nuxt-module/issues/74
   experimental: {
@@ -81,5 +78,10 @@ export default defineNuxtConfig({
   // enable nuxt devtools
   devtools: {
     enabled: false,
+  },
+
+  devServer: {
+    port: 8000, // default: 3000
+    host: '0.0.0.0', // default: localhost
   },
 })
