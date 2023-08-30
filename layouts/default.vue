@@ -1,11 +1,11 @@
 <template>
   <div>
     <!-- navigation menu -->
-    <NavVertical v-model="drawer" :routes="routes" />
-    <NavHorizontal :routes="routes" @toggle-drawer="() => (drawer = !drawer)" />
+    <NavVertical :routes="routes" />
+    <NavHorizontal :routes="routes" />
 
     <!-- main content -->
-    <VMain class="ma-10" style="min-height: 2000px">
+    <VMain class="ma-4">
       <slot />
     </VMain>
   </div>
@@ -15,9 +15,7 @@
   const { mobile } = useDisplay()
   const { currentRoute } = useRouter()
 
-  // navigation drawer state
-  // true: open
-  const drawer = ref(false)
+  const app = useAppStore()
 
   // public routes
   const routes = [
@@ -40,5 +38,5 @@
   ]
 
   // close navigation drawer when navigating or leaving mobile breakpiont
-  watch([mobile, currentRoute], () => (drawer.value = false))
+  watch([mobile, currentRoute], () => (app.drawer = false))
 </script>

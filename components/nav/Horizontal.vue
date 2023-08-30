@@ -31,7 +31,6 @@
         v-if="auth.hasAccessLevel('admin') && !mobile"
         vertical
         inset
-        :thickness="2"
         length="75%"
         class="my-4 mx-2"
       />
@@ -43,30 +42,18 @@
         append-icon="mdi-chevron-down"
         class="mx-2"
         rounded="lg"
-        variant="text"
-        size="x-large"
       >
         NO
       </v-btn>
 
       <!-- open navigation drawer -->
-      <VBtn
-        v-if="mobile"
-        icon="mdi-menu"
-        size="x-large"
-        @click="$emit('toggleDrawer')"
-      />
+      <VBtn v-if="mobile" icon="mdi-menu" @click="app.drawer = true" />
 
       <!-- sign in or out btn -->
-      <VBtn
-        v-else
-        variant="text"
-        rounded="lg"
-        size="x-large"
-        :prepend-icon="auth.isLoggedIn ? 'mdi-logout' : 'mdi-login'"
-      >
-        {{ auth.isLoggedIn ? $t('sign_in') : $t('sign_out') }}
-      </VBtn>
+      <UserButton v-if="!mobile && !auth.isLoggedIn" />
+
+      <!-- user menu -->
+      <UserMenu v-if="!mobile && auth.isLoggedIn" />
     </template>
   </VAppBar>
 </template>
@@ -78,14 +65,13 @@
   const { mobile } = useDisplay()
 
   const auth = useAuthStore()
+  const app = useAppStore()
 
   type Routes = Route[]
 
   defineProps({
     routes: { type: Array as PropType<Routes>, required: true },
   })
-
-  defineEmits(['toggleDrawer'])
 </script>
 
 <style scoped lang="scss">

@@ -36,6 +36,9 @@ export const signinUser = async (email: string, password: string) => {
 
 export const signoutUser = async () => {
   const auth = getAuth()
+  const app = useAppStore()
+
+  app.drawer = false
 
   // sign out user and navigate to home page
   await navigateTo('/')
