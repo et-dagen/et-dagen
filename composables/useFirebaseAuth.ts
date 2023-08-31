@@ -34,6 +34,8 @@ export const signinUser = async (email: string, password: string) => {
 export const signoutUser = async () => {
   const auth = getAuth()
   const app = useAppStore()
+  const authStore = useAuthStore()
+
   const localePath = useLocalePath()
 
   app.drawer = false
@@ -50,6 +52,7 @@ export const signoutUser = async () => {
   } catch (error) {
     console.log('Could not sign out user')
   }
+
   authStore.user = null
 }
 
