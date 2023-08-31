@@ -5,9 +5,6 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth'
 
-// 60sec * 60min * 24h = 1 day in seconds
-const dayInSeconds = 60 * 60 * 24
-
 export const registerUser = async (email: string, password: string) => {
   const auth = getAuth()
   const credentials = await createUserWithEmailAndPassword(
@@ -44,6 +41,16 @@ export const signoutUser = async () => {
   // sign out user and navigate to home page
   await navigateTo(localePath('/'))
   await auth.signOut()
+
+  // remove token cookie
+  try {
+    await $fetch('/api/user/signout', {
+      method: 'POST',
+    })
+  } catch (error) {
+    console.log('Could not sign out user')
+  }
+  authStore.user = null
 }
 
 export const initUser = () => {
@@ -51,19 +58,24 @@ export const initUser = () => {
 
   onAuthStateChanged(auth, async (user) => {
     const authStore = useAuthStore()
-    const token = useCookie('token', {
-      maxAge: dayInSeconds * 1, // 24 hours
-    })
 
     if (user) {
       // store idToken in cookie for use on server
-      token.value = await user.getIdToken()
+      const idToken = await user.getIdToken()
 
       // fetch user data if user is not already signed in after server render
-      if (!authStore.isLoggedIn) authStore.user = await $fetch('/api/user')
+      if (!authStore.isLoggedIn)
+        try {
+          authStore.user = await $fetch('/api/user', {
+            headers: {
+              Authorization: `Bearer ${idToken}`,
+            },
+          })
+        } catch (error) {
+          console.error('Could not fetch user data')
+        }
     } else {
       authStore.user = null
-      token.value = null
     }
   })
 }
