@@ -19,7 +19,7 @@ export default defineNuxtConfig({
     dirs: ['stores'],
   },
 
-  css: ['vuetify/styles'],
+  css: ['vuetify/styles', '@/assets/scss/main.scss'],
 
   modules: [
     '@nuxtjs/i18n',
@@ -27,6 +27,7 @@ export default defineNuxtConfig({
     'vuetify-nuxt-module',
     'nuxt-vitest',
   ],
+
   i18n: {
     lazy: false,
     langDir: 'locales',
@@ -52,7 +53,11 @@ export default defineNuxtConfig({
   },
 
   pinia: {
-    autoImports: ['defineStore', ['defineStore', 'definePiniaStore']],
+    autoImports: [
+      'defineStore',
+      ['defineStore', 'definePiniaStore'],
+      'storeToRefs',
+    ],
   },
 
   vuetify: {
@@ -64,23 +69,6 @@ export default defineNuxtConfig({
     vuetifyOptions: './config/vuetify/vuetify.config.ts',
   },
 
-  hooks: {
-    // automatically adds meta data to pages
-    // in the @proteced folder
-    'pages:extend': (pages) => {
-      pages.forEach((page) => {
-        if (!page.path.includes('@protected')) return
-
-        // update nuxt page
-        page.name = page.name?.split('@protected-')[1]
-        page.path = page.path?.split('/@protected')[1]
-        page.meta = {
-          protected: true,
-        }
-      })
-    },
-  },
-
   // nuxt inlineSSRStyles not compatiable with Vuetify :(
   // https://github.com/userquin/vuetify-nuxt-module/issues/74
   experimental: {
@@ -89,6 +77,10 @@ export default defineNuxtConfig({
 
   // enable nuxt devtools
   devtools: {
-    enabled: true,
+    enabled: false,
+  },
+
+  devServer: {
+    host: '0.0.0.0', // default: localhost
   },
 })

@@ -33,8 +33,15 @@ export const signinUser = async (email: string, password: string) => {
 
 export const signoutUser = async () => {
   const auth = getAuth()
+  const app = useAppStore()
   const authStore = useAuthStore()
 
+  const localePath = useLocalePath()
+
+  app.drawer = false
+
+  // sign out user and navigate to home page
+  await navigateTo(localePath('/'))
   await auth.signOut()
 
   // remove token cookie
@@ -45,6 +52,7 @@ export const signoutUser = async () => {
   } catch (error) {
     console.log('Could not sign out user')
   }
+
   authStore.user = null
 }
 
