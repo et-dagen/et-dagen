@@ -40,7 +40,7 @@
         :routes="[
           {
             name: 'admin',
-            route: '/admin/companies',
+            route: '/admin',
           },
         ]"
       />

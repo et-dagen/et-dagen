@@ -21,7 +21,7 @@
         v-if="auth.hasAccessLevel('admin') && !mobile"
         :route="{
           name: 'admin',
-          route: '/admin/companies',
+          route: '/admin',
         }"
         class="mx-2"
       />

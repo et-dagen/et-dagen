@@ -9,5 +9,6 @@
   definePageMeta({
     protected: true,
     accessLevel: 'admin',
+    redirect: '/admin/companies',
   })
 </script>
