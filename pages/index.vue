@@ -1,7 +1,5 @@
 <template>
   <div>
-    <!-- Sign in/out buttons -->
-
     <p>User from store: {{ user }}</p>
 
     <VBtn
