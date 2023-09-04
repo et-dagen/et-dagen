@@ -4,16 +4,18 @@
     <VBtn color="success" @click="signIn">
       {{ $t('user.sign_in') }}
     </VBtn>
+
+    <!-- if the user just registered a msg should be displayed in a chip -->
+    <p v-if="$route.query.registered === 'true'">
+      User successfully registered
+    </p>
   </div>
 </template>
 
 <script setup lang="ts">
-  const localePath = useLocalePath()
-
   const signIn = async () => {
     // test user credentials
     // await signinUser('aasmund@cot.as', 'abc123+A')
     await signinUser('petter@cot.as', '123456')
-    await navigateTo(localePath('/'))
   }
 </script>

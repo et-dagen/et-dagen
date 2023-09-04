@@ -49,22 +49,24 @@ export const registerUser = async (newUser: newUser) => {
 
   // navigate to sign in page
   const localePath = useLocalePath()
-  await navigateTo(localePath('/user/signin'))
+  await navigateTo({
+    path: localePath('/user/signin'),
+    query: {
+      registered: 'true',
+    },
+  })
 
   appStore.registeringUser = false
 }
 
+// sign in firebase auth user
 export const signinUser = async (email: string, password: string) => {
   const auth = getAuth()
-  const credentials = await signInWithEmailAndPassword(
-    auth,
-    email,
-    password
-  ).catch((error) => {
-    console.error(error.code, error.message)
-    return false
-  })
-  return credentials
+  await signInWithEmailAndPassword(auth, email, password)
+
+  // navigate to home page
+  const localePath = useLocalePath()
+  await navigateTo(localePath('/'))
 }
 
 // signs out firebase user and removes token cookie
@@ -82,13 +84,9 @@ export const signoutUser = async () => {
   await auth.signOut()
 
   // remove token cookie
-  try {
-    await $fetch('/api/user/signout', {
-      method: 'POST',
-    })
-  } catch (error) {
-    console.log('Could not sign out user')
-  }
+  await $fetch('/api/user/signout', {
+    method: 'POST',
+  })
 
   // set local auth state to null
   authStore.user = null
@@ -99,13 +97,13 @@ export const signoutUser = async () => {
 export const initUser = () => {
   const auth = getAuth()
   const appStore = useAppStore()
+  const authStore = useAuthStore()
 
   onAuthStateChanged(auth, async (user) => {
     // return if a user is currently being created
     if (appStore.registeringUser) return
 
-    const authStore = useAuthStore()
-
+    // user has signed in
     if (user) {
       // store idToken in cookie for use on server
       const idToken = await user.getIdToken()
