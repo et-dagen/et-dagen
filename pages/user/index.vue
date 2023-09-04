@@ -4,6 +4,7 @@
 
 <script setup lang="ts">
   definePageMeta({
+    // route is protected
     protected: true,
   })
 
