@@ -4,7 +4,7 @@
     :prepend-icon="auth.isLoggedIn ? 'mdi-logout' : 'mdi-login'"
     variant="text"
     @click="
-      auth.isLoggedIn ? signoutUser() : navigateTo(localePath('/user/login'))
+      auth.isLoggedIn ? signoutUser() : navigateTo(localePath('/user/signin'))
     "
   >
     {{ auth.isLoggedIn ? $t('user.sign_out') : $t('user.sign_in') }}
