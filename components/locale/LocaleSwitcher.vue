@@ -12,8 +12,10 @@
 <template>
   <div class="locale-switcher">
     <VMenu transition="scale-transition">
-      <template>
+      <!-- må ha en v-slot??? -->
+      <template #activator>
         <VBtn id="locale-menu-activator" icon="mdi-translate-outline">
+          ABC
           <v-tooltip activator="parent" location="end">
             Translate Page
             <!--make this change with current locale-->
@@ -23,11 +25,11 @@
         <v-menu activator="#locale-menu-activator">
           <v-list>
             <NuxtLink
-              v-for="locale in availableLocales"
-              :key="locale.code"
-              :to="switchLocalePath(locale.code)"
+              v-for="language in availableLocales"
+              :key="language.code"
+              :to="switchLocalePath(language.code)"
             >
-              <v-list-item-title>{{ locale.name }}</v-list-item-title>
+              <v-list-item-title>{{ language.name }}</v-list-item-title>
             </NuxtLink>
           </v-list>
         </v-menu>
