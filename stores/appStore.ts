@@ -3,12 +3,14 @@
 
 interface State {
   drawer: boolean
+  registeringUser: boolean
 }
 
 export const useAppStore = defineStore('app', {
   state: (): State => {
     return {
       drawer: false,
+      registeringUser: false,
     }
   },
 })
