@@ -50,7 +50,7 @@
 
       <div w-100 class="d-flex justify-space-between">
         <!-- sign out btn -->
-        <UserButton />
+        <UserStateButton />
 
         <!-- the locale switcher will go here -->
         <VBtn

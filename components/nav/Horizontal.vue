@@ -50,7 +50,7 @@
       <VBtn v-if="mobile" icon="mdi-menu" @click="app.drawer = true" />
 
       <!-- sign in or out btn -->
-      <UserButton v-if="!mobile && !auth.isLoggedIn" />
+      <UserStateButton v-if="!mobile && !auth.isLoggedIn" />
 
       <!-- user menu -->
       <UserMenu v-if="!mobile && auth.isLoggedIn" />

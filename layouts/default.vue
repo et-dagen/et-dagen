@@ -13,7 +13,6 @@
 
 <script setup lang="ts">
   const { mobile } = useDisplay()
-  const { currentRoute } = useRouter()
 
   const app = useAppStore()
 
@@ -37,6 +36,6 @@
     },
   ]
 
-  // close navigation drawer when navigating or leaving mobile breakpiont
-  watch([mobile, currentRoute], () => (app.drawer = false))
+  // close navigation drawer when leaving mobile breakpiont
+  watch(mobile, () => (app.drawer = false))
 </script>

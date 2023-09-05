@@ -1,9 +1,10 @@
 <template>
-  <div>Welcome {{ user?.email }}</div>
+  <div>Welcome {{ user?.name }}!</div>
 </template>
 
 <script setup lang="ts">
   definePageMeta({
+    // route is protected
     protected: true,
   })
 

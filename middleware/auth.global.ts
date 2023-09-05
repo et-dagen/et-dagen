@@ -13,5 +13,5 @@ export default defineNuxtRouteMiddleware((to) => {
 
   // user is not authenticated
   const localePath = useLocalePath()
-  return navigateTo(localePath('/user/login'))
+  return navigateTo(localePath('/user/signin'))
 })
