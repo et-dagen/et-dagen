@@ -1,13 +1,6 @@
 <template>
   <div>
     <!-- Sign in/out buttons -->
-    <VBtn v-if="!authStore.isLoggedIn" color="success" @click="signIn">
-      {{ $t('sign_in') }}
-    </VBtn>
-
-    <VBtn v-else color="error" @click="signOut">
-      {{ $t('sign_out') }}
-    </VBtn>
 
     <p>User from store: {{ user }}</p>
     <p>User from api: {{ data }} {{ error }}</p>
@@ -24,19 +17,14 @@
 </template>
 
 <script setup lang="ts">
-  import { storeToRefs } from 'pinia'
-
   const authStore = useAuthStore()
   const { user } = storeToRefs(authStore)
 
   const { locale } = useI18n()
 
-  const signIn = () => signinUser('email', 'password')
-  const signOut = () => signoutUser()
-
   const { data, error, refresh } = await useFetch('/api/user', {
     // add scope to get all users
-    params: { scope: 'all' },
+    // params: { scope: 'all' },
   })
 
   const createUser = async () => {
