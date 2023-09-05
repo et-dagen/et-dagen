@@ -9,6 +9,15 @@
     <VBtn color="error" @click="deleteUser">Delete user</VBtn>
     <VBtn color="success" @click="refresh">Refresh user data</VBtn>
 
+    <HomeBanner
+      :content="{
+        caption: 'Få et innblikk i din fremtidige arbeidsplass',
+        date: { start: '2023-02-14', end: '2023-02-15' },
+        image: 'https://cdn.vuetifyjs.com/images/parallax/material.jpg',
+        title: 'Elektronikk & Teknologidagen',
+      }"
+    />
+
     <select v-model="locale" style="cursor: pointer">
       <option value="en">English</option>
       <option value="no">Norsk</option>
