@@ -103,24 +103,23 @@ export const initUser = () => {
     // return if a user is currently being created
     if (appStore.registeringUser) return
 
-    // user has signed in
-    if (user) {
-      // store idToken in cookie for use on server
-      const idToken = await user.getIdToken()
+    // user has signed out
+    if (!user) return (authStore.user = null)
 
-      // fetch user data if user is not already signed in after server render
-      if (!authStore.isLoggedIn)
-        try {
-          authStore.user = await $fetch('/api/user', {
-            headers: {
-              Authorization: `Bearer ${idToken}`,
-            },
-          })
-        } catch (error) {
-          console.error('Could not fetch user data')
-        }
-    } else {
-      authStore.user = null
+    // user data is already present after server side rendering
+    if (authStore.isLoggedIn) return
+
+    // get idToken and fetch user data from database
+    const idToken = await user.getIdToken()
+
+    try {
+      authStore.user = await $fetch('/api/user', {
+        headers: {
+          Authorization: `Bearer ${idToken}`,
+        },
+      })
+    } catch (error) {
+      console.error('Could not fetch user data')
     }
   })
 }
