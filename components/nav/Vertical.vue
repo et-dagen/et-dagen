@@ -53,14 +53,7 @@
         <UserButton />
 
         <!-- the locale switcher will go here -->
-        <VBtn
-          prepend-icon="mdi-translate"
-          append-icon="mdi-chevron-down"
-          rounded="lg"
-          variant="text"
-        >
-          NO
-        </VBtn>
+        <LocaleSwitcher />
       </div>
     </template>
   </VNavigationDrawer>

@@ -36,15 +36,7 @@
       />
 
       <!-- the locale switcher will go here -->
-      <v-btn
-        v-if="!mobile"
-        prepend-icon="mdi-translate"
-        append-icon="mdi-chevron-down"
-        class="mx-2"
-        rounded="lg"
-      >
-        NO
-      </v-btn>
+      <LocaleSwitcher />
 
       <!-- open navigation drawer -->
       <VBtn v-if="mobile" icon="mdi-menu" @click="app.drawer = true" />
