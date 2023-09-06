@@ -13,8 +13,10 @@
     }
   }>()
 
-  const { content } = toRefs(props)
+  const { mobile } = useDisplay()
 
+  // Convert event dates into readable and usable format
+  const { content } = toRefs(props)
   const startDate: DateStringObject = dateStringToStringObject(
     content.value.date.start
   )
@@ -24,20 +26,22 @@
 </script>
 
 <template>
-  <div>
-    <h3>
-      {{ startDate.day }}.
-      {{
-        !isSameMonth(content.date.start, content.date.end)
-          ? $t(`datetime.months.${startDate.month}`)
-          : ''
-      }}
-      - {{ endDate.day }}. {{ $t(`datetime.months.${endDate.month}`) }}
-    </h3>
-    <h1>{{ content.title }}</h1>
-    <h4>{{ content.caption }}</h4>
+  <div class="home-banner">
+    <div>
+      <h3>
+        {{ startDate.day }}.
+        {{
+          !isSameMonth(content.date.start, content.date.end)
+            ? $t(`datetime.months.${startDate.month}`)
+            : ''
+        }}
+        - {{ endDate.day }}. {{ $t(`datetime.months.${endDate.month}`) }}
+      </h3>
+      <h1>{{ content.title }}</h1>
+      <h4>{{ content.caption }}</h4>
+    </div>
     <v-img
-      :width="295"
+      v-if="!mobile"
       :aspect-ratio="4 / 3"
       cover
       :src="content.image"
