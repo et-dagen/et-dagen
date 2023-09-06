@@ -47,27 +47,27 @@
       :src="content.image"
     ></v-img>
   </div>
+</template>
 
-  <style lang="scss" scoped>
-    .home-banner {
-      align-items: center;
-      display: flex;
-      gap: 4rem;
-      justify-content: center;
-      min-width: 310px;
-      padding-block: 1rem;
-      width: 100%;
+<style scoped lang="scss">
+  .home-banner {
+    align-items: center;
+    display: flex;
+    gap: 4rem;
+    justify-content: center;
+    min-width: 310px;
+    padding-block: 1rem;
+    width: 100%;
 
-      // All direct descendants
+    // All direct descendants
+    > * {
+      max-width: 25%;
+    }
+
+    @media (max-width: 768px) {
       > * {
-        max-width: 25%;
-      }
-
-      @media (max-width: 768px) {
-        > * {
-          max-width: 100%;
-        }
+        max-width: 100%;
       }
     }
-  </style>
-</template>
+  }
+</style>
