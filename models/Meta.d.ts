@@ -7,7 +7,7 @@ export {}
 
 declare module 'vue-router' {
   interface RouteMeta {
-    accessLevel?: string
+    accessLevels?: string[]
     protected?: boolean
   }
 }

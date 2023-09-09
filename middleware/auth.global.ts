@@ -6,12 +6,16 @@ export default defineNuxtRouteMiddleware((to) => {
   const auth = useAuthStore()
   const isLoggedIn = auth.isLoggedIn
 
-  const accessLevel = to.meta.accessLevel
+  // check if user has access
+  const accessLevels = to.meta.accessLevels
+  const hasAccess = auth.hasAccess(accessLevels)
 
   // user is authenticated and has the required access level
-  if (isLoggedIn && auth.hasAccessLevel(accessLevel)) return
+  if (isLoggedIn && hasAccess) return
 
-  // user is not authenticated
+  // user does not have access
   const localePath = useLocalePath()
-  return navigateTo(localePath('/user/signin'))
+  const redirectPath = hasAccess ? '/user/signin' : '/user'
+
+  return navigateTo(localePath(redirectPath))
 })

@@ -18,7 +18,7 @@
     <template #append>
       <!-- admin nav button -->
       <NavButton
-        v-if="auth.hasAccessLevel('admin') && !mobile"
+        v-if="auth.hasAccess(['admin']) && !mobile"
         :route="{
           name: 'admin',
           route: '/admin',
@@ -28,7 +28,7 @@
 
       <!-- divider -->
       <VDivider
-        v-if="auth.hasAccessLevel('admin') && !mobile"
+        v-if="auth.hasAccess(['admin']) && !mobile"
         vertical
         inset
         length="75%"

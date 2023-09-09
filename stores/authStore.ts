@@ -12,7 +12,7 @@ export const useAuthStore = defineStore('auth', {
   },
   getters: {
     isLoggedIn: (state) => !!state.user,
-    hasAccessLevel: (state) => (accessLevel?: string) =>
-      accessLevel ? state.user?.accessLevel?.includes(accessLevel) : true,
+    hasAccess: (state) => (accessLevels?: string[]) =>
+      accessLevels ? accessLevels?.includes(state.user?.userType ?? '') : true,
   },
 })
