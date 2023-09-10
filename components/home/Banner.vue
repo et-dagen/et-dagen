@@ -51,6 +51,8 @@
 </template>
 
 <style scoped lang="scss">
+  @use 'vuetify/settings';
+
   .home-banner {
     align-items: center;
     display: flex;
@@ -65,7 +67,7 @@
       max-width: 25%;
     }
 
-    @media (max-width: 768px) {
+    @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
       > * {
         max-width: 100%;
       }
