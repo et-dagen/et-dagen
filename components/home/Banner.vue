@@ -29,7 +29,9 @@
 <template>
   <div class="home-banner">
     <div>
-      <h3>
+      <!-- FIXME: #88 Change vuetify text-class sizes as 
+        these default values are way to large. -->
+      <h3 class="text-h3">
         {{ startDate.day }}.
         {{
           !isSameMonth(content.date.start, content.date.end)
@@ -38,8 +40,8 @@
         }}
         - {{ endDate.day }}. {{ $t(`datetime.months.${endDate.month}`) }}
       </h3>
-      <h1>{{ content.title }}</h1>
-      <h4>{{ content.caption }}</h4>
+      <h1 class="text-h1">{{ content.title }}</h1>
+      <h4 class="text-h4">{{ content.caption }}</h4>
     </div>
     <v-img
       v-if="!mobile"
