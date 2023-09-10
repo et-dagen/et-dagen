@@ -1,17 +1,19 @@
 <script setup lang="ts">
   import { DateStringObject } from 'models/DateTime'
 
-  const props = defineProps<{
-    content: {
-      caption: string
-      date: {
-        start: string
-        end: string
-      }
-      image: string
-      title: string
+  export interface HomeBannerContent {
+    caption: string
+    date: {
+      start: string
+      end: string
     }
-  }>()
+    image: string
+    title: string
+  }
+
+  const props = defineProps({
+    content: { type: Object as PropType<HomeBannerContent>, required: true },
+  })
 
   const { mobile } = useDisplay()
 
