@@ -18,13 +18,12 @@
   const { mobile } = useDisplay()
 
   // Convert event dates into readable and usable format
-  const { content } = toRefs(props)
-  const startDate: DateStringObject = dateStringToStringObject(
-    content.value.date.start
-  )
-  const endDate: DateStringObject = dateStringToStringObject(
-    content.value.date.end
-  )
+  const startDate = computed<DateStringObject>(() => {
+    return dateStringToStringObject(props.content.date.start)
+  })
+  const endDate = computed<DateStringObject>(() => {
+    return dateStringToStringObject(props.content.date.end)
+  })
 </script>
 
 <template>
