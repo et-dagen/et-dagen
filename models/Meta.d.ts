@@ -7,7 +7,7 @@ export {}
 
 declare module 'vue-router' {
   interface RouteMeta {
-    accessLevels?: string[]
+    accessLevels?: ('admin' | 'company')[]
     protected?: boolean
   }
 }
