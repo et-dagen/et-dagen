@@ -15,14 +15,11 @@
   <VMenu transition="slide-y-transition">
     <!-- activator btn -->
     <template #activator="{ props }">
-      <VBtn
-        v-bind="props"
-        rounded="lg"
-        prepend-icon="mdi-translate"
-        append-icon="mdi-chevron-down"
-        variant="text"
-      >
+      <VBtn v-bind="props" rounded="lg" variant="text">
         <!-- dependent on current locale-->
+        <template #prepend>
+          <VImg width="30" :src="`/images/flags/${currentLocale.code}.svg`" />
+        </template>
         {{ currentLocale.name.toUpperCase() }}
       </VBtn>
     </template>
@@ -34,6 +31,9 @@
         :key="language.code"
         :to="switchLocalePath(language.code)"
       >
+        <template #prepend>
+          <VImg width="30" :src="`/images/flags/${language.code}.svg`" />
+        </template>
         {{ language.name.toUpperCase() }}
       </VBtn>
     </VCard>
