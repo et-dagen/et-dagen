@@ -63,14 +63,14 @@ export default defineNuxtConfig({
       {
         code: 'no',
         iso: 'nb-NO',
-        name: 'Norsk Bokmål',
+        name: 'Norsk',
         file: 'nb-NO.json',
         isCatchallLocale: true,
       },
       {
         code: 'en',
         iso: 'en-US',
-        name: 'English (United States)',
+        name: 'English (US)',
         file: 'en-US.json',
       },
     ],
