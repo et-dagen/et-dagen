@@ -14,6 +14,7 @@
       "
       >Create user</VBtn
     >
+    <CompanyCard />
   </div>
 </template>
 
