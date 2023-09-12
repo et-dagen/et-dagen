@@ -1,3 +1,6 @@
 <template>
-  <div>Signup page</div>
+  <div>
+    <UserFormPasswordInput />
+    <UserFormPasswordInput confirm-password />
+  </div>
 </template>

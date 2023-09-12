@@ -1,6 +1,9 @@
 <template>
   <div>
     Login page
+
+    <UserFormPasswordInput />
+
     <VBtn color="success" @click="signIn">
       {{ $t('user.sign_in') }}
     </VBtn>
