@@ -9,6 +9,8 @@
   },
   "user": {
     "sign_in": "Logg inn",
-    "sign_out": "Logg ut"
+    "sign_out": "Logg ut",
+    "invalid_email": "Ugyldig epostadresse",
+    "required_input": "Påkrevd felt"
   }
 }

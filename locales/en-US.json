@@ -9,6 +9,8 @@
   },
   "user": {
     "sign_in": "Sign in",
-    "sign_out": "Sign out"
+    "sign_out": "Sign out",
+    "invalid_email": "Invalid email",
+    "required_input": "Required input"
   }
 }
