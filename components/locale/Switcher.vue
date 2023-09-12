@@ -7,7 +7,7 @@
     return locales.value.filter((i) => i.code !== locale.value)
   })
   const currentLocale = computed(() => {
-    return locales.value.filter((i) => i.code === locale.value)
+    return locales.value.find((i) => i.code === locale.value)
   })
 </script>
 
@@ -23,7 +23,7 @@
         variant="text"
       >
         <!-- dependent on current locale-->
-        {{ currentLocale[0].code.toUpperCase() }}
+        {{ currentLocale.name.toUpperCase() }}
       </VBtn>
     </template>
 
