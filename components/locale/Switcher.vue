@@ -34,7 +34,7 @@
         :key="language.code"
         :to="switchLocalePath(language.code)"
       >
-        {{ language.code.toUpperCase() }}
+        {{ language.name.toUpperCase() }}
       </VBtn>
     </VCard>
   </VMenu>
