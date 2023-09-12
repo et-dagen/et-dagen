@@ -35,7 +35,7 @@
 
       <!-- navigate to admin page -->
       <NavButtons
-        v-if="auth.hasAccessLevel('admin')"
+        v-if="auth.hasAccess(['admin'])"
         direction="vertical"
         :routes="[
           {

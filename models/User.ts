@@ -5,7 +5,7 @@ export interface TokenData {
 }
 
 export interface User extends TokenData {
-  accessLevel?: string[]
+  userType: 'company' | 'admin'
   studyProgram: string
   updated: number
 }
