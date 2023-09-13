@@ -48,7 +48,7 @@
       </v-row>
     </v-container>
     <v-container>
-      <v-tabs v-model="formInput.userType" bg-color="primary">
+      <v-tabs v-model="formInput.userType" bg-color="primary" fixed-tabs>
         <v-tab value="student">{{
           $t('user.register.user_type.student')
         }}</v-tab>
