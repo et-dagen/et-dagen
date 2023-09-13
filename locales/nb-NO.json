@@ -9,6 +9,20 @@
   },
   "user": {
     "sign_in": "Logg inn",
-    "sign_out": "Logg ut"
+    "sign_out": "Logg ut",
+    "sign_up": "Registrer bruker",
+    "register": {
+      "name": "Navn",
+      "email": "E-post",
+      "password": "Passord",
+      "password_confirmation": "Bekreft passord",
+      "study_program": "Studieprogram",
+      "year": "Årstrinn",
+      "registration_code": "Registreringskode",
+      "user_type": {
+        "student": "Studentbruker",
+        "company": "Bedriftsbruker"
+      }
+    }
   }
 }
