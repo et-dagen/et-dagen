@@ -18,7 +18,7 @@
     <template #append>
       <!-- admin nav button -->
       <NavButton
-        v-if="auth.hasAccessLevel('admin') && !mobile"
+        v-if="auth.hasAccess(['admin']) && !mobile"
         :route="{
           name: 'admin',
           route: '/admin',
@@ -28,7 +28,7 @@
 
       <!-- divider -->
       <VDivider
-        v-if="auth.hasAccessLevel('admin') && !mobile"
+        v-if="auth.hasAccess(['admin']) && !mobile"
         vertical
         inset
         length="75%"
@@ -50,7 +50,7 @@
       <VBtn v-if="mobile" icon="mdi-menu" @click="app.drawer = true" />
 
       <!-- sign in or out btn -->
-      <UserButton v-if="!mobile && !auth.isLoggedIn" />
+      <UserStateButton v-if="!mobile && !auth.isLoggedIn" />
 
       <!-- user menu -->
       <UserMenu v-if="!mobile && auth.isLoggedIn" />

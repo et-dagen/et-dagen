@@ -1,5 +1,5 @@
 <template>
-  <NuxtLink :to="localePath(route.route)">
+  <NuxtLink :to="localePath(route.route)" @click="app.drawer = false">
     <VBtn
       color="black"
       variant="text"
@@ -19,6 +19,7 @@
   import type { Route } from '@/models/Nav'
 
   const localePath = useLocalePath()
+  const app = useAppStore()
 
   defineProps({
     route: {
