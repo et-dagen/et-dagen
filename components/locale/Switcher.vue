@@ -15,7 +15,7 @@
   <VMenu transition="slide-y-transition">
     <!-- activator btn -->
     <template #activator="{ props }">
-      <VBtn v-bind="props" rounded="lg" variant="text">
+      <VBtn v-bind="props" rounded="lg" variant="text" class="mx-2">
         <!-- dependent on current locale-->
         <template #prepend>
           <VImg width="30" :src="`/images/flags/${currentLocale.code}.svg`" />
@@ -27,6 +27,7 @@
     <VCard class="d-flex flex-column mt-2 pa-2" rounded="lg" :elevation="3">
       <!-- buttons for locales -->
       <VBtn
+        variant="text"
         v-for="language in availableLocales"
         :key="language.code"
         :to="switchLocalePath(language.code)"
