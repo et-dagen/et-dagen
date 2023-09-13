@@ -1,3 +1,6 @@
 <template>
-  <div>Signup page</div>
+  <div>
+    Signup page
+    <UserSignupForm />
+  </div>
 </template>
