@@ -14,7 +14,12 @@
       "
       >Create user</VBtn
     >
-    <CompanyCard />
+    <CompanyCard
+      :content="{
+        logo: 'https://1000logos.net/wp-content/uploads/2021/05/Sony-logo.png',
+        website: 'https://pro.sony/en_NO/home',
+      }"
+    />
   </div>
 </template>
 
