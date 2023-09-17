@@ -9,18 +9,18 @@
         max-width: 70vw;
       "
     >
-      <div
-        style="
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-        "
-      >
-        <v-container class="text-center">
-          <p>{{ company.content.logo }}</p>
-          <br />
+      <div class="grid">
+        <v-container class="text-right pa-0 w-100">
+          <!-- <p>{{ company.content.logo }}</p> -->
+          <VImg
+            src="https://media.istockphoto.com/id/178447404/photo/
+            modern-business-buildings.jpg?s=612x612&w=0&k=20&c=MOG
+            9lvRz7WjsVyW3IiQ0srEzpaBPDcc7qxYsBCvAUJs="
+            alt=""
+          />
         </v-container>
-        <v-container style="overflow-wrap: break-word">
-          <h4 v-if="mobile">
+        <v-container class="pa-1" style="overflow-wrap: break-word">
+          <h4 v-if="mobile" class="text-h6 font-weight-bold">
             {{ company.content.name }}
           </h4>
           <h4 v-else class="text-h3">
@@ -63,7 +63,7 @@
 </template>
 
 <script setup lang="ts">
-  const mobile = useDisplay()
+  const { mobile } = useDisplay()
 
   const company = defineProps({
     content: {
@@ -74,3 +74,10 @@
 
   console.log(`Company: ${JSON.stringify(company)}`)
 </script>
+
+<style scoped>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+</style>
