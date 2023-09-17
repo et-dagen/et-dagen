@@ -36,7 +36,7 @@
       />
 
       <!-- the locale switcher will go here -->
-      <LocaleSwitcher />
+      <LocaleSwitcher v-if="!mobile" class="ma-2" />
 
       <!-- open navigation drawer -->
       <VBtn v-if="mobile" icon="mdi-menu" @click="app.drawer = true" />
