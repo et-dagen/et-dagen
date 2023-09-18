@@ -20,7 +20,7 @@
 </script>
 
 <template>
-  <VForm>
+  <VForm @submit.prevent="signUp">
     <VContainer>
       <VRow>
         <UserTextInput
@@ -88,7 +88,7 @@
           </VWindowItem>
         </VWindow>
       </VCardText>
-      <VBtn color="success" @click="signUp">
+      <VBtn color="success" type="submit">
         {{ $t('user.sign_up') }}
       </VBtn>
     </VContainer>
