@@ -5,7 +5,7 @@
     password: null,
     studyProgram: null,
     currentYear: null,
-    userType: undefined,
+    userType: null,
     registrationCode: null,
   })
 
