@@ -20,45 +20,41 @@
 </script>
 
 <template>
-  <v-form>
-    <v-container>
-      <v-row>
+  <VForm>
+    <VContainer>
+      <VRow>
         <UserTextInput
           v-model="formInput.name"
           :content="{
             label: $t('user.register.name'),
           }"
         />
-      </v-row>
-      <v-row>
+      </VRow>
+      <VRow>
         <!-- TODO: Input UserPasswordInput from #78 -->
         <input
           v-model="formInput.password"
           type="password"
           :placeholder="$t('user.register.password')"
         />
-      </v-row>
-      <v-row>
+      </VRow>
+      <VRow>
         <!-- TODO: Input UserPasswordInput from 
           #78 with password confirm logic -->
         <input
           type="password"
           :placeholder="$t('user.register.password_confirmation')"
         />
-      </v-row>
-    </v-container>
-    <v-container>
-      <v-tabs v-model="formInput.userType" bg-color="primary" fixed-tabs>
-        <v-tab value="student">{{
-          $t('user.register.user_type.student')
-        }}</v-tab>
-        <v-tab value="company">{{
-          $t('user.register.user_type.company')
-        }}</v-tab>
-      </v-tabs>
-      <v-card-text>
-        <v-window v-model="formInput.userType">
-          <v-window-item value="student">
+      </VRow>
+    </VContainer>
+    <VContainer>
+      <VTabs v-model="formInput.userType" bg-color="primary" fixed-tabs>
+        <VTab value="student">{{ $t('user.register.user_type.student') }}</VTab>
+        <VTab value="company">{{ $t('user.register.user_type.company') }}</VTab>
+      </VTabs>
+      <VCardText>
+        <VWindow v-model="formInput.userType">
+          <VWindowItem value="student">
             <UserSelectInput
               v-model="formInput.studyProgram"
               :content="{
@@ -80,21 +76,21 @@
                 options: [1, 2, 3, 4, 5],
               }"
             />
-          </v-window-item>
+          </VWindowItem>
 
-          <v-window-item value="company">
+          <VWindowItem value="company">
             <UserTextInput
               :content="{
                 label: $t('user.register.registration_code'),
                 hint: 'Koden skal være tilsendt av en administrator',
               }"
             />
-          </v-window-item>
-        </v-window>
-      </v-card-text>
+          </VWindowItem>
+        </VWindow>
+      </VCardText>
       <VBtn color="success" @click="signUp">
         {{ $t('user.sign_up') }}
       </VBtn>
-    </v-container>
-  </v-form>
+    </VContainer>
+  </VForm>
 </template>
