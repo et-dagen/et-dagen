@@ -18,7 +18,7 @@
       />
 
       <!-- sign out btn -->
-      <UserButton />
+      <UserStateButton />
     </VCard>
   </VMenu>
 </template>

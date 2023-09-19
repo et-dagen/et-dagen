@@ -35,7 +35,7 @@
 
       <!-- navigate to admin page -->
       <NavButtons
-        v-if="auth.hasAccessLevel('admin')"
+        v-if="auth.hasAccess(['admin'])"
         direction="vertical"
         :routes="[
           {
@@ -50,7 +50,7 @@
 
       <div w-100 class="d-flex justify-space-between">
         <!-- sign out btn -->
-        <UserButton />
+        <UserStateButton />
 
         <!-- the locale switcher will go here -->
         <LocaleSwitcher />
