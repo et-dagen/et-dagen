@@ -20,6 +20,8 @@
         website: 'https://pro.sony/en_NO/home',
       }"
     />
+    <CompanyGrid></CompanyGrid>
+    <VBtn></VBtn>
   </div>
 </template>
 
