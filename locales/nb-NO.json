@@ -12,7 +12,8 @@
     "sign_out": "Logg ut",
     "sign_up": "Registrer bruker",
     "register": {
-      "name": "Navn",
+      "first_name": "First name",
+      "last_name": "Last name",
       "email": "E-post",
       "password": "Passord",
       "password_confirmation": "Bekreft passord",
