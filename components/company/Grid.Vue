@@ -12,10 +12,10 @@
 </script>
 
 <template>
-  <v-container class="bg-surface-variant mb-0">
+  <v-container>
     <v-row>
     <!-- Style styrer høyde og slikt-->
-      <v-col v-for="n in content" :key="n">
+      <v-col v-for="n in content">
         <CompanyCard
         :content="{
         logo: n.logo,
