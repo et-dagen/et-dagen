@@ -18,7 +18,8 @@
       :content="{
         name: 'Companyname',
         description: ``,
-        logo: 'logoUrl',
+        logo: `https://graphicsfamily.com/wp-content/uploads/
+2020/08/Company-Logo-Design-on-3d-glass-window-scaled.jpg`,
         website: 'https://shortsdag.no',
       }"
       class="my-5 d-flex justify-center"
