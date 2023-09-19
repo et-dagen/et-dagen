@@ -2,7 +2,7 @@
   <VNavigationDrawer
     location="right"
     temporary
-    width="400"
+    :width="xs ? width : '400'"
     :elevation="5"
     class="pa-4"
     :model-value="app.drawer"
@@ -64,6 +64,8 @@
 
   const auth = useAuthStore()
   const app = useAppStore()
+
+  const { xs, width } = useDisplay()
 
   type Routes = Route[]
 
