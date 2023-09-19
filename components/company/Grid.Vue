@@ -1,3 +1,28 @@
+<script setup lang="ts">
+  import { PropType } from 'nuxt/dist/app/compat/capi'
+
+  interface CompanyInformation {
+    logo: string
+    website: string
+  }
+
+  defineProps({
+    content: { type: Array as PropType<CompanyInformation[]>, required: true },
+  })
+</script>
+
 <template>
-    <h1>HELLO</h1>
+  <v-container class="bg-surface-variant mb-0">
+    <v-row>
+    <!-- Style styrer høyde og slikt-->
+      <v-col v-for="n in content" :key="n">
+        <CompanyCard
+        :content="{
+        logo: n.logo,
+        website: n.website,
+      }"
+    />
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
