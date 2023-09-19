@@ -1,6 +1,7 @@
 <template>
   <v-responsive max-width="400">
     <VTextField
+      variant="outlined"
       clearable
       :rules="[rules.required, rules.min]"
       :append-inner-icon="ShowPassord ? 'mdi-eye' : 'mdi-eye-off'"
@@ -18,8 +19,8 @@
   const ShowPassord = ref(false)
 
   const rules = {
-    required: (value) => !!value || 'Feltet er påkrevd',
-    min: (v) => v.length >= 8 || 'Passordet må ha minst 8 tegn',
+    required: (value: string) => !!value || 'Feltet er påkrevd',
+    min: (value: string) => value.length >= 8 || 'Passordet må ha minst 8 tegn',
   }
   console.log(props.confirmPassword)
 </script>
