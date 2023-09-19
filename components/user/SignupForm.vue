@@ -1,15 +1,32 @@
 <script setup lang="ts">
-  const formInput = ref({
-    name: null,
-    email: null,
+  import {
+    useRequiredInput,
+    useValidateEmail,
+    useValidatePassword,
+  } from '@/composables/useForm'
+
+  const initialState = {
+    firstName: '',
+    lastName: '',
+    email: '',
     password: null,
     studyProgram: null,
     currentYear: null,
     userType: null,
     registrationCode: null,
+  }
+
+  const state = reactive({
+    ...initialState,
   })
 
-  const signUp = async () => {
+  const form = ref()
+  const submit = async () => {
+    if (!form.value) return
+    const { valid } = await form.value.validate()
+
+    if (!valid) throw new Error('Form is not valid')
+
     await registerUser({
       email: 'test@et-dagen.no',
       password: '123456',
@@ -20,22 +37,41 @@
 </script>
 
 <template>
-  <VForm @submit.prevent="signUp">
+  <VForm ref="form" @submit.prevent="submit">
     <VContainer>
       <VRow>
         <UserTextInput
-          v-model="formInput.name"
+          v-model="state.firstName"
           :content="{
-            label: $t('user.register.name'),
+            label: $t('user.register.first_name'),
           }"
+          :rules="[useRequiredInput]"
+        />
+      </VRow>
+      <VRow>
+        <UserTextInput
+          v-model="state.lastName"
+          :content="{
+            label: $t('user.register.last_name'),
+          }"
+          :rules="[useRequiredInput]"
+        />
+      </VRow>
+      <VRow>
+        <!-- TODO: Input UserEmailInput from #78 -->
+        <input
+          v-model="state.email"
+          :placeholder="$t('user.register.email')"
+          :rules="[useRequiredInput, useValidateEmail]"
         />
       </VRow>
       <VRow>
         <!-- TODO: Input UserPasswordInput from #78 -->
         <input
-          v-model="formInput.password"
+          v-model="state.password"
           type="password"
           :placeholder="$t('user.register.password')"
+          :rules="[useRequiredInput, useValidatePassword]"
         />
       </VRow>
       <VRow>
@@ -44,19 +80,20 @@
         <input
           type="password"
           :placeholder="$t('user.register.password_confirmation')"
+          :rules="[useRequiredInput, useValidatePassword]"
         />
       </VRow>
     </VContainer>
     <VContainer>
-      <VTabs v-model="formInput.userType" bg-color="primary" fixed-tabs>
+      <VTabs v-model="state.userType" bg-color="primary" fixed-tabs>
         <VTab value="student">{{ $t('user.register.user_type.student') }}</VTab>
         <VTab value="company">{{ $t('user.register.user_type.company') }}</VTab>
       </VTabs>
       <VCardText>
-        <VWindow v-model="formInput.userType">
+        <VWindow v-model="state.userType">
           <VWindowItem value="student">
             <UserSelectInput
-              v-model="formInput.studyProgram"
+              v-model="state.studyProgram"
               :content="{
                 label: $t('user.register.study_program'),
                 options: [
@@ -68,13 +105,15 @@
                   'Annen',
                 ],
               }"
+              :rules="[state.userType === 'student' ?? useRequiredInput]"
             />
             <UserSelectInput
-              v-model="formInput.currentYear"
+              v-model="state.currentYear"
               :content="{
                 label: $t('user.register.year'),
                 options: [1, 2, 3, 4, 5],
               }"
+              :rules="[state.userType === 'student' ?? useRequiredInput]"
             />
           </VWindowItem>
 
@@ -84,6 +123,7 @@
                 label: $t('user.register.registration_code'),
                 hint: 'Koden skal være tilsendt av en administrator',
               }"
+              :rules="[state.userType === 'company' ?? useRequiredInput]"
             />
           </VWindowItem>
         </VWindow>
