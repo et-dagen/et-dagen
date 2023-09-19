@@ -15,14 +15,12 @@
 </template>
 
 <script setup lang="ts">
-  export interface CompanyCardContent {
-    logo: string
-    website: string
-  }
-
-  const props = defineProps({
-    content: { type: Object as PropType<CompanyCardContent>, required: true },
-  })
+  const props = defineProps<{
+    content: {
+      logo: string
+      website: string
+    }
+  }>()
 
   const redirectToWebsite = () => {
     window.open(props.content.website)
