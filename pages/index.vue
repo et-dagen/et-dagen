@@ -14,6 +14,15 @@
       "
       >Create user</VBtn
     >
+    <CompanyHero
+      :content="{
+        name: 'Companyname',
+        description: ``,
+        logo: 'logoUrl',
+        website: 'https://shortsdag.no',
+      }"
+      class="my-5 d-flex justify-center"
+    />
   </div>
 </template>
 
