@@ -21,7 +21,6 @@
       }"
     />
     <CompanyGrid></CompanyGrid>
-    <VBtn></VBtn>
   </div>
 </template>
 
