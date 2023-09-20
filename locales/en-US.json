@@ -12,17 +12,34 @@
     "sign_out": "Sign out",
     "sign_up": "Register user",
     "register": {
-      "first_name": "Fornavn",
-      "last_name": "Etternavn",
-      "email": "E-post",
-      "password": "Passord",
-      "password_confirmation": "Bekreft passord",
-      "study_program": "Studieprogram",
+      "first_name": "First name",
+      "last_name": "Last name",
+      "email": "E-mail",
+      "password": "Password",
+      "password_confirmation": "Confirm password",
+      "study_program": "Study Programme",
       "year": "Current year",
-      "registration_code": "Registreringskode",
+      "registration_code": "Registration code",
       "user_type": {
         "student": "Student user",
         "company": "Company user"
+      }
+    }
+  },
+  "error": {
+    "form": {
+      "general": {
+        "required": "This field is required",
+        "email": "Invalid email address"
+      },
+      "password": {
+        "length": "The password must be at least 8 characters long.",
+        "letters": "The password must contain at least 3 letters.",
+        "numbers": "The password must contain at least 3 numbers.",
+        "special": "The password must contain at least 1 special character.",
+        "uppercase": "The password must contain at least 1 uppercase letter.",
+        "required": "Passord er påkrevd",
+        "confirmed": "Passordene må være like"
       }
     }
   }
