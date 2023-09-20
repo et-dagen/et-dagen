@@ -15,8 +15,6 @@
     content: { type: Object as PropType<HomeBannerContent>, required: true },
   })
 
-  const { mobile } = useDisplay()
-
   // Convert event dates into readable and usable format
   const startDate = computed<DateStringObject>(() => {
     return dateStringToStringObject(props.content.date.start)
@@ -28,10 +26,9 @@
 
 <template>
   <div class="home-banner">
+    <!-- banner title and caption -->
     <div>
-      <!-- FIXME: #88 Change vuetify text-class sizes as 
-        these default values are way to large. -->
-      <h3 class="text-h3">
+      <h5>
         {{ startDate.day }}.
         {{
           !isSameMonth(content.date.start, content.date.end)
@@ -39,16 +36,21 @@
             : ''
         }}
         - {{ endDate.day }}. {{ $t(`datetime.months.${endDate.month}`) }}
-      </h3>
-      <h1 class="text-h1">{{ content.title }}</h1>
-      <h4 class="text-h4">{{ content.caption }}</h4>
+      </h5>
+
+      <!-- h4 for under lg breakpoint and h3 above -->
+      <h3 class="text-h4 text-lg-h3 font-weight-bold">{{ content.title }}</h3>
+
+      <h6>{{ content.caption }}</h6>
     </div>
-    <v-img
-      v-if="!mobile"
+
+    <!-- banner image -->
+    <VImg
+      class="d-none d-md-flex elevation-3 rounded-lg"
       :aspect-ratio="4 / 3"
       cover
       :src="content.image"
-    ></v-img>
+    ></VImg>
   </div>
 </template>
 
