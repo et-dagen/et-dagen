@@ -16,11 +16,11 @@ type newUser = {
 // registers new user in firebase auth and db
 export const registerUser = async (newUser: newUser) => {
   const auth = getAuth()
-  const appStore = useAppStore()
+  const authStore = useAuthStore()
 
   // make sure onauthStateChanged does not try to fetch
   // the user data before it is created
-  appStore.registeringUser = true
+  authStore.registeringUser = true
 
   // register user in firebase auth
   const { user } = await createUserWithEmailAndPassword(
@@ -56,7 +56,7 @@ export const registerUser = async (newUser: newUser) => {
     },
   })
 
-  appStore.registeringUser = false
+  authStore.registeringUser = false
 }
 
 // sign in firebase auth user
@@ -96,12 +96,11 @@ export const signoutUser = async () => {
 // listens for changes in the firebase auth state
 export const initUser = () => {
   const auth = getAuth()
-  const appStore = useAppStore()
   const authStore = useAuthStore()
 
   onAuthStateChanged(auth, async (user) => {
     // return if a user is currently being created
-    if (appStore.registeringUser) return
+    if (authStore.registeringUser) return
 
     // user has signed out
     if (!user) return (authStore.user = null)

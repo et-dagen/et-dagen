@@ -14,8 +14,8 @@ export default defineEventHandler(async (event) => {
   // get request body
   let { uid } = await readBody(event)
 
-  // only admins can remove other users
-  if (!hasAccessLevel(user, 'admin') || !uid) {
+  // only admins can remove other users than their own
+  if (!hasAccess(user, ['admin']) || !uid) {
     uid = user.uid
   }
 
