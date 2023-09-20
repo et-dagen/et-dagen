@@ -1,31 +1,33 @@
 export const useRequiredInput = (value: string) => {
-  return !!value || 'This field is required'
+  const nuxtApp = useNuxtApp()
+  return !!value || nuxtApp.$i18n.t('error.form.general.required')
 }
 
 export const useValidateEmail = (value: string) => {
+  const nuxtApp = useNuxtApp()
   const emailRegex = /\S+@\S+\.\S+/
-  return emailRegex.test(value) || 'Invalid e-mail.'
+  return emailRegex.test(value) || nuxtApp.$i18n.t('Invalid e-mail.')
 }
 
 export const useValidatePassword = (value: string) => {
-  if (value.length < 8)
-    return 'The password must be at least 8 characters long.'
+  const nuxtApp = useNuxtApp()
+  if (value.length < 8) return nuxtApp.$i18n.t('error.form.password.length')
 
   // Fail validation if value doesn not contain minimum 3 letters
   if (!value.match(/^(.*[a-zA-Z]){3}/))
-    return 'The password must contain at least 3 letters.'
+    return nuxtApp.$i18n.t('error.form.password.letters')
 
   // Fail validation if value does not contain minimum 3 numbers
   if (!value.match(/^(.*[0-9]){3}/))
-    return 'The password must contain at least 3 numbers.'
+    return nuxtApp.$i18n.t('error.form.password.numbers')
 
   // Fail validation if value does not contain minimum 1 special characters
   if (!value.match(/^(.*[!@#$%^&*()\-_=+{};:,<.>]){1}/))
-    return 'The password must contain at least 1 special character.'
+    return nuxtApp.$i18n.t('error.form.password.special')
 
   // Fail validation if value doen not contain minimum 1 uppercase letter
   if (!value.match(/^(.*[A-Z]){1}/))
-    return 'The password must contain at least 1 uppercase letter.'
+    return nuxtApp.$i18n.t('error.form.password.uppercase')
 
   return true
 }
