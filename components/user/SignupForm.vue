@@ -119,6 +119,7 @@
 
           <VWindowItem value="company">
             <UserTextInput
+              v-model="state.registrationCode"
               :content="{
                 label: $t('user.register.registration_code'),
                 hint: 'Koden skal være tilsendt av en administrator',
