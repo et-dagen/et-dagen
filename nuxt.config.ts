@@ -46,7 +46,7 @@ export default defineNuxtConfig({
     dirs: ['stores'],
   },
 
-  css: ['vuetify/styles', '@/assets/scss/main.scss'],
+  css: ['@/assets/scss/main.scss'],
 
   modules: [
     '@nuxtjs/i18n',
@@ -77,6 +77,7 @@ export default defineNuxtConfig({
     defaultLocale: 'no',
     vueI18n: 'config/i18n.config.ts',
     detectBrowserLanguage: false,
+    skipSettingLocaleOnNavigate: true,
   },
 
   pinia: {
