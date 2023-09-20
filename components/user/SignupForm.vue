@@ -105,7 +105,7 @@
                   'Annen',
                 ],
               }"
-              :rules="[state.userType === 'student' ?? useRequiredInput]"
+              :rules="[state.userType === 'student' ? useRequiredInput : null]"
             />
             <UserSelectInput
               v-model="state.currentYear"
@@ -113,7 +113,7 @@
                 label: $t('user.register.year'),
                 options: [1, 2, 3, 4, 5],
               }"
-              :rules="[state.userType === 'student' ?? useRequiredInput]"
+              :rules="[state.userType === 'student' ? useRequiredInput : null]"
             />
           </VWindowItem>
 
@@ -123,7 +123,7 @@
                 label: $t('user.register.registration_code'),
                 hint: 'Koden skal være tilsendt av en administrator',
               }"
-              :rules="[state.userType === 'company' ?? useRequiredInput]"
+              :rules="[state.userType === 'company' ? useRequiredInput : null]"
             />
           </VWindowItem>
         </VWindow>
