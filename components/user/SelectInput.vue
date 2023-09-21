@@ -12,9 +12,5 @@
 </script>
 
 <template>
-  <v-select
-    :label="content.label"
-    :items="content.options"
-    variant="outlined"
-  />
+  <VSelect :label="content.label" :items="content.options" variant="outlined" />
 </template>

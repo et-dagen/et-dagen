@@ -11,7 +11,7 @@
 </script>
 
 <template>
-  <v-text-field
+  <VTextField
     :label="content.label"
     type="text"
     variant="outlined"
