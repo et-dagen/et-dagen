@@ -23,8 +23,8 @@
   const form = ref()
   const submit = async () => {
     if (!form.value) return
-    const { valid } = await form.value.validate()
 
+    const { valid } = await form.value.validate()
     if (!valid) throw new Error('Form is not valid')
 
     await registerUser({
