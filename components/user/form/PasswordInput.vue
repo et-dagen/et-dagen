@@ -1,5 +1,5 @@
 <template>
-  <v-responsive max-width="400">
+  <VResponsive max-width="400">
     <VTextField
       variant="outlined"
       clearable
@@ -9,11 +9,11 @@
       :label="confirmPassword ? 'Bekreft passord' : 'Passord'"
       @click:append-inner="ShowPassord = !ShowPassord"
     />
-  </v-responsive>
+  </VResponsive>
 </template>
 
 <script setup lang="ts">
-  const props = defineProps({
+  defineProps({
     confirmPassword: Boolean,
   })
   const ShowPassord = ref(false)
@@ -22,5 +22,4 @@
     required: (value: string) => !!value || 'Feltet er påkrevd',
     min: (value: string) => value.length >= 8 || 'Passordet må ha minst 8 tegn',
   }
-  console.log(props.confirmPassword)
 </script>
