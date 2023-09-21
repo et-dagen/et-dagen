@@ -15,10 +15,10 @@ export default defineEventHandler(async (event) => {
   const { companyUID } = await readBody(event)
 
   // reference to companies
-  const companiesRed = db.ref('companies')
+  const companiesRef = db.ref('companies')
 
   // remove company
-  companiesRed.child(companyUID).remove()
+  companiesRef.child(companyUID).remove()
 
   // company successfully removed
   sendNoContent(event, 204)
