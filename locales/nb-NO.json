@@ -9,6 +9,10 @@
   },
   "user": {
     "sign_in": "Logg inn",
-    "sign_out": "Logg ut"
+    "sign_out": "Logg ut",
+    "register": {
+      "password_confirmation" : "Bekreft passord",
+      "password" : "Passord"
+    }
   }
 }

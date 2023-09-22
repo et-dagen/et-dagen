@@ -14,7 +14,11 @@
       :rules="[useRequiredInput, useValidatePassword]"
       :append-inner-icon="ShowPassord ? 'mdi-eye' : 'mdi-eye-off'"
       :type="ShowPassord ? 'text' : 'password'"
-      :label="confirmPassword ? 'Bekreft passord' : 'Passord'"
+      :label="
+        confirmPassword
+          ? $t('user.register.password_confirmation')
+          : $t('user.register.password')
+      "
       @click:append-inner="ShowPassord = !ShowPassord"
     />
   </VResponsive>

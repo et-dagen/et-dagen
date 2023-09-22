@@ -9,6 +9,10 @@
   },
   "user": {
     "sign_in": "Sign in",
-    "sign_out": "Sign out"
+    "sign_out": "Sign out",
+    "register": {
+      "password_confirmation" : "Confirm password",
+      "password" : "Password"
+    }
   }
 }
