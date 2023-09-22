@@ -83,7 +83,7 @@ module.exports = {
         tabWidth: 2,
         comments: 80,
         ignorePattern: '',
-        ignoreComments: false,
+        ignoreComments: true,
         ignoreTrailingComments: false,
         ignoreUrls: false,
         ignoreStrings: false,

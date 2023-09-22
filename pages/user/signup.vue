@@ -1,6 +1,5 @@
 <template>
   <div>
-    <UserFormPasswordInput />
-    <UserFormPasswordInput confirm-password />
+    <UserSignupForm />
   </div>
 </template>
