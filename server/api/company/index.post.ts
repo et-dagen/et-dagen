@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Missing company name, webpage, or type',
     })
 
-  companiesRef.push().set({
+  companiesRef.push({
     description: description ?? null,
     logo: logo ?? null,
     name,

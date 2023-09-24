@@ -5,7 +5,7 @@ export default defineEventHandler(async (event) => {
   const { user } = event.context
 
   // get request body
-  const { companyUID, ...updatedData } = await readBody(event)
+  const { companyUID, ...newData } = await readBody(event)
 
   const isAdmin = hasAccess(user, ['admin'])
   const isCompanyAdmin =
@@ -37,11 +37,11 @@ export default defineEventHandler(async (event) => {
     })
 
   // only admins can change company types
-  if (!isAdmin) updatedData.type = data[companyUID].type
+  if (!isAdmin) delete newData.type
 
   // update company data
-  companiesRef.child(companyUID).update(updatedData)
+  companiesRef.child(companyUID).update(newData)
 
   // successfully modified companies
-  sendNoContent(event, 201)
+  sendNoContent(event, 204)
 })
