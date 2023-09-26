@@ -1,8 +1,6 @@
 // POST /api/code
 // endpoint for creating registration codes in the db
 
-import { generateRandomString } from '../../utils/randomString'
-
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 

@@ -2,7 +2,7 @@
 // used when registering a company user or calling DELETE /api/code
 
 export const deleteCode = (code: string) => {
-  // reference to companies
+  // reference to registration codes
   const registrationCodesRef = db.ref('registrationCodes')
 
   // get reference to code
