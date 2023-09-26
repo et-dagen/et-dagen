@@ -1,15 +1,9 @@
-<template>
-  <div>
-    <NuxtPage />
-  </div>
-</template>
-
 <script setup lang="ts">
   definePageMeta({
     // route and all sub routes are protected
     protected: true,
     // route is only accessible by admins
-    accessLevel: 'admin',
+    accessLevels: ['admin'],
 
     // there exists no /admin page, so redirect to /admin/companies
     middleware: (to) => {
@@ -21,3 +15,9 @@
     },
   })
 </script>
+
+<template>
+  <div>
+    <NuxtPage />
+  </div>
+</template>

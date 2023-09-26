@@ -1,3 +1,19 @@
+<script setup lang="ts">
+  import type { Route } from '@/models/Nav'
+
+  const localePath = useLocalePath()
+  const { mobile } = useDisplay()
+
+  const auth = useAuthStore()
+  const app = useAppStore()
+
+  type Routes = Route[]
+
+  defineProps({
+    routes: { type: Array as PropType<Routes>, required: true },
+  })
+</script>
+
 <template>
   <VAppBar
     scroll-behavior="hide"
@@ -18,7 +34,7 @@
     <template #append>
       <!-- admin nav button -->
       <NavButton
-        v-if="auth.hasAccessLevel('admin') && !mobile"
+        v-if="auth.hasAccess(['admin']) && !mobile"
         :route="{
           name: 'admin',
           route: '/admin',
@@ -28,7 +44,7 @@
 
       <!-- divider -->
       <VDivider
-        v-if="auth.hasAccessLevel('admin') && !mobile"
+        v-if="auth.hasAccess(['admin']) && !mobile"
         vertical
         inset
         length="75%"
@@ -36,15 +52,7 @@
       />
 
       <!-- the locale switcher will go here -->
-      <v-btn
-        v-if="!mobile"
-        prepend-icon="mdi-translate"
-        append-icon="mdi-chevron-down"
-        class="mx-2"
-        rounded="lg"
-      >
-        NO
-      </v-btn>
+      <LocaleSwitcher v-if="!mobile" class="mx-2" />
 
       <!-- open navigation drawer -->
       <VBtn v-if="mobile" icon="mdi-menu" @click="app.drawer = true" />
@@ -57,22 +65,6 @@
     </template>
   </VAppBar>
 </template>
-
-<script setup lang="ts">
-  import type { Route } from '@/models/Nav'
-
-  const localePath = useLocalePath()
-  const { mobile } = useDisplay()
-
-  const auth = useAuthStore()
-  const app = useAppStore()
-
-  type Routes = Route[]
-
-  defineProps({
-    routes: { type: Array as PropType<Routes>, required: true },
-  })
-</script>
 
 <style scoped lang="scss">
   @use 'vuetify/settings';
