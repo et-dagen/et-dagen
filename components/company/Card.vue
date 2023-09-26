@@ -7,22 +7,18 @@
       height="125"
       max-width="250"
       v-bind="props"
-      @click="redirectToWebsite"
+      @click="navigateTo(content.website, { external: true, open: 'target' })"
     >
-      <v-img :width="500" aspect-ratio="4/3" cover :src="content.logo"></v-img>
+      <v-img :width="500" aspect-ratio="4/3" cover :src="content.logo" />
     </v-card>
   </v-hover>
 </template>
 
 <script setup lang="ts">
-  const props = defineProps<{
+  defineProps<{
     content: {
       logo: string
       website: string
     }
   }>()
-
-  const redirectToWebsite = () => {
-    window.open(props.content.website)
-  }
 </script>
