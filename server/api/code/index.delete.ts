@@ -1,4 +1,4 @@
-// DELETE /api/company
+// DELETE /api/code
 // endpoint for removing a registration code from db
 
 export default defineEventHandler(async (event) => {
