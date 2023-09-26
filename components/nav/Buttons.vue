@@ -1,14 +1,3 @@
-<template>
-  <div :class="`d-flex ${flexDirection} justify-end`">
-    <NavButton
-      v-for="(route, index) in routes"
-      :key="index"
-      :route="route"
-      :class="direction === 'horizontal' ? 'ma-2' : 'my-2'"
-    />
-  </div>
-</template>
-
 <script setup lang="ts">
   import type { Route } from '@/models/Nav'
 
@@ -33,3 +22,14 @@
     }
   })
 </script>
+
+<template>
+  <div :class="`d-flex ${flexDirection} justify-end`">
+    <NavButton
+      v-for="(route, index) in routes"
+      :key="index"
+      :route="route"
+      :class="direction === 'horizontal' ? 'ma-2' : 'my-2'"
+    />
+  </div>
+</template>

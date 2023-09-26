@@ -14,7 +14,6 @@
       "
       >Create user</VBtn
     >
-    <!-- <div>{{ screenWidth }}</div> -->
     <CompanyHero
       :content="{
         name: 'Companyname',
@@ -29,7 +28,6 @@
 </template>
 
 <script setup lang="ts">
-  // const screenWidth = screen.width
   const authStore = useAuthStore()
   const { user } = storeToRefs(authStore)
 </script>

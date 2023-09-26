@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
 
   // get request body
   // eslint-disable-next-line prefer-const
-  let { uid, accessLevel, studyProgram } = await readBody(event)
+  let { uid, userType, studyProgram } = await readBody(event)
 
   if (!studyProgram)
     throw createError({
@@ -21,10 +21,10 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Missing study program',
     })
 
-  // only admins can modify user access levels
-  if (!hasAccessLevel(user, 'admin') || !uid || !accessLevel) {
+  // only admins can modify usertypes and other users than their own
+  if (!hasAccess(user, ['admin']) || !uid || !userType) {
     uid = decodedToken.uid
-    accessLevel = []
+    userType = null
   }
 
   // reference to users
@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
 
   // add or update user in database
   usersRef.child(uid).set({
-    accessLevel,
+    userType,
     studyProgram,
     updated: Date.now(),
   })
