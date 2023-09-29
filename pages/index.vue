@@ -21,7 +21,5 @@
       "
       >Create user</VBtn
     >
-
-    />
   </div>
 </template>
