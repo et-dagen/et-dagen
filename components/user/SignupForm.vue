@@ -3,6 +3,7 @@
     useRequiredInput,
     useValidateEmail,
     useValidatePassword,
+    useRequireEqualPasswords,
   } from '@/composables/useForm'
 
   const initialState = {
@@ -10,6 +11,7 @@
     lastName: '',
     email: '',
     password: null,
+    passwordConfirmation: null,
     studyProgram: null,
     currentYear: null,
     userType: null,
@@ -58,29 +60,31 @@
         />
       </VRow>
       <VRow>
-        <!-- TODO: Input UserEmailInput from #78 -->
-        <input
+        <UserFormEmailInput
           v-model="state.email"
-          :placeholder="$t('user.register.email')"
           :rules="[useRequiredInput, useValidateEmail]"
         />
       </VRow>
       <VRow>
-        <!-- TODO: Input UserPasswordInput from #78 -->
-        <input
+        <!-- TODO: Input FormPasswordInput from #78 -->
+        <UserFormPasswordInput
           v-model="state.password"
-          type="password"
-          :placeholder="$t('user.register.password')"
           :rules="[useRequiredInput, useValidatePassword]"
         />
       </VRow>
       <VRow>
-        <!-- TODO: Input UserPasswordInput from 
+        <!-- TODO: Input FormPasswordInput from 
           #78 with password confirm logic -->
-        <input
-          type="password"
-          :placeholder="$t('user.register.password_confirmation')"
-          :rules="[useRequiredInput, useValidatePassword]"
+        <UserFormPasswordInput
+          v-model="state.passwordConfirmation"
+          :rules="[
+            useRequiredInput,
+            useRequireEqualPasswords(
+              state.password,
+              state.passwordConfirmation
+            ),
+          ]"
+          confirm-password
         />
       </VRow>
     </VContainer>
