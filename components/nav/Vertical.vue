@@ -1,8 +1,23 @@
+<script setup lang="ts">
+  import type { Route } from '@/models/Nav'
+
+  const auth = useAuthStore()
+  const app = useAppStore()
+
+  const { xs, width } = useDisplay()
+
+  type Routes = Route[]
+
+  defineProps({
+    routes: { type: Array as PropType<Routes>, required: true },
+  })
+</script>
+
 <template>
   <VNavigationDrawer
     location="right"
     temporary
-    width="400"
+    :width="xs ? width : '400'"
     :elevation="5"
     class="pa-4"
     :model-value="app.drawer"
@@ -53,28 +68,8 @@
         <UserStateButton />
 
         <!-- the locale switcher will go here -->
-        <VBtn
-          prepend-icon="mdi-translate"
-          append-icon="mdi-chevron-down"
-          rounded="lg"
-          variant="text"
-        >
-          NO
-        </VBtn>
+        <LocaleSwitcher />
       </div>
     </template>
   </VNavigationDrawer>
 </template>
-
-<script setup lang="ts">
-  import type { Route } from '@/models/Nav'
-
-  const auth = useAuthStore()
-  const app = useAppStore()
-
-  type Routes = Route[]
-
-  defineProps({
-    routes: { type: Array as PropType<Routes>, required: true },
-  })
-</script>
