@@ -42,7 +42,7 @@
   <VForm ref="form" @submit.prevent="submit">
     <VContainer>
       <VRow>
-        <UserTextInput
+        <UserFormTextInput
           v-model="state.firstName"
           :content="{
             label: $t('user.register.first_name'),
@@ -51,7 +51,7 @@
         />
       </VRow>
       <VRow>
-        <UserTextInput
+        <UserFormTextInput
           v-model="state.lastName"
           :content="{
             label: $t('user.register.last_name'),
@@ -96,7 +96,7 @@
       <VCardText>
         <VWindow v-model="state.userType">
           <VWindowItem value="student">
-            <UserSelectInput
+            <UserFormSelectInput
               v-model="state.studyProgram"
               :content="{
                 label: $t('user.register.study_program'),
@@ -111,7 +111,7 @@
               }"
               :rules="[state.userType === 'student' ? useRequiredInput : null]"
             />
-            <UserSelectInput
+            <UserFormSelectInput
               v-model="state.currentYear"
               :content="{
                 label: $t('user.register.year'),
@@ -122,7 +122,7 @@
           </VWindowItem>
 
           <VWindowItem value="company">
-            <UserTextInput
+            <UserFormTextInput
               v-model="state.registrationCode"
               :content="{
                 label: $t('user.register.registration_code'),
