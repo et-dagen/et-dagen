@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import { PropType } from 'nuxt/dist/app/compat/capi'
   //define the contents of CompanyInformation
   interface CompanyInformation {
     logo: string
