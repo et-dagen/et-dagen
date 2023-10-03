@@ -6,6 +6,7 @@ export interface TokenData {
 
 export interface User extends TokenData {
   userType: 'company' | 'admin'
-  studyProgram: string
+  studyProgram?: string
+  companyUID?: string
   updated: number
 }

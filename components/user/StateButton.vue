@@ -1,3 +1,8 @@
+<script setup lang="ts">
+  const auth = useAuthStore()
+  const localePath = useLocalePath()
+</script>
+
 <template>
   <VBtn
     rounded="lg"
@@ -10,8 +15,3 @@
     {{ auth.isLoggedIn ? $t('user.sign_out') : $t('user.sign_in') }}
   </VBtn>
 </template>
-
-<script setup lang="ts">
-  const auth = useAuthStore()
-  const localePath = useLocalePath()
-</script>
