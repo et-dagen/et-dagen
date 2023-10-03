@@ -29,6 +29,7 @@
   "error": {
     "form": {
       "general": {
+        "equal_password": "Passordene må være like",
         "required": "Dette feltet er påkrevd",
         "email": "Ugyldig e-postadresse"
       },
