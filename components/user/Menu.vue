@@ -1,5 +1,5 @@
 <template>
-  <VMenu transition="scale-transition">
+  <VMenu transition="slide-y-transition">
     <!-- activator btn -->
     <template #activator="{ props }">
       <VBtn v-bind="props" icon="mdi-account-outline" />
@@ -18,7 +18,7 @@
       />
 
       <!-- sign out btn -->
-      <UserButton />
+      <UserStateButton />
     </VCard>
   </VMenu>
 </template>

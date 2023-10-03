@@ -6,6 +6,8 @@ export default (user: FirebaseUser | UserRecord): TokenData => {
   return {
     uid: user.uid,
     email: user.email || '',
-    name: user.displayName,
+    // for some reason the key is called name and not displayName
+    // @ts-ignore
+    name: user.name,
   }
 }

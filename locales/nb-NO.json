@@ -9,8 +9,22 @@
   },
   "user": {
     "sign_in": "Logg inn",
-    "sign_out": "Logg ut",
-    "invalid_email": "Ugyldig epostadresse",
-    "required_input": "Påkrevd felt"
+    "sign_out": "Logg ut"
+  },
+  "datetime": {
+    "months": {
+      "january": "januar",
+      "february": "februar",
+      "march": "mars",
+      "april": "april",
+      "may": "mai",
+      "june": "juni",
+      "july": "juli",
+      "august": "august",
+      "september": "september",
+      "october": "oktober",
+      "november": "november",
+      "december": "desember"
+    }
   }
 }

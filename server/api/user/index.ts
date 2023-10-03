@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
   const { scope } = getQuery(event)
 
   // only admins can get other users than their own
-  if (!hasAccessLevel(user, 'admin') || !scope || scope !== 'all') return user
+  if (!hasAccess(user, ['admin']) || !scope || scope !== 'all') return user
 
   // reference to users
   const usersRef = db.ref('users')
