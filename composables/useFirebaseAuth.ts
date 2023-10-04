@@ -6,6 +6,8 @@ import {
   updateProfile,
 } from 'firebase/auth'
 
+import type { User } from '@/models/User'
+
 type newUser = {
   email: string
   password: string
@@ -145,7 +147,7 @@ export const initUser = () => {
     const idToken = await user.getIdToken()
 
     try {
-      authStore.user = await $fetch('/api/user', {
+      authStore.user = await $fetch<User>('/api/user', {
         headers: {
           Authorization: `Bearer ${idToken}`,
         },
