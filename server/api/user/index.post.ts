@@ -11,29 +11,61 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'User not authenticated',
     })
 
-  // get request body
-  // eslint-disable-next-line prefer-const
-  let { uid, userType, studyProgram } = await readBody(event)
+  // get request body and query params
+  let { uid, userType, studyProgram, companyUID } = await readBody(event)
+  const { code: registrationCode } = getQuery(event)
 
-  if (!studyProgram)
+  // studyprogram is required when creating, or modifying your own, normal user
+  if (
+    !registrationCode &&
+    !studyProgram &&
+    !hasAccess(user, ['admin', 'company'])
+  )
     throw createError({
       statusCode: 400,
       statusMessage: 'Missing study program',
     })
 
   // only admins can modify usertypes and other users than their own
-  if (!hasAccess(user, ['admin']) || !uid || !userType) {
-    uid = decodedToken.uid
-    userType = null
+  if (!hasAccess(user, ['admin']) || !uid) {
+    // prevent users from creating multiple instances in the db
+    uid = user.uid ?? decodedToken.uid
+    userType = user?.userType
+    companyUID = user?.companyUID
+  }
+
+  // check validity of registration code
+  // only applicble when creating a new company user
+  if (registrationCode) {
+    const { isValid, companyUID: codeCompanyUID } = await validateCode(
+      registrationCode as string
+    )
+
+    // a valid code is required when creating a new company user
+    if (!isValid)
+      throw createError({
+        statusCode: 401,
+        statusMessage: 'Invalid registration code',
+      })
+
+    userType = 'company'
+    companyUID = codeCompanyUID
+
+    // company users have no studyprogram
+    studyProgram = null
+
+    // remove registration code from db
+    deleteCode(registrationCode as string)
   }
 
   // reference to users
   const usersRef = db.ref('users')
 
   // add or update user in database
-  usersRef.child(uid).set({
-    userType,
-    studyProgram,
+  usersRef.child(uid).update({
+    userType: userType ?? null,
+    studyProgram: userType === 'company' ? null : studyProgram,
+    companyUID: userType === 'company' ? companyUID : null,
     updated: Date.now(),
   })
 
