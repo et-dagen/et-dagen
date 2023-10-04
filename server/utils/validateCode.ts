@@ -8,11 +8,12 @@ export const validateCode = async (code: string) => {
     .equalTo(code)
     .once('value')
 
+  // get code data and companyUID
   const data = snapshot.val()
+  const companyUID = data ? data[Object.keys(data)[0]].companyUID : null
 
-  // if code exists return true
   return {
     isValid: !!data,
-    companyUID: data?.companyUID,
+    companyUID,
   }
 }
