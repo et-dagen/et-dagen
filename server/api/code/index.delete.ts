@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
   const { code } = await readBody(event)
 
   // delete code
-  deleteCode(code)
+  await deleteCode(code)
 
   // company successfully removed
   sendNoContent(event, 204)
