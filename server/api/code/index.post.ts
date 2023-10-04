@@ -49,7 +49,7 @@ export default defineEventHandler(async (event) => {
 
   // create code in db
   registrationCodesRef.push({
-    value: `${kebabCaseName}-${randomString}`,
+    code: `${kebabCaseName}-${randomString}`,
     companyUID,
   })
 
