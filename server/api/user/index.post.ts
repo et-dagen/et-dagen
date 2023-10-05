@@ -32,7 +32,7 @@ export default defineEventHandler(async (event) => {
   // only admins can modify usertypes and other users than their own
   if (!hasAccess(user, ['admin']) || !uid) {
     // prevent users from creating multiple instances in the db
-    uid = user.uid ?? decodedToken.uid
+    uid = user?.uid ?? decodedToken.uid
     userType = user?.userType
     companyUID = user?.companyUID
   }
