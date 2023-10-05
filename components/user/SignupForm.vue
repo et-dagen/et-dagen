@@ -95,12 +95,13 @@
         />
       </VRow>
     </VContainer>
-    <VContainer>
-      <VTabs v-model="state.userType" bg-color="primary" fixed-tabs>
+    <VContainer class="px-0">
+      <!-- TODO: Set background color of active tab to primary with less opacity -->
+      <VTabs v-model="state.userType" fixed-tabs color="primary" class="tabs">
         <VTab value="student">{{ $t('user.register.user_type.student') }}</VTab>
         <VTab value="company">{{ $t('user.register.user_type.company') }}</VTab>
       </VTabs>
-      <VCardText>
+      <VCardText class="px-0">
         <VWindow v-model="state.userType">
           <VWindowItem value="student">
             <UserFormSelectInput
@@ -140,9 +141,43 @@
           </VWindowItem>
         </VWindow>
       </VCardText>
-      <VBtn color="success" type="submit">
+      <VBtn color="success" type="submit" class="btn--submit">
         {{ $t('user.sign_up') }}
       </VBtn>
     </VContainer>
   </VForm>
 </template>
+
+<style scoped lang="scss">
+  @import 'vuetify/settings';
+
+  .v-row {
+    padding-block: 0.6rem;
+  }
+
+  .v-tab--selected {
+    background: rgba(var(--v-theme-accent), 0.08);
+  }
+
+  .v-window__container {
+    div {
+      padding-block: 0.6rem;
+    }
+  }
+
+  .btn--submit {
+    width: 60%;
+    margin-inline: 20% !important;
+  }
+
+  @media #{map-get($display-breakpoints, 'sm-and-down')} {
+    .v-tab {
+      font-size: 1rem;
+    }
+
+    .btn--submit {
+      width: 100%;
+      margin: 0 !important;
+    }
+  }
+</style>
