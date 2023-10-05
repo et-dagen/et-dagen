@@ -59,18 +59,9 @@
     <VContainer>
       <VRow>
         <UserFormTextInput
-          v-model="state.firstName"
+          v-model="state.name"
           :content="{
-            label: $t('user.register.first_name'),
-          }"
-          :rules="[useRequiredInput]"
-        />
-      </VRow>
-      <VRow>
-        <UserFormTextInput
-          v-model="state.lastName"
-          :content="{
-            label: $t('user.register.last_name'),
+            label: $t('user.register.full_name'),
           }"
           :rules="[useRequiredInput]"
         />
