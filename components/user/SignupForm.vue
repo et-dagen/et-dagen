@@ -33,22 +33,22 @@
 
     if (userType === 'student') {
       await registerUser({
-        name: state.name,
-        email: state.email,
-        password: state.password,
-        studyProgram: state.studyProgram,
-        currentYear: state.currentYear,
+        name: user.name,
+        email: user.email,
+        password: user.password,
+        studyProgram: user.studyProgram,
+        currentYear: user.currentYear,
       })
     }
 
     if (userType === 'company') {
       await registerUser(
         {
-          name: state.name,
-          email: state.email,
-          password: state.password,
+          name: user.name,
+          email: user.email,
+          password: user.password,
         },
-        state.registrationCode
+        user.registrationCode
       )
     }
   }
