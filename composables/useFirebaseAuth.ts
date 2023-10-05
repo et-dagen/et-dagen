@@ -12,7 +12,7 @@ type newUser = {
   email: string
   password: string
   studyProgram?: string
-  currentYear?: string
+  currentYear?: number
   name: string
 }
 
