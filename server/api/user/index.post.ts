@@ -11,14 +11,17 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'User not authenticated',
     })
 
-  // get request body and query params
-  let { uid, userType, studyProgram, companyUID } = await readBody(event)
+  // get request body and query param
+  /* eslint-disable */
+  let { uid, userType, studyProgram, currentYear, companyUID } = await readBody(
+    event
+  )
   const { code: registrationCode } = getQuery(event)
 
   // studyprogram is required when creating, or modifying your own, normal user
   if (
     !registrationCode &&
-    !studyProgram &&
+    (!studyProgram || !currentYear) &&
     !hasAccess(user, ['admin', 'company'])
   )
     throw createError({
@@ -35,7 +38,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // check validity of registration code
-  // only applicble when creating a new company user
+  // only applicable when creating a new company user
   if (registrationCode) {
     const { isValid, companyUID: codeCompanyUID } = await validateCode(
       registrationCode as string
@@ -51,9 +54,6 @@ export default defineEventHandler(async (event) => {
     userType = 'company'
     companyUID = codeCompanyUID
 
-    // company users have no studyprogram
-    studyProgram = null
-
     // remove registration code from db
     deleteCode(registrationCode as string)
   }
@@ -65,6 +65,7 @@ export default defineEventHandler(async (event) => {
   usersRef.child(uid).update({
     userType: userType ?? null,
     studyProgram: userType === 'company' ? null : studyProgram,
+    currentYear: userType === 'company' ? null : currentYear,
     companyUID: userType === 'company' ? companyUID : null,
     updated: Date.now(),
   })

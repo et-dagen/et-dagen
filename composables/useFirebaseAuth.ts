@@ -12,6 +12,7 @@ type newUser = {
   email: string
   password: string
   studyProgram?: string
+  currentYear?: string
   name: string
 }
 
@@ -20,11 +21,11 @@ export const registerUser = async (
   newUser: newUser,
   registrationCode?: string
 ) => {
-  // studyprogram is required when not creating a company user
-  if (!registrationCode && !newUser.studyProgram)
+  // studyprogram and current year are required when not creating a company user
+  if (!registrationCode && (!newUser.studyProgram || !newUser.currentYear))
     throw createError({
       statusCode: 400,
-      statusMessage: 'Missing studyprogram',
+      statusMessage: 'Missing studyprogram or current year',
     })
 
   // name is handled client side with the firebase SDK and is required
@@ -73,6 +74,7 @@ export const registerUser = async (
     },
     body: {
       studyProgram: newUser.studyProgram,
+      currentYear: newUser.currentYear,
     },
     query: {
       code: registrationCode,

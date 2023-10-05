@@ -11,7 +11,6 @@ export const deleteCode = async (code: string) => {
     .equalTo(code)
     .once('value')
 
-  // get parent key of code
   const data = snapshot.val()
 
   if (!data)
@@ -20,6 +19,7 @@ export const deleteCode = async (code: string) => {
       statusMessage: 'Code does not exist',
     })
 
+  // get parent key of code
   const key = Object.keys(data)[0]
 
   // remove registration code
