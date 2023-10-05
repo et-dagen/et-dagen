@@ -7,13 +7,12 @@
   } from '@/composables/useForm'
 
   const initialState = {
-    firstName: '',
-    lastName: '',
+    name: '',
     email: '',
-    password: null,
+    password: '',
     passwordConfirmation: null,
-    studyProgram: null,
-    currentYear: null,
+    studyProgram: '',
+    currentYear: '',
     userType: null,
     registrationCode: null,
   }
@@ -29,12 +28,29 @@
 
     if (!valid) throw new Error('Form is not valid')
 
-    await registerUser({
-      email: 'test@et-dagen.no',
-      password: '123456',
-      studyProgram: 'Elektronisk systemdesign og innovasjon',
-      name: 'Test User',
-    })
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { passwordConfirmation, userType, ...user } = state
+
+    if (userType === 'student') {
+      await registerUser({
+        name: state.name,
+        email: state.email,
+        password: state.password,
+        studyProgram: state.studyProgram,
+        currentYear: state.currentYear,
+      })
+    }
+
+    if (userType === 'company') {
+      await registerUser(
+        {
+          name: state.name,
+          email: state.email,
+          password: state.password,
+        },
+        state.registrationCode
+      )
+    }
   }
 </script>
 
