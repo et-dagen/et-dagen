@@ -12,6 +12,7 @@
     "sign_out": "Logg ut",
     "sign_up": "Registrer bruker",
     "register": {
+      "title": "Registrer bruker",
       "first_name": "Fornavn",
       "last_name": "Etternavn",
       "email": "E-post",
