@@ -13,6 +13,7 @@
     "sign_up": "Registrer bruker",
     "register": {
       "title": "Registrer bruker",
+      "full_name": "Fullt navn",
       "first_name": "Fornavn",
       "last_name": "Etternavn",
       "email": "E-post",
