@@ -151,6 +151,10 @@
 <style scoped lang="scss">
   @import 'vuetify/settings';
 
+  .v-container {
+    max-width: 26rem !important;
+  }
+
   .v-row {
     padding-block: 0.6rem;
   }
