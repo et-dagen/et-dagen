@@ -31,7 +31,7 @@
   "error": {
     "form": {
       "general": {
-        "equal_password": "Passordene må være like",
+        "equal_password": "Passwords must match",
         "required": "This field is required",
         "email": "Invalid email address"
       },
@@ -41,8 +41,8 @@
         "numbers": "The password must contain at least 3 numbers.",
         "special": "The password must contain at least 1 special character.",
         "uppercase": "The password must contain at least 1 uppercase letter.",
-        "required": "Passord er påkrevd",
-        "confirmed": "Passordene må være like"
+        "required": "Password is required",
+        "confirmed": "Passwords must match"
       }
     }
   },
