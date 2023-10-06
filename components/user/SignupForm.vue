@@ -134,7 +134,7 @@
               v-model="state.registrationCode"
               :content="{
                 label: $t('user.register.registration_code'),
-                hint: 'Koden skal være tilsendt av en administrator',
+                hint: $t('user.register.code_hint'),
               }"
               :rules="[state.userType === 'company' ? useRequiredInput : null]"
             />

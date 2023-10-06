@@ -22,6 +22,7 @@
       "study_program": "Studieprogram",
       "year": "Årstrinn",
       "registration_code": "Registreringskode",
+      "code_hint": "Ta kontakt for a motta en registreringskode",
       "user_type": {
         "student": "Studentbruker",
         "company": "Bedriftsbruker"

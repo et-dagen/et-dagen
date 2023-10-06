@@ -22,6 +22,7 @@
       "study_program": "Study Programme",
       "year": "Current year",
       "registration_code": "Registration code",
+      "code_hint": "Contact us to recieve a registration code",
       "user_type": {
         "student": "Student user",
         "company": "Company user"
