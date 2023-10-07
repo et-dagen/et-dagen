@@ -3,15 +3,16 @@
     useRequiredInput,
     useValidateEmail,
     useValidatePassword,
+    useRequireEqualPasswords,
   } from '@/composables/useForm'
 
   const initialState = {
-    firstName: '',
-    lastName: '',
+    name: '',
     email: '',
-    password: null,
-    studyProgram: null,
-    currentYear: null,
+    password: '',
+    passwordConfirmation: null,
+    studyProgram: '',
+    currentYear: '',
     userType: null,
     registrationCode: null,
   }
@@ -27,12 +28,29 @@
     const { valid } = await form.value.validate()
     if (!valid) throw new Error('Form is not valid')
 
-    await registerUser({
-      email: 'test@et-dagen.no',
-      password: '123456',
-      studyProgram: 'Elektronisk systemdesign og innovasjon',
-      name: 'Test User',
-    })
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { passwordConfirmation, userType, ...user } = state
+
+    if (userType === 'student') {
+      await registerUser({
+        name: user.name,
+        email: user.email,
+        password: user.password,
+        studyProgram: user.studyProgram,
+        currentYear: user.currentYear,
+      })
+    }
+
+    if (userType === 'company') {
+      await registerUser(
+        {
+          name: user.name,
+          email: user.email,
+          password: user.password,
+        },
+        user.registrationCode
+      )
+    }
   }
 </script>
 
@@ -40,59 +58,53 @@
   <VForm ref="form" @submit.prevent="submit">
     <VContainer>
       <VRow>
-        <UserTextInput
-          v-model="state.firstName"
+        <UserFormTextInput
+          v-model="state.name"
           :content="{
-            label: $t('user.register.first_name'),
+            label: $t('user.register.full_name'),
           }"
           :rules="[useRequiredInput]"
         />
       </VRow>
       <VRow>
-        <UserTextInput
-          v-model="state.lastName"
-          :content="{
-            label: $t('user.register.last_name'),
-          }"
-          :rules="[useRequiredInput]"
-        />
-      </VRow>
-      <VRow>
-        <!-- TODO: Input UserEmailInput from #78 -->
-        <input
+        <UserFormEmailInput
           v-model="state.email"
-          :placeholder="$t('user.register.email')"
           :rules="[useRequiredInput, useValidateEmail]"
         />
       </VRow>
       <VRow>
-        <!-- TODO: Input UserPasswordInput from #78 -->
-        <input
+        <!-- TODO: Input FormPasswordInput from #78 -->
+        <UserFormPasswordInput
           v-model="state.password"
-          type="password"
-          :placeholder="$t('user.register.password')"
           :rules="[useRequiredInput, useValidatePassword]"
         />
       </VRow>
       <VRow>
-        <!-- TODO: Input UserPasswordInput from 
+        <!-- TODO: Input FormPasswordInput from 
           #78 with password confirm logic -->
-        <input
-          type="password"
-          :placeholder="$t('user.register.password_confirmation')"
-          :rules="[useRequiredInput, useValidatePassword]"
+        <UserFormPasswordInput
+          v-model="state.passwordConfirmation"
+          :rules="[
+            useRequiredInput,
+            useRequireEqualPasswords(
+              state.password,
+              state.passwordConfirmation
+            ),
+          ]"
+          confirm-password
         />
       </VRow>
     </VContainer>
-    <VContainer>
-      <VTabs v-model="state.userType" bg-color="primary" fixed-tabs>
+    <VContainer class="px-0">
+      <!-- TODO: Set background color of active tab to primary with less opacity -->
+      <VTabs v-model="state.userType" fixed-tabs color="primary" class="tabs">
         <VTab value="student">{{ $t('user.register.user_type.student') }}</VTab>
         <VTab value="company">{{ $t('user.register.user_type.company') }}</VTab>
       </VTabs>
-      <VCardText>
+      <VCardText class="px-0">
         <VWindow v-model="state.userType">
           <VWindowItem value="student">
-            <UserSelectInput
+            <UserFormSelectInput
               v-model="state.studyProgram"
               :content="{
                 label: $t('user.register.study_program'),
@@ -107,7 +119,7 @@
               }"
               :rules="[state.userType === 'student' ? useRequiredInput : null]"
             />
-            <UserSelectInput
+            <UserFormSelectInput
               v-model="state.currentYear"
               :content="{
                 label: $t('user.register.year'),
@@ -118,20 +130,58 @@
           </VWindowItem>
 
           <VWindowItem value="company">
-            <UserTextInput
+            <UserFormTextInput
               v-model="state.registrationCode"
               :content="{
                 label: $t('user.register.registration_code'),
-                hint: 'Koden skal være tilsendt av en administrator',
+                hint: $t('user.register.code_hint'),
               }"
               :rules="[state.userType === 'company' ? useRequiredInput : null]"
             />
           </VWindowItem>
         </VWindow>
       </VCardText>
-      <VBtn color="success" type="submit">
+      <VBtn color="success" type="submit" class="btn--submit">
         {{ $t('user.sign_up') }}
       </VBtn>
     </VContainer>
   </VForm>
 </template>
+
+<style scoped lang="scss">
+  @import 'vuetify/settings';
+
+  .v-container {
+    max-width: 26rem !important;
+  }
+
+  .v-row {
+    padding-block: 0.6rem;
+  }
+
+  .v-tab--selected {
+    background: rgba(var(--v-theme-accent), 0.08);
+  }
+
+  .v-window__container {
+    div {
+      padding-block: 0.6rem;
+    }
+  }
+
+  .btn--submit {
+    width: 60%;
+    margin-inline: 20% !important;
+  }
+
+  @media #{map-get($display-breakpoints, 'sm-and-down')} {
+    .v-tab {
+      font-size: 1rem;
+    }
+
+    .btn--submit {
+      width: 100%;
+      margin: 0 !important;
+    }
+  }
+</style>

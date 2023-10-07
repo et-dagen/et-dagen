@@ -6,7 +6,7 @@ export const useRequiredInput = (value: string) => {
 export const useValidateEmail = (value: string) => {
   const nuxtApp = useNuxtApp()
   const emailRegex = /\S+@\S+\.\S+/
-  return emailRegex.test(value) || nuxtApp.$i18n.t('Invalid e-mail.')
+  return emailRegex.test(value) || nuxtApp.$i18n.t('error.form.general.email')
 }
 
 export const useValidatePassword = (value: string) => {
@@ -30,4 +30,9 @@ export const useValidatePassword = (value: string) => {
     return nuxtApp.$i18n.t('error.form.password.uppercase')
 
   return true
+}
+
+export const useRequireEqualPasswords = (value: any, other: any) => {
+  const nuxtApp = useNuxtApp()
+  return value === other || nuxtApp.$i18n.t('error.form.general.equal_password')
 }
