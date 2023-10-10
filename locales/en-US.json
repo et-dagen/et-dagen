@@ -12,6 +12,8 @@
     "sign_out": "Sign out",
     "sign_up": "Register user",
     "register": {
+      "title": "Register user",
+      "full_name": "Full name",
       "first_name": "First name",
       "last_name": "Last name",
       "email": "E-mail",
@@ -20,6 +22,7 @@
       "study_program": "Study Programme",
       "year": "Current year",
       "registration_code": "Registration code",
+      "code_hint": "Contact us to recieve a registration code",
       "user_type": {
         "student": "Student user",
         "company": "Company user"
@@ -35,6 +38,7 @@
   "error": {
     "form": {
       "general": {
+        "equal_password": "Passwords must match",
         "required": "This field is required",
         "email": "Invalid email address"
       },
@@ -44,8 +48,8 @@
         "numbers": "The password must contain at least 3 numbers.",
         "special": "The password must contain at least 1 special character.",
         "uppercase": "The password must contain at least 1 uppercase letter.",
-        "required": "Passord er påkrevd",
-        "confirmed": "Passordene må være like"
+        "required": "Password is required",
+        "confirmed": "Passwords must match"
       }
     }
   },
@@ -63,6 +67,21 @@
       "october": "October",
       "november": "November",
       "december": "December"
+    }
+  },
+  "company": {
+    "main_partner": "Main partner"
+  },
+  "alert": {
+    "close_alert": "Close alert",
+    "error": {
+      "default": "An error occured",
+      "firebase": {
+        "email_in_use": "Email already in use"
+      },
+      "server": {
+        "invalid_registration_code": "Invalid registration code"
+      }
     }
   }
 }

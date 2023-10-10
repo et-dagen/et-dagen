@@ -1,3 +1,19 @@
+<script setup lang="ts">
+  import type { Route } from '@/models/Nav'
+
+  const localePath = useLocalePath()
+  const { mobile } = useDisplay()
+
+  const auth = useAuthStore()
+  const app = useAppStore()
+
+  type Routes = Route[]
+
+  defineProps({
+    routes: { type: Array as PropType<Routes>, required: true },
+  })
+</script>
+
 <template>
   <VAppBar
     scroll-behavior="hide"
@@ -49,22 +65,6 @@
     </template>
   </VAppBar>
 </template>
-
-<script setup lang="ts">
-  import type { Route } from '@/models/Nav'
-
-  const localePath = useLocalePath()
-  const { mobile } = useDisplay()
-
-  const auth = useAuthStore()
-  const app = useAppStore()
-
-  type Routes = Route[]
-
-  defineProps({
-    routes: { type: Array as PropType<Routes>, required: true },
-  })
-</script>
 
 <style scoped lang="scss">
   @use 'vuetify/settings';

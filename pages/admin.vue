@@ -1,9 +1,3 @@
-<template>
-  <div>
-    <NuxtPage />
-  </div>
-</template>
-
 <script setup lang="ts">
   definePageMeta({
     // route and all sub routes are protected
@@ -21,3 +15,9 @@
     },
   })
 </script>
+
+<template>
+  <div>
+    <NuxtPage />
+  </div>
+</template>

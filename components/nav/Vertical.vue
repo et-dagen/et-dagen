@@ -1,3 +1,18 @@
+<script setup lang="ts">
+  import type { Route } from '@/models/Nav'
+
+  const auth = useAuthStore()
+  const app = useAppStore()
+
+  const { xs, width } = useDisplay()
+
+  type Routes = Route[]
+
+  defineProps({
+    routes: { type: Array as PropType<Routes>, required: true },
+  })
+</script>
+
 <template>
   <VNavigationDrawer
     location="right"
@@ -58,18 +73,3 @@
     </template>
   </VNavigationDrawer>
 </template>
-
-<script setup lang="ts">
-  import type { Route } from '@/models/Nav'
-
-  const auth = useAuthStore()
-  const app = useAppStore()
-
-  const { xs, width } = useDisplay()
-
-  type Routes = Route[]
-
-  defineProps({
-    routes: { type: Array as PropType<Routes>, required: true },
-  })
-</script>
