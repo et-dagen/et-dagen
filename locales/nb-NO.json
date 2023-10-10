@@ -26,5 +26,8 @@
       "november": "november",
       "december": "desember"
     }
+  },
+  "company": {
+    "main_partner": "Hovedpartner"
   }
 }

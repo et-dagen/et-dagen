@@ -26,5 +26,8 @@
       "november": "November",
       "december": "December"
     }
+  },
+  "company": {
+    "main_partner": "Main partner"
   }
 }

@@ -29,7 +29,7 @@
       <h2
         class="text-md-h2 text-sm-h3 text-h4 text-center pb-10 font-weight-bold"
       >
-        Hovedpartner
+        {{ $t('company.main_partner') }}
       </h2>
 
       <VRow class="pt-10">
