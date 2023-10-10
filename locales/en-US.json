@@ -65,13 +65,13 @@
   },
   "alert": {
     "close_alert": "Close alert",
-    "default_error": "An error occured",
     "error": {
+      "default": "An error occured",
       "firebase": {
-        "email_in_use": {
-          "title": "Email already in use",
-          "message": "The email address is already in use by another account. Please use another email address."
-        }
+        "email_in_use": "Email already in use"
+      },
+      "server": {
+        "invalid_registration_code": "Invalid registration code"
       }
     }
   }

@@ -49,6 +49,7 @@
     )
       .catch((error) => {
         const content = getAlertRouteAndType(error.message)
+        console.log(error.message)
 
         alertState.show = true
         alertState.alertRoute = content.route
@@ -72,7 +73,7 @@
 
 <template>
   <VSnackbar v-model="alertState.show">
-    {{ $t(`${alertState.alertRoute}.title`) }}
+    {{ $t(`${alertState.alertRoute}`) }}
 
     <template #actions>
       <v-btn
