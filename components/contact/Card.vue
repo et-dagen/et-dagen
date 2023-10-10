@@ -11,31 +11,23 @@
 </script>
 
 <template>
-  <div class="d-flex flex-column">
-    <VCard class="mx-auto" width="435" variant="flat">
-      <VRow>
-        <VCol>
-          <VImg
-            height="100%"
-            class="rounded-lg"
-            :width="150"
-            :src="content.image"
-            cover
-          />
-        </VCol>
-        <VCol>
-          <VCardTitle class="text-h4">
-            {{ content.name }}
-          </VCardTitle>
-          <VCardText class="text-h6"> <br />{{ content.position }} </VCardText>
-          <VCardText class="text-body-1">
-            <a :href="`mailto:${content.email}`"> {{ content.email }} </a>
-          </VCardText>
-          <VCardText class="text-body-1">
-            <a :href="`tel:${content.phone}`"> {{ content.phone }} </a>
-          </VCardText>
-        </VCol>
-      </VRow>
-    </VCard>
-  </div>
+  <VCard variant="flat">
+    <VRow>
+      <VCol cols="4">
+        <VImg class="rounded-lg" :src="content.image" />
+      </VCol>
+      <VCol>
+        <VCardTitle class="font-weight-bold text-h4">
+          {{ content.name }}
+        </VCardTitle>
+        <VCardText class="text-h6"> <br />{{ content.position }} </VCardText>
+        <VCardText class="text-body-1">
+          <a :href="`mailto:${content.email}`"> {{ content.email }} </a>
+        </VCardText>
+        <VCardText class="text-body-1">
+          <a :href="`tel:${content.phone}`"> {{ content.phone }} </a>
+        </VCardText>
+      </VCol>
+    </VRow>
+  </VCard>
 </template>
