@@ -11,4 +11,7 @@ export default {
   VDivider: {
     thickness: 2,
   },
+  VAlert: {
+    maxWidth: '600px',
+  },
 }
