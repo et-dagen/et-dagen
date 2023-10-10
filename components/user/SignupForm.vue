@@ -42,7 +42,8 @@
         email: user.email,
         password: user.password,
         studyProgram: userType === 'student' ? user.studyProgram : undefined,
-        currentYear: userType === 'student' ? user.currentYear : undefined,
+        currentYear:
+          userType === 'student' ? Number(user.currentYear) : undefined,
       },
       user.registrationCode ?? undefined // Only send registration code if user is a company
     )
