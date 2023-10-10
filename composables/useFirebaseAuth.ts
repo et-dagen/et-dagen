@@ -6,15 +6,48 @@ import {
   updateProfile,
 } from 'firebase/auth'
 
+import type { User } from '@/models/User'
+
 type newUser = {
   email: string
   password: string
-  studyProgram: string
+  studyProgram?: string
+  currentYear?: number
   name: string
 }
 
 // registers new user in firebase auth and db
-export const registerUser = async (newUser: newUser) => {
+export const registerUser = async (
+  newUser: newUser,
+  registrationCode?: string
+) => {
+  // studyprogram and current year are required when not creating a company user
+  if (!registrationCode && (!newUser.studyProgram || !newUser.currentYear))
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Missing studyprogram or current year',
+    })
+
+  // name is handled client side with the firebase SDK and is required
+  if (!newUser.name)
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Missing name',
+    })
+
+  // check validity of registratin code
+  // only applicable if creating a company user
+  if (registrationCode) {
+    const { isValid } = await $fetch(`/api/code/${registrationCode}`)
+
+    // do not attempt to create user if the code is invalid
+    if (!isValid)
+      throw createError({
+        statusCode: 401,
+        statusMessage: 'Invalid registration code',
+      })
+  }
+
   const auth = getAuth()
   const authStore = useAuthStore()
 
@@ -41,6 +74,10 @@ export const registerUser = async (newUser: newUser) => {
     },
     body: {
       studyProgram: newUser.studyProgram,
+      currentYear: newUser.currentYear,
+    },
+    query: {
+      code: registrationCode,
     },
   })
 
@@ -112,7 +149,7 @@ export const initUser = () => {
     const idToken = await user.getIdToken()
 
     try {
-      authStore.user = await $fetch('/api/user', {
+      authStore.user = await $fetch<User>('/api/user', {
         headers: {
           Authorization: `Bearer ${idToken}`,
         },
