@@ -77,7 +77,10 @@
     "error": {
       "default": "Oi! Noe gikk galt.",
       "firebase": {
-        "email_in_use": "Eposten er allerede i bruk"
+        "email_in_use": "Eposten er allerede i bruk",
+        "invalid_email": "Ugyldig epost",
+        "user_not_found": "Brukeren ble ikke funnet",
+        "wrong_password": "Feil passord"
       },
       "server": {
         "invalid_registration_code": "Ugyldig registreringskode"
