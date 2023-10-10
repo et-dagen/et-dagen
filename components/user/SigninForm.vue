@@ -39,6 +39,32 @@
         isRegistering.value = false
       })
   }
+
+  const resetPassword = () => {
+    if (!state.email) {
+      alertState.alertRoute = 'alert.error.form.missing_email'
+      alertState.type = 'error'
+      alertState.show = true
+
+      return
+    }
+
+    requestPasswordReset(state.email)
+      .then(() => {
+        alertState.alertRoute = 'alert.success.firebase.reset_password'
+        alertState.type = 'success'
+        alertState.show = true
+      })
+      .catch((error) => {
+        const content = getAlertRouteAndType(error.message)
+
+        alertState.alertRoute = content.route
+        alertState.type = content.type as AlertType
+        alertState.show = true
+
+        console.error(error)
+      })
+  }
 </script>
 
 <template>
@@ -59,11 +85,12 @@
   <VForm ref="form" @submit.prevent="submit">
     <VContainer>
       <VRow>
-        <UserFormTextInput
+        <UserFormEmailInput
           v-model="state.email"
           :content="{
             label: $t('user.login.email'),
           }"
+          :rules="[useRequiredInput]"
         />
       </VRow>
       <VRow>
@@ -85,7 +112,9 @@
     <VContainer>
       <VRow>
         <!-- TODO: Add @click hook to use Firebase 'Forgot Password' feature -->
-        <span class="btn--forgot">{{ $t('user.login.forgot') }}</span>
+        <span class="btn--forgot" @click="resetPassword">{{
+          $t('user.login.forgot')
+        }}</span>
       </VRow>
       <VRow>
         <VBtn
