@@ -27,6 +27,12 @@
         "student": "Student user",
         "company": "Company user"
       }
+    },
+    "login": {
+      "email": "E-mail",
+      "password": "Password",
+      "remember": "Remember me",
+      "forgot": "Forgot password?"
     }
   },
   "error": {
@@ -67,14 +73,25 @@
     "main_partner": "Main partner"
   },
   "alert": {
-    "close_alert": "Close alert",
+    "close_alert": "Close",
     "error": {
       "default": "An error occured",
+      "form": {
+        "missing_email": "Email input is missing"
+      },
       "firebase": {
-        "email_in_use": "Email already in use"
+        "email_in_use": "Email already in use",
+        "invalid_email": "Invalid email address",
+        "user_not_found": "User not found",
+        "wrong_password": "Incorrect password"
       },
       "server": {
         "invalid_registration_code": "Invalid registration code"
+      }
+    },
+    "success": {
+      "firebase": {
+        "reset_password": "Password reset email sent"
       }
     }
   }

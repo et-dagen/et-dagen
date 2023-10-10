@@ -2,6 +2,7 @@ import {
   createUserWithEmailAndPassword,
   getAuth,
   onAuthStateChanged,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   updateProfile,
 } from 'firebase/auth'
@@ -158,4 +159,10 @@ export const initUser = () => {
       console.error('Could not fetch user data')
     }
   })
+}
+
+// sends password reset email to user
+export const requestPasswordReset = (email: string) => {
+  const auth = getAuth()
+  return sendPasswordResetEmail(auth, email)
 }

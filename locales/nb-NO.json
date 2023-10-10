@@ -27,6 +27,12 @@
         "student": "Studentbruker",
         "company": "Bedriftsbruker"
       }
+    },
+    "login": {
+      "email": "E-post",
+      "password": "Passord",
+      "remember": "Husk meg",
+      "forgot": "Glemt passord?"
     }
   },
   "error": {
@@ -70,11 +76,22 @@
     "close_alert": "Lukk",
     "error": {
       "default": "Oi! Noe gikk galt.",
+      "form": {
+        "missing_email": "Epost ikke oppgitt"
+      },
       "firebase": {
-        "email_in_use": "Eposten er allerede i bruk"
+        "email_in_use": "Eposten er allerede i bruk",
+        "invalid_email": "Ugyldig epost",
+        "user_not_found": "Brukeren ble ikke funnet",
+        "wrong_password": "Feil passord"
       },
       "server": {
         "invalid_registration_code": "Ugyldig registreringskode"
+      }
+    },
+    "success": {
+      "firebase": {
+        "reset_password": "Epost for tilbakestilling av passord er sendt"
       }
     }
   }

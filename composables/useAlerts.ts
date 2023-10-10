@@ -15,6 +15,30 @@ const errorMessageMap = new Map([
       message: 'invalid_registration_code',
     },
   ],
+  [
+    'Firebase: Error (auth/invalid-email).',
+    {
+      source: 'firebase',
+      type: 'error',
+      message: 'invalid_email',
+    },
+  ],
+  [
+    'Firebase: Error (auth/user-not-found).',
+    {
+      source: 'firebase',
+      type: 'error',
+      message: 'user_not_found',
+    },
+  ],
+  [
+    'Firebase: Error (auth/wrong-password).',
+    {
+      source: 'firebase',
+      type: 'error',
+      message: 'wrong_password',
+    },
+  ],
 ])
 
 export type AlertType = 'error' | 'info' | 'success' | 'warning' | undefined
