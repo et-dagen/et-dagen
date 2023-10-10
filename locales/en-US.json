@@ -62,5 +62,16 @@
       "november": "November",
       "december": "December"
     }
+  },
+  "alert": {
+    "close_alert": "Close alert",
+    "error": {
+      "firebase": {
+        "email_in_use": {
+          "title": "Email already in use",
+          "message": "The email address is already in use by another account. Please use another email address."
+        }
+      }
+    }
   }
 }

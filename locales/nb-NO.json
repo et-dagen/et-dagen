@@ -62,5 +62,16 @@
       "november": "november",
       "december": "desember"
     }
+  },
+  "alert": {
+    "close_alert": "Lukk",
+    "error": {
+      "firebase": {
+        "email_in_use": {
+          "title": "Eposten er allerede i bruk",
+          "message": "Eposten som er oppgitt er allerede i bruk. Opprett en ny bruker med en annen epostadresse."
+        }
+      }
+    }
   }
 }
