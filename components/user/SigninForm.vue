@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { useValidateEmail } from '@/composables/useForm'
+  import type { AlertType } from 'composables/useAlerts'
 
   const initialState = {
     email: '',
@@ -10,60 +10,151 @@
     ...initialState,
   })
 
-  // Only enable sign in button if all fields are filled out and valid
-  const enableSignin = ref<boolean>(false)
-  watch(state, async () => {
-    const { valid } = await form.value.validate()
-    enableSignin.value = !!state.email && !!state.password && !!valid
+  const initialAlertState = {
+    show: false,
+    alertRoute: '',
+    type: undefined as AlertType,
+  }
+
+  const alertState = reactive({
+    ...initialAlertState,
   })
 
+  const isRegistering = ref<boolean>(false)
+
   const form = ref()
-  const submit = async () => {
-    if (!form.value) return
+  const submit = () => {
+    isRegistering.value = true
+    signinUser(state.email, state.password)
+      .catch((error) => {
+        const content = getAlertRouteAndType(error.message)
 
-    const { valid } = await form.value.validate()
-    if (!valid) throw new Error('Form is not valid')
+        alertState.alertRoute = content.route
+        alertState.type = content.type as AlertType
+        alertState.show = true
 
-    if (!state.email || !state.password)
-      throw new Error('Missing email or passord')
-
-    await signinUser(state.email, state.password)
+        console.error(error)
+      })
+      .finally(() => {
+        isRegistering.value = false
+      })
   }
 </script>
 
 <template>
-  <VForm
-    ref="form"
-    @submit.prevent="submit"
-    class="d-flex flex-column align-center"
-  >
-    <h3 class="mb-8">{{ $t('user.sign_in') }}</h3>
+  <VSnackbar v-model="alertState.show">
+    {{ $t(`${alertState.alertRoute}`) }}
+
+    <template #actions>
+      <v-btn
+        :color="alertState.type"
+        variant="text"
+        @click="alertState.show = false"
+      >
+        {{ $t('alert.close_alert') }}
+      </v-btn>
+    </template>
+  </VSnackbar>
+
+  <VForm ref="form" @submit.prevent="submit">
     <VContainer>
-      <VRow class="py-1">
-        <UserTextInput
+      <VRow>
+        <UserFormTextInput
           v-model="state.email"
           :content="{
             label: $t('user.login.email'),
           }"
-          :rules="[useValidateEmail]"
         />
       </VRow>
-      <VRow class="py-1">
-        <UserTextInput
-          v-model="state.password"
-          :content="{
-            label: $t('user.login.password'),
-          }"
-        />
+      <VRow>
+        <UserFormPasswordInput v-model="state.password" />
       </VRow>
-      <VBtn
-        color="success"
-        type="submit"
-        class="mt-8 w-100"
-        :disabled="!enableSignin"
-      >
-        {{ $t('user.sign_in') }}
-      </VBtn>
+    </VContainer>
+    <VContainer>
+      <VRow>
+        <VBtn
+          color="success"
+          type="submit"
+          class="btn--submit"
+          :loading="isRegistering"
+        >
+          {{ $t('user.sign_in') }}
+        </VBtn>
+      </VRow>
+    </VContainer>
+    <VContainer>
+      <VRow>
+        <!-- TODO: Add @click hook to use Firebase 'Forgot Password' feature -->
+        <span class="btn--forgot">{{ $t('user.login.forgot') }}</span>
+      </VRow>
+      <VRow>
+        <VBtn
+          color="primary"
+          @click="() => navigateTo('/user/signup')"
+          variant="outlined"
+          class="btn--register"
+          :disabled="isRegistering"
+        >
+          {{ $t('user.sign_up') }}
+        </VBtn>
+      </VRow>
     </VContainer>
   </VForm>
 </template>
+
+<style scoped lang="scss">
+  @import 'vuetify/settings';
+
+  .v-container {
+    max-width: 26rem !important;
+    margin-block: 1.2rem;
+  }
+
+  .v-row {
+    padding-block: 0.1rem;
+  }
+
+  .v-tab--selected {
+    background: rgba(var(--v-theme-accent), 0.08);
+  }
+
+  .v-window__container {
+    div {
+      padding-block: 0.6rem;
+    }
+  }
+
+  .btn {
+    &--submit,
+    &--register {
+      width: 60%;
+      margin-inline: 20% !important;
+    }
+
+    &--forgot {
+      margin: 0.4rem auto !important;
+      font-weight: 600;
+      font-style: italic;
+      font-size: 1.1rem;
+
+      &:hover {
+        text-decoration: underline;
+        cursor: pointer;
+      }
+    }
+  }
+
+  @media #{map-get($display-breakpoints, 'sm-and-down')} {
+    .v-tab {
+      font-size: 1rem;
+    }
+
+    .btn {
+      &--submit,
+      &--register {
+        width: 100%;
+        margin: 0 !important;
+      }
+    }
+  }
+</style>
