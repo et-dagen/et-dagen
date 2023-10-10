@@ -20,8 +20,7 @@ export const mapErrorMessageToAlertInfo = (errorMessage: string) => {
 
 export const getI18nAlertRoute = (errorMessage: string) => {
   const alert = mapErrorMessageToAlertInfo(errorMessage)
-  if (alert === 'unknown_error')
-    return { type: 'warning', route: 'alert.unknown_error' }
+  if (alert === 'unknown_error') return 'alert.unknown_error'
 
   const { source, type, message } = alert
   return `alert.${type}.${source}.${message}`
