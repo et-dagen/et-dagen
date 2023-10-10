@@ -21,15 +21,31 @@
       "
       >Create user</VBtn
     >
-    <!--
-    <CompanyCard
-      :content="{
+    <!-- eslint-disable 
+    <CompanyGrid
+      :content="[{
         logo: 'https://1000logos.net/wp-content/uploads/2021/05/Sony-logo.png',
         website: 'https://pro.sony/en_NO/home',
-      }"
-    />
-    -->
-    <!-- eslint-disable -->
+      },{
+        logo: 'https://1000logos.net/wp-content/uploads/2021/05/Sony-logo.png',
+        website: 'https://pro.sony/en_NO/home',
+      },{
+        logo: 'https://1000logos.net/wp-content/uploads/2021/05/Sony-logo.png',
+        website: 'https://pro.sony/en_NO/home',
+      },{
+        logo: 'https://1000logos.net/wp-content/uploads/2021/05/Sony-logo.png',
+        website: 'https://pro.sony/en_NO/home',
+      },{
+        logo: 'https://1000logos.net/wp-content/uploads/2021/05/Sony-logo.png',
+        website: 'https://pro.sony/en_NO/home',
+      },{
+        logo: 'https://1000logos.net/wp-content/uploads/2021/05/Sony-logo.png',
+        website: 'https://pro.sony/en_NO/home',
+      }]"
+      >
+      </CompanyGrid>
+    eslint-enable -->
+    <!--eslint-disable -->
     <CompanyGrid2>
       <CompanyCard
         :content="{
@@ -46,8 +62,13 @@
           logo: 'https://1000logos.net/wp-content/uploads/2021/05/Sony-logo.png',
           website: 'https://pro.sony/en_NO/home',
         }"
+      /><CompanyCard
+        :content="{
+          logo: 'https://1000logos.net/wp-content/uploads/2021/05/Sony-logo.png',
+          website: 'https://pro.sony/en_NO/home',
+        }"
       />
     </CompanyGrid2>
-    <!-- eslint-enable -->
+    <!--eslint-enable -->
   </div>
 </template>
