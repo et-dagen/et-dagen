@@ -109,14 +109,14 @@
         </VBtn>
       </VRow>
     </VContainer>
-    <VContainer>
-      <VRow>
+    <VContainer class="my-0 pt-2">
+      <VRow class="mt-0">
         <!-- TODO: Add @click hook to use Firebase 'Forgot Password' feature -->
         <span class="btn--forgot" @click="resetPassword">{{
           $t('user.login.forgot')
         }}</span>
       </VRow>
-      <VRow>
+      <VRow class="mt-0">
         <VBtn
           color="primary"
           @click="() => navigateTo('/user/signup')"
@@ -136,11 +136,11 @@
 
   .v-container {
     max-width: 26rem !important;
-    margin-block: 1.2rem;
+    margin-block: 0.5rem;
   }
 
   .v-row {
-    padding-block: 0.1rem;
+    padding-block: 0.5rem;
   }
 
   .v-tab--selected {
