@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import type { AlertType } from 'composables/useAlerts'
+  const localePath = useLocalePath()
 
   const initialState = {
     email: '',
@@ -119,7 +120,7 @@
       <VRow class="mt-0">
         <VBtn
           color="primary"
-          @click="() => navigateTo('/user/signup')"
+          @click="navigateTo(localePath('/user/signup'))"
           variant="outlined"
           class="btn--register"
           :disabled="isRegistering"
