@@ -1,33 +1,31 @@
 <template>
   <div>
-    <p>User from store: {{ user }}</p>
-
-    <VBtn
-      color="info"
-      @click="
-        registerUser({
-          email: 'petter@cot.as',
-          password: '123456',
-          name: 'Petter Arnt',
-          studyProgram: 'kyb',
-        })
-      "
-      >Create user</VBtn
-    >
+    <HomeBanner
+      :content="{
+        caption: 'Få et innblikk i din fremtidige arbeidsplass',
+        date: { start: '2023-02-14', end: '2023-02-15' },
+        image: 'https://cdn.vuetifyjs.com/images/parallax/material.jpg',
+        title: 'Elektronikk & Teknologidagen',
+      }"
+    />
     <CompanyHero
       :content="{
         name: 'Company Name',
-        description: `This is the company's description`,
-        logo: `https://graphicsfamily.com/wp-content/uploads/
-2020/08/Company-Logo-Design-on-3d-glass-window-scaled.jpg`,
+        description: `Lorem ipsum 
+        dolor sit amet, 
+        consectetur adipiscing elit, sed do eiusmod tempor 
+        incididunt ut labore et 
+        dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
+        ullamco laboris nisi ut aliquip ex ea
+        commodo consequat. Duis aute irure 
+        dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat 
+        nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in 
+         qui officia deserunt mollit anim id est laborum.`,
+        logo: `https://storage.googleapis.com/etdagen-d1f82.
+appspot.com/storage_companies%2FSony%2FLogo%2Fsony.png`,
         website: 'https://shortsdag.no',
       }"
       class="my-5 d-flex justify-center"
     />
   </div>
 </template>
-
-<script setup lang="ts">
-  const authStore = useAuthStore()
-  const { user } = storeToRefs(authStore)
-</script>
