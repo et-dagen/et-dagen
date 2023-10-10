@@ -61,16 +61,19 @@
 </script>
 
 <template>
-  <VAlert
-    v-if="alertState.show"
-    v-model="alertState.show"
-    variant="tonal"
-    :type="alertState.type"
-    closable
-    :close-label="$t('alert.close_alert')"
-    :title="$t(`${alertState.alertRoute}.title`)"
-    :text="$t(`${alertState.alertRoute}.message`)"
-  />
+  <VSnackbar v-model="alertState.show">
+    {{ $t(`${alertState.alertRoute}.title`) }}
+
+    <template #actions>
+      <v-btn
+        :color="alertState.type"
+        variant="text"
+        @click="alertState.show = false"
+      >
+        {{ $t('alert.close_alert') }}
+      </v-btn>
+    </template>
+  </VSnackbar>
   <VForm ref="form" @submit.prevent="submit">
     <VContainer>
       <VRow>

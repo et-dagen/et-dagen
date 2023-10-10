@@ -14,4 +14,8 @@ export default {
   VAlert: {
     maxWidth: '600px',
   },
+  VSnackbar: {
+    location: 'bottom right',
+    zIndex: 1000,
+  },
 }
