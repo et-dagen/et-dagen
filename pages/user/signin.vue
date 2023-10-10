@@ -1,3 +1,12 @@
+<script setup lang="ts">
+  const signIn = async () => {
+    // test user credentials
+    // await signinUser('basic@test.no', 'password')
+    // await signinUser('company@test.no', 'password')
+    await signinUser('admin@test.no', 'password')
+  }
+</script>
+
 <template>
   <div>
     Login page
@@ -11,11 +20,3 @@
     </p>
   </div>
 </template>
-
-<script setup lang="ts">
-  const signIn = async () => {
-    // test user credentials
-    // await signinUser('aasmund@cot.as', 'abc123+A')
-    await signinUser('petter@cot.as', '123456')
-  }
-</script>

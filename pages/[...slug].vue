@@ -1,3 +1,7 @@
+<script setup lang="ts">
+  const localePath = useLocalePath()
+</script>
+
 <template>
   <div class="d-flex h-screen mt-10 justify-center">
     <VSheet class="text-center">
@@ -9,10 +13,6 @@
     </VSheet>
   </div>
 </template>
-
-<script setup lang="ts">
-  const localePath = useLocalePath()
-</script>
 
 <style scoped>
   .break-text {
