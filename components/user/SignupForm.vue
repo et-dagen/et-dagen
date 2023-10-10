@@ -24,11 +24,14 @@
   })
 
   const form = ref()
+  const isRegistering = ref<boolean>(false)
   const submit = async () => {
     if (!form.value) return
 
     const { valid } = await form.value.validate()
     if (!valid) throw new Error('Form is not valid')
+
+    isRegistering.value = true
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { passwordConfirmation, userType, ...user } = state
@@ -42,13 +45,17 @@
         currentYear: userType === 'student' ? user.currentYear : undefined,
       },
       user.registrationCode ?? undefined // Only send registration code if user is a company
-    ).catch((error) => {
-      const content = getAlertRouteAndType(error.message)
+    )
+      .catch((error) => {
+        const content = getAlertRouteAndType(error.message)
 
-      alertState.show = true
-      alertState.alertRoute = content.route
-      alertState.type = content.type as AlertType
-    })
+        alertState.show = true
+        alertState.alertRoute = content.route
+        alertState.type = content.type as AlertType
+      })
+      .finally(() => {
+        isRegistering.value = false
+      })
   }
 
   const initialAlertState = {
@@ -158,7 +165,12 @@
           </VWindowItem>
         </VWindow>
       </VCardText>
-      <VBtn color="success" type="submit" class="btn--submit">
+      <VBtn
+        color="success"
+        type="submit"
+        class="btn--submit"
+        :loading="isRegistering"
+      >
         {{ $t('user.sign_up') }}
       </VBtn>
     </VContainer>
