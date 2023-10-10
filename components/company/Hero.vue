@@ -21,21 +21,20 @@
       required: true,
     },
   })
-  const { lgAndUp } = useDisplay()
+  const { xs } = useDisplay()
 </script>
 
 <template>
   <div>
-    <VSheet :width="lgAndUp ? '75vw' : '90vw'">
-      <br />
+    <VSheet :width="xs ? '90vw' : '65vw'">
       <h2
         :class="`text-md-h2 text-sm-h3 text-h4 text-center 
-        pt-10 pb-lg-3 pb-5 font-weight-bold`"
+        pt-10 pb-lg-6 pb-3 font-weight-bold`"
       >
         {{ $t('company.main_partner') }}
       </h2>
 
-      <VRow class="pt-lg-10" no-gutters>
+      <VRow no-gutters>
         <!-- Company logo -->
         <VCol cols="12" lg="6" style="cursor: pointer" class="pr-lg-3">
           <VImg
