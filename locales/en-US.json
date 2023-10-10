@@ -76,6 +76,9 @@
     "close_alert": "Close alert",
     "error": {
       "default": "An error occured",
+      "form": {
+        "missing_email": "Email input is missing"
+      },
       "firebase": {
         "email_in_use": "Email already in use",
         "invalid_email": "Invalid email address",
@@ -84,6 +87,11 @@
       },
       "server": {
         "invalid_registration_code": "Invalid registration code"
+      }
+    },
+    "success": {
+      "firebase": {
+        "reset_password": "Password reset email sent"
       }
     }
   }

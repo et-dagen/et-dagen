@@ -76,6 +76,9 @@
     "close_alert": "Lukk",
     "error": {
       "default": "Oi! Noe gikk galt.",
+      "form": {
+        "missing_email": "Epost ikke oppgitt"
+      },
       "firebase": {
         "email_in_use": "Eposten er allerede i bruk",
         "invalid_email": "Ugyldig epost",
@@ -84,6 +87,11 @@
       },
       "server": {
         "invalid_registration_code": "Ugyldig registreringskode"
+      }
+    },
+    "success": {
+      "firebase": {
+        "reset_password": "Epost for tilbakestilling av passord er sendt"
       }
     }
   }
