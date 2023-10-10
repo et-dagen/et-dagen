@@ -6,6 +6,8 @@
     useRequireEqualPasswords,
   } from '@/composables/useForm'
 
+  import type { AlertType } from 'composables/useAlerts'
+
   const initialState = {
     name: '',
     email: '',
@@ -31,30 +33,44 @@
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { passwordConfirmation, userType, ...user } = state
 
-    if (userType === 'student') {
-      await registerUser({
+    await registerUser(
+      {
         name: user.name,
         email: user.email,
         password: user.password,
-        studyProgram: user.studyProgram,
-        currentYear: user.currentYear,
-      })
-    }
+      },
+      user.registrationCode ?? undefined // Only send registration code if user is a company
+    ).catch((error) => {
+      const content = getAlertRouteAndType(error.message)
 
-    if (userType === 'company') {
-      await registerUser(
-        {
-          name: user.name,
-          email: user.email,
-          password: user.password,
-        },
-        user.registrationCode
-      )
-    }
+      alertState.show = true
+      alertState.alertRoute = content.route
+      alertState.type = content.type as AlertType
+    })
   }
+
+  const initialAlertState = {
+    show: false,
+    alertRoute: '',
+    type: undefined as AlertType,
+  }
+
+  const alertState = reactive({
+    ...initialAlertState,
+  })
 </script>
 
 <template>
+  <VAlert
+    v-if="alertState.show"
+    v-model="alertState.show"
+    variant="tonal"
+    :type="alertState.type"
+    closable
+    :close-label="$t('alert.close_alert')"
+    :title="$t(`${alertState.alertRoute}.title`)"
+    :text="$t(`${alertState.alertRoute}.message`)"
+  />
   <VForm ref="form" @submit.prevent="submit">
     <VContainer>
       <VRow>
@@ -73,15 +89,12 @@
         />
       </VRow>
       <VRow>
-        <!-- TODO: Input FormPasswordInput from #78 -->
         <UserFormPasswordInput
           v-model="state.password"
           :rules="[useRequiredInput, useValidatePassword]"
         />
       </VRow>
       <VRow>
-        <!-- TODO: Input FormPasswordInput from 
-          #78 with password confirm logic -->
         <UserFormPasswordInput
           v-model="state.passwordConfirmation"
           :rules="[
@@ -96,7 +109,6 @@
       </VRow>
     </VContainer>
     <VContainer class="px-0">
-      <!-- TODO: Set background color of active tab to primary with less opacity -->
       <VTabs v-model="state.userType" fixed-tabs color="primary" class="tabs">
         <VTab value="student">{{ $t('user.register.user_type.student') }}</VTab>
         <VTab value="company">{{ $t('user.register.user_type.company') }}</VTab>
