@@ -65,7 +65,7 @@
   },
   "alert": {
     "close_alert": "Close alert",
-    "unknown_error": "An unknown error occured",
+    "default_error": "An error occured",
     "error": {
       "firebase": {
         "email_in_use": {
