@@ -49,11 +49,12 @@
     )
       .catch((error) => {
         const content = getAlertRouteAndType(error.message)
-        console.log(error.message)
 
-        alertState.show = true
         alertState.alertRoute = content.route
         alertState.type = content.type as AlertType
+        alertState.show = true
+
+        console.error(error)
       })
       .finally(() => {
         isRegistering.value = false
