@@ -63,6 +63,9 @@
       "december": "desember"
     }
   },
+  "company": {
+    "main_partner": "Hovedpartner"
+  },
   "alert": {
     "close_alert": "Lukk",
     "error": {

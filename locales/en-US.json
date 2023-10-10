@@ -63,6 +63,9 @@
       "december": "December"
     }
   },
+  "company": {
+    "main_partner": "Main partner"
+  },
   "alert": {
     "close_alert": "Close alert",
     "error": {
