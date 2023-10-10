@@ -65,6 +65,7 @@
   },
   "alert": {
     "close_alert": "Lukk",
+    "unknown_error": "En ukjent feil har oppstått. Vennligst prøv igjen senere.",
     "error": {
       "firebase": {
         "email_in_use": {
