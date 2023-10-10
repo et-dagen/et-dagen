@@ -53,22 +53,12 @@
           style="max-height: 40vh"
           class="pt-lg-0 pt-3 pl-lg-3"
         >
-          <VHover v-slot="{ isHovering, props }">
-            <VSheet
-              :class="{ 'on-hover': isHovering }"
-              v-bind="props"
-              class="d-inline-block"
-              :style="isHovering ? 'cursor: pointer' : ''"
-              @click="openInNewTab"
-            >
-              <h3
-                :class="isHovering ? 'text-decoration-underline' : ''"
-                class="text-lg-h4 text-h5 font-weight-bold"
-              >
-                {{ company.content.name }}
-              </h3>
-            </VSheet>
-          </VHover>
+          <h3
+            class="text-lg-h4 text-h5 font-weight-bold clicker d-inline-block"
+            @click="openInNewTab"
+          >
+            {{ company.content.name }}
+          </h3>
           <p class="pt-1 pt-lg-3">{{ company.content.description }}</p>
         </VCol>
       </VRow>
@@ -77,6 +67,11 @@
 </template>
 
 <style setup lang="scss">
+  .clicker:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
   .companyImage {
     color: transparent;
     background-color: transparent;
