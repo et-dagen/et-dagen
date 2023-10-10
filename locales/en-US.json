@@ -73,7 +73,7 @@
     "main_partner": "Main partner"
   },
   "alert": {
-    "close_alert": "Close alert",
+    "close_alert": "Close",
     "error": {
       "default": "An error occured",
       "form": {
