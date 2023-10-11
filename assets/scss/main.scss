@@ -1,8 +1,10 @@
 @use 'vuetify/styles';
+@use 'vuetify/settings';
 
 // link underlines were showing on iOS
 a {
   text-decoration: none !important;
+  color: rgb(var(--v-theme-primary)) !important;
 }
 
 // give all header elements their corresponding Vuetify class
