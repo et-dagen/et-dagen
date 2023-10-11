@@ -1,34 +1,39 @@
 export const calculateTimeDifference = (
   futureDate: string,
   futureTime: string
-): string => {
+): object => {
   // Define current date and future date + time
   const currentDate = new Date()
   const futureDateTime = new Date(`${futureDate} ${futureTime}`)
 
-  // Variables to find and define timedifferences
-
   // Calculate the time difference in milliseconds.
   const timeDifferenceInMs = futureDateTime.getTime() - currentDate.getTime()
 
-  // Convert the time difference in milliseconds to seconds.
-  const timeDifferenceInSeconds = timeDifferenceInMs / 1000
+  // Variables defining the timedifference in seconds, minutes, hours and days.
+  const totalTimeDifferenceInSeconds = timeDifferenceInMs / 1000
 
-  // Convert the time difference in seconds to minutes.
-  const timeDifferenceInMinutes = timeDifferenceInSeconds / 60
+  const totalTimeDifferenceInMinutes = totalTimeDifferenceInSeconds / 60
 
-  // Convert the time difference in minutes to hours.
-  const timeDifferenceInHours = timeDifferenceInMinutes / 60
+  const totalTimeDifferenceInHours = totalTimeDifferenceInMinutes / 60
 
-  // Convert the time difference in hours to days.
-  const timeDifferenceInDays = timeDifferenceInHours / 24
+  const totalTimeDifferenceInDays = totalTimeDifferenceInHours / 24
 
-  // Create a string to display the time difference in the desired format.
-  const timeDifferenceString = `${timeDifferenceInDays.toFixed(
-    0
-  )}:${timeDifferenceInHours.toFixed(0)}:${timeDifferenceInMinutes.toFixed(
-    0
-  )}:${timeDifferenceInSeconds.toFixed(0)}`
+  // Variables containing remaining values of days, hours, minutes and seconds
+  const timeDifferenceInDays = totalTimeDifferenceInDays
 
-  return timeDifferenceString
+  const timeDifferenceInHours =
+    totalTimeDifferenceInHours - 24 * Math.floor(totalTimeDifferenceInDays)
+
+  const timeDifferenceInMinutes =
+    totalTimeDifferenceInMinutes - 60 * Math.floor(totalTimeDifferenceInHours)
+
+  const timeDifferenceInSeconds =
+    totalTimeDifferenceInSeconds - 60 * Math.floor(totalTimeDifferenceInMinutes)
+
+  return {
+    days: Math.floor(timeDifferenceInDays),
+    hours: Math.floor(timeDifferenceInHours),
+    minutes: Math.floor(timeDifferenceInMinutes),
+    seconds: Math.floor(timeDifferenceInSeconds),
+  }
 }
