@@ -4,16 +4,28 @@
     futureTime: string
   }
 
-  const props = defineProps({
+  const cdProps = defineProps({
     content: { type: Object as PropType<CountDownContent>, required: true },
   })
 
+  export interface TimeDiffReturn {
+    days: string
+    hours: string
+    minutes: string
+    seconds: string
+  }
+
   const timeDiff = calculateTimeDifference(
-    props.content.futureDate,
-    props.content.futureTime
+    cdProps.content.futureDate,
+    cdProps.content.futureTime
   )
+
+  const diffDays = timeDiff.days
+  const diffHours = timeDiff.hours
+  const diffMinutes = timeDiff.minutes
+  const diffSeconds = timeDiff.seconds
 </script>
 
 <template>
-  <div>{{ timeDiff }}</div>
+  <div>{{ diffDays }}{{ diffHours }}{{ diffMinutes }}{{ diffSeconds }}</div>
 </template>
