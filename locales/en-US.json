@@ -25,6 +25,12 @@
       "october": "October",
       "november": "November",
       "december": "December"
+    },
+    "times": {
+      "days": "Days",
+      "hours": "Hours",
+      "minutes": "Minutes",
+      "seconds": "Seconds"
     }
   }
 }

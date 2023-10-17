@@ -25,6 +25,12 @@
       "october": "oktober",
       "november": "november",
       "december": "desember"
+    },
+    "times": {
+      "days": "Dager",
+      "hours": "Timer",
+      "minutes": "Minutter",
+      "seconds": "Sekunder"
     }
   }
 }

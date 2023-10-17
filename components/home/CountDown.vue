@@ -22,13 +22,6 @@
     )
   )
 
-  const displayText = {
-    days: 'Dager',
-    hours: 'Timer',
-    minutes: 'Minutter',
-    seconds: 'Sekunder',
-  }
-
   setInterval(() => {
     timeDiff.value = calculateTimeDifference(
       cdProps.content.futureDate,
@@ -46,34 +39,63 @@
         >
       </v-col>
     </v-row>
+
     <v-row justify="center">
-      <v-col
-        v-for="elements in timeDiff"
-        :key="elements"
-        cols="12"
-        md="3"
-        sm="3"
-        class="mx-auto"
-      >
-        <v-card class="outlined">
+      <v-col cols="2.25" class="px=2">
+        <v-row justify="center">
+          <v-card class="outlined">
+            <v-card-text class="text-center">
+              <h4>{{ timeDiff.days }}</h4>
+            </v-card-text>
+          </v-card>
+        </v-row>
+        <v-row>
           <v-card-text class="text-center">
-            <h4>{{ elements }}</h4>
+            <h6>{{ $t('datetime.times.days') }}</h6>
           </v-card-text>
-        </v-card>
+        </v-row>
       </v-col>
-    </v-row>
-    <v-row justify="center">
-      <v-col
-        v-for="words in displayText"
-        :key="words"
-        cols="12"
-        md="3"
-        sm="3"
-        class="mx-auto"
-      >
-        <v-card-text class="text-center">
-          <h6>{{ words }}</h6>
-        </v-card-text>
+      <v-col cols="2.25" class="px=2">
+        <v-row justify="center">
+          <v-card class="outlined">
+            <v-card-text class="text-center">
+              <h4>{{ timeDiff.hours }}</h4>
+            </v-card-text>
+          </v-card>
+        </v-row>
+        <v-row>
+          <v-card-text class="text-center">
+            <h6>{{ $t('datetime.times.hours') }}</h6>
+          </v-card-text>
+        </v-row>
+      </v-col>
+      <v-col cols="2.25" class="px=2">
+        <v-row justify="center">
+          <v-card class="outlined">
+            <v-card-text class="text-center">
+              <h4>{{ timeDiff.minutes }}</h4>
+            </v-card-text>
+          </v-card>
+        </v-row>
+        <v-row>
+          <v-card-text class="text-center">
+            <h6>{{ $t('datetime.times.minutes') }}</h6>
+          </v-card-text>
+        </v-row>
+      </v-col>
+      <v-col cols="2.25" class="px=2">
+        <v-row justify="center">
+          <v-card class="outlined">
+            <v-card-text class="text-center">
+              <h4>{{ timeDiff.seconds }}</h4>
+            </v-card-text>
+          </v-card>
+        </v-row>
+        <v-row>
+          <v-card-text class="text-center">
+            <h6>{{ $t('datetime.times.seconds') }}</h6>
+          </v-card-text>
+        </v-row>
       </v-col>
     </v-row>
     <v-card-actions>
@@ -98,5 +120,9 @@
 
   .mx-auto {
     margin: 0 auto;
+  }
+
+  .v-card {
+    min-width: 90px;
   }
 </style>
