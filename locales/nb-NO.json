@@ -9,7 +9,49 @@
   },
   "user": {
     "sign_in": "Logg inn",
-    "sign_out": "Logg ut"
+    "sign_out": "Logg ut",
+    "sign_up": "Registrer bruker",
+    "register": {
+      "title": "Registrer bruker",
+      "full_name": "Fullt navn",
+      "first_name": "Fornavn",
+      "last_name": "Etternavn",
+      "email": "E-post",
+      "password": "Passord",
+      "password_confirmation": "Bekreft passord",
+      "study_program": "Studieprogram",
+      "year": "Årstrinn",
+      "registration_code": "Registreringskode",
+      "code_hint": "Ta kontakt for a motta en registreringskode",
+      "user_type": {
+        "student": "Studentbruker",
+        "company": "Bedriftsbruker"
+      }
+    },
+    "login": {
+      "email": "E-post",
+      "password": "Passord",
+      "remember": "Husk meg",
+      "forgot": "Glemt passord?"
+    }
+  },
+  "error": {
+    "form": {
+      "general": {
+        "equal_password": "Passordene må være like",
+        "required": "Dette feltet er påkrevd",
+        "email": "Ugyldig e-postadresse"
+      },
+      "password": {
+        "length": "Passordet må være minst 8 tegn langt.",
+        "letters": "Passordet må inneholde minst 3 bokstaver.",
+        "numbers": "Passordet må inneholde minst 3 tall.",
+        "special": "Passordet må inneholde minst 1 spesialtegn.",
+        "uppercase": "Passordet må inneholde minst 1 stor bokstav.",
+        "required": "Passord er påkrevd",
+        "confirmed": "Passordene må være like"
+      }
+    }
   },
   "datetime": {
     "months": {
@@ -25,6 +67,32 @@
       "october": "oktober",
       "november": "november",
       "december": "desember"
+    }
+  },
+  "company": {
+    "main_partner": "Hovedpartner"
+  },
+  "alert": {
+    "close_alert": "Lukk",
+    "error": {
+      "default": "Oi! Noe gikk galt.",
+      "form": {
+        "missing_email": "Epost ikke oppgitt"
+      },
+      "firebase": {
+        "email_in_use": "Eposten er allerede i bruk",
+        "invalid_email": "Ugyldig epost",
+        "user_not_found": "Brukeren ble ikke funnet",
+        "wrong_password": "Feil passord"
+      },
+      "server": {
+        "invalid_registration_code": "Ugyldig registreringskode"
+      }
+    },
+    "success": {
+      "firebase": {
+        "reset_password": "Epost for tilbakestilling av passord er sendt"
+      }
     }
   }
 }
