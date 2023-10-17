@@ -15,9 +15,11 @@
     seconds: string
   }
 
-  const timeDiff = calculateTimeDifference(
-    cdProps.content.futureDate,
-    cdProps.content.futureTime
+  const timeDiff = ref(
+    calculateTimeDifference(
+      cdProps.content.futureDate,
+      cdProps.content.futureTime
+    )
   )
 
   const displayText = {
@@ -26,10 +28,17 @@
     minutes: 'Minutter',
     seconds: 'Sekunder',
   }
+
+  setInterval(() => {
+    timeDiff.value = calculateTimeDifference(
+      cdProps.content.futureDate,
+      cdProps.content.futureTime
+    )
+  }, 1000)
 </script>
 
 <template>
-  <v-card width="37%" class="mx-auto" elevation="0">
+  <v-card width="37%" class="mx-auto pt-16" elevation="0">
     <v-row justify="center">
       <v-col class="text-center">
         <v-card-title class="text-h6 text-md-h5 text-lg-h4"
