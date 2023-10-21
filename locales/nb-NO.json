@@ -5,7 +5,8 @@
     "jobs": "Jobber",
     "contact": "Kontakt",
     "admin": "Administrasjon",
-    "user": "Min profil"
+    "user": "Min profil",
+    "program_nav": "SE PROGRAM"
   },
   "user": {
     "sign_in": "Logg inn",
@@ -32,5 +33,9 @@
       "minutes": "Minutter",
       "seconds": "Sekunder"
     }
+  },
+  "event": {
+    "take_off": "Arrangementet tar av om"
   }
+  
 }

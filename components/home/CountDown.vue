@@ -34,9 +34,9 @@
   <v-card width="37%" class="mx-auto pt-16" elevation="0">
     <v-row justify="center">
       <v-col class="text-center">
-        <v-card-title class="text-h6 text-md-h5 text-lg-h4"
-          >Arrangementet tar av om</v-card-title
-        >
+        <v-card-title class="text-h6 text-md-h5 text-lg-h4">{{
+          $t('event.take_off')
+        }}</v-card-title>
       </v-col>
     </v-row>
 
@@ -108,7 +108,7 @@
         append-icon="mdi-arrow-right"
         @click="navigateTo('/program')"
       >
-        SE PROGRAM
+        {{ $t('nav.program_nav') }}
       </v-btn>
     </v-card-actions>
   </v-card>
