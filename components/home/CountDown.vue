@@ -106,6 +106,7 @@
         style="background-color: #c33c3b"
         color="white"
         append-icon="mdi-arrow-right"
+        @click="navigateTo('/program')"
       >
         SE PROGRAM
       </v-btn>
