@@ -33,7 +33,7 @@
 <template>
   <v-card width="37%" class="mx-auto pt-16" elevation="0">
     <v-row justify="center">
-      <v-col class="text-center">
+      <v-col class="text-center pb-6">
         <v-card-title class="text-h6 text-md-h5 text-lg-h4">{{
           $t('event.take_off')
         }}</v-card-title>
@@ -98,7 +98,7 @@
         </v-row>
       </v-col>
     </v-row>
-    <v-card-actions>
+    <v-card-actions class="pt-6">
       <v-btn
         variant="outlined"
         width="95%"
@@ -125,5 +125,10 @@
 
   .v-card {
     min-width: 90px;
+  }
+
+  .v-row {
+    margin-left: 0px;
+    margin-right: 0px;
   }
 </style>
