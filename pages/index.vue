@@ -27,5 +27,15 @@ appspot.com/storage_companies%2FSony%2FLogo%2Fsony.png`,
       }"
       class="my-5 d-flex justify-center"
     />
+
+    <CompanyGrid>
+      <CompanyCard
+        :content="{
+          logo: `https://1000logos.net/wp-content/
+          uploads/2021/05/Sony-logo.png`,
+          website: 'https://pro.sony/en_NO/home',
+        }"
+      ></CompanyCard>
+    </CompanyGrid>
   </div>
 </template>
