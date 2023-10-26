@@ -51,3 +51,8 @@ export const getNumericDayAndMonthString = (dateTimeString: string): {} => {
 
   return `${day < 10 ? `0${day}` : day}/${month + 1 < 10 ? `0${month}` : month}`
 }
+
+// Get date string YYYY-MM-DD from datetime string YYYY-MM-DDThh:mm:ssZ
+export const getDateFromDatetime = (datetime: string): string => {
+  return datetime.split('T')[0]
+}
