@@ -94,5 +94,11 @@
         "reset_password": "Epost for tilbakestilling av passord er sendt"
       }
     }
+  },
+  "program": {
+    "title": "Program",
+    "event": {
+      "sign_up": "Meld meg på!"
+    }
   }
 }

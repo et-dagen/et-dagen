@@ -94,5 +94,11 @@
         "reset_password": "Password reset email sent"
       }
     }
+  },
+  "program": {
+    "title": "Programme",
+    "event": {
+      "sign_up": "Sign me up!"
+    }
   }
 }
