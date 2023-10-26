@@ -1,5 +1,3 @@
-import { DateStringObject } from 'models/DateTime'
-
 export const isValidDate = (date: string): boolean => {
   // Check if date matches date regex
   const dateRegex = /^\d{4}-\d{2}-\d{2}$/
@@ -40,14 +38,16 @@ const months = [
   'december',
 ]
 
-export const dateStringToStringObject = (
-  startDate: string
-): DateStringObject => {
-  const start = new Date(startDate)
+// Get month name from month index
+export const getFullMonthFromNumber = (month: number): string => {
+  return months[month]
+}
 
-  return {
-    day: start.getDate(),
-    month: months[start.getMonth()],
-    year: start.getFullYear(),
-  }
+// Get date and month string from datetime string. Format: DD/MM
+export const getNumericDayAndMonthString = (dateTimeString: string): {} => {
+  const date = new Date(dateTimeString)
+  const day = date.getDate()
+  const month = date.getMonth() + 1
+
+  return `${day < 10 ? `0${day}` : day}/${month + 1 < 10 ? `0${month}` : month}`
 }
