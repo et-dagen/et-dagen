@@ -1,3 +1,4 @@
+// Check if date is valid and matches YYYY-MM-DD format
 export const isValidDate = (date: string): boolean => {
   // Check if date matches date regex
   const dateRegex = /^\d{4}-\d{2}-\d{2}$/
@@ -14,6 +15,7 @@ export const isValidDate = (date: string): boolean => {
   return true
 }
 
+// Check if two dates are of the same month
 export const isSameMonth = (date1: string, date2: string): boolean => {
   const date1Object = new Date(date1)
   const date2Object = new Date(date2)
@@ -44,8 +46,8 @@ export const getFullMonthFromNumber = (month: number): string => {
 }
 
 // Get date and month string from datetime string. Format: DD/MM
-export const getNumericDayAndMonthString = (dateTimeString: string): {} => {
-  const date = new Date(dateTimeString)
+export const getNumericDayAndMonthString = (datetime: string): {} => {
+  const date = new Date(datetime)
   const day = date.getDate()
   const month = date.getMonth() + 1
 
