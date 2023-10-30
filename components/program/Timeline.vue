@@ -1,7 +1,10 @@
 <script setup lang="ts">
   const events = await $fetch('/api/event', { method: 'GET' })
   const eventsByDate = groupEventsByDateStart(events)
+  sortDateGroupedEventsByStartTime(eventsByDate)
   const dates = Object.keys(eventsByDate)
+
+  const companies = await $fetch('/api/company', { method: 'GET' })
 
   const initialState = {
     selectedDate: dates[0] as string,
@@ -13,301 +16,188 @@
 </script>
 
 <template>
-  <VContainer class="px-0 my-10">
+  <VContainer>
     <VTabs v-model="state.selectedDate" fixed-tabs color="primary" class="tabs">
-      <VTab v-for="date in dates" :key="date" :value="date">{{
-        getNumericDayAndMonthString(date)
-      }}</VTab>
+      <VTab v-for="date in dates" :key="date" :value="date">
+        {{ getNumericDayAndMonthString(date) }}
+      </VTab>
     </VTabs>
   </VContainer>
-
   <VContainer>
-    <div class="timeline-wrapper">
-      <ul class="step">
-        <li
-          v-for="event in eventsByDate[state.selectedDate]"
-          :key="event.id"
-          class="step__item mb-10"
-          :class="false ? 'is-done' : ''"
+    <div class="container">
+      <div
+        v-for="event in eventsByDate[state.selectedDate]"
+        :key="event.id"
+        class="card__div"
+      >
+        <div class="card__timestamp">
+          <span class="date text-h5 text-primary bold">
+            {{ getNumericDayAndMonthString(event.date.start) }}
+          </span>
+          <br />
+          <span class="time text-h4 bold">
+            {{ getHourAndMinuteStringFromString(event.date.start) }}
+          </span>
+        </div>
+
+        <v-card
+          width="600"
+          elevation="0"
+          class="card mb-4"
+          variant="flat"
+          @click="() => navigateTo('/program/' + event.id)"
         >
-          <div class="time">
-            <h6 class="bold text-primary">
-              {{ getNumericDayAndMonthString(event.date.start) }}
-            </h6>
-            <h4 class="bold">
-              {{ getHourAndMinuteStringFromString(event.date.start) }}
-            </h4>
-          </div>
-          <div class="step__item--content">
-            <div class="step__item--title bold">
-              <h4
-                class="truncate-v1"
-                @click="() => navigateTo('/program/' + event.id)"
-              >
-                {{ event.title }}
-              </h4>
-            </div>
-            <div class="step__item--description">
-              <span>{{ event.description }}</span>
-            </div>
-            <div class="step__item--location py-2 d-flex flex-row align-center">
-              <VIcon class="mr-2" color="primary">mdi-map-marker</VIcon>
+          <template #title> {{ event.title }} </template>
+
+          <template v-if="companies[event.companyUID]" #subtitle>
+            {{ companies[event.companyUID].name }}
+          </template>
+
+          <template #text>
+            <span class="card__location">
+              <VIcon color="primary">mdi-map-marker</VIcon>
               <NuxtLink
                 v-if="event.location.map !== 'null'"
                 :to="event.location.map"
                 class="link"
+                @click.stop
               >
                 {{ event.location.name }}
-                <VIcon size="x-small" class="open_in_view"
-                  >mdi-open-in-new
-                </VIcon>
+                <VIcon size="x-small">mdi-open-in-new</VIcon>
               </NuxtLink>
-              <span v-else>{{ event.location.name }}</span>
-            </div>
+              <span v-else>
+                {{ event.location.name }}
+              </span>
+            </span>
+            <br />
+            {{ event.description }}
+          </template>
+
+          <template #actions>
             <VBtn
               color="primary"
-              density="compact"
               variant="tonal"
-              class="mt-2"
-              @click="
-                () => {
-                  // TODO: POST request to sign up for event with 'eventId' as parameter
-                  console.log(event.id)
-                }
-              "
+              density="comfortable"
+              @click.stop="() => console.log('test')"
+              >{{ $t('program.event.sign_up') }}</VBtn
             >
-              {{ $t('program.event.sign_up') }}
-            </VBtn>
-          </div>
-        </li>
-      </ul>
+          </template>
+        </v-card>
+      </div>
     </div>
   </VContainer>
 </template>
 
 <style scoped lang="scss">
   @import 'vuetify/settings';
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem !important;
+  }
+
   .bold {
     font-weight: bold;
   }
 
-  .time {
-    position: absolute;
-    max-width: 100px;
-    left: -75px;
-    text-align: right;
-    margin-top: 6px;
-    * {
-      padding: 0;
-      margin: 0;
-    }
+  .v-tab--selected {
+    background: rgba(var(--v-theme-accent), 0.08);
   }
 
-  .timeline-wrapper {
-    min-width: 400px;
-    font-family: 'Helvetica';
-    font-size: 14px;
-    position: relative;
-  }
+  .card {
+    // position: relative;
 
-  .step {
-    padding-left: 45px;
-    list-style: none;
-    position: absolute;
-    width: 100%;
-    left: 5rem;
-
-    &::before {
-      // Node line
-      display: inline-block;
-      content: '';
+    &__timestamp {
       position: absolute;
-      top: 1rem; // Start from top
-      left: 84.2px;
-      width: 52px;
-      height: 100%;
-      border-left: 4px solid #000;
-    }
-  }
-
-  .step__item {
-    position: relative;
-    counter-increment: list;
-    max-width: 600px;
-    max-height: 200px;
-    min-height: 100px;
-
-    &:not(:last-child) {
-      padding-bottom: 20px;
+      left: -9rem - 0.125rem;
+      top: 10px;
+      text-align: right;
     }
 
-    // &:last-child {
-    //   @extend .step;
-    //   margin: 0;
-    //   padding: 0;
-
-    //   &::before {
-    //     left: 39px;
-    //     // display: none;
-    //   }
-    // }
-
-    // &::before {
-    //   display: inline-block;
-    //   content: '';
-    //   position: absolute;
-    //   left: 40px;
-    //   height: 100%;
-    //   width: 10px;
-    // }
-
-    &::after {
-      // Node circle
-      content: '';
-      display: inline-block;
-      position: absolute;
-      top: 12px;
-      left: 33px;
-      width: 1rem;
-      height: 1rem;
-      border: 2px solid #000;
-      border-radius: 50%;
-      margin-top: 0px;
-      background-color: rgb(var(--v-theme-neutral));
-    }
-
-    &--content {
-      margin-left: 68px;
-    }
-
-    &--title {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 1; // Number of lines to show
-      -webkit-box-orient: vertical;
-
-      h4 {
-        text-decoration: underline;
-
-        &:hover {
-          cursor: pointer;
-        }
-      }
-    }
-
-    &--description {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 3; // Number of lines to show
-      -webkit-box-orient: vertical;
-
-      span {
-        font-size: 1.2rem !important;
-      }
-    }
-
-    .link {
+    &__div {
       position: relative;
-      font-size: 1.2rem;
-      color: rbg(var(--v-theme-neutral));
-
-      &:visited {
-        color: rbg(var(--v-theme-neutral));
-      }
-    }
-
-    span {
-      font-size: 1.2rem;
-    }
-
-    &.is-done {
-      &::before {
-        border-left: 2px solid green;
-      }
-
-      &::after {
-        font-size: 10px;
-        color: #fff;
-        text-align: center;
-        border: 2px solid green;
-        background-color: green;
-      }
-    }
-
-    strong {
-      display: block;
-    }
-  }
-
-  .v-row {
-    padding-block: 0.6rem;
-  }
-
-  @media #{map-get($display-breakpoints, 'sm-and-down')} {
-    .timeline-wrapper,
-    .v-container {
-      min-width: 100%;
-    }
-
-    .time {
-      left: -65px;
-
-      h4 {
-        font-size: 1.2rem !important;
-      }
-
-      h6 {
-        font-size: 1rem !important;
-      }
-    }
-
-    .step {
-      width: 100%;
-      left: 0;
 
       &::before {
         // Node line
-        left: 51px;
+        display: inline-block !important;
+        content: '';
+        position: absolute !important;
+        left: -1.5rem;
+        top: 15px;
+        border-left: 4px solid #000;
+        height: calc(100% + 0.5rem);
       }
-    }
 
-    .step__item {
       &::after {
         // Node circle
-        left: 0px;
+        $node-width: 1.5rem;
+        content: '';
+        display: inline-block;
+        position: absolute;
+        top: 15px;
+        left: -1.5rem - ($node-width / 2) + 0.125rem;
+        width: $node-width;
+        height: $node-width;
+        border: 2px solid #000;
+        border-radius: 50%;
+        margin-top: 0px;
+        background-color: rgb(var(--v-theme-neutral));
       }
 
-      &--content {
-        margin-left: 30px;
-      }
-
-      &--title {
-        -webkit-line-clamp: 2; // Number of lines to show
-
-        h4 {
-          font-size: 1.2rem !important;
+      &:last-child {
+        &::before {
+          // Node line
+          height: calc(100% - 1.9rem);
+          display: none !important;
         }
-      }
-
-      &--description {
-        span {
-          font-size: 1rem !important;
-        }
-      }
-
-      .link {
-        font-size: 1rem;
       }
     }
 
-    .v-row {
-      padding-block: 0.6rem;
+    &__location {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      $card-gap: 0.5rem;
+      gap: $card-gap;
+
+      .link,
+      .link:visited {
+        color: rgb(var(--v-theme-neutral));
+      }
+    }
+  }
+
+  @media #{map-get($display-breakpoints, 'sm-and-down')} {
+    .container {
+      transform: translateX(3rem);
     }
 
-    .v-btn {
-      font-size: 1rem;
+    .card {
+      left: -1rem;
+
+      &__timestamp {
+        position: absolute;
+        left: -6.2rem - 0.125rem;
+        top: 10px;
+        text-align: right;
+      }
+    }
+
+    .date {
+      font-size: 1.2rem !important;
+    }
+
+    .time {
+      font-size: 1.4rem !important;
+    }
+
+    .card {
+      width: 250px !important;
+    }
+
+    .tabs {
+      width: 100% !important;
     }
   }
 </style>
