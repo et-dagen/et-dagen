@@ -36,3 +36,15 @@ export const groupEventsByDateStart = (eventsObject: any) => {
 
   return groupedEvents
 }
+
+// Sort date-grouped events by start time
+export const sortDateGroupedEventsByStartTime = (
+  events: Record<string, any[]>
+) => {
+  // tslint:disable-next-line: forin
+  for (const eventsOfDate of Object.entries(events)) {
+    eventsOfDate[1].sort((a: any, b: any) => {
+      return new Date(a.date.start).getTime() - new Date(b.date.start).getTime()
+    })
+  }
+}
