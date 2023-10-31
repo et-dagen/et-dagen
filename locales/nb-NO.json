@@ -114,7 +114,8 @@
     "title": "Program",
     "event": {
       "sign_up": "Meld meg på",
-      "opt_out": "Trekk påmelding"
+      "opt_out": "Trekk påmelding",
+      "sign_in_to_register": "Logg inn for å melde deg på"
     }
   }
 }

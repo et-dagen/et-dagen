@@ -115,7 +115,8 @@
     "title": "Programme",
     "event": {
       "sign_up": "Sign up",
-      "opt_out": "Opt out"
+      "opt_out": "Opt out",
+      "sign_in_to_register": "Sign in to register"
     }
   }
 }
