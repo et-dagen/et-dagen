@@ -93,13 +93,21 @@
         "missing_event_id": "Missing event id",
         "register": {
           "event_is_full": "Event is full",
-          "already_registered": "You are already registered for this event"
+          "already_registered": "You are already registered for this event",
+          "user_not_registered": "You are not registered for this event",
+          "registration_unnecessary": "Registration is not necessary for this event"
         }
       }
     },
     "success": {
       "firebase": {
         "reset_password": "Password reset email sent"
+      },
+      "event": {
+        "register": {
+          "sign_up": "Successfully registered to event",
+          "opt_out": "Successfully opted out of event"
+        }
       }
     }
   },

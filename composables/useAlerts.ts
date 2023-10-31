@@ -71,6 +71,22 @@ const errorMessageMap = new Map([
       message: 'missing_event_id',
     },
   ],
+  [
+    'Events: Error (register/user-not-registered).',
+    {
+      source: 'event.register',
+      type: 'error',
+      message: 'user_not_registered',
+    },
+  ],
+  [
+    'Events: Error (register/registration-unnecessary).',
+    {
+      source: 'event.register',
+      type: 'error',
+      message: 'registration_unnecessary',
+    },
+  ],
 ])
 
 export type AlertType = 'error' | 'info' | 'success' | 'warning' | undefined
