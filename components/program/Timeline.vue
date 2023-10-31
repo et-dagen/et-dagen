@@ -1,17 +1,33 @@
 <script setup lang="ts">
-  const events = await $fetch('/api/event', { method: 'GET' })
-  const eventsByDate = groupEventsByDateStart(events)
-  sortDateGroupedEventsByStartTime(eventsByDate)
-  const dates = Object.keys(eventsByDate)
+  const useAuth = useAuthStore()
 
   const companies = await $fetch('/api/company', { method: 'GET' })
 
+  const events = ref({})
+  const eventsByDate: Ref<{ [key: string]: any[] }> = ref({})
+  const dates = ref([])
+  const fetchAndUpdateEvents = async () => {
+    try {
+      const updatedEvents = await getEvents()
+      events.value = updatedEvents
+      eventsByDate.value = groupEventsByDateStart(updatedEvents)
+      dates.value = Object.keys(eventsByDate.value)
+      state.selectedDate = dates.value[0] || ''
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   const initialState = {
-    selectedDate: dates[0] as string,
+    selectedDate: dates.value[0] as string,
   }
 
   const state = reactive({
     ...initialState,
+  })
+
+  onMounted(() => {
+    fetchAndUpdateEvents()
   })
 </script>
 
@@ -24,7 +40,7 @@
     </VTabs>
   </VContainer>
   <VContainer>
-    <div class="container">
+    <div v-if="eventsByDate[state.selectedDate]" class="container">
       <div
         v-for="event in eventsByDate[state.selectedDate]"
         :key="event.id"
@@ -65,36 +81,83 @@
                 {{ event.location.name }}
                 <VIcon size="x-small">mdi-open-in-new</VIcon>
               </NuxtLink>
-              <span v-else>
+              <span v-else class="mb-2">
                 {{ event.location.name }}
               </span>
             </span>
-            <span class="card__timeinterval">
+            <span class="card__timeinterval mb-2">
               <VIcon color="primary">mdi-clock</VIcon>
               <span>
                 {{ getHourAndMinuteStringFromString(event.date.start) }} -
                 {{ getHourAndMinuteStringFromString(event.date.end) }}
               </span>
             </span>
-            <br />
-            {{ event.description }}
+            <span v-if="event.limitedCapacity" class="card__attendees mb-2">
+              <VIcon
+                v-if="
+                  Object.hasOwn(event, 'attendants') &&
+                  event?.attendants?.length >= 3
+                "
+                color="primary"
+              >
+                mdi-account-group
+              </VIcon>
+              <VIcon v-else color="primary">mdi-account</VIcon>
+              <span>
+                <span v-if="Object.hasOwn(event, 'attendants')">
+                  {{ Object.values(event.attendants).length }}
+                </span>
+                <span v-else>0</span>
+                / {{ event.capacity }}
+              </span>
+            </span>
           </template>
 
-          <template #actions>
+          <template v-if="event.limitedCapacity" #actions>
             <VBtn
+              v-if="
+                (useAuth.isLoggedIn &&
+                  event.attendants &&
+                  !Object.values(event.attendants).includes(
+                    useAuth?.user?.uid
+                  )) ||
+                !event.attendants
+              "
               color="primary"
               variant="tonal"
               density="comfortable"
               @click.stop="
                 () => {
                   signUpForEvent(event.id)
-                    .then(() => {
+                    .then(async () => {
                       console.log('Successfully signed up for event')
+                      fetchAndUpdateEvents()
                     })
                     .catch((err) => console.error(err))
                 }
               "
               >{{ $t('program.event.sign_up') }}</VBtn
+            >
+            <VBtn
+              v-if="
+                useAuth.isLoggedIn &&
+                event.attendants &&
+                Object.values(event.attendants).includes(useAuth?.user?.uid)
+              "
+              color="primary"
+              variant="tonal"
+              density="comfortable"
+              @click.stop="
+                () => {
+                  optOutOfEvent(event.id)
+                    .then(() => {
+                      console.log('Successfully retracted signup for event')
+                      fetchAndUpdateEvents()
+                    })
+                    .catch((err) => console.error(err))
+                }
+              "
+              >{{ $t('program.event.opt_out') }}</VBtn
             >
           </template>
         </v-card>
@@ -110,6 +173,10 @@
     flex-direction: column;
     align-items: center;
     gap: 0.5rem !important;
+  }
+
+  .v-tab {
+    max-width: 600px;
   }
 
   .bold {
@@ -170,7 +237,8 @@
     }
 
     &__location,
-    &__timeinterval {
+    &__timeinterval,
+    &__attendees {
       display: flex;
       flex-direction: row;
       align-items: center;
