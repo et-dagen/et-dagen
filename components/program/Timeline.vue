@@ -137,17 +137,24 @@
                 / {{ event.capacity }}
               </span>
             </span>
+            <span
+              v-if="!useAuth.isLoggedIn && event.limitedCapacity"
+              class="text-primary"
+            >
+              <br />
+              {{ $t('program.event.sign_in_to_register') }}
+            </span>
           </template>
 
-          <template v-if="event.limitedCapacity" #actions>
+          <template v-if="event.limitedCapacity && useAuth.isLoggedIn" #actions>
             <VBtn
               v-if="
-                (useAuth.isLoggedIn &&
-                  event.attendants &&
+                useAuth.isLoggedIn &&
+                ((event.attendants &&
                   !Object.values(event.attendants).includes(
                     useAuth?.user?.uid
                   )) ||
-                !event.attendants
+                  !event.attendants)
               "
               color="success"
               variant="tonal"
