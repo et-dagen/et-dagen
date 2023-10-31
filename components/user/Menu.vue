@@ -1,5 +1,5 @@
 <template>
-  <VMenu transition="slide-y-transition">
+  <VMenu transition="slide-y-transition" location="bottom right">
     <!-- activator btn -->
     <template #activator="{ props }">
       <VBtn v-bind="props" icon="mdi-account-outline" />
