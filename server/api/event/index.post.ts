@@ -65,7 +65,6 @@ starttime, description, location, title or type`,
 
   // endtime and description don't have to be defined
   eventsRef.push({
-    attendants: [],
     capacity: capacity ?? null,
     companyUID,
     date: {
@@ -75,7 +74,7 @@ starttime, description, location, title or type`,
     description,
     limitedCapacity,
     location: {
-      map: location.map ?? 'null',
+      map: location.map ?? null,
       name: location.name,
     },
     title,
