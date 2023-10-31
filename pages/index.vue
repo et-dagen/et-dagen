@@ -4,13 +4,19 @@
       method: 'post',
       body: {
         companyUID: '-NesGFDmavw-y88kvfYM',
+        capacity: 69,
         date: {
           start: '2024-01-01T00:00:00Z',
           end: '2024-12-31T23:59:59Z',
         },
         description: "Lit party at Johan's place. Show up!",
+        limitedCapacity: true,
+        location: {
+          map: null,
+          name: 'Hjemme hos Johan',
+        },
         title: 'Johan hjemmefest for the crew',
-        eventtype: 'other',
+        eventType: 'other',
       },
       // companyUID, date, description, title, eventtype
     })
@@ -22,7 +28,7 @@
       body: {
         companyUID: '-NesGFDmavw-y88kvfYM',
         title: 'Johan hjemmefest for the crew',
-        start: '2024-01-01T00:00:00Z',
+        starttime: '2024-01-01T00:00:00Z',
       },
     })
   }
@@ -58,6 +64,6 @@ appspot.com/storage_companies%2FSony%2FLogo%2Fsony.png`,
       class="my-5 d-flex justify-center"
     />
     <VBtn color="success" @click="postEvent">Create event</VBtn>
-    <VBtn color="success" @click="deleteEvent">Delete event</VBtn>
+    <VBtn color="error" @click="deleteEvent">Delete event</VBtn>
   </div>
 </template>
