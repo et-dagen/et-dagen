@@ -85,7 +85,15 @@
               color="primary"
               variant="tonal"
               density="comfortable"
-              @click.stop="() => console.log('test')"
+              @click.stop="
+                () => {
+                  signUpForEvent(event.id)
+                    .then(() => {
+                      console.log('Successfully signed up for event')
+                    })
+                    .catch((err) => console.error(err))
+                }
+              "
               >{{ $t('program.event.sign_up') }}</VBtn
             >
           </template>
