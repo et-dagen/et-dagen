@@ -45,7 +45,7 @@
           elevation="0"
           class="card mb-4"
           variant="flat"
-          @click="() => navigateTo('/program/' + event.id)"
+          @click="() => navigateTo(`/program/${event.id}`)"
         >
           <template #title> {{ event.title }} </template>
 
