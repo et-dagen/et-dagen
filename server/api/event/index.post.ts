@@ -8,14 +8,6 @@ export default defineEventHandler(async (event) => {
     event
   )
 
-  // check if data is defined
-  if (!companyUID || !date.start || !description || !title)
-    throw createError({
-      statusCode: 400,
-      statusMessage:
-        'missing companyUID, starttime, description, title or type',
-    })
-
   // Check if user is authorized
   if (hasAccess(user, ['company'])) {
     if (user.companyUID !== companyUID)
@@ -29,18 +21,28 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'User not authenticated',
     })
 
+  // check if data is defined.
+  // It is allowed to not give the endtime of the event, since that might not be clearly defined
+  if (!companyUID || !date.start || !description || !title || !eventtype)
+    throw createError({
+      statusCode: 400,
+      statusMessage:
+        'Missing companyUID, starttime, description, title or type',
+    })
+
   // check if endtime is after starttime
   if (date.start > date.end)
     throw createError({
       statusCode: 400,
-      statusMessage: 'start time has to be before end time',
+      statusMessage: 'Start time has to be before end time',
     })
 
   // check if the eventtype is valid
-  if (!['presentation', 'dinner', null].includes(eventtype))
+  if (!['presentation', 'dinner', 'other'].includes(eventtype))
     throw createError({
       statusCode: 400,
-      statusMessage: 'eventtype has to be either presentation, dinner or null',
+      statusMessage:
+        "Eventtype has to be either 'presentation', 'dinner' or 'other'",
     })
 
   // all checks made, so push data to db
@@ -53,7 +55,7 @@ export default defineEventHandler(async (event) => {
       start: date.start,
       end: date.end ?? null,
     },
-    description: description ?? null,
+    description,
     title,
     eventtype,
   })
