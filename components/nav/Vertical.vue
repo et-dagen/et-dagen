@@ -4,8 +4,6 @@
   const auth = useAuthStore()
   const app = useAppStore()
 
-  const { xs, width } = useDisplay()
-
   type Routes = Route[]
 
   defineProps({
@@ -17,7 +15,6 @@
   <VNavigationDrawer
     location="right"
     temporary
-    :width="xs ? width : '400'"
     :elevation="5"
     class="pa-4"
     :model-value="app.drawer"
@@ -73,3 +70,15 @@
     </template>
   </VNavigationDrawer>
 </template>
+
+<style lang="scss">
+  @use 'vuetify/settings';
+
+  .v-navigation-drawer--active {
+    width: 400px !important;
+
+    @media #{map-get(settings.$display-breakpoints, "xs")} {
+      width: 100vw !important;
+    }
+  }
+</style>
