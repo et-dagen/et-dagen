@@ -54,7 +54,7 @@
           </template>
 
           <template #text>
-            <span class="card__location">
+            <span class="card__location mb-2">
               <VIcon color="primary">mdi-map-marker</VIcon>
               <NuxtLink
                 v-if="event.location.map !== 'null'"
@@ -143,7 +143,7 @@
         display: inline-block;
         position: absolute;
         top: 15px;
-        left: -1.5rem - ($node-width / 2) + 0.125rem;
+        left: -1.5rem - calc($node-width / 2) + 0.125rem;
         width: $node-width;
         height: $node-width;
         border: 2px solid #000;
@@ -161,7 +161,8 @@
       }
     }
 
-    &__location {
+    &__location,
+    &__timeinterval {
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -185,9 +186,24 @@
 
       &__timestamp {
         position: absolute;
-        left: -6.2rem - 0.125rem;
+        left: -6rem - 0.125rem;
         top: 10px;
         text-align: right;
+      }
+
+      &__div {
+        &::before {
+          // Node line
+          left: -1.8rem;
+        }
+
+        &::after {
+          // Node circle
+          $node-width: 1rem;
+          left: -1.8rem - calc($node-width / 2) + 0.125rem;
+          width: $node-width;
+          height: $node-width;
+        }
       }
     }
 
