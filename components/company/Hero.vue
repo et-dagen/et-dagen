@@ -27,8 +27,9 @@
 <template>
   <div>
     <VSheet :width="xs ? '90vw' : '65vw'">
+      <!-- This header should not be smaller than h3 for large screens -->
       <h2
-        :class="`text-md-h2 text-sm-h3 text-h4 text-center 
+        :class="`text-sm-h3 text-h4 text-center 
         pt-10 pb-lg-6 pb-3 font-weight-bold`"
       >
         {{ $t('company.main_partner') }}
@@ -53,7 +54,7 @@
           class="pt-lg-0 pt-3 pl-lg-3"
         >
           <h3
-            class="text-lg-h4 text-h5 font-weight-bold clicker d-inline-block"
+            class="text-h5 font-weight-bold clicker d-inline-block"
             @click="openInNewTab"
           >
             {{ company.content.name }}
