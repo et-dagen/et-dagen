@@ -69,6 +69,13 @@
                 {{ event.location.name }}
               </span>
             </span>
+            <span class="card__timeinterval">
+              <VIcon color="primary">mdi-clock</VIcon>
+              <span>
+                {{ getHourAndMinuteStringFromString(event.date.start) }} -
+                {{ getHourAndMinuteStringFromString(event.date.end) }}
+              </span>
+            </span>
             <br />
             {{ event.description }}
           </template>
