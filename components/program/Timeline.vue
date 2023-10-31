@@ -107,7 +107,7 @@
                 {{ event.location.name }}
                 <VIcon size="x-small">mdi-open-in-new</VIcon>
               </NuxtLink>
-              <span v-else class="mb-2">
+              <span v-else>
                 {{ event.location.name }}
               </span>
             </span>
@@ -149,13 +149,18 @@
                   )) ||
                 !event.attendants
               "
-              color="primary"
+              color="success"
               variant="tonal"
               density="comfortable"
               @click.stop="
                 () => {
                   signUpForEvent(event.id)
                     .then(async () => {
+                      alertState.alertRoute = `
+                        alert.success.event.register.sign_up
+                      `
+                      alertState.type = 'success'
+                      alertState.show = true
                       fetchAndUpdateEvents()
                     })
                     .catch((error) => {
@@ -183,7 +188,11 @@
                 () => {
                   optOutOfEvent(event.id)
                     .then(() => {
-                      console.log('Successfully retracted signup for event')
+                      alertState.alertRoute = `
+                        alert.success.event.register.opt_out
+                      `
+                      alertState.type = 'success'
+                      alertState.show = true
                       fetchAndUpdateEvents()
                     })
                     .catch((error) => {
