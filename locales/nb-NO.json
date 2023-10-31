@@ -98,7 +98,8 @@
   "program": {
     "title": "Program",
     "event": {
-      "sign_up": "Meld meg på!"
+      "sign_up": "Meld meg på",
+      "opt_out": "Trekk påmelding"
     }
   }
 }

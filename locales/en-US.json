@@ -98,7 +98,8 @@
   "program": {
     "title": "Programme",
     "event": {
-      "sign_up": "Sign me up!"
+      "sign_up": "Sign up",
+      "opt_out": "Opt out"
     }
   }
 }
