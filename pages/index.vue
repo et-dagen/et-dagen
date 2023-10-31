@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="ma-10">
     <HomeBanner
       :content="{
         caption: 'Få et innblikk i din fremtidige arbeidsplass',

@@ -14,10 +14,171 @@
       return navigateTo(`${to.fullPath}/companies`)
     },
   })
+
+  const route = useRoute()
+  const localePath = useLocalePath()
+  const appStore = useAppStore()
+
+  const currentCategory = computed(() => {
+    const routeNames = route.fullPath.split('/')
+    return routeNames[routeNames.length - 1]
+  })
+
+  const categories = [
+    {
+      name: 'companies',
+      icon: 'tag-outline',
+    },
+    {
+      name: 'events',
+      icon: 'calendar',
+    },
+    {
+      name: 'jobs',
+      icon: 'briefcase-outline',
+    },
+    {
+      name: 'users',
+      icon: 'account-outline',
+    },
+  ]
 </script>
 
 <template>
-  <div>
-    <NuxtPage />
+  <div class="d-flex flex-column align-center">
+    <div class="my-10 d-flex align-center">
+      <!-- title -->
+      <h4 class="font-weight-bold text-center">
+        {{ $t('nav.admin') }}
+      </h4>
+
+      <!-- select category mobile -->
+      <VMenu transition="slide-y-transition" location="bottom right">
+        <!-- activator btn -->
+        <template #activator="{ props }">
+          <VBtn
+            size="45"
+            elevation="0"
+            variant="text"
+            class="d-flex d-lg-none ml-4 bg-primary"
+            v-bind="props"
+            icon="mdi-arrow-bottom-left"
+          />
+        </template>
+
+        <VCard
+          class="d-flex flex-column mt-2 px-3 pt-3 categories-mobile"
+          width="240"
+          rounded="lg"
+          :elevation="1"
+        >
+          <!-- select category buttons -->
+          <VBtn
+            v-for="(category, index) in categories"
+            :key="index"
+            size="large"
+            variant="text"
+            :ripple="false"
+            :class="`rounded-lg d-flex justify-start px-3 ${
+              currentCategory === category.name
+                ? 'text-background'
+                : 'bg-neutral-lighten-4 text-neutral'
+            }`"
+            :width="'100%'"
+            :active="currentCategory === category.name"
+            @click="navigateTo(localePath(`/admin/${category.name}`))"
+          >
+            {{ $t(`admin.${category.name}`) }}
+            <VIcon style="position: absolute; right: 0.5rem"
+              >mdi-{{ category.icon }}</VIcon
+            >
+          </VBtn>
+        </VCard>
+      </VMenu>
+    </div>
+
+    <!-- select category wide screen -->
+    <div class="d-flex">
+      <VCard
+        class="categories pa-2 d-none d-lg-flex flex-column align-center"
+        rounded="0"
+        elevation="0"
+        width="240"
+      >
+        <h6 class="font-weight-bold">{{ $t('admin.categories') }}</h6>
+
+        <!-- select category buttons -->
+        <VBtn
+          v-for="(category, index) in categories"
+          :key="index"
+          size="large"
+          variant="text"
+          :ripple="false"
+          :class="`rounded-lg d-flex justify-start px-3 text-background ${
+            currentCategory === category.name
+              ? 'text-background'
+              : 'bg-neutral-lighten-4 text-neutral'
+          }`"
+          :loading="appStore.loading && currentCategory === category.name"
+          :width="'100%'"
+          :active="currentCategory === category.name"
+          @click="navigateTo(localePath(`/admin/${category.name}`))"
+        >
+          {{ $t(`admin.${category.name}`) }}
+          <VIcon style="position: absolute; right: 0.5rem"
+            >mdi-{{ category.icon }}</VIcon
+          >
+
+          <template #loader>
+            <VProgressCircular
+              size="24"
+              width="2"
+              indeterminate
+              color="background"
+            />
+          </template>
+        </VBtn>
+      </VCard>
+
+      <!-- edit selected category -->
+      <VCard class="administration px-4 ma-0 ma-lg-4" rounded="0" elevation="0">
+        <!-- child route -->
+        <NuxtPage />
+      </VCard>
+
+      <!-- spacer div -->
+      <div class="d-none d-lg-inline" style="width: 240px"></div>
+    </div>
   </div>
 </template>
+
+<style lang="scss">
+  @use 'vuetify/settings';
+
+  .categories,
+  .categories-mobile {
+    &:not(.categories-mobile) {
+      border-right: 2px solid rgba(0, 0, 0, 0.4);
+    }
+
+    gap: 1rem;
+
+    .v-btn {
+      transition: 0.4s !important;
+    }
+
+    > .v-btn--active {
+      background-color: rgb(var(--v-theme-primary)) !important;
+      > .v-btn__overlay {
+        opacity: 0 !important;
+      }
+    }
+  }
+
+  .administration {
+    width: 600px;
+    @media #{map-get(settings.$display-breakpoints, 'md-and-down')} {
+      width: 95vw;
+    }
+  }
+</style>

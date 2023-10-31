@@ -94,5 +94,12 @@
         "reset_password": "Password reset email sent"
       }
     }
+  },
+  "admin": {
+    "categories": "Categories",
+    "companies": "Companies",
+    "events": "Events",
+    "jobs": "Jobs",
+    "users": "Users"
   }
 }
