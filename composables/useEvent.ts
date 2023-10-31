@@ -1,3 +1,9 @@
+export const getEvents = async () => {
+  const events = await $fetch('/api/event')
+
+  return events
+}
+
 // Get specific event by UID
 export const getEventByUID = async (UID: string) => {
   const event = await $fetch('/api/event', {
@@ -12,6 +18,12 @@ export const getEventByUID = async (UID: string) => {
 export const signUpForEvent = async (eventUID: string) => {
   await $fetch(`/api/event/register/${eventUID}`, {
     method: 'POST',
+  })
+}
+
+export const optOutOfEvent = async (eventUID: string) => {
+  await $fetch(`/api/event/register/${eventUID}`, {
+    method: 'DELETE',
   })
 }
 
