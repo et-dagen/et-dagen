@@ -77,7 +77,6 @@ export default defineNuxtConfig({
     defaultLocale: 'no',
     vueI18n: 'config/i18n.config.ts',
     detectBrowserLanguage: false,
-    skipSettingLocaleOnNavigate: true,
   },
 
   pinia: {
