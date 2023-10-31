@@ -163,9 +163,8 @@
                 () => {
                   signUpForEvent(event.id)
                     .then(async () => {
-                      alertState.alertRoute = `
-                        alert.success.event.register.sign_up
-                      `
+                      // eslint-disable-next-line vue/max-len
+                      alertState.alertRoute = 'alert.success.event.register.sign_up'
                       alertState.type = 'success'
                       alertState.show = true
                       fetchAndUpdateEvents()
@@ -195,9 +194,8 @@
                 () => {
                   optOutOfEvent(event.id)
                     .then(() => {
-                      alertState.alertRoute = `
-                        alert.success.event.register.opt_out
-                      `
+                      // eslint-disable-next-line vue/max-len
+                      alertState.alertRoute = 'alert.success.event.register.opt_out'
                       alertState.type = 'success'
                       alertState.show = true
                       fetchAndUpdateEvents()
