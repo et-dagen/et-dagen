@@ -186,7 +186,14 @@
                       console.log('Successfully retracted signup for event')
                       fetchAndUpdateEvents()
                     })
-                    .catch((err) => console.error(err))
+                    .catch((error) => {
+                      const content = getAlertRouteAndType(error.statusMessage)
+
+                      alertState.alertRoute = content.route
+                      alertState.type = content.type as AlertType
+                      alertState.show = true
+                      console.error(error)
+                    })
                 }
               "
               >{{ $t('program.event.opt_out') }}</VBtn
