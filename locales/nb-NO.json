@@ -87,6 +87,13 @@
       },
       "server": {
         "invalid_registration_code": "Ugyldig registreringskode"
+      },
+      "event": {
+        "event_doesnt_exist": "Arrangementet finnes ikke",
+        "register": {
+          "event_is_full": "Arrangementet er fullt",
+          "already_registered": "Du er allerede påmeldt dette arrangementet"
+        }
       }
     },
     "success": {

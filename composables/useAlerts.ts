@@ -39,6 +39,38 @@ const errorMessageMap = new Map([
       message: 'wrong_password',
     },
   ],
+  [
+    'Events: Error (register/event-is-full).',
+    {
+      source: 'event.register',
+      type: 'error',
+      message: 'event_is_full',
+    },
+  ],
+  [
+    'Events: Error (register/already-registered).',
+    {
+      source: 'event.register',
+      type: 'error',
+      message: 'already_registered',
+    },
+  ],
+  [
+    'Events: Error (event/event-doesnt-exists).',
+    {
+      source: 'event',
+      type: 'error',
+      message: 'event_doesnt_exist',
+    },
+  ],
+  [
+    'Events: Error (event/missing-event-id).',
+    {
+      source: 'event',
+      type: 'error',
+      message: 'missing_event_id',
+    },
+  ],
 ])
 
 export type AlertType = 'error' | 'info' | 'success' | 'warning' | undefined
@@ -55,6 +87,7 @@ export const getI18nAlertRoute = (errorMessage: string) => {
   if (alert === 'missing_error') return 'alert.error.default'
 
   const { source, type, message } = alert
+  console.log('Looking for alert:', `alert.${type}.${source}.${message}`)
   return `alert.${type}.${source}.${message}`
 }
 

@@ -87,6 +87,14 @@
       },
       "server": {
         "invalid_registration_code": "Invalid registration code"
+      },
+      "event": {
+        "event_doesnt_exist": "Event doesn't exist",
+        "missing_event_id": "Missing event id",
+        "register": {
+          "event_is_full": "Event is full",
+          "already_registered": "You are already registered for this event"
+        }
       }
     },
     "success": {

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import type { AlertType } from 'composables/useAlerts'
+
   const useAuth = useAuthStore()
 
   const companies = await $fetch('/api/company', { method: 'GET' })
@@ -26,12 +28,36 @@
     ...initialState,
   })
 
+  const initialAlertState = {
+    show: false,
+    alertRoute: '',
+    type: undefined as AlertType,
+  }
+
+  const alertState = reactive({
+    ...initialAlertState,
+  })
+
   onMounted(() => {
     fetchAndUpdateEvents()
   })
 </script>
 
 <template>
+  <VSnackbar v-model="alertState.show">
+    {{ $t(`${alertState.alertRoute}`) }}
+
+    <template #actions>
+      <v-btn
+        :color="alertState.type"
+        variant="text"
+        @click="alertState.show = false"
+      >
+        {{ $t('alert.close_alert') }}
+      </v-btn>
+    </template>
+  </VSnackbar>
+
   <VContainer>
     <VTabs v-model="state.selectedDate" fixed-tabs color="primary" class="tabs">
       <VTab v-for="date in dates" :key="date" :value="date">
@@ -130,10 +156,16 @@
                 () => {
                   signUpForEvent(event.id)
                     .then(async () => {
-                      console.log('Successfully signed up for event')
                       fetchAndUpdateEvents()
                     })
-                    .catch((err) => console.error(err))
+                    .catch((error) => {
+                      const content = getAlertRouteAndType(error.statusMessage)
+
+                      alertState.alertRoute = content.route
+                      alertState.type = content.type as AlertType
+                      alertState.show = true
+                      console.error(error)
+                    })
                 }
               "
               >{{ $t('program.event.sign_up') }}</VBtn
