@@ -16,7 +16,6 @@
   })
 
   const route = useRoute()
-  const localePath = useLocalePath()
   const appStore = useAppStore()
 
   const currentCategory = computed(() => {
@@ -67,32 +66,18 @@
         </template>
 
         <VCard
-          class="d-flex flex-column mt-2 px-3 pt-3 categories-mobile"
+          class="d-flex d-lg-none flex-column mt-2 px-3 pt-3 categories-mobile"
           width="240"
           rounded="lg"
           :elevation="1"
         >
           <!-- select category buttons -->
-          <VBtn
+          <AdminCategoryButton
             v-for="(category, index) in categories"
             :key="index"
-            size="large"
-            variant="text"
-            :ripple="false"
-            :class="`rounded-lg d-flex justify-start px-3 ${
-              currentCategory === category.name
-                ? 'text-background'
-                : 'bg-neutral-lighten-4 text-neutral'
-            }`"
-            :width="'100%'"
             :active="currentCategory === category.name"
-            @click="navigateTo(localePath(`/admin/${category.name}`))"
-          >
-            {{ $t(`admin.${category.name}`) }}
-            <VIcon style="position: absolute; right: 0.5rem"
-              >mdi-{{ category.icon }}</VIcon
-            >
-          </VBtn>
+            :category="category"
+          />
         </VCard>
       </VMenu>
     </div>
@@ -108,36 +93,13 @@
         <h6 class="font-weight-bold">{{ $t('admin.categories') }}</h6>
 
         <!-- select category buttons -->
-        <VBtn
+        <AdminCategoryButton
           v-for="(category, index) in categories"
           :key="index"
-          size="large"
-          variant="text"
-          :ripple="false"
-          :class="`rounded-lg d-flex justify-start px-3 text-background ${
-            currentCategory === category.name
-              ? 'text-background'
-              : 'bg-neutral-lighten-4 text-neutral'
-          }`"
-          :loading="appStore.loading && currentCategory === category.name"
-          :width="'100%'"
           :active="currentCategory === category.name"
-          @click="navigateTo(localePath(`/admin/${category.name}`))"
-        >
-          {{ $t(`admin.${category.name}`) }}
-          <VIcon style="position: absolute; right: 0.5rem"
-            >mdi-{{ category.icon }}</VIcon
-          >
-
-          <template #loader>
-            <VProgressCircular
-              size="24"
-              width="2"
-              indeterminate
-              color="background"
-            />
-          </template>
-        </VBtn>
+          :category="category"
+          :loading="appStore.loading && currentCategory === category.name"
+        />
       </VCard>
 
       <!-- edit selected category -->
