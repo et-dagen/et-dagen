@@ -124,17 +124,6 @@
     }
 
     gap: 1rem;
-
-    .v-btn {
-      transition: 0.4s !important;
-    }
-
-    > .v-btn--active {
-      background-color: rgb(var(--v-theme-primary)) !important;
-      > .v-btn__overlay {
-        opacity: 0 !important;
-      }
-    }
   }
 
   .administration {
