@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  if (!data[eventUID].limitedCapacity || !data[eventUID].capacity) {
+  if (data[eventUID].capacity === 'null' || !data[eventUID].capacity) {
     throw createError({
       statusCode: 404,
       statusMessage: 'Events: Error (register/registration-unnecessary).',
