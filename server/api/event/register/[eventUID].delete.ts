@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
   // user is not authenticated
   if (!user) {
     throw createError({
-      statusCode: 404,
+      statusCode: 401,
       statusMessage: 'Firebase: Error (auth/user-not-found).',
     })
   }
