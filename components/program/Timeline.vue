@@ -361,7 +361,7 @@
 
       &__timestamp {
         position: absolute;
-        left: -6rem - 0.125rem;
+        left: -6.7rem - 0.125rem;
         top: 10px;
         text-align: right;
       }
