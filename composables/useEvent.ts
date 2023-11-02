@@ -33,7 +33,13 @@ export const sortDateGroupedEventsByStartTime = (
   // tslint:disable-next-line: forin
   for (const eventsOfDate of Object.entries(events)) {
     eventsOfDate[1].sort((a: any, b: any) => {
-      return new Date(a.date.start).getTime() - new Date(b.date.start).getTime()
+      if (a.date.start !== b.date.start)
+        return (
+          new Date(a.date.start).getTime() - new Date(b.date.start).getTime()
+        )
+
+      // If start time is the same, sort by end time
+      return new Date(a.date.end).getTime() - new Date(b.date.end).getTime()
     })
   }
 
