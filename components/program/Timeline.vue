@@ -27,9 +27,20 @@
     ...initialAlertState,
   })
 
-  onMounted(() => {
-    fetchAndUpdateEvents()
-  })
+  const displaySuccessAlert = (alertRoute: string) => {
+    alertState.alertRoute = alertRoute
+    alertState.type = 'success'
+    alertState.show = true
+  }
+
+  const displayErrorAlertFromMessage = (errorMessage: string) => {
+    const content = getAlertContent(errorMessage)
+    alertState.alertRoute = content.alertRoute
+    alertState.type = content.type
+    alertState.show = content.show
+
+    console.error(errorMessage)
+  }
 </script>
 
 <template>
