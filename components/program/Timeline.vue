@@ -9,7 +9,9 @@
   const { data: events, refresh: refreshEvents } = await useFetch('/api/event')
 
   // Group events by date
-  const eventsByDate: any = computed(() => groupEventsByDateStart(events.value))
+  const eventsByDate: any = computed(() =>
+    sortDateGroupedEventsByStartTime(groupEventsByDateStart(events.value))
+  )
   const dates = computed(() => Object.keys(eventsByDate.value)) // Get all dates from eventsByDate
 
   // Check if event has attendants
@@ -200,7 +202,7 @@
             </span>
 
             <!-- Event capacity -->
-            <span v-if="event.limitedCapacity" class="card__attendees mb-2">
+            <span v-if="event.capacity !== 'null'" class="card__attendees mb-2">
               <!-- Group icon -->
               <VIcon v-if="showGroupIcon(event)" color="primary">
                 mdi-account-group
@@ -221,7 +223,7 @@
             <span
               v-if="
                 !useAuth.isLoggedIn &&
-                event.limitedCapacity &&
+                event.capacity !== 'null' &&
                 !eventFull(event)
               "
               class="text-primary"
@@ -232,7 +234,10 @@
           </template>
 
           <!-- Event actions -->
-          <template v-if="event.limitedCapacity && useAuth.isLoggedIn" #actions>
+          <template
+            v-if="event.capacity !== 'null' && useAuth.isLoggedIn"
+            #actions
+          >
             <!-- Sign up to event -->
             <VBtn
               v-if="useAuth.isLoggedIn && showSignupButton(event)"

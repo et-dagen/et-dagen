@@ -36,4 +36,6 @@ export const sortDateGroupedEventsByStartTime = (
       return new Date(a.date.start).getTime() - new Date(b.date.start).getTime()
     })
   }
+
+  return events
 }
