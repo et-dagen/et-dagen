@@ -113,8 +113,8 @@ export const getAlertRouteAndType = (errorMessage: string) => {
   }
 }
 
-export const getAlertContent = (errorMessage: string, showAlert = true) => {
-  const content = getAlertRouteAndType(errorMessage)
+export const getAlertContent = (message: string, showAlert = true) => {
+  const content = getAlertRouteAndType(message)
 
   return {
     alertRoute: content.route,
