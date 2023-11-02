@@ -48,175 +48,130 @@
     {{ $t(`${alertState.alertRoute}`) }}
 
     <template #actions>
-      <v-btn
+      <VBtn
         :color="alertState.type"
         variant="text"
         @click="alertState.show = false"
       >
         {{ $t('alert.close_alert') }}
-      </v-btn>
+      </VBtn>
     </template>
   </VSnackbar>
 
-  <VContainer>
-    <VTabs v-model="state.selectedDate" fixed-tabs color="primary" class="tabs">
-      <VTab v-for="date in dates" :key="date" :value="date">
-        {{ getNumericDayAndMonthString(date) }}
-      </VTab>
-    </VTabs>
-  </VContainer>
-  <VContainer>
-    <div v-if="eventsByDate[state.selectedDate]" class="container">
-      <div
-        v-for="event in eventsByDate[state.selectedDate]"
-        :key="event.id"
-        class="card__div"
+  <div>
+    <VContainer>
+      <VTabs
+        v-model="state.selectedDate"
+        fixed-tabs
+        color="primary"
+        class="tabs"
       >
-        <div class="card__timestamp">
-          <span class="date text-h5 text-primary bold">
-            {{ getNumericDayAndMonthString(event.date.start) }}
-          </span>
-          <br />
-          <span class="time text-h4 bold">
-            {{ getHourAndMinuteStringFromString(event.date.start) }}
-          </span>
-        </div>
+        <VTab v-for="date in dates" :key="date" :value="date">
+          {{ getNumericDayAndMonthString(date) }}
+        </VTab>
+      </VTabs>
+    </VContainer>
 
-        <v-card
-          width="600"
-          elevation="0"
-          class="card mb-4"
-          variant="flat"
-          @click="() => navigateTo(`/program/${event.id}`)"
+    <VContainer>
+      <div v-if="eventsByDate[state.selectedDate]" class="container">
+        <div
+          v-for="event in eventsByDate[state.selectedDate]"
+          :key="event.id"
+          class="card__div"
         >
-          <template #title> {{ event.title }} </template>
+          <div class="card__timestamp">
+            <span class="date text-h5 text-primary bold">
+              {{ getNumericDayAndMonthString(event.date.start) }}
+            </span>
+            <br />
+            <span class="time text-h4 bold">
+              {{ getHourAndMinuteStringFromString(event.date.start) }}
+            </span>
+          </div>
 
-          <template v-if="companies[event.companyUID]" #subtitle>
-            {{ companies[event.companyUID].name }}
-          </template>
+          <VCard
+            width="600"
+            elevation="0"
+            class="card mb-4"
+            variant="flat"
+            @click="() => navigateTo(`/program/${event.id}`)"
+          >
+            <template #title> {{ event.title }} </template>
 
-          <template #text>
-            <span class="card__location mb-2">
-              <VIcon color="primary">mdi-map-marker</VIcon>
-              <NuxtLink
-                v-if="event.location.map !== 'null'"
-                :to="event.location.map"
-                class="link"
-                @click.stop
+            <template v-if="companies[event.companyUID]" #subtitle>
+              {{ companies[event.companyUID].name }}
+            </template>
+
+            <template #text>
+              <span class="card__location mb-2">
+                <VIcon color="primary">mdi-map-marker</VIcon>
+                <NuxtLink
+                  v-if="event.location.map !== 'null'"
+                  :to="event.location.map"
+                  class="link"
+                  @click.stop
+                >
+                  {{ event.location.name }}
+                  <VIcon size="x-small">mdi-open-in-new</VIcon>
+                </NuxtLink>
+                <span v-else>
+                  {{ event.location.name }}
+                </span>
+              </span>
+              <span class="card__timeinterval mb-2">
+                <VIcon color="primary">mdi-clock</VIcon>
+                <span>
+                  {{ getHourAndMinuteStringFromString(event.date.start) }} -
+                  {{ getHourAndMinuteStringFromString(event.date.end) }}
+                </span>
+              </span>
+              <span v-if="event.limitedCapacity" class="card__attendees mb-2">
+                <VIcon
+                  v-if="
+                    Object.hasOwn(event, 'attendants') &&
+                    event?.attendants?.length >= 3
+                  "
+                  color="primary"
+                >
+                  mdi-account-group
+                </VIcon>
+                <VIcon v-else color="primary">mdi-account</VIcon>
+                <span>
+                  <span v-if="Object.hasOwn(event, 'attendants')">
+                    {{ Object.values(event.attendants).length }}
+                  </span>
+                  <span v-else>0</span>
+                  / {{ event.capacity }}
+                </span>
+              </span>
+              <span
+                v-if="!useAuth.isLoggedIn && event.limitedCapacity"
+                class="text-primary"
               >
-                {{ event.location.name }}
-                <VIcon size="x-small">mdi-open-in-new</VIcon>
-              </NuxtLink>
-              <span v-else>
-                {{ event.location.name }}
+                <br />
+                {{ $t('program.event.sign_in_to_register') }}
               </span>
-            </span>
-            <span class="card__timeinterval mb-2">
-              <VIcon color="primary">mdi-clock</VIcon>
-              <span>
-                {{ getHourAndMinuteStringFromString(event.date.start) }} -
-                {{ getHourAndMinuteStringFromString(event.date.end) }}
-              </span>
-            </span>
-            <span v-if="event.limitedCapacity" class="card__attendees mb-2">
-              <VIcon
+            </template>
+
+            <template
+              v-if="event.limitedCapacity && useAuth.isLoggedIn"
+              #actions
+            >
+              <VBtn
                 v-if="
                   Object.hasOwn(event, 'attendants') &&
                   event?.attendants?.length >= 3
                 "
                 color="primary"
               >
-                mdi-account-group
-              </VIcon>
-              <VIcon v-else color="primary">mdi-account</VIcon>
-              <span>
-                <span v-if="Object.hasOwn(event, 'attendants')">
-                  {{ Object.values(event.attendants).length }}
-                </span>
-                <span v-else>0</span>
-                / {{ event.capacity }}
-              </span>
-            </span>
-            <span
-              v-if="!useAuth.isLoggedIn && event.limitedCapacity"
-              class="text-primary"
-            >
-              <br />
-              {{ $t('program.event.sign_in_to_register') }}
-            </span>
-          </template>
-
-          <template v-if="event.limitedCapacity && useAuth.isLoggedIn" #actions>
-            <VBtn
-              v-if="
-                useAuth.isLoggedIn &&
-                ((event.attendants &&
-                  !Object.values(event.attendants).includes(
-                    useAuth?.user?.uid
-                  )) ||
-                  !event.attendants)
-              "
-              color="success"
-              variant="tonal"
-              density="comfortable"
-              @click.stop="
-                () => {
-                  signUpForEvent(event.id)
-                    .then(async () => {
-                      // eslint-disable-next-line vue/max-len
-                      alertState.alertRoute = 'alert.success.event.register.sign_up'
-                      alertState.type = 'success'
-                      alertState.show = true
-                      fetchAndUpdateEvents()
-                    })
-                    .catch((error) => {
-                      const content = getAlertRouteAndType(error.statusMessage)
-
-                      alertState.alertRoute = content.route
-                      alertState.type = content.type as AlertType
-                      alertState.show = true
-                      console.error(error)
-                    })
-                }
-              "
-              >{{ $t('program.event.sign_up') }}</VBtn
-            >
-            <VBtn
-              v-if="
-                useAuth.isLoggedIn &&
-                event.attendants &&
-                Object.values(event.attendants).includes(useAuth?.user?.uid)
-              "
-              color="primary"
-              variant="tonal"
-              density="comfortable"
-              @click.stop="
-                () => {
-                  optOutOfEvent(event.id)
-                    .then(() => {
-                      // eslint-disable-next-line vue/max-len
-                      alertState.alertRoute = 'alert.success.event.register.opt_out'
-                      alertState.type = 'success'
-                      alertState.show = true
-                      fetchAndUpdateEvents()
-                    })
-                    .catch((error) => {
-                      const content = getAlertRouteAndType(error.statusMessage)
-
-                      alertState.alertRoute = content.route
-                      alertState.type = content.type as AlertType
-                      alertState.show = true
-                      console.error(error)
-                    })
-                }
-              "
-              >{{ $t('program.event.opt_out') }}</VBtn
-            >
-          </template>
-        </v-card>
+                {{ $t('program.event.opt_out') }}
+              </VBtn>
+            </template>
+          </VCard>
+        </div>
       </div>
-    </div>
-  </VContainer>
+    </VContainer>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -241,8 +196,6 @@
   }
 
   .card {
-    // position: relative;
-
     &__timestamp {
       position: absolute;
       left: -9rem - 0.125rem;
