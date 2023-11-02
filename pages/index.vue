@@ -8,6 +8,7 @@
         title: 'Elektronikk & Teknologidagene',
       }"
     />
+
     <CompanyHero
       :content="{
         name: 'Company Name',
@@ -27,5 +28,6 @@ appspot.com/storage_companies%2FSony%2FLogo%2Fsony.png`,
       }"
       class="my-5 d-flex justify-center"
     />
+
   </div>
 </template>
