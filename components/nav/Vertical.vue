@@ -21,7 +21,7 @@
     @update:model-value="(value) => (app.drawer = value)"
   >
     <!-- close vertical nav -->
-    <template #prepend>
+    <template v-if="app.drawer" #prepend>
       <VBtn
         icon="mdi-window-close"
         size="large"
@@ -30,11 +30,15 @@
       ></VBtn>
     </template>
 
-    <div class="d-flex flex-column justify-end mt-4" style="gap: 1rem">
+    <div
+      v-if="app.drawer"
+      class="d-flex flex-column justify-end mt-4"
+      style="gap: 1rem"
+    >
       <NavButton v-for="(route, index) in routes" :key="index" :route="route" />
     </div>
 
-    <template #append>
+    <template v-if="app.drawer" #append>
       <div class="d-flex flex-column justify-end" style="gap: 1rem">
         <!-- nav btn to user page -->
         <NavButton
