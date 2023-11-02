@@ -20,7 +20,6 @@
     const routeNames = useRoute().fullPath.split('/')
     const index = locale.value === defaultLocale ? 1 : 2
     const name = routeNames[index]
-    console.log(name, index, routeNames)
     return name === '' ? 'index' : name ?? 'index'
   })
 </script>
