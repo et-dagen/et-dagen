@@ -219,7 +219,11 @@
 
             <!-- Event actions: Sign up perform action -->
             <span
-              v-if="!useAuth.isLoggedIn && event.limitedCapacity"
+              v-if="
+                !useAuth.isLoggedIn &&
+                event.limitedCapacity &&
+                !eventFull(event)
+              "
               class="text-primary"
             >
               <br />
