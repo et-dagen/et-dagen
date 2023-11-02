@@ -94,5 +94,12 @@
         "reset_password": "Epost for tilbakestilling av passord er sendt"
       }
     }
+  },
+  "admin": {
+    "categories": "Kategorier",
+    "companies": "Bedrifter",
+    "events": "Arrangementer",
+    "jobs": "Jobber",
+    "users": "Brukere"
   }
 }
