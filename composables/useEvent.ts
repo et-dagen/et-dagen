@@ -1,20 +1,3 @@
-export const getEvents = async () => {
-  const events = await $fetch('/api/event')
-
-  return events
-}
-
-// Get specific event by UID
-export const getEventByUID = async (UID: string) => {
-  const event = await $fetch('/api/event', {
-    method: 'GET',
-    query: {
-      eventUID: UID,
-    },
-  })
-  return event
-}
-
 // Group events by start date
 export const groupEventsByDateStart = (eventsObject: any) => {
   const groupedEvents: Record<string, any[]> = {}
