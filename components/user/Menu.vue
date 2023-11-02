@@ -5,7 +5,7 @@
       <VBtn
         v-bind="props"
         icon="mdi-account-outline"
-        class="d-none d-lg-flex"
+        class="d-none d-lg-flex mx-2"
       />
     </template>
 

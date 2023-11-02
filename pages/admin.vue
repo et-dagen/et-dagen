@@ -26,7 +26,7 @@
   const categories = [
     {
       name: 'companies',
-      icon: 'tag-outline',
+      icon: 'domain',
     },
     {
       name: 'events',
