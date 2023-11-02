@@ -59,14 +59,14 @@
             size="45"
             elevation="0"
             variant="text"
-            class="d-flex d-lg-none ml-4 bg-primary"
+            class="d-flex d-md-none ml-4 bg-primary"
             v-bind="props"
             icon="mdi-arrow-bottom-left"
           />
         </template>
 
         <VCard
-          class="d-flex d-lg-none flex-column mt-2 px-3 pt-3 categories-mobile"
+          class="d-flex d-md-none flex-column mt-2 px-3 pt-3 categories-mobile"
           width="240"
           rounded="lg"
           :elevation="1"
@@ -85,7 +85,7 @@
     <!-- select category wide screen -->
     <div class="d-flex">
       <VCard
-        class="categories pa-2 d-none d-lg-flex flex-column align-center"
+        class="categories pa-2 d-none d-md-flex flex-column align-center"
         rounded="0"
         elevation="0"
         width="240"
@@ -103,7 +103,7 @@
       </VCard>
 
       <!-- edit selected category -->
-      <VCard class="administration px-4 ma-0 ma-lg-4" rounded="0" elevation="0">
+      <VCard class="administration px-4 ma-0 ma-md-4" rounded="0" elevation="0">
         <!-- child route -->
         <NuxtPage />
       </VCard>
@@ -117,18 +117,18 @@
 <style lang="scss">
   @use 'vuetify/settings';
 
-  .categories,
-  .categories-mobile {
-    &:not(.categories-mobile) {
-      border-right: 2px solid rgba(0, 0, 0, 0.4);
-    }
+  .categories {
+    border-right: 2px solid rgba(0, 0, 0, 0.4) !important;
+    gap: 1rem;
+  }
 
+  .categories-mobile {
     gap: 1rem;
   }
 
   .administration {
     width: 600px;
-    @media #{map-get(settings.$display-breakpoints, 'md-and-down')} {
+    @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
       width: 95vw;
     }
   }
