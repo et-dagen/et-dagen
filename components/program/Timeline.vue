@@ -1,14 +1,51 @@
 <script setup lang="ts">
   import type { AlertType } from 'composables/useAlerts'
 
+  // Use cached auth data from Pinia
   const useAuth = useAuthStore()
 
+  // Fetch company and event data from API
   const { data: companies } = await useFetch('/api/company')
-
   const { data: events, refresh: refreshEvents } = await useFetch('/api/event')
-  const eventsByDate: any = computed(() => groupEventsByDateStart(events.value))
-  const dates = computed(() => Object.keys(eventsByDate.value))
 
+  // Group events by date
+  const eventsByDate: any = computed(() => groupEventsByDateStart(events.value))
+  const dates = computed(() => Object.keys(eventsByDate.value)) // Get all dates from eventsByDate
+
+  // Check if event has attendants
+  const hasAttendants = computed(
+    () => (event: any) => event.attendants || Object.hasOwn(event, 'attendants')
+  )
+
+  // Check if user is already registered for event
+  const alreadyRegistered = computed(() => {
+    return (event: any) => {
+      return (
+        hasAttendants.value(event) &&
+        Object.values(event.attendants).includes(useAuth?.user?.uid)
+      )
+    }
+  })
+
+  // Check if event has more than two attendants
+  const showGroupIcon = computed(() => {
+    return (event: any) => {
+      return hasAttendants.value(event) && event.attendants.length >= 3
+    }
+  })
+
+  // Check if user is already registered for event
+  const showSignupButton = computed(() => {
+    return (event: any) => {
+      const nonZeroAttendants = hasAttendants.value(event)
+      return (
+        (nonZeroAttendants && !alreadyRegistered.value(event)) ||
+        !nonZeroAttendants
+      )
+    }
+  })
+
+  // Set initial selected date to show
   const initialState = {
     selectedDate: dates.value[0] as string,
   }
@@ -17,6 +54,7 @@
     ...initialState,
   })
 
+  // Alert state
   const initialAlertState = {
     show: false,
     alertRoute: '',
@@ -27,12 +65,14 @@
     ...initialAlertState,
   })
 
+  // Show appropriate success alert after signing up for event
   const displaySuccessAlert = (alertRoute: string) => {
     alertState.alertRoute = alertRoute
     alertState.type = 'success'
     alertState.show = true
   }
 
+  // Show appropriate error alert for failed API calls
   const displayErrorAlertFromMessage = (errorMessage: string) => {
     const content = getAlertContent(errorMessage)
     alertState.alertRoute = content.alertRoute
@@ -44,6 +84,8 @@
 </script>
 
 <template>
+  <!-- Vuetify alert component -->
+  <!-- TODO: #121 Make a custom reactive component for VSnackbar that takes in content prop -->
   <VSnackbar v-model="alertState.show">
     {{ $t(`${alertState.alertRoute}`) }}
 
@@ -58,166 +100,158 @@
     </template>
   </VSnackbar>
 
-  <div>
-    <VContainer>
-      <VTabs
-        v-model="state.selectedDate"
-        fixed-tabs
-        color="primary"
-        class="tabs"
+  <!-- Date selection tabs -->
+  <VContainer>
+    <VTabs v-model="state.selectedDate" fixed-tabs color="primary" class="tabs">
+      <VTab v-for="date in dates" :key="date" :value="date">
+        {{ getNumericDayAndMonthString(date) }}
+      </VTab>
+    </VTabs>
+  </VContainer>
+
+  <!-- Timeline container -->
+  <VContainer>
+    <div v-if="eventsByDate[state.selectedDate]" class="container">
+      <div
+        v-for="event in eventsByDate[state.selectedDate]"
+        :key="event.id"
+        class="card__div"
       >
-        <VTab v-for="date in dates" :key="date" :value="date">
-          {{ getNumericDayAndMonthString(date) }}
-        </VTab>
-      </VTabs>
-    </VContainer>
-
-    <VContainer>
-      <div v-if="eventsByDate[state.selectedDate]" class="container">
-        <div
-          v-for="event in eventsByDate[state.selectedDate]"
-          :key="event.id"
-          class="card__div"
-        >
-          <div class="card__timestamp">
-            <span class="date text-h5 text-primary bold">
-              {{ getNumericDayAndMonthString(event.date.start) }}
-            </span>
-            <br />
-            <span class="time text-h4 bold">
-              {{ getHourAndMinuteStringFromString(event.date.start) }}
-            </span>
-          </div>
-
-          <VCard
-            width="600"
-            elevation="0"
-            class="card mb-4"
-            variant="flat"
-            @click="() => navigateTo(`/program/${event.id}`)"
-          >
-            <template #title> {{ event.title }} </template>
-
-            <template v-if="companies[event.companyUID]" #subtitle>
-              {{ companies[event.companyUID].name }}
-            </template>
-
-            <template #text>
-              <span class="card__location mb-2">
-                <VIcon color="primary">mdi-map-marker</VIcon>
-                <NuxtLink
-                  v-if="event.location.map !== 'null'"
-                  :to="event.location.map"
-                  class="link"
-                  @click.stop
-                >
-                  {{ event.location.name }}
-                  <VIcon size="x-small">mdi-open-in-new</VIcon>
-                </NuxtLink>
-                <span v-else>
-                  {{ event.location.name }}
-                </span>
-              </span>
-              <span class="card__timeinterval mb-2">
-                <VIcon color="primary">mdi-clock</VIcon>
-                <span>
-                  {{ getHourAndMinuteStringFromString(event.date.start) }} -
-                  {{ getHourAndMinuteStringFromString(event.date.end) }}
-                </span>
-              </span>
-              <span v-if="event.limitedCapacity" class="card__attendees mb-2">
-                <VIcon
-                  v-if="
-                    Object.hasOwn(event, 'attendants') &&
-                    event?.attendants?.length >= 3
-                  "
-                  color="primary"
-                >
-                  mdi-account-group
-                </VIcon>
-                <VIcon v-else color="primary">mdi-account</VIcon>
-                <span>
-                  <span v-if="Object.hasOwn(event, 'attendants')">
-                    {{ Object.values(event.attendants).length }}
-                  </span>
-                  <span v-else>0</span>
-                  / {{ event.capacity }}
-                </span>
-              </span>
-              <span
-                v-if="!useAuth.isLoggedIn && event.limitedCapacity"
-                class="text-primary"
-              >
-                <br />
-                {{ $t('program.event.sign_in_to_register') }}
-              </span>
-            </template>
-
-            <template
-              v-if="event.limitedCapacity && useAuth.isLoggedIn"
-              #actions
-            >
-              <VBtn
-                v-if="
-                  useAuth.isLoggedIn &&
-                  ((event.attendants &&
-                    !Object.values(event.attendants).includes(
-                      useAuth?.user?.uid
-                    )) ||
-                    !event.attendants)
-                "
-                color="success"
-                variant="tonal"
-                density="comfortable"
-                @click.stop="
-                  () => {
-                    signUpForEvent(event.id)
-                      .then(() => refreshEvents())
-                      .then(() =>
-                        displaySuccessAlert(
-                          'alert.success.event.register.sign_up'
-                        )
-                      )
-                      .catch((error) =>
-                        displayErrorAlertFromMessage(error.statusMessage)
-                      )
-                  }
-                "
-              >
-                {{ $t('program.event.sign_up') }}
-              </VBtn>
-              <VBtn
-                v-if="
-                  useAuth.isLoggedIn &&
-                  event.attendants &&
-                  Object.values(event.attendants).includes(useAuth?.user?.uid)
-                "
-                color="primary"
-                variant="tonal"
-                density="comfortable"
-                @click.stop="
-                  () => {
-                    optOutOfEvent(event.id)
-                      .then(() => refreshEvents())
-                      .then(() =>
-                        displaySuccessAlert(
-                          'alert.success.event.register.opt_out'
-                        )
-                      )
-                      .catch((error) =>
-                        displayErrorAlertFromMessage(error.statusMessage)
-                      )
-                  }
-                "
-              >
-                {{ $t('program.event.opt_out') }}
-              </VBtn>
-            </template>
-          </VCard>
+        <!-- Event card timestamp and date -->
+        <div class="card__timestamp">
+          <span class="date text-h5 text-primary bold">
+            {{ getNumericDayAndMonthString(event.date.start) }}
+          </span>
+          <br />
+          <span class="time text-h4 bold">
+            {{ getHourAndMinuteStringFromString(event.date.start) }}
+          </span>
         </div>
+
+        <!-- Event card -->
+        <VCard
+          width="600"
+          elevation="0"
+          class="card mb-4"
+          variant="flat"
+          @click="() => navigateTo(`/program/${event.id}`)"
+        >
+          <template #title> {{ event.title }} </template>
+
+          <!-- Display company name if found -->
+          <template v-if="companies[event.companyUID]" #subtitle>
+            {{ companies[event.companyUID].name }}
+          </template>
+
+          <template #text>
+            <!-- Event location -->
+            <span class="card__location mb-2">
+              <VIcon color="primary">mdi-map-marker</VIcon>
+              <NuxtLink
+                v-if="event.location.map !== 'null'"
+                :to="event.location.map"
+                class="link"
+                @click.stop
+              >
+                {{ event.location.name }}
+                <VIcon size="x-small">mdi-open-in-new</VIcon>
+              </NuxtLink>
+              <span v-else>
+                {{ event.location.name }}
+              </span>
+            </span>
+
+            <!-- Event start and end time -->
+            <span class="card__timeinterval mb-2">
+              <VIcon color="primary">mdi-clock</VIcon>
+              <span>
+                {{ getHourAndMinuteStringFromString(event.date.start) }} -
+                {{ getHourAndMinuteStringFromString(event.date.end) }}
+              </span>
+            </span>
+
+            <!-- Event capacity -->
+            <span v-if="event.limitedCapacity" class="card__attendees mb-2">
+              <!-- Group icon -->
+              <VIcon v-if="showGroupIcon(event)" color="primary">
+                mdi-account-group
+              </VIcon>
+              <VIcon v-else color="primary">mdi-account</VIcon>
+
+              <!-- Capacity count -->
+              <span>
+                <span v-if="hasAttendants(event)">
+                  {{ Object.values(event.attendants).length }}
+                </span>
+                <span v-else>0</span>
+                / {{ event.capacity }}
+              </span>
+            </span>
+
+            <!-- Event actions: Sign up perform action -->
+            <span
+              v-if="!useAuth.isLoggedIn && event.limitedCapacity"
+              class="text-primary"
+            >
+              <br />
+              {{ $t('program.event.sign_in_to_register') }}
+            </span>
+          </template>
+
+          <!-- Event actions -->
+          <template v-if="event.limitedCapacity && useAuth.isLoggedIn" #actions>
+            <!-- Sign up to event -->
+            <VBtn
+              v-if="useAuth.isLoggedIn && showSignupButton(event)"
+              color="success"
+              variant="tonal"
+              density="comfortable"
+              @click.stop="
+                () => {
+                  signUpForEvent(event.id)
+                    .then(() => refreshEvents())
+                    .then(() =>
+                      displaySuccessAlert(
+                        'alert.success.event.register.sign_up'
+                      )
+                    )
+                    .catch((error) =>
+                      displayErrorAlertFromMessage(error.statusMessage)
+                    )
+                }
+              "
+            >
+              {{ $t('program.event.sign_up') }}
+            </VBtn>
+
+            <!-- Opt out of event -->
+            <VBtn
+              v-if="useAuth.isLoggedIn && alreadyRegistered(event)"
+              color="primary"
+              variant="tonal"
+              density="comfortable"
+              @click.stop="
+                () => {
+                  optOutOfEvent(event.id)
+                    .then(() => refreshEvents())
+                    .then(() =>
+                      displaySuccessAlert(
+                        'alert.success.event.register.opt_out'
+                      )
+                    )
+                    .catch((error) =>
+                      displayErrorAlertFromMessage(error.statusMessage)
+                    )
+                }
+              "
+            >
+              {{ $t('program.event.opt_out') }}
+            </VBtn>
+          </template>
+        </VCard>
       </div>
-    </VContainer>
-  </div>
+    </div>
+  </VContainer>
 </template>
 
 <style scoped lang="scss">
