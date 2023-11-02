@@ -45,6 +45,15 @@
     }
   })
 
+  // Check if event is full
+  const eventFull = computed(() => {
+    return (event: any) => {
+      return (
+        hasAttendants.value(event) && event.attendants.length >= event.capacity
+      )
+    }
+  })
+
   // Set initial selected date to show
   const initialState = {
     selectedDate: dates.value[0] as string,
@@ -80,6 +89,26 @@
     alertState.show = content.show
 
     console.error(errorMessage)
+  }
+
+  // Sign up for event
+  const signUpForEvent = async (eventUID: string) => {
+    await $fetch(`/api/event/register/${eventUID}`, {
+      method: 'POST',
+    })
+      .then(() => refreshEvents())
+      .then(() => displaySuccessAlert('alert.success.event.register.sign_up'))
+      .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
+  }
+
+  // Opt out of event
+  const optOutOfEvent = async (eventUID: string) => {
+    await $fetch(`/api/event/register/${eventUID}`, {
+      method: 'DELETE',
+    })
+      .then(() => refreshEvents())
+      .then(() => displaySuccessAlert('alert.success.event.register.opt_out'))
+      .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
   }
 </script>
 
@@ -206,20 +235,8 @@
               color="success"
               variant="tonal"
               density="comfortable"
-              @click.stop="
-                () => {
-                  signUpForEvent(event.id)
-                    .then(() => refreshEvents())
-                    .then(() =>
-                      displaySuccessAlert(
-                        'alert.success.event.register.sign_up'
-                      )
-                    )
-                    .catch((error) =>
-                      displayErrorAlertFromMessage(error.statusMessage)
-                    )
-                }
-              "
+              :disabled="eventFull(event)"
+              @click.stop="signUpForEvent(event.id)"
             >
               {{ $t('program.event.sign_up') }}
             </VBtn>
@@ -230,20 +247,7 @@
               color="primary"
               variant="tonal"
               density="comfortable"
-              @click.stop="
-                () => {
-                  optOutOfEvent(event.id)
-                    .then(() => refreshEvents())
-                    .then(() =>
-                      displaySuccessAlert(
-                        'alert.success.event.register.opt_out'
-                      )
-                    )
-                    .catch((error) =>
-                      displayErrorAlertFromMessage(error.statusMessage)
-                    )
-                }
-              "
+              @click.stop="optOutOfEvent(event.id)"
             >
               {{ $t('program.event.opt_out') }}
             </VBtn>

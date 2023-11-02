@@ -15,18 +15,6 @@ export const getEventByUID = async (UID: string) => {
   return event
 }
 
-export const signUpForEvent = async (eventUID: string) => {
-  await $fetch(`/api/event/register/${eventUID}`, {
-    method: 'POST',
-  })
-}
-
-export const optOutOfEvent = async (eventUID: string) => {
-  await $fetch(`/api/event/register/${eventUID}`, {
-    method: 'DELETE',
-  })
-}
-
 // Group events by start date
 export const groupEventsByDateStart = (eventsObject: any) => {
   const groupedEvents: Record<string, any[]> = {}
