@@ -92,8 +92,8 @@
   }
 
   // Sign up for event
-  const signUpForEvent = async (eventUID: string) => {
-    await $fetch(`/api/event/register/${eventUID}`, {
+  const signUpForEvent = (eventUID: string) => {
+    $fetch(`/api/event/register/${eventUID}`, {
       method: 'POST',
     })
       .then(() => refreshEvents())
@@ -102,8 +102,8 @@
   }
 
   // Opt out of event
-  const optOutOfEvent = async (eventUID: string) => {
-    await $fetch(`/api/event/register/${eventUID}`, {
+  const optOutOfEvent = (eventUID: string) => {
+    $fetch(`/api/event/register/${eventUID}`, {
       method: 'DELETE',
     })
       .then(() => refreshEvents())
