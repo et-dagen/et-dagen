@@ -103,7 +103,6 @@ export const getI18nAlertRoute = (errorMessage: string) => {
   if (alert === 'missing_error') return 'alert.error.default'
 
   const { source, type, message } = alert
-  console.log('Looking for alert:', `alert.${type}.${source}.${message}`)
   return `alert.${type}.${source}.${message}`
 }
 
@@ -111,5 +110,15 @@ export const getAlertRouteAndType = (errorMessage: string) => {
   return {
     type: getAlertTypeFromErrorMessage(errorMessage),
     route: getI18nAlertRoute(errorMessage),
+  }
+}
+
+export const getAlertContent = (errorMessage: string, showAlert = true) => {
+  const content = getAlertRouteAndType(errorMessage)
+
+  return {
+    alertRoute: content.route,
+    type: content.type as AlertType,
+    show: showAlert,
   }
 }
