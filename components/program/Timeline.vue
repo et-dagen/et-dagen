@@ -3,22 +3,11 @@
 
   const useAuth = useAuthStore()
 
-  const companies = await $fetch('/api/company', { method: 'GET' })
+  const { data: companies } = await useFetch('/api/company')
 
-  const events = ref({})
-  const eventsByDate: Ref<{ [key: string]: any[] }> = ref({})
-  const dates = ref([])
-  const fetchAndUpdateEvents = async () => {
-    try {
-      const updatedEvents = await getEvents()
-      events.value = updatedEvents
-      eventsByDate.value = groupEventsByDateStart(updatedEvents)
-      dates.value = Object.keys(eventsByDate.value)
-      state.selectedDate = dates.value[0] || ''
-    } catch (err) {
-      console.error(err)
-    }
-  }
+  const { data: events, refresh: refreshEvents } = await useFetch('/api/event')
+  const eventsByDate: any = computed(() => groupEventsByDateStart(events.value))
+  const dates = computed(() => Object.keys(eventsByDate.value))
 
   const initialState = {
     selectedDate: dates.value[0] as string,
@@ -159,10 +148,56 @@
             >
               <VBtn
                 v-if="
-                  Object.hasOwn(event, 'attendants') &&
-                  event?.attendants?.length >= 3
+                  useAuth.isLoggedIn &&
+                  ((event.attendants &&
+                    !Object.values(event.attendants).includes(
+                      useAuth?.user?.uid
+                    )) ||
+                    !event.attendants)
+                "
+                color="success"
+                variant="tonal"
+                density="comfortable"
+                @click.stop="
+                  () => {
+                    signUpForEvent(event.id)
+                      .then(() => refreshEvents())
+                      .then(() =>
+                        displaySuccessAlert(
+                          'alert.success.event.register.sign_up'
+                        )
+                      )
+                      .catch((error) =>
+                        displayErrorAlertFromMessage(error.statusMessage)
+                      )
+                  }
+                "
+              >
+                {{ $t('program.event.sign_up') }}
+              </VBtn>
+              <VBtn
+                v-if="
+                  useAuth.isLoggedIn &&
+                  event.attendants &&
+                  Object.values(event.attendants).includes(useAuth?.user?.uid)
                 "
                 color="primary"
+                variant="tonal"
+                density="comfortable"
+                @click.stop="
+                  () => {
+                    optOutOfEvent(event.id)
+                      .then(() => refreshEvents())
+                      .then(() =>
+                        displaySuccessAlert(
+                          'alert.success.event.register.opt_out'
+                        )
+                      )
+                      .catch((error) =>
+                        displayErrorAlertFromMessage(error.statusMessage)
+                      )
+                  }
+                "
               >
                 {{ $t('program.event.opt_out') }}
               </VBtn>
