@@ -4,7 +4,7 @@
 
   // Add event id as property
   const events = computed(() => {
-    return addEventIDAsProperty(data.value)
+    if (data.value !== null) return addEventIDAsProperty(data.value)
   })
 
   // Check if event has attendants
