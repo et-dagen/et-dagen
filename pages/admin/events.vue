@@ -1,10 +1,10 @@
 <script setup lang="ts">
-  const { data } = useFetch('/api/event')
-  const { data: companies } = useFetch('/api/company')
+  const { data } = await useFetch('/api/event')
+  const { data: companies } = await useFetch('/api/company')
 
   // Add event id as property
   const events = computed(() => {
-    if (data.value !== null) return addEventIDAsProperty(data.value)
+    return addEventIDAsProperty(data.value)
   })
 
   // Check if event has attendants
