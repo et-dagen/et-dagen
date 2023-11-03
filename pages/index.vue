@@ -1,13 +1,14 @@
 <template>
-  <div>
+  <div class="ma-10">
     <HomeBanner
       :content="{
         caption: 'Få et innblikk i din fremtidige arbeidsplass',
         date: { start: '2023-02-14', end: '2023-02-15' },
         image: 'https://cdn.vuetifyjs.com/images/parallax/material.jpg',
-        title: 'Elektronikk & Teknologidagen',
+        title: 'Elektronikk & Teknologidagene',
       }"
     />
+
     <CompanyHero
       :content="{
         name: 'Company Name',
@@ -22,10 +23,18 @@
         nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in 
          qui officia deserunt mollit anim id est laborum.`,
         logo: `https://storage.googleapis.com/etdagen-d1f82.
-appspot.com/storage_companies%2FSony%2FLogo%2Fsony.png`,
+          appspot.com/storage_companies%2FSony%2FLogo%2Fsony.png`,
         website: 'https://shortsdag.no',
       }"
       class="my-5 d-flex justify-center"
+    />
+
+    <CompanyCard
+      :content="{
+        logo: `https://companyofthings.no/wp-content/uploads/2022/06/
+          cot_nettside_logo_svart-e1672157803306.png`,
+        website: 'https://cot.as',
+      }"
     />
   </div>
 </template>

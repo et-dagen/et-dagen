@@ -18,6 +18,7 @@ export default {
       'neutral-lighten-1': '#7a7a7a',
       'neutral-lighten-2': '#949494',
       'neutral-lighten-3': '#aeaeae',
+      'neutral-lighten-4': '#F5F5F5',
       accent: '#C33C3B',
       error: '#cc3000',
       info: '#ECA72C',
