@@ -26,6 +26,22 @@ export const groupEventsByDateStart = (eventsObject: any) => {
   return groupedEvents
 }
 
+// Bake eventsObject keys into event objects
+export const addEventIDAsProperty = (eventsObject: any) => {
+  interface EventWithId extends Record<string, any> {
+    id: string
+  }
+
+  // Iterate over object containing events
+  for (const key of Object.entries(eventsObject)) {
+    // Make sure event doesnt lose its ID
+    const event = key[1] as EventWithId
+    event.id = key[0]
+  }
+
+  return eventsObject
+}
+
 // Sort date-grouped events by start time
 export const sortDateGroupedEventsByStartTime = (
   events: Record<string, any[]>
