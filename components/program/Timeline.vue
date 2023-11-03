@@ -165,6 +165,7 @@
           elevation="0"
           class="card mb-4"
           variant="flat"
+          :ripple="false"
           @click="() => navigateTo(`/program/${event.id}`)"
         >
           <template #title> {{ event.title }} </template>
@@ -243,6 +244,7 @@
               v-if="useAuth.isLoggedIn && showSignupButton(event)"
               color="success"
               variant="tonal"
+              :ripple="true"
               density="comfortable"
               :disabled="eventFull(event)"
               @click.stop="signUpForEvent(event.id)"
@@ -255,6 +257,7 @@
               v-if="useAuth.isLoggedIn && alreadyRegistered(event)"
               color="primary"
               variant="tonal"
+              :ripple="true"
               density="comfortable"
               @click.stop="optOutOfEvent(event.id)"
             >
