@@ -116,6 +116,12 @@
       "sign_up": "Meld meg på",
       "opt_out": "Trekk påmelding",
       "sign_in_to_register": "Logg inn for å melde deg på"
-    }
+    },
+  "admin": {
+    "categories": "Kategorier",
+    "companies": "Bedrifter",
+    "events": "Arrangementer",
+    "jobs": "Jobber",
+    "users": "Brukere"
   }
 }
