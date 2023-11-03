@@ -13,7 +13,12 @@
     height="125"
     variant="flat"
     max-width="250"
-    @click="navigateTo(content.website, { external: true, open: 'target' })"
+    @click="
+      navigateTo(content.website, {
+        external: true,
+        open: { target: '_blank' },
+      })
+    "
   >
     <VImg :width="500" aspect-ratio="4/3" contain :src="content.logo" />
   </VCard>

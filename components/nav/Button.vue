@@ -2,6 +2,7 @@
   import type { Route } from '@/models/Nav'
 
   const localePath = useLocalePath()
+  const { locale, defaultLocale } = useI18n()
   const app = useAppStore()
 
   defineProps({
@@ -14,21 +15,31 @@
       default: true,
     },
   })
+
+  const currentRouteName = computed(() => {
+    const routeNames = useRoute().fullPath.split('/')
+    const index = locale.value === defaultLocale ? 1 : 2
+    const name = routeNames[index]
+    return name === '' ? 'index' : name ?? 'index'
+  })
 </script>
 
 <template>
-  <NuxtLink :to="localePath(route.route)" @click="app.drawer = false">
-    <VBtn
-      color="black"
-      variant="text"
-      :rounded="!route.icon ? 'lg' : undefined"
-      :width="!route.icon ? '100%' : undefined"
-      :active="active && ($route.name as string).includes(route.name)"
-      :icon="route.icon"
-    >
-      <template v-if="!route.icon" #default>
-        {{ $t(`nav.${route.name}`) }}
-      </template>
-    </VBtn>
-  </NuxtLink>
+  <VBtn
+    color="black"
+    variant="text"
+    :rounded="!route.icon ? 'lg' : undefined"
+    :active="active && currentRouteName === route.name"
+    :icon="route.icon"
+    @click="
+      () => {
+        app.drawer = false
+        navigateTo(localePath(route.route))
+      }
+    "
+  >
+    <template v-if="!route.icon" #default>
+      {{ $t(`nav.${route.name}`) }}
+    </template>
+  </VBtn>
 </template>
