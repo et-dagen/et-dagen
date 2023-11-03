@@ -12,6 +12,10 @@
 </template>
 
 <script setup lang="ts">
+  useHead({
+    link: [{ rel: 'shortcut icon', type: 'image/png', href: '/favicon.ico' }],
+  })
+
   const { mobile } = useDisplay()
 
   const app = useAppStore()
