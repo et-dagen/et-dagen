@@ -17,6 +17,11 @@ a {
   }
 }
 
+// fix chip background colors
+.v-chip__underlay {
+  opacity: 0 !important;
+}
+
 // give all header elements their corresponding Vuetify class
 // ie h1 will get class text-h1
 @for $i from 1 through 6 {

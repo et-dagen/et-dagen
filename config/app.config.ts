@@ -37,4 +37,6 @@ const adminCategories = [
   },
 ]
 
-export { routes, adminCategories }
+const usertypes = ['basic', 'company', 'admin']
+
+export { routes, adminCategories, usertypes }

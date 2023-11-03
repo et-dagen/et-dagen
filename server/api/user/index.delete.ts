@@ -25,6 +25,9 @@ export default defineEventHandler(async (event) => {
   // remove user
   usersRef.child(uid).remove()
 
+  // remove firebase auth user
+  await auth.deleteUser(uid)
+
   // user successfully removed
   sendNoContent(event, 204)
 })
