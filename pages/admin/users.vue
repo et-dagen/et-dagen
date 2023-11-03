@@ -72,10 +72,10 @@
 <template>
   <div>
     <div class="d-flex flex-wrap filters align-end">
-      <!-- usertypes -->
+      <!-- user types -->
       <div>
-        <p>Usertypes</p>
-        <VChipGroup v-model="usertypes" multiple>
+        <p>User types</p>
+        <VChipGroup v-model="usertypes" multiple mandatory>
           <VChip
             v-for="(usertype, index) in usertypeNames"
             :key="index"
@@ -112,47 +112,69 @@
 
       <VSpacer />
 
-      <!-- delete users modal -->
-      <VDialog v-model="dialog" width="500">
-        <template #activator="{ props }">
-          <VBtn
-            v-bind="props"
-            :disabled="!selected.find((val) => val)"
-            color="primary"
-            size="large"
-            rounded="lg"
-            flat
-          >
-            Delete selected
-          </VBtn>
-        </template>
+      <div>
+        <!-- select all button -->
+        <VBtn
+          color="primary"
+          size="large"
+          rounded="lg"
+          class="mr-2"
+          flat
+          @click="
+            () => {
+              /* @ts-ignore */
+              filteredUsers.forEach((user, index) => (selected[index] = true))
+            }
+          "
+        >
+          Select all
+        </VBtn>
 
-        <template #default="{ isActive }">
-          <VCard rounded="lg" class="text-center pa-6">
-            <h6>Are you sure you want to delete the selected users?</h6>
+        <!-- delete users modal -->
+        <VDialog v-model="dialog" width="500">
+          <template #activator="{ props }">
+            <VBtn
+              v-bind="props"
+              :disabled="!selected.find((val) => val)"
+              color="primary"
+              size="large"
+              rounded="lg"
+              flat
+            >
+              Delete selected
+            </VBtn>
+          </template>
 
-            <div class="d-flex justify-center mt-6" style="gap: 1.5rem">
-              <VBtn
-                size="large"
-                variant="outlined"
-                color="primary"
-                :loading="loading"
-                @click="deleteUsers"
+          <template #default="{ isActive }">
+            <VCard rounded="lg" class="text-center pa-6">
+              <h6>Are you sure you want to delete the selected users?</h6>
+
+              <div
+                class="d-flex justify-center flex-wrap mt-6"
+                style="gap: 1.5rem"
               >
-                Yes, delete them
-              </VBtn>
-              <VBtn
-                size="large"
-                flat
-                color="success"
-                @click="isActive.value = false"
-              >
-                No, abort
-              </VBtn>
-            </div>
-          </VCard>
-        </template>
-      </VDialog>
+                <VBtn
+                  size="large"
+                  variant="outlined"
+                  color="primary"
+                  :loading="loading"
+                  @click="deleteUsers"
+                >
+                  Yes, delete them
+                </VBtn>
+                <VBtn
+                  size="large"
+                  flat
+                  color="success"
+                  @click="isActive.value = false"
+                >
+                  No, abort
+                </VBtn>
+              </div>
+            </VCard>
+          </template>
+        </VDialog>
+      </div>
     </div>
 
     <VDivider class="mb-10 mt-2" />
@@ -161,13 +183,13 @@
     <VTable hover style="overflow: hidden">
       <thead>
         <tr>
-          <th class="text-left">Select</th>
-          <th class="text-left">Name</th>
-          <th class="text-left">User type</th>
-          <th class="text-left">Email</th>
-          <th class="text-left">Year</th>
-          <th class="text-left">Program</th>
-          <th class="text-left">Company</th>
+          <th>Select</th>
+          <th>Name</th>
+          <th>User type</th>
+          <th>Email</th>
+          <th>Year</th>
+          <th>Program</th>
+          <th>Company</th>
           <th class="text-center">UID</th>
         </tr>
       </thead>
@@ -216,7 +238,7 @@
 
 <style scoped lang="scss">
   .filters {
-    gap: 1rem;
+    gap: 0.5rem;
   }
 
   td {
