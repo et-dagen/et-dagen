@@ -1,14 +1,12 @@
 <script setup lang="ts">
-  import type { Route } from '@/models/Nav'
+  import { routes } from '~/config/app.config'
 
   const auth = useAuthStore()
   const app = useAppStore()
+  const { mobile } = useDisplay()
 
-  type Routes = Route[]
-
-  defineProps({
-    routes: { type: Array as PropType<Routes>, required: true },
-  })
+  // close navigation drawer when leaving mobile breakpiont
+  watch(mobile, () => (app.drawer = false))
 </script>
 
 <template>

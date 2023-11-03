@@ -1,16 +1,10 @@
 <script setup lang="ts">
-  import type { Route } from '@/models/Nav'
+  import { routes } from '~/config/app.config'
 
   const localePath = useLocalePath()
 
   const auth = useAuthStore()
   const app = useAppStore()
-
-  type Routes = Route[]
-
-  defineProps({
-    routes: { type: Array as PropType<Routes>, required: true },
-  })
 </script>
 
 <template>
