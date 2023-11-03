@@ -21,9 +21,22 @@
     console.log(event)
   }
 </script>
-'
+
 <template>
   <div class="container">
+    <!-- Create new event -->
+    <VBtn
+      block
+      variant="flat"
+      color="primary"
+      @click="() => navigateTo('/admin/edit/event')"
+      class="mb-5"
+    >
+      <VIcon>mdi-plus</VIcon>
+      <span>Legg til arrangement</span>
+    </VBtn>
+
+    <!-- Event container -->
     <VCard v-for="(event, index) in events" :key="index" elevation="3">
       <!-- Event title -->
       <template #title>
