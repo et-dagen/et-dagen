@@ -241,7 +241,8 @@
     gap: 0.5rem;
   }
 
-  td {
+  td,
+  th {
     text-wrap: nowrap;
     min-width: fit-content;
   }
