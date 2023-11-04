@@ -13,6 +13,9 @@
 
   const selected = ref([])
 
+  const pageSize = 10
+  const currentPage = ref(1)
+
   const loading = ref()
   const dialog = ref(false)
 
@@ -36,6 +39,15 @@
       }) ?? []
     )
   })
+
+  // from stackoverflow
+  const pages = computed(() =>
+    filteredUsers.value.reduce((all, one, i) => {
+      const ch = Math.floor(i / pageSize)
+      all[ch] = [].concat(all[ch] || [], one)
+      return all
+    }, [])
+  )
 
   const deleteUsers = async () => {
     loading.value = true
@@ -177,10 +189,19 @@
       </div>
     </div>
 
-    <VDivider class="mb-10 mt-2" />
+    <VDivider class="mb-5 mt-2" />
+
+    <VPagination
+      v-if="pages.length > 1"
+      v-model="currentPage"
+      :ripple="false"
+      :length="pages.length"
+      :total-visible="4"
+      density="comfortable"
+    />
 
     <!-- user list -->
-    <VTable hover style="overflow: hidden">
+    <VTable hover style="overflow: hidden" class="mb-5">
       <thead>
         <tr>
           <th>Select</th>
@@ -194,7 +215,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(user, index) in filteredUsers" :key="index">
+        <tr v-for="(user, index) in pages[currentPage - 1]" :key="index">
           <!-- select user -->
           <td>
             <VCheckbox v-model="selected[index]" :hide-details="true" />
