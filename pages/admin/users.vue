@@ -6,6 +6,7 @@
   const { data: companies } = await useFetch('/api/company')
 
   const { text, copy, copied } = useClipboard()
+  const { mobile } = useDisplay()
 
   const usertypes = ref([0, 1, 2])
   const filterOrder = ref('descending')
@@ -39,8 +40,9 @@
 
     return (
       filteredByUsertype?.sort((a, b) => {
-        /* @ts-ignore */
-        const order = a[filterType.value] < b[filterType.value] ? -1 : 1
+        const order =
+          /* @ts-ignore */
+          (a[filterType.value] ?? 0) < (b[filterType.value] ?? 0) ? -1 : 1
         return filterOrder.value === 'ascending' ? order : order * -1
       }) ?? []
     )
@@ -113,7 +115,7 @@
         </VChipGroup>
       </div>
 
-      <!-- filer type -->
+      <!-- filter type -->
       <div>
         <p>{{ $t('admin.users.filtertypes.name') }}</p>
         <VChipGroup v-model="filterType" mandatory>
@@ -136,7 +138,7 @@
         </VChipGroup>
       </div>
 
-      <!-- filer order -->
+      <!-- filter order -->
       <div>
         <p>{{ $t('admin.users.filterorder.name') }}</p>
         <VChipGroup v-model="filterOrder" mandatory>
@@ -228,7 +230,8 @@
 
     <VDivider class="mb-5 mt-2" />
 
-    <div class="d-flex align-center justify-space-between flex-wrap">
+    <!-- pagination -->
+    <div class="d-flex align-center justify-space-between pagination-wrapper">
       <VPagination
         v-model="currentPage"
         :ripple="false"
@@ -237,7 +240,10 @@
         density="comfortable"
       />
 
-      <div class="d-flex align-center">
+      <div
+        class="d-flex align-center"
+        style="text-wrap: nowrap; min-width: fit-content"
+      >
         <p class="text-subtitle-1 mr-4 font-weight-medium">
           {{ $t('admin.users.pagesize') }}
         </p>
@@ -287,7 +293,7 @@
 
           <!-- copy user id -->
           <td>
-            <VTooltip location="top" color="primary">
+            <VTooltip location="top" color="primary" :open-on-click="mobile">
               <template #activator="{ props }">
                 <VBtn
                   v-bind="props"
@@ -330,5 +336,13 @@
   .v-chip--selected {
     background-color: rgb(var(--v-theme-accent)) !important;
     color: rgb(var(--v-theme-background)) !important;
+  }
+
+  .pagination-wrapper {
+    overflow: scroll;
+  }
+
+  .pagination-wrapper::-webkit-scrollbar {
+    display: none;
   }
 </style>

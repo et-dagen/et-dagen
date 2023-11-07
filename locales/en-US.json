@@ -132,7 +132,7 @@
     },
     "users": {
       "name": "Users",
-      "pagesize": "User per page",
+      "pagesize": "Users per page",
       "usertypes": {
         "name": "User types",
         "admin": "Admins",
