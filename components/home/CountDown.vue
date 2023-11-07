@@ -28,7 +28,7 @@
 </script>
 
 <template>
-  <v-card width="37%" class="mx-auto pt-16" elevation="0">
+  <v-card class="mx-auto pt-16 w-100 container" elevation="0">
     <v-row justify="center">
       <v-col class="text-center pb-6">
         <v-card-title class="text-h6 text-md-h5 text-lg-h4">{{
@@ -38,63 +38,79 @@
     </v-row>
 
     <v-row justify="center">
-      <v-col cols="2.25" class="px=2">
+      <v-col cols="2.25" class="px-sm-2 px-1">
         <v-row justify="center">
           <v-card class="outlined">
             <v-card-text class="text-center">
-              <h4 v-if="timeDiff !== null">{{ timeDiff.days }}</h4>
-              <h4 v-else>0</h4>
+              <h4 class="text-h5 text-sm-h4" v-if="timeDiff !== null">
+                {{ timeDiff.days }}
+              </h4>
+              <h4 class="text-h5 text-sm-h4" v-else>0</h4>
             </v-card-text>
           </v-card>
         </v-row>
         <v-row>
-          <v-card-text class="text-center">
-            <h6>{{ $t('datetime.times.days') }}</h6>
+          <v-card-text class="text-center px-sm-2 px-1">
+            <h6 class="text-subtitle-2 text-sm-h6">
+              {{ $t('datetime.times.days') }}
+            </h6>
           </v-card-text>
         </v-row>
       </v-col>
-      <v-col cols="2.25" class="px=2">
+      <v-col cols="2.25" class="px-sm-2 px-1">
         <v-row justify="center">
           <v-card class="outlined">
             <v-card-text class="text-center">
-              <h4 v-if="timeDiff !== null">{{ timeDiff.hours }}</h4>
-              <h4 v-else>0</h4>
+              <h4 class="text-h5 text-sm-h4" v-if="timeDiff !== null">
+                {{ timeDiff.hours }}
+              </h4>
+              <h4 class="text-h5 text-sm-h4" v-else>0</h4>
             </v-card-text>
           </v-card>
         </v-row>
         <v-row>
-          <v-card-text class="text-center">
-            <h6>{{ $t('datetime.times.hours') }}</h6>
+          <v-card-text class="text-center px-sm-2 px-1">
+            <h6 class="text-subtitle-2 text-sm-h6">
+              {{ $t('datetime.times.hours') }}
+            </h6>
           </v-card-text>
         </v-row>
       </v-col>
-      <v-col cols="2.25" class="px=2">
+      <v-col cols="2.25" class="px-sm-2 px-1">
         <v-row justify="center">
           <v-card class="outlined">
             <v-card-text class="text-center">
-              <h4 v-if="timeDiff !== null">{{ timeDiff.minutes }}</h4>
-              <h4 v-else>0</h4>
+              <h4 class="text-h5 text-sm-h4" v-if="timeDiff !== null">
+                {{ timeDiff.minutes }}
+              </h4>
+              <h4 class="text-h5 text-sm-h4" v-else>0</h4>
             </v-card-text>
           </v-card>
         </v-row>
         <v-row>
-          <v-card-text class="text-center">
-            <h6>{{ $t('datetime.times.minutes') }}</h6>
+          <v-card-text class="text-center px-sm-2 px-1">
+            <h6 class="text-subtitle-2 text-sm-h6">
+              {{ $t('datetime.times.minutes') }}
+            </h6>
           </v-card-text>
         </v-row>
       </v-col>
-      <v-col cols="2.25" class="px=2">
+      <v-col cols="2.25" class="px-sm-2 px-1">
         <v-row justify="center">
           <v-card class="outlined">
             <v-card-text class="text-center">
-              <h4 v-if="timeDiff !== null">{{ timeDiff.seconds }}</h4>
-              <h4 v-else>0</h4>
+              <h4 class="text-h5 text-sm-h4" v-if="timeDiff !== null">
+                {{ timeDiff.seconds }}
+              </h4>
+              <h4 class="text-h5 text-sm-h4" v-else>0</h4>
             </v-card-text>
           </v-card>
         </v-row>
         <v-row>
-          <v-card-text class="text-center">
-            <h6>{{ $t('datetime.times.seconds') }}</h6>
+          <v-card-text class="text-center px-sm-2 px-1">
+            <h6 class="text-subtitle-2 text-sm-h6">
+              {{ $t('datetime.times.seconds') }}
+            </h6>
           </v-card-text>
         </v-row>
       </v-col>
@@ -115,17 +131,23 @@
   </v-card>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+  @use 'vuetify/settings';
+
+  .container {
+    max-width: 500px;
+  }
+
   .text-center {
     text-align: center;
   }
 
-  .mx-auto {
-    margin: 0 auto;
-  }
-
   .v-card {
     min-width: 90px;
+
+    @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
+      min-width: 60px;
+    }
   }
 
   .v-row {
