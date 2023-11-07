@@ -42,11 +42,17 @@
 
   // from stackoverflow
   const pages = computed(() =>
-    filteredUsers.value.reduce((all, one, i) => {
-      const ch = Math.floor(i / pageSize)
-      all[ch] = [].concat(all[ch] || [], one)
-      return all
-    }, [])
+    filteredUsers.value.reduce((resultArray, item, index) => {
+      const chunkIndex = Math.floor(index / pageSize)
+
+      if (!resultArray[chunkIndex]) {
+        resultArray[chunkIndex] = [] // start a new chunk
+      }
+
+      resultArray[chunkIndex].push(item)
+
+      return resultArray
+    }, [] as User[][])
   )
 
   const deleteUsers = async () => {
@@ -91,7 +97,9 @@
           <VChip
             v-for="(usertype, index) in usertypeNames"
             :key="index"
-            class="bg-neutral-lighten-4"
+            :class="`bg-neutral-lighten-4 ${
+              usertypes.includes(index) ? 'v-chip--selected' : ''
+            }`"
           >
             {{ usertype.charAt(0).toUpperCase() + usertype.slice(1) }}
           </VChip>
@@ -102,10 +110,22 @@
       <div>
         <p>Filter type</p>
         <VChipGroup v-model="filterType" mandatory>
-          <VChip class="bg-neutral-lighten-4" value="updated">
+          <VChip
+            :class="`bg-neutral-lighten-4 ${
+              filterType === 'updated' ? 'v-chip--selected' : ''
+            }`"
+            value="updated"
+          >
             Last modified
           </VChip>
-          <VChip class="bg-neutral-lighten-4" value="currentYear"> Year </VChip>
+          <VChip
+            :class="`bg-neutral-lighten-4 ${
+              filterType === 'currentYear' ? 'v-chip--selected' : ''
+            }`"
+            value="currentYear"
+          >
+            Year
+          </VChip>
         </VChipGroup>
       </div>
 
@@ -113,10 +133,20 @@
       <div>
         <p>Filter order</p>
         <VChipGroup v-model="filterOrder" mandatory>
-          <VChip class="bg-neutral-lighten-4" value="descending">
+          <VChip
+            :class="`bg-neutral-lighten-4 ${
+              filterOrder === 'descending' ? 'v-chip--selected' : ''
+            }`"
+            value="descending"
+          >
             Descending
           </VChip>
-          <VChip class="bg-neutral-lighten-4" value="ascending">
+          <VChip
+            :class="`bg-neutral-lighten-4 ${
+              filterOrder === 'ascending' ? 'v-chip--selected' : ''
+            }`"
+            value="ascending"
+          >
             Ascending
           </VChip>
         </VChipGroup>
