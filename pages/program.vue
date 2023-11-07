@@ -27,18 +27,22 @@
       method: 'delete',
       body: {
         companyUID: '-NesGFDmavw-y88kvfYM',
-        title: 'Johan hjemmefest for the crew',
-        starttime: '2024-01-01T00:00:00Z',
+        eventUID: '-NifJRxs3FRhomJyoP_d',
       },
     })
   }
 
   const patchEvent = async () => {
     await $fetch('/api/event', {
-      mathod: 'patch',
-      body: {
-        companyUID: '-NesGFDmavw-y88kvfYM',
+      header: {
+        'Content-Type': 'application/json',
       },
+      method: 'patch',
+      body: JSON.stringify({
+        companyUID: '-NesGFDmavw-y88kvfYM',
+        eventUID: '-NifJRxs3FRhomJyoP_d',
+        description: 'Updated description',
+      }),
     })
   }
 </script>
