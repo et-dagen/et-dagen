@@ -100,12 +100,42 @@
       },
       "server": {
         "invalid_registration_code": "Ugyldig registreringskode"
+      },
+      "event": {
+        "event_doesnt_exist": "Arrangementet finnes ikke",
+        "register": {
+          "event_is_full": "Arrangementet er fullt",
+          "already_registered": "Du er allerede påmeldt dette arrangementet",
+          "user_not_registered": "Du er ikke påmeldt dette arrangementet",
+          "registration_unnecessary": "Påmelding er ikke nødvendig for dette arrangementet"
+        }
       }
     },
     "success": {
       "firebase": {
         "reset_password": "Epost for tilbakestilling av passord er sendt"
+      },
+      "event": {
+        "register": {
+          "sign_up": "Du er påmeldt dette arrangementet",
+          "opt_out": "Du har meldt deg av dette arrangementet"
+        }
       }
     }
+  },
+  "program": {
+    "title": "Program",
+    "event": {
+      "sign_up": "Meld meg på",
+      "opt_out": "Trekk påmelding",
+      "sign_in_to_register": "Logg inn for å melde deg på"
+    }
+  },
+  "admin": {
+    "categories": "Kategorier",
+    "companies": "Bedrifter",
+    "events": "Arrangementer",
+    "jobs": "Jobber",
+    "users": "Brukere"
   }
 }

@@ -77,7 +77,6 @@ export default defineNuxtConfig({
     defaultLocale: 'no',
     vueI18n: 'config/i18n.config.ts',
     detectBrowserLanguage: false,
-    skipSettingLocaleOnNavigate: true,
   },
 
   pinia: {
@@ -89,18 +88,7 @@ export default defineNuxtConfig({
   },
 
   vuetify: {
-    moduleOptions: {
-      styles: {
-        configFile: '/assets/scss/settings.scss',
-      },
-    },
     vuetifyOptions: './config/vuetify/vuetify.config.ts',
-  },
-
-  // nuxt inlineSSRStyles not compatiable with Vuetify :(
-  // https://github.com/userquin/vuetify-nuxt-module/issues/74
-  experimental: {
-    inlineSSRStyles: false,
   },
 
   // enable nuxt devtools

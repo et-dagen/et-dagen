@@ -1,6 +1,4 @@
 <script setup lang="ts">
-  import { DateStringObject } from 'models/DateTime'
-
   export interface HomeBannerContent {
     caption: string
     date: {
@@ -15,13 +13,8 @@
     content: { type: Object as PropType<HomeBannerContent>, required: true },
   })
 
-  // Convert event dates into readable and usable format
-  const startDate = computed<DateStringObject>(() => {
-    return dateStringToStringObject(props.content.date.start)
-  })
-  const endDate = computed<DateStringObject>(() => {
-    return dateStringToStringObject(props.content.date.end)
-  })
+  const startDate = new Date(props.content.date.start)
+  const endDate = new Date(props.content.date.end)
 </script>
 
 <template>
@@ -29,13 +22,20 @@
     <!-- banner title and caption -->
     <div>
       <h5>
-        {{ startDate.day }}.
+        {{ startDate.getDate() }}.
         {{
           !isSameMonth(content.date.start, content.date.end)
-            ? $t(`datetime.months.${startDate.month}`)
+            ? $t(
+                `datetime.months.${getFullMonthFromNumber(
+                  startDate.getMonth()
+                )}`
+              )
             : ''
         }}
-        - {{ endDate.day }}. {{ $t(`datetime.months.${endDate.month}`) }}
+        - {{ endDate.getDate() }}.
+        {{
+          $t(`datetime.months.${getFullMonthFromNumber(endDate.getMonth())}`)
+        }}
       </h5>
 
       <!-- h4 for under lg breakpoint and h3 above -->
