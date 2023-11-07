@@ -46,7 +46,7 @@
       const chunkIndex = Math.floor(index / pageSize)
 
       if (!resultArray[chunkIndex]) {
-        resultArray[chunkIndex] = [] // start a new chunk
+        resultArray[chunkIndex] = []
       }
 
       resultArray[chunkIndex].push(item)
@@ -60,8 +60,8 @@
 
     const queries = []
 
-    const selectedUsers = filteredUsers.value.map((user, index) =>
-      selected.value[index] ? user.uid : undefined
+    const selectedUsers = pages.value[currentPage.value - 1].map(
+      (user, index) => (selected.value[index] ? user.uid : undefined)
     )
 
     for (const uid of selectedUsers)
@@ -81,6 +81,7 @@
 
     dialog.value = false
     loading.value = false
+    currentPage.value = 1
 
     // refresh user data
     refresh()
@@ -92,7 +93,7 @@
     <div class="d-flex flex-wrap filters align-end">
       <!-- user types -->
       <div>
-        <p>User types</p>
+        <p>{{ $t('admin.users.usertypes.name') }}</p>
         <VChipGroup v-model="usertypes" multiple mandatory>
           <VChip
             v-for="(usertype, index) in usertypeNames"
@@ -101,14 +102,14 @@
               usertypes.includes(index) ? 'v-chip--selected' : ''
             }`"
           >
-            {{ usertype.charAt(0).toUpperCase() + usertype.slice(1) }}
+            {{ $t(`admin.users.usertypes.${usertype}`) }}
           </VChip>
         </VChipGroup>
       </div>
 
       <!-- filer type -->
       <div>
-        <p>Filter type</p>
+        <p>{{ $t('admin.users.filtertypes.name') }}</p>
         <VChipGroup v-model="filterType" mandatory>
           <VChip
             :class="`bg-neutral-lighten-4 ${
@@ -116,7 +117,7 @@
             }`"
             value="updated"
           >
-            Last modified
+            {{ $t('admin.users.filtertypes.updated') }}
           </VChip>
           <VChip
             :class="`bg-neutral-lighten-4 ${
@@ -124,14 +125,14 @@
             }`"
             value="currentYear"
           >
-            Year
+            {{ $t('admin.users.filtertypes.currentyear') }}
           </VChip>
         </VChipGroup>
       </div>
 
       <!-- filer order -->
       <div>
-        <p>Filter order</p>
+        <p>{{ $t('admin.users.filterorder.name') }}</p>
         <VChipGroup v-model="filterOrder" mandatory>
           <VChip
             :class="`bg-neutral-lighten-4 ${
@@ -139,7 +140,7 @@
             }`"
             value="descending"
           >
-            Descending
+            {{ $t('admin.users.filterorder.descending') }}
           </VChip>
           <VChip
             :class="`bg-neutral-lighten-4 ${
@@ -147,7 +148,7 @@
             }`"
             value="ascending"
           >
-            Ascending
+            {{ $t('admin.users.filterorder.ascending') }}
           </VChip>
         </VChipGroup>
       </div>
@@ -169,7 +170,7 @@
             }
           "
         >
-          Select all
+          {{ $t('admin.users.selectall') }}
         </VBtn>
 
         <!-- delete users modal -->
@@ -183,13 +184,13 @@
               rounded="lg"
               flat
             >
-              Delete selected
+              {{ $t('admin.users.delete.selected') }}
             </VBtn>
           </template>
 
           <template #default="{ isActive }">
             <VCard rounded="lg" class="text-center pa-6">
-              <h6>Are you sure you want to delete the selected users?</h6>
+              <h6>{{ $t('admin.users.delete.confirmtext') }}</h6>
 
               <div
                 class="d-flex justify-center flex-wrap mt-6"
@@ -202,7 +203,7 @@
                   :loading="loading"
                   @click="deleteUsers"
                 >
-                  Yes, delete them
+                  {{ $t('admin.users.delete.confirm') }}
                 </VBtn>
                 <VBtn
                   size="large"
@@ -210,7 +211,7 @@
                   color="success"
                   @click="isActive.value = false"
                 >
-                  No, abort
+                  {{ $t('admin.users.delete.abort') }}
                 </VBtn>
               </div>
             </VCard>
@@ -234,13 +235,13 @@
     <VTable hover style="overflow: hidden" class="mb-5">
       <thead>
         <tr>
-          <th>Select</th>
-          <th>Name</th>
-          <th>User type</th>
-          <th>Email</th>
-          <th>Year</th>
-          <th>Program</th>
-          <th>Company</th>
+          <th>{{ $t('admin.users.attributes.select') }}</th>
+          <th>{{ $t('admin.users.attributes.name') }}</th>
+          <th>{{ $t('admin.users.attributes.usertype') }}</th>
+          <th>{{ $t('admin.users.attributes.email') }}</th>
+          <th>{{ $t('admin.users.attributes.year') }}</th>
+          <th>{{ $t('admin.users.attributes.program') }}</th>
+          <th>{{ $t('admin.users.attributes.company') }}</th>
           <th class="text-center">UID</th>
         </tr>
       </thead>
@@ -278,7 +279,11 @@
                 />
               </template>
 
-              {{ copied && text === user.uid ? 'UID copied!' : user.uid }}
+              {{
+                copied && text === user.uid
+                  ? $t('admin.users.copied')
+                  : user.uid
+              }}
             </VTooltip>
           </td>
         </tr>

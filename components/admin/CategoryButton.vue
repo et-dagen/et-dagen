@@ -24,7 +24,7 @@
     :active="active"
     @click="navigateTo(localePath(`/admin/${category.name}`))"
   >
-    {{ $t(`admin.${category.name}`) }}
+    {{ $t(`admin.${category.name}.name`) }}
 
     <VIcon style="position: absolute; right: 0.5rem">
       mdi-{{ category.icon }}
