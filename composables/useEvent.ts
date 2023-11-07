@@ -61,3 +61,14 @@ export const sortDateGroupedEventsByStartTime = (
 
   return events
 }
+
+export const getEventDates = (eventsObject: any) => {
+  const dates = new Set<string>()
+
+  for (const key of Object.entries(eventsObject)) {
+    const event = key[1] as Record<string, any>
+    dates.add(getDateFromDatetime(event.date.start))
+  }
+
+  return Array.from(dates)
+}
