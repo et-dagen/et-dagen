@@ -13,11 +13,17 @@
 
   const selected = ref([])
 
-  const pageSize = 10
   const currentPage = ref(1)
+  const pageSizes = [10, 25, 100]
+  const pageSize = ref(pageSizes[0])
 
   const loading = ref()
   const dialog = ref(false)
+
+  watch(currentPage, () => (selected.value = []))
+  watch(pageSize, () => {
+    currentPage.value = 1
+  })
 
   const filteredUsers = computed(() => {
     // eslint-disable-next-line
@@ -25,14 +31,14 @@
       usertypes.value.includes(index)
     )
 
-    const filteredUsers = users.value?.filter((user) =>
+    const filteredByUsertype = users.value?.filter((user) =>
       selectedUsertypes.includes(user.userType ?? 'basic')
     )
 
     selected.value = []
 
     return (
-      filteredUsers?.sort((a, b) => {
+      filteredByUsertype?.sort((a, b) => {
         /* @ts-ignore */
         const order = a[filterType.value] < b[filterType.value] ? -1 : 1
         return filterOrder.value === 'ascending' ? order : order * -1
@@ -43,7 +49,7 @@
   // from stackoverflow
   const pages = computed(() =>
     filteredUsers.value.reduce((resultArray, item, index) => {
-      const chunkIndex = Math.floor(index / pageSize)
+      const chunkIndex = Math.floor(index / pageSize.value)
 
       if (!resultArray[chunkIndex]) {
         resultArray[chunkIndex] = []
@@ -222,14 +228,28 @@
 
     <VDivider class="mb-5 mt-2" />
 
-    <VPagination
-      v-if="pages.length > 1"
-      v-model="currentPage"
-      :ripple="false"
-      :length="pages.length"
-      :total-visible="4"
-      density="comfortable"
-    />
+    <div class="d-flex align-center justify-space-between flex-wrap">
+      <VPagination
+        v-model="currentPage"
+        :ripple="false"
+        :length="pages.length"
+        :total-visible="4"
+        density="comfortable"
+      />
+
+      <div class="d-flex align-center">
+        <p class="text-subtitle-1 mr-4 font-weight-medium">
+          {{ $t('admin.users.pagesize') }}
+        </p>
+        <VSelect
+          v-model="pageSize"
+          density="compact"
+          variant="outlined"
+          :items="pageSizes"
+          :hide-details="true"
+        />
+      </div>
+    </div>
 
     <!-- user list -->
     <VTable hover style="overflow: hidden" class="mb-5">

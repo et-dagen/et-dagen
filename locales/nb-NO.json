@@ -131,6 +131,7 @@
     },
     "users": {
       "name": "Brukere",
+      "pagesize": "Brukere per side",
       "usertypes": {
         "name": "Brukertyper",
         "admin": "Administratorer",

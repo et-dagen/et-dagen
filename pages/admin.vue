@@ -27,8 +27,8 @@
 </script>
 
 <template>
-  <div class="d-flex flex-column align-center">
-    <div class="my-10 d-flex align-center">
+  <div class="d-flex flex-column align-center my-10">
+    <div class="d-flex align-center">
       <!-- title -->
       <h4 class="font-weight-bold text-center">
         {{ $t('nav.admin') }}
