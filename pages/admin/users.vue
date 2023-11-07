@@ -6,7 +6,6 @@
   const { data: companies } = await useFetch('/api/company')
 
   const { text, copy, copied } = useClipboard()
-  const { mobile } = useDisplay()
 
   const usertypes = ref([0, 1, 2])
   const filterOrder = ref('descending')
@@ -293,7 +292,7 @@
 
           <!-- copy user id -->
           <td>
-            <VTooltip location="top" color="primary" :open-on-click="mobile">
+            <VTooltip location="top" color="primary">
               <template #activator="{ props }">
                 <VBtn
                   v-bind="props"

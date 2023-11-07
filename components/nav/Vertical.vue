@@ -33,7 +33,12 @@
       class="d-flex flex-column justify-end mt-4"
       style="gap: 1rem"
     >
-      <NavButton v-for="(route, index) in routes" :key="index" :route="route" />
+      <NavButton
+        v-for="(route, index) in routes"
+        :key="index"
+        size="large"
+        :route="route"
+      />
     </div>
 
     <template v-if="app.drawer" #append>
@@ -41,6 +46,7 @@
         <!-- nav btn to user page -->
         <NavButton
           v-if="auth.isLoggedIn"
+          size="large"
           :route="{
             name: 'user',
             route: '/user',
@@ -50,6 +56,7 @@
         <!-- navigate to admin page -->
         <NavButton
           v-if="auth.hasAccess(['admin'])"
+          size="large"
           :route="{
             name: 'admin',
             route: '/admin',
