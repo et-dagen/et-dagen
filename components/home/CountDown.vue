@@ -15,19 +15,16 @@
     seconds: string
   }
 
-  const timeDiff = ref(
-    calculateTimeDifference(
-      cdProps.content.futureDate,
-      cdProps.content.futureTime
-    )
-  )
+  const timeDiff = ref<object | null>(null)
 
-  setInterval(() => {
-    timeDiff.value = calculateTimeDifference(
-      cdProps.content.futureDate,
-      cdProps.content.futureTime
-    )
-  }, 1000)
+  onMounted(() => {
+    setInterval(() => {
+      timeDiff.value = calculateTimeDifference(
+        cdProps.content.futureDate,
+        cdProps.content.futureTime
+      )
+    }, 1000)
+  })
 </script>
 
 <template>
@@ -45,7 +42,8 @@
         <v-row justify="center">
           <v-card class="outlined">
             <v-card-text class="text-center">
-              <h4>{{ timeDiff.days }}</h4>
+              <h4 v-if="timeDiff !== null">{{ timeDiff.days }}</h4>
+              <h4 v-else>0</h4>
             </v-card-text>
           </v-card>
         </v-row>
@@ -59,7 +57,8 @@
         <v-row justify="center">
           <v-card class="outlined">
             <v-card-text class="text-center">
-              <h4>{{ timeDiff.hours }}</h4>
+              <h4 v-if="timeDiff !== null">{{ timeDiff.hours }}</h4>
+              <h4 v-else>0</h4>
             </v-card-text>
           </v-card>
         </v-row>
@@ -73,7 +72,8 @@
         <v-row justify="center">
           <v-card class="outlined">
             <v-card-text class="text-center">
-              <h4>{{ timeDiff.minutes }}</h4>
+              <h4 v-if="timeDiff !== null">{{ timeDiff.minutes }}</h4>
+              <h4 v-else>0</h4>
             </v-card-text>
           </v-card>
         </v-row>
@@ -87,7 +87,8 @@
         <v-row justify="center">
           <v-card class="outlined">
             <v-card-text class="text-center">
-              <h4>{{ timeDiff.seconds }}</h4>
+              <h4 v-if="timeDiff !== null">{{ timeDiff.seconds }}</h4>
+              <h4 v-else>0</h4>
             </v-card-text>
           </v-card>
         </v-row>

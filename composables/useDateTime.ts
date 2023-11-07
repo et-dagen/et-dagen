@@ -30,6 +30,16 @@ export const calculateTimeDifference = (
   const timeDifferenceInSeconds =
     totalTimeDifferenceInSeconds - 60 * Math.floor(totalTimeDifferenceInMinutes)
 
+  console.log('milliseconds', timeDifferenceInMs)
+  if (timeDifferenceInMs <= 0) {
+    return {
+      days: 0,
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+    }
+  }
+
   return {
     days: Math.floor(timeDifferenceInDays),
     hours: Math.floor(timeDifferenceInHours),
