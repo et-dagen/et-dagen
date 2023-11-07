@@ -1,3 +1,5 @@
 <template>
-  <div>Edit companies</div>
+  <div>
+    <CompanyAdminList> </CompanyAdminList>
+  </div>
 </template>
