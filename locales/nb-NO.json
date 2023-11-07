@@ -120,9 +120,80 @@
   },
   "admin": {
     "categories": "Kategorier",
-    "companies": "Bedrifter",
-    "events": "Arrangementer",
-    "jobs": "Jobber",
-    "users": "Brukere"
+    "companies": {
+      "name": "Bedrifter"
+    },
+    "events": {
+      "name": "Arrangementer",
+      "pagesize": "Arrangementer per side",
+      "dates": "Dato",
+      "filtertypes": {
+        "name": "Filtertype",
+        "updated": "Sist modifisert",
+        "company": "Bedrift"
+      },
+      "filterorder": {
+        "name": "Rekkefølge",
+        "descending": "Synkende",
+        "ascending": "Stigende"
+      },
+      "selectall": "Velg alle",
+      "delete": {
+        "selected": "Slett valgte",
+        "confirmtext": "Er du sikker på at du vil slette de valgte brukerne?",
+        "confirm": "Ja, slett dem",
+        "abort": "Nei, avbryt"
+      },
+      "attributes": {
+        "select": "Velg",
+        "title": "Tittel",
+        "company": "Bedrift",
+        "location": "Sted",
+        "date": "Dato",
+        "time": "Tid"
+
+      },
+      "copied": "UID kopiert!"
+    },
+    "jobs": {
+      "name": "Jobber"
+    },
+    "users": {
+      "name": "Brukere",
+      "pagesize": "Brukere per side",
+      "usertypes": {
+        "name": "Brukertyper",
+        "admin": "Administratorer",
+        "company": "Bedrifter",
+        "basic": "Basis"
+      },
+      "filtertypes": {
+        "name": "Filtertype",
+        "updated": "Sist modifisert",
+        "currentyear": "År"
+      },
+      "filterorder": {
+        "name": "Rekkefølge",
+        "descending": "Synkende",
+        "ascending": "Stigende"
+      },
+      "selectall": "Velg alle",
+      "delete": {
+        "selected": "Slett valgte",
+        "confirmtext": "Er du sikker på at du vil slette de valgte brukerne?",
+        "confirm": "Ja, slett dem",
+        "abort": "Nei, avbryt"
+      },
+      "attributes": {
+        "select": "Velg",
+        "name": "Navn",
+        "usertype": "Brukertype",
+        "email": "Epost",
+        "year": "År",
+        "program": "Studieprogram",
+        "company": "Bedrift"
+      },
+      "copied": "UID kopiert!"
+    }
   }
 }

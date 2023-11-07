@@ -120,10 +120,80 @@
     }
   },
   "admin": {
-    "categories": "Categories",
-    "companies": "Companies",
-    "events": "Events",
-    "jobs": "Jobs",
-    "users": "Users"
+    "companies": {
+      "name": "Companies"
+    },
+    "events": {
+      "name": "Events",
+      "pagesize": "Events per page",
+      "dates": "Date",
+      "filtertypes": {
+        "name": "Filter type",
+        "updated": "Last modified",
+        "company": "Company"
+      },
+      "filterorder": {
+        "name": "Order",
+        "descending": "Descending",
+        "ascending": "Ascending"
+      },
+      "selectall": "Select all",
+      "delete": {
+        "selected": "Delete selected",
+        "confirmtext": "Are you sure you want to delete the selected users?",
+        "confirm": "Yes, delete them",
+        "abort": "No, abort"
+      },
+      "attributes": {
+        "select": "Select",
+        "title": "Title",
+        "company": "Company",
+        "location": "Location",
+        "date": "Date",
+        "time": "Time"
+
+      },
+      "copied": "UID kopiert!"
+    },
+    "jobs": {
+      "name": "Jobs"
+    },
+    "users": {
+      "name": "Users",
+      "pagesize": "Users per page",
+      "usertypes": {
+        "name": "User types",
+        "admin": "Admins",
+        "company": "Companies",
+        "basic": "Basic"
+      },
+      "filtertypes": {
+        "name": "Filter types",
+        "updated": "Last modified",
+        "currentyear": "Year"
+      },
+      "filterorder": {
+        "name": "Order",
+        "descending": "Descending",
+        "ascending": "Ascending"
+      },
+      "selectall": "Select all",
+      "delete": {
+        "selected": "Delete selected",
+        "confirmtext": "Are you sure you want to delete the selected users?",
+        "confirm": "Yes, delete them",
+        "abort": "No, abort"
+      },
+      "attributes": {
+        "select": "Select",
+        "name": "Name",
+        "usertype": "User type",
+        "email": "Email",
+        "year": "Year",
+        "program": "Study program",
+        "company": "Company"
+      },
+      "copied": "UID copied!"
+    }
   }
 }
