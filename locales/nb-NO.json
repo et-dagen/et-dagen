@@ -150,7 +150,8 @@
         "company": "Bedrift",
         "location": "Sted",
         "date": "Dato",
-        "time": "Tid"
+        "time": "Tid",
+        "capacity": "Kapasitet"
 
       },
       "copied": "UID kopiert!"

@@ -150,7 +150,8 @@
         "company": "Company",
         "location": "Location",
         "date": "Date",
-        "time": "Time"
+        "time": "Time",
+        "capacity": "Capacity"
 
       },
       "copied": "UID kopiert!"
