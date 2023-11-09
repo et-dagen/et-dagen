@@ -34,6 +34,16 @@
     currentPage.value = 1
   })
 
+  // Get the number of attendants for an event
+  const eventAttendants = computed(() => {
+    return (event: any) => {
+      // Object doesn't have attendants property if no attendants
+      if (!Object.hasOwn(event, 'attendants')) return 0
+
+      return Object.values(event.attendants).length
+    }
+  })
+
   // Filter events by date and sort them
   const filteredEvents = computed(() => {
     // eslint-disable-next-line
@@ -188,6 +198,7 @@
         >
           {{ $t('admin.events.selectall') }}
         </VBtn>
+        <!-- TODO: Add deselect all button which renders instead if all entries on page are selected -->
 
         <!-- delete users modal -->
         <VDialog v-model="dialog" width="500">
@@ -269,6 +280,7 @@
           <th>{{ $t('admin.events.attributes.select') }}</th>
           <th>{{ $t('admin.events.attributes.title') }}</th>
           <th>{{ $t('admin.events.attributes.company') }}</th>
+          <th>{{ $t('admin.events.attributes.capacity') }}</th>
           <th>{{ $t('admin.events.attributes.date') }}</th>
           <th>{{ $t('admin.events.attributes.time') }}</th>
           <th>{{ $t('admin.events.attributes.location') }}</th>
@@ -284,6 +296,10 @@
 
           <td>{{ event.title }}</td>
           <td>{{ companies[event.companyUID]?.name ?? '-' }}</td>
+          <td v-if="event.capacity !== 'null'">
+            {{ eventAttendants(event) }}/{{ event.capacity }}
+          </td>
+          <td v-else>-</td>
           <td>
             {{ getNumericDayAndMonthString(event.date.start) }}
           </td>
@@ -292,12 +308,6 @@
             {{ getHourAndMinuteStringFromString(event.date.end) }}
           </td>
           <td>{{ event.location.name }}</td>
-          <td>
-            {{
-              /* @ts-ignore */
-              event.id ?? '-'
-            }}
-          </td>
 
           <!-- copy user id -->
           <td>
