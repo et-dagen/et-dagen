@@ -21,9 +21,7 @@
   const dialog = ref(false)
 
   watch(currentPage, () => (selected.value = []))
-  watch(pageSize, () => {
-    currentPage.value = 1
-  })
+  watch(pageSize, () => (currentPage.value = 1))
 
   const filteredUsers = computed(() => {
     // eslint-disable-next-line
@@ -201,12 +199,13 @@
 
               <div
                 class="d-flex justify-center flex-wrap mt-6"
-                style="gap: 1.5rem"
+                style="gap: 0.5rem"
               >
                 <VBtn
                   size="large"
                   variant="outlined"
                   color="primary"
+                  class="flex-grow-1"
                   :loading="loading"
                   @click="deleteUsers"
                 >
@@ -215,6 +214,7 @@
                 <VBtn
                   size="large"
                   flat
+                  class="flex-grow-1"
                   color="success"
                   @click="isActive.value = false"
                 >
