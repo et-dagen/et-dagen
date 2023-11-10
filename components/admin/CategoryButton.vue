@@ -29,9 +29,5 @@
     <VIcon style="position: absolute; right: 0.5rem">
       mdi-{{ category.icon }}
     </VIcon>
-
-    <template #loader>
-      <VProgressCircular size="24" width="2" indeterminate color="background" />
-    </template>
   </VBtn>
 </template>

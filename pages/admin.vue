@@ -18,7 +18,6 @@
   })
 
   const route = useRoute()
-  const appStore = useAppStore()
 
   const currentCategory = computed(() => {
     const routeNames = route.fullPath.split('/')
@@ -81,7 +80,6 @@
           :key="index"
           :active="currentCategory === category.name"
           :category="category"
-          :loading="appStore.loading && currentCategory === category.name"
         />
       </VCard>
 
