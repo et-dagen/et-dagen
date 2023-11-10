@@ -12,21 +12,25 @@ export default defineEventHandler(async (event) => {
     })
 
   // get request body
-  let { uid } = await readBody(event)
+  let { UIDs } = await readBody(event)
 
   // only admins can remove other users than their own
-  if (!hasAccess(user, ['admin']) || !uid) {
-    uid = user.uid
+  if (!hasAccess(user, ['admin']) || !UIDs) {
+    UIDs = user.uid
   }
+
+  if (typeof UIDs !== 'object') UIDs = [UIDs]
 
   // reference to users
   const usersRef = db.ref('users')
 
-  // remove user
-  usersRef.child(uid).remove()
+  // // remove user
+  usersRef.update(
+    Object.assign({}, ...(UIDs as string[]).map((uid) => ({ [uid]: null })))
+  )
 
-  // remove firebase auth user
-  await auth.deleteUser(uid)
+  // // remove firebase auth user
+  await auth.deleteUsers(UIDs)
 
   // user successfully removed
   sendNoContent(event, 204)

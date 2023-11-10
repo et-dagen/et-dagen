@@ -63,25 +63,18 @@
   const deleteUsers = async () => {
     loading.value = true
 
-    const queries = []
-
-    const selectedUsers = pages.value[currentPage.value - 1].map(
-      (user, index) => (selected.value[index] ? user.uid : undefined)
-    )
-
-    for (const uid of selectedUsers)
-      !uid ||
-        queries.push(
-          $fetch('/api/user', {
-            method: 'DELETE',
-            body: {
-              uid,
-            },
-          })
-        )
+    const selectedUsers = pages.value[currentPage.value - 1]
+      // eslint-disable-next-line
+      .filter((user, index) => selected.value[index])
+      .map((user) => user.uid)
 
     try {
-      await Promise.all(queries)
+      await $fetch('/api/user', {
+        method: 'DELETE',
+        body: {
+          UIDs: selectedUsers,
+        },
+      })
     } catch (error) {}
 
     dialog.value = false
