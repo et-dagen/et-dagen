@@ -70,7 +70,9 @@
     }
   },
   "company": {
-    "main_partner": "Hovedpartner"
+    "main_partner": "Hovedpartner",
+    "partners": "Partnere",
+    "sponsors": "Sponsorer"
   },
   "alert": {
     "close_alert": "Lukk",

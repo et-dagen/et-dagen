@@ -1,8 +1,31 @@
 <script setup lang="ts">
   const { data: companies } = await useFetch('/api/company')
 
-  const mainSponsor: any = computed(() =>
-    Object.values(companies.value).find((el: any) => el.type === 'main-sponsor')
+  const mainSponsor = computed(
+    () =>
+      Object.values(companies.value).find(
+        (company: any) => company.type === 'main-sponsor'
+      ) || null
+  )
+
+  const partners =
+    computed(() =>
+      Object.values(companies.value).filter(
+        (company: any) => company.type === 'partner'
+      )
+    ) || null
+  const showPartners = computed(
+    () => partners.value !== null && partners.value.length !== 0
+  )
+
+  const sponsors =
+    computed(() =>
+      Object.values(companies.value).filter(
+        (company: any) => company.type === 'sponsor'
+      )
+    ) || null
+  const showSponsors = computed(
+    () => sponsors.value !== null && sponsors.value.length !== 0
   )
 </script>
 
@@ -18,6 +41,7 @@
     />
 
     <CompanyHero
+      v-if="mainSponsor !== null"
       :content="{
         name: mainSponsor.name,
         description: mainSponsor.description,
@@ -27,14 +51,42 @@
       class="my-5 d-flex justify-center"
     />
 
-    <CompanyGrid>
-      <CompanyCard
-        :content="{
-          logo: `https://1000logos.net/wp-content/
-          uploads/2021/05/Sony-logo.png`,
-          website: 'https://pro.sony/en_NO/home',
-        }"
-      ></CompanyCard>
-    </CompanyGrid>
+    <div v-if="showPartners">
+      <h2
+        :class="`text-sm-h3 text-h4 text-center 
+          pt-10 pb-lg-6 pb-3 font-weight-bold`"
+      >
+        {{ $t('company.partners') }}
+      </h2>
+      <CompanyGrid>
+        <CompanyCard
+          v-for="partner in partners"
+          :key="partner.id"
+          :content="{
+            logo: partner.logo,
+            website: partner.website,
+          }"
+        />
+      </CompanyGrid>
+    </div>
+
+    <div v-if="showSponsors">
+      <h2
+        :class="`text-sm-h3 text-h4 text-center 
+          pt-10 pb-lg-6 pb-3 font-weight-bold`"
+      >
+        {{ $t('company.sponsors') }}
+      </h2>
+      <CompanyGrid>
+        <CompanyCard
+          v-for="sponsor in sponsors"
+          :key="sponsor.id"
+          :content="{
+            logo: sponsor.logo || '',
+            website: sponsor.website,
+          }"
+        />
+      </CompanyGrid>
+    </div>
   </div>
 </template>
