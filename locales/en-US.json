@@ -69,6 +69,19 @@
       "december": "December"
     }
   },
+  "contact": {
+    "positions": {
+      "head": "Manager",
+      "deputyHead": "Deputy manager",
+      "IT": "IT manager",
+      "finance": "Finance manager",
+      "business": "Business relations manager",
+      "spons": "Sponsorship manager",
+      "marketing": "Marketing manager",
+      "logistics": "Logistics manager",
+      "travel": "Travel manager"
+    }
+  },
   "company": {
     "main_partner": "Main partner",
     "partners": "Partners",
