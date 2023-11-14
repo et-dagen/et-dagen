@@ -69,6 +69,19 @@
       "december": "December"
     }
   },
+  "contact": {
+    "positions": {
+      "head": "Manager",
+      "deputyHead": "Deputy manager",
+      "IT": "IT manager",
+      "finance": "Finance manager",
+      "business": "Business relations manager",
+      "spons": "Sponsorship manager",
+      "marketing": "Marketing manager",
+      "logistics": "Logistics manager",
+      "travel": "Travel manager"
+    }
+  },
   "company": {
     "main_partner": "Main partner"
   },
@@ -87,12 +100,43 @@
       },
       "server": {
         "invalid_registration_code": "Invalid registration code"
+      },
+      "event": {
+        "event_doesnt_exist": "Event doesn't exist",
+        "missing_event_id": "Missing event id",
+        "register": {
+          "event_is_full": "Event is full",
+          "already_registered": "You are already registered for this event",
+          "user_not_registered": "You are not registered for this event",
+          "registration_unnecessary": "Registration is not necessary for this event"
+        }
       }
     },
     "success": {
       "firebase": {
         "reset_password": "Password reset email sent"
+      },
+      "event": {
+        "register": {
+          "sign_up": "Successfully registered to event",
+          "opt_out": "Successfully opted out of event"
+        }
       }
     }
+  },
+  "program": {
+    "title": "Programme",
+    "event": {
+      "sign_up": "Sign up",
+      "opt_out": "Opt out",
+      "sign_in_to_register": "Sign in to register"
+    }
+  },
+  "admin": {
+    "categories": "Categories",
+    "companies": "Companies",
+    "events": "Events",
+    "jobs": "Jobs",
+    "users": "Users"
   }
 }
