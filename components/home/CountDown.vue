@@ -30,8 +30,8 @@
 <template>
   <v-card class="mx-auto pt-16 w-100 container" elevation="0">
     <v-row justify="center">
-      <v-col class="text-center pb-6">
-        <v-card-title class="text-h6 text-md-h5 text-lg-h4">{{
+      <v-col class="text-center pb-sm-6 pb-2">
+        <v-card-title class="text-sm-h4 text-h6">{{
           $t('event.take_off')
         }}</v-card-title>
       </v-col>
@@ -115,17 +115,16 @@
         </v-row>
       </v-col>
     </v-row>
-    <v-card-actions class="pt-6">
+    <v-card-actions class="pt-sm-6 pt-3">
       <v-btn
         variant="outlined"
-        width="95%"
         class="mx-auto"
         style="background-color: #c33c3b"
         color="white"
         append-icon="mdi-arrow-right"
         @click="navigateTo('/program')"
       >
-        {{ $t('nav.program_nav') }}
+        <h6 class="text-sm-h6 text-h6">{{ $t('nav.program_nav') }}</h6>
       </v-btn>
     </v-card-actions>
   </v-card>
@@ -153,5 +152,17 @@
   .v-row {
     margin-left: 0px;
     margin-right: 0px;
+  }
+
+  .v-btn {
+    width: 95%;
+    height: 50px;
+    font-size: 1.5em;
+
+    @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
+      width: 75%;
+      height: 40px;
+      font-size: 1.2em;
+    }
   }
 </style>
