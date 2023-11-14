@@ -2,7 +2,6 @@
   import type { Route } from '@/models/Nav'
 
   const localePath = useLocalePath()
-  const { mobile } = useDisplay()
 
   const auth = useAuthStore()
   const app = useAppStore()
@@ -29,39 +28,48 @@
     </template>
 
     <!-- nav buttons -->
-    <NavButtons v-if="!mobile" :routes="routes" direction="horizontal" />
+    <NavButton
+      v-for="(route, index) in routes"
+      :key="index"
+      :route="route"
+      class="ma-2 d-none d-lg-flex"
+    />
 
     <template #append>
       <!-- admin nav button -->
       <NavButton
-        v-if="auth.hasAccess(['admin']) && !mobile"
+        v-if="auth.hasAccess(['admin'])"
         :route="{
           name: 'admin',
           route: '/admin',
         }"
-        class="mx-2"
+        class="mx-2 d-none d-lg-flex"
       />
 
       <!-- divider -->
       <VDivider
-        v-if="auth.hasAccess(['admin']) && !mobile"
+        v-if="auth.hasAccess(['admin'])"
         vertical
         inset
         length="75%"
-        class="my-4 mx-2"
+        class="my-4 mx-2 d-none d-lg-flex"
       />
 
       <!-- the locale switcher will go here -->
-      <LocaleSwitcher v-if="!mobile" class="mx-2" />
-
-      <!-- open navigation drawer -->
-      <VBtn v-if="mobile" icon="mdi-menu" @click="app.drawer = true" />
+      <LocaleSwitcher class="mx-2 d-none d-lg-flex" />
 
       <!-- sign in or out btn -->
-      <UserStateButton v-if="!mobile && !auth.isLoggedIn" />
+      <UserStateButton v-if="!auth.isLoggedIn" class="d-none d-lg-flex" />
 
       <!-- user menu -->
-      <UserMenu v-if="!mobile && auth.isLoggedIn" />
+      <UserMenu v-else />
+
+      <!-- open navigation drawer -->
+      <VBtn
+        class="d-flex d-lg-none"
+        icon="mdi-menu"
+        @click="app.drawer = true"
+      />
     </template>
   </VAppBar>
 </template>

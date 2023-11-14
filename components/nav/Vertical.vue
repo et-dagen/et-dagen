@@ -4,8 +4,6 @@
   const auth = useAuthStore()
   const app = useAppStore()
 
-  const { xs, width } = useDisplay()
-
   type Routes = Route[]
 
   defineProps({
@@ -17,51 +15,52 @@
   <VNavigationDrawer
     location="right"
     temporary
-    :width="xs ? width : '400'"
     :elevation="5"
-    class="pa-4"
+    class="pa-4 d-flex d-lg-none"
     :model-value="app.drawer"
     @update:model-value="(value) => (app.drawer = value)"
   >
     <!-- close vertical nav -->
-    <template #prepend>
-      <v-btn
+    <template v-if="app.drawer" #prepend>
+      <VBtn
         icon="mdi-window-close"
         size="large"
         variant="text"
         @click="app.drawer = false"
-      ></v-btn>
+      ></VBtn>
     </template>
 
-    <NavButtons :routes="routes" direction="vertical" />
+    <div
+      v-if="app.drawer"
+      class="d-flex flex-column justify-end mt-4"
+      style="gap: 1rem"
+    >
+      <NavButton v-for="(route, index) in routes" :key="index" :route="route" />
+    </div>
 
-    <template #append>
-      <!-- nav btn to user page -->
-      <NavButtons
-        v-if="auth.isLoggedIn"
-        direction="vertical"
-        :routes="[
-          {
+    <template v-if="app.drawer" #append>
+      <div class="d-flex flex-column justify-end" style="gap: 1rem">
+        <!-- nav btn to user page -->
+        <NavButton
+          v-if="auth.isLoggedIn"
+          :route="{
             name: 'user',
             route: '/user',
-          },
-        ]"
-      />
+          }"
+        />
 
-      <!-- navigate to admin page -->
-      <NavButtons
-        v-if="auth.hasAccess(['admin'])"
-        direction="vertical"
-        :routes="[
-          {
+        <!-- navigate to admin page -->
+        <NavButton
+          v-if="auth.hasAccess(['admin'])"
+          :route="{
             name: 'admin',
             route: '/admin',
-          },
-        ]"
-      />
+          }"
+        />
+      </div>
 
       <!-- divider -->
-      <VDivider class="mt-2 mb-4" />
+      <VDivider class="my-4" />
 
       <div w-100 class="d-flex justify-space-between">
         <!-- sign out btn -->
@@ -73,3 +72,19 @@
     </template>
   </VNavigationDrawer>
 </template>
+
+<style lang="scss">
+  @use 'vuetify/settings';
+
+  .v-navigation-drawer--active {
+    width: 400px !important;
+
+    @media #{map-get(settings.$display-breakpoints, "xs")} {
+      width: 100vw !important;
+    }
+  }
+
+  .v-navigation-drawer {
+    transition: 0.3s !important;
+  }
+</style>
