@@ -12,7 +12,7 @@
         description: "Lit party at Johan's place. Show up!",
         limitedCapacity: true,
         location: {
-          map: null,
+          map: 'Johan sin adresse på google maps',
           name: 'Hjemme hos Johan',
         },
         title: 'Johan hjemmefest for the crew',
@@ -34,14 +34,26 @@
 
   const patchEvent = async () => {
     await $fetch('/api/event', {
-      header: {
+      headers: {
         'Content-Type': 'application/json',
       },
-      method: 'patch',
+      method: 'PATCH',
       body: JSON.stringify({
         companyUID: '-NesGFDmavw-y88kvfYM',
         eventUID: '-NifJRxs3FRhomJyoP_d',
-        description: 'Updated description',
+        capacity: 420,
+        date: {
+          start: '2025-01-01T00:00:00Z',
+          end: '2025-12-31T23:59:59Z',
+        },
+        description: 'Johan døde på en komisk måte. Begravelse i stedet lmao',
+        limitedCapacity: true,
+        location: {
+          map: 'Google maps link til kirken',
+          name: 'Kirken',
+        },
+        title: 'Johan begravelse for the crew',
+        eventType: 'other',
       }),
     })
   }
@@ -49,9 +61,9 @@
 
 <template>
   <div>
-    <NuxtPage />
     <VBtn color="success" @click="postEvent">Create event</VBtn>
     <VBtn color="error" @click="deleteEvent">Delete event</VBtn>
     <VBtn color="success" @click="patchEvent">Patch event</VBtn>
+    <NuxtPage />
   </div>
 </template>
