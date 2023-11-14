@@ -4,13 +4,6 @@
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 
-  // Check if user is authorized
-  if (!hasAccess(user, ['admin']))
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'User not authenticated',
-    })
-
   const {
     companyUID,
     capacity,
@@ -22,20 +15,34 @@ export default defineEventHandler(async (event) => {
     eventType,
   } = await readBody(event)
 
-  // check if important data is defined.
+  // Check if user is authorized
+  if (hasAccess(user, ['company'])) {
+    if (user.companyUID !== companyUID)
+      throw createError({
+        statusCode: 401,
+        statusMessage: 'Company users cannot post events for other companies',
+      })
+  } else if (!hasAccess(user, ['admin']))
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'User not authenticated',
+    })
+
+  // check if data is defined.
   if (
     !companyUID ||
     (limitedCapacity === true && !capacity) ||
     !date.start ||
+    !date.end ||
     !description ||
     !location.name ||
+    !location.map ||
     !title ||
     !eventType
   )
     throw createError({
       statusCode: 400,
-      statusMessage: `Missing companyUID, capacity, 
-starttime, description, location, title or type`,
+      statusMessage: 'Not all data is defined',
     })
 
   // Check if capacity is legal
@@ -65,16 +72,16 @@ starttime, description, location, title or type`,
 
   // endtime and description don't have to be defined
   eventsRef.push({
-    capacity: capacity ?? null,
+    limitedCapacity,
+    capacity,
     companyUID,
     date: {
       start: date.start,
-      end: date.end ?? null,
+      end: date.end,
     },
     description,
-    limitedCapacity,
     location: {
-      map: location.map ?? null,
+      map: location.map,
       name: location.name,
     },
     title,
