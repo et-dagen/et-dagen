@@ -19,19 +19,21 @@ export default defineEventHandler(async (event) => {
     UIDs = user.uid
   }
 
+  // UIDs can be passed both as an array or a single UID string
   if (typeof UIDs !== 'object') UIDs = [UIDs]
 
   // reference to users
   const usersRef = db.ref('users')
 
-  // // remove user
+  // remove users from db
   usersRef.update(
+    // format UIDs array as object with the UIDs as keys and values null
     Object.assign({}, ...(UIDs as string[]).map((uid) => ({ [uid]: null })))
   )
 
-  // // remove firebase auth user
+  // remove firebase auth users
   await auth.deleteUsers(UIDs)
 
-  // user successfully removed
+  // users successfully removed
   sendNoContent(event, 204)
 })
