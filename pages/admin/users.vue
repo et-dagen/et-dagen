@@ -2,39 +2,51 @@
   import { usertypes as usertypeNames } from '~/config/app.config'
   import type { User } from '~/models/User'
 
+  // fetch users and companies
   const { data: users, refresh } = await useFetch<User[]>('/api/user?scope=all')
   const { data: companies } = await useFetch('/api/company')
 
+  // utility from VueUse module to allow copying to clipboard
   const { text, copy, copied } = useClipboard()
 
+  // filter and sorting options
   const usertypes = ref([0, 1, 2])
   const filterOrder = ref('descending')
   const filterType = ref('updated')
 
+  // selected users
   const selected = ref([])
 
+  // list pagination options
   const currentPage = ref(1)
   const pageSizes = [10, 25, 100]
   const pageSize = ref(pageSizes[0])
 
+  // dialog and loading used when deleting users
   const loading = ref()
   const dialog = ref(false)
 
+  // reset current page and user selection
   watch(currentPage, () => (selected.value = []))
   watch(pageSize, () => (currentPage.value = 1))
 
+  // filter and sort users based on options selected by user
   const filteredUsers = computed(() => {
+    // map the selected user types to their names
     // eslint-disable-next-line
     const selectedUsertypes = usertypeNames.filter((usertype, index) =>
       usertypes.value.includes(index)
     )
 
+    // filter out users with the selectd user types
     const filteredByUsertype = users.value?.filter((user) =>
       selectedUsertypes.includes(user.userType ?? 'basic')
     )
 
+    // reset user selection when filters change
     selected.value = []
 
+    // sort the filtered users
     return (
       filteredByUsertype?.sort((a, b) => {
         const order =
@@ -45,8 +57,9 @@
     )
   })
 
-  // from stackoverflow
+  // divide the filtered user list into pages with specified page size
   const pages = computed(() =>
+    // this was taken from stackoverflow
     filteredUsers.value.reduce((resultArray, item, index) => {
       const chunkIndex = Math.floor(index / pageSize.value)
 
@@ -63,12 +76,14 @@
   const deleteUsers = async () => {
     loading.value = true
 
+    // map selected users to their user id
     const selectedUsers = pages.value[currentPage.value - 1]
       // eslint-disable-next-line
       .filter((user, index) => selected.value[index])
       .map((user) => user.uid)
 
     try {
+      // delete selected users
       await $fetch('/api/user', {
         method: 'DELETE',
         body: {
