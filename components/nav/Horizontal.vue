@@ -80,18 +80,19 @@
 <style lang="scss">
   @use 'vuetify/settings';
 
-  .v-toolbar {
+  .v-app-bar {
     padding-left: 3rem !important;
     padding-right: 3rem !important;
+
     // on sm breakpoint set padding to 1rem
     @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
       padding-left: 1rem !important;
       padding-right: 1rem !important;
     }
-  }
 
-  .v-toolbar__extension {
-    height: fit-content !important;
-    width: 100vw !important;
+    .v-toolbar__extension {
+      height: fit-content !important;
+      width: 100vw !important;
+    }
   }
 </style>
