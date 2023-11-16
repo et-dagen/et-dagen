@@ -3,6 +3,7 @@
 // link underlines were showing on iOS
 a {
   text-decoration: none !important;
+  color: rgb(var(--v-theme-nautral)) !important;
 }
 
 .v-btn {
