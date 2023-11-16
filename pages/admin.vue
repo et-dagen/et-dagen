@@ -105,7 +105,11 @@
   }
 
   .administration {
-    width: 1010px;
+    width: 80rem;
+
+    @media #{map-get(settings.$display-breakpoints, 'lg')} {
+      width: 63rem;
+    }
 
     @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
       width: 95vw;
