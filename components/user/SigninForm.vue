@@ -86,7 +86,7 @@
   <VForm ref="form" @submit.prevent="submit">
     <VContainer>
       <VRow>
-        <UserFormEmailInput
+        <FormEmailInput
           v-model="state.email"
           :content="{
             label: $t('user.login.email'),
@@ -95,7 +95,7 @@
         />
       </VRow>
       <VRow>
-        <UserFormPasswordInput v-model="state.password" />
+        <FormPasswordInput v-model="state.password" />
       </VRow>
     </VContainer>
     <VContainer>
