@@ -1,12 +1,11 @@
 <script setup lang="ts">
+  import type { AlertType } from 'composables/useAlerts'
   import {
     useRequiredInput,
     useValidateEmail,
     useValidatePassword,
     useRequireEqualPasswords,
   } from '@/composables/useForm'
-
-  import type { AlertType } from 'composables/useAlerts'
 
   const initialState = {
     name: '',

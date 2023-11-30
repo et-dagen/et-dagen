@@ -83,7 +83,9 @@
     }
   },
   "company": {
-    "main_partner": "Main partner"
+    "main_partner": "Main partner",
+    "partners": "Partners",
+    "sponsors": "Sponsors"
   },
   "alert": {
     "close_alert": "Close",
