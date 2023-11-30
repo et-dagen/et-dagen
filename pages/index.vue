@@ -9,6 +9,13 @@
       }"
     />
 
+    <HomeCountDown
+      :content="{
+        futureDate: '2024-02-14',
+        futureTime: '10:00:00',
+      }"
+    ></HomeCountDown>
+
     <CompanyHero
       :content="{
         name: 'Company Name',
