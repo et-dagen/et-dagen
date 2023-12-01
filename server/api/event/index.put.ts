@@ -1,5 +1,5 @@
-// PATCH /api/events
-// Endpoint for modifying existing events
+// PUT /api/events
+// Endpoint for overwriting existing events
 
 export default defineEventHandler(async (event) => {
   const { user } = event.context
@@ -89,15 +89,8 @@ export default defineEventHandler(async (event) => {
     eventType,
   }
 
-  // Update database information if there are any changes
-  if (Object.keys(updates).length > 0) {
-    eventRef.update(updates)
-  } else {
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'No data has been changed',
-    })
-  }
+  // Update database information
+  eventRef.update(updates)
 
   sendNoContent(event, 203)
 })
