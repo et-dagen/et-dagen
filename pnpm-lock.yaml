@@ -1894,6 +1894,7 @@ packages:
       - rollup
       - supports-color
 
+<<<<<<< HEAD
   /@nuxt/kit@3.8.1:
     resolution: {integrity: sha512-DrhG1Z85iH68QOTkgfb0HVfM2g7+CfcMWrFWMDwck9ofyM2RXQUZyfmvMedwBnui1AjjpgpLO9078yZM+RqNUg==}
     engines: {node: ^14.18.0 || >=16.10.0}
@@ -1902,6 +1903,16 @@ packages:
       c12: 1.5.1
       consola: 3.2.3
       defu: 6.1.3
+=======
+  /@nuxt/kit@3.8.0:
+    resolution: {integrity: sha512-oIthQxeMIVs4ESVP5FqLYn8tj0S1sLd+eYreh+dNYgnJ2pTi7+THR12ONBNHjk668jqEe7ErUJ8UlGwqBzgezg==}
+    engines: {node: ^14.18.0 || >=16.10.0}
+    dependencies:
+      '@nuxt/schema': 3.8.0
+      c12: 1.5.1
+      consola: 3.2.3
+      defu: 6.1.2
+>>>>>>> dev
       globby: 13.2.2
       hash-sum: 2.0.0
       ignore: 5.2.4
@@ -1938,16 +1949,29 @@ packages:
       - rollup
       - supports-color
 
+<<<<<<< HEAD
   /@nuxt/schema@3.8.1:
     resolution: {integrity: sha512-fSaWRcI/2mUskfTZTGSnH6Ny0x05CRzylbVn6WFV0d6UEKIVy42Qd6n+h7yoFfp4cq4nji6u16PT4SqS1DEhsw==}
+=======
+  /@nuxt/schema@3.8.0:
+    resolution: {integrity: sha512-VEDVeCjdVowhoY5vIBSz94+SSwmM204jN6TNe/ShBJ2d/vZiy9EtLbhOwqaPNFHwnN1fl/XFHThwJiexdB9D1w==}
+>>>>>>> dev
     engines: {node: ^14.18.0 || >=16.10.0}
     dependencies:
       '@nuxt/ui-templates': 1.3.1
       consola: 3.2.3
+<<<<<<< HEAD
       defu: 6.1.3
       hookable: 5.5.3
       pathe: 1.1.1
       pkg-types: 1.0.3
+=======
+      defu: 6.1.2
+      hookable: 5.5.3
+      pathe: 1.1.1
+      pkg-types: 1.0.3
+      postcss-import-resolver: 2.0.0
+>>>>>>> dev
       std-env: 3.4.3
       ufo: 1.3.1
       unimport: 3.4.0
@@ -3222,7 +3246,11 @@ packages:
     peerDependencies:
       nuxt: ^3.0.0
     dependencies:
+<<<<<<< HEAD
       '@nuxt/kit': 3.8.1
+=======
+      '@nuxt/kit': 3.8.0
+>>>>>>> dev
       '@vueuse/core': 10.5.0(vue@3.3.4)
       '@vueuse/metadata': 10.5.0
       local-pkg: 0.5.0
@@ -3793,7 +3821,11 @@ packages:
     resolution: {integrity: sha512-BWZRJgDEveT8uI+cliCwvYSSSSvb4xKoiiu5S0jaDbKBopQLQF7E+bq9xKk1pTcG+mUa3yXuFO7bD9d8Lr9Xxg==}
     dependencies:
       chokidar: 3.5.3
+<<<<<<< HEAD
       defu: 6.1.3
+=======
+      defu: 6.1.2
+>>>>>>> dev
       dotenv: 16.3.1
       giget: 1.1.3
       jiti: 1.21.0
@@ -5770,7 +5802,11 @@ packages:
     hasBin: true
     dependencies:
       colorette: 2.0.20
+<<<<<<< HEAD
       defu: 6.1.3
+=======
+      defu: 6.1.2
+>>>>>>> dev
       https-proxy-agent: 7.0.2
       mri: 1.2.0
       node-fetch-native: 1.4.1

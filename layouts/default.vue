@@ -1,8 +1,8 @@
 <template>
   <div>
     <!-- navigation menu -->
-    <NavVertical :routes="routes" />
-    <NavHorizontal :routes="routes" />
+    <NavVertical />
+    <NavHorizontal />
 
     <!-- main content -->
     <VMain>
@@ -10,36 +10,3 @@
     </VMain>
   </div>
 </template>
-
-<script setup lang="ts">
-  useHead({
-    link: [{ rel: 'shortcut icon', type: 'image/png', href: '/favicon.ico' }],
-  })
-
-  const { mobile } = useDisplay()
-
-  const app = useAppStore()
-
-  // public routes
-  const routes = [
-    {
-      name: 'index',
-      route: '/',
-    },
-    {
-      name: 'program',
-      route: '/program',
-    },
-    {
-      name: 'jobs',
-      route: '/jobs',
-    },
-    {
-      name: 'contact',
-      route: '/contact',
-    },
-  ]
-
-  // close navigation drawer when leaving mobile breakpiont
-  watch(mobile, () => (app.drawer = false))
-</script>

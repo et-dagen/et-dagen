@@ -69,8 +69,23 @@
       "december": "desember"
     }
   },
+  "contact": {
+    "positions": {
+      "head": "Leder",
+      "deputyHead": "Nestleder",
+      "IT": "IT-ansvarlig",
+      "finance": "Økonomiansvarlig",
+      "business": "Bedriftansvarlig",
+      "spons": "Sponsoransvarlig",
+      "marketing": "Markedsføringsansvarlig",
+      "logistics": "Logistikkansvarlig",
+      "travel": "Turansvarlig"
+    }
+  },
   "company": {
-    "main_partner": "Hovedpartner"
+    "main_partner": "Hovedpartner",
+    "partners": "Partnere",
+    "sponsors": "Sponsorer"
   },
   "alert": {
     "close_alert": "Lukk",
@@ -169,7 +184,7 @@
         "basic": "Basis"
       },
       "filtertypes": {
-        "name": "Filtertype",
+        "name": "Sorter etter",
         "updated": "Sist modifisert",
         "currentyear": "År"
       },

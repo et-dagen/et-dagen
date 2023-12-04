@@ -69,8 +69,23 @@
       "december": "December"
     }
   },
+  "contact": {
+    "positions": {
+      "head": "Manager",
+      "deputyHead": "Deputy manager",
+      "IT": "IT manager",
+      "finance": "Finance manager",
+      "business": "Business relations manager",
+      "spons": "Sponsorship manager",
+      "marketing": "Marketing manager",
+      "logistics": "Logistics manager",
+      "travel": "Travel manager"
+    }
+  },
   "company": {
-    "main_partner": "Main partner"
+    "main_partner": "Main partner",
+    "partners": "Partners",
+    "sponsors": "Sponsors"
   },
   "alert": {
     "close_alert": "Close",
@@ -120,6 +135,7 @@
     }
   },
   "admin": {
+    "categories": "Categories",
     "companies": {
       "name": "Companies"
     },
@@ -169,7 +185,7 @@
         "basic": "Basic"
       },
       "filtertypes": {
-        "name": "Filter types",
+        "name": "Sort by",
         "updated": "Last modified",
         "currentyear": "Year"
       },
