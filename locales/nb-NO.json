@@ -140,6 +140,7 @@
     },
     "events": {
       "name": "Arrangementer",
+      "edit": "Rediger",
       "pagesize": "Arrangementer per side",
       "dates": "Dato",
       "filtertypes": {

@@ -141,6 +141,7 @@
     },
     "events": {
       "name": "Events",
+      "edit": "Edit event",
       "pagesize": "Events per page",
       "dates": "Date",
       "filtertypes": {

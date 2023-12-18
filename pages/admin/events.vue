@@ -285,6 +285,7 @@
           <th>{{ $t('admin.events.attributes.time') }}</th>
           <th>{{ $t('admin.events.attributes.location') }}</th>
           <th class="text-center">UID</th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -294,7 +295,7 @@
             <VCheckbox v-model="selected[index]" :hide-details="true" />
           </td>
 
-          <td>{{ event.title }}</td>
+          <td id="title" class="truncate">{{ event.title }}</td>
           <td>{{ companies[event.companyUID]?.name ?? '-' }}</td>
           <td v-if="event.capacity !== 'null'">
             {{ eventAttendants(event) }}/{{ event.capacity }}
@@ -307,7 +308,7 @@
             {{ getHourAndMinuteStringFromString(event.date.start) }} -
             {{ getHourAndMinuteStringFromString(event.date.end) }}
           </td>
-          <td>{{ event.location.name }}</td>
+          <td id="location" class="truncate">{{ event.location.name }}</td>
 
           <!-- copy user id -->
           <td>
@@ -328,6 +329,24 @@
                   ? $t('admin.events.copied')
                   : event.id
               }}
+            </VTooltip>
+          </td>
+
+          <!-- Edit event -->
+          <td>
+            <VTooltip location="top" color="primary">
+              <template #activator="{ props }">
+                <VBtn
+                  v-bind="props"
+                  size="small"
+                  variant="text"
+                  color="primary"
+                  icon="mdi-pencil"
+                  @click="navigateTo(`/event/edit/${event.id}`)"
+                />
+              </template>
+
+              {{ $t('admin.events.edit') }}
             </VTooltip>
           </td>
         </tr>
@@ -354,5 +373,20 @@
   .v-chip--selected {
     background-color: rgb(var(--v-theme-accent)) !important;
     color: rgb(var(--v-theme-background)) !important;
+  }
+
+  .truncate {
+    // Add ellipsis to long location names
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &#title {
+      max-width: 225px;
+    }
+
+    &#location {
+      max-width: 150px;
+    }
   }
 </style>
