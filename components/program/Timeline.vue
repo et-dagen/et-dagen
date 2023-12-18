@@ -356,7 +356,8 @@
 
   @media #{map-get($display-breakpoints, 'sm-and-down')} {
     .container {
-      transform: translateX(3rem);
+      transform: translateX(9rem);
+      max-width: 200px;
     }
 
     .card {
