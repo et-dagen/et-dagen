@@ -70,16 +70,18 @@
     }
   },
   "contact": {
+    "title": "Kontakt oss",
+    "board": "Styret",
     "positions": {
-      "head": "Manager",
-      "deputyHead": "Deputy manager",
-      "IT": "IT manager",
-      "finance": "Finance manager",
-      "business": "Business relations manager",
-      "spons": "Sponsorship manager",
-      "marketing": "Marketing manager",
-      "logistics": "Logistics manager",
-      "travel": "Travel manager"
+      "head": "Leder",
+      "deputyHead": "Nestleder",
+      "IT": "IT-ansvarlig",
+      "finance": "Økonomiansvarlig",
+      "business": "Bedriftansvarlig",
+      "spons": "Sponsoransvarlig",
+      "marketing": "Markedsføringsansvarlig",
+      "logistics": "Logistikkansvarlig",
+      "travel": "Turansvarlig"
     }
   },
   "company": {
