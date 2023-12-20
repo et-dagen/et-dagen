@@ -1,0 +1,61 @@
+name: Linting and Build test (dev)
+
+on:
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  lint_build:
+    name: Lint code and build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run linting and testing
+        run: |
+          pnpm lint
+          pnpm build
+  deploy_dev:
+    name: Deploy to dev
+    if: github.event_name == 'pull_request'
+    needs: [lint_build]
+    runs-on: ubuntu-latest
+    environment:
+      name: Development
+      url: 'http://dev.etdagen.no' # Doesnt work
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Deploy to live dev
+        run: |
+          # Replace with deployment script

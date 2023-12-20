@@ -1,20 +1,92 @@
+<script setup lang="ts">
+  const { data: companies } = await useFetch('/api/company')
+
+  const mainSponsor = computed(
+    () =>
+      Object.values(companies.value).find(
+        (company: any) => company.type === 'main-sponsor'
+      ) || null
+  )
+
+  const partners =
+    computed(() =>
+      Object.values(companies.value).filter(
+        (company: any) => company.type === 'partner'
+      )
+    ) || null
+  const showPartners = computed(
+    () => partners.value !== null && partners.value.length !== 0
+  )
+
+  const sponsors =
+    computed(() =>
+      Object.values(companies.value).filter(
+        (company: any) => company.type === 'sponsor'
+      )
+    ) || null
+  const showSponsors = computed(
+    () => sponsors.value !== null && sponsors.value.length !== 0
+  )
+</script>
+
 <template>
-  <div>
-    <!-- Sign in/out buttons -->
-    <VBtn v-if="!authStore.isLoggedIn" color="success" @click="signIn">{{
-      $t('sign_in')
-    }}</VBtn>
-    <VBtn v-else color="error" @click="signOut">Sign out</VBtn>
-    {{ user }}
+  <div class="ma-10">
+    <HomeBanner
+      :content="{
+        caption: 'Få et innblikk i din fremtidige arbeidsplass',
+        date: { start: '2023-02-14', end: '2023-02-15' },
+        image: 'https://cdn.vuetifyjs.com/images/parallax/material.jpg',
+        title: 'Elektronikk & Teknologidagene',
+      }"
+    />
+
+    <CompanyHero
+      v-if="mainSponsor !== null"
+      :content="{
+        name: mainSponsor.name,
+        description: mainSponsor.description,
+        logo: mainSponsor.logo,
+        website: mainSponsor.website,
+      }"
+      class="my-5 d-flex justify-center"
+    />
+
+    <div v-if="showPartners">
+      <h2
+        :class="`text-sm-h3 text-h4 text-center 
+          pt-10 pb-lg-6 pb-3 font-weight-bold`"
+      >
+        {{ $t('company.partners') }}
+      </h2>
+      <CompanyGrid>
+        <CompanyCard
+          v-for="partner in partners"
+          :key="partner.id"
+          :content="{
+            logo: partner.logo,
+            website: partner.website,
+          }"
+        />
+      </CompanyGrid>
+    </div>
+
+    <div v-if="showSponsors">
+      <h2
+        :class="`text-sm-h3 text-h4 text-center 
+          pt-10 pb-lg-6 pb-3 font-weight-bold`"
+      >
+        {{ $t('company.sponsors') }}
+      </h2>
+      <CompanyGrid>
+        <CompanyCard
+          v-for="sponsor in sponsors"
+          :key="sponsor.id"
+          :content="{
+            logo: sponsor.logo || '',
+            website: sponsor.website,
+          }"
+        />
+      </CompanyGrid>
+    </div>
   </div>
 </template>
-
-<script setup lang="ts">
-  import { storeToRefs } from 'pinia'
-
-  const authStore = useAuthStore()
-  const { user } = storeToRefs(authStore)
-
-  const signIn = () => signinUser('email', 'password')
-  const signOut = () => signoutUser()
-</script>

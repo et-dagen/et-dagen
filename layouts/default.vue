@@ -1,7 +1,12 @@
 <template>
-  <VMain>
-    <nuxt-link to="/">Home</nuxt-link>
-    <nuxt-link to="/protected">Protected</nuxt-link>
-    <slot />
-  </VMain>
+  <div>
+    <!-- navigation menu -->
+    <NavVertical />
+    <NavHorizontal />
+
+    <!-- main content -->
+    <VMain>
+      <slot />
+    </VMain>
+  </div>
 </template>

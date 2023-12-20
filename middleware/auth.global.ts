@@ -1,25 +1,21 @@
-export default defineNuxtRouteMiddleware(async (to) => {
-  // skip middleware if app is hydrating
-  const nuxtApp = useNuxtApp()
-  if (nuxtApp.isHydrating) return
-
-  // route is protected
+export default defineNuxtRouteMiddleware((to) => {
+  // check if route is protected
   if (!to.meta.protected) return
 
-  // makes sure that the token cookie is included
-  // in the initial request headers
-  const headers = useRequestHeaders(['cookie'])
+  // get auth state from store
+  const auth = useAuthStore()
+  const isLoggedIn = auth.isLoggedIn
 
-  // when navigating client side the auth state is
-  // collected from the auth store
-  const isLoggedIn = process.client
-    ? useAuthStore().isLoggedIn
-    : // check auth server side
-      await $fetch('/api/getAuth', { headers })
+  // check if user has access
+  const accessLevels = to.meta.accessLevels
+  const hasAccess = auth.hasAccess(accessLevels)
 
-  // user is authenticated
-  if (isLoggedIn) return
+  // user is authenticated and has the required access level
+  if (isLoggedIn && hasAccess) return
 
-  // user is not authenticated
-  return navigateTo('/')
+  // user does not have access
+  const localePath = useLocalePath()
+  const redirectPath = hasAccess ? '/user/signin' : '/user'
+
+  return navigateTo(localePath(redirectPath))
 })

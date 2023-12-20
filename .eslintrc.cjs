@@ -23,6 +23,7 @@ module.exports = {
         semi: false,
         tabWidth: 2,
         vueIndentScriptAndStyle: true,
+        endOfLine: 'auto',
       },
     ],
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
@@ -73,6 +74,7 @@ module.exports = {
         after: true,
       },
     ],
+    'vue/multi-word-component-names': 'off',
     'vue/max-len': [
       'error',
       {
@@ -81,12 +83,12 @@ module.exports = {
         tabWidth: 2,
         comments: 80,
         ignorePattern: '',
-        ignoreComments: false,
+        ignoreComments: true,
         ignoreTrailingComments: false,
         ignoreUrls: false,
         ignoreStrings: false,
         ignoreTemplateLiterals: false,
-        ignoreRegExpLiterals: false,
+        ignoreRegExpLiterals: true,
         ignoreHTMLAttributeValues: false,
         ignoreHTMLTextContents: false,
       },
@@ -122,7 +124,6 @@ module.exports = {
     'prefer-template': 'error',
     'quote-props': 'error',
     'space-in-parens': 'error',
-    'template-curly-spacing': ['error', 'always'],
     '@typescript-eslint/quotes': [
       'error',
       'single',
