@@ -137,5 +137,33 @@
     "events": "Arrangementer",
     "jobs": "Jobber",
     "users": "Brukere"
+  },
+  "edit": {
+    "event": {
+      "create": {
+        "title": "Opprett arrangement",
+        "action": "Opprett"
+      },
+      "edit": {
+        "title": "Rediger arrangement",
+        "action": "Lagre"
+      },
+      "cancel": "Avbryt",
+      "attributes": {
+        "title": "Tittel",
+        "company": "Bedrift",
+        "description": "Beskrivelse",
+        "location": {
+          "name": "Stedsnavn",
+          "map": "Kartlink"
+        },
+        "date": {
+          "start": "Startdato",
+          "end": "Sluttdato"
+        },
+        "attendants": "Påmeldte deltakere"
+
+      }
+    }
   }
 }

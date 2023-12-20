@@ -138,5 +138,33 @@
     "events": "Events",
     "jobs": "Jobs",
     "users": "Users"
+  },
+  "edit": {
+    "event": {
+      "create": {
+        "title": "Create Event",
+        "action": "Create Event"
+      },
+      "edit": {
+        "title": "Edit Event",
+        "action": "Save Changes"
+      },
+      "cancel": "Cancel",
+      "attributes": {
+        "title": "Title",
+        "company": "Company",
+        "description": "Description",
+        "location": {
+          "name": "Name of Place",
+          "map": "Map Link"
+        },
+        "date": {
+          "start": "Start Date",
+          "end": "End Date"
+        },
+        "attendants": "Påmeldte deltakere"
+
+      }
+    }
   }
 }
