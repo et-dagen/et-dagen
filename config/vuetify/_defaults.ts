@@ -5,6 +5,9 @@ export default {
     size: 'x-large',
     ripple: false,
   },
+  VChip: {
+    ripple: false,
+  },
   VMain: {
     // fixes problem with VMain rendering under the appbar on SSR
     style: 'padding-top: 90px',

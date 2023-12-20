@@ -53,6 +53,7 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
     'vuetify-nuxt-module',
     'nuxt-vitest',
+    '@vueuse/nuxt',
   ],
 
   i18n: {

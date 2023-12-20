@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import type { AlertType } from 'composables/useAlerts'
   import {
     useRequiredInput,
     useValidateEmail,
@@ -118,7 +119,7 @@
   <VForm ref="form" @submit.prevent="submit">
     <VContainer>
       <VRow>
-        <UserFormTextInput
+        <FormTextInput
           v-model="state.name"
           :content="{
             label: $t('user.register.full_name'),
@@ -127,19 +128,19 @@
         />
       </VRow>
       <VRow>
-        <UserFormEmailInput
+        <FormEmailInput
           v-model="state.email"
           :rules="[useRequiredInput, useValidateEmail]"
         />
       </VRow>
       <VRow>
-        <UserFormPasswordInput
+        <FormPasswordInput
           v-model="state.password"
           :rules="[useRequiredInput, useValidatePassword]"
         />
       </VRow>
       <VRow>
-        <UserFormPasswordInput
+        <FormPasswordInput
           v-model="state.passwordConfirmation"
           :rules="[
             useRequiredInput,
@@ -160,7 +161,7 @@
       <VCardText class="px-0">
         <VWindow v-model="state.userType">
           <VWindowItem value="student">
-            <UserFormSelectInput
+            <FormSelectInput
               v-model="state.studyProgram"
               :content="{
                 label: $t('user.register.study_program'),
@@ -169,7 +170,7 @@
               }"
               :rules="[state.userType === 'student' ? useRequiredInput : null]"
             />
-            <UserFormSelectInput
+            <FormSelectInput
               v-model="state.currentYear"
               :content="{
                 label: $t('user.register.year'),
@@ -180,7 +181,7 @@
           </VWindowItem>
 
           <VWindowItem value="company">
-            <UserFormTextInput
+            <FormTextInput
               v-model="state.registrationCode"
               :content="{
                 label: $t('user.register.registration_code'),
