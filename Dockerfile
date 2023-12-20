@@ -7,10 +7,10 @@ WORKDIR /app
 COPY package.json pnpm-lock.yaml ./
 
 # Install pnpm
-RUN apk update && apk add g++ make py3-pip && yarn global add pnpm
+RUN apk update && yarn global add pnpm
 
 # Install dependencies with PNPM
-RUN pnpm install
+RUN pnpm install --prod
 
 # Copy the entire app source code
 COPY . .
@@ -26,9 +26,6 @@ WORKDIR /app
 # Copy only the necessary files from the previous stage
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
-
-# Expose the port your Nuxt app will run on
-EXPOSE 8080
 
 # Start the Nuxt app
 CMD ["pnpm", "start"]
