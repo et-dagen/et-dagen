@@ -31,15 +31,15 @@ export default defineEventHandler(async (event) => {
 
   // check if data is defined.
   if (
-    !companyUID ||
-    (limitedCapacity === true && !capacity) ||
-    !date.start ||
-    !date.end ||
-    !description ||
-    !location.name ||
-    !location.map ||
-    !title ||
-    !eventType
+    companyUID === null ||
+    (limitedCapacity === true && capacity === null) ||
+    date.start === null ||
+    date.end === null ||
+    description === null ||
+    location.name === null ||
+    location.map === null ||
+    title === null ||
+    eventType === null
   )
     throw createError({
       statusCode: 400,
@@ -47,7 +47,10 @@ export default defineEventHandler(async (event) => {
     })
 
   // Check if capacity is legal
-  if (limitedCapacity && (typeof capacity !== 'number' || capacity <= 0))
+  if (
+    limitedCapacity === true &&
+    (typeof capacity !== 'number' || capacity <= 0)
+  )
     throw createError({
       statusCode: 400,
       statusMessage: 'Capacity has to be a number and larger than 0',
