@@ -26,7 +26,7 @@
 
 <template>
   <div>
-    <VSheet :width="xs ? '90vw' : '65vw'">
+    <VCard :width="xs ? '90vw' : '65vw'" max-height="450" variant="flat">
       <!-- This header should not be smaller than h3 for large screens -->
       <h2
         :class="`text-sm-h3 text-h4 text-center 
@@ -62,7 +62,7 @@
           <p class="pt-1 pt-lg-3">{{ company.content.description }}</p>
         </VCol>
       </VRow>
-    </VSheet>
+    </VCard>
   </div>
 </template>
 
