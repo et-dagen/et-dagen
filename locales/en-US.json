@@ -69,6 +69,19 @@
       "december": "December"
     }
   },
+  "contact": {
+    "positions": {
+      "head": "Leder",
+      "deputyHead": "Nestleder",
+      "IT": "IT-ansvarlig",
+      "finance": "Økonomiansvarlig",
+      "business": "Bedriftansvarlig",
+      "spons": "Sponsoransvarlig",
+      "marketing": "Markedsføringsansvarlig",
+      "logistics": "Logistikkansvarlig",
+      "travel": "Turansvarlig"
+    }
+  },
   "company": {
     "main_partner": "Main partner"
   },
