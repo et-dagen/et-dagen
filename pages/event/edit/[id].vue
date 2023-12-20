@@ -5,19 +5,6 @@
     // route is only accessible by admins
     accessLevels: ['admin', 'company'],
   })
-
-  // const route = useRoute()
-  // const { data } = await useFetch('/api/event', {
-  //   query: { eventUID: route.params.id },
-  // })
-
-  // if (!data.value) navigateTo('/event/edit')
-
-  // const event = computed(() =>
-  //   data.value
-  //     ? Object.entries(embedKeyIntoObjectValues(data.value))[0][1]
-  //     : undefined
-  // )
 </script>
 
 <template>
