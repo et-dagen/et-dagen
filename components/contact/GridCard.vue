@@ -45,8 +45,8 @@
     align-items: center;
     text-align: center;
     aspect-ratio: 15 / 3 !important;
-    max-width: 200px;
-    min-width: 150px;
+    max-width: 250px;
+    min-width: 200px;
     padding: 12px;
 
     &__image {

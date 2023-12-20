@@ -11,7 +11,7 @@
       }"
     />
 
-    <CompanyGrid>
+    <CommonGrid>
       <ContactGridCard
         :content="{
           name: 'Sara Stokke Aursand',
@@ -87,12 +87,12 @@
       <ContactGridCard
         :content="{
           name: 'Josh Jude',
-          position: $t('contact.positions.traveling'),
+          position: $t('contact.positions.travel'),
           email: 'turansvarlig@et-dagen.no',
           phone: '+47 123 45 678',
           image: 'https://picsum.photos/500/300?image=60',
         }"
       />
-    </CompanyGrid>
+    </CommonGrid>
   </div>
 </template>
