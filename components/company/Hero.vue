@@ -76,10 +76,8 @@
     color: transparent;
     background-color: transparent;
     transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    filter: drop-shadow(2px 2px 1px gray);
     &:hover {
-      filter: drop-shadow(4px 4px 2px gray);
-      transform: scale(1.05);
+      transform: scale(1.03);
     }
   }
 </style>
