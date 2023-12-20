@@ -7,8 +7,6 @@
     useRequireEqualPasswords,
   } from '@/composables/useForm'
 
-  import type { AlertType } from 'composables/useAlerts'
-
   const { data: studyProgrammes } = await useFetch('/api/programme')
   const yearOptions = computed(() => {
     return (studyProgram: string) => {
