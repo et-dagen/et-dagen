@@ -7,6 +7,15 @@
     },
   })
 
+  const { data: companies } = await useFetch('/api/company')
+  // TODO: Replace with API endpoint for getting only a sublist of known UIDs
+  const { data: users } = await useFetch('/api/user', {
+    query: { scope: 'all' },
+  })
+
+  console.log('companies:', companies.value)
+  console.log('users:', users.value)
+
   const { data: event } = await useAsyncData('event', async () => {
     if (!props.eventUid) return
 
