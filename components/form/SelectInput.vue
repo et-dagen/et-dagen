@@ -1,8 +1,7 @@
 <script setup lang="ts">
-  export type SelectOption = string | number
   export interface SelectInputContent {
     label: string
-    options: SelectOption[]
+    options: any[]
     required?: boolean
   }
 
