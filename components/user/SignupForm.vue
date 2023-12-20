@@ -7,6 +7,28 @@
     useRequireEqualPasswords,
   } from '@/composables/useForm'
 
+  import type { AlertType } from 'composables/useAlerts'
+
+  const { data: studyProgrammes } = await useFetch('/api/programme')
+  const yearOptions = computed(() => {
+    return (studyProgram: string) => {
+      const programme = studyProgrammes.value.find(
+        (prog: any) => prog.name === studyProgram
+      )
+
+      if (!programme || programme.type === 'integrated') return [1, 2, 3, 4, 5]
+
+      switch (programme.type) {
+        case 'bachelor':
+          return [1, 2, 3]
+        case 'master':
+          return [4, 5]
+        default:
+          return []
+      }
+    }
+  })
+
   const initialState = {
     name: '',
     email: '',
@@ -21,6 +43,15 @@
   const state = reactive({
     ...initialState,
   })
+
+  // Reset currentYear if programme doesn't have that year
+  watch(
+    () => state.studyProgram,
+    (program) => {
+      if (!yearOptions.value(program).includes(Number(state.currentYear)))
+        state.currentYear = ''
+    }
+  )
 
   const form = ref()
   const isRegistering = ref<boolean>(false)
@@ -134,14 +165,8 @@
               v-model="state.studyProgram"
               :content="{
                 label: $t('user.register.study_program'),
-                options: [
-                  'Data',
-                  'Elektro',
-                  'Bygg',
-                  'Maskin',
-                  'Kjemi',
-                  'Annen',
-                ],
+                // eslint-disable-next-line vue/max-len
+                options: Object.values(studyProgrammes).map((prog: any) => prog.name),
               }"
               :rules="[state.userType === 'student' ? useRequiredInput : null]"
             />
@@ -149,7 +174,7 @@
               v-model="state.currentYear"
               :content="{
                 label: $t('user.register.year'),
-                options: [1, 2, 3, 4, 5],
+                options: yearOptions(state.studyProgram),
               }"
               :rules="[state.userType === 'student' ? useRequiredInput : null]"
             />
