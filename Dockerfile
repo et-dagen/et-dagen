@@ -9,7 +9,7 @@ WORKDIR /app
 COPY package* ./
 # install all the project npm dependencies
 RUN  yarn global add pnpm
-RUN  pnpm install
+RUN  pnpm install --prod
 # copy all other project files to working directory
 COPY . ./
 # build the nuxt project to generate the artifacts in .output directory
