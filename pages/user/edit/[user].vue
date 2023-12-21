@@ -1,15 +1,15 @@
 <script setup lang="ts">
   definePageMeta({
     // route and all sub routes are protected
-    // meaning you hae to be logged in
+    // meaning you have to be logged in
     protected: true,
 
     // check if we should redirect
     middleware: (to) => {
       const authStore = useAuthStore()
-      //
+      // if correct user?
       if (to.params.user === authStore.user?.uid) return
-      // is user admin?
+      // if user is admin?
       if (authStore.hasAccess(['admin'])) return
       // redirect to respective user
       // ignore error, .uid is definetly a string
@@ -21,10 +21,19 @@
 
   const authStore = useAuthStore()
   const { user } = storeToRefs(authStore)
+  // make a object to save all values that can be changed
+  const initialValues = {
+    name: user.value?.name,
+    userType: user.value?.userType,
+  }
+
+  const values = reactive({
+    ...initialValues,
+  })
+
   const newUserName = ref(user.value?.name)
   const oldUserName = ref(user.value?.name)
-  // studyprogram
-  // studyyear
+
   // newAllergy
 
   // cancel should return admins to overview, and users to user profile
@@ -54,7 +63,7 @@
     cancel()
   }
 
-  const hasChanged = computed(() => oldUserName.value !== newUserName.value)
+  const hasChanged = computed(() => initialValues !== values)
 </script>
 
 <template>
@@ -62,14 +71,17 @@
     <h4 class="font-weight-bold text-center">Edit Profile</h4>
 
     <VContainer>
+      <!--Text field to edit name-->
       <VTextField
-        v-model="newUserName"
+        v-model="values.name"
         label="Name"
         type="text"
         variant="outlined"
       />
 
+      <!--Row for buttons-->
       <vRow justify="space-around">
+        <!--Submit button-->
         <VBtn
           size="large"
           variant="text"
@@ -81,9 +93,10 @@
           :disabled="!hasChanged"
           @click="submit"
         >
-          <diV justify="center">Submit</diV>
+          Submit
         </VBtn>
 
+        <!--Cancel button-->
         <VBtn
           size="large"
           variant="text"
@@ -94,14 +107,16 @@
           :active="false"
           @click="cancel"
         >
-          <diV justify="center">Cancel</diV>
+          Cancel
         </VBtn>
       </vRow>
     </VContainer>
 
+    <!--Temporary debug stuff-->
     <div>Program: {{ user?.studyProgram }}</div>
     <div>Email: {{ user?.email }}</div>
     <div>User Name: {{ user?.name }}</div>
+    <div>Old User Name: {{ oldUserName }}</div>
     <div>New User Name: {{ newUserName }}</div>
   </VContainer>
 </template>
