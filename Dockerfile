@@ -16,7 +16,6 @@ RUN pnpm build
 # Copy build files
 COPY . .
 
-
 ENV PORT=8080
 
 # Expose port 8080 to outside world
