@@ -4,21 +4,27 @@
       <VImg class="image" :width="30" src="/images/logo_long_neg.png" />
       <ul class="pa-0 ma-0">
         <li>
-          <span class="header text-h4">{{
+          <span class="header fade text-h4">{{
             $t('footer.header.resources')
           }}</span>
           <NuxtLink to="/program">{{ $t('footer.link.program') }}</NuxtLink>
           <NuxtLink to="/jobs">{{ $t('footer.link.jobs') }}</NuxtLink>
         </li>
         <li>
-          <span class="header text-h4">{{ $t('footer.header.join') }}</span>
-          <NuxtLink to="mailto:bedriftansvarlig@et-dagen.no"
-            >bedriftansvarlig@</NuxtLink
-          >
-          <NuxtLink to="mailto:logistikk@et-dagen.no">logistikk@</NuxtLink>
+          <span class="header fade text-h4">{{
+            $t('footer.header.join')
+          }}</span>
+          <NuxtLink to="mailto:bedriftansvarlig@et-dagen.no">
+            <VIcon icon="mdi-email" class="fade mr-2" size="small" />
+            {{ $t('contact.positions.business') }}
+          </NuxtLink>
+          <NuxtLink to="mailto:logistikk@et-dagen.no">
+            <VIcon icon="mdi-email" class="fade mr-2" size="small" />
+            {{ $t('contact.positions.logistics') }}
+          </NuxtLink>
         </li>
         <li>
-          <span class="header text-h4">{{
+          <span class="header fade text-h4">{{
             $t('footer.header.organisation')
           }}</span>
           <NuxtLink to="https://www.ntnu.edu/studies/mtelsys">MTELSYS</NuxtLink>
@@ -28,7 +34,7 @@
     </section>
     <section class="bottom">
       <span>Elektronikk- & Teknologidagene 2023</span>
-      <span class="org">Org nr.: 996 858 545</span>
+      <span class="fade">Org nr.: 996 858 545</span>
     </section>
   </footer>
 </template>
@@ -39,6 +45,10 @@
   * {
     box-sizing: border-box;
     color: rgb(var(--v-theme-background)) !important;
+  }
+
+  .fade {
+    color: rgba(var(--v-theme-background), 0.7) !important;
   }
 
   footer {
@@ -55,10 +65,6 @@
         border-top: 1px solid rgba(var(--v-theme-background), 0.1) !important;
         display: flex;
         flex-direction: column;
-
-        .org {
-          color: rgba(var(--v-theme-background), 0.6) !important;
-        }
       }
 
       &.top {
@@ -66,7 +72,6 @@
         margin-bottom: 48px;
 
         .header {
-          color: rgba(var(--v-theme-background), 0.6) !important;
           text-transform: uppercase;
           letter-spacing: 1px;
           font-size: 20px !important;
