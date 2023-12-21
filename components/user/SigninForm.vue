@@ -120,10 +120,10 @@
       <VRow class="mt-0">
         <VBtn
           color="primary"
-          @click="navigateTo(localePath('/user/signup'))"
           variant="outlined"
           class="btn--register"
           :disabled="isRegistering"
+          @click="navigateTo(localePath('/user/signup'))"
         >
           {{ $t('user.sign_up') }}
         </VBtn>

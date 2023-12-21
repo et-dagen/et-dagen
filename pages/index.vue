@@ -23,7 +23,7 @@
         nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in 
          qui officia deserunt mollit anim id est laborum.`,
         logo: `https://storage.googleapis.com/etdagen-d1f82.
-          appspot.com/storage_companies%2FSony%2FLogo%2Fsony.png`,
+appspot.com/storage_companies%2FSony%2FLogo%2Fsony.png`,
         website: 'https://shortsdag.no',
       }"
       class="my-5 d-flex justify-center"
@@ -33,7 +33,7 @@
       <CompanyCard
         :content="{
           logo: `https://1000logos.net/wp-content/
-          uploads/2021/05/Sony-logo.png`,
+uploads/2021/05/Sony-logo.png`,
           website: 'https://pro.sony/en_NO/home',
         }"
       ></CompanyCard>
