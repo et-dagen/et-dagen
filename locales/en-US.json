@@ -69,8 +69,23 @@
       "december": "December"
     }
   },
+  "contact": {
+    "positions": {
+      "head": "Manager",
+      "deputyHead": "Deputy manager",
+      "IT": "IT manager",
+      "finance": "Finance manager",
+      "business": "Business relations manager",
+      "spons": "Sponsorship manager",
+      "marketing": "Marketing manager",
+      "logistics": "Logistics manager",
+      "travel": "Travel manager"
+    }
+  },
   "company": {
-    "main_partner": "Main partner"
+    "main_partner": "Main partner",
+    "partners": "Partners",
+    "sponsors": "Sponsors"
   },
   "alert": {
     "close_alert": "Close",
@@ -121,9 +136,51 @@
   },
   "admin": {
     "categories": "Categories",
-    "companies": "Companies",
-    "events": "Events",
-    "jobs": "Jobs",
-    "users": "Users"
+    "companies": {
+      "name": "Companies"
+    },
+    "events": {
+      "name": "Events"
+    },
+    "jobs": {
+      "name": "Jobs"
+    },
+    "users": {
+      "name": "Users",
+      "pagesize": "Users per page",
+      "usertypes": {
+        "name": "User types",
+        "admin": "Admins",
+        "company": "Companies",
+        "basic": "Basic"
+      },
+      "filtertypes": {
+        "name": "Sort by",
+        "updated": "Last modified",
+        "currentyear": "Year"
+      },
+      "filterorder": {
+        "name": "Order",
+        "descending": "Descending",
+        "ascending": "Ascending"
+      },
+      "selectall": "Select all",
+      "delete": {
+        "selected": "Delete selected",
+        "confirmtext": "Are you sure you want to delete the selected users?",
+        "confirm": "Yes, delete them",
+        "abort": "No, abort"
+      },
+      "attributes": {
+        "select": "Select",
+        "name": "Name",
+        "usertype": "User type",
+        "email": "Email",
+        "year": "Year",
+        "program": "Study program",
+        "company": "Company"
+      },
+      "copied": "UID copied!"
+    }
   }
 }
