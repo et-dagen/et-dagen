@@ -26,7 +26,12 @@
 
 <template>
   <div>
-    <VCard :width="xs ? '90vw' : '65vw'" max-height="450" variant="flat">
+    <VCard
+      :width="xs ? '90vw' : '65vw'"
+      max-height="100vh"
+      md="50v"
+      variant="flat"
+    >
       <!-- This header should not be smaller than h3 for large screens -->
       <h2
         :class="`text-sm-h3 text-h4 text-center 
@@ -47,12 +52,7 @@
         </VCol>
 
         <!-- Company name and description -->
-        <VCol
-          cols="12"
-          lg="6"
-          style="max-height: 40vh"
-          class="pt-lg-0 pt-3 pl-lg-3"
-        >
+        <VCol cols="12" lg="6" class="pt-lg-0 pt-3 pl-lg-3">
           <h3
             class="text-h5 font-weight-bold clicker d-inline-block"
             @click="openInNewTab"
