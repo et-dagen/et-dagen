@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main">
     <!-- navigation menu -->
     <NavVertical />
     <NavHorizontal />
@@ -8,5 +8,15 @@
     <VMain>
       <slot />
     </VMain>
+
+    <Footer />
   </div>
 </template>
+
+<style scoped lang="scss">
+  .main {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+</style>
