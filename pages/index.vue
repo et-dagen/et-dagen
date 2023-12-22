@@ -38,6 +38,7 @@
         image: 'https://cdn.vuetifyjs.com/images/parallax/material.jpg',
         title: 'Elektronikk & Teknologidagene',
       }"
+      class="my-5 d-flex justify-center"
     />
 
     <CompanyHero
