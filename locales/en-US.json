@@ -182,5 +182,17 @@
       },
       "copied": "UID copied!"
     }
+  },
+  "footer": {
+    "header": {
+      "resources": "Resources",
+      "organisation": "Organisation",
+      "join": "Wish to join us?"
+    },
+    "link": {
+      "contact": "Contact Us",
+      "program": "Program",
+      "jobs": "Jobs"
+    }
   }
 }
