@@ -5,7 +5,7 @@
     <NavHorizontal />
 
     <!-- main content -->
-    <VMain>
+    <VMain style="min-height: 100vh">
       <slot />
     </VMain>
 
