@@ -27,12 +27,10 @@
     userType: user.value?.userType,
   }
 
+  // copy of initial values, used store changes
   const values = reactive({
     ...initialValues,
   })
-
-  const newUserName = ref(user.value?.name)
-  const oldUserName = ref(user.value?.name)
 
   // newAllergy
 
@@ -50,7 +48,7 @@
   // submit should update user data
   const submit = async () => {
     // if nothing is changed, do nothing
-    if (hasChanged) {
+    if (!hasChanged) {
       return
     }
 
@@ -58,12 +56,15 @@
       method: 'POST',
       body: {},
     })
-
     // run cancel function to return to previous page
     cancel()
   }
-
-  const hasChanged = computed(() => initialValues !== values)
+  // hasChanged is used to check if we have new values
+  const hasChanged = ref(false)
+  watch(values, () => {
+    const raw = toRaw(values)
+    hasChanged.value = JSON.stringify(raw) !== JSON.stringify(initialValues)
+  })
 </script>
 
 <template>
@@ -116,8 +117,8 @@
     <div>Program: {{ user?.studyProgram }}</div>
     <div>Email: {{ user?.email }}</div>
     <div>User Name: {{ user?.name }}</div>
-    <div>Old User Name: {{ oldUserName }}</div>
-    <div>New User Name: {{ newUserName }}</div>
+    <div>Old User Name: {{ initialValues.name }}</div>
+    <div>New User Name: {{ values.name }}</div>
   </VContainer>
 </template>
 
