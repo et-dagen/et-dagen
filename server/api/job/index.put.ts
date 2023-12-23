@@ -1,6 +1,8 @@
 // PUT /api/job
 // endpoint for editing jobs in the database
 
+import { isValidDate } from '../../../composables/useDate'
+
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 
@@ -47,6 +49,12 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 400,
       statusMessage: 'Cannot add single fields to the database entry',
+    })
+
+  if (newData.deadline && !isValidDate(newData.deadline))
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Date must be of the ISO 8601 format',
     })
 
   const isAdmin = hasAccess(user, ['admin'])
