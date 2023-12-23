@@ -32,15 +32,12 @@ export default defineEventHandler(async (event) => {
 
   const { companyUID } = data[Object.keys(data)[0]]
 
-  // Check if user is authorized
-  if (hasAccess(user, ['company'])) {
-    if (user?.companyUID !== companyUID)
-      throw createError({
-        statusCode: 401,
-        statusMessage:
-          'Company users can only remove jobs belonging to their own company',
-      })
-  } else if (!hasAccess(user, ['admin']))
+  const isAdmin = hasAccess(user, ['admin'])
+  const isCompanyAdmin =
+    hasAccess(user, ['company']) && user.companyUID === companyUID
+
+  // only admins and company admins can modify jobs
+  if (!isAdmin && !isCompanyAdmin)
     throw createError({
       statusCode: 401,
       statusMessage: 'User not authorized',

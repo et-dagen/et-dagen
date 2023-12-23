@@ -13,14 +13,12 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Not all data is defined',
     })
 
-  // Check if user is authorized
-  if (hasAccess(user, ['company'])) {
-    if (user?.companyUID !== companyUID)
-      throw createError({
-        statusCode: 401,
-        statusMessage: 'Company users cannot post jobs for other companies',
-      })
-  } else if (!hasAccess(user, ['admin']))
+  const isAdmin = hasAccess(user, ['admin'])
+  const isCompanyAdmin =
+    hasAccess(user, ['company']) && user.companyUID === companyUID
+
+  // only admins and company admins can modify jobs
+  if (!isAdmin && !isCompanyAdmin)
     throw createError({
       statusCode: 401,
       statusMessage: 'User not authorized',
