@@ -12,10 +12,10 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Missing jobUID',
     })
 
-  // reference to companies
+  // reference to jobs
   const jobsRef = db.ref('jobs')
 
-  // check if the company exists
+  // check if the job exists
   const snapshot = await jobsRef
     .orderByKey()
     .equalTo(jobUID as string)
@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
 
   const data = snapshot.val()
 
-  // the company does not exist in db
+  // the job does not exist in db
   if (!data)
     throw createError({
       statusCode: 404,
