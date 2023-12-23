@@ -51,10 +51,10 @@
     if (!hasChanged) {
       return
     }
-
+    // Make a POST request to update the user's data
     await $fetch('/api/user', {
       method: 'POST',
-      body: {},
+      body: values,
     })
     // run cancel function to return to previous page
     cancel()
