@@ -1,47 +1,45 @@
 <script setup lang="ts">
   const { data: companies } = await useFetch('/api/company')
 </script>
+
 <template>
   <div v-for="(company, id) in companies" :key="id" class="card_div">
-    <VCard width="700">
+    <VCard width="550" flat>
       <VRow>
-        <VCol cols="5">
+        <VCol cols="4">
           <VImg
             class="rounded-lg"
             :src="company.logo"
             width="100%"
-            height="200"
+            height="100"
           />
         </VCol>
         <VCol>
           <VRow>
             <VCol>
               <VCardTitle
-                class="font-weight-bold text-h5 pa-0"
-                append-icon="mdi-pencil"
+                class="font-weight-bold text-h6 pa-0 text-decoration-underline"
               >
                 {{ company.name }}
               </VCardTitle>
             </VCol>
             <VCol>
-              <VBtn class="icon" density="compact" variant="text">
-                <VIcon> mdi-pencil </VIcon>
-                <VDialog activator="parent" width="auto">
-                  <VCard>
-                    <VCardText> Hello </VCardText>
-                  </VCard>
-                </VDialog>
-              </VBtn>
+              <VBtn
+                class="icon"
+                variant="text"
+                size="small"
+                icon="mdi-pencil"
+                @click="navigateTo(`/company/edit/${id}`)"
+              />
             </VCol>
           </VRow>
-          <VCardText class="text-h7"> UID: {{ id }} </VCardText>
-          <VCardText class="text-h6">
+          <VCardText class="text-h7 pa-0"> UID: {{ id }} </VCardText>
+          <VCardText class="text-h7 pa-0">
             Company type: {{ company.type }}
           </VCardText>
         </VCol>
       </VRow>
     </VCard>
-    <br />
   </div>
 </template>
 
