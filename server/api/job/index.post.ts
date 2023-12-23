@@ -6,8 +6,6 @@ export default defineEventHandler(async (event) => {
 
   const { companyUID, title, description, deadline } = await readBody(event)
 
-  console.log(companyUID, title, description, deadline)
-
   // make sure all necessary data is included
   if (!companyUID || !title || !description || !deadline)
     throw createError({
