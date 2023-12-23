@@ -1,24 +1,20 @@
-# Base off Alpine Linux
-FROM node:20-alpine AS build
+# Set base image with pnpm enabled
+FROM node:20-alpine AS base
+RUN apk update \
+    && apk upgrade \
+    && corepack enable pnpm
 
+# Build project
+FROM base as build
 WORKDIR /app
-
-# Copy package files
-COPY package*.json ./
-
-# Install pnpm (Important for building)
-RUN npm install --location=global pnpm
-
+COPY . .
 RUN pnpm install
-
 RUN pnpm build
 
-# Copy build files
-COPY . .
-
+# Run
+FROM node:20-alpine as prod
+WORKDIR /app
+COPY --from=build /app /app
 ENV PORT=8080
-
-# Expose port 8080 to outside world
 EXPOSE 8080
-
-CMD ["pnpm", "start"]
+CMD ["node", ".output/server/index.mjs"]
