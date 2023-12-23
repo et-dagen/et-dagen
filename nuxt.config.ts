@@ -1,5 +1,23 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  app: {
+    head: {
+      link: [
+        {
+          rel: 'icon',
+          href: '/images/favicon-light.ico',
+          type: 'image/x-icon',
+          media: '(prefers-color-scheme: light)',
+        },
+        {
+          rel: 'icon',
+          href: '/images/favicon.ico',
+          type: 'image/x-icon',
+          media: '(prefers-color-scheme: dark)',
+        },
+      ],
+    },
+  },
   runtimeConfig: {
     // used by firebase admin sdk
     GOOGLE_APPLICATION_CREDENTIALS:
