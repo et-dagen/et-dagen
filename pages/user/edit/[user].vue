@@ -70,7 +70,6 @@
 <template>
   <VContainer>
     <h4 class="font-weight-bold text-center">Edit Profile</h4>
-
     <VContainer>
       <!--Text field to edit name-->
       <VTextField
@@ -80,6 +79,31 @@
         variant="outlined"
       />
 
+      <vRow justify="space-around" class="mb-4">
+        <template v-if="authStore.hasAccess(['admin'])">
+          <VMenu transition="slide-y-transition">
+            <!-- activator btn -->
+            <template #activator="{ props }">
+              <VBtn v-bind="props" rounded="lg" variant="text">
+                <template #prepend>
+                  User type: {{ values.userType?.toUpperCase() }}
+                </template>
+              </VBtn>
+            </template>
+
+            <VCard
+              class="d-flex flex-column my-2 pa-2"
+              rounded="lg"
+              :elevation="3"
+            >
+              <!-- buttons for usertype -->
+              <VBtn @click="values.userType = 'admin'">Admin</VBtn>
+              <VBtn @click="values.userType = 'company'">Company</VBtn>
+              <VBtn @click="values.userType = undefined">Undefined</VBtn>
+            </VCard>
+          </VMenu>
+        </template>
+      </vRow>
       <!--Row for buttons-->
       <vRow justify="space-around">
         <!--Submit button-->
@@ -112,13 +136,13 @@
         </VBtn>
       </vRow>
     </VContainer>
-
     <!--Temporary debug stuff-->
     <div>Program: {{ user?.studyProgram }}</div>
     <div>Email: {{ user?.email }}</div>
     <div>User Name: {{ user?.name }}</div>
     <div>Old User Name: {{ initialValues.name }}</div>
     <div>New User Name: {{ values.name }}</div>
+    <div>User Type: {{ values.userType }}</div>
   </VContainer>
 </template>
 
