@@ -1,7 +1,7 @@
 <template>
   <div class="my-16">
     <h3 class="text-center mb-6">{{ $t('contact.title') }}</h3>
-    <VContainer class="mb-6">
+    <VContainer class="mb-6 px-md-12">
       <ContactCard
         class="mx-auto"
         :content="{
@@ -108,7 +108,7 @@
   .v-container {
     // Set different max-widths for different screen sizes
     @media #{map-get(settings.$display-breakpoints, 'md-and-up')} {
-      max-width: 800px !important;
+      max-width: 900px !important;
     }
     @media #{map-get(settings.$display-breakpoints, 'sm')} {
       max-width: 600px !important;
