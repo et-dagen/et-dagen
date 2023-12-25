@@ -1,7 +1,7 @@
 {
   "nav": {
     "index": "Home",
-    "program": "Program",
+    "program": "Programme",
     "jobs": "Jobs",
     "contact": "Contact",
     "admin": "Administration",
@@ -183,6 +183,18 @@
         "company": "Company"
       },
       "copied": "UID copied!"
+    }
+  },
+  "footer": {
+    "header": {
+      "resources": "Resources",
+      "organisation": "Organisation",
+      "join": "Wish to join us?"
+    },
+    "link": {
+      "contact": "Contact Us",
+      "program": "Program",
+      "jobs": "Jobs"
     }
   }
 }
