@@ -181,5 +181,17 @@
       },
       "copied": "UID kopiert!"
     }
+  },
+  "footer": {
+    "header": {
+      "resources": "Ressurser",
+      "organisation": "Organisasjon",
+      "join": "Vil dere delta?"
+    },
+    "link": {
+      "contact": "Kontakt oss",
+      "program": "Program",
+      "jobs": "Jobber"
+    }
   }
 }
