@@ -2,6 +2,10 @@
   "name": "nuxt-app",
   "type": "module",
   "private": true,
+  "engines": {
+    "node": "20.x",
+    "npm": "7.x"
+  },
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
