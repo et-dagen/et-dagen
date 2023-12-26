@@ -78,9 +78,9 @@
     }
 
     .card__image {
-      max-height: 180px;
-      width: 100%;
-      object-fit: cover;
+      max-height: 250px !important;
+      object-fit: scale-down;
+      aspect-ratio: 1 / 1.2 !important;
       position: relative;
     }
 
@@ -111,6 +111,12 @@
         padding: 3rem;
         width: 100%;
       }
+    }
+  }
+
+  @media #{map-get(settings.$display-breakpoints, 'md-and-down')} {
+    .card__image {
+      width: 100%;
     }
   }
 
