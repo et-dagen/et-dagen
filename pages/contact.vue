@@ -3,13 +3,13 @@
     <h3 class="text-center mb-6">{{ $t('contact.title') }}</h3>
     <VContainer class="mb-6 px-md-12">
       <ContactCard
-        class="mx-auto"
+        class="mx-auto w-md-75"
         :content="{
           name: 'Marius Liebig',
           position: $t('contact.positions.business'),
           email: 'bedriftansvarlig@et-dagen.no',
           phone: '+47 123 45 678',
-          image: 'https://picsum.photos/500/300?image=60',
+          image: '/images/board/business.jpg',
         }"
       />
     </VContainer>
@@ -23,7 +23,7 @@
             position: $t('contact.positions.head'),
             email: 'leder@et-dagen.no',
             phone: '+47 123 45 678',
-            image: 'https://picsum.photos/500/300?image=60',
+            image: '/images/board/manager.jpg',
           }"
         />
         <ContactGridCard
@@ -32,7 +32,7 @@
             position: $t('contact.positions.deputyHead'),
             email: 'nestleder@et-dagen.no',
             phone: '+47 123 45 678',
-            image: 'https://picsum.photos/500/300?image=60',
+            image: '/images/board/deputy_manager.jpg',
           }"
         />
         <ContactGridCard
@@ -41,7 +41,7 @@
             position: $t('contact.positions.finance'),
             email: 'okonomi@et-dagen.no',
             phone: '+47 123 45 678',
-            image: 'https://picsum.photos/500/300?image=60',
+            image: '/images/board/finance.jpg',
           }"
         />
         <ContactGridCard
@@ -50,7 +50,7 @@
             position: $t('contact.positions.logistics'),
             email: 'logistikk@et-dagen.no',
             phone: '+47 123 45 678',
-            image: 'https://picsum.photos/500/300?image=60',
+            image: '/images/board/logistics.jpg',
           }"
         />
         <ContactGridCard
@@ -59,7 +59,7 @@
             position: $t('contact.positions.business'),
             email: 'bedriftansvarlig@et-dagen.no',
             phone: '+47 123 45 678',
-            image: 'https://picsum.photos/500/300?image=60',
+            image: '/images/board/business.jpg',
           }"
         />
         <ContactGridCard
@@ -68,7 +68,7 @@
             position: $t('contact.positions.spons'),
             email: 'spons@et-dagen.no',
             phone: '+47 123 45 678',
-            image: 'https://picsum.photos/500/300?image=60',
+            image: '/images/board/sponsor.jpg',
           }"
         />
         <ContactGridCard
@@ -77,7 +77,7 @@
             position: $t('contact.positions.marketing'),
             email: 'mfansvarlig@et-dagen.no',
             phone: '+47 123 45 678',
-            image: 'https://picsum.photos/500/300?image=60',
+            image: '/images/board/marketing.jpg',
           }"
         />
         <ContactGridCard
@@ -86,7 +86,7 @@
             position: $t('contact.positions.IT'),
             email: 'itansvarlig@et-dagen.no',
             phone: '+47 123 45 678',
-            image: 'https://picsum.photos/500/300?image=60',
+            image: '/images/board/it.jpg',
           }"
         />
         <ContactGridCard
@@ -95,7 +95,7 @@
             position: $t('contact.positions.travel'),
             email: 'turansvarlig@et-dagen.no',
             phone: '+47 123 45 678',
-            image: 'https://picsum.photos/500/300?image=60',
+            image: '/images/board/travel.jpg',
           }"
         />
       </CommonGrid>
