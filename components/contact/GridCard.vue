@@ -53,6 +53,8 @@
       width: 100%;
       padding: 6px;
       border-radius: 12px;
+      aspect-ratio: 1 / 1.2 !important;
+      object-fit: cover;
     }
 
     &__name {
