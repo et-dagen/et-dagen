@@ -222,11 +222,7 @@
 
             <!-- Event actions: Sign up perform action -->
             <span
-              v-if="
-                !useAuth.isLoggedIn &&
-                event.capacity !== 'null' &&
-                !eventFull(event)
-              "
+              v-if="!useAuth.isLoggedIn && event.capacity && !eventFull(event)"
               class="text-primary"
             >
               <br />
@@ -235,10 +231,7 @@
           </template>
 
           <!-- Event actions -->
-          <template
-            v-if="event.capacity !== 'null' && useAuth.isLoggedIn"
-            #actions
-          >
+          <template v-if="event.capacity && useAuth.isLoggedIn" #actions>
             <!-- Sign up to event -->
             <VBtn
               v-if="useAuth.isLoggedIn && showSignupButton(event)"
