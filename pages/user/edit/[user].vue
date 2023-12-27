@@ -25,6 +25,7 @@
   const initialValues = {
     name: user.value?.name,
     userType: user.value?.userType,
+    email: user.value?.email,
   }
 
   // copy of initial values, used store changes
@@ -72,23 +73,46 @@
     <h4 class="font-weight-bold text-center">Edit Profile</h4>
     <VContainer>
       <!--Text field to edit name-->
-      <VTextField
-        v-model="values.name"
-        label="Name"
-        type="text"
-        variant="outlined"
-      />
+      <vRow justify="space-around" class="mb-4">
+        <VTextField
+          v-model="values.name"
+          label="Name"
+          type="text"
+          variant="outlined"
+        />
+      </vRow>
+      <!--Text field to edit email-->
+      <vRow justify="space-around" class="mb-4">
+        <VTextField
+          v-model="values.email"
+          label="Email"
+          type="text"
+          variant="outlined"
+        />
+      </vRow>
 
       <vRow justify="space-around" class="mb-4">
         <template v-if="authStore.hasAccess(['admin'])">
           <VMenu transition="slide-y-transition">
             <!-- activator btn -->
+
             <template #activator="{ props }">
-              <VBtn v-bind="props" rounded="lg" variant="text">
-                <template #prepend>
-                  User type: {{ values.userType?.toUpperCase() }}
-                </template>
-              </VBtn>
+              <v-col :cols="6" class="text-center"> User type: </v-col>
+
+              <v-col :cols="6" class="text-center">
+                <VBtn
+                  size="large"
+                  variant="text"
+                  :ripple="false"
+                  :width="'45%'"
+                  v-bind="props"
+                  rounded="lg"
+                >
+                  <template #prepend>
+                    {{ values.userType?.toUpperCase() }}
+                  </template>
+                </VBtn>
+              </v-col>
             </template>
 
             <VCard
@@ -105,40 +129,44 @@
         </template>
       </vRow>
       <!--Row for buttons-->
-      <vRow justify="space-around">
+      <vRow justify="space-around" class="mb-4">
         <!--Submit button-->
-        <VBtn
-          size="large"
-          variant="text"
-          :ripple="false"
-          :class="`rounded-lg d-flex justify-start px-3 text-background
+        <v-col :cols="6" class="text-center">
+          <VBtn
+            size="large"
+            variant="text"
+            :ripple="false"
+            :class="`rounded-lg d-flex justify-start px-3 text-background
         ${'text-background'}`"
-          :width="'45%'"
-          :active="true"
-          :disabled="!hasChanged"
-          @click="submit"
-        >
-          Submit
-        </VBtn>
-
+            :width="'100%'"
+            :active="true"
+            :disabled="!hasChanged"
+            @click="submit"
+          >
+            Submit
+          </VBtn>
+        </v-col>
         <!--Cancel button-->
-        <VBtn
-          size="large"
-          variant="text"
-          :ripple="false"
-          :class="`rounded-lg d-flex justify-start px-3 text-background
+        <v-col :cols="6" class="text-center">
+          <VBtn
+            size="large"
+            variant="text"
+            :ripple="false"
+            :class="`rounded-lg d-flex justify-start px-3 text-background
         ${'bg-neutral-lighten-4 text-neutral'}`"
-          :width="'45%'"
-          :active="false"
-          @click="cancel"
-        >
-          Cancel
-        </VBtn>
+            :width="'100%'"
+            :active="false"
+            @click="cancel"
+          >
+            Cancel
+          </VBtn>
+        </v-col>
       </vRow>
     </VContainer>
+
     <!--Temporary debug stuff-->
     <div>Program: {{ user?.studyProgram }}</div>
-    <div>Email: {{ user?.email }}</div>
+    <div>Email: {{ values.email }}</div>
     <div>User Name: {{ user?.name }}</div>
     <div>Old User Name: {{ initialValues.name }}</div>
     <div>New User Name: {{ values.name }}</div>
