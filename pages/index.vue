@@ -4,7 +4,7 @@
   const mainSponsor = computed(
     () =>
       Object.values(companies.value).find(
-        (company: any) => company.type === 'main-sponsor'
+        (company: any) => company.type === 'main-partner'
       ) || null
   )
 
