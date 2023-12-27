@@ -219,7 +219,6 @@
                 / {{ event.capacity }}
               </span>
             </span>
-            {{ event }}
 
             <!-- Event actions: Sign up perform action -->
             <span
