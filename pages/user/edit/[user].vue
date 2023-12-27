@@ -107,6 +107,7 @@
                   :width="'45%'"
                   v-bind="props"
                   rounded="lg"
+                  block
                 >
                   <template #prepend>
                     {{ values.userType?.toUpperCase() }}
@@ -142,6 +143,7 @@
             :active="true"
             :disabled="!hasChanged"
             @click="submit"
+            block
           >
             Submit
           </VBtn>
@@ -157,6 +159,7 @@
             :width="'100%'"
             :active="false"
             @click="cancel"
+            block
           >
             Cancel
           </VBtn>
