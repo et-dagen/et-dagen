@@ -100,9 +100,9 @@
     isLoadingAttendants.value = false
   }
 
-  // TODO: Implement code for removing user from event
+  // TODO: #184 Add code for removing user from event
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const removeFromEvent = (userUID: string) => {
-    console.log('Removing user:', userUID)
     // Code for removing user
     refreshAttendants()
   }
@@ -134,8 +134,6 @@
     handleEmptyStateValues()
 
     if (!editMode.value) {
-      console.log('Posting new event: ', state)
-
       await $fetch('/api/event', {
         method: 'POST',
         body: state,
