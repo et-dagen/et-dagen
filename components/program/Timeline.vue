@@ -180,7 +180,7 @@
             <span class="card__location mb-2">
               <VIcon color="primary">mdi-map-marker</VIcon>
               <NuxtLink
-                v-if="event.location.map !== 'null'"
+                v-if="event.location.map"
                 :to="event.location.map"
                 class="link"
                 @click.stop
@@ -203,7 +203,7 @@
             </span>
 
             <!-- Event capacity -->
-            <span v-if="event.capacity !== 'null'" class="card__attendees mb-2">
+            <span v-if="event.capacity" class="card__attendees mb-2">
               <!-- Group icon -->
               <VIcon v-if="showGroupIcon(event)" color="primary">
                 mdi-account-group
@@ -219,6 +219,7 @@
                 / {{ event.capacity }}
               </span>
             </span>
+            {{ event }}
 
             <!-- Event actions: Sign up perform action -->
             <span
