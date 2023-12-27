@@ -197,6 +197,7 @@
       "attributes": {
         "title": "Title",
         "company": "Company",
+        "capacity": "Capacity",
         "description": "Description",
         "location": {
           "name": "Name of Place",

@@ -196,6 +196,7 @@
       "attributes": {
         "title": "Tittel",
         "company": "Bedrift",
+        "capacity": "Kapasitet",
         "description": "Beskrivelse",
         "location": {
           "name": "Stedsnavn",
