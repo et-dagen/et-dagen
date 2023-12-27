@@ -26,12 +26,7 @@
 
 <template>
   <div>
-    <VCard
-      :width="xs ? '90vw' : '65vw'"
-      max-height="100vh"
-      md="50v"
-      variant="flat"
-    >
+    <VCard :width="xs ? '90vw' : '65vw'" md="50v" variant="flat">
       <!-- This header should not be smaller than h3 for large screens -->
       <h2
         :class="`text-sm-h3 text-h4 text-center 
