@@ -1,10 +1,10 @@
 <script setup lang="ts">
   const { data: companies } = await useFetch('/api/company')
 
-  const mainSponsor = computed(
+  const mainPartner = computed(
     () =>
       Object.values(companies.value).find(
-        (company: any) => company.type === 'main-sponsor'
+        (company: any) => company.type === 'main-partner'
       ) || null
   )
 
@@ -41,12 +41,12 @@
     />
 
     <CompanyHero
-      v-if="mainSponsor !== null"
+      v-if="mainPartner !== null"
       :content="{
-        name: mainSponsor.name,
-        description: mainSponsor.description,
-        logo: mainSponsor.logo,
-        website: mainSponsor.website,
+        name: mainPartner.name,
+        description: mainPartner.description,
+        logo: mainPartner.logo,
+        website: mainPartner.website,
       }"
       class="my-5 d-flex justify-center"
     />
