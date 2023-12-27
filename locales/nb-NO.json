@@ -70,6 +70,8 @@
     }
   },
   "contact": {
+    "title": "Kontakt oss",
+    "board": "Styret",
     "positions": {
       "head": "Leder",
       "deputyHead": "Nestleder",
@@ -180,6 +182,18 @@
         "company": "Bedrift"
       },
       "copied": "UID kopiert!"
+    }
+  },
+  "footer": {
+    "header": {
+      "resources": "Ressurser",
+      "organisation": "Organisasjon",
+      "join": "Vil dere delta?"
+    },
+    "link": {
+      "contact": "Kontakt oss",
+      "program": "Program",
+      "jobs": "Jobber"
     }
   }
 }

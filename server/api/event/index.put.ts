@@ -95,5 +95,5 @@ export default defineEventHandler(async (event) => {
   // Update database information
   eventRef.update(updates)
 
-  sendNoContent(event, 203)
+  sendNoContent(event, 204)
 })

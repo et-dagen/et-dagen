@@ -15,19 +15,6 @@ export default defineEventHandler(async (event) => {
     eventType,
   } = await readBody(event)
 
-  // Check if user is authorized
-  if (hasAccess(user, ['company'])) {
-    if (user.companyUID !== companyUID)
-      throw createError({
-        statusCode: 401,
-        statusMessage: 'Company users cannot post events for other companies',
-      })
-  } else if (!hasAccess(user, ['admin']))
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'User not authenticated',
-    })
-
   // check if data is defined.
   if (
     !companyUID ||
@@ -43,6 +30,19 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 400,
       statusMessage: 'Not all data is defined',
+    })
+
+  // Check if user is authorized
+  if (hasAccess(user, ['company'])) {
+    if (user.companyUID !== companyUID)
+      throw createError({
+        statusCode: 401,
+        statusMessage: 'Company users cannot post events for other companies',
+      })
+  } else if (!hasAccess(user, ['admin']))
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'User not authenticated',
     })
 
   // Check if capacity is legal
