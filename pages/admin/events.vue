@@ -282,7 +282,6 @@
           <th>{{ $t('admin.events.attributes.company') }}</th>
           <th>{{ $t('admin.events.attributes.capacity') }}</th>
           <th>{{ $t('admin.events.attributes.date') }}</th>
-          <th>{{ $t('admin.events.attributes.time') }}</th>
           <th>{{ $t('admin.events.attributes.location') }}</th>
           <th class="text-center">UID</th>
           <th></th>
@@ -297,16 +296,12 @@
 
           <td id="title" class="truncate">{{ event.title }}</td>
           <td>{{ companies[event.companyUID]?.name ?? '-' }}</td>
-          <td v-if="event.capacity !== 'null'">
+          <td v-if="event.capacity">
             {{ eventAttendants(event) }}/{{ event.capacity }}
           </td>
           <td v-else>-</td>
           <td>
             {{ getNumericDayAndMonthString(event.date.start) }}
-          </td>
-          <td>
-            {{ getHourAndMinuteStringFromString(event.date.start) }} -
-            {{ getHourAndMinuteStringFromString(event.date.end) }}
           </td>
           <td id="location" class="truncate">{{ event.location.name }}</td>
 
