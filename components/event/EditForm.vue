@@ -107,12 +107,6 @@
     refreshAttendants()
   }
 
-  // Reroute to previous page
-  const { history } = useRouter().options
-  const goToPreviousPage = () => {
-    history.go(-1)
-  }
-
   const handleEmptyStateValues = () => {
     state.capacity =
       state.capacity === undefined || Number(state.capacity) === 0
@@ -146,7 +140,7 @@
     }
 
     // Reroute to previous page
-    goToPreviousPage()
+    navigateTo('/admin/events')
   }
 </script>
 
@@ -259,7 +253,7 @@
             block
             variant="outlined"
             color="error"
-            @click="goToPreviousPage"
+            @click="navigateTo('/admin/events')"
           >
             {{ $t('edit.event.cancel') }}
           </VBtn>
