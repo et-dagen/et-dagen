@@ -78,7 +78,7 @@
   const form = ref()
 
   // Boolean control states
-  const editMode = computed(() => !!state.uid)
+  const editMode = computed(() => !!state.uid || !!state.eventUID)
   const isLoadingAttendants = ref(false)
   const hasAttendants = computed(
     () => Object.hasOwn(state, 'attendants') && !!state.attendants
@@ -113,9 +113,39 @@
     history.go(-1)
   }
 
+  const handleEmptyStateValues = () => {
+    state.capacity =
+      state.capacity === undefined || Number(state.capacity) === 0
+        ? null
+        : Number(state.capacity)
+
+    state.eventUID = state.uid
+
+    state.location.map = state.location.map ? state.location.map : null
+  }
+
   // Post new or update previous event
-  const submit = () => {
+  const submit = async () => {
     // Code for processing data and posting to API
+
+    const { valid } = await form.value.validate()
+    if (!valid) throw new Error('Form is not valid')
+
+    handleEmptyStateValues()
+
+    if (!editMode.value) {
+      console.log('Posting new event: ', state)
+
+      await $fetch('/api/event', {
+        method: 'POST',
+        body: state,
+      }).catch((err) => console.error(err))
+    } else {
+      await $fetch('/api/event', {
+        method: 'PUT',
+        body: state,
+      }).catch((err) => console.error(err))
+    }
 
     // Reroute to previous page
     goToPreviousPage()
@@ -164,6 +194,18 @@
             label: $t('edit.event.attributes.company'),
             options: companyList,
           }"
+          :rules="[useRequiredInput]"
+        />
+      </VRow>
+
+      <!-- Capacity -->
+      <VRow>
+        <FormNumberInput
+          v-model="state.capacity"
+          :content="{
+            label: $t('edit.event.attributes.capacity'),
+          }"
+          clearable
         />
       </VRow>
 
@@ -206,7 +248,6 @@
             :content="{
               label: $t('edit.event.attributes.location.map'),
             }"
-            :rules="[useRequiredInput]"
           />
         </VCol>
       </VRow>
@@ -222,12 +263,16 @@
             color="error"
             @click="goToPreviousPage"
           >
-            Cancel
+            {{ $t('edit.event.cancel') }}
           </VBtn>
         </VCol>
         <VCol cols="6">
           <VBtn block variant="flat" color="success" @click="submit">
-            {{ editMode ? 'Save' : 'Create' }}
+            {{
+              editMode
+                ? $t('edit.event.edit.action')
+                : $t('edit.event.create.action')
+            }}
           </VBtn>
         </VCol>
       </VRow>
