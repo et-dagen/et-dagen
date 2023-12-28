@@ -244,6 +244,18 @@
             </VCard>
           </template>
         </VDialog>
+
+        <!-- Create new event -->
+        <VBtn
+          color="success"
+          size="large"
+          rounded="lg"
+          class="ml-2 add_event"
+          flat
+          icon="mdi-plus"
+          @click="navigateTo('/event/edit')"
+        >
+        </VBtn>
       </div>
     </div>
 
@@ -353,6 +365,10 @@
 <style scoped lang="scss">
   .filters {
     gap: 0.5rem;
+  }
+
+  .add_event {
+    max-height: 44px !important;
   }
 
   td,
