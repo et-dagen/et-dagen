@@ -93,7 +93,7 @@
           $fetch('/api/event', {
             method: 'DELETE',
             body: {
-              uid,
+              eventUID: uid,
             },
           })
         )
