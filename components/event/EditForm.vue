@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import type { AlertType } from 'composables/useAlerts'
+
   const props = defineProps({
     eventUid: {
       type: String,
@@ -75,6 +77,32 @@
       : { ...initialState }
   )
 
+  // Alert state
+  const initialAlertState = {
+    show: false,
+    alertRoute: '',
+    type: undefined as AlertType,
+  }
+
+  const alertState = reactive({
+    ...initialAlertState,
+  })
+
+  // Show appropriate success alert after signing up for event
+  const displaySuccessAlert = (alertRoute: string) => {
+    alertState.alertRoute = alertRoute
+    alertState.type = 'success'
+    alertState.show = true
+  }
+
+  // Show appropriate error alert for failed API calls
+  const displayErrorAlertFromMessage = (errorMessage: string) => {
+    const content = getAlertContent(errorMessage)
+    alertState.alertRoute = content.alertRoute
+    alertState.type = content.type
+    alertState.show = content.show
+  }
+
   const form = ref()
 
   // Boolean control states
@@ -88,7 +116,7 @@
   const refreshAttendants = async () => {
     isLoadingAttendants.value = true
     const data = await $fetch('/api/event', {
-      query: { eventUID: props.eventUid },
+      query: { eventUID: props.eventUid || state.uid },
     })
     if (!data) return
 
@@ -101,8 +129,16 @@
   }
 
   // TODO: #184 Add code for removing user from event
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const removeFromEvent = (userUID: string) => {
+
+  const removeFromEvent = async (userUID: string) => {
+    await $fetch('/api/event/register', {
+      method: 'DELETE',
+      body: {
+        eventUID: props.eventUid || state.uid,
+        userUID,
+      },
+    })
+
     // Code for removing user
     refreshAttendants()
   }
@@ -118,29 +154,33 @@
     state.location.map = state.location.map ? state.location.map : null
   }
 
-  // Post new or update previous event
-  const submit = async () => {
-    // Code for processing data and posting to API
-
+  const validateForm = async () => {
     const { valid } = await form.value.validate()
     if (!valid) throw new Error('Form is not valid')
+  }
 
+  const saveChanges = async () => {
+    validateForm()
     handleEmptyStateValues()
+    await $fetch('/api/event', {
+      method: 'PUT',
+      body: state,
+    }).catch((error) => displayErrorAlertFromMessage(error.statusMessage))
 
-    if (!editMode.value) {
-      await $fetch('/api/event', {
-        method: 'POST',
-        body: state,
-      }).catch((err) => console.error(err))
-    } else {
-      await $fetch('/api/event', {
-        method: 'PUT',
-        body: state,
-      }).catch((err) => console.error(err))
-    }
+    displaySuccessAlert('alert.success.event.edit.modified')
+    setTimeout(() => navigateTo('/admin/events'), 2000)
+  }
 
-    // Reroute to previous page
-    navigateTo('/admin/events')
+  const createEvent = async () => {
+    validateForm()
+    handleEmptyStateValues()
+    await $fetch('/api/event', {
+      method: 'POST',
+      body: state,
+    }).catch((error) => displayErrorAlertFromMessage(error.statusMessage))
+
+    displaySuccessAlert('alert.success.event.edit.created')
+    setTimeout(() => navigateTo('/admin/events'), 2000)
   }
 </script>
 
@@ -153,8 +193,23 @@
     {{ $t('edit.event.create.title') }}
   </h3>
 
+  <!-- Alert component -->
+  <VSnackbar v-model="alertState.show">
+    {{ $t(`${alertState.alertRoute}`) }}
+
+    <template #actions>
+      <VBtn
+        :color="alertState.type"
+        variant="text"
+        @click="alertState.show = false"
+      >
+        {{ $t('alert.close_alert') }}
+      </VBtn>
+    </template>
+  </VSnackbar>
+
   <!-- Edit Form -->
-  <VForm ref="form" @submit.prevent="submit">
+  <VForm ref="form" @submit.prevent="saveChanges || createEvent">
     <VContainer>
       <!-- Title -->
       <VRow>
@@ -259,12 +314,23 @@
           </VBtn>
         </VCol>
         <VCol cols="6">
-          <VBtn block variant="flat" color="success" @click="submit">
-            {{
-              editMode
-                ? $t('edit.event.edit.action')
-                : $t('edit.event.create.action')
-            }}
+          <VBtn
+            v-if="editMode"
+            block
+            variant="flat"
+            color="success"
+            @click="saveChanges"
+          >
+            {{ $t('edit.event.edit.action') }}
+          </VBtn>
+          <VBtn
+            v-if="!editMode"
+            block
+            variant="flat"
+            color="success"
+            @click="createEvent"
+          >
+            {{ $t('edit.event.create.action') }}
           </VBtn>
         </VCol>
       </VRow>
