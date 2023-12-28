@@ -122,6 +122,10 @@
         "register": {
           "sign_up": "Successfully registered to event",
           "opt_out": "Successfully opted out of event"
+        },
+        "edit": {
+          "created": "Successfully created event",
+          "modified": "Successfully modified event"
         }
       }
     }

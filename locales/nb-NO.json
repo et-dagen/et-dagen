@@ -121,6 +121,10 @@
         "register": {
           "sign_up": "Du er påmeldt dette arrangementet",
           "opt_out": "Du har meldt deg av dette arrangementet"
+        },
+        "edit": {
+          "created": "Arrangement opprettet",
+          "modified": "Arrangement oppdatert"
         }
       }
     }
