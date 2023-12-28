@@ -8,14 +8,12 @@
     content: { type: Object as PropType<CountDownContent>, required: true },
   })
 
-  export interface TimeDiffReturn {
-    days: string
-    hours: string
-    minutes: string
-    seconds: string
-  }
-
-  const timeDiff = ref<object | null>(null)
+  const timeDiff = ref(
+    calculateTimeDifference(
+      cdProps.content.futureDate,
+      cdProps.content.futureTime
+    )
+  )
 
   onMounted(() => {
     setInterval(() => {
