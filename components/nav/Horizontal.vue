@@ -1,24 +1,18 @@
 <script setup lang="ts">
-  import type { Route } from '@/models/Nav'
+  import { routes } from '~/config/app.config'
 
   const localePath = useLocalePath()
 
   const auth = useAuthStore()
   const app = useAppStore()
-
-  type Routes = Route[]
-
-  defineProps({
-    routes: { type: Array as PropType<Routes>, required: true },
-  })
 </script>
 
 <template>
   <VAppBar
     scroll-behavior="hide"
-    :elevation="1"
+    elevation="1"
     :height="90"
-    class="horizontal-nav d-flex align-center"
+    class="d-flex align-center"
   >
     <!-- logo -->
     <template #prepend>
@@ -71,22 +65,34 @@
         @click="app.drawer = true"
       />
     </template>
+
+    <template #extension>
+      <VProgressLinear
+        :indeterminate="app.loading"
+        height="1"
+        :color="app.loading ? 'accent' : 'background'"
+        bg-opacity="0"
+      ></VProgressLinear>
+    </template>
   </VAppBar>
 </template>
 
-<style scoped lang="scss">
+<style lang="scss">
   @use 'vuetify/settings';
 
-  .horizontal-nav {
+  .v-app-bar {
     padding-left: 3rem !important;
     padding-right: 3rem !important;
-  }
 
-  // on sm breakpoint set padding to 1rem
-  @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
-    .horizontal-nav {
+    // on sm breakpoint set padding to 1rem
+    @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
       padding-left: 1rem !important;
       padding-right: 1rem !important;
+    }
+
+    .v-toolbar__extension {
+      height: fit-content !important;
+      width: 100vw !important;
     }
   }
 </style>

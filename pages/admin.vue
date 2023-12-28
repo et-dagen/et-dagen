@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import { adminCategories as categories } from '~/config/app.config'
+
   definePageMeta({
     // route and all sub routes are protected
     protected: true,
@@ -16,36 +18,16 @@
   })
 
   const route = useRoute()
-  const appStore = useAppStore()
 
   const currentCategory = computed(() => {
     const routeNames = route.fullPath.split('/')
     return routeNames[routeNames.length - 1]
   })
-
-  const categories = [
-    {
-      name: 'companies',
-      icon: 'domain',
-    },
-    {
-      name: 'events',
-      icon: 'calendar',
-    },
-    {
-      name: 'jobs',
-      icon: 'briefcase-outline',
-    },
-    {
-      name: 'users',
-      icon: 'account-outline',
-    },
-  ]
 </script>
 
 <template>
-  <div class="d-flex flex-column align-center">
-    <div class="my-10 d-flex align-center">
+  <div class="d-flex flex-column align-center my-10">
+    <div class="d-flex align-center">
       <!-- title -->
       <h4 class="font-weight-bold text-center">
         {{ $t('nav.admin') }}
@@ -59,14 +41,14 @@
             size="45"
             elevation="0"
             variant="text"
-            class="d-flex d-md-none ml-4 bg-primary"
+            class="d-flex d-lg-none ml-4 bg-primary"
             v-bind="props"
             icon="mdi-arrow-bottom-left"
           />
         </template>
 
         <VCard
-          class="d-flex d-md-none flex-column mt-2 px-3 pt-3 categories-mobile"
+          class="d-flex d-lg-none flex-column mt-2 px-3 pt-3 categories-mobile"
           width="240"
           rounded="lg"
           :elevation="1"
@@ -85,7 +67,7 @@
     <!-- select category wide screen -->
     <div class="d-flex">
       <VCard
-        class="categories pa-2 d-none d-md-flex flex-column align-center"
+        class="categories pa-2 d-none d-lg-flex flex-column align-center"
         rounded="0"
         elevation="0"
         width="240"
@@ -98,18 +80,14 @@
           :key="index"
           :active="currentCategory === category.name"
           :category="category"
-          :loading="appStore.loading && currentCategory === category.name"
         />
       </VCard>
 
       <!-- edit selected category -->
-      <VCard class="administration px-4 ma-0 ma-md-4" rounded="0" elevation="0">
+      <VCard class="administration px-4 ma-0 ma-lg-4" rounded="0" elevation="0">
         <!-- child route -->
         <NuxtPage />
       </VCard>
-
-      <!-- spacer div -->
-      <div class="d-none d-lg-inline" style="width: 240px"></div>
     </div>
   </div>
 </template>
@@ -127,7 +105,12 @@
   }
 
   .administration {
-    width: 600px;
+    width: 80rem;
+
+    @media #{map-get(settings.$display-breakpoints, 'lg-and-down')} {
+      width: 60rem;
+    }
+
     @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
       width: 95vw;
     }
