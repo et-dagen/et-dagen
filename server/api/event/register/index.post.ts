@@ -2,7 +2,8 @@
 // endpoint for signing up for an event
 export default defineEventHandler(async (event) => {
   const { user } = event.context
-  const eventUID = getRouterParam(event, 'eventUID') as string
+
+  const { eventUID, userUID } = await readBody(event)
 
   // user is not authenticated
   if (!user) {
@@ -20,6 +21,14 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  // Only admins can modify event attendants
+  if (userUID && userUID !== user.uid && !hasAccess(user, ['admin'])) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Events: Error (register/non-admin-user).',
+    })
+  }
+
   // Get event from database
   const eventsRef = db.ref('events')
   const snapshot = await eventsRef.orderByKey().equalTo(eventUID).once('value')
@@ -33,7 +42,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  if (data[eventUID].capacity === 'null' || !data[eventUID].capacity) {
+  if (!data[eventUID].capacity) {
     throw createError({
       statusCode: 404,
       statusMessage: 'Events: Error (register/registration-unnecessary).',
@@ -42,12 +51,15 @@ export default defineEventHandler(async (event) => {
 
   // Event does not have attendants
   if (!Object.hasOwn(data[eventUID], 'attendants')) {
-    eventsRef.child(eventUID).child('attendants').push(user.uid)
+    eventsRef
+      .child(eventUID)
+      .child('attendants')
+      .push(userUID || user.uid)
     sendNoContent(event, 201)
   }
 
   // User is already registered for this event
-  if (Object.values(data[eventUID].attendants).includes(user.uid)) {
+  if (Object.values(data[eventUID].attendants).includes(userUID || user.uid)) {
     throw createError({
       statusCode: 404,
       statusMessage: 'Events: Error (register/already-registered).',
@@ -65,7 +77,10 @@ export default defineEventHandler(async (event) => {
   }
 
   // Add user to attendants
-  eventsRef.child(eventUID).child('attendants').push(user.uid)
+  eventsRef
+    .child(eventUID)
+    .child('attendants')
+    .push(userUID || user.uid)
 
   // User successfully registered for event
   sendNoContent(event, 201)

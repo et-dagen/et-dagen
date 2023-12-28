@@ -2,7 +2,8 @@
 // endpoint for opting out of an event
 export default defineEventHandler(async (event) => {
   const { user } = event.context
-  const eventUID = getRouterParam(event, 'eventUID') as string
+
+  const { eventUID } = await readBody(event)
 
   // user is not authenticated
   if (!user) {
@@ -21,11 +22,8 @@ export default defineEventHandler(async (event) => {
   }
 
   // Get event from database
-  const attendantsRef = db.ref('events')
-  const snapshot = await attendantsRef
-    .orderByKey()
-    .equalTo(eventUID)
-    .once('value')
+  const eventsRef = db.ref('events')
+  const snapshot = await eventsRef.orderByKey().equalTo(eventUID).once('value')
   const data = snapshot.val()
 
   // Event does not exist
@@ -54,7 +52,7 @@ export default defineEventHandler(async (event) => {
   delete attendees[attendantUID]
 
   // Update attendants
-  attendantsRef.child(eventUID).child('attendants').set(attendees)
+  eventsRef.child(eventUID).child('attendants').set(attendees)
 
   // User successfully opted out of event
   sendNoContent(event, 201)
