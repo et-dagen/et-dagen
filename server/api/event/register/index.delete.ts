@@ -3,7 +3,7 @@
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 
-  const { eventUID } = await readBody(event)
+  const { eventUID, userUID } = await readBody(event)
 
   // user is not authenticated
   if (!user) {
@@ -18,6 +18,14 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 400,
       statusMessage: 'Event: Error (event/missing-event-id).',
+    })
+  }
+
+  // Only admins can modify event attendants
+  if (userUID && userUID !== user.uid && !hasAccess(user, ['admin'])) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Events: Error (register/non-admin-user).',
     })
   }
 
@@ -36,12 +44,18 @@ export default defineEventHandler(async (event) => {
 
   // Get attendee key for user
   const attendees = data[eventUID].attendants
-  const attendantUID: string | undefined = Object.entries(attendees ?? {}).find(
-    (attendant) => attendant[1] === user.uid
-  )?.[0]
+
+  // Delete other user if admin, and userUID provided in body
+  const attendantUID: string | undefined = userUID
+    ? Object.entries(attendees ?? {}).find(
+        (attendant) => attendant[1] === userUID
+      )?.[0]
+    : Object.entries(attendees ?? {}).find(
+        (attendant) => attendant[1] === user.uid
+      )?.[0]
 
   // User is not registered for this event
-  if (attendantUID === undefined) {
+  if (!attendantUID) {
     throw createError({
       statusCode: 404,
       statusMessage: 'Events: Error (register/user-not-registered).',
