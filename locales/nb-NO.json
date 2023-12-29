@@ -232,6 +232,7 @@
         "title": "Rediger bedrift",
         "action": "Lagre"
       },
+      "update_logo": "Oppdater logo",
       "cancel": "Avbryt",
       "attributes": {
         "name": "Navn",

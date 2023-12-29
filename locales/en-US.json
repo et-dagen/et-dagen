@@ -201,6 +201,7 @@
         "title": "Edit Event",
         "action": "Save Changes"
       },
+      "update_logo": "Update Logo",
       "cancel": "Cancel",
       "attributes": {
         "title": "Title",
