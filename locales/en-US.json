@@ -113,7 +113,8 @@
           "event_is_full": "Event is full",
           "already_registered": "You are already registered for this event",
           "user_not_registered": "You are not registered for this event",
-          "registration_unnecessary": "Registration is not necessary for this event"
+          "registration_unnecessary": "Registration is not necessary for this event",
+          "non_admin_user": "This requires admin privileges"
         }
       }
     },

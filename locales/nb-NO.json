@@ -112,7 +112,8 @@
           "event_is_full": "Arrangementet er fullt",
           "already_registered": "Du er allerede påmeldt dette arrangementet",
           "user_not_registered": "Du er ikke påmeldt dette arrangementet",
-          "registration_unnecessary": "Påmelding er ikke nødvendig for dette arrangementet"
+          "registration_unnecessary": "Påmelding er ikke nødvendig for dette arrangementet",
+          "non_admin_user": "Dette krever administratorrettigheter"
         }
       }
     },

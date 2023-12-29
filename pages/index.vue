@@ -58,7 +58,7 @@
       >
         {{ $t('company.partners') }}
       </h2>
-      <CompanyGrid>
+      <CommonGrid>
         <CompanyCard
           v-for="partner in partners"
           :key="partner.id"
@@ -67,7 +67,7 @@
             website: partner.website,
           }"
         />
-      </CompanyGrid>
+      </CommonGrid>
     </div>
 
     <div v-if="showSponsors">
@@ -77,7 +77,7 @@
       >
         {{ $t('company.sponsors') }}
       </h2>
-      <CompanyGrid>
+      <CommonGrid>
         <CompanyCard
           v-for="sponsor in sponsors"
           :key="sponsor.id"
@@ -86,7 +86,7 @@
             website: sponsor.website,
           }"
         />
-      </CompanyGrid>
+      </CommonGrid>
     </div>
   </div>
 </template>
