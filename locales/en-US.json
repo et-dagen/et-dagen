@@ -94,7 +94,8 @@
     "error": {
       "default": "An error occured",
       "form": {
-        "missing_email": "Email input is missing"
+        "missing_email": "Email input is missing",
+        "invalid": "Invalid form"
       },
       "firebase": {
         "email_in_use": "Email already in use",

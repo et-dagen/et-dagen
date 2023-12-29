@@ -19,8 +19,17 @@
 
     return data
   })
+
+  const { hasAccess, user } = useAuthStore()
   // Reroute to /event/edit if event does not exist
-  if (props.eventUid && !event.value) navigateTo('/event/edit')
+  // or if user does not have access to edit event
+  if (
+    (props.eventUid && !event.value) ||
+    (hasAccess(['company']) &&
+      props.eventUid &&
+      props.eventUid !== user?.companyUID)
+  )
+    navigateTo('/event/edit')
 
   // Fetch all users
   // TODO: Replace with API endpoint for getting only a sublist of known UIDs
@@ -39,9 +48,11 @@
 
   const { data: companies } = await useFetch('/api/company')
   // Format companies for select input
-  const companyList = computed(() =>
-    Object?.values(
-      embedKeyIntoObjectValues(companies.value).map((company) => {
+  const companyList = computed(() => {
+    if (!hasAccess(['admin', 'company']) || !event) return null
+
+    if (hasAccess(['admin'])) {
+      return embedKeyIntoObjectValues(companies.value).map((company) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { uid, name, ...remains } = company
         return {
@@ -49,8 +60,23 @@
           title: name,
         }
       })
-    )
-  )
+    }
+
+    if (hasAccess(['company'])) {
+      return Object?.values(
+        embedKeyIntoObjectValues(companies.value)
+          .filter(({ uid }) => uid === user?.companyUID)
+          .map((company) => {
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const { uid, name, ...remains } = company
+            return {
+              value: uid,
+              title: name,
+            }
+          })
+      )
+    }
+  })
 
   // Initial state in case of missing props or API bounce
   const initialState = {
@@ -92,6 +118,12 @@
   const displaySuccessAlert = (alertRoute: string) => {
     alertState.alertRoute = alertRoute
     alertState.type = 'success'
+    alertState.show = true
+  }
+
+  const displayErrorAlert = (alertRoute: string) => {
+    alertState.alertRoute = alertRoute
+    alertState.type = 'error'
     alertState.show = true
   }
 
@@ -154,13 +186,15 @@
     state.location.map = state.location.map ? state.location.map : null
   }
 
-  const validateForm = async () => {
-    const { valid } = await form.value.validate()
-    if (!valid) throw new Error('Form is not valid')
-  }
-
   const saveChanges = async () => {
-    validateForm()
+    const { valid } = await form.value.validate()
+    try {
+      if (!valid) throw new Error('Form is not valid')
+    } catch (error) {
+      displayErrorAlert('alert.error.form.invalid')
+      return
+    }
+
     handleEmptyStateValues()
     await $fetch('/api/event', {
       method: 'PUT',
@@ -172,7 +206,14 @@
   }
 
   const createEvent = async () => {
-    validateForm()
+    const { valid } = await form.value.validate()
+    try {
+      if (!valid) throw new Error('Form is not valid')
+    } catch (error) {
+      displayErrorAlert('alert.error.form.invalid')
+      return
+    }
+
     handleEmptyStateValues()
     await $fetch('/api/event', {
       method: 'POST',

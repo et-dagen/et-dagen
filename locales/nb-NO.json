@@ -94,7 +94,8 @@
     "error": {
       "default": "Oi! Noe gikk galt.",
       "form": {
-        "missing_email": "Epost ikke oppgitt"
+        "missing_email": "Epost ikke oppgitt",
+        "invalid": "Skjemaet er ikke gyldig"
       },
       "firebase": {
         "email_in_use": "Eposten er allerede i bruk",
