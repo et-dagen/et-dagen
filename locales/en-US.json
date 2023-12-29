@@ -70,6 +70,8 @@
     }
   },
   "contact": {
+    "title": "Contact Us",
+    "board": "Board Members",
     "positions": {
       "head": "Manager",
       "deputyHead": "Deputy manager",
