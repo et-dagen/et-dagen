@@ -32,7 +32,7 @@
     navigateTo('/event/edit')
 
   // Fetch all users
-  // TODO: Replace with API endpoint for getting only a sublist of known UIDs
+  // TODO: #188 Replace with API endpoint for getting only a sublist of known UIDs
   const { data: users } = await useFetch('/api/user', {
     query: { scope: 'all' },
   })
