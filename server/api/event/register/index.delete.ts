@@ -2,7 +2,8 @@
 // endpoint for opting out of an event
 export default defineEventHandler(async (event) => {
   const { user } = event.context
-  const eventUID = getRouterParam(event, 'eventUID') as string
+
+  const { eventUID, userUID } = await readBody(event)
 
   // user is not authenticated
   if (!user) {
@@ -20,12 +21,17 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  // Only admins can modify event attendants
+  if (userUID && userUID !== user.uid && !hasAccess(user, ['admin'])) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Events: Error (register/non-admin-user).',
+    })
+  }
+
   // Get event from database
-  const attendantsRef = db.ref('events')
-  const snapshot = await attendantsRef
-    .orderByKey()
-    .equalTo(eventUID)
-    .once('value')
+  const eventsRef = db.ref('events')
+  const snapshot = await eventsRef.orderByKey().equalTo(eventUID).once('value')
   const data = snapshot.val()
 
   // Event does not exist
@@ -38,12 +44,18 @@ export default defineEventHandler(async (event) => {
 
   // Get attendee key for user
   const attendees = data[eventUID].attendants
-  const attendantUID: string | undefined = Object.entries(attendees ?? {}).find(
-    (attendant) => attendant[1] === user.uid
-  )?.[0]
+
+  // Delete other user if admin, and userUID provided in body
+  const attendantUID: string | undefined = userUID
+    ? Object.entries(attendees ?? {}).find(
+        (attendant) => attendant[1] === userUID
+      )?.[0]
+    : Object.entries(attendees ?? {}).find(
+        (attendant) => attendant[1] === user.uid
+      )?.[0]
 
   // User is not registered for this event
-  if (attendantUID === undefined) {
+  if (!attendantUID) {
     throw createError({
       statusCode: 404,
       statusMessage: 'Events: Error (register/user-not-registered).',
@@ -54,7 +66,7 @@ export default defineEventHandler(async (event) => {
   delete attendees[attendantUID]
 
   // Update attendants
-  attendantsRef.child(eventUID).child('attendants').set(attendees)
+  eventsRef.child(eventUID).child('attendants').set(attendees)
 
   // User successfully opted out of event
   sendNoContent(event, 201)
