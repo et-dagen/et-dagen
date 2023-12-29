@@ -73,66 +73,43 @@
     <h4 class="font-weight-bold text-center">Edit Profile</h4>
     <VContainer>
       <!--Text field to edit name-->
-      <vRow justify="space-around" class="mb-4">
+      <VRow justify="space-around" class="mb-4">
         <VTextField
           v-model="values.name"
           label="Name"
           type="text"
           variant="outlined"
         />
-      </vRow>
+      </VRow>
       <!--Text field to edit email-->
-      <vRow justify="space-around" class="mb-4">
+      <VRow justify="space-around" class="mb-4">
         <VTextField
           v-model="values.email"
           label="Email"
           type="text"
           variant="outlined"
         />
-      </vRow>
+      </VRow>
 
-      <vRow justify="space-around" class="mb-4">
+      <VRow justify="space-around" class="mb-4">
         <template v-if="authStore.hasAccess(['admin'])">
-          <VMenu transition="slide-y-transition">
-            <!-- activator btn -->
-
-            <template #activator="{ props }">
-              <v-col :cols="6" class="text-center"> User type: </v-col>
-
-              <v-col :cols="6" class="text-center">
-                <VBtn
-                  size="large"
-                  variant="text"
-                  :ripple="false"
-                  :width="'45%'"
-                  v-bind="props"
-                  rounded="lg"
-                  block
-                >
-                  <template #prepend>
-                    {{ values.userType?.toUpperCase() }}
-                  </template>
-                </VBtn>
-              </v-col>
-            </template>
-
-            <VCard
-              class="d-flex flex-column my-2 pa-2"
-              rounded="lg"
-              :elevation="3"
-            >
-              <!-- buttons for usertype -->
-              <VBtn @click="values.userType = 'admin'">Admin</VBtn>
-              <VBtn @click="values.userType = 'company'">Company</VBtn>
-              <VBtn @click="values.userType = undefined">Undefined</VBtn>
-            </VCard>
-          </VMenu>
+          <VCol :cols="6" class="text-center">
+            <VForm>
+              <VSelect
+                v-model="values.userType"
+                :items="['admin', 'company', undefined]"
+                label="User Type"
+                outlined
+              ></VSelect>
+            </VForm>
+          </VCol>
         </template>
-      </vRow>
+      </VRow>
+
       <!--Row for buttons-->
-      <vRow justify="space-around" class="mb-4">
+      <VRow justify="space-around" class="mb-4">
         <!--Submit button-->
-        <v-col :cols="6" class="text-center">
+        <VCol :cols="6" class="text-center">
           <VBtn
             size="large"
             variant="text"
@@ -147,9 +124,9 @@
           >
             Submit
           </VBtn>
-        </v-col>
+        </VCol>
         <!--Cancel button-->
-        <v-col :cols="6" class="text-center">
+        <VCol :cols="6" class="text-center">
           <VBtn
             size="large"
             variant="text"
@@ -163,8 +140,8 @@
           >
             Cancel
           </VBtn>
-        </v-col>
-      </vRow>
+        </VCol>
+      </VRow>
     </VContainer>
 
     <!--Temporary debug stuff-->
