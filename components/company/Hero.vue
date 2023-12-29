@@ -52,7 +52,7 @@
         </VCol>
 
         <!-- Company name and description -->
-        <VCol cols="12" lg="6" class="pt-lg-0 pt-3 pl-lg-3">
+        <VCol cols="12" lg="5" class="pt-lg-0 pt-3 pl-lg-3 companyHero">
           <h3
             class="text-h5 font-weight-bold clicker d-inline-block"
             @click="openInNewTab"
