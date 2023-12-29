@@ -15,11 +15,11 @@
             $t('footer.header.join')
           }}</span>
           <NuxtLink to="mailto:bedriftansvarlig@et-dagen.no">
-            <VIcon icon="mdi-email" class="fade mr-2" size="small" />
+            <VIcon icon="mdi-email" class="fade mr-2 mail-icon" size="small" />
             {{ $t('contact.positions.business') }}
           </NuxtLink>
           <NuxtLink to="mailto:logistikk@et-dagen.no">
-            <VIcon icon="mdi-email" class="fade mr-2" size="small" />
+            <VIcon icon="mdi-email" class="fade mr-2 mail-icon" size="small" />
             {{ $t('contact.positions.logistics') }}
           </NuxtLink>
         </li>
@@ -99,11 +99,22 @@
     }
   }
 
-  @media #{map-get(settings.$display-breakpoints, 'sm-and-up')} {
+  @media #{map-get(settings.$display-breakpoints, 'md-and-up')} {
     footer section {
       &.top ul {
         grid-template-columns: repeat(4, 1fr);
-        padding-right: 0;
+      }
+    }
+  }
+
+  @media #{map-get(settings.$display-breakpoints, 'sm')} {
+    footer section {
+      &.top ul {
+        grid-template-columns: repeat(3, 1fr);
+
+        .mail-icon {
+          display: none !important;
+        }
       }
     }
   }
@@ -112,7 +123,10 @@
     footer section {
       &.top ul {
         grid-template-columns: repeat(2, 1fr);
-        right-padding: 10% !important;
+
+        .mail-icon {
+          display: none !important;
+        }
       }
     }
   }

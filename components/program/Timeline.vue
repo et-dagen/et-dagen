@@ -95,8 +95,9 @@
 
   // Sign up for event
   const signUpForEvent = (eventUID: string) => {
-    $fetch(`/api/event/register/${eventUID}`, {
+    $fetch('/api/event/register', {
       method: 'POST',
+      body: { eventUID },
     })
       .then(() => refreshEvents())
       .then(() => displaySuccessAlert('alert.success.event.register.sign_up'))
@@ -105,8 +106,9 @@
 
   // Opt out of event
   const optOutOfEvent = (eventUID: string) => {
-    $fetch(`/api/event/register/${eventUID}`, {
+    $fetch('/api/event/register', {
       method: 'DELETE',
+      body: { eventUID },
     })
       .then(() => refreshEvents())
       .then(() => displaySuccessAlert('alert.success.event.register.opt_out'))
