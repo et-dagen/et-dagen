@@ -8,14 +8,12 @@
     content: { type: Object as PropType<CountDownContent>, required: true },
   })
 
-  export interface TimeDiffReturn {
-    days: string
-    hours: string
-    minutes: string
-    seconds: string
-  }
-
-  const timeDiff = ref<object | null>(null)
+  const timeDiff = ref(
+    calculateTimeDifference(
+      cdProps.content.futureDate,
+      cdProps.content.futureTime
+    )
+  )
 
   onMounted(() => {
     setInterval(() => {
@@ -28,9 +26,6 @@
 </script>
 
 <template>
-  <!-- eslint-disable-next-line vue/max-len -->
-  <!-- Card containing 2 rows and a VCardAction at the bottom. First row is for event take off string, second row contains 4 cols with 2 rows each. The 2 rows in these 4 cols contains the number for days/hours/minutes/seconds and the corresponding text ("days/hours/minutes/seconds"), respectively -->
-
   <!-- Event take off string -->
   <VCard class="mx-auto pt-16 w-100 container" elevation="0">
     <VRow justify="center">

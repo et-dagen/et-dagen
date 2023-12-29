@@ -1,5 +1,3 @@
-<script></script>
-
 <template>
   <!--container serves as the grid-->
   <div class="grid-container">

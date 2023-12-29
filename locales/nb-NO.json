@@ -80,6 +80,8 @@
     "take_off": "Arrangementet tar av om"
   },
   "contact": {
+    "title": "Kontakt oss",
+    "board": "Styret",
     "positions": {
       "head": "Leder",
       "deputyHead": "Nestleder",
@@ -93,7 +95,9 @@
     }
   },
   "company": {
-    "main_partner": "Hovedpartner"
+    "main_partner": "Hovedpartner",
+    "partners": "Partnere",
+    "sponsors": "Sponsorer"
   },
   "alert": {
     "close_alert": "Lukk",
@@ -143,9 +147,63 @@
   },
   "admin": {
     "categories": "Kategorier",
-    "companies": "Bedrifter",
-    "events": "Arrangementer",
-    "jobs": "Jobber",
-    "users": "Brukere"
+    "companies": {
+      "name": "Bedrifter"
+    },
+    "events": {
+      "name": "Arrangementer"
+    },
+    "jobs": {
+      "name": "Jobber"
+    },
+    "users": {
+      "name": "Brukere",
+      "pagesize": "Brukere per side",
+      "usertypes": {
+        "name": "Brukertyper",
+        "admin": "Administratorer",
+        "company": "Bedrifter",
+        "basic": "Basis"
+      },
+      "filtertypes": {
+        "name": "Sorter etter",
+        "updated": "Sist modifisert",
+        "currentyear": "År"
+      },
+      "filterorder": {
+        "name": "Rekkefølge",
+        "descending": "Synkende",
+        "ascending": "Stigende"
+      },
+      "selectall": "Velg alle",
+      "delete": {
+        "selected": "Slett valgte",
+        "confirmtext": "Er du sikker på at du vil slette de valgte brukerne?",
+        "confirm": "Ja, slett dem",
+        "abort": "Nei, avbryt"
+      },
+      "attributes": {
+        "select": "Velg",
+        "name": "Navn",
+        "usertype": "Brukertype",
+        "email": "Epost",
+        "year": "År",
+        "program": "Studieprogram",
+        "company": "Bedrift"
+      },
+      "copied": "UID kopiert!"
+    }
+  },
+  "footer": {
+    "header": {
+      "resources": "Ressurser",
+      "organisation": "Organisasjon",
+      "join": "Vil dere delta?"
+    },
+    "link": {
+      "contact": "Kontakt oss",
+      "program": "Program",
+      "jobs": "Jobber"
+    }
   }
 }
