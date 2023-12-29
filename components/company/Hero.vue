@@ -67,6 +67,28 @@
 </template>
 
 <style setup lang="scss">
+  @use 'vuetify/settings';
+
+  .companyHero {
+    > p {
+      display: -webkit-box;
+      overflow: hidden;
+      // // -webkit-line-clamp: 5;
+      text-overflow: ellipsis;
+      -webkit-box-orient: vertical;
+
+      @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
+        -webkit-line-clamp: 12;
+      }
+      @media #{map-get(settings.$display-breakpoints, 'md')} {
+        -webkit-line-clamp: 8;
+      }
+      @media #{map-get(settings.$display-breakpoints, 'lg-and-up')} {
+        -webkit-line-clamp: 6;
+      }
+    }
+  }
+
   .clicker:hover {
     cursor: pointer;
     text-decoration: underline;
