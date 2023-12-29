@@ -108,6 +108,22 @@
 
       <!--Row for buttons-->
       <VRow justify="space-around" class="mb-4">
+        <!--Cancel button-->
+        <VCol :cols="6" class="text-center">
+          <VBtn
+            size="large"
+            variant="text"
+            :ripple="false"
+            :class="`rounded-lg d-flex justify-start px-3 text-background
+        ${'bg-neutral-lighten-4 text-neutral'}`"
+            :width="'100%'"
+            :active="false"
+            @click="cancel"
+            block
+          >
+            Cancel
+          </VBtn>
+        </VCol>
         <!--Submit button-->
         <VCol :cols="6" class="text-center">
           <VBtn
@@ -123,22 +139,6 @@
             block
           >
             Submit
-          </VBtn>
-        </VCol>
-        <!--Cancel button-->
-        <VCol :cols="6" class="text-center">
-          <VBtn
-            size="large"
-            variant="text"
-            :ripple="false"
-            :class="`rounded-lg d-flex justify-start px-3 text-background
-        ${'bg-neutral-lighten-4 text-neutral'}`"
-            :width="'100%'"
-            :active="false"
-            @click="cancel"
-            block
-          >
-            Cancel
           </VBtn>
         </VCol>
       </VRow>
