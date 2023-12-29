@@ -7,7 +7,7 @@ const config = useRuntimeConfig()
 
 if (!getApps().length) {
   firebaseAdminApp = initializeApp({
-    credential: cert(config.GOOGLE_APPLICATION_CREDENTIALS),
+    credential: cert(JSON.parse(config.GOOGLE_APPLICATION_CREDENTIALS)),
     databaseURL: config.public.FB_DB_URL,
   })
 } else {
