@@ -217,6 +217,29 @@
         },
         "attendants": "Påmeldte deltakere"
       }
+    },
+    "company": {
+      "create": {
+        "title": "Create Company",
+        "action": "Create Company"
+      },
+      "edit": {
+        "title": "Edit Company",
+        "action": "Save Changes"
+      },
+      "cancel": "Cancel",
+      "attributes": {
+        "name": "Company Name",
+        "description": "Description",
+        "logo": "Logo",
+        "website": "Website",
+        "type": {
+          "name": "Company Type",
+          "main_partner": "Main Partner",
+          "partner": "Partner",
+          "sponsor": "Sponsor"
+        }
+      }
     }
   },
   "footer": {

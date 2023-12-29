@@ -130,6 +130,12 @@
           "created": "Arrangement opprettet",
           "modified": "Arrangement oppdatert"
         }
+      },
+      "company": {
+        "edit": {
+          "created":"Bedrift opprettet",
+          "modified": "Bedrift oppdatert"
+        }
       }
     }
   },
@@ -215,6 +221,29 @@
           "end": "Sluttdato"
         },
         "attendants": "Påmeldte deltakere"
+      }
+    },
+    "company": {
+      "create": {
+        "title": "Opprett bedrift",
+        "action": "Opprett"
+      },
+      "edit": {
+        "title": "Rediger bedrift",
+        "action": "Lagre"
+      },
+      "cancel": "Avbryt",
+      "attributes": {
+        "name": "Navn",
+        "description": "Beskrivelse",
+        "logo": "Logo",
+        "website": "Nettside",
+        "type": {
+          "name": "Bedriftstype",
+          "main_partner": "Hovedsponsor",
+          "partner": "Partner",
+          "sponsor": "Sponsor"
+        }
       }
     }
   },
