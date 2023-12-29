@@ -1,13 +1,14 @@
 export const calculateTimeDifference = (
   futureDate: string,
   futureTime: string
-): object => {
+): object | null => {
   // Define current date and future date + time
   const currentDate = new Date()
   const futureDateTime = new Date(`${futureDate} ${futureTime}`)
 
   // Calculate the time difference in milliseconds.
   const timeDifferenceInMs = futureDateTime.getTime() - currentDate.getTime()
+  if (timeDifferenceInMs <= 0) return null
 
   // Variables defining the timedifference in seconds, minutes, hours and days.
   const totalTimeDifferenceInSeconds = timeDifferenceInMs / 1000
@@ -30,7 +31,6 @@ export const calculateTimeDifference = (
   const timeDifferenceInSeconds =
     totalTimeDifferenceInSeconds - 60 * Math.floor(totalTimeDifferenceInMinutes)
 
-  console.log('milliseconds', timeDifferenceInMs)
   if (timeDifferenceInMs <= 0) {
     return {
       days: 0,
