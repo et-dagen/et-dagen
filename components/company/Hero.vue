@@ -26,7 +26,12 @@
 
 <template>
   <div>
-    <VCard :width="xs ? '90vw' : '65vw'" md="50v" variant="flat">
+    <VCard
+      :width="xs ? '90vw' : '65vw'"
+      max-height="100vh"
+      md="50v"
+      variant="flat"
+    >
       <!-- This header should not be smaller than h3 for large screens -->
       <h2
         :class="`text-sm-h3 text-h4 text-center 
@@ -37,7 +42,7 @@
 
       <VRow no-gutters>
         <!-- Company logo -->
-        <VCol cols="12" lg="6" style="cursor: pointer" class="pr-lg-3">
+        <VCol cols="12" lg="7" style="cursor: pointer" class="pr-lg-3">
           <VImg
             class="w-100 rounded-lg companyImage"
             :src="company.content.logo"
