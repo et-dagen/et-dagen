@@ -90,22 +90,19 @@
           variant="outlined"
         />
       </VRow>
-
+      <!--Drop down for userType-->
       <VRow justify="space-around" class="mb-4">
         <template v-if="authStore.hasAccess(['admin'])">
-          <VCol :cols="6" class="text-center">
-            <VForm>
-              <VSelect
-                v-model="values.userType"
-                :items="['admin', 'company', undefined]"
-                label="User Type"
-                outlined
-              ></VSelect>
-            </VForm>
-          </VCol>
+          <FormSelectInput
+            v-model="values.userType"
+            :content="{
+              label: 'User Type',
+              // eslint-disable-next-line vue/max-len
+              options: ['admin', 'company', 'basic'],
+            }"
+          />
         </template>
       </VRow>
-
       <!--Row for buttons-->
       <VRow justify="space-around" class="mb-4">
         <!--Cancel button-->
