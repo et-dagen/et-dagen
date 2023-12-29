@@ -8,10 +8,6 @@
   const { user } = storeToRefs(authStore)
 
   const localePath = useLocalePath()
-  const goToEdit = () => {
-    // asume normal user
-    navigateTo(localePath(`/user/edit/${user?.id}`))
-  }
 </script>
 
 <template>
@@ -26,7 +22,7 @@
         ${'text-background'}`"
       :width="'45%'"
       :active="true"
-      @click="goToEdit"
+      @click="navigateTo(localePath(`/user/edit/${user?.id}`))"
     >
       Edit Account
     </VBtn>
