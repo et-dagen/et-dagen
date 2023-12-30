@@ -116,6 +116,14 @@
           "registration_unnecessary": "Registration is not necessary for this event",
           "non_admin_user": "This requires admin privileges"
         }
+      },
+      "company": {
+        "edit": {
+          "created": "Creation failed",
+          "modified": "Modification failed",
+          "modified_logo": "Logo modification failed",
+          "deleted_logo": "Logo deletion failed"
+        }
       }
     },
     "success": {
@@ -129,7 +137,8 @@
         },
         "edit": {
           "created": "Successfully created event",
-          "modified": "Successfully modified event"
+          "modified": "Successfully modified event",
+          "deleted_logo": "Successfully deleted logo"
         }
       }
     }
@@ -202,6 +211,7 @@
         "action": "Save Changes"
       },
       "update_logo": "Update Logo",
+      "delete_logo": "Delete Logo",
       "cancel": "Cancel",
       "attributes": {
         "title": "Title",

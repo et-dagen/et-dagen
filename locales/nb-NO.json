@@ -115,6 +115,14 @@
           "registration_unnecessary": "Påmelding er ikke nødvendig for dette arrangementet",
           "non_admin_user": "Dette krever administratorrettigheter"
         }
+      },
+      "company": {
+        "edit": {
+          "created": "Bedriften ble ikke opprettet",
+          "modified": "Oppdatering misslykket",
+          "modified_logo": "Logo ble ikke oppdatert",
+          "deleted_logo": "Logo ble ikke slettet"
+        }
       }
     },
     "success": {
@@ -133,8 +141,9 @@
       },
       "company": {
         "edit": {
-          "created":"Bedrift opprettet",
-          "modified": "Bedrift oppdatert"
+          "created": "Bedrift opprettet",
+          "modified": "Bedrift oppdatert",
+          "deleted_logo": "Logo slettet"
         }
       }
     }
@@ -233,6 +242,7 @@
         "action": "Lagre"
       },
       "update_logo": "Oppdater logo",
+      "delete_logo": "Slett logo",
       "cancel": "Avbryt",
       "attributes": {
         "name": "Navn",
