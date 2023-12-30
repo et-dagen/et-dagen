@@ -94,7 +94,8 @@
     "error": {
       "default": "Oi! Noe gikk galt.",
       "form": {
-        "missing_email": "Epost ikke oppgitt"
+        "missing_email": "Epost ikke oppgitt",
+        "invalid": "Skjemaet er ikke gyldig"
       },
       "firebase": {
         "email_in_use": "Eposten er allerede i bruk",
@@ -124,6 +125,10 @@
         "register": {
           "sign_up": "Du er påmeldt dette arrangementet",
           "opt_out": "Du har meldt deg av dette arrangementet"
+        },
+        "edit": {
+          "created": "Arrangement opprettet",
+          "modified": "Arrangement oppdatert"
         }
       }
     }
@@ -142,7 +147,37 @@
       "name": "Bedrifter"
     },
     "events": {
-      "name": "Arrangementer"
+      "name": "Arrangementer",
+      "edit": "Rediger",
+      "pagesize": "Arrangementer per side",
+      "dates": "Dato",
+      "filtertypes": {
+        "name": "Filtertype",
+        "updated": "Sist modifisert",
+        "company": "Bedrift"
+      },
+      "filterorder": {
+        "name": "Rekkefølge",
+        "descending": "Synkende",
+        "ascending": "Stigende"
+      },
+      "selectall": "Velg alle",
+      "delete": {
+        "selected": "Slett valgte",
+        "confirmtext": "Er du sikker på at du vil slette de valgte brukerne?",
+        "confirm": "Ja, slett dem",
+        "abort": "Nei, avbryt"
+      },
+      "attributes": {
+        "select": "Velg",
+        "title": "Tittel",
+        "company": "Bedrift",
+        "location": "Sted",
+        "date": "Dato",
+        "time": "Tid",
+        "capacity": "Kapasitet"
+      },
+      "copied": "UID kopiert!"
     },
     "jobs": {
       "name": "Jobber"
@@ -183,6 +218,34 @@
         "company": "Bedrift"
       },
       "copied": "UID kopiert!"
+    }
+  },
+  "edit": {
+    "event": {
+      "create": {
+        "title": "Opprett arrangement",
+        "action": "Opprett"
+      },
+      "edit": {
+        "title": "Rediger arrangement",
+        "action": "Lagre"
+      },
+      "cancel": "Avbryt",
+      "attributes": {
+        "title": "Tittel",
+        "company": "Bedrift",
+        "capacity": "Kapasitet",
+        "description": "Beskrivelse",
+        "location": {
+          "name": "Stedsnavn",
+          "map": "Kartlink"
+        },
+        "date": {
+          "start": "Startdato",
+          "end": "Sluttdato"
+        },
+        "attendants": "Påmeldte deltakere"
+      }
     }
   },
   "footer": {
