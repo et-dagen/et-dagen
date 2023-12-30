@@ -10,6 +10,7 @@
   // Fetch event data if props are provided
   const { hasAccess, user } = useAuthStore()
 
+  // fetch company data
   const { data: company } = await useFetch('/api/company', {
     method: 'GET',
     query: {
@@ -17,6 +18,7 @@
     },
   })
 
+  // redirect on non existing company or lacking access
   if (
     (props.companyUid && !company.value) ||
     (hasAccess(['company']) &&
@@ -59,6 +61,7 @@
     alertState.show = true
   }
 
+  // show appropriate error alert after signing up for event
   const displayErrorAlert = (alertRoute: string) => {
     alertState.alertRoute = alertRoute
     alertState.type = 'error'
@@ -79,22 +82,27 @@
   // Boolean control states
   const editMode = computed(() => !!state.uid || !!state.companyUID)
 
+  // update ref on input change
   const setLogo = (event) => {
     file.value = event.target.files[0]
   }
+
+  // update logo
   const updateLogo = async () => {
     if (!file.value || !state.uid) return
 
+    // creating multipart form data
     const formData = new FormData()
-    // Adding file to FormData doesnt work as of now
     formData.append('file', file.value)
     formData.append('companyUID', state.uid)
 
+    // posting image to storage bucket
     await $fetch('/api/company/logo', {
       method: 'POST',
       body: formData,
     })
       .then(async ({ URL }) => {
+        // catch url in response and update company logo
         await $fetch('/api/company', {
           method: 'PUT',
           body: {
@@ -113,6 +121,7 @@
       .catch(() => displayErrorAlert('alert.error.company.edit.modified'))
   }
 
+  // remove logo from company
   const deleteLogo = async () => {
     await $fetch('/api/company', {
       method: 'PUT',
@@ -128,7 +137,9 @@
       .catch(() => displayErrorAlert('alert.error.company.edit.deleted_logo'))
   }
 
+  // save changes to existing company
   const saveChanges = async () => {
+    // throw error on invalid form
     const { valid } = await form.value.validate()
     try {
       if (!valid) throw new Error('Form is not valid')
@@ -139,6 +150,7 @@
 
     state.companyUID = state.uid
 
+    // update company
     await $fetch('/api/company', {
       method: 'PUT',
       body: state,
@@ -151,6 +163,7 @@
   }
 
   const createEvent = async () => {
+    // throw error on invalid form
     const { valid } = await form.value.validate()
     try {
       if (!valid) throw new Error('Form is not valid')
@@ -161,11 +174,12 @@
 
     state.companyUID = state.uid
 
+    // create company
     await $fetch('/api/company', {
       method: 'POST',
       body: state,
     })
-      .then(() => updateLogo())
+      .then(() => updateLogo()) // add logo newly created company if provided
       .then(() => {
         displaySuccessAlert('alert.success.company.edit.created')
         setTimeout(() => navigateTo('/admin/companies'), 2000)
@@ -259,8 +273,6 @@
       </VRow>
 
       <!-- Logo -->
-      <!-- Only render logo input on edit, as companyUID 
-        doesnt exist on initial creation. -->
       <!-- TODO: #190 Add code for uploading image after company creation -->
       <VRow>
         <VCol :cols="state.logo ? 6 : 8">
@@ -276,6 +288,7 @@
         </VCol>
         <VCol v-if="state.logo" cols="2">
           <VTooltip location="top" color="primary">
+            <!-- eslint-disable-next-line -->
             <template #activator="{ props }">
               <VBtn
                 v-bind="props"
