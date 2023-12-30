@@ -157,7 +157,37 @@
       "name": "Companies"
     },
     "events": {
-      "name": "Events"
+      "name": "Events",
+      "edit": "Edit event",
+      "pagesize": "Events per page",
+      "dates": "Date",
+      "filtertypes": {
+        "name": "Filter type",
+        "updated": "Last modified",
+        "company": "Company"
+      },
+      "filterorder": {
+        "name": "Order",
+        "descending": "Descending",
+        "ascending": "Ascending"
+      },
+      "selectall": "Select all",
+      "delete": {
+        "selected": "Delete selected",
+        "confirmtext": "Are you sure you want to delete the selected users?",
+        "confirm": "Yes, delete them",
+        "abort": "No, abort"
+      },
+      "attributes": {
+        "select": "Select",
+        "title": "Title",
+        "company": "Company",
+        "location": "Location",
+        "date": "Date",
+        "time": "Time",
+        "capacity": "Capacity"
+      },
+      "copied": "UID kopiert!"
     },
     "jobs": {
       "name": "Jobs"
