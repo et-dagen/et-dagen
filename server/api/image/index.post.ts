@@ -1,11 +1,11 @@
-// POST /api/company/logo
-// endpoint for posting a company logo to storage db
+// POST /api/image
+// endpoint for posting an image to storage bucket
 
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 
-  // only admins can remove companies
-  if (!hasAccess(user, ['admin', 'company']))
+  // only admins can post to storage bucket
+  if (!hasAccess(user, ['admin']))
     throw createError({
       statusCode: 401,
       statusMessage: 'User not authorized',
@@ -14,44 +14,24 @@ export default defineEventHandler(async (event) => {
   // get request body
   const formData = await readMultipartFormData(event)
   const file = formData?.[0]
-  const companyUID = formData?.[1].data.toString()
+  const storagePath = formData?.[1].data.toString()
 
   // if no file or companyUID
-  if (!file || !companyUID)
+  if (!file || !storagePath)
     throw createError({
       statusCode: 400,
-      statusMessage: 'Missing file, company UID or name',
-    })
-
-  // check if company user, but of different company
-  if (!hasAccess(user, ['admin']) && user.companyUID !== companyUID)
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'User not authorized',
+      statusMessage: 'Missing file or storagePath',
     })
 
   // get file extention
   const fileExtension = file.filename?.split('.').pop() || ''
-
-  // get file contentType
-  const getFileContentTypeFromExtension = (fileExtension: string) => {
-    switch (fileExtension) {
-      case 'png':
-        return 'image/png'
-      case 'jpg':
-        return 'image/jpeg'
-      case 'jpeg':
-        return 'image/jpeg'
-      case 'svg':
-        return 'image/svg+xml'
-      default:
-        return null
-    }
-  }
-  const fileContentType = getFileContentTypeFromExtension(fileExtension)
-
-  // throw error on non-supported file type
-  if (!fileContentType)
+  if (
+    !(
+      fileExtension === 'jpg' ||
+      fileExtension === 'jpeg' ||
+      fileExtension === 'png'
+    )
+  )
     throw createError({
       statusCode: 400,
       statusMessage: 'Firebase: Error (storage/unsupported-file-type).',
@@ -59,7 +39,7 @@ export default defineEventHandler(async (event) => {
 
   // get storage bucket
   const bucket = storage.bucket()
-  const filePath = `companies/${companyUID}/logo.${fileExtension}`
+  const filePath = `${storagePath}/${file.filename}`
   const fileRef = bucket.file(filePath)
 
   // create new Buffer from FormData data buffer
