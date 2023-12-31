@@ -7,7 +7,7 @@
       default: null,
     },
   })
-  // Fetch event data if props are provided
+  // Fetch company data if props are provided
   const { hasAccess, user } = useAuthStore()
 
   // fetch company data
@@ -36,7 +36,7 @@
     uid: null,
   }
 
-  // Set state to event data if data fetched successfully
+  // Set state to company data if data fetched successfully
   const state = reactive(
     props.companyUid && company.value
       ? { ...Object.values(embedKeyIntoObjectValues(company.value))[0] }
@@ -54,14 +54,14 @@
     ...initialAlertState,
   })
 
-  // Show appropriate success alert after signing up for event
+  // Show appropriate success alert after signing up for company
   const displaySuccessAlert = (alertRoute: string) => {
     alertState.alertRoute = alertRoute
     alertState.type = 'success'
     alertState.show = true
   }
 
-  // show appropriate error alert after signing up for event
+  // show appropriate error alert after signing up for company
   const displayErrorAlert = (alertRoute: string) => {
     alertState.alertRoute = alertRoute
     alertState.type = 'error'
