@@ -23,9 +23,9 @@
   // redirect on non existing company or lacking access
   if (
     (props.companyUid && !company.value) ||
-    (hasAccess(['company']) &&
+    (hasAccess.value(['company']) &&
       props.companyUid &&
-      props.companyUid !== user?.companyUID)
+      props.companyUid !== user.value?.companyUID)
   )
     navigateTo(localePath('/company/edit'))
 
