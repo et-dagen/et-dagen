@@ -133,7 +133,7 @@
     })
       .then(() => {
         displaySuccessAlert('alert.success.company.edit.modified')
-        // setTimeout(() => navigateTo(localePath('/admin/companies')), 2000)
+        setTimeout(() => navigateTo(localePath('/admin/companies')), 2000)
       })
       .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
   }
