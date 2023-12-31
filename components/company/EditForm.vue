@@ -96,47 +96,17 @@
     // creating multipart form data
     const formData = new FormData()
     formData.append('file', file.value)
-    formData.append('companyUID', state.uid)
+    formData.append('storagePath', `companies/${state.uid}`)
 
     // posting image to storage bucket
-    await $fetch('/api/company/logo', {
+    await $fetch('/api/image', {
       method: 'POST',
       body: formData,
     })
-      .then(async ({ URL }) => {
-        // catch url in response and update company logo
-        await $fetch('/api/company', {
-          method: 'PUT',
-          body: {
-            companyUID: state.uid,
-            logo: URL,
-          },
-        })
-          .then(() => {
-            displaySuccessAlert('alert.success.company.edit.modified')
-            setTimeout(() => navigateTo(localePath('/admin/companies')), 2000)
-          })
-          .catch(() =>
-            displayErrorAlert('alert.error.company.edit.modified_logo')
-          )
+      .then(({ URL }) => {
+        state.logo = URL
       })
       .catch(() => displayErrorAlert('alert.error.company.edit.modified'))
-  }
-
-  // remove logo from company
-  const deleteLogo = async () => {
-    await $fetch('/api/company', {
-      method: 'PUT',
-      body: {
-        logo: null,
-        companyUID: state.uid,
-      },
-    })
-      .then(() => {
-        displaySuccessAlert('alert.success.company.edit.deleted_logo')
-        setTimeout(() => navigateTo(localePath('/admin/companies')), 2000)
-      })
-      .catch(() => displayErrorAlert('alert.error.company.edit.deleted_logo'))
   }
 
   // save changes to existing company
@@ -152,14 +122,18 @@
 
     state.companyUID = state.uid
 
+    await updateLogo()
+
+    // eslint-disable-next-line
+    const { uid, ...rest } = state
     // update company
     await $fetch('/api/company', {
       method: 'PUT',
-      body: state,
+      body: rest,
     })
       .then(() => {
         displaySuccessAlert('alert.success.company.edit.modified')
-        setTimeout(() => navigateTo(localePath('/admin/companies')), 2000)
+        // setTimeout(() => navigateTo(localePath('/admin/companies')), 2000)
       })
       .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
   }
@@ -174,14 +148,26 @@
       return
     }
 
-    state.companyUID = state.uid
-
     // create company
     await $fetch('/api/company', {
       method: 'POST',
       body: state,
     })
-      .then(() => updateLogo()) // add logo newly created company if provided
+      .then(async (res) => {
+        // get companuUID from server response
+        state.uid = res.companyUID
+
+        // update logo
+        await updateLogo()
+
+        // update company logo with UID
+        // eslint-disable-next-line
+        const { uid, logo, ...rest } = state
+        await $fetch('/api/company', {
+          method: 'PUT',
+          body: { companyUID: uid, logo },
+        })
+      }) // add logo newly created company if provided
       .then(() => {
         displaySuccessAlert('alert.success.company.edit.created')
         setTimeout(() => navigateTo(localePath('/admin/companies')), 2000)
@@ -277,10 +263,12 @@
       <!-- Logo -->
       <!-- TODO: #190 Add code for uploading image after company creation -->
       <VRow>
-        <VCol :cols="state.logo ? 6 : 8">
+        <VCol :cols="state.logo ? 9 : 12">
           <FormFileInput
             :content="{
-              label: $t('edit.company.attributes.logo'),
+              label: state.logo
+                ? `${state.logo.split('/').pop()}`
+                : $t('edit.company.attributes.logo'),
               icon: 'mdi-image',
               accept: ['image/png', 'image/jpeg'],
             }"
@@ -288,7 +276,7 @@
             @change="setLogo"
           />
         </VCol>
-        <VCol v-if="state.logo" cols="2">
+        <VCol v-if="state.logo && user?.userType === 'admin'" cols="3">
           <VTooltip location="top" color="primary">
             <!-- eslint-disable-next-line -->
             <template #activator="{ props }">
@@ -300,22 +288,12 @@
                 rounded="lg"
                 color="error"
                 icon="mdi-delete"
-                @click="deleteLogo"
+                @click="state.logo = null"
               ></VBtn>
             </template>
 
             {{ $t('edit.company.delete_logo') }}
           </VTooltip>
-        </VCol>
-        <VCol cols="4">
-          <VBtn
-            block
-            height="56"
-            variant="flat"
-            color="success"
-            @click="updateLogo"
-            >{{ $t('edit.company.update_logo') }}</VBtn
-          >
         </VCol>
       </VRow>
     </VContainer>
