@@ -8,7 +8,8 @@
     },
   })
   // Fetch company data if props are provided
-  const { hasAccess, user } = useAuthStore()
+  const auth = useAuthStore()
+  const { hasAccess, user } = storeToRefs(auth)
 
   // fetch company data
   const { data: company } = await useFetch('/api/company', {
