@@ -23,15 +23,8 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Missing file or storagePath',
     })
 
-  // get file extention
-  const fileExtension = file.filename?.split('.').pop() || ''
-  if (
-    !(
-      fileExtension === 'jpg' ||
-      fileExtension === 'jpeg' ||
-      fileExtension === 'png'
-    )
-  )
+  // check if file is correct type
+  if (!(file.type === 'image/jpeg' || file.type === 'image/png'))
     throw createError({
       statusCode: 400,
       statusMessage: 'Firebase: Error (storage/unsupported-file-type).',
