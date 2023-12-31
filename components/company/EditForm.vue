@@ -19,6 +19,7 @@
     },
   })
 
+  const localePath = useLocalePath()
   // redirect on non existing company or lacking access
   if (
     (props.companyUid && !company.value) ||
@@ -26,7 +27,7 @@
       props.companyUid &&
       props.companyUid !== user?.companyUID)
   )
-    navigateTo('/company/edit')
+    navigateTo(localePath('/company/edit'))
 
   const initialState = {
     name: null,
@@ -113,7 +114,7 @@
         })
           .then(() => {
             displaySuccessAlert('alert.success.company.edit.modified')
-            setTimeout(() => navigateTo('/admin/companies'), 2000)
+            setTimeout(() => navigateTo(localePath('/admin/companies')), 2000)
           })
           .catch(() =>
             displayErrorAlert('alert.error.company.edit.modified_logo')
@@ -133,7 +134,7 @@
     })
       .then(() => {
         displaySuccessAlert('alert.success.company.edit.deleted_logo')
-        setTimeout(() => navigateTo('/admin/companies'), 2000)
+        setTimeout(() => navigateTo(localePath('/admin/companies')), 2000)
       })
       .catch(() => displayErrorAlert('alert.error.company.edit.deleted_logo'))
   }
@@ -158,7 +159,7 @@
     })
       .then(() => {
         displaySuccessAlert('alert.success.company.edit.modified')
-        setTimeout(() => navigateTo('/admin/companies'), 2000)
+        setTimeout(() => navigateTo(localePath('/admin/companies')), 2000)
       })
       .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
   }
@@ -183,7 +184,7 @@
       .then(() => updateLogo()) // add logo newly created company if provided
       .then(() => {
         displaySuccessAlert('alert.success.company.edit.created')
-        setTimeout(() => navigateTo('/admin/companies'), 2000)
+        setTimeout(() => navigateTo(localePath('/admin/companies')), 2000)
       })
       .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
   }
@@ -327,7 +328,7 @@
             block
             variant="outlined"
             color="error"
-            @click="navigateTo('/admin/companies')"
+            @click="navigateTo(localePath('/admin/companies'))"
           >
             {{ $t('edit.company.cancel') }}
           </VBtn>
