@@ -95,8 +95,9 @@
 
   // Sign up for event
   const signUpForEvent = (eventUID: string) => {
-    $fetch(`/api/event/register/${eventUID}`, {
+    $fetch('/api/event/register', {
       method: 'POST',
+      body: { eventUID },
     })
       .then(() => refreshEvents())
       .then(() => displaySuccessAlert('alert.success.event.register.sign_up'))
@@ -105,8 +106,9 @@
 
   // Opt out of event
   const optOutOfEvent = (eventUID: string) => {
-    $fetch(`/api/event/register/${eventUID}`, {
+    $fetch('/api/event/register', {
       method: 'DELETE',
+      body: { eventUID },
     })
       .then(() => refreshEvents())
       .then(() => displaySuccessAlert('alert.success.event.register.opt_out'))
@@ -180,7 +182,7 @@
             <span class="card__location mb-2">
               <VIcon color="primary">mdi-map-marker</VIcon>
               <NuxtLink
-                v-if="event.location.map !== 'null'"
+                v-if="event.location.map"
                 :to="event.location.map"
                 class="link"
                 @click.stop
@@ -203,7 +205,7 @@
             </span>
 
             <!-- Event capacity -->
-            <span v-if="event.capacity !== 'null'" class="card__attendees mb-2">
+            <span v-if="event.capacity" class="card__attendees mb-2">
               <!-- Group icon -->
               <VIcon v-if="showGroupIcon(event)" color="primary">
                 mdi-account-group
@@ -222,11 +224,7 @@
 
             <!-- Event actions: Sign up perform action -->
             <span
-              v-if="
-                !useAuth.isLoggedIn &&
-                event.capacity !== 'null' &&
-                !eventFull(event)
-              "
+              v-if="!useAuth.isLoggedIn && event.capacity && !eventFull(event)"
               class="text-primary"
             >
               <br />
@@ -235,10 +233,7 @@
           </template>
 
           <!-- Event actions -->
-          <template
-            v-if="event.capacity !== 'null' && useAuth.isLoggedIn"
-            #actions
-          >
+          <template v-if="event.capacity && useAuth.isLoggedIn" #actions>
             <!-- Sign up to event -->
             <VBtn
               v-if="useAuth.isLoggedIn && showSignupButton(event)"
@@ -356,7 +351,8 @@
 
   @media #{map-get($display-breakpoints, 'sm-and-down')} {
     .container {
-      transform: translateX(3rem);
+      transform: translateX(9rem);
+      max-width: 200px;
     }
 
     .card {

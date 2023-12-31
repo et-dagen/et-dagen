@@ -8,5 +8,5 @@
 </script>
 
 <template>
-  <EventEditForm />
+  <EventEditForm :event-uid="$route.params.id" />
 </template>

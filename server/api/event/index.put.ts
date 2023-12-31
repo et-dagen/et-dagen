@@ -4,17 +4,8 @@
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 
-  const {
-    companyUID,
-    eventUID,
-    capacity,
-    date,
-    description,
-    limitedCapacity,
-    location,
-    title,
-    eventType,
-  } = await readBody(event)
+  const { companyUID, eventUID, capacity, date, description, location, title } =
+    await readBody(event)
 
   // Check if user is authorized
   if (hasAccess(user, ['company'])) {
@@ -32,14 +23,15 @@ export default defineEventHandler(async (event) => {
   // check if data is defined.
   if (
     companyUID === null ||
-    (limitedCapacity === true && capacity === null) ||
+    eventUID === null ||
+    (typeof capacity === 'number' && capacity <= 0) ||
+    (capacity !== null && typeof capacity !== 'number') ||
     date.start === null ||
     date.end === null ||
     description === null ||
     location.name === null ||
     location.map === null ||
-    title === null ||
-    eventType === null
+    title === null
   )
     throw createError({
       statusCode: 400,
@@ -47,10 +39,13 @@ export default defineEventHandler(async (event) => {
     })
 
   // Check if capacity is legal
-  if (
-    limitedCapacity === true &&
-    (typeof capacity !== 'number' || capacity <= 0)
-  )
+  if (typeof capacity !== 'number' && capacity !== null)
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Capacity has to be a number or null',
+    })
+
+  if (typeof capacity !== 'number' && !capacity === null && capacity <= 0)
     throw createError({
       statusCode: 400,
       statusMessage: 'Capacity has to be a number and larger than 0',
@@ -63,20 +58,21 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Start time has to be before end time',
     })
 
+  // TODO: Add support for different event types
   // check if the eventtype is valid
-  if (!['presentation', 'dinner', 'other'].includes(eventType))
-    throw createError({
-      statusCode: 400,
-      statusMessage:
-        "Eventtype has to be either 'presentation', 'dinner' or 'other'",
-    })
+  // if (!['presentation', 'dinner', 'other'].includes(eventType))
+  //   throw createError({
+  //     statusCode: 400,
+  //     statusMessage:
+  //       "Eventtype has to be either 'presentation', 'dinner' or 'other'",
+  //   })
 
   // Get database reference
   const eventRef = db.ref(`events/${eventUID}`)
 
   // Add defined inputs to updates-object
   const updates = {
-    limitedCapacity,
+    // limitedCapacity,
     capacity,
     companyUID,
     date: {
@@ -89,11 +85,11 @@ export default defineEventHandler(async (event) => {
       name: location.name,
     },
     title,
-    eventType,
+    // eventType,
   }
 
   // Update database information
   eventRef.update(updates)
 
-  sendNoContent(event, 203)
+  sendNoContent(event, 204)
 })
