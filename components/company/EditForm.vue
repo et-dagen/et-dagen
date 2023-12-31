@@ -249,12 +249,12 @@
         />
       </VRow>
 
-      <!-- Website -->
+      <!-- Webpage -->
       <VRow>
         <FormTextInput
           v-model="state.webpage"
           :content="{
-            label: $t('edit.company.attributes.website'),
+            label: $t('edit.company.attributes.webpage'),
           }"
           :rules="[useRequiredInput]"
         />

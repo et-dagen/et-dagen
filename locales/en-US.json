@@ -273,7 +273,7 @@
         "name": "Company Name",
         "description": "Description",
         "logo": "Logo",
-        "website": "Website",
+        "webpage": "webpage",
         "type": {
           "name": "Company Type",
           "main_partner": "Main Partner",

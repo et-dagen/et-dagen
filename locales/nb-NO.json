@@ -278,7 +278,7 @@
         "name": "Navn",
         "description": "Beskrivelse",
         "logo": "Logo",
-        "website": "Nettside",
+        "webpage": "Nettside",
         "type": {
           "name": "Bedriftstype",
           "main_partner": "Hovedsponsor",
