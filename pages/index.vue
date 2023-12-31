@@ -46,7 +46,7 @@
         name: mainPartner.name,
         description: mainPartner.description,
         logo: mainPartner.logo,
-        website: mainPartner.website,
+        webpage: mainPartner.webpage,
       }"
       class="my-5 d-flex justify-center"
     />
@@ -64,7 +64,7 @@
           :key="partner.id"
           :content="{
             logo: partner.logo,
-            website: partner.website,
+            webpage: partner.webpage,
           }"
         />
       </CommonGrid>
@@ -83,7 +83,7 @@
           :key="sponsor.id"
           :content="{
             logo: sponsor.logo || '',
-            website: sponsor.website,
+            webpage: sponsor.webpage,
           }"
         />
       </CommonGrid>
