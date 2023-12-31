@@ -164,7 +164,7 @@
       .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
   }
 
-  const createEvent = async () => {
+  const createCompany = async () => {
     // throw error on invalid form
     const { valid } = await form.value.validate()
     try {
@@ -215,7 +215,7 @@
   </VSnackbar>
 
   <!-- Edit Form -->
-  <VForm ref="form" @submit.prevent="saveChanges || createEvent">
+  <VForm ref="form" @submit.prevent="saveChanges || createCompany">
     <VContainer>
       <!-- Name -->
       <VRow>
@@ -348,7 +348,7 @@
             block
             variant="flat"
             color="success"
-            @click="createEvent"
+            @click="createCompany"
           >
             {{ $t('edit.company.create.action') }}
           </VBtn>
