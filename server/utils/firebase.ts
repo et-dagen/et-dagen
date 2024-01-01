@@ -18,7 +18,7 @@ if (!getApps().length) {
   firebaseAdminApp = initializeApp({
     credential: cert({
       "type": config.FB_ADMIN_TYPE,
-      "project_id": config.FB_ADMIN_PROJECT_ID,
+      "project_id": config.public.FB_ADMIN_PROJECT_ID,
       "private_key_id": config.FB_ADMIN_PRIVATE_KEY_ID,
       "private_key": config.FB_ADMIN_PRIVATE_KEY,
       "client_email": config.FB_ADMIN_CLIENT_EMAIL,
