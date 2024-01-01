@@ -277,23 +277,15 @@
           />
         </VCol>
         <VCol v-if="state.logo && user?.userType === 'admin'" cols="3">
-          <VTooltip location="top" color="primary">
-            <!-- eslint-disable-next-line -->
-            <template #activator="{ props }">
-              <VBtn
-                v-bind="props"
-                variant="flat"
-                block
-                size="large"
-                rounded="lg"
-                color="error"
-                icon="mdi-delete"
-                @click="state.logo = null"
-              ></VBtn>
-            </template>
-
-            {{ $t('edit.company.delete_logo') }}
-          </VTooltip>
+          <VBtn
+            variant="outlined"
+            block
+            height="56"
+            color="warning"
+            @click="state.logo = null"
+          >
+            {{ $t('edit.company.unlink_logo') }}
+          </VBtn>
         </VCol>
       </VRow>
     </VContainer>
