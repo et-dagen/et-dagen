@@ -1,3 +1,5 @@
+/* eslint quote-props: 0 */
+/* eslint @typescript-eslint/quotes: 0 */
 import {
   initializeApp,
   cert,
@@ -25,7 +27,7 @@ if (!getApps().length) {
       "token_uri": config.FB_ADMIN_TOKEN_URI,
       "auth_provider_x509_cert_url": config.FB_ADMIN_AUTH_PROVIDER_CERL_URL,
       "client_x509_cert_url": config.FB_ADMIN_CLIENT_CERT_URL,
-      "universe_domain": config.FB_ADMIN_UNIVERSE_DOMAIN
+      "universe_domain": config.FB_ADMIN_UNIVERSE_DOMAIN,
     } as ServiceAccount),
     databaseURL: config.public.FB_DB_URL,
   })
