@@ -17,17 +17,9 @@ const config = useRuntimeConfig()
 if (!getApps().length) {
   firebaseAdminApp = initializeApp({
     credential: cert({
-      "type": config.FB_ADMIN_TYPE,
-      "project_id": config.FB_ADMIN_PROJECT_ID,
-      "private_key_id": config.FB_ADMIN_PRIVATE_KEY_ID,
-      "private_key": config.FB_ADMIN_PRIVATE_KEY,
-      "client_email": config.FB_ADMIN_CLIENT_EMAIL,
-      "client_id": config.FB_ADMIN_CLIENT_ID,
-      "auth_uri": config.FB_ADMIN_AUTH_URI,
-      "token_uri": config.FB_ADMIN_TOKEN_URI,
-      "auth_provider_x509_cert_url": config.FB_ADMIN_AUTH_PROVIDER_CERL_URL,
-      "client_x509_cert_url": config.FB_ADMIN_CLIENT_CERT_URL,
-      "universe_domain": config.FB_ADMIN_UNIVERSE_DOMAIN,
+      projectId: config.FB_ADMIN_PROJECT_ID,
+      clientEmail: config.FB_ADMIN_CLIENT_EMAIL,
+      privateKey: config.FB_ADMIN_PRIVATE_KEY.replace(/\\n/g, '\n'),
     } as ServiceAccount),
     databaseURL: config.public.FB_DB_URL,
   })
