@@ -20,10 +20,50 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     // used by firebase admin sdk
-    GOOGLE_APPLICATION_CREDENTIALS:
+    FB_ADMIN_TYPE:
       process.env.NODE_ENV === 'production'
-        ? process.env.GOOGLE_APPLICATION_CREDENTIALS_PROD
-        : process.env.GOOGLE_APPLICATION_CREDENTIALS_DEV,
+        ? process.env.FB_ADMIN_TYPE_PROD
+        : process.env.FB_ADMIN_TYPE_DEV,
+    FB_ADMIN_PROJECT_ID:
+      process.env.NODE_ENV === 'production'
+        ? process.env.FB_ADMIN_PROJECT_ID_PROD
+        : process.env.FB_ADMIN_PROJECT_ID_DEV,
+    FB_ADMIN_PRIVATE_KEY_ID:
+      process.env.NODE_ENV === 'production'
+        ? process.env.FB_ADMIN_PRIVATE_KEY_ID_PROD
+        : process.env.FB_ADMIN_PRIVATE_KEY_ID_DEV,
+    FB_ADMIN_PRIVATE_KEY:
+      process.env.NODE_ENV === 'production'
+        ? process.env.FB_ADMIN_PRIVATE_KEY_PROD
+        : process.env.FB_ADMIN_PRIVATE_KEY_DEV,
+    FB_ADMIN_CLIENT_EMAIL:
+      process.env.NODE_ENV === 'production'
+        ? process.env.FB_ADMIN_CLIENT_EMAIL_PROD
+        : process.env.FB_ADMIN_CLIENT_EMAIL_DEV,
+    FB_ADMIN_CLIENT_ID:
+      process.env.NODE_ENV === 'production'
+        ? process.env.FB_ADMIN_CLIENT_ID_PROD
+        : process.env.FB_ADMIN_CLIENT_ID_DEV,
+    FB_ADMIN_AUTH_URI:
+      process.env.NODE_ENV === 'production'
+        ? process.env.FB_ADMIN_AUTH_URI_PROD
+        : process.env.FB_ADMIN_AUTH_URI_DEV,
+    FB_ADMIN_TOKEN_URI:
+      process.env.NODE_ENV === 'production'
+        ? process.env.FB_ADMIN_TOKEN_URI_PROD
+        : process.env.FB_ADMIN_TOKEN_URI_DEV,
+    FB_ADMIN_AUTH_PROVIDER_CERL_URL:
+      process.env.NODE_ENV === 'production'
+        ? process.env.FB_ADMIN_AUTH_PROVIDER_CERL_URL_PROD
+        : process.env.FB_ADMIN_AUTH_PROVIDER_CERL_URL_DEV,
+    FB_ADMIN_CLIENT_CERT_URL:
+      process.env.NODE_ENV === 'production'
+        ? process.env.FB_ADMIN_CLIENT_CERT_URL_PROD
+        : process.env.FB_ADMIN_CLIENT_CERT_URL_DEV,
+    FB_ADMIN_UNIVERSE_DOMAIN:
+      process.env.NODE_ENV === 'production'
+        ? process.env.FB_ADMIN_UNIVERSE_DOMAIN_PROD
+        : process.env.FB_ADMIN_UNIVERSE_DOMAIN_DEV,
     public: {
       FB_API_KEY:
         process.env.NODE_ENV === 'production'
