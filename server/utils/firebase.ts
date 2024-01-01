@@ -19,7 +19,7 @@ if (!getApps().length) {
     credential: cert({
       projectId: `${config.FB_ADMIN_PROJECT_ID}`,
       clientEmail: `${config.FB_ADMIN_CLIENT_EMAIL}`,
-      privateKey: `${config.FB_ADMIN_PRIVATE_KEY.replace(/\\n/g, '\n')}`,
+      "private_key": `${config.FB_ADMIN_PRIVATE_KEY.replace(/\\n/g, '\n')}`,
     } as ServiceAccount),
     databaseURL: config.public.FB_DB_URL,
   })
