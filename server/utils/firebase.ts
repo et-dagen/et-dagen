@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 /* eslint quote-props: 0 */
 /* eslint @typescript-eslint/quotes: 0 */
->>>>>>> 5f61d539cf88989ad8f5b8ec9923491a91165ff0
 import {
   initializeApp,
   cert,
