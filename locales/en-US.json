@@ -240,8 +240,6 @@
         "title": "Edit Event",
         "action": "Save Changes"
       },
-      "update_logo": "Update Logo",
-      "delete_logo": "Delete Logo",
       "cancel": "Cancel",
       "attributes": {
         "title": "Title",
@@ -268,6 +266,7 @@
         "title": "Edit Company",
         "action": "Save Changes"
       },
+      "unlink_logo": "Unlink Logo",
       "cancel": "Cancel",
       "attributes": {
         "name": "Company Name",

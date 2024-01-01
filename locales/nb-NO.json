@@ -271,8 +271,7 @@
         "title": "Rediger bedrift",
         "action": "Lagre"
       },
-      "update_logo": "Oppdater logo",
-      "delete_logo": "Slett logo",
+      "unlink_logo": "Frakoble logo",
       "cancel": "Avbryt",
       "attributes": {
         "name": "Navn",
