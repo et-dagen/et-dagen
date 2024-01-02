@@ -24,7 +24,6 @@ export default defineNuxtConfig({
       process.env.NODE_ENV === 'production'
         ? process.env.FB_ADMIN_TYPE_PROD
         : process.env.FB_ADMIN_TYPE_DEV,
-
     FB_ADMIN_PRIVATE_KEY_ID:
       process.env.NODE_ENV === 'production'
         ? process.env.FB_ADMIN_PRIVATE_KEY_ID_PROD
@@ -66,6 +65,7 @@ export default defineNuxtConfig({
         process.env.NODE_ENV === 'production'
           ? process.env.NUXT_FB_ADMIN_PROJECT_ID_PROD
           : process.env.NUXT_FB_ADMIN_PROJECT_ID_DEV,
+
       FB_API_KEY:
         process.env.NODE_ENV === 'production'
           ? process.env.NUXT_FB_API_KEY_PROD
