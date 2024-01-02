@@ -187,7 +187,46 @@
         "time": "Time",
         "capacity": "Capacity"
       },
-      "copied": "UID kopiert!"
+      "copied": "Copied UID!"
+    },
+    "company": {
+      "name": "Companies",
+      "edit": "Edit companies",
+      "pagesize": "Companies per page",
+      "filtertypes": {
+        "name": "Filter type",
+        "updated":"Last modified",
+        "companyname": "Company name"
+      },
+      "filterorder": {
+        "name": "Order",
+        "descending": "Descending",
+        "ascending": "Ascending"
+      },
+      "selectall": "Select all",
+      "delete": {
+        "selected":"Delete selected",
+        "confirmtext": "Are you sure you want to delete the selected users?",
+        "confirm":"Yes, delete them",
+        "abort":"No, abort"
+      },
+      "attributes": {
+        "select": "Select",
+        "name": "Name",
+        "logo": "Logo",
+        "webpage": "Webpage",
+        "type": {
+          "name": "Type",
+          "main_partner": "Main partner",
+          "partner": "Partner",
+          "sponsor": "Sponsor"
+        },
+        "code": "Company code"
+      },
+      "copied": "Copied UID!",
+      "copiedcode": "Copied registration code!",
+      "createcode": "Create code"
+
     },
     "jobs": {
       "name": "Jobs"
