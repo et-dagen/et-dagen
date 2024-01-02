@@ -166,3 +166,9 @@ export const requestPasswordReset = (email: string) => {
   const auth = getAuth()
   return sendPasswordResetEmail(auth, email)
 }
+
+// update name of user
+export const updateName = async (user: User, newName: string) => {
+  // set displayname in firebase auth
+  await updateProfile(user, { displayName: newName })
+}
