@@ -21,7 +21,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     // used by firebase admin sdk
     FB_ADMIN_TYPE: process.env.FB_ADMIN_TYPE,
-    FB_ADMIN_PROJECT_ID: process.env.FB_ADMIN_PROJECT_ID,
+    FB_ADMIN_PROJECT_ID: process.env.NUXT_FB_PROJECT_ID,
     FB_ADMIN_PRIVATE_KEY_ID: process.env.FB_ADMIN_PRIVATE_KEY_ID,
     FB_ADMIN_PRIVATE_KEY: process.env.FB_ADMIN_PRIVATE_KEY,
     FB_ADMIN_CLIENT_EMAIL: process.env.FB_ADMIN_CLIENT_EMAIL,
