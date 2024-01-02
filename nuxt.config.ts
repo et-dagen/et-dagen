@@ -65,6 +65,11 @@ export default defineNuxtConfig({
         ? process.env.FB_ADMIN_UNIVERSE_DOMAIN_PROD
         : process.env.FB_ADMIN_UNIVERSE_DOMAIN_DEV,
     public: {
+      FB_ADMIN_PROJECT_ID:
+        process.env.NODE_ENV === 'production'
+          ? process.env.NUXT_FB_ADMIN_PROJECT_ID_PROD
+          : process.env.NUXT_FB_ADMIN_PROJECT_ID_DEV,
+
       FB_API_KEY:
         process.env.NODE_ENV === 'production'
           ? process.env.NUXT_FB_API_KEY_PROD
