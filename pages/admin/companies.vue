@@ -28,13 +28,11 @@
   const companyCode = computed(() => {
     return (companyUID: string) => {
       if (!codes.value) return []
-      return (
-        Object.values(codes.value)
-          // eslint-disable-next-line
-          ?.filter((code: any) => code?.companyUID === companyUID)
-          // eslint-disable-next-line
-          .map((code: any) => code?.code)[0]
-      )
+      return Object.values(codes.value)
+
+        ?.filter((code: any) => code?.companyUID === companyUID)
+
+        .map((code: any) => code?.code)[0]
     }
   })
 

@@ -200,7 +200,7 @@
       "pagesize": "Bedrifter per side",
       "filtertypes": {
         "name": "Filtertype",
-        "updated":"Sist modifisert",
+        "updated": "Sist modifisert",
         "companyname": "Bedriftsnavn"
       },
       "filterorder": {
@@ -210,10 +210,10 @@
       },
       "selectall": "Velg alle",
       "delete": {
-        "selected":"Slett valgte",
+        "selected": "Slett valgte",
         "confirmtext": "Er du sikker på at du vil slette de valgte brukerne?",
-        "confirm":"Ja, slett dem",
-        "abort":"Nei, avbryt"
+        "confirm": "Ja, slett dem",
+        "abort": "Nei, avbryt"
       },
       "attributes": {
         "select": "Velg",

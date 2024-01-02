@@ -195,7 +195,7 @@
       "pagesize": "Companies per page",
       "filtertypes": {
         "name": "Filter type",
-        "updated":"Last modified",
+        "updated": "Last modified",
         "companyname": "Company name"
       },
       "filterorder": {
@@ -205,10 +205,10 @@
       },
       "selectall": "Select all",
       "delete": {
-        "selected":"Delete selected",
+        "selected": "Delete selected",
         "confirmtext": "Are you sure you want to delete the selected users?",
-        "confirm":"Yes, delete them",
-        "abort":"No, abort"
+        "confirm": "Yes, delete them",
+        "abort": "No, abort"
       },
       "attributes": {
         "select": "Select",
@@ -226,7 +226,6 @@
       "copied": "Copied UID!",
       "copiedcode": "Copied registration code!",
       "createcode": "Create code"
-
     },
     "jobs": {
       "name": "Jobs"
