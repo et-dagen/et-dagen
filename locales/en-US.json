@@ -1,7 +1,7 @@
 {
   "nav": {
     "index": "Home",
-    "program": "Program",
+    "program": "Programme",
     "jobs": "Jobs",
     "contact": "Contact",
     "admin": "Administration",
@@ -69,15 +69,33 @@
       "december": "December"
     }
   },
+  "contact": {
+    "title": "Contact Us",
+    "board": "Board Members",
+    "positions": {
+      "head": "Manager",
+      "deputyHead": "Deputy manager",
+      "IT": "IT manager",
+      "finance": "Finance manager",
+      "business": "Business relations manager",
+      "spons": "Sponsorship manager",
+      "marketing": "Marketing manager",
+      "logistics": "Logistics manager",
+      "travel": "Travel manager"
+    }
+  },
   "company": {
-    "main_partner": "Main partner"
+    "main_partner": "Main partner",
+    "partners": "Partners",
+    "sponsors": "Sponsors"
   },
   "alert": {
     "close_alert": "Close",
     "error": {
       "default": "An error occured",
       "form": {
-        "missing_email": "Email input is missing"
+        "missing_email": "Email input is missing",
+        "invalid": "Invalid form"
       },
       "firebase": {
         "email_in_use": "Email already in use",
@@ -87,12 +105,193 @@
       },
       "server": {
         "invalid_registration_code": "Invalid registration code"
+      },
+      "event": {
+        "event_doesnt_exist": "Event doesn't exist",
+        "missing_event_id": "Missing event id",
+        "register": {
+          "event_is_full": "Event is full",
+          "already_registered": "You are already registered for this event",
+          "user_not_registered": "You are not registered for this event",
+          "registration_unnecessary": "Registration is not necessary for this event",
+          "non_admin_user": "This requires admin privileges"
+        }
+      },
+      "company": {
+        "edit": {
+          "created": "Creation failed",
+          "modified": "Modification failed",
+          "modified_logo": "Logo modification failed",
+          "deleted_logo": "Logo deletion failed"
+        }
       }
     },
     "success": {
       "firebase": {
         "reset_password": "Password reset email sent"
+      },
+      "event": {
+        "register": {
+          "sign_up": "Successfully registered to event",
+          "opt_out": "Successfully opted out of event"
+        },
+        "edit": {
+          "created": "Successfully created event",
+          "modified": "Successfully modified event",
+          "deleted_logo": "Successfully deleted logo"
+        }
       }
+    }
+  },
+  "program": {
+    "title": "Programme",
+    "event": {
+      "sign_up": "Sign up",
+      "opt_out": "Opt out",
+      "sign_in_to_register": "Sign in to register"
+    }
+  },
+  "admin": {
+    "categories": "Categories",
+    "companies": {
+      "name": "Companies"
+    },
+    "events": {
+      "name": "Events",
+      "edit": "Edit event",
+      "pagesize": "Events per page",
+      "dates": "Date",
+      "filtertypes": {
+        "name": "Filter type",
+        "updated": "Last modified",
+        "company": "Company"
+      },
+      "filterorder": {
+        "name": "Order",
+        "descending": "Descending",
+        "ascending": "Ascending"
+      },
+      "selectall": "Select all",
+      "delete": {
+        "selected": "Delete selected",
+        "confirmtext": "Are you sure you want to delete the selected users?",
+        "confirm": "Yes, delete them",
+        "abort": "No, abort"
+      },
+      "attributes": {
+        "select": "Select",
+        "title": "Title",
+        "company": "Company",
+        "location": "Location",
+        "date": "Date",
+        "time": "Time",
+        "capacity": "Capacity"
+      },
+      "copied": "UID kopiert!"
+    },
+    "jobs": {
+      "name": "Jobs"
+    },
+    "users": {
+      "name": "Users",
+      "pagesize": "Users per page",
+      "usertypes": {
+        "name": "User types",
+        "admin": "Admins",
+        "company": "Companies",
+        "basic": "Basic"
+      },
+      "filtertypes": {
+        "name": "Sort by",
+        "updated": "Last modified",
+        "currentyear": "Year"
+      },
+      "filterorder": {
+        "name": "Order",
+        "descending": "Descending",
+        "ascending": "Ascending"
+      },
+      "selectall": "Select all",
+      "delete": {
+        "selected": "Delete selected",
+        "confirmtext": "Are you sure you want to delete the selected users?",
+        "confirm": "Yes, delete them",
+        "abort": "No, abort"
+      },
+      "attributes": {
+        "select": "Select",
+        "name": "Name",
+        "usertype": "User type",
+        "email": "Email",
+        "year": "Year",
+        "program": "Study program",
+        "company": "Company"
+      },
+      "copied": "UID copied!"
+    }
+  },
+  "edit": {
+    "event": {
+      "create": {
+        "title": "Create Event",
+        "action": "Create Event"
+      },
+      "edit": {
+        "title": "Edit Event",
+        "action": "Save Changes"
+      },
+      "cancel": "Cancel",
+      "attributes": {
+        "title": "Title",
+        "company": "Company",
+        "capacity": "Capacity",
+        "description": "Description",
+        "location": {
+          "name": "Name of Place",
+          "map": "Map Link"
+        },
+        "date": {
+          "start": "Start Date",
+          "end": "End Date"
+        },
+        "attendants": "Påmeldte deltakere"
+      }
+    },
+    "company": {
+      "create": {
+        "title": "Create Company",
+        "action": "Create Company"
+      },
+      "edit": {
+        "title": "Edit Company",
+        "action": "Save Changes"
+      },
+      "unlink_logo": "Unlink Logo",
+      "cancel": "Cancel",
+      "attributes": {
+        "name": "Company Name",
+        "description": "Description",
+        "logo": "Logo",
+        "webpage": "webpage",
+        "type": {
+          "name": "Company Type",
+          "main_partner": "Main Partner",
+          "partner": "Partner",
+          "sponsor": "Sponsor"
+        }
+      }
+    }
+  },
+  "footer": {
+    "header": {
+      "resources": "Resources",
+      "organisation": "Organisation",
+      "join": "Wish to join us?"
+    },
+    "link": {
+      "contact": "Contact Us",
+      "program": "Program",
+      "jobs": "Jobs"
     }
   }
 }

@@ -1,5 +1,36 @@
+<script setup lang="ts">
+  const { data: companies } = await useFetch('/api/company')
+
+  const mainPartner = computed(
+    () =>
+      Object.values(companies.value).find(
+        (company: any) => company.type === 'main-partner' && !!company.logo
+      ) || null
+  )
+
+  const partners =
+    computed(() =>
+      Object.values(companies.value).filter(
+        (company: any) => company.type === 'partner' && !!company.logo
+      )
+    ) || null
+  const showPartners = computed(
+    () => partners.value !== null && partners.value.length !== 0
+  )
+
+  const sponsors =
+    computed(() =>
+      Object.values(companies.value).filter(
+        (company: any) => company.type === 'sponsor' && !!company.logo
+      )
+    ) || null
+  const showSponsors = computed(
+    () => sponsors.value !== null && sponsors.value.length !== 0
+  )
+</script>
+
 <template>
-  <div>
+  <div class="ma-10">
     <HomeBanner
       :content="{
         caption: 'Få et innblikk i din fremtidige arbeidsplass',
@@ -8,24 +39,54 @@
         title: 'Elektronikk & Teknologidagene',
       }"
     />
+
     <CompanyHero
+      v-if="mainPartner !== null"
       :content="{
-        name: 'Company Name',
-        description: `Lorem ipsum 
-        dolor sit amet, 
-        consectetur adipiscing elit, sed do eiusmod tempor 
-        incididunt ut labore et 
-        dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation 
-        ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure 
-        dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat 
-        nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in 
-         qui officia deserunt mollit anim id est laborum.`,
-        logo: `https://storage.googleapis.com/etdagen-d1f82.
-appspot.com/storage_companies%2FSony%2FLogo%2Fsony.png`,
-        website: 'https://shortsdag.no',
+        name: mainPartner.name,
+        description: mainPartner.description,
+        logo: mainPartner.logo,
+        webpage: mainPartner.webpage,
       }"
       class="my-5 d-flex justify-center"
     />
+
+    <div v-if="showPartners">
+      <h2
+        :class="`text-sm-h3 text-h4 text-center 
+          pt-10 pb-lg-6 pb-3 font-weight-bold`"
+      >
+        {{ $t('company.partners') }}
+      </h2>
+      <CommonGrid>
+        <CompanyCard
+          v-for="partner in partners"
+          :key="partner.id"
+          :content="{
+            logo: partner.logo,
+            webpage: partner.webpage,
+          }"
+        />
+      </CommonGrid>
+    </div>
+
+    <div v-if="showSponsors">
+      <h2
+        :class="`text-sm-h3 text-h4 text-center 
+          pt-10 pb-lg-6 pb-3 font-weight-bold`"
+      >
+        {{ $t('company.sponsors') }}
+      </h2>
+      <CommonGrid>
+        <CompanyCard
+          v-for="sponsor in sponsors"
+          :key="sponsor.id"
+          :content="{
+            logo: sponsor.logo || '',
+            webpage: sponsor.webpage,
+          }"
+        />
+      </CommonGrid>
+    </div>
   </div>
 </template>

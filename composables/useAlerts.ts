@@ -39,6 +39,62 @@ const errorMessageMap = new Map([
       message: 'wrong_password',
     },
   ],
+  [
+    'Events: Error (register/event-is-full).',
+    {
+      source: 'event.register',
+      type: 'error',
+      message: 'event_is_full',
+    },
+  ],
+  [
+    'Events: Error (register/already-registered).',
+    {
+      source: 'event.register',
+      type: 'error',
+      message: 'already_registered',
+    },
+  ],
+  [
+    'Events: Error (event/event-doesnt-exists).',
+    {
+      source: 'event',
+      type: 'error',
+      message: 'event_doesnt_exist',
+    },
+  ],
+  [
+    'Events: Error (event/missing-event-id).',
+    {
+      source: 'event',
+      type: 'error',
+      message: 'missing_event_id',
+    },
+  ],
+  [
+    'Events: Error (register/user-not-registered).',
+    {
+      source: 'event.register',
+      type: 'error',
+      message: 'user_not_registered',
+    },
+  ],
+  [
+    'Events: Error (register/registration-unnecessary).',
+    {
+      source: 'event.register',
+      type: 'error',
+      message: 'registration_unnecessary',
+    },
+  ],
+  [
+    'Events: Error (register/non-admin-user).',
+    {
+      source: 'event.register',
+      type: 'error',
+      message: 'non_admin_user',
+    },
+  ],
 ])
 
 export type AlertType = 'error' | 'info' | 'success' | 'warning' | undefined
@@ -62,5 +118,15 @@ export const getAlertRouteAndType = (errorMessage: string) => {
   return {
     type: getAlertTypeFromErrorMessage(errorMessage),
     route: getI18nAlertRoute(errorMessage),
+  }
+}
+
+export const getAlertContent = (message: string, showAlert = true) => {
+  const content = getAlertRouteAndType(message)
+
+  return {
+    alertRoute: content.route,
+    type: content.type as AlertType,
+    show: showAlert,
   }
 }

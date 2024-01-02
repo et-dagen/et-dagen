@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import type { AlertType } from 'composables/useAlerts'
   import {
     useRequiredInput,
     useValidateEmail,
@@ -6,7 +7,25 @@
     useRequireEqualPasswords,
   } from '@/composables/useForm'
 
-  import type { AlertType } from 'composables/useAlerts'
+  const { data: studyProgrammes } = await useFetch('/api/programme')
+  const yearOptions = computed(() => {
+    return (studyProgram: string) => {
+      const programme = studyProgrammes.value.find(
+        (prog: any) => prog.name === studyProgram
+      )
+
+      if (!programme || programme.type === 'integrated') return [1, 2, 3, 4, 5]
+
+      switch (programme.type) {
+        case 'bachelor':
+          return [1, 2, 3]
+        case 'master':
+          return [4, 5]
+        default:
+          return []
+      }
+    }
+  })
 
   const initialState = {
     name: '',
@@ -22,6 +41,15 @@
   const state = reactive({
     ...initialState,
   })
+
+  // Reset currentYear if programme doesn't have that year
+  watch(
+    () => state.studyProgram,
+    (program) => {
+      if (!yearOptions.value(program).includes(Number(state.currentYear)))
+        state.currentYear = ''
+    }
+  )
 
   const form = ref()
   const isRegistering = ref<boolean>(false)
@@ -89,7 +117,7 @@
   <VForm ref="form" @submit.prevent="submit">
     <VContainer>
       <VRow>
-        <UserFormTextInput
+        <FormTextInput
           v-model="state.name"
           :content="{
             label: $t('user.register.full_name'),
@@ -98,19 +126,19 @@
         />
       </VRow>
       <VRow>
-        <UserFormEmailInput
+        <FormEmailInput
           v-model="state.email"
           :rules="[useRequiredInput, useValidateEmail]"
         />
       </VRow>
       <VRow>
-        <UserFormPasswordInput
+        <FormPasswordInput
           v-model="state.password"
           :rules="[useRequiredInput, useValidatePassword]"
         />
       </VRow>
       <VRow>
-        <UserFormPasswordInput
+        <FormPasswordInput
           v-model="state.passwordConfirmation"
           :rules="[
             useRequiredInput,
@@ -131,33 +159,27 @@
       <VCardText class="px-0">
         <VWindow v-model="state.userType">
           <VWindowItem value="student">
-            <UserFormSelectInput
+            <FormSelectInput
               v-model="state.studyProgram"
               :content="{
                 label: $t('user.register.study_program'),
-                options: [
-                  'Data',
-                  'Elektro',
-                  'Bygg',
-                  'Maskin',
-                  'Kjemi',
-                  'Annen',
-                ],
+                // eslint-disable-next-line vue/max-len
+                options: Object.values(studyProgrammes).map((prog: any) => prog.name),
               }"
               :rules="[state.userType === 'student' ? useRequiredInput : null]"
             />
-            <UserFormSelectInput
+            <FormSelectInput
               v-model="state.currentYear"
               :content="{
                 label: $t('user.register.year'),
-                options: [1, 2, 3, 4, 5],
+                options: yearOptions(state.studyProgram),
               }"
               :rules="[state.userType === 'student' ? useRequiredInput : null]"
             />
           </VWindowItem>
 
           <VWindowItem value="company">
-            <UserFormTextInput
+            <FormTextInput
               v-model="state.registrationCode"
               :content="{
                 label: $t('user.register.registration_code'),

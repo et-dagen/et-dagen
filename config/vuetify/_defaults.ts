@@ -3,6 +3,10 @@ export default {
   VBtn: {
     style: 'text-transform: none',
     size: 'x-large',
+    ripple: false,
+  },
+  VChip: {
+    ripple: false,
   },
   VMain: {
     // fixes problem with VMain rendering under the appbar on SSR
