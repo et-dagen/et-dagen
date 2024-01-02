@@ -17,7 +17,7 @@ const config = useRuntimeConfig()
 if (!getApps().length) {
   firebaseAdminApp = initializeApp({
     credential: cert({
-      "project_id": `${config.FB_ADMIN_PROJECT_ID}`,
+      "project_id": `${config.public.FB_ADMIN_PROJECT_ID}`,
       clientEmail: `${config.FB_ADMIN_CLIENT_EMAIL}`,
       "private_key": `${config.FB_ADMIN_PRIVATE_KEY.replace(/\\n/g, '\n')}`,
     } as ServiceAccount),
