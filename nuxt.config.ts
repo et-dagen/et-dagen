@@ -20,83 +20,27 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     // used by firebase admin sdk
-    FB_ADMIN_TYPE:
-      process.env.NODE_ENV === 'production'
-        ? process.env.FB_ADMIN_TYPE_PROD
-        : process.env.FB_ADMIN_TYPE_DEV,
-    FB_ADMIN_PROJECT_ID:
-      process.env.NODE_ENV === 'production'
-        ? process.env.FB_ADMIN_PROJECT_ID_PROD
-        : process.env.FB_ADMIN_PROJECT_ID_DEV,
-    FB_ADMIN_PRIVATE_KEY_ID:
-      process.env.NODE_ENV === 'production'
-        ? process.env.FB_ADMIN_PRIVATE_KEY_ID_PROD
-        : process.env.FB_ADMIN_PRIVATE_KEY_ID_DEV,
-    FB_ADMIN_PRIVATE_KEY:
-      process.env.NODE_ENV === 'production'
-        ? process.env.FB_ADMIN_PRIVATE_KEY_PROD
-        : process.env.FB_ADMIN_PRIVATE_KEY_DEV,
-    FB_ADMIN_CLIENT_EMAIL:
-      process.env.NODE_ENV === 'production'
-        ? process.env.FB_ADMIN_CLIENT_EMAIL_PROD
-        : process.env.FB_ADMIN_CLIENT_EMAIL_DEV,
-    FB_ADMIN_CLIENT_ID:
-      process.env.NODE_ENV === 'production'
-        ? process.env.FB_ADMIN_CLIENT_ID_PROD
-        : process.env.FB_ADMIN_CLIENT_ID_DEV,
-    FB_ADMIN_AUTH_URI:
-      process.env.NODE_ENV === 'production'
-        ? process.env.FB_ADMIN_AUTH_URI_PROD
-        : process.env.FB_ADMIN_AUTH_URI_DEV,
-    FB_ADMIN_TOKEN_URI:
-      process.env.NODE_ENV === 'production'
-        ? process.env.FB_ADMIN_TOKEN_URI_PROD
-        : process.env.FB_ADMIN_TOKEN_URI_DEV,
+    FB_ADMIN_TYPE: process.env.FB_ADMIN_TYPE,
+    FB_ADMIN_PROJECT_ID: process.env.FB_ADMIN_PROJECT_ID,
+    FB_ADMIN_PRIVATE_KEY_ID: process.env.FB_ADMIN_PRIVATE_KEY_ID,
+    FB_ADMIN_PRIVATE_KEY: process.env.FB_ADMIN_PRIVATE_KEY,
+    FB_ADMIN_CLIENT_EMAIL: process.env.FB_ADMIN_CLIENT_EMAIL,
+    FB_ADMIN_CLIENT_ID: process.env.FB_ADMIN_CLIENT_ID,
+    FB_ADMIN_AUTH_URI: process.env.FB_ADMIN_AUTH_URI,
+    FB_ADMIN_TOKEN_URI: process.env.FB_ADMIN_TOKEN_URI,
     FB_ADMIN_AUTH_PROVIDER_CERL_URL:
-      process.env.NODE_ENV === 'production'
-        ? process.env.FB_ADMIN_AUTH_PROVIDER_CERL_URL_PROD
-        : process.env.FB_ADMIN_AUTH_PROVIDER_CERL_URL_DEV,
-    FB_ADMIN_CLIENT_CERT_URL:
-      process.env.NODE_ENV === 'production'
-        ? process.env.FB_ADMIN_CLIENT_CERT_URL_PROD
-        : process.env.FB_ADMIN_CLIENT_CERT_URL_DEV,
-    FB_ADMIN_UNIVERSE_DOMAIN:
-      process.env.NODE_ENV === 'production'
-        ? process.env.FB_ADMIN_UNIVERSE_DOMAIN_PROD
-        : process.env.FB_ADMIN_UNIVERSE_DOMAIN_DEV,
+      process.env.FB_ADMIN_AUTH_PROVIDER_CERL_URL,
+    FB_ADMIN_CLIENT_CERT_URL: process.env.FB_ADMIN_CLIENT_CERT_URL,
+    FB_ADMIN_UNIVERSE_DOMAIN: process.env.FB_ADMIN_UNIVERSE_DOMAIN,
     public: {
-      FB_API_KEY:
-        process.env.NODE_ENV === 'production'
-          ? process.env.NUXT_FB_API_KEY_PROD
-          : process.env.NUXT_FB_API_KEY_DEV,
-      FB_AUTH_DOMAIN:
-        process.env.NODE_ENV === 'production'
-          ? process.env.NUXT_FB_AUTH_DOMAIN_PROD
-          : process.env.NUXT_FB_AUTH_DOMAIN_DEV,
-      FB_DB_URL:
-        process.env.NODE_ENV === 'production'
-          ? process.env.NUXT_FB_DATABASE_URL_PROD
-          : process.env.NUXT_FB_DATABASE_URL_DEV,
-      FB_PROJECT_ID:
-        process.env.NODE_ENV === 'production'
-          ? process.env.NUXT_FB_PROJECT_ID_PROD
-          : process.env.NUXT_FB_PROJECT_ID_DEV,
-      FB_STORAGE_BUCKET:
-        process.env.NODE_ENV === 'production'
-          ? process.env.NUXT_FB_STORAGE_BUCKET_PROD
-          : process.env.NUXT_FB_STORAGE_BUCKET_DEV,
-      FB_MESSAGING_SENDER_ID:
-        process.env.NODE_ENV === 'production'
-          ? process.env.NUXT_FB_MESSAGING_SENDER_ID_PROD
-          : process.env.NUXT_FB_MESSAGING_SENDER_ID_DEV,
-      FB_APP_ID:
-        process.env.NODE_ENV === 'production'
-          ? process.env.NUXT_FB_APP_ID_PROD
-          : process.env.NUXT_FB_APP_ID_DEV,
-      FB_MEASUREMENT_ID:
-        process.env.NODE_ENV === 'production'
-          ? process.env.NUXT_FB_MEASUREMENT_ID_PROD
-          : process.env.NUXT_FB_MEASUREMENT_ID_DEV,
+      FB_API_KEY: process.env.NUXT_FB_API_KEY,
+      FB_AUTH_DOMAIN: process.env.NUXT_FB_AUTH_DOMAIN,
+      FB_DB_URL: process.env.NUXT_FB_DATABASE_URL,
+      FB_PROJECT_ID: process.env.NUXT_FB_PROJECT_ID,
+      FB_STORAGE_BUCKET: process.env.NUXT_FB_STORAGE_BUCKET,
+      FB_MESSAGING_SENDER_ID: process.env.NUXT_FB_MESSAGING_SENDER_ID,
+      FB_APP_ID: process.env.NUXT_FB_APP_ID,
+      FB_MEASUREMENT_ID: process.env.NUXT_FB_MEASUREMENT_ID,
     },
   },
 
