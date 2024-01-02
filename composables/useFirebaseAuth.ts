@@ -168,7 +168,21 @@ export const requestPasswordReset = (email: string) => {
 }
 
 // update name of user
-export const updateName = async (user: User, newName: string) => {
-  // set displayname in firebase auth
-  await updateProfile(user, { displayName: newName })
+export const updateName = async (newName: string | null | undefined) => {
+  const auth = getAuth()
+  const user = auth.currentUser
+
+  if (user) {
+    // Update the display name in Firebase Auth
+    await updateProfile(user, { displayName: newName })
+
+    // Update user's name in the Firebase Realtime Database
+    const usersRef = db.ref('users')
+    const uid = user.uid
+
+    usersRef.child(uid).update({
+      name: newName,
+      updated: Date.now(),
+    })
+  }
 }

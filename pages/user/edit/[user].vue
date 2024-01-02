@@ -57,6 +57,8 @@
       method: 'POST',
       body: values,
     })
+    // update name (not handled by POST request)
+    updateName(values.name)
     // run cancel function to return to previous page
     cancel()
   }
@@ -115,8 +117,8 @@
         ${'bg-neutral-lighten-4 text-neutral'}`"
             :width="'100%'"
             :active="false"
-            @click="cancel"
             block
+            @click="cancel"
           >
             Cancel
           </VBtn>
@@ -132,8 +134,8 @@
             :width="'100%'"
             :active="true"
             :disabled="!hasChanged"
-            @click="submit"
             block
+            @click="submit"
           >
             Submit
           </VBtn>
