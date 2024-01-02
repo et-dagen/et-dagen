@@ -20,27 +20,32 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     // used by firebase admin sdk
-    FB_ADMIN_TYPE: process.env.NUXT_FIREBASE_ADMIN_TYPE,
-    FB_ADMIN_PROJECT_ID: process.env.NUXT_NIREUASEXT_FB_PROJECT_ID,
-    FB_ADMIN_PRIVATE_KEY_ID: process.env.NUXT_FIREBASE_ADMIN_PRIVATE_KEY_ID,
-    FB_ADMIN_PRIVATE_KEY: process.env.NUXT_FIREBASE_ADMIN_PRIVATE_KEY,
-    FB_ADMIN_CLIENT_EMAIL: process.env.NUXT_FIREBASE_ADMIN_CLIENT_EMAIL,
-    FB_ADMIN_CLIENT_ID: process.env.NUXT_FIREBASE_ADMIN_CLIENT_ID,
-    FB_ADMIN_AUTH_URI: process.env.NUXT_FIREBASE_ADMIN_AUTH_URI,
-    FB_ADMIN_TOKEN_URI: process.env.NUXT_FIREBASE_ADMIN_TOKEN_URI,
-    FB_ADMIN_AUTH_PROVIDER_CERL_URL:
-      process.env.NUXT_FIREBASE_ADMIN_AUTH_PROVIDER_CERL_URL,
-    FB_ADMIN_CLIENT_CERT_URL: process.env.NUXT_FIREBASE_ADMIN_CLIENT_CERT_URL,
-    FB_ADMIN_UNIVERSE_DOMAIN: process.env.NUXT_FIREBASE_ADMIN_UNIVERSE_DOMAIN,
+    firebaseAdminType: process.env.NUXT_FIREBASE_ADMIN_TYPE ?? '',
+    firebaseAdminProjectId: process.env.NUXT_FIREBASE_ADMIN_PROJECT_ID ?? '',
+    firebaseAdminPrivateKeyId:
+      process.env.NUXT_FIREBASE_ADMIN_PRIVATE_KEY_ID ?? '',
+    firebaseAdminPrivateKey: process.env.NUXT_FIREBASE_ADMIN_PRIVATE_KEY ?? '',
+    firebaseAdminClientEmail:
+      process.env.NUXT_FIREBASE_ADMIN_CLIENT_EMAIL ?? '',
+    firebaseAdminClientId: process.env.NUXT_FIREBASE_ADMIN_CLIENT_ID ?? '',
+    firebaseAdminAuthUri: process.env.NUXT_FIREBASE_ADMIN_AUTH_URI ?? '',
+    firebaseAdminTokenUri: process.env.NUXT_FIREBASE_ADMIN_TOKEN_URI ?? '',
+    firebaseAdminAuthProviderCertUrl:
+      process.env.NUXT_FIREBASE_ADMIN_AUTH_PROVIDER_CERT_URL ?? '',
+    firebaseAdminClientCertUrl:
+      process.env.NUXT_FIREBASE_ADMIN_CLIENT_CERT_URL ?? '',
+    firebaseAdminUniverseDomain:
+      process.env.NUXT_FIREBASE_ADMIN_UNIVERSE_DOMAIN ?? '',
     public: {
-      FB_API_KEY: process.env.NUXT_FIREBASE_API_KEY,
-      FB_AUTH_DOMAIN: process.env.NUXT_FIREBASE_AUTH_DOMAIN,
-      FB_DB_URL: process.env.NUXT_FIREBASE_DATABASE_URL,
-      FB_PROJECT_ID: process.env.NUXT_FIREBASE_PROJECT_ID,
-      FB_STORAGE_BUCKET: process.env.NUXT_FIREBASE_STORAGE_BUCKET,
-      FB_MESSAGING_SENDER_ID: process.env.NUXT_FIREBASE_MESSAGING_SENDER_ID,
-      FB_APP_ID: process.env.NUXT_FIREBASE_APP_ID,
-      FB_MEASUREMENT_ID: process.env.NUXT_FIREBASE_MEASUREMENT_ID,
+      firebaseApiKey: process.env.NUXT_FIREBASE_API_KEY ?? '',
+      firebaseAuthDomain: process.env.NUXT_FIREBASE_AUTH_DOMAIN ?? '',
+      firebaseDatabaseUrl: process.env.NUXT_FIREBASE_DATABASE_URL ?? '',
+      firebaseProjectId: process.env.NUXT_FIREBASE_PROJECT_ID ?? '',
+      firebaseStorageBucket: process.env.NUXT_FIREBASE_STORAGE_BUCKET ?? '',
+      firebaseMessagingSenderId:
+        process.env.NUXT_FIREBASE_MESSAGING_SENDER_ID ?? '',
+      firebaseAppId: process.env.NUXT_FIREBASE_APP_ID ?? '',
+      firebaseMeasurementId: process.env.NUXT_FIREBASE_MEASUREMENT_ID ?? '',
     },
   },
 
