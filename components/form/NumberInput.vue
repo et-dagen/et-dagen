@@ -1,12 +1,12 @@
 <script setup lang="ts">
-  export interface TextareaInputContent {
+  export interface NumberInputContent {
     label: string
     hint?: string
     rules?: string[]
   }
 
   defineProps({
-    content: { type: Object as PropType<TextareaInputContent>, required: true },
+    content: { type: Object as PropType<NumberInputContent>, required: true },
   })
 </script>
 

@@ -115,6 +115,14 @@
           "registration_unnecessary": "Påmelding er ikke nødvendig for dette arrangementet",
           "non_admin_user": "Dette krever administratorrettigheter"
         }
+      },
+      "company": {
+        "edit": {
+          "created": "Bedriften ble ikke opprettet",
+          "modified": "Oppdatering misslykket",
+          "modified_logo": "Logo ble ikke oppdatert",
+          "deleted_logo": "Logo ble ikke slettet"
+        }
       }
     },
     "success": {
@@ -129,6 +137,13 @@
         "edit": {
           "created": "Arrangement opprettet",
           "modified": "Arrangement oppdatert"
+        }
+      },
+      "company": {
+        "edit": {
+          "created": "Bedrift opprettet",
+          "modified": "Bedrift oppdatert",
+          "deleted_logo": "Logo slettet"
         }
       }
     }
@@ -245,6 +260,30 @@
           "end": "Sluttdato"
         },
         "attendants": "Påmeldte deltakere"
+      }
+    },
+    "company": {
+      "create": {
+        "title": "Opprett bedrift",
+        "action": "Opprett"
+      },
+      "edit": {
+        "title": "Rediger bedrift",
+        "action": "Lagre"
+      },
+      "unlink_logo": "Frakoble logo",
+      "cancel": "Avbryt",
+      "attributes": {
+        "name": "Navn",
+        "description": "Beskrivelse",
+        "logo": "Logo",
+        "webpage": "Nettside",
+        "type": {
+          "name": "Bedriftstype",
+          "main_partner": "Hovedsponsor",
+          "partner": "Partner",
+          "sponsor": "Sponsor"
+        }
       }
     }
   },

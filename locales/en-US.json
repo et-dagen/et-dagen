@@ -116,6 +116,14 @@
           "registration_unnecessary": "Registration is not necessary for this event",
           "non_admin_user": "This requires admin privileges"
         }
+      },
+      "company": {
+        "edit": {
+          "created": "Creation failed",
+          "modified": "Modification failed",
+          "modified_logo": "Logo modification failed",
+          "deleted_logo": "Logo deletion failed"
+        }
       }
     },
     "success": {
@@ -129,7 +137,8 @@
         },
         "edit": {
           "created": "Successfully created event",
-          "modified": "Successfully modified event"
+          "modified": "Successfully modified event",
+          "deleted_logo": "Successfully deleted logo"
         }
       }
     }
@@ -246,6 +255,30 @@
           "end": "End Date"
         },
         "attendants": "Påmeldte deltakere"
+      }
+    },
+    "company": {
+      "create": {
+        "title": "Create Company",
+        "action": "Create Company"
+      },
+      "edit": {
+        "title": "Edit Company",
+        "action": "Save Changes"
+      },
+      "unlink_logo": "Unlink Logo",
+      "cancel": "Cancel",
+      "attributes": {
+        "name": "Company Name",
+        "description": "Description",
+        "logo": "Logo",
+        "webpage": "webpage",
+        "type": {
+          "name": "Company Type",
+          "main_partner": "Main Partner",
+          "partner": "Partner",
+          "sponsor": "Sponsor"
+        }
       }
     }
   },

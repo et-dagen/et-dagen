@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Missing company name, webpage, or type',
     })
 
-  companiesRef.push({
+  const companyRef = await companiesRef.push({
     description: description ?? null,
     logo: logo ?? null,
     name,
@@ -30,6 +30,7 @@ export default defineEventHandler(async (event) => {
     webpage,
   })
 
-  // successfully created company
-  sendNoContent(event, 201)
+  return {
+    companyUID: companyRef.key,
+  }
 })

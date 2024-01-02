@@ -3,11 +3,11 @@
     name: string
     description: string
     logo: string
-    website: string
+    webpage: string
   }
 
   const openInNewTab = () => {
-    navigateTo(company.content.website, {
+    navigateTo(company.content.webpage, {
       external: true,
       open: {
         target: '_blank',
