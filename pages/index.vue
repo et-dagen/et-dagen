@@ -4,14 +4,14 @@
   const mainPartner = computed(
     () =>
       Object.values(companies.value).find(
-        (company: any) => company.type === 'main-partner'
+        (company: any) => company.type === 'main-partner' && !!company.logo
       ) || null
   )
 
   const partners =
     computed(() =>
       Object.values(companies.value).filter(
-        (company: any) => company.type === 'partner'
+        (company: any) => company.type === 'partner' && !!company.logo
       )
     ) || null
   const showPartners = computed(
@@ -21,7 +21,7 @@
   const sponsors =
     computed(() =>
       Object.values(companies.value).filter(
-        (company: any) => company.type === 'sponsor'
+        (company: any) => company.type === 'sponsor' && !!company.logo
       )
     ) || null
   const showSponsors = computed(
@@ -46,7 +46,7 @@
         name: mainPartner.name,
         description: mainPartner.description,
         logo: mainPartner.logo,
-        website: mainPartner.website,
+        webpage: mainPartner.webpage,
       }"
       class="my-5 d-flex justify-center"
     />
@@ -64,7 +64,7 @@
           :key="partner.id"
           :content="{
             logo: partner.logo,
-            website: partner.website,
+            webpage: partner.webpage,
           }"
         />
       </CommonGrid>
@@ -83,7 +83,7 @@
           :key="sponsor.id"
           :content="{
             logo: sponsor.logo || '',
-            website: sponsor.website,
+            webpage: sponsor.webpage,
           }"
         />
       </CommonGrid>

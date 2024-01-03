@@ -2,7 +2,7 @@
   defineProps<{
     content: {
       logo: string
-      website: string
+      webpage: string
     }
   }>()
 </script>
@@ -14,7 +14,7 @@
     variant="flat"
     max-width="250"
     @click="
-      navigateTo(content.website, {
+      navigateTo(content.webpage, {
         external: true,
         open: { target: '_blank' },
       })

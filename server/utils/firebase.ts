@@ -10,6 +10,7 @@ import {
 } from 'firebase-admin/app'
 import { getAuth } from 'firebase-admin/auth'
 import { getDatabase } from 'firebase-admin/database'
+import { getStorage } from 'firebase-admin/storage'
 
 let firebaseAdminApp: App
 const config = useRuntimeConfig()
@@ -17,11 +18,11 @@ const config = useRuntimeConfig()
 if (!getApps().length) {
   firebaseAdminApp = initializeApp({
     credential: cert({
-      projectId: config.FB_ADMIN_PROJECT_ID,
-      clientEmail: config.FB_ADMIN_CLIENT_EMAIL,
-      privateKey: config.FB_ADMIN_PRIVATE_KEY.replace(/\\n/g, '\n'),
+      projectId: config.firebaseAdminProjectId,
+      clientEmail: config.firebaseAdminClientEmail,
+      privateKey: config.firebaseAdminPrivateKey.replace(/\\n/g, '\n'),
     } as ServiceAccount),
-    databaseURL: config.public.FB_DB_URL,
+    databaseURL: config.public.firebaseDatabaseUrl,
   })
 } else {
   firebaseAdminApp = getApp()
@@ -29,3 +30,4 @@ if (!getApps().length) {
 
 export const auth = getAuth(firebaseAdminApp)
 export const db = getDatabase()
+export const storage = getStorage(firebaseAdminApp)
