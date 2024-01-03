@@ -303,7 +303,11 @@
         <tr v-for="(event, index) in pages[currentPage - 1]" :key="index">
           <!-- select user -->
           <td>
-            <VCheckbox v-model="selected[index]" :hide-details="true" />
+            <VCheckbox
+              v-model="selected[index]"
+              :hide-details="true"
+              color="primary"
+            />
           </td>
 
           <td id="title" class="truncate">{{ event.title }}</td>

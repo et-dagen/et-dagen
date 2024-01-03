@@ -282,7 +282,11 @@
         <tr v-for="(user, index) in pages[currentPage - 1]" :key="index">
           <!-- select user -->
           <td>
-            <VCheckbox v-model="selected[index]" :hide-details="true" />
+            <VCheckbox
+              v-model="selected[index]"
+              :hide-details="true"
+              color="primary"
+            />
           </td>
 
           <!-- static information -->
