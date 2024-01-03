@@ -14,7 +14,7 @@
     margin-inline: auto;
     display: flex;
     flex-wrap: wrap;
-    align-items: start;
+    justify-content: center;
     gap: 1rem 1.5rem !important;
 
     // Set different max-widths for different screen sizes
