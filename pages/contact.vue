@@ -1,9 +1,9 @@
 <template>
   <div class="my-16">
     <h3 class="text-center mb-6">{{ $t('contact.title') }}</h3>
-    <VContainer class="mb-6 px-md-12">
+    <VContainer class="mb-6 px-md-12 d-none d-sm-block">
       <ContactCard
-        class="mx-auto w-md-75"
+        class="mx-auto w-75"
         :content="{
           name: 'Marius Liebig',
           position: $t('contact.positions.business'),
