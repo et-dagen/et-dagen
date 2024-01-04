@@ -36,16 +36,20 @@ export default defineNuxtConfig({
       process.env.NUXT_FIREBASE_ADMIN_CLIENT_CERT_URL ?? '',
     firebaseAdminUniverseDomain:
       process.env.NUXT_FIREBASE_ADMIN_UNIVERSE_DOMAIN ?? '',
+    firebaseAdminStorageBucket:
+      process.env.NUXT_FIREBASE_ADMIN_STORAGE_BUCKET ?? '',
     public: {
-      firebaseApiKey: process.env.NUXT_FIREBASE_API_KEY ?? '',
-      firebaseAuthDomain: process.env.NUXT_FIREBASE_AUTH_DOMAIN ?? '',
-      firebaseDatabaseUrl: process.env.NUXT_FIREBASE_DATABASE_URL ?? '',
-      firebaseProjectId: process.env.NUXT_FIREBASE_PROJECT_ID ?? '',
-      firebaseStorageBucket: process.env.NUXT_FIREBASE_STORAGE_BUCKET ?? '',
+      firebaseApiKey: process.env.NUXT_PUBLIC_FIREBASE_API_KEY ?? '',
+      firebaseAuthDomain: process.env.NUXT_PUBLIC_FIREBASE_AUTH_DOMAIN ?? '',
+      firebaseDatabaseUrl: process.env.NUXT_PUBLIC_FIREBASE_DATABASE_URL ?? '',
+      firebaseProjectId: process.env.NUXT_PUBLIC_FIREBASE_PROJECT_ID ?? '',
+      firebaseStorageBucket:
+        process.env.NUXT_PUBLIC_FIREBASE_STORAGE_BUCKET ?? '',
       firebaseMessagingSenderId:
-        process.env.NUXT_FIREBASE_MESSAGING_SENDER_ID ?? '',
-      firebaseAppId: process.env.NUXT_FIREBASE_APP_ID ?? '',
-      firebaseMeasurementId: process.env.NUXT_FIREBASE_MEASUREMENT_ID ?? '',
+        process.env.NUXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ?? '',
+      firebaseAppId: process.env.NUXT_PUBLIC_FIREBASE_APP_ID ?? '',
+      firebaseMeasurementId:
+        process.env.NUXT_PUBLIC_FIREBASE_MEASUREMENT_ID ?? '',
     },
   },
 
