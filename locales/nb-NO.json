@@ -221,12 +221,12 @@
         "logo": "Logo",
         "webpage": "Nettside",
         "type": {
-          "name": "Bedriftstype",
+          "name": "Type",
           "main_partner": "Hovedpartner",
           "partner": "Partner",
           "sponsor": "Sponsor"
         },
-        "code": "Bedriftskode"
+        "code": "Kode"
       },
       "copied": "UID kopiert!",
       "copiedcode": "Kode kopiert!",
