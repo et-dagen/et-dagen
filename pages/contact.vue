@@ -8,7 +8,7 @@
           name: 'Marius Liebig',
           position: $t('contact.positions.business'),
           email: 'bedriftansvarlig@et-dagen.no',
-          phone: '+47 123 45 678',
+          phone: '+47 923 13 055',
           image: '/images/board/business.jpg',
         }"
       />
@@ -22,7 +22,7 @@
             name: 'Sara Stokke Aursand',
             position: $t('contact.positions.head'),
             email: 'leder@et-dagen.no',
-            phone: '+47 123 45 678',
+            phone: '+47 918 00 396',
             image: '/images/board/manager.jpg',
           }"
         />
@@ -31,7 +31,7 @@
             name: 'Cecilie Von Krogh Fagtun',
             position: $t('contact.positions.deputyHead'),
             email: 'nestleder@et-dagen.no',
-            phone: '+47 123 45 678',
+            phone: '+47 455 07 633',
             image: '/images/board/deputy_manager.jpg',
           }"
         />
@@ -40,7 +40,7 @@
             name: 'Tord Sætermo',
             position: $t('contact.positions.finance'),
             email: 'okonomi@et-dagen.no',
-            phone: '+47 123 45 678',
+            phone: '+47 412 77 747',
             image: '/images/board/finance.jpg',
           }"
         />
@@ -49,7 +49,7 @@
             name: 'Anita Bueno Lindmoen',
             position: $t('contact.positions.logistics'),
             email: 'logistikk@et-dagen.no',
-            phone: '+47 123 45 678',
+            phone: '+47 483 63 109',
             image: '/images/board/logistics.jpg',
           }"
         />
@@ -58,7 +58,7 @@
             name: 'Marius Liebig',
             position: $t('contact.positions.business'),
             email: 'bedriftansvarlig@et-dagen.no',
-            phone: '+47 123 45 678',
+            phone: '+47 923 13 055',
             image: '/images/board/business.jpg',
           }"
         />
@@ -67,7 +67,7 @@
             name: 'Håvard Lundheim',
             position: $t('contact.positions.spons'),
             email: 'spons@et-dagen.no',
-            phone: '+47 123 45 678',
+            phone: '+47 977 83 216',
             image: '/images/board/sponsor.jpg',
           }"
         />
@@ -76,7 +76,7 @@
             name: 'Anetta Lyche Knudsen',
             position: $t('contact.positions.marketing'),
             email: 'mfansvarlig@et-dagen.no',
-            phone: '+47 123 45 678',
+            phone: '+47 953 02 740',
             image: '/images/board/marketing.jpg',
           }"
         />
@@ -85,7 +85,7 @@
             name: 'Ian Philip Eglin',
             position: $t('contact.positions.IT'),
             email: 'itansvarlig@et-dagen.no',
-            phone: '+47 123 45 678',
+            phone: '+47 970 85 256',
             image: '/images/board/it.jpg',
           }"
         />
@@ -94,7 +94,7 @@
             name: 'Josh Jude',
             position: $t('contact.positions.travel'),
             email: 'turansvarlig@et-dagen.no',
-            phone: '+47 123 45 678',
+            phone: '+47 459 24 469',
             image: '/images/board/travel.jpg',
           }"
         />
