@@ -65,6 +65,7 @@ export default defineNuxtConfig({
     'vuetify-nuxt-module',
     'nuxt-vitest',
     '@vueuse/nuxt',
+    '@nuxt/image',
   ],
 
   i18n: {
