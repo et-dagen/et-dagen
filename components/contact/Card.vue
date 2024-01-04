@@ -17,7 +17,7 @@
 
 <template>
   <div class="card">
-    <img
+    <NuxtImg
       class="card__image"
       :src="content.image"
       :alt="`Image of ${content.position}`"

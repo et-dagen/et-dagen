@@ -17,7 +17,7 @@
 
 <template>
   <div class="card">
-    <img class="card__image" :src="content.image" />
+    <NuxtImg class="card__image" :src="content.image" />
     <span class="text-primary semibold">{{ content.position }}</span>
     <span class="card__name bold">{{ content.name }}</span>
     <a :href="`mailto:${content.email}`" class="text-accent bold">{{
