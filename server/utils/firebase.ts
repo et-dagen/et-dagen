@@ -22,6 +22,7 @@ if (!getApps().length) {
       clientEmail: config.firebaseAdminClientEmail,
       privateKey: config.firebaseAdminPrivateKey.replace(/\\n/g, '\n'),
     } as ServiceAccount),
+    storageBucket: config.firebaseAdminStorageBucket,
     databaseURL: config.public.firebaseDatabaseUrl,
   })
 } else {
