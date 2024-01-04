@@ -100,6 +100,17 @@ export default defineNuxtConfig({
     ],
   },
 
+  image: {
+    inject: true,
+    screens: {
+      xs: 599,
+      sm: 959,
+      md: 1279,
+      lg: 1919,
+      xl: 2559,
+    },
+  },
+
   vuetify: {
     vuetifyOptions: './config/vuetify/vuetify.config.ts',
   },
