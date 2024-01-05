@@ -20,43 +20,36 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     // used by firebase admin sdk
-    GOOGLE_APPLICATION_CREDENTIALS:
-      process.env.NODE_ENV === 'production'
-        ? process.env.GOOGLE_APPLICATION_CREDENTIALS_PROD
-        : process.env.GOOGLE_APPLICATION_CREDENTIALS_DEV,
+    firebaseAdminType: process.env.NUXT_FIREBASE_ADMIN_TYPE ?? '',
+    firebaseAdminProjectId: process.env.NUXT_FIREBASE_ADMIN_PROJECT_ID ?? '',
+    firebaseAdminPrivateKeyId:
+      process.env.NUXT_FIREBASE_ADMIN_PRIVATE_KEY_ID ?? '',
+    firebaseAdminPrivateKey: process.env.NUXT_FIREBASE_ADMIN_PRIVATE_KEY ?? '',
+    firebaseAdminClientEmail:
+      process.env.NUXT_FIREBASE_ADMIN_CLIENT_EMAIL ?? '',
+    firebaseAdminClientId: process.env.NUXT_FIREBASE_ADMIN_CLIENT_ID ?? '',
+    firebaseAdminAuthUri: process.env.NUXT_FIREBASE_ADMIN_AUTH_URI ?? '',
+    firebaseAdminTokenUri: process.env.NUXT_FIREBASE_ADMIN_TOKEN_URI ?? '',
+    firebaseAdminAuthProviderCertUrl:
+      process.env.NUXT_FIREBASE_ADMIN_AUTH_PROVIDER_CERT_URL ?? '',
+    firebaseAdminClientCertUrl:
+      process.env.NUXT_FIREBASE_ADMIN_CLIENT_CERT_URL ?? '',
+    firebaseAdminUniverseDomain:
+      process.env.NUXT_FIREBASE_ADMIN_UNIVERSE_DOMAIN ?? '',
+    firebaseAdminStorageBucket:
+      process.env.NUXT_FIREBASE_ADMIN_STORAGE_BUCKET ?? '',
     public: {
-      FB_API_KEY:
-        process.env.NODE_ENV === 'production'
-          ? process.env.NUXT_FB_API_KEY_PROD
-          : process.env.NUXT_FB_API_KEY_DEV,
-      FB_AUTH_DOMAIN:
-        process.env.NODE_ENV === 'production'
-          ? process.env.NUXT_FB_AUTH_DOMAIN_PROD
-          : process.env.NUXT_FB_AUTH_DOMAIN_DEV,
-      FB_DB_URL:
-        process.env.NODE_ENV === 'production'
-          ? process.env.NUXT_FB_DATABASE_URL_PROD
-          : process.env.NUXT_FB_DATABASE_URL_DEV,
-      FB_PROJECT_ID:
-        process.env.NODE_ENV === 'production'
-          ? process.env.NUXT_FB_PROJECT_ID_PROD
-          : process.env.NUXT_FB_PROJECT_ID_DEV,
-      FB_STORAGE_BUCKET:
-        process.env.NODE_ENV === 'production'
-          ? process.env.NUXT_FB_STORAGE_BUCKET_PROD
-          : process.env.NUXT_FB_STORAGE_BUCKET_DEV,
-      FB_MESSAGING_SENDER_ID:
-        process.env.NODE_ENV === 'production'
-          ? process.env.NUXT_FB_MESSAGING_SENDER_ID_PROD
-          : process.env.NUXT_FB_MESSAGING_SENDER_ID_DEV,
-      FB_APP_ID:
-        process.env.NODE_ENV === 'production'
-          ? process.env.NUXT_FB_APP_ID_PROD
-          : process.env.NUXT_FB_APP_ID_DEV,
-      FB_MEASUREMENT_ID:
-        process.env.NODE_ENV === 'production'
-          ? process.env.NUXT_FB_MEASUREMENT_ID_PROD
-          : process.env.NUXT_FB_MEASUREMENT_ID_DEV,
+      firebaseApiKey: process.env.NUXT_PUBLIC_FIREBASE_API_KEY ?? '',
+      firebaseAuthDomain: process.env.NUXT_PUBLIC_FIREBASE_AUTH_DOMAIN ?? '',
+      firebaseDatabaseUrl: process.env.NUXT_PUBLIC_FIREBASE_DATABASE_URL ?? '',
+      firebaseProjectId: process.env.NUXT_PUBLIC_FIREBASE_PROJECT_ID ?? '',
+      firebaseStorageBucket:
+        process.env.NUXT_PUBLIC_FIREBASE_STORAGE_BUCKET ?? '',
+      firebaseMessagingSenderId:
+        process.env.NUXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID ?? '',
+      firebaseAppId: process.env.NUXT_PUBLIC_FIREBASE_APP_ID ?? '',
+      firebaseMeasurementId:
+        process.env.NUXT_PUBLIC_FIREBASE_MEASUREMENT_ID ?? '',
     },
   },
 

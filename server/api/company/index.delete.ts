@@ -20,6 +20,14 @@ export default defineEventHandler(async (event) => {
   // remove company
   companiesRef.child(companyUID).remove()
 
+  // fetch storage bucket
+  const bucket = storage.bucket()
+
+  // delete all files linked to company
+  await bucket.deleteFiles({
+    prefix: `companies/${companyUID}/`,
+  })
+
   // company successfully removed
   sendNoContent(event, 204)
 })
