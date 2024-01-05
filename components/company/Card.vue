@@ -9,7 +9,7 @@
 
 <template>
   <VCard
-    class="card pa-2"
+    class="card pa-2 d-flex"
     height="125"
     variant="flat"
     max-width="250"
@@ -20,11 +20,17 @@
       })
     "
   >
-    <VImg :width="500" aspect-ratio="4/3" contain :src="content.logo" />
+    <NuxtImg :src="content.logo" />
   </VCard>
 </template>
 
 <style scoped lang="scss">
+  img {
+    max-width: 100%;
+    object-fit: contain;
+    max-height: 100%;
+  }
+
   .card {
     color: transparent;
     background-color: transparent;
