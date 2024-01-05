@@ -20,18 +20,24 @@
     <NuxtImg class="card__image" :src="content.image" />
     <span class="text-primary semibold">{{ content.position }}</span>
     <span class="card__name bold">{{ content.name }}</span>
-    <a :href="`mailto:${content.email}`" class="text-accent bold">{{
-      content.email
-    }}</a>
-    <a v-if="content.phone" :href="`tel:${content.phone}`">{{
-      content.phone
-    }}</a>
+    <div class="actions d-flex flex-column">
+      <p>
+        <a :href="`mailto:${content.email}`" class="text-accent bold">
+          {{ content.email }}
+        </a>
+      </p>
+      <p>
+        <a v-if="content.phone" :href="`tel:${content.phone}`">
+          {{ content.phone }}
+        </a>
+      </p>
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
   .semibold {
-    font-weight: 500;
+    font-weight: 600;
   }
 
   .bold {
@@ -53,10 +59,16 @@
       width: 100%;
       padding: 6px;
       border-radius: 12px;
+      aspect-ratio: 1 / 1.2 !important;
+      object-fit: cover;
     }
 
     &__name {
       font-size: 1.1rem !important;
+    }
+
+    .actions {
+      gap: 0.25rem;
     }
 
     span,
