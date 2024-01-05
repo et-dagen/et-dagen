@@ -437,7 +437,9 @@
                   variant="text"
                   color="primary"
                   icon="mdi-pencil"
-                  @click="navigateTo(`/company/edit/${company.uid}`)"
+                  @click="
+                    navigateTo(localePath(`/company/edit/${company.uid}`))
+                  "
                 />
               </template>
 
