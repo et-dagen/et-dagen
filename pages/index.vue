@@ -52,10 +52,7 @@
     />
 
     <div v-if="showPartners">
-      <h2
-        :class="`text-sm-h3 text-h4 text-center 
-          pt-10 pb-lg-6 pb-3 font-weight-bold`"
-      >
+      <h2 class="text-h3 text-center pt-10 pb-lg-8 pb-5 font-weight-bold">
         {{ $t('company.partners') }}
       </h2>
       <CommonGrid>
@@ -71,10 +68,7 @@
     </div>
 
     <div v-if="showSponsors">
-      <h2
-        :class="`text-sm-h3 text-h4 text-center 
-          pt-10 pb-lg-6 pb-3 font-weight-bold`"
-      >
+      <h2 class="text-h3 text-center pt-10 pb-lg-8 pb-5 font-weight-bold">
         {{ $t('company.sponsors') }}
       </h2>
       <CommonGrid>
