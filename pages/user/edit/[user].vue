@@ -57,6 +57,15 @@
       method: 'POST',
       body: values,
     })
+    // Make a PUT request to update the username
+    await $fetch('/api/user', {
+      method: 'PUT',
+      body: {
+        newname: values.name,
+        userUID: user?.value?.uid,
+        // Include any other fields you want to update
+      },
+    })
     // update name (not handled by POST request)
     updateName(values.name)
     // run cancel function to return to previous page
