@@ -1,4 +1,5 @@
-//
+// PUT /api/user
+// endpoint for updating the name of a user in the database
 
 export default defineEventHandler(async (event) => {
   const { user } = event.context
@@ -13,6 +14,7 @@ export default defineEventHandler(async (event) => {
   const isAdmin = hasAccess(user, ['admin'])
   // const firebaseUser = auth.getUser(user.uid)
   if (isAdmin) {
+    // update name with ID
     auth.updateUser(userUID, newName)
   }
 
