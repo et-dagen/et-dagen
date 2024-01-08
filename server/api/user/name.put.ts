@@ -12,8 +12,8 @@ export default defineEventHandler(async (event) => {
     })
   // check if the user is admin
   const isAdmin = hasAccess(user, ['admin'])
-  // const firebaseUser = auth.getUser(user.uid)
-  if (isAdmin) {
+  // if the user is admin, or trying to change own name
+  if (isAdmin || userUID === user.value.uid) {
     // update name with ID
     auth.updateUser(userUID, newName)
   }

@@ -66,8 +66,6 @@
         // Include any other fields you want to update
       },
     })
-    // update name (not handled by POST request)
-    updateName(values.name)
     // run cancel function to return to previous page
     cancel()
   }
