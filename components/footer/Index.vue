@@ -1,7 +1,7 @@
 <template>
   <footer>
     <section class="top">
-      <VImg class="image" :width="30" src="/images/logo_long_neg.png" />
+      <NuxtImg height="80" class="mb-8" src="/images/logo_long_neg.png" />
       <ul class="pa-0 ma-0">
         <li>
           <span class="header fade text-h4">{{
@@ -75,13 +75,6 @@
           text-transform: uppercase;
           letter-spacing: 1px;
           font-size: 20px !important;
-        }
-
-        .image {
-          display: block;
-          height: 90px !important;
-          width: 200px !important;
-          margin: 0 0 30px;
         }
 
         ul {

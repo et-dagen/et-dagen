@@ -17,7 +17,7 @@
     <!-- logo -->
     <template #prepend>
       <NuxtLink :to="localePath('/')">
-        <VImg :width="30" src="/images/logo.png" />
+        <NuxtImg width="30" src="/images/logo.png" />
       </NuxtLink>
     </template>
 

@@ -65,6 +65,7 @@ export default defineNuxtConfig({
     'vuetify-nuxt-module',
     'nuxt-vitest',
     '@vueuse/nuxt',
+    '@nuxt/image',
   ],
 
   i18n: {
@@ -97,6 +98,17 @@ export default defineNuxtConfig({
       ['defineStore', 'definePiniaStore'],
       'storeToRefs',
     ],
+  },
+
+  image: {
+    inject: true,
+    screens: {
+      xs: 599,
+      sm: 959,
+      md: 1279,
+      lg: 1919,
+      xl: 2559,
+    },
   },
 
   vuetify: {
