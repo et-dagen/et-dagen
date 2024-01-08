@@ -33,7 +33,8 @@
       </ul>
     </section>
     <section class="bottom">
-      <span>Elektronikk- & Teknologidagene 2023</span>
+      <span>Elektronikk- & Teknogslogidagene 2023</span>
+      <span class="fade">Addr.: O.S. Bragstads plass 2, 7034 TRONDHEIM</span>
       <span class="fade">Org nr.: 996 858 545</span>
     </section>
   </footer>
