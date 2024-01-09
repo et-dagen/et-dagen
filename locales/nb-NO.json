@@ -211,7 +211,7 @@
       "selectall": "Velg alle",
       "delete": {
         "selected": "Slett valgte",
-        "confirmtext": "Er du sikker på at du vil slette de valgte brukerne?",
+        "confirmtext": "Er du sikker på at du vil slette de valgte bedriftene?",
         "confirm": "Ja, slett dem",
         "abort": "Nei, avbryt"
       },
@@ -233,7 +233,43 @@
       "createcode": "Opprett kode"
     },
     "jobs": {
-      "name": "Jobber"
+      "name": "Jobber",
+      "edit": "Rediger",
+      "pagesize": "Jobber per side",
+      "filtertypes": {
+        "name": "Filtertype",
+        "updated": "Sist modifisert",
+        "jobtitle": "Stillingstittel"
+      },
+      "filterorder": {
+        "name": "Rekkefølge",
+        "descending": "Synkende",
+        "ascending": "Stigende"
+      },
+      "selectall": "Velg alle",
+      "delete": {
+        "selected": "Slett valgte",
+        "confirmtext": "Er du sikker på at du vil slette de valgte jobbene?",
+        "confirm": "Ja, slett dem",
+        "abort": "Nei, avbryt"
+      },
+      "attributes": {
+        "select": "Velg",
+        "title": "Tittel",
+        "description": "Beskrivelse",
+        "company": "Bedrift",
+        "location": "Sted",
+        "deadline": "Søkefrist",
+        "jobtype": {
+          "name": "Jobbtype",
+          "full_time": "Fulltid",
+          "part_time": "Deltid",
+          "graduate": "Graduate",
+          "summer_internship": "Sommerjobb"
+        },
+        "code": "Jobbkode"
+      },
+      "copied": "UID kopiert!"
     },
     "users": {
       "name": "Brukere",
