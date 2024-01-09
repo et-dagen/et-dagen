@@ -274,6 +274,30 @@
     }
   },
   "edit": {
+    "jobs": {
+      "create": {
+        "title": "Opprett stillingsannonse",
+        "action": "Opprett"
+      },
+      "edit": {
+        "title": "Rediger stillingsannonse",
+        "action": "Lagre"
+      },
+      "cancel": "Avbryt",
+      "attributes": {
+        "title": "Stillingstittel",
+        "company": "Bedrift",
+        "description": "Stillingsbeskrivelse",
+        "deadline": "Søknadsfrist",
+        "jobtype": {
+          "name": "Stillingstype",
+          "full_time": "Fulltid",
+          "graduate": "Gratuate",
+          "summer_internship": "Sommerjobb"
+        },
+        "location": "Sted"
+      }
+    },
     "event": {
       "create": {
         "title": "Opprett arrangement",
