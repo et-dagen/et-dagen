@@ -1,7 +1,7 @@
 <template>
   <footer>
     <section class="top">
-      <VImg class="image" :width="30" src="/images/logo_long_neg.png" />
+      <NuxtImg height="80" class="mb-8" src="/images/logo_long_neg.png" />
       <ul class="pa-0 ma-0">
         <li>
           <span class="header fade text-h4">{{
@@ -33,7 +33,8 @@
       </ul>
     </section>
     <section class="bottom">
-      <span>Elektronikk- & Teknologidagene 2023</span>
+      <span>Elektronikk- & Teknogslogidagene 2023</span>
+      <span class="fade">Addr.: O.S. Bragstads plass 2, 7034 TRONDHEIM</span>
       <span class="fade">Org nr.: 996 858 545</span>
     </section>
   </footer>
@@ -75,13 +76,6 @@
           text-transform: uppercase;
           letter-spacing: 1px;
           font-size: 20px !important;
-        }
-
-        .image {
-          display: block;
-          height: 90px !important;
-          width: 200px !important;
-          margin: 0 0 30px;
         }
 
         ul {

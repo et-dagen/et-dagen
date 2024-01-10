@@ -104,7 +104,8 @@
     "error": {
       "default": "Oi! Noe gikk galt.",
       "form": {
-        "missing_email": "Epost ikke oppgitt"
+        "missing_email": "Epost ikke oppgitt",
+        "invalid": "Skjemaet er ikke gyldig"
       },
       "firebase": {
         "email_in_use": "Eposten er allerede i bruk",
@@ -124,6 +125,14 @@
           "registration_unnecessary": "Påmelding er ikke nødvendig for dette arrangementet",
           "non_admin_user": "Dette krever administratorrettigheter"
         }
+      },
+      "company": {
+        "edit": {
+          "created": "Bedriften ble ikke opprettet",
+          "modified": "Oppdatering misslykket",
+          "modified_logo": "Logo ble ikke oppdatert",
+          "deleted_logo": "Logo ble ikke slettet"
+        }
       }
     },
     "success": {
@@ -134,6 +143,17 @@
         "register": {
           "sign_up": "Du er påmeldt dette arrangementet",
           "opt_out": "Du har meldt deg av dette arrangementet"
+        },
+        "edit": {
+          "created": "Arrangement opprettet",
+          "modified": "Arrangement oppdatert"
+        }
+      },
+      "company": {
+        "edit": {
+          "created": "Bedrift opprettet",
+          "modified": "Bedrift oppdatert",
+          "deleted_logo": "Logo slettet"
         }
       }
     }
@@ -152,7 +172,75 @@
       "name": "Bedrifter"
     },
     "events": {
-      "name": "Arrangementer"
+      "name": "Arrangementer",
+      "edit": "Rediger",
+      "pagesize": "Arrangementer per side",
+      "dates": "Dato",
+      "filtertypes": {
+        "name": "Filtertype",
+        "updated": "Sist modifisert",
+        "company": "Bedrift"
+      },
+      "filterorder": {
+        "name": "Rekkefølge",
+        "descending": "Synkende",
+        "ascending": "Stigende"
+      },
+      "selectall": "Velg alle",
+      "delete": {
+        "selected": "Slett valgte",
+        "confirmtext": "Er du sikker på at du vil slette de valgte brukerne?",
+        "confirm": "Ja, slett dem",
+        "abort": "Nei, avbryt"
+      },
+      "attributes": {
+        "select": "Velg",
+        "title": "Tittel",
+        "company": "Bedrift",
+        "location": "Sted",
+        "date": "Dato",
+        "time": "Tid",
+        "capacity": "Kapasitet"
+      },
+      "copied": "UID kopiert!"
+    },
+    "company": {
+      "name": "Bedrifter",
+      "edit": "Rediger",
+      "pagesize": "Bedrifter per side",
+      "filtertypes": {
+        "name": "Filtertype",
+        "updated": "Sist modifisert",
+        "companyname": "Bedriftsnavn"
+      },
+      "filterorder": {
+        "name": "Rekkefølge",
+        "descending": "Synkende",
+        "ascending": "Stigende"
+      },
+      "selectall": "Velg alle",
+      "delete": {
+        "selected": "Slett valgte",
+        "confirmtext": "Er du sikker på at du vil slette de valgte brukerne?",
+        "confirm": "Ja, slett dem",
+        "abort": "Nei, avbryt"
+      },
+      "attributes": {
+        "select": "Velg",
+        "name": "Navn",
+        "logo": "Logo",
+        "webpage": "Nettside",
+        "type": {
+          "name": "Bedriftstype",
+          "main_partner": "Hovedpartner",
+          "partner": "Partner",
+          "sponsor": "Sponsor"
+        },
+        "code": "Bedriftskode"
+      },
+      "copied": "UID kopiert!",
+      "copiedcode": "Kode kopiert!",
+      "createcode": "Opprett kode"
     },
     "jobs": {
       "name": "Jobber"
@@ -193,6 +281,58 @@
         "company": "Bedrift"
       },
       "copied": "UID kopiert!"
+    }
+  },
+  "edit": {
+    "event": {
+      "create": {
+        "title": "Opprett arrangement",
+        "action": "Opprett"
+      },
+      "edit": {
+        "title": "Rediger arrangement",
+        "action": "Lagre"
+      },
+      "cancel": "Avbryt",
+      "attributes": {
+        "title": "Tittel",
+        "company": "Bedrift",
+        "capacity": "Kapasitet",
+        "description": "Beskrivelse",
+        "location": {
+          "name": "Stedsnavn",
+          "map": "Kartlink"
+        },
+        "date": {
+          "start": "Startdato",
+          "end": "Sluttdato"
+        },
+        "attendants": "Påmeldte deltakere"
+      }
+    },
+    "company": {
+      "create": {
+        "title": "Opprett bedrift",
+        "action": "Opprett"
+      },
+      "edit": {
+        "title": "Rediger bedrift",
+        "action": "Lagre"
+      },
+      "unlink_logo": "Frakoble logo",
+      "cancel": "Avbryt",
+      "attributes": {
+        "name": "Navn",
+        "description": "Beskrivelse",
+        "logo": "Logo",
+        "webpage": "Nettside",
+        "type": {
+          "name": "Bedriftstype",
+          "main_partner": "Hovedsponsor",
+          "partner": "Partner",
+          "sponsor": "Sponsor"
+        }
+      }
     }
   },
   "footer": {

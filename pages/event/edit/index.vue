@@ -1,6 +1,12 @@
+<script setup lang="ts">
+  definePageMeta({
+    // route and all sub routes are protected
+    protected: true,
+    // route is only accessible by admins
+    accessLevels: ['admin', 'company'],
+  })
+</script>
+
 <template>
-  <div class="ma-10">
-    <h4 class="text-center pt-4 pb-7">{{ $t('admin.events.name') }}</h4>
-    <EventEditForm />
-  </div>
+  <EventEditForm />
 </template>

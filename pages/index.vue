@@ -4,14 +4,14 @@
   const mainPartner = computed(
     () =>
       Object.values(companies.value).find(
-        (company: any) => company.type === 'main-partner'
+        (company: any) => company.type === 'main-partner' && !!company.logo
       ) || null
   )
 
   const partners =
     computed(() =>
       Object.values(companies.value).filter(
-        (company: any) => company.type === 'partner'
+        (company: any) => company.type === 'partner' && !!company.logo
       )
     ) || null
   const showPartners = computed(
@@ -21,7 +21,7 @@
   const sponsors =
     computed(() =>
       Object.values(companies.value).filter(
-        (company: any) => company.type === 'sponsor'
+        (company: any) => company.type === 'sponsor' && !!company.logo
       )
     ) || null
   const showSponsors = computed(
@@ -53,16 +53,13 @@
         name: mainPartner.name,
         description: mainPartner.description,
         logo: mainPartner.logo,
-        website: mainPartner.website,
+        webpage: mainPartner.webpage,
       }"
       class="my-5 d-flex justify-center"
     />
 
     <div v-if="showPartners">
-      <h2
-        :class="`text-sm-h3 text-h4 text-center 
-          pt-10 pb-lg-6 pb-3 font-weight-bold`"
-      >
+      <h2 class="text-h3 text-center pt-10 pb-lg-8 pb-5 font-weight-bold">
         {{ $t('company.partners') }}
       </h2>
       <CommonGrid>
@@ -71,17 +68,14 @@
           :key="partner.id"
           :content="{
             logo: partner.logo,
-            website: partner.website,
+            webpage: partner.webpage,
           }"
         />
       </CommonGrid>
     </div>
 
     <div v-if="showSponsors">
-      <h2
-        :class="`text-sm-h3 text-h4 text-center 
-          pt-10 pb-lg-6 pb-3 font-weight-bold`"
-      >
+      <h2 class="text-h3 text-center pt-10 pb-lg-8 pb-5 font-weight-bold">
         {{ $t('company.sponsors') }}
       </h2>
       <CommonGrid>
@@ -90,7 +84,7 @@
           :key="sponsor.id"
           :content="{
             logo: sponsor.logo || '',
-            website: sponsor.website,
+            webpage: sponsor.webpage,
           }"
         />
       </CommonGrid>

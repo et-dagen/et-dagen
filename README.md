@@ -39,6 +39,12 @@ Create a `.env` file in the project root by copying the `.env.example` file:
 cp .env.example .env
 ```
 
+and
+
+```bash
+cp .env.example .env.development
+```
+
 Missing environment variables in the `.env` file will be provided by the project manager.
 
 ### Development

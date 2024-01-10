@@ -28,7 +28,7 @@
         <VBtn v-bind="props" rounded="lg" variant="text">
           <!-- dependent on current locale-->
           <template #prepend>
-            <VImg
+            <NuxtImg
               width="30"
               :src="`/images/flags/${currentLocale?.code}.svg`"
             />
