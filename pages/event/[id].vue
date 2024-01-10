@@ -14,30 +14,50 @@
 </script>
 
 <template>
-  <div>
-    <div>
-      <!-- <div>{{ event[eventUid] }}</div> -->
-      <h2 class="text-center text-h3 pt-5">{{ event[eventUid]['title'] }}</h2>
-      <div>Company: {{ event[eventUid]['companyUID'] }}</div>
-      <div>Description: {{ event[eventUid]['description'] }}</div>
-      <div>Capacity: {{ event[eventUid]['capacity'] }}</div>
-      <div>Date: {{ event[eventUid]['date'] }}</div>
-      <div>Location: {{ event[eventUid]['location'] }}</div>
-      <div>Attendants: {{ event[eventUid]['attendants'] }}</div>
-    </div>
-    <VCard style="max-width: 80vw">
-      <VRow>
+  <div class="pt-10 d-flex justify-center">
+    <!-- <div> -->
+    <!-- <div>{{ event[eventUid] }}</div> -->
+    <!-- <h2 class="text-center text-h3 pt-5">{{ event[eventUid]['title'] }}</h2>
+    <div>Company: {{ event[eventUid]['companyUID'] }}</div>
+    <div>Description: {{ event[eventUid]['description'] }}</div>
+    <div>Capacity: {{ event[eventUid]['capacity'] }}</div>
+    <div>Date: {{ event[eventUid]['date'] }}</div>
+    <div>Location: {{ event[eventUid]['location'] }}</div>
+    <div>Attendants: {{ event[eventUid]['attendants'] }}</div> -->
+    <!-- </div> -->
+    <VCard variant="flat" class="w-75 pt-10 pb-1">
+      <VRow no-gutters>
         <VCol cols="4">
           <VCard>
-            <h4>Detaljer</h4>
-            <p>Fra:</p>
-            <p>Til:</p>
-            <p>Sted:</p>
-            <p>Hva:</p>
-            <p>Arrangør:</p>
+            <h4 class="text-h4 pb-4">Detaljer</h4>
+            <p>
+              <span class="font-weight-bold">Fra:</span>
+              {{ event[eventUid]['date']['start'] }}
+            </p>
+            <p>
+              <span class="font-weight-bold">Til: </span>
+              {{ event[eventUid]['date']['end'] }}
+            </p>
+            <p>
+              <span class="font-weight-bold">Sted: </span>
+              {{ event[eventUid]['location']['name'] }}
+            </p>
+            <p>
+              <span class="font-weight-bold">Hva: </span>
+              {{ event[eventUid]['eventType'] }}
+            </p>
+            <p>
+              <span class="font-weight-bold">Arrangør: </span>
+              {{ event[eventUid]['companyUID'] }}
+            </p>
           </VCard>
         </VCol>
-        <VCol cols="8"> hei </VCol>
+        <VCol cols="8">
+          <VCard>
+            <h3 class="text-h3 pb-6">{{ event[eventUid]['title'] }}</h3>
+            <p>{{ event[eventUid]['description'] }}</p>
+          </VCard>
+        </VCol>
       </VRow>
     </VCard>
   </div>
