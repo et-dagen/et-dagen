@@ -27,7 +27,9 @@
           <span class="header fade text-h4">{{
             $t('footer.header.organisation')
           }}</span>
-          <NuxtLink to="https://www.ntnu.edu/studies/mtelsys">MTELSYS</NuxtLink>
+          <NuxtLink to="https://www.ntnu.edu/studies/mtelsys" target="_blank">
+            MTELSYS
+          </NuxtLink>
           <NuxtLink to="/contact">{{ $t('footer.link.contact') }}</NuxtLink>
           <NuxtLink
             to="https://github.com/et-dagen"
