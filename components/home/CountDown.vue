@@ -4,6 +4,8 @@
     futureTime: string
   }
 
+  const localePath = useLocalePath()
+
   const cdProps = defineProps({
     content: { type: Object as PropType<CountDownContent>, required: true },
   })
@@ -143,7 +145,7 @@
         style="background-color: #c33c3b"
         color="white"
         append-icon="mdi-arrow-right"
-        @click="navigateTo('/program')"
+        @click="navigateTo(localePath('/program'))"
       >
         <h6 class="text-sm-h6 text-h6">{{ $t('nav.program_nav') }}</h6>
       </VBtn>
