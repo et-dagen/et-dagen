@@ -26,6 +26,12 @@
       "user_type": {
         "student": "Studentbruker",
         "company": "Bedriftsbruker"
+      },
+      "dietary_restrictions": {
+        "name": "Allergener og restriksjoner",
+        "other": "Andre restriksjoner",
+        "norestrictions": "Nei, jeg har ingen restriksjoner",
+        "restrictions": "Jeg har allergener og/eller restriksjoner",
       }
     },
     "login": {
@@ -336,5 +342,27 @@
       "program": "Program",
       "jobs": "Jobber"
     }
+  },
+  "dietary_restrictions": {
+    "name": "Allergener og restriksjoner",
+    "gluten": "Gluten",
+    "shellfish": "Skalldyr",
+    "citrus": "Sitrusfrukter",
+    "egg": "Egg",
+    "fish": "Fisk",
+    "peanuts": "Peanøtter",
+    "soy": "Soya",
+    "milk": "Melk",
+    "nuts": "Nøtter",
+    "celery": "Selleri",
+    "mustard": "Sennep",
+    "sesame_seeds": "Sesamfrø",
+    "sulfur_dioxide_sulphite": "Svoveldioksid og sulfitter",
+    "lupine": "Lupin",
+    "mollusc": "Bløtdyr",
+    "vegetarian": "Vegetar",
+    "vegan": "Vegansk",
+    "halal": "Halal",
+    "kosher": "Kosher"
   }
 }
