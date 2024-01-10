@@ -5,7 +5,8 @@
     "jobs": "Jobber",
     "contact": "Kontakt",
     "admin": "Administrasjon",
-    "user": "Min profil"
+    "user": "Min profil",
+    "program_nav": "SE PROGRAM"
   },
   "user": {
     "sign_in": "Logg inn",
@@ -67,7 +68,16 @@
       "october": "oktober",
       "november": "november",
       "december": "desember"
+    },
+    "times": {
+      "days": "Dager",
+      "hours": "Timer",
+      "minutes": "Minutter",
+      "seconds": "Sekunder"
     }
+  },
+  "event": {
+    "take_off": "Arrangementet tar av om"
   },
   "contact": {
     "title": "Kontakt oss",
