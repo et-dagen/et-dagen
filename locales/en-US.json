@@ -27,6 +27,12 @@
       "user_type": {
         "student": "Student user",
         "company": "Company user"
+      },
+      "dietary_restrictions": {
+        "name": "Allergens and restrictions",
+        "other": "Other restrictions",
+        "norestrictions": "No, I have no dietary restrictions",
+        "restrictions": "Yes, I have allergies and/or restrictions"
       }
     },
     "login": {
@@ -376,5 +382,27 @@
       "program": "Program",
       "jobs": "Jobs"
     }
+  },
+  "dietary_restrictions": {
+    "name": "Allergens and restrictions",
+    "gluten": "Gluten",
+    "shellfish": "shellfish",
+    "citrus": "Citrus fruits",
+    "egg": "Egg",
+    "fish": "Fish",
+    "peanuts": "Peanuts",
+    "soy": "Soy",
+    "milk": "Milk",
+    "nuts": "Nuts",
+    "celery": "Celery",
+    "mustard": "Mustard",
+    "sesame_seeds": "Sesame Seeds",
+    "sulfur_dioxide_sulphite": "Sulfor Oxide and Sulphites",
+    "lupine": "Lupine",
+    "mollusc": "Molluscs",
+    "vegetarian": "Vegetarian",
+    "vegan": "Vegan",
+    "halal": "Halal",
+    "kosher": "Kosher"
   }
 }
