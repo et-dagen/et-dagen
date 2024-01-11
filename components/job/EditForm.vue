@@ -25,12 +25,13 @@
   })
 
   const localePath = useLocalePath()
+
   // redirect on non existing job or lacking access
   if (
     (props.jobUid && !job.value) ||
     (hasAccess.value(['company']) &&
       props.jobUid &&
-      job.value.companyUID !== user.value?.companyUID)
+      Object.values(job.value)[0].companyUID !== user.value?.companyUID)
   )
     navigateTo(localePath('/jobs/edit'))
 
