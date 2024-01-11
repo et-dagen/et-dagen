@@ -106,18 +106,16 @@
     }
 
     if (hasAccess.value(['company'])) {
-      return Object?.values(
-        embedKeyIntoObjectValues(companies.value)
-          .filter(({ uid }) => uid === user?.companyUID)
-          .map((company) => {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { uid, name, ...remains } = company
-            return {
-              value: uid,
-              title: name,
-            }
-          })
-      )
+      return embedKeyIntoObjectValues(companies.value)
+        .filter((company) => company.uid === user.value?.companyUID)
+        .map((company) => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { uid, name, ...remains } = company
+          return {
+            value: uid,
+            title: name,
+          }
+        })
     }
   })
 
