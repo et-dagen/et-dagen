@@ -20,7 +20,7 @@
 </script>
 
 <template>
-  <div class="pb-5">
+  <div class="pb-5 pb-lg-9 py-md-7">
     <VCard variant="flat" :width="xs ? '90vw' : '65vw'">
       <VRow>
         <!-- banner title and caption -->
