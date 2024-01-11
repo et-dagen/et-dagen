@@ -1,8 +1,8 @@
-# E&T-dagen v2
+# etdagen.no
 
 The second version of the [E&T-dagen website](https://etdagen.no). This time built with Nuxt 3 instead of Django.
 
-**_NB!_** _You can find further reading materials in the [repository wiki](https://github.com/ipeglin/et-dagen-v2/wiki) if the content in this README is not satisfactory_
+**_NB!_** _You can find further reading materials in the [Repository Wiki](https://github.com/et-dagen/et-dagen/wiki) if the content in this README is not satisfactory_
 
 ## Getting started
 
@@ -10,63 +10,70 @@ Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introdu
 
 ### Pre-requisites
 
-- [Node.js](https://nodejs.org/en/) (v16.11.0 or higher)
-- [npm](https://www.npmjs.com/) (v7.24.0 or higher)
+- [Node.js](https://nodejs.org/en/) (v20.2.0 or higher)
+- [pnpm](https://pnpm.io/installation) (v8.10.5 or higher)
 
 ### Installation
 
 Clone the repository using SSH:
 
 ```bash
-git clone
+git clone git@github.com:et-dagen/et-dagen.git
 ```
 
 Install dependencies:
 
 ```bash
 # Navigate to the project root
-cd ./etdagen-v2
+cd ./et-dagen
 
 # Install dependencies
-npm install
+pnpm install
 ```
 
 ### Setup
 
-Create a `.env` and a `firebase-admin.key.json` file in the project root by copying the .env.example and firebase-admin.key.json.example files:
+Create a `.env` file in the project root by copying the `.env.example` file:
 
 ```bash
 cp .env.example .env
-cp firebase-admin.key.json.example firebase-admin.key.json
 ```
 
-Replace `xxxxx` in the `.env` file with the correct value: _d1f82_.
+and
 
-Add missing environment variables to the `.env` file and Firebase admin SDK credentials, provided by the project manager.
+```bash
+cp .env.example .env.development
+```
+
+Missing environment variables in the `.env` file will be provided by the project manager.
 
 ### Development
 
 Start the development server on `http://localhost:3000`
 
 ```bash
-npm run dev
+pnpm dev
+```
+
+or optionally with Turbo if installed:
+
+```bash
+turbo dev
 ```
 
 ### Production
 
-Build the application for production:
-
-```bash
-npm run build
-```
-
 Locally preview production build:
 
 ```bash
-npm run preview
+pnpm preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+### Deployment
+
+Create pull request from `dev` to `main` branch. When the pull request is approved and merged, the production build will be deployed automatically to Digital Ocean using their App Platform.
+
+Control the deployment logs in [Digital Ocean Control Panel](https://cloud.digitalocean.com/apps).
 
 ## Development guidelines
 
@@ -100,15 +107,11 @@ The project uses the following branch naming conventions:
 
 - See [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0-beta.4/#summary) conventions for commit messages.
 
-- The projects has been configured with a [husky pre-commit](https://github.com/typicode/husky) hook that runs `npm run lintfix` before every commit. This ensures that the code style is consistent.
+- The projects has been configured with a [husky pre-commit](https://github.com/typicode/husky) hook that runs `pnpm lintfix` before every commit. This ensures that the code style is consistent.
 
 ### Pull requests
 
 - Pull requests should be created for all new features and bugs. The pull request should be assigned to the person who should review it. The pull request should be labeled with the appropriate label(s).
-
-## Deployment
-
-_To be improved._
 
 ## Testing
 

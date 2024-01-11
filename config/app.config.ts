@@ -38,5 +38,7 @@ const adminCategories = [
 ]
 
 const usertypes = ['basic', 'company', 'admin']
+const companyTypes = ['main-partner', 'partner', 'sponsor']
+const jobTypes = ['full-time', 'graduate', 'summer-internship']
 
-export { routes, adminCategories, usertypes }
+export { routes, adminCategories, usertypes, companyTypes, jobTypes }

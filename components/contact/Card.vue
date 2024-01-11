@@ -16,28 +16,24 @@
 </script>
 
 <template>
-  <div class="card">
-    <img
-      class="card__image"
-      :src="content.image"
-      :alt="`Image of ${content.position}`"
-    />
-    <div class="card__text">
-      <h4 class="card__title bold">{{ content.name }}</h4>
-      <h5 class="card__position text-primary">{{ content.position }}</h5>
-      <a :href="`mailto:${content.email}`" class="card__txt mt-3">
-        <VIcon icon="mdi-email" color="primary" class="mr-2" />
-        {{ content.email }}
-      </a>
-      <a
-        v-if="content.phone"
-        :href="`tel:${content.phone}`"
-        class="card__txt mt-3"
-      >
-        <VIcon icon="mdi-phone" color="primary" class="mr-2" />{{
-          content.phone
-        }}</a
-      >
+  <div class="card elevation-3">
+    <div class="card-content">
+      <NuxtImg class="image" :src="content.image" />
+      <div class="card-text pa-md-8 pa-sm-4">
+        <div class="title bold text-primary py-3 text-md-h6">
+          {{ content.position }}
+        </div>
+        <span class="text-md-h4 text-sm-h5 bold">{{ content.name }}</span>
+
+        <div class="actions mt-md-6 mt-sm-3">
+          <NuxtLink :to="`mailto:${content.email}`">
+            <VIcon>mdi-email</VIcon> {{ content.email }}
+          </NuxtLink>
+          <NuxtLink v-if="content.phone" :to="`tel:${content.phone}`">
+            <VIcon>mdi-phone</VIcon> {{ content.phone }}
+          </NuxtLink>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -48,85 +44,58 @@
     font-weight: bold;
   }
 
-  .icon {
+  .image {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  .v-icon {
     color: rgb(var(--v-theme-primary));
   }
-
-  .email {
-    font-weight: bold;
-  }
-
-  span,
-  a {
-    color: var(--color-text-neutral);
-  }
-
-  /* Cards */
   .card {
-    flex-wrap: wrap;
+    aspect-ratio: 2 / 1 !important;
     display: flex;
-
-    border-radius: 12px;
-    margin: 0 0 2rem 0;
+    flex-direction: row;
+    border-radius: 24px;
     overflow: hidden;
-    position: relative;
 
-    background: rgb(var(--v-theme-error)), transparent 50% !important;
-
-    .card__title {
-      font-size: 1.75rem;
-    }
-
-    .card__image {
-      max-height: 180px;
+    &-content {
+      display: grid;
       width: 100%;
-      object-fit: cover;
+      height: 100%;
+      grid-template-columns: 1fr 2fr;
       position: relative;
-    }
+      overflow: hidden;
 
-    .card__text {
-      padding: 1.5rem;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-    }
-  }
+      .actions {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
 
-  // Set different max-widths for different screen sizes
-  @media #{map-get(settings.$display-breakpoints, 'md-and-up')} {
-    .card {
-      flex-wrap: inherit;
-
-      .card__title {
-        font-size: 2rem;
-      }
-
-      .card__image {
-        max-width: 300px;
-        max-height: 100%;
-        transition: transform 0.3s ease;
-      }
-
-      .card__text {
-        padding: 3rem;
-        width: 100%;
+        a {
+          display: flex;
+          flex-direction: row;
+          gap: 1rem;
+          align-items: center;
+        }
       }
     }
-  }
 
-  @media #{map-get(settings.$display-breakpoints, 'xs')} {
-    .card__text {
-      padding: 2rem 3.5rem;
+    // Set different max-widths for different screen sizes
+    @media #{map-get(settings.$display-breakpoints, 'sm-and-up')} {
+      max-width: 600px !important;
     }
+    @media #{map-get(settings.$display-breakpoints, 'sm')} {
+      width: 450px !important;
+      .actions {
+        font-size: 0.9rem !important;
 
-    .card__text:before {
-      content: '';
-      position: absolute;
-      display: block;
-
-      top: -20%;
-      height: 130%;
-      width: 55px;
+        a {
+          gap: 0.5rem;
+        }
+      }
     }
   }
 </style>

@@ -4,7 +4,8 @@ node_modules
 .nitro
 .cache
 .output
-.env
+.env*
+!.env.example
 dist
 .DS_Store
 .fleet
