@@ -27,11 +27,11 @@
         "student": "Student user",
         "company": "Company user"
       },
-      "diatary_restrictions": {
-        "name": "Allergener og restriksjoner",
+      "dietary_restrictions": {
+        "name": "Allergens and restrictions",
         "other": "Other restrictions",
-        "norestrictions": "Nei, jeg har ingen restriksjoner",
-        "restrictions": "Jeg har allergener og/eller restriksjoner"
+        "norestrictions": "No, I have no dietary restrictions",
+        "restrictions": "Yes, I have allergies and/or restrictions"
       }
     },
     "login": {
@@ -338,25 +338,25 @@
       "jobs": "Jobs"
     }
   },
-  "diatary_restrictions": {
-    "name": "Allergener og restriksjoner",
+  "dietary_restrictions": {
+    "name": "Allergens and restrictions",
     "gluten": "Gluten",
-    "shellfish": "Skalldyr",
-    "citrus": "Sitrusfrukter",
+    "shellfish": "shellfish",
+    "citrus": "Citrus fruits",
     "egg": "Egg",
-    "fish": "Fisl",
-    "peanuts": "Peanøtter",
-    "soy": "Soya",
-    "milk": "Melk",
-    "nuts": "Nøtter",
-    "celery": "Selleri",
-    "mustard": "Sennep",
-    "sesame_seeds": "Sesamfrø",
-    "sulfur_dioxide_sulphite": "Svoveldioksid og sulfitter",
-    "lupine": "Lupin",
-    "mollusc": "Bløtdyr",
-    "vegetarian": "Vegetar",
-    "vegan": "Vegansk",
+    "fish": "Fish",
+    "peanuts": "Peanuts",
+    "soy": "Soy",
+    "milk": "Milk",
+    "nuts": "Nuts",
+    "celery": "Celery",
+    "mustard": "Mustard",
+    "sesame_seeds": "Sesame Seeds",
+    "sulfur_dioxide_sulphite": "Sulfor Oxide and Sulphites",
+    "lupine": "Lupine",
+    "mollusc": "Molluscs",
+    "vegetarian": "Vegetarian",
+    "vegan": "Vegan",
     "halal": "Halal",
     "kosher": "Kosher"
   }
