@@ -5,7 +5,8 @@
     "jobs": "Jobs",
     "contact": "Contact",
     "admin": "Administration",
-    "user": "My profile"
+    "user": "My profile",
+    "program_nav": "SEE PROGRAM"
   },
   "user": {
     "sign_in": "Sign in",
@@ -67,7 +68,16 @@
       "october": "October",
       "november": "November",
       "december": "December"
+    },
+    "times": {
+      "days": "Days",
+      "hours": "Hours",
+      "minutes": "Minutes",
+      "seconds": "Seconds"
     }
+  },
+  "event": {
+    "take_off": "The event is taking off in"
   },
   "contact": {
     "title": "Contact Us",
@@ -228,7 +238,42 @@
       "createcode": "Create code"
     },
     "jobs": {
-      "name": "Jobs"
+      "name": "Jobs",
+      "edit": "Edit Jobs",
+      "pagesize": "Jobs per page",
+      "filtertypes": {
+        "name": "Filter type",
+        "updated": "Last modified",
+        "jobtitle": "Job Title"
+      },
+      "filterorder": {
+        "name": "Order",
+        "descending": "Descending",
+        "ascending": "Ascending"
+      },
+      "selectall": "Select all",
+      "delete": {
+        "selected": "Delete selected",
+        "confirmtext": "Are you sure you want to delete the selected jobs?",
+        "confirm": "Yes, delete them",
+        "abort": "No, abort"
+      },
+      "attributes": {
+        "select": "Velg",
+        "title": "Title",
+        "description": "Description",
+        "company": "Company",
+        "location": "Location",
+        "deadline": "Deadline",
+        "jobtype": {
+          "name": "Job Type",
+          "full_time": "Full-time",
+          "graduate": "Graduate",
+          "summer_internship": "Summer internship"
+        },
+        "code": "Jobb Code"
+      },
+      "copied": "UID kopiert!"
     },
     "users": {
       "name": "Users",
