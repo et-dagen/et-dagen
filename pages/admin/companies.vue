@@ -363,7 +363,9 @@
           <td v-else>-</td>
 
           <!-- company webpage -->
-          <td>{{ company.webpage }}</td>
+          <td class="truncate">
+            {{ company.webpage.replace('https://', '') }}
+          </td>
 
           <!-- company code -->
           <td v-if="hadCompanyCodes(company.uid)">
@@ -479,7 +481,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 200px;
+    max-width: 190px;
   }
 </style>
 models/RegistrationCode
