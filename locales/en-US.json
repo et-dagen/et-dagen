@@ -31,7 +31,7 @@
         "name": "Allergener og restriksjoner",
         "other": "Other restrictions",
         "norestrictions": "Nei, jeg har ingen restriksjoner",
-        "restrictions": "Jeg har allergener og/eller restriksjoner",
+        "restrictions": "Jeg har allergener og/eller restriksjoner"
       }
     },
     "login": {
