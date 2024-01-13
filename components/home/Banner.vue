@@ -22,8 +22,8 @@
     <VCard variant="flat" width="60vw" min-width="290px">
       <VRow>
         <!-- banner title and caption -->
-        <VCol cols="12" md="6">
-          <h5 class="pt-md-5">
+        <VCol cols="12" lg="7">
+          <h5 class="pt-md-7">
             {{ startDate.getDate() }}.
             {{
               !isSameMonth(content.date.start, content.date.end)
@@ -43,16 +43,16 @@
           </h5>
 
           <!-- h4 for under lg breakpoint and h3 above -->
-          <h3 class="py-3 text-h4 text-lg-h3 text-md-h3 font-weight-bold">
+          <h3 class="py-3 text-h4 text-md-h3 font-weight-bold">
             {{ content.title }}
           </h3>
 
           <h6>{{ content.caption }}</h6>
         </VCol>
-        <VCol cols="6">
+        <VCol cols="5">
           <!-- banner image -->
           <VImg
-            class="d-none d-md-flex elevation-3 rounded-lg"
+            class="d-none d-lg-flex elevation-3 rounded-lg"
             :aspect-ratio="4 / 3"
             cover
             :src="content.image"
