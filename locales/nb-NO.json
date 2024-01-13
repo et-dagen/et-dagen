@@ -173,7 +173,8 @@
     }
   },
   "jobs": {
-    "title": "Stillingsannonser"
+    "title": "Stillingsannonser",
+    "jobTypes": "Jobbtyper"
   },
   "admin": {
     "categories": "Kategorier",

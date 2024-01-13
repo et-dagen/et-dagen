@@ -168,7 +168,8 @@
     }
   },
   "jobs": {
-    "title": "Job advertisements"
+    "title": "Job advertisements",
+    "jobTypes": "Job types"
   },
   "admin": {
     "categories": "Categories",
