@@ -15,13 +15,11 @@
 
   const startDate = new Date(props.content.date.start)
   const endDate = new Date(props.content.date.end)
-
-  const { smAndUp, xs } = useDisplay()
 </script>
 
 <template>
-  <div class="pb-5 pb-lg-9 py-md-7">
-    <VCard variant="flat" :width="xs ? '90vw' : '65vw'">
+  <div class="pb-lg-9 py-md-7">
+    <VCard variant="flat" width="60vw" min-width="290px">
       <VRow>
         <!-- banner title and caption -->
         <VCol cols="12" md="6">
