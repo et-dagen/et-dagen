@@ -20,9 +20,10 @@
     class="job-wrapper d-flex rounded-lg"
     @click="navigateTo(localePath(`/jobs/${jobUID}`))"
   >
-    <NuxtImg width="200" height="100" :src="companyLogo" />
+    <NuxtImg :src="companyLogo" />
+    <VDivider vertical class="my-2 ml-2" />
     <VCard
-      class="ml-5 flex-grow-1"
+      class="flex-grow-1"
       flat
       :subtitle="
         $t(`admin.jobs.attributes.jobtype.${jobType.replace('-', '_')}`)
@@ -49,6 +50,8 @@
     object-fit: contain;
     align-self: start;
     margin: 0.625rem;
+    width: 175px;
+    max-height: 125px;
 
     @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
       width: 125px;
