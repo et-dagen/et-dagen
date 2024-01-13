@@ -1,6 +1,8 @@
 <script setup lang="ts">
   import { adminCategories as categories } from '~/config/app.config'
 
+  const localePath = useLocalePath()
+
   definePageMeta({
     // route and all sub routes are protected
     protected: true,
@@ -13,7 +15,7 @@
       if (!(to.name as string).includes('admin___')) return
 
       // make sure localization is preserved
-      return navigateTo(`${to.fullPath}/companies`)
+      return navigateTo(localePath(`${to.fullPath}/companies`))
     },
   })
 

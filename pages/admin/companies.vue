@@ -2,6 +2,8 @@
   import { companyTypes as companyTypeNames } from '~/config/app.config'
   import type { Company } from '~/models/Company'
 
+  const localePath = useLocalePath()
+
   // get companies and companies from the API
   const { data: companies, refresh } = await useFetch('/api/company')
   const { data: codes, refresh: refreshCodes } = await useFetch('/api/code')
@@ -290,7 +292,7 @@
           class="ml-2 add_company"
           flat
           icon="mdi-plus"
-          @click="navigateTo('/company/edit')"
+          @click="navigateTo(localePath('/company/edit'))"
         >
         </VBtn>
       </div>

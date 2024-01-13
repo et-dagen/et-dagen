@@ -1,6 +1,8 @@
 <script setup lang="ts">
   import type { AlertType } from 'composables/useAlerts'
 
+  const localePath = useLocalePath()
+
   const props = defineProps({
     eventUid: {
       type: String,
