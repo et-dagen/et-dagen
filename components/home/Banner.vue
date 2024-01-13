@@ -49,7 +49,7 @@
 
           <h6>{{ content.caption }}</h6>
         </VCol>
-        <VCol v-if="smAndUp" cols="5">
+        <VCol cols="6">
           <!-- banner image -->
           <VImg
             class="d-none d-md-flex elevation-3 rounded-lg"
