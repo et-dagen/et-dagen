@@ -320,6 +320,30 @@
     }
   },
   "edit": {
+    "jobs": {
+      "create": {
+        "title": "Create Job",
+        "action": "Create Job"
+      },
+      "edit": {
+        "title": "Edit Job",
+        "action": "Save Changes"
+      },
+      "cancel": "Cancel",
+      "attributes": {
+        "title": "Job Title",
+        "company": "Company",
+        "description": "Job Description",
+        "deadline": "Application Deadline",
+        "jobtype": {
+          "name": "Job Type",
+          "full_time": "Full-time",
+          "graduate": "Gratuate position",
+          "summer_internship": "Summer Internship"
+        },
+        "location": "Job Location"
+      }
+    },
     "event": {
       "create": {
         "title": "Create Event",

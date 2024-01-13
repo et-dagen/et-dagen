@@ -66,6 +66,7 @@ export default defineEventHandler(async (event) => {
     description,
     deadline,
     jobType,
+    location,
   })
 
   sendNoContent(event, 201)
