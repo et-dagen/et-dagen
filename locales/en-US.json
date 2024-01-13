@@ -167,6 +167,9 @@
       "sign_in_to_register": "Sign in to register"
     }
   },
+  "jobs": {
+    "title": "Job advertisements"
+  },
   "admin": {
     "categories": "Categories",
     "companies": {

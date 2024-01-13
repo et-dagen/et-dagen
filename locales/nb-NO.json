@@ -172,6 +172,9 @@
       "sign_in_to_register": "Logg inn for å melde deg på"
     }
   },
+  "jobs": {
+    "title": "Stillingsannonser"
+  },
   "admin": {
     "categories": "Kategorier",
     "companies": {
