@@ -22,4 +22,7 @@ export default {
     location: 'bottom right',
     zIndex: 1000,
   },
+  VCheckbox: {
+    color: 'primary',
+  },
 }

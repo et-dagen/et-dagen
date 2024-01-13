@@ -3,11 +3,11 @@
     name: string
     description: string
     logo: string
-    website: string
+    webpage: string
   }
 
   const openInNewTab = () => {
-    navigateTo(company.content.website, {
+    navigateTo(company.content.webpage, {
       external: true,
       open: {
         target: '_blank',
@@ -21,12 +21,11 @@
       required: true,
     },
   })
-  const { xs } = useDisplay()
 </script>
 
 <template>
   <div>
-    <VSheet :width="xs ? '90vw' : '65vw'">
+    <VCard class="companyWrapper" variant="flat">
       <!-- This header should not be smaller than h3 for large screens -->
       <h2
         :class="`text-sm-h3 text-h4 text-center 
@@ -37,22 +36,16 @@
 
       <VRow no-gutters>
         <!-- Company logo -->
-        <VCol cols="12" lg="6" style="cursor: pointer" class="pr-lg-3">
-          <VImg
-            class="w-100 rounded-lg companyImage"
+        <VCol cols="12" lg="7" class="d-flex justify-center pr-lg-3">
+          <NuxtImg
+            class="companyImage"
             :src="company.content.logo"
-            :alt="`${company.content.name}'s logo`"
             @click="openInNewTab"
           />
         </VCol>
 
         <!-- Company name and description -->
-        <VCol
-          cols="12"
-          lg="6"
-          style="max-height: 40vh"
-          class="pt-lg-0 pt-3 pl-lg-3"
-        >
+        <VCol cols="12" lg="5" class="pt-lg-0 pt-3 pl-lg-3 companyHero">
           <h3
             class="text-h5 font-weight-bold clicker d-inline-block"
             @click="openInNewTab"
@@ -62,11 +55,42 @@
           <p class="pt-1 pt-lg-3">{{ company.content.description }}</p>
         </VCol>
       </VRow>
-    </VSheet>
+    </VCard>
   </div>
 </template>
 
 <style setup lang="scss">
+  @use 'vuetify/settings';
+
+  .companyWrapper {
+    max-height: 100vh;
+    width: 70vw;
+
+    @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
+      width: 90vw;
+    }
+  }
+
+  .companyHero {
+    > p {
+      display: -webkit-box;
+      overflow: hidden;
+      // // -webkit-line-clamp: 5;
+      text-overflow: ellipsis;
+      -webkit-box-orient: vertical;
+
+      @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
+        -webkit-line-clamp: 12;
+      }
+      @media #{map-get(settings.$display-breakpoints, 'md')} {
+        -webkit-line-clamp: 8;
+      }
+      @media #{map-get(settings.$display-breakpoints, 'lg-and-up')} {
+        -webkit-line-clamp: 6;
+      }
+    }
+  }
+
   .clicker:hover {
     cursor: pointer;
     text-decoration: underline;
@@ -76,6 +100,11 @@
     color: transparent;
     background-color: transparent;
     transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+    max-width: 100%;
+    object-fit: contain;
+    max-height: 100%;
+
     &:hover {
       transform: scale(1.03);
     }

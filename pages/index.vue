@@ -1,17 +1,17 @@
 <script setup lang="ts">
   const { data: companies } = await useFetch('/api/company')
 
-  const mainSponsor = computed(
+  const mainPartner = computed(
     () =>
       Object.values(companies.value).find(
-        (company: any) => company.type === 'main-sponsor'
+        (company: any) => company.type === 'main-partner' && !!company.logo
       ) || null
   )
 
   const partners =
     computed(() =>
       Object.values(companies.value).filter(
-        (company: any) => company.type === 'partner'
+        (company: any) => company.type === 'partner' && !!company.logo
       )
     ) || null
   const showPartners = computed(
@@ -21,7 +21,7 @@
   const sponsors =
     computed(() =>
       Object.values(companies.value).filter(
-        (company: any) => company.type === 'sponsor'
+        (company: any) => company.type === 'sponsor' && !!company.logo
       )
     ) || null
   const showSponsors = computed(
@@ -40,53 +40,54 @@
       }"
     />
 
-    <CompanyHero
-      v-if="mainSponsor !== null"
+    <HomeCountDown
       :content="{
-        name: mainSponsor.name,
-        description: mainSponsor.description,
-        logo: mainSponsor.logo,
-        website: mainSponsor.website,
+        futureDate: '2024-02-14',
+        futureTime: '10:00:00',
+      }"
+    />
+
+    <CompanyHero
+      v-if="mainPartner !== null"
+      :content="{
+        name: mainPartner.name,
+        description: mainPartner.description,
+        logo: mainPartner.logo,
+        webpage: mainPartner.webpage,
       }"
       class="my-5 d-flex justify-center"
     />
 
     <div v-if="showPartners">
-      <h2
-        :class="`text-sm-h3 text-h4 text-center 
-          pt-10 pb-lg-6 pb-3 font-weight-bold`"
-      >
+      <h2 class="text-h3 text-center pt-10 pb-lg-8 pb-5 font-weight-bold">
         {{ $t('company.partners') }}
       </h2>
-      <CompanyGrid>
+      <CommonGrid>
         <CompanyCard
           v-for="partner in partners"
           :key="partner.id"
           :content="{
             logo: partner.logo,
-            website: partner.website,
+            webpage: partner.webpage,
           }"
         />
-      </CompanyGrid>
+      </CommonGrid>
     </div>
 
     <div v-if="showSponsors">
-      <h2
-        :class="`text-sm-h3 text-h4 text-center 
-          pt-10 pb-lg-6 pb-3 font-weight-bold`"
-      >
+      <h2 class="text-h3 text-center pt-10 pb-lg-8 pb-5 font-weight-bold">
         {{ $t('company.sponsors') }}
       </h2>
-      <CompanyGrid>
+      <CommonGrid>
         <CompanyCard
           v-for="sponsor in sponsors"
           :key="sponsor.id"
           :content="{
             logo: sponsor.logo || '',
-            website: sponsor.website,
+            webpage: sponsor.webpage,
           }"
         />
-      </CompanyGrid>
+      </CommonGrid>
     </div>
   </div>
 </template>

@@ -6,10 +6,18 @@ import { isValidDate } from '../../../composables/useDate'
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 
-  const { companyUID, title, description, deadline } = await readBody(event)
+  const { companyUID, title, description, deadline, jobType, location } =
+    await readBody(event)
 
   // make sure all necessary data is included
-  if (!companyUID || !title || !description || !deadline)
+  if (
+    !companyUID ||
+    !title ||
+    !description ||
+    !deadline ||
+    !jobType ||
+    !location
+  )
     throw createError({
       statusCode: 400,
       statusMessage: 'Not all data is defined',
@@ -57,6 +65,8 @@ export default defineEventHandler(async (event) => {
     title,
     description,
     deadline,
+    jobType,
+    location,
   })
 
   sendNoContent(event, 201)

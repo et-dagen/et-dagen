@@ -1,7 +1,7 @@
 <template>
   <footer>
     <section class="top">
-      <VImg class="image" :width="30" src="/images/logo_long_neg.png" />
+      <NuxtImg height="80" class="mb-8" src="/images/logo_long_neg.png" />
       <ul class="pa-0 ma-0">
         <li>
           <span class="header fade text-h4">{{
@@ -15,11 +15,11 @@
             $t('footer.header.join')
           }}</span>
           <NuxtLink to="mailto:bedriftansvarlig@et-dagen.no">
-            <VIcon icon="mdi-email" class="fade mr-2" size="small" />
+            <VIcon icon="mdi-email" class="fade mr-2 mail-icon" size="small" />
             {{ $t('contact.positions.business') }}
           </NuxtLink>
           <NuxtLink to="mailto:logistikk@et-dagen.no">
-            <VIcon icon="mdi-email" class="fade mr-2" size="small" />
+            <VIcon icon="mdi-email" class="fade mr-2 mail-icon" size="small" />
             {{ $t('contact.positions.logistics') }}
           </NuxtLink>
         </li>
@@ -27,13 +27,24 @@
           <span class="header fade text-h4">{{
             $t('footer.header.organisation')
           }}</span>
-          <NuxtLink to="https://www.ntnu.edu/studies/mtelsys">MTELSYS</NuxtLink>
+          <NuxtLink to="https://www.ntnu.edu/studies/mtelsys" target="_blank">
+            MTELSYS
+          </NuxtLink>
           <NuxtLink to="/contact">{{ $t('footer.link.contact') }}</NuxtLink>
+          <NuxtLink
+            to="https://github.com/et-dagen"
+            target="_blank"
+            class="d-flex align-center"
+          >
+            GitHub
+            <VIcon class="mx-1">mdi-github</VIcon>
+          </NuxtLink>
         </li>
       </ul>
     </section>
     <section class="bottom">
-      <span>Elektronikk- & Teknologidagene 2023</span>
+      <span>Elektronikk- & Teknogslogidagene 2023</span>
+      <span class="fade">Addr.: O.S. Bragstads plass 2, 7034 TRONDHEIM</span>
       <span class="fade">Org nr.: 996 858 545</span>
     </section>
   </footer>
@@ -77,13 +88,6 @@
           font-size: 20px !important;
         }
 
-        .image {
-          display: block;
-          height: 90px !important;
-          width: 200px !important;
-          margin: 0 0 30px;
-        }
-
         ul {
           list-style: none;
           display: grid;
@@ -99,11 +103,22 @@
     }
   }
 
-  @media #{map-get(settings.$display-breakpoints, 'sm-and-up')} {
+  @media #{map-get(settings.$display-breakpoints, 'md-and-up')} {
     footer section {
       &.top ul {
         grid-template-columns: repeat(4, 1fr);
-        padding-right: 0;
+      }
+    }
+  }
+
+  @media #{map-get(settings.$display-breakpoints, 'sm')} {
+    footer section {
+      &.top ul {
+        grid-template-columns: repeat(3, 1fr);
+
+        .mail-icon {
+          display: none !important;
+        }
       }
     }
   }
@@ -112,7 +127,10 @@
     footer section {
       &.top ul {
         grid-template-columns: repeat(2, 1fr);
-        right-padding: 10% !important;
+
+        .mail-icon {
+          display: none !important;
+        }
       }
     }
   }
