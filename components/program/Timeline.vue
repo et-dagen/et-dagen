@@ -76,6 +76,8 @@
     ...initialAlertState,
   })
 
+  const showStandMap = ref(false)
+
   // Show appropriate success alert after signing up for event
   const displaySuccessAlert = (alertRoute: string) => {
     alertState.alertRoute = alertRoute
@@ -141,6 +143,22 @@
       </VTab>
     </VTabs>
   </VContainer>
+
+  <VContainer v-if="state.selectedDate" class="d-flex justify-center">
+    <VBtn class="w-50" color="accent" @click="showStandMap = true">
+      <VIcon class="mx-3">mdi-map</VIcon>
+      {{ $t('program.standmap') }}:
+      {{ $t(`weekday.${getWeekdayFromDateTime(state.selectedDate)}`) }}
+    </VBtn>
+  </VContainer>
+
+  <CommonModal v-if="showStandMap" @close-modal="showStandMap = false">
+    <NuxtImg
+      :src="`/images/standmap/${state.selectedDate}.png`"
+      alt="Standmap"
+      object-fit="contain"
+    />
+  </CommonModal>
 
   <!-- Timeline container -->
   <VContainer>
