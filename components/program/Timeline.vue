@@ -152,6 +152,7 @@
     </VBtn>
   </VContainer>
 
+  <!-- TODO: #254 Replace static file with maps stored in Firebase -->
   <CommonModal v-if="showStandMap" @close-modal="showStandMap = false">
     <NuxtImg
       :src="`/images/standmap/${state.selectedDate}.png`"
