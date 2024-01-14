@@ -3,7 +3,7 @@
 
 export default defineEventHandler(async (event) => {
   const { user } = event.context
-  const { userUID, newName } = await readBody(event)
+  const { uid, ...newData } = await readBody(event)
   // user is not authenticated
   if (!user)
     throw createError({
@@ -12,11 +12,15 @@ export default defineEventHandler(async (event) => {
     })
   // check if the user is admin
   const isAdmin = hasAccess(user, ['admin'])
-  // if the user is admin, or trying to change own name
-  if (isAdmin || userUID === user.value.uid) {
-    // update name with ID
-    auth.updateUser(userUID, newName)
-  }
+
+  if (!isAdmin && uid !== user.uid)
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'User not authorized',
+    })
+
+  // update name with ID
+  auth.updateUser(uid, newData)
 
   // send response to remove cookie
   sendNoContent(event, 204)
