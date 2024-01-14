@@ -23,6 +23,9 @@
   const { user } = storeToRefs(authStore)
   // make a object to save all values that can be changed
   const initialValues = {
+    studyProgram: user.value?.studyProgram,
+    currentYear: user.value?.currentYear,
+
     name: user.value?.name,
     userType: user.value?.userType,
     email: user.value?.email,
@@ -157,6 +160,7 @@
     <div>Old User Name: {{ initialValues.name }}</div>
     <div>New User Name: {{ values.name }}</div>
     <div>User Type: {{ values.userType }}</div>
+    <div>Study program: {{ values.studyProgram }}</div>
   </VContainer>
 </template>
 
