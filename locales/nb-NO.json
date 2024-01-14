@@ -166,6 +166,7 @@
   },
   "program": {
     "title": "Program",
+    "standmap": "Se standkart",
     "event": {
       "sign_up": "Meld meg på",
       "opt_out": "Trekk påmelding",
@@ -434,5 +435,14 @@
     "vegan": "Vegansk",
     "halal": "Halal",
     "kosher": "Kosher"
+  },
+  "weekday": {
+    "sunday": "Søndag",
+    "monday": "Mandag",
+    "tuesday": "Tirsdag",
+    "wednesday": "Onsdag",
+    "thursday": "Torsdag",
+    "friday": "Fredag",
+    "saturday": "Lørdag"
   }
 }

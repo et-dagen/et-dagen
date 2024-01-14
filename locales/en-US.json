@@ -161,6 +161,7 @@
   },
   "program": {
     "title": "Programme",
+    "standmap": "Stand Map",
     "event": {
       "sign_up": "Sign up",
       "opt_out": "Opt out",
@@ -428,5 +429,14 @@
     "vegan": "Vegan",
     "halal": "Halal",
     "kosher": "Kosher"
+  },
+  "weekday": {
+    "sunday": "Sunday",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday"
   }
 }
