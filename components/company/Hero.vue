@@ -26,14 +26,6 @@
 <template>
   <div>
     <VCard class="companyWrapper" variant="flat">
-      <!-- This header should not be smaller than h3 for large screens -->
-      <h2
-        :class="`text-sm-h3 text-h4 text-center 
-        pt-10 pb-lg-6 pb-3 font-weight-bold`"
-      >
-        {{ $t('company.main_partner') }}
-      </h2>
-
       <VRow no-gutters>
         <!-- Company logo -->
         <VCol cols="12" lg="7" class="d-flex justify-center pr-lg-3">
