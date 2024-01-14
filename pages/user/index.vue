@@ -22,7 +22,7 @@
         ${'text-background'}`"
       :width="'45%'"
       :active="true"
-      @click="navigateTo(localePath(`/user/edit/${user?.id}`))"
+      @click="navigateTo(localePath('/user/edit'))"
     >
       Edit Account
     </VBtn>
