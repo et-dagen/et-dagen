@@ -3,20 +3,6 @@
     // route and all sub routes are protected
     // meaning you hae to be logged in
     protected: true,
-
-    // check if we should redirect
-    middleware: (to) => {
-      const authStore = useAuthStore()
-      //
-      // if (to.params.user === authStore.user?.uid) return
-      // is user admin?
-      if (user.value?.userType === 'admin') return
-      // redirect to respective user
-      // ignore error, .uid is definetly a string
-      // dobbeltsjekk om å endre "to" funker til å redirecte!
-      /* @ts-ignore */
-      to.params.user = authStore.user?.uid
-    },
   })
 
   const authStore = useAuthStore()
@@ -24,7 +10,9 @@
 </script>
 
 <template>
-  <div>Welcome {{ user?.name }}!</div>
+  <VContainer>
+    <UserEditForm :user="user" />
+  </VContainer>
 </template>
 
 <style lang="scss"></style>
