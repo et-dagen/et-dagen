@@ -45,12 +45,10 @@
     </div>
 
     <!-- banner image -->
-    <VImg
+    <NuxtImg
       class="d-none d-md-flex elevation-3 rounded-lg"
-      :aspect-ratio="4 / 3"
-      cover
       :src="content.image"
-    ></VImg>
+    />
   </div>
 </template>
 

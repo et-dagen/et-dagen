@@ -21,17 +21,11 @@
       required: true,
     },
   })
-  const { xs } = useDisplay()
 </script>
 
 <template>
   <div>
-    <VCard
-      :width="xs ? '90vw' : '65vw'"
-      max-height="100vh"
-      md="50v"
-      variant="flat"
-    >
+    <VCard class="companyWrapper" variant="flat">
       <!-- This header should not be smaller than h3 for large screens -->
       <h2
         :class="`text-sm-h3 text-h4 text-center 
@@ -42,11 +36,10 @@
 
       <VRow no-gutters>
         <!-- Company logo -->
-        <VCol cols="12" lg="7" style="cursor: pointer" class="pr-lg-3">
-          <VImg
-            class="w-100 rounded-lg companyImage"
+        <VCol cols="12" lg="7" class="d-flex justify-center pr-lg-3">
+          <NuxtImg
+            class="companyImage"
             :src="company.content.logo"
-            :alt="`${company.content.name}'s logo`"
             @click="openInNewTab"
           />
         </VCol>
@@ -68,6 +61,15 @@
 
 <style setup lang="scss">
   @use 'vuetify/settings';
+
+  .companyWrapper {
+    max-height: 100vh;
+    width: 70vw;
+
+    @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
+      width: 90vw;
+    }
+  }
 
   .companyHero {
     > p {
@@ -98,6 +100,11 @@
     color: transparent;
     background-color: transparent;
     transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+    max-width: 100%;
+    object-fit: contain;
+    max-height: 100%;
+
     &:hover {
       transform: scale(1.03);
     }
