@@ -41,6 +41,8 @@
             {{
               $t(`admin.jobs.attributes.jobtype.${jobType.replace('-', '_')}`)
             }}
+            -
+            {{ location }}
           </span>
           <span class="d-none d-sm-flex">
             {{ $t('jobs.deadline') }}: {{ date.getDate() }}.

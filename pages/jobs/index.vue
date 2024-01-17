@@ -46,17 +46,22 @@
 </script>
 
 <template>
-  <div class="d-flex flex-column align-center my-10">
+  <div class="job-page d-flex flex-column my-10">
     <!-- title -->
     <h4 class="font-weight-bold text-center">
       {{ $t('jobs.title') }}
     </h4>
 
-    <div class="job-filtering d-flex mt-5">
+    <div class="job-filtering d-flex flex-nowrap mt-5 pl-4">
       <!-- job types -->
       <div>
         <p>{{ $t('jobs.jobTypes') }}</p>
-        <VChipGroup v-model="jobTypes" multiple mandatory>
+        <VChipGroup
+          v-model="jobTypes"
+          class="d-flex flex-nowrap"
+          multiple
+          mandatory
+        >
           <VChip
             v-for="(jobType, index) in jobTypeNames"
             :key="index"
@@ -74,7 +79,7 @@
       <!-- sort by deadline -->
       <div>
         <p>{{ $t('jobs.deadline') }}</p>
-        <VChipGroup v-model="sortOrder" mandatory>
+        <VChipGroup v-model="sortOrder" class="d-flex flex-nowrap" mandatory>
           <VChip
             :class="`bg-neutral-lighten-4 ${
               sortOrder === 'descending' ? 'v-chip--selected' : ''
@@ -95,6 +100,7 @@
       </div>
     </div>
 
+    <!-- job list -->
     <div class="job-list">
       <JobCard
         v-for="(job, UID) in filteredJobs"
@@ -111,7 +117,20 @@
 </template>
 
 <style lang="scss">
+  @use 'vuetify/settings';
+
+  .job-page {
+    @media #{map-get(settings.$display-breakpoints, 'md-and-up')} {
+      align-items: center !important;
+    }
+  }
+
   .job-filtering {
+    overflow: scroll !important;
+  }
+
+  .job-filtering::-webkit-scrollbar {
+    display: none;
   }
 
   .job-list {
