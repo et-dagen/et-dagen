@@ -47,6 +47,7 @@
             {{
               $t(`datetime.months.${getFullMonthFromNumber(date.getMonth())}`)
             }}
+            {{ date.getFullYear() }}
           </span>
         </div>
       </template>

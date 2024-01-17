@@ -16,16 +16,32 @@
   // job type filtering
   const jobTypes = ref([0, 1, 2])
 
+  // sorting by deadline
+  const sortOrder = ref('descending')
+
   const filteredJobs = computed(() => {
     const jobsArray = Object.entries(jobs.value)
 
     const filteredArray = jobsArray.filter((job: any) => {
-      const jobType = job[1].jobType
+      const { jobType } = job[1]
       const jobIndex = jobTypeNames.indexOf(jobType)
       return jobTypes.value.includes(jobIndex)
     })
 
-    return Object.fromEntries(filteredArray)
+    const sortedArray =
+      filteredArray.sort((a: any, b: any) => {
+        const firstDate = new Date(a[1].deadline)
+        const secondDate = new Date(b[1].deadline)
+
+        console.log(firstDate, secondDate)
+
+        const order =
+          /* @ts-ignore */
+          firstDate < secondDate ? -1 : 1
+        return sortOrder.value === 'ascending' ? order : order * -1
+      }) ?? []
+
+    return Object.fromEntries(sortedArray)
   })
 </script>
 
@@ -54,10 +70,33 @@
           </VChip>
         </VChipGroup>
       </div>
+
+      <!-- sort by deadline -->
+      <div>
+        <p>{{ $t('jobs.deadline') }}</p>
+        <VChipGroup v-model="sortOrder" mandatory>
+          <VChip
+            :class="`bg-neutral-lighten-4 ${
+              sortOrder === 'descending' ? 'v-chip--selected' : ''
+            }`"
+            value="descending"
+          >
+            {{ $t('admin.users.filterorder.descending') }}
+          </VChip>
+          <VChip
+            :class="`bg-neutral-lighten-4 ${
+              sortOrder === 'ascending' ? 'v-chip--selected' : ''
+            }`"
+            value="ascending"
+          >
+            {{ $t('admin.users.filterorder.ascending') }}
+          </VChip>
+        </VChipGroup>
+      </div>
     </div>
 
     <div class="job-list">
-      <JobsCard
+      <JobCard
         v-for="(job, UID) in filteredJobs"
         :key="UID"
         v-bind="{
