@@ -175,7 +175,8 @@
   "jobs": {
     "title": "Stillingsannonser",
     "jobTypes": "Jobbtyper",
-    "deadline": "Søknadsfrist"
+    "deadline": "Søknadsfrist",
+    "search": "Søk"
   },
   "admin": {
     "categories": "Kategorier",

@@ -19,21 +19,47 @@
   // sorting by deadline
   const sortOrder = ref('descending')
 
-  const filteredJobs = computed(() => {
-    const jobsArray = Object.entries(jobs.value)
+  // search string: keywords separated by spaces
+  const search = ref('')
 
-    const filteredArray = jobsArray.filter((job: any) => {
-      const { jobType } = job[1]
+  // format the jobs in the format accepted by the JobCard
+  const formatedJobs = computed(() => {
+    const jobsArray = Object.entries(jobs.value)
+    return jobsArray.map((job: any) => {
+      return {
+        jobUID: job[0],
+        ...job[1],
+        ...company.value(job[1].companyUID),
+      }
+    })
+  })
+
+  // do filter and sorting
+  const filteredJobs = computed(() => {
+    // filter by job type
+    const typeFilteredArray = formatedJobs.value.filter((job: any) => {
+      const { jobType } = job
       const jobIndex = jobTypeNames.indexOf(jobType)
       return jobTypes.value.includes(jobIndex)
     })
 
-    const sortedArray =
-      filteredArray.sort((a: any, b: any) => {
-        const firstDate = new Date(a[1].deadline)
-        const secondDate = new Date(b[1].deadline)
+    // prepare array of words to search by
+    const searchLower = search.value.toLowerCase()
+    const searchTrimmed = searchLower.trim()
+    const searchWords = searchTrimmed.split(' ')
 
-        console.log(firstDate, secondDate)
+    // only include jobs that include all the search words
+    const searchFilteredArray = typeFilteredArray.filter((job: any) => {
+      const jobInfo = Object.values(job).join(' ')
+      const jobInfoLower = jobInfo.toLowerCase()
+      return searchWords.every((word) => jobInfoLower.includes(word))
+    })
+
+    // sort array according to deadline
+    const sortedArray =
+      searchFilteredArray.sort((a: any, b: any) => {
+        const firstDate = new Date(a.deadline)
+        const secondDate = new Date(b.deadline)
 
         const order =
           /* @ts-ignore */
@@ -41,7 +67,7 @@
         return sortOrder.value === 'ascending' ? order : order * -1
       }) ?? []
 
-    return Object.fromEntries(sortedArray)
+    return sortedArray
   })
 </script>
 
@@ -52,7 +78,7 @@
       {{ $t('jobs.title') }}
     </h4>
 
-    <div class="job-filtering d-flex flex-nowrap mt-5 pl-4">
+    <div class="job-filtering d-flex flex-nowrap mt-5 pl-5 pr-4">
       <!-- job types -->
       <div>
         <p>{{ $t('jobs.jobTypes') }}</p>
@@ -100,17 +126,24 @@
       </div>
     </div>
 
+    <!-- search field -->
+    <div>
+      <VTextField
+        v-model="search"
+        class="search-field mx-auto mt-3"
+        :placeholder="$t('jobs.search') + '...'"
+        variant="outlined"
+        density="compact"
+      />
+    </div>
+
     <!-- job list -->
-    <div class="job-list">
+    <div class="job-list mx-auto">
       <JobCard
-        v-for="(job, UID) in filteredJobs"
-        :key="UID"
-        v-bind="{
-          jobUID: UID,
-          ...job,
-          ...company(job.companyUID),
-        }"
-        class="my-5"
+        v-for="(job, index) in filteredJobs"
+        :key="index"
+        v-bind="job"
+        class="my-3"
       />
     </div>
   </div>
@@ -129,12 +162,19 @@
     overflow: scroll !important;
   }
 
+  .search-field {
+    width: 520px;
+    box-sizing: border-box;
+    max-width: 95vw;
+  }
+
   .job-filtering::-webkit-scrollbar {
     display: none;
   }
 
   .job-list {
     width: 800px;
+    box-sizing: border-box;
     max-width: 95vw !important;
   }
 
