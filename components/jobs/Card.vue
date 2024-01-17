@@ -33,8 +33,8 @@
         <div class="d-flex justify-space-between">
           <span class="title mr-1"> {{ title }}</span>
           <span class="d-none d-sm-flex">
-            {{ getDateFromDatetime(deadline) }}</span
-          >
+            {{ getDateFromDatetime(deadline) }}
+          </span>
         </div>
       </template>
 
@@ -48,7 +48,6 @@
 
   img {
     object-fit: contain;
-    align-self: start;
     margin: 0.625rem;
     width: 175px;
     max-height: 125px;
@@ -71,7 +70,7 @@
 
   .job-wrapper {
     cursor: pointer;
-    transition: 0.3s;
+    transition: 0.2s;
 
     &:hover {
       background-color: rgba(151, 151, 151, 0.14);
