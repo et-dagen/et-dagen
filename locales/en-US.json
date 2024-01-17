@@ -169,7 +169,8 @@
   },
   "jobs": {
     "title": "Job advertisements",
-    "jobTypes": "Job types"
+    "jobTypes": "Job types",
+    "deadline": "Deadline"
   },
   "admin": {
     "categories": "Categories",

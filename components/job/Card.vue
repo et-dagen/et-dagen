@@ -12,7 +12,9 @@
     deadline: string
   }
 
-  defineProps<Job>()
+  const props = defineProps<Job>()
+
+  const date = computed(() => new Date(props.deadline))
 </script>
 
 <template>
@@ -30,10 +32,21 @@
       "
     >
       <template #title>
+        {{ title }}
+      </template>
+
+      <template #subtitle>
         <div class="d-flex justify-space-between">
-          <span class="title mr-1"> {{ title }}</span>
+          <span class="title mr-1">
+            {{
+              $t(`admin.jobs.attributes.jobtype.${jobType.replace('-', '_')}`)
+            }}
+          </span>
           <span class="d-none d-sm-flex">
-            {{ getDateFromDatetime(deadline) }}
+            {{ $t('jobs.deadline') }}: {{ date.getDate() }}.
+            {{
+              $t(`datetime.months.${getFullMonthFromNumber(date.getMonth())}`)
+            }}
           </span>
         </div>
       </template>
