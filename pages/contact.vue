@@ -14,8 +14,13 @@
       />
     </VContainer>
 
-    <h4 class="text-center">{{ $t('contact.board') }}</h4>
     <VContainer>
+      <h4 class="d-none d-sm-block font-weight-bold text-center pt-8 pb-4">
+        {{ $t('contact.board') }}
+      </h4>
+
+      <VDivider class="pb-4" />
+
       <CommonGrid>
         <ContactGridCard
           :content="{

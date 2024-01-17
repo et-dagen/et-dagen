@@ -40,29 +40,40 @@
       }"
       class="my-5 d-flex justify-center"
     />
+    <VContainer>
+      <HomeCountDown
+        :content="{
+          futureDate: '2024-02-14',
+          futureTime: '10:00:00',
+        }"
+      />
+    </VContainer>
 
-    <HomeCountDown
-      :content="{
-        futureDate: '2024-02-14',
-        futureTime: '10:00:00',
-      }"
-    />
+    <VContainer v-if="mainPartner">
+      <h4 class="text-sm-h3 text-h4 font-weight-bold text-center pt-16 pb-4">
+        {{ $t('company.main_partner') }}
+      </h4>
 
-    <CompanyHero
-      v-if="mainPartner !== null"
-      :content="{
-        name: mainPartner.name,
-        description: mainPartner.description,
-        logo: mainPartner.logo,
-        webpage: mainPartner.webpage,
-      }"
-      class="my-5 d-flex justify-center"
-    />
+      <VDivider class="pb-4" />
 
-    <div v-if="showPartners">
-      <h2 class="text-h3 text-center pt-10 pb-lg-8 pb-5 font-weight-bold">
+      <CompanyHero
+        :content="{
+          name: mainPartner.name,
+          description: mainPartner.description,
+          logo: mainPartner.logo,
+          webpage: mainPartner.webpage,
+        }"
+        class="my-5 d-flex justify-center"
+      />
+    </VContainer>
+
+    <VContainer v-if="showPartners">
+      <h4 class="text-sm-h3 text-h4 font-weight-bold text-center pt-16 pb-4">
         {{ $t('company.partners') }}
-      </h2>
+      </h4>
+
+      <VDivider class="pb-4" />
+
       <CommonGrid>
         <CompanyCard
           v-for="partner in partners"
@@ -73,12 +84,15 @@
           }"
         />
       </CommonGrid>
-    </div>
+    </VContainer>
 
-    <div v-if="showSponsors">
-      <h2 class="text-h3 text-center pt-10 pb-lg-8 pb-5 font-weight-bold">
+    <VContainer v-if="showSponsors">
+      <h4 class="text-sm-h3 text-h4 font-weight-bold text-center pt-16 pb-4">
         {{ $t('company.sponsors') }}
-      </h2>
+      </h4>
+
+      <VDivider class="pb-4" />
+
       <CommonGrid>
         <CompanyCard
           v-for="sponsor in sponsors"
@@ -89,6 +103,6 @@
           }"
         />
       </CommonGrid>
-    </div>
+    </VContainer>
   </div>
 </template>
