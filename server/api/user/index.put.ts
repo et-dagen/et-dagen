@@ -18,9 +18,9 @@ export default defineEventHandler(async (event) => {
       statusCode: 401,
       statusMessage: 'User not authorized',
     })
-
+  const displayName = newData.name
   // update name with ID
-  auth.updateUser(uid, newData)
+  auth.updateUser(uid, { displayName })
 
   // send response to remove cookie
   sendNoContent(event, 204)
