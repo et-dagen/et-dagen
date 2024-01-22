@@ -4,6 +4,9 @@
   // Use cached auth data from Pinia
   const useAuth = useAuthStore()
 
+  // use locale path for navigation
+  const localePath = useLocalePath()
+
   // Fetch company and event data from API
   const { data: companies } = await useFetch('/api/company')
   const { data: events, refresh: refreshEvents } = await useFetch('/api/event')
@@ -168,7 +171,7 @@
           class="card mb-4"
           variant="flat"
           :ripple="false"
-          @click="() => navigateTo(`/event/${event.id}`)"
+          @click="() => navigateTo(localePath(`/program/${event.id}`))"
         >
           <template #title> {{ event.title }} </template>
 

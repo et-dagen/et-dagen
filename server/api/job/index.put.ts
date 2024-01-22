@@ -39,7 +39,8 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Job not found',
     })
 
-  const { companyUID, ...dbData } = data[Object.keys(data)[0]]
+  const dbData = data[Object.keys(data)[0]]
+  const { companyUID } = dbData
 
   const newKeys = Object.keys(newData)
   const oldKeys = Object.keys(dbData)

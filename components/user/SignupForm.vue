@@ -6,6 +6,7 @@
     useValidatePassword,
     useRequireEqualPasswords,
   } from '@/composables/useForm'
+  import { dietaryFlags } from '~/config/app.config'
 
   const { data: studyProgrammes } = await useFetch('/api/programme')
   const yearOptions = computed(() => {
@@ -36,6 +37,7 @@
     currentYear: '',
     userType: null,
     registrationCode: null,
+    dietaryRestrictions: null as string[] | null,
   }
 
   const state = reactive({
@@ -52,12 +54,21 @@
   )
 
   const form = ref()
+  const hasDietaryRestrictions = ref(false)
+  const otherRestrictions = ref<null | string>(null)
   const isRegistering = ref<boolean>(false)
   const submit = async () => {
     if (!form.value) return
 
     const { valid } = await form.value.validate()
     if (!valid) throw new Error('Form is not valid')
+
+    // add other restrictions if submitted
+    if (otherRestrictions.value && otherRestrictions.value !== '') {
+      otherRestrictions?.value
+        .split(',')
+        .map((restriction) => state.dietaryRestrictions?.push(restriction))
+    }
 
     isRegistering.value = true
 
@@ -69,6 +80,7 @@
         name: user.name,
         email: user.email,
         password: user.password,
+        dietaryRestrictions: user.dietaryRestrictions,
         studyProgram: userType === 'student' ? user.studyProgram : undefined,
         currentYear:
           userType === 'student' ? Number(user.currentYear) : undefined,
@@ -148,6 +160,47 @@
             ),
           ]"
           confirm-password
+        />
+      </VRow>
+      <VRow>
+        <VRadioGroup
+          v-model="hasDietaryRestrictions"
+          :label="$t('user.register.dietary_restrictions.name')"
+        >
+          <VRadio
+            :label="$t('user.register.dietary_restrictions.norestrictions')"
+            :value="false"
+          ></VRadio>
+          <VRadio
+            :label="$t('user.register.dietary_restrictions.restrictions')"
+            :value="true"
+          ></VRadio>
+        </VRadioGroup>
+      </VRow>
+      <VRow v-if="hasDietaryRestrictions">
+        <FormSelectInput
+          v-model="state.dietaryRestrictions"
+          multiple
+          :content="{
+            label: $t('user.register.dietary_restrictions.name'),
+            options: dietaryFlags
+              .map((flag) => {
+                return {
+                  title: $t(`dietary_restrictions.${flag.name}`),
+                  value: flag.name,
+                }
+              })
+              .sort(),
+          }"
+          :rules="[hasDietaryRestrictions ? useRequiredInput : null]"
+        />
+      </VRow>
+      <VRow v-if="hasDietaryRestrictions" class="mt-3 pt-0">
+        <FormTextInput
+          v-model="otherRestrictions"
+          :content="{
+            label: $t('user.register.dietary_restrictions.other'),
+          }"
         />
       </VRow>
     </VContainer>
