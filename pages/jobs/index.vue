@@ -26,6 +26,7 @@
   const formatedJobs = computed(() => {
     const jobsArray = Object.entries(jobs.value)
     return jobsArray.map((job: any) => {
+      // combine the data from a job with the relevant data from the jobs company
       return {
         jobUID: job[0],
         ...job[1],
