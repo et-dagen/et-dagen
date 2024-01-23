@@ -168,8 +168,8 @@
     }
   },
   "jobs": {
-    "title": "Job advertisements",
-    "jobTypes": "Job types",
+    "title": "Job Advertisements",
+    "jobTypes": "Job Types",
     "deadline": "Deadline",
     "search": "Search"
   },
