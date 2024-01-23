@@ -12,37 +12,47 @@
     deadline: string
   }
 
-  const props = defineProps<Job>()
+  const props = defineProps({
+    content: {
+      type: Object as PropType<Job>,
+      required: true,
+    },
+  })
 
-  const date = computed(() => new Date(props.deadline))
+  const date = computed(() => new Date(props.content.deadline))
 </script>
 
 <template>
   <div
     class="job-wrapper d-flex rounded-lg"
-    @click="navigateTo(localePath(`/jobs/${jobUID}`))"
+    @click="navigateTo(localePath(`/jobs/${content.jobUID}`))"
   >
-    <NuxtImg :src="companyLogo" />
+    <NuxtImg :src="content.companyLogo" />
     <VDivider vertical class="my-2 ml-2" />
     <VCard
       class="flex-grow-1"
       flat
       :subtitle="
-        $t(`admin.jobs.attributes.jobtype.${jobType.replace('-', '_')}`)
+        $t(`admin.jobs.attributes.jobtype.${content.jobType.replace('-', '_')}`)
       "
     >
       <template #title>
-        {{ title }}
+        {{ content.title }}
       </template>
 
       <template #subtitle>
         <div class="d-flex justify-space-between">
           <span class="title mr-1">
             {{
-              $t(`admin.jobs.attributes.jobtype.${jobType.replace('-', '_')}`)
+              $t(
+                `admin.jobs.attributes.jobtype.${content.jobType.replace(
+                  '-',
+                  '_'
+                )}`
+              )
             }}
             -
-            {{ location }}
+            {{ content.location }}
           </span>
           <span class="d-none d-sm-flex">
             {{ $t('jobs.deadline') }}: {{ date.getDate() }}.
@@ -54,7 +64,7 @@
         </div>
       </template>
 
-      <p class="px-4 mb-4 text-subtitle-2">{{ description }}</p>
+      <p class="px-4 mb-4 text-subtitle-2">{{ content.description }}</p>
     </VCard>
   </div>
 </template>

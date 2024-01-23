@@ -142,7 +142,7 @@
       <JobCard
         v-for="(job, index) in filteredJobs"
         :key="index"
-        v-bind="job"
+        :content="job"
         class="my-3"
       />
     </div>
