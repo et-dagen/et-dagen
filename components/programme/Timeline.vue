@@ -195,6 +195,7 @@
                 v-if="event.location.map"
                 :to="event.location.map"
                 class="link"
+                target="_blank"
                 @click.stop
               >
                 {{ event.location.name }}
