@@ -7,7 +7,7 @@
           <span class="header fade text-h4">{{
             $t('footer.header.resources')
           }}</span>
-          <NuxtLink to="/program">{{ $t('footer.link.program') }}</NuxtLink>
+          <NuxtLink to="/programme">{{ $t('footer.link.program') }}</NuxtLink>
           <NuxtLink to="/jobs">{{ $t('footer.link.jobs') }}</NuxtLink>
         </li>
         <li>

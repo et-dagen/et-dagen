@@ -145,7 +145,7 @@
         style="background-color: #c33c3b"
         color="white"
         append-icon="mdi-arrow-right"
-        @click="navigateTo(localePath('/program'))"
+        @click="navigateTo(localePath('/programme'))"
       >
         <h6 class="text-sm-h6 text-h6">{{ $t('nav.program_nav') }}</h6>
       </VBtn>
