@@ -119,6 +119,22 @@
 
 <template>
   <VContainer class="container">
+    <!-- Vuetify alert component -->
+    <!-- TODO: #121 Make a custom reactive component for VSnackbar that takes in content prop -->
+    <VSnackbar v-model="alertState.show">
+      {{ $t(`${alertState.alertRoute}`) }}
+
+      <template #actions>
+        <VBtn
+          :color="alertState.type"
+          variant="text"
+          @click="alertState.show = false"
+        >
+          {{ $t('alert.close_alert') }}
+        </VBtn>
+      </template>
+    </VSnackbar>
+
     <!-- company logo -->
     <VCard
       class="d-flex justify-center align-center pa-4 image-container"
