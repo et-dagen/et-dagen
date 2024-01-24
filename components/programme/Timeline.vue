@@ -66,7 +66,7 @@
         <!-- Event card -->
         <VCard
           width="600"
-          elevation="0"
+          elevation="2"
           class="card mb-4"
           variant="flat"
           :ripple="false"
@@ -210,7 +210,7 @@
     }
 
     .card {
-      left: -1rem;
+      left: -0.75rem;
 
       &__timestamp {
         position: absolute;
