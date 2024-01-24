@@ -181,6 +181,12 @@
       "sign_in_to_register": "Sign in to register"
     }
   },
+  "jobs": {
+    "title": "Job Advertisements",
+    "jobTypes": "Job Types",
+    "deadline": "Deadline",
+    "search": "Search"
+  },
   "admin": {
     "categories": "Categories",
     "companies": {

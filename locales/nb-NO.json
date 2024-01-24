@@ -186,6 +186,12 @@
       "sign_in_to_register": "Logg inn for å melde deg på"
     }
   },
+  "jobs": {
+    "title": "Stillingsannonser",
+    "jobTypes": "Jobbtyper",
+    "deadline": "Søknadsfrist",
+    "search": "Søk"
+  },
   "admin": {
     "categories": "Kategorier",
     "companies": {
