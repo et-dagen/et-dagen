@@ -171,7 +171,7 @@
           class="card mb-4"
           variant="flat"
           :ripple="false"
-          @click="() => navigateTo(localePath(`/program/${event.id}`))"
+          @click="() => navigateTo(localePath(`/event/${event.id}`))"
         >
           <template #title> {{ event.title }} </template>
 

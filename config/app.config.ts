@@ -6,7 +6,7 @@ const routes = [
   },
   {
     name: 'program',
-    route: '/program',
+    route: '/programme',
   },
   {
     name: 'jobs',
