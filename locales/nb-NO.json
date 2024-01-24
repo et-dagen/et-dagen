@@ -190,7 +190,11 @@
     "title": "Stillingsannonser",
     "jobTypes": "Jobbtyper",
     "deadline": "Søknadsfrist",
-    "search": "Søk"
+    "search": "Søk",
+    "location": "Sted",
+    "company": "Bedrift",
+    "details": "Stillingsdetaljer",
+    "apply": "Søk her"
   },
   "admin": {
     "categories": "Kategorier",

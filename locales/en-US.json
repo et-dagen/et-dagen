@@ -185,7 +185,11 @@
     "title": "Job Advertisements",
     "jobTypes": "Job Types",
     "deadline": "Deadline",
-    "search": "Search"
+    "search": "Search",
+    "location": "Location",
+    "company": "Company",
+    "details": "Job Details",
+    "apply": "Apply here"
   },
   "admin": {
     "categories": "Categories",
