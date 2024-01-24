@@ -28,7 +28,7 @@
     background-color: rgba(0, 0, 0, 0.9); /* Black w/ opacity */
 
     &__close {
-      position: absolute;
+      position: fixed;
       right: 0;
       top: 0;
     }
