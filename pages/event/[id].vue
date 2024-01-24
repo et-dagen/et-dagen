@@ -224,6 +224,15 @@
         </VCardText>
       </VCard>
 
+      <!-- Event actions: Sign up perform action -->
+      <div
+        v-if="!useAuth.isLoggedIn && hasCapacity && !eventFull"
+        class="text-primary px-4 py-2 d-flex justify-center align-center"
+      >
+        <VIcon class="pr-3 pb-1">mdi-lock</VIcon>
+        {{ $t('program.event.sign_in_to_register') }}
+      </div>
+
       <!-- sign up options -->
       <div v-if="hasCapacity && useAuth.isLoggedIn">
         <!-- sign up -->
