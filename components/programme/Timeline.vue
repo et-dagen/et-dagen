@@ -85,6 +85,7 @@
           <template v-if="companies[event.companyUID]" #subtitle>
             {{ companies[event.companyUID].name }}
           </template>
+          <template v-else #subtitle> E&T-dagene </template>
 
           <template #text>
             <!-- Event location -->
