@@ -201,10 +201,16 @@
     await $fetch('/api/event', {
       method: 'PUT',
       body: state,
-    }).catch((error) => displayErrorAlertFromMessage(error.statusMessage))
-
-    displaySuccessAlert('alert.success.event.edit.modified')
-    setTimeout(() => navigateTo(localePath('/admin/events')), 2000)
+    })
+      .then((_data) => {
+        // Handle successful response
+        displaySuccessAlert('alert.success.event.edit.modified')
+        setTimeout(() => navigateTo(localePath('/admin/events')), 2000)
+      })
+      .catch((error) => {
+        // Handle errors, including HTTP errors
+        displayErrorAlertFromMessage(error.message)
+      })
   }
 
   const createEvent = async () => {
@@ -216,14 +222,19 @@
       return
     }
 
-    handleEmptyStateValues()
     await $fetch('/api/event', {
       method: 'POST',
       body: state,
-    }).catch((error) => displayErrorAlertFromMessage(error.statusMessage))
-
-    displaySuccessAlert('alert.success.event.edit.created')
-    setTimeout(() => navigateTo(localePath('/admin/events')), 2000)
+    })
+      .then((_data) => {
+        // Handle successful response
+        displaySuccessAlert('alert.success.event.edit.created')
+        setTimeout(() => navigateTo(localePath('/admin/events')), 2000)
+      })
+      .catch((error) => {
+        // Handle errors, including HTTP errors
+        displayErrorAlertFromMessage(error.message)
+      })
   }
 </script>
 
