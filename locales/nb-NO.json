@@ -83,7 +83,21 @@
     }
   },
   "event": {
-    "take_off": "Arrangementet tar av om"
+    "take_off": "Arrangementet tar av om",
+    "page": {
+      "details": {
+        "name": "Detaljer",
+        "from": "Fra",
+        "to": "Til",
+        "location": "Sted",
+        "host": "Arrangør"
+      },
+      "attendants": {
+        "name": "Påmelding",
+        "attendants": "Påmeldte",
+        "nocapacity": "Ingen kapasitetsbegrensning"
+      }
+    }
   },
   "contact": {
     "title": "Kontakt oss",
