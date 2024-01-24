@@ -1,15 +1,10 @@
 <script setup lang="ts">
-  import type { AlertType } from 'composables/useAlerts'
-
-  // Use cached auth data from Pinia
-  const useAuth = useAuthStore()
-
   // use locale path for navigation
   const localePath = useLocalePath()
 
   // Fetch company and event data from API
   const { data: companies } = await useFetch('/api/company')
-  const { data: events, refresh: refreshEvents } = await useFetch('/api/event')
+  const { data: events } = await useFetch('/api/event')
 
   // Group events by date
   const eventsByDate: any = computed(() =>
@@ -22,40 +17,10 @@
     () => (event: any) => event.attendants || Object.hasOwn(event, 'attendants')
   )
 
-  // Check if user is already registered for event
-  const alreadyRegistered = computed(() => {
-    return (event: any) => {
-      return (
-        hasAttendants.value(event) &&
-        Object.values(event.attendants).includes(useAuth?.user?.uid)
-      )
-    }
-  })
-
   // Check if event has more than two attendants
   const showGroupIcon = computed(() => {
     return (event: any) => {
       return hasAttendants.value(event) && event.attendants.length >= 3
-    }
-  })
-
-  // Check if user is already registered for event
-  const showSignupButton = computed(() => {
-    return (event: any) => {
-      const nonZeroAttendants = hasAttendants.value(event)
-      return (
-        (nonZeroAttendants && !alreadyRegistered.value(event)) ||
-        !nonZeroAttendants
-      )
-    }
-  })
-
-  // Check if event is full
-  const eventFull = computed(() => {
-    return (event: any) => {
-      return (
-        hasAttendants.value(event) && event.attendants.length >= event.capacity
-      )
     }
   })
 
@@ -67,75 +32,9 @@
   const state = reactive({
     ...initialState,
   })
-
-  // Alert state
-  const initialAlertState = {
-    show: false,
-    alertRoute: '',
-    type: undefined as AlertType,
-  }
-
-  const alertState = reactive({
-    ...initialAlertState,
-  })
-
-  // Show appropriate success alert after signing up for event
-  const displaySuccessAlert = (alertRoute: string) => {
-    alertState.alertRoute = alertRoute
-    alertState.type = 'success'
-    alertState.show = true
-  }
-
-  // Show appropriate error alert for failed API calls
-  const displayErrorAlertFromMessage = (errorMessage: string) => {
-    const content = getAlertContent(errorMessage)
-    alertState.alertRoute = content.alertRoute
-    alertState.type = content.type
-    alertState.show = content.show
-
-    console.error(errorMessage)
-  }
-
-  // Sign up for event
-  const signUpForEvent = (eventUID: string) => {
-    $fetch('/api/event/register', {
-      method: 'POST',
-      body: { eventUID },
-    })
-      .then(() => refreshEvents())
-      .then(() => displaySuccessAlert('alert.success.event.register.sign_up'))
-      .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
-  }
-
-  // Opt out of event
-  const optOutOfEvent = (eventUID: string) => {
-    $fetch('/api/event/register', {
-      method: 'DELETE',
-      body: { eventUID },
-    })
-      .then(() => refreshEvents())
-      .then(() => displaySuccessAlert('alert.success.event.register.opt_out'))
-      .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
-  }
 </script>
 
 <template>
-  <!-- Vuetify alert component -->
-  <!-- TODO: #121 Make a custom reactive component for VSnackbar that takes in content prop -->
-  <VSnackbar v-model="alertState.show">
-    {{ $t(`${alertState.alertRoute}`) }}
-
-    <template #actions>
-      <VBtn
-        :color="alertState.type"
-        variant="text"
-        @click="alertState.show = false"
-      >
-        {{ $t('alert.close_alert') }}
-      </VBtn>
-    </template>
-  </VSnackbar>
-
   <!-- Date selection tabs -->
   <VContainer>
     <VTabs v-model="state.selectedDate" fixed-tabs color="primary" class="tabs">
@@ -174,7 +73,7 @@
         <!-- Event card -->
         <VCard
           width="600"
-          elevation="0"
+          elevation="2"
           class="card mb-4"
           variant="flat"
           :ripple="false"
@@ -191,19 +90,7 @@
             <!-- Event location -->
             <span class="card__location mb-2">
               <VIcon color="primary">mdi-map-marker</VIcon>
-              <NuxtLink
-                v-if="event.location.map"
-                :to="event.location.map"
-                class="link"
-                target="_blank"
-                @click.stop
-              >
-                {{ event.location.name }}
-                <VIcon size="x-small">mdi-open-in-new</VIcon>
-              </NuxtLink>
-              <span v-else>
-                {{ event.location.name }}
-              </span>
+              {{ event.location.name }}
             </span>
 
             <!-- Event start and end time -->
@@ -232,43 +119,6 @@
                 / {{ event.capacity }}
               </span>
             </span>
-
-            <!-- Event actions: Sign up perform action -->
-            <span
-              v-if="!useAuth.isLoggedIn && event.capacity && !eventFull(event)"
-              class="text-primary"
-            >
-              <br />
-              {{ $t('program.event.sign_in_to_register') }}
-            </span>
-          </template>
-
-          <!-- Event actions -->
-          <template v-if="event.capacity && useAuth.isLoggedIn" #actions>
-            <!-- Sign up to event -->
-            <VBtn
-              v-if="useAuth.isLoggedIn && showSignupButton(event)"
-              color="success"
-              variant="tonal"
-              :ripple="true"
-              density="comfortable"
-              :disabled="eventFull(event)"
-              @click.stop="signUpForEvent(event.id)"
-            >
-              {{ $t('program.event.sign_up') }}
-            </VBtn>
-
-            <!-- Opt out of event -->
-            <VBtn
-              v-if="useAuth.isLoggedIn && alreadyRegistered(event)"
-              color="primary"
-              variant="tonal"
-              :ripple="true"
-              density="comfortable"
-              @click.stop="optOutOfEvent(event.id)"
-            >
-              {{ $t('program.event.opt_out') }}
-            </VBtn>
           </template>
         </VCard>
       </div>
@@ -367,7 +217,7 @@
     }
 
     .card {
-      left: -1rem;
+      left: -0.75rem;
 
       &__timestamp {
         position: absolute;

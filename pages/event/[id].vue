@@ -119,6 +119,22 @@
 
 <template>
   <VContainer class="container">
+    <!-- Vuetify alert component -->
+    <!-- TODO: #121 Make a custom reactive component for VSnackbar that takes in content prop -->
+    <VSnackbar v-model="alertState.show">
+      {{ $t(`${alertState.alertRoute}`) }}
+
+      <template #actions>
+        <VBtn
+          :color="alertState.type"
+          variant="text"
+          @click="alertState.show = false"
+        >
+          {{ $t('alert.close_alert') }}
+        </VBtn>
+      </template>
+    </VSnackbar>
+
     <!-- company logo -->
     <VCard
       class="d-flex justify-center align-center pa-4 image-container"
@@ -155,8 +171,20 @@
       </VCardText>
 
       <VCardText class="details__location py-0 pb-5">
-        <strong>{{ $t('event.page.details.location') }}:</strong>
-        {{ event.location.name }}
+        <strong>{{ $t('event.page.details.location') }}: </strong>
+        <NuxtLink
+          v-if="event.location.map"
+          :to="event.location.map"
+          class="link"
+          target="_blank"
+          @click.stop
+        >
+          {{ event.location.name }}
+          <VIcon size="x-small" color="primary">mdi-open-in-new</VIcon>
+        </NuxtLink>
+        <span v-else>
+          {{ event.location.name }}
+        </span>
       </VCardText>
 
       <VCardText class="details__host py-0 pb-5">
@@ -182,12 +210,13 @@
           {{ $t('event.page.attendants.name') }}
         </VCardTitle>
 
-        <VCardText
-          v-if="hasCapacity && hasAttendants"
-          class="attendants__count"
-        >
+        <VCardText v-if="hasCapacity" class="attendants__count">
           {{ $t('event.page.attendants.attendants') }}:
-          {{ Object.values(event.attendants).length }}
+          <span v-if="hasAttendants">
+            {{ Object.values(event.attendants).length }}
+          </span>
+          <span v-else>0</span>
+
           {{ event.capacity ? `/ ${event.capacity}` : '' }}
         </VCardText>
 
@@ -195,6 +224,15 @@
           {{ $t('event.page.attendants.nocapacity') }}
         </VCardText>
       </VCard>
+
+      <!-- Event actions: Sign up perform action -->
+      <div
+        v-if="!useAuth.isLoggedIn && hasCapacity && !eventFull"
+        class="text-primary px-4 py-2 d-flex justify-center align-center"
+      >
+        <VIcon class="pr-3 pb-1">mdi-lock</VIcon>
+        {{ $t('program.event.sign_in_to_register') }}
+      </div>
 
       <!-- sign up options -->
       <div v-if="hasCapacity && useAuth.isLoggedIn">
