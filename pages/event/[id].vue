@@ -160,9 +160,10 @@
       </VCardText>
 
       <VCardText class="details__host py-0 pb-5">
-        <strong>{{ $t('event.page.details.host') }}:</strong>
+        <strong>{{ $t('event.page.details.host') }}: </strong>
         <NuxtLink v-if="company" :to="company?.webpage" target="_blank">
           {{ company?.name }}
+          <VIcon size="xsmall" color="primary">mdi-open-in-new</VIcon>
         </NuxtLink>
 
         <span v-else>{{ 'E&T-dagene' }}</span>
@@ -230,7 +231,6 @@
 
 <style scoped lang="scss">
   @use 'vuetify/settings';
-
   .container {
     display: grid;
     width: 100vw;
