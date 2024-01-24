@@ -171,8 +171,20 @@
       </VCardText>
 
       <VCardText class="details__location py-0 pb-5">
-        <strong>{{ $t('event.page.details.location') }}:</strong>
-        {{ event.location.name }}
+        <strong>{{ $t('event.page.details.location') }}: </strong>
+        <NuxtLink
+          v-if="event.location.map"
+          :to="event.location.map"
+          class="link"
+          target="_blank"
+          @click.stop
+        >
+          {{ event.location.name }}
+          <VIcon size="x-small" color="primary">mdi-open-in-new</VIcon>
+        </NuxtLink>
+        <span v-else>
+          {{ event.location.name }}
+        </span>
       </VCardText>
 
       <VCardText class="details__host py-0 pb-5">
