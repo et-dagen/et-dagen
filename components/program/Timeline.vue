@@ -139,7 +139,14 @@
   <!-- Date selection tabs -->
   <VContainer>
     <VTabs v-model="state.selectedDate" fixed-tabs color="primary" class="tabs">
-      <VTab v-for="date in dates" :key="date" :value="date">
+      <VTab
+        v-for="date in dates"
+        :key="date"
+        :value="date"
+        :class="{
+          'v-tab--selected': state.selectedDate === date,
+        }"
+      >
         {{ getNumericDayAndMonthString(date) }}
       </VTab>
     </VTabs>
@@ -188,6 +195,7 @@
                 v-if="event.location.map"
                 :to="event.location.map"
                 class="link"
+                target="_blank"
                 @click.stop
               >
                 {{ event.location.name }}
