@@ -1,6 +1,8 @@
 <script setup lang="ts">
   import type { AlertType } from 'composables/useAlerts'
 
+  const localePath = useLocalePath()
+
   const props = defineProps({
     eventUid: {
       type: String,
@@ -29,7 +31,7 @@
       props.eventUid &&
       props.eventUid !== user?.companyUID)
   )
-    navigateTo('/event/edit')
+    navigateTo(localePath('/event/edit'))
 
   // Fetch all users
   // TODO: #188 Replace with API endpoint for getting only a sublist of known UIDs
@@ -202,7 +204,7 @@
     }).catch((error) => displayErrorAlertFromMessage(error.statusMessage))
 
     displaySuccessAlert('alert.success.event.edit.modified')
-    setTimeout(() => navigateTo('/admin/events'), 2000)
+    setTimeout(() => navigateTo(localePath('/admin/events')), 2000)
   }
 
   const createEvent = async () => {
@@ -221,7 +223,7 @@
     }).catch((error) => displayErrorAlertFromMessage(error.statusMessage))
 
     displaySuccessAlert('alert.success.event.edit.created')
-    setTimeout(() => navigateTo('/admin/events'), 2000)
+    setTimeout(() => navigateTo(localePath('/admin/events')), 2000)
   }
 </script>
 
@@ -349,7 +351,7 @@
             block
             variant="outlined"
             color="error"
-            @click="navigateTo('/admin/events')"
+            @click="navigateTo(localePath('/admin/events'))"
           >
             {{ $t('edit.event.cancel') }}
           </VBtn>

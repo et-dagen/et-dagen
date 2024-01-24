@@ -1,5 +1,6 @@
 <script setup lang="ts">
   const { data: companies } = await useFetch('/api/company')
+  const localePath = useLocalePath()
 </script>
 
 <template>
@@ -29,7 +30,7 @@
                 variant="text"
                 size="small"
                 icon="mdi-pencil"
-                @click="navigateTo(`/company/edit/${id}`)"
+                @click="navigateTo(localePath(`/company/edit/${id}`))"
               />
             </VCol>
           </VRow>

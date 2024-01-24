@@ -68,6 +68,19 @@ export const getNumericDayAndMonthString = (datetime: string): {} => {
   return `${day < 10 ? `0${day}` : day}/${month + 1 < 10 ? `0${month}` : month}`
 }
 
+export const getDayAndMonthString = (datetime: string) => {
+  const nuxtApp = useNuxtApp()
+
+  const date = new Date(datetime)
+
+  const day = date.getDate()
+  const month = nuxtApp.$i18n.t(
+    `datetime.months.${getFullMonthFromNumber(date.getMonth())}`
+  )
+
+  return `${day}. ${month}`
+}
+
 // Get date string YYYY-MM-DD from datetime string YYYY-MM-DDThh:mm:ssZ
 export const getDateFromDatetime = (datetime: string): string => {
   return datetime.split('T')[0]

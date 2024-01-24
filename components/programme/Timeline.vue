@@ -4,6 +4,9 @@
   // Use cached auth data from Pinia
   const useAuth = useAuthStore()
 
+  // use locale path for navigation
+  const localePath = useLocalePath()
+
   // Fetch company and event data from API
   const { data: companies } = await useFetch('/api/company')
   const { data: events, refresh: refreshEvents } = await useFetch('/api/event')
@@ -138,7 +141,14 @@
   <!-- Date selection tabs -->
   <VContainer>
     <VTabs v-model="state.selectedDate" fixed-tabs color="primary" class="tabs">
-      <VTab v-for="date in dates" :key="date" :value="date">
+      <VTab
+        v-for="date in dates"
+        :key="date"
+        :value="date"
+        :class="{
+          'v-tab--selected': state.selectedDate === date,
+        }"
+      >
         {{ getNumericDayAndMonthString(date) }}
       </VTab>
     </VTabs>
@@ -187,7 +197,7 @@
           class="card mb-4"
           variant="flat"
           :ripple="false"
-          @click="() => navigateTo(`/program/${event.id}`)"
+          @click="() => navigateTo(localePath(`/event/${event.id}`))"
         >
           <template #title> {{ event.title }} </template>
 
@@ -204,6 +214,7 @@
                 v-if="event.location.map"
                 :to="event.location.map"
                 class="link"
+                target="_blank"
                 @click.stop
               >
                 {{ event.location.name }}

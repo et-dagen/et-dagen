@@ -1,7 +1,7 @@
 {
   "nav": {
     "index": "Home",
-    "program": "Programme",
+    "programme": "Programme",
     "jobs": "Jobs",
     "contact": "Contact",
     "admin": "Administration",
@@ -83,7 +83,21 @@
     }
   },
   "event": {
-    "take_off": "The event is taking off in"
+    "take_off": "The event is taking off in",
+    "page": {
+      "details": {
+        "name": "Details",
+        "from": "From",
+        "to": "To",
+        "location": "Location",
+        "host": "Organiser"
+      },
+      "attendants": {
+        "name": "Registration",
+        "attendants": "Attendants",
+        "nocapacity": "No capacity limit"
+      }
+    }
   },
   "contact": {
     "title": "Contact Us",
@@ -167,6 +181,12 @@
       "opt_out": "Opt out",
       "sign_in_to_register": "Sign in to register"
     }
+  },
+  "jobs": {
+    "title": "Job Advertisements",
+    "jobTypes": "Job Types",
+    "deadline": "Deadline",
+    "search": "Search"
   },
   "admin": {
     "categories": "Categories",

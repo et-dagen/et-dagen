@@ -5,8 +5,8 @@ const routes = [
     route: '/',
   },
   {
-    name: 'program',
-    route: '/program',
+    name: 'programme',
+    route: '/programme',
   },
   {
     name: 'jobs',

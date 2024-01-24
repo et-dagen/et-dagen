@@ -1,7 +1,7 @@
 {
   "nav": {
     "index": "Hjem",
-    "program": "Program",
+    "programme": "Program",
     "jobs": "Jobber",
     "contact": "Kontakt",
     "admin": "Administrasjon",
@@ -83,7 +83,21 @@
     }
   },
   "event": {
-    "take_off": "Arrangementet tar av om"
+    "take_off": "Arrangementet tar av om",
+    "page": {
+      "details": {
+        "name": "Detaljer",
+        "from": "Fra",
+        "to": "Til",
+        "location": "Sted",
+        "host": "Arrangør"
+      },
+      "attendants": {
+        "name": "Påmelding",
+        "attendants": "Påmeldte",
+        "nocapacity": "Ingen kapasitetsbegrensning"
+      }
+    }
   },
   "contact": {
     "title": "Kontakt oss",
@@ -172,6 +186,12 @@
       "opt_out": "Trekk påmelding",
       "sign_in_to_register": "Logg inn for å melde deg på"
     }
+  },
+  "jobs": {
+    "title": "Stillingsannonser",
+    "jobTypes": "Jobbtyper",
+    "deadline": "Søknadsfrist",
+    "search": "Søk"
   },
   "admin": {
     "categories": "Kategorier",
