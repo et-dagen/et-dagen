@@ -12,6 +12,11 @@
     "sign_in": "Logg inn",
     "sign_out": "Logg ut",
     "sign_up": "Registrer bruker",
+    "information": {
+      "studyprogramme": "Studieprogram",
+      "currentyear": "Årstrinn",
+      "dietaryrestrictions": "Allergener og restriksjoner"
+    },
     "register": {
       "title": "Registrer bruker",
       "full_name": "Fullt navn",
