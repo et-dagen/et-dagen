@@ -210,12 +210,13 @@
           {{ $t('event.page.attendants.name') }}
         </VCardTitle>
 
-        <VCardText
-          v-if="hasCapacity && hasAttendants"
-          class="attendants__count"
-        >
+        <VCardText v-if="hasCapacity" class="attendants__count">
           {{ $t('event.page.attendants.attendants') }}:
-          {{ Object.values(event.attendants).length }}
+          <span v-if="hasAttendants">
+            {{ Object.values(event.attendants).length }}
+          </span>
+          <span v-else>0</span>
+
           {{ event.capacity ? `/ ${event.capacity}` : '' }}
         </VCardText>
 
