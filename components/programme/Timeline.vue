@@ -1,6 +1,4 @@
 <script setup lang="ts">
-  import type { AlertType } from 'composables/useAlerts'
-
   // Use cached auth data from Pinia
   const useAuth = useAuthStore()
 
@@ -9,7 +7,7 @@
 
   // Fetch company and event data from API
   const { data: companies } = await useFetch('/api/company')
-  const { data: events, refresh: refreshEvents } = await useFetch('/api/event')
+  const { data: events } = await useFetch('/api/event')
 
   // Group events by date
   const eventsByDate: any = computed(() =>
@@ -67,75 +65,9 @@
   const state = reactive({
     ...initialState,
   })
-
-  // Alert state
-  const initialAlertState = {
-    show: false,
-    alertRoute: '',
-    type: undefined as AlertType,
-  }
-
-  const alertState = reactive({
-    ...initialAlertState,
-  })
-
-  // Show appropriate success alert after signing up for event
-  const displaySuccessAlert = (alertRoute: string) => {
-    alertState.alertRoute = alertRoute
-    alertState.type = 'success'
-    alertState.show = true
-  }
-
-  // Show appropriate error alert for failed API calls
-  const displayErrorAlertFromMessage = (errorMessage: string) => {
-    const content = getAlertContent(errorMessage)
-    alertState.alertRoute = content.alertRoute
-    alertState.type = content.type
-    alertState.show = content.show
-
-    console.error(errorMessage)
-  }
-
-  // Sign up for event
-  const signUpForEvent = (eventUID: string) => {
-    $fetch('/api/event/register', {
-      method: 'POST',
-      body: { eventUID },
-    })
-      .then(() => refreshEvents())
-      .then(() => displaySuccessAlert('alert.success.event.register.sign_up'))
-      .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
-  }
-
-  // Opt out of event
-  const optOutOfEvent = (eventUID: string) => {
-    $fetch('/api/event/register', {
-      method: 'DELETE',
-      body: { eventUID },
-    })
-      .then(() => refreshEvents())
-      .then(() => displaySuccessAlert('alert.success.event.register.opt_out'))
-      .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
-  }
 </script>
 
 <template>
-  <!-- Vuetify alert component -->
-  <!-- TODO: #121 Make a custom reactive component for VSnackbar that takes in content prop -->
-  <VSnackbar v-model="alertState.show">
-    {{ $t(`${alertState.alertRoute}`) }}
-
-    <template #actions>
-      <VBtn
-        :color="alertState.type"
-        variant="text"
-        @click="alertState.show = false"
-      >
-        {{ $t('alert.close_alert') }}
-      </VBtn>
-    </template>
-  </VSnackbar>
-
   <!-- Date selection tabs -->
   <VContainer>
     <VTabs v-model="state.selectedDate" fixed-tabs color="primary" class="tabs">
