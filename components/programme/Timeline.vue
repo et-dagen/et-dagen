@@ -1,7 +1,4 @@
 <script setup lang="ts">
-  // Use cached auth data from Pinia
-  const useAuth = useAuthStore()
-
   // use locale path for navigation
   const localePath = useLocalePath()
 
@@ -20,40 +17,10 @@
     () => (event: any) => event.attendants || Object.hasOwn(event, 'attendants')
   )
 
-  // Check if user is already registered for event
-  const alreadyRegistered = computed(() => {
-    return (event: any) => {
-      return (
-        hasAttendants.value(event) &&
-        Object.values(event.attendants).includes(useAuth?.user?.uid)
-      )
-    }
-  })
-
   // Check if event has more than two attendants
   const showGroupIcon = computed(() => {
     return (event: any) => {
       return hasAttendants.value(event) && event.attendants.length >= 3
-    }
-  })
-
-  // Check if user is already registered for event
-  const showSignupButton = computed(() => {
-    return (event: any) => {
-      const nonZeroAttendants = hasAttendants.value(event)
-      return (
-        (nonZeroAttendants && !alreadyRegistered.value(event)) ||
-        !nonZeroAttendants
-      )
-    }
-  })
-
-  // Check if event is full
-  const eventFull = computed(() => {
-    return (event: any) => {
-      return (
-        hasAttendants.value(event) && event.attendants.length >= event.capacity
-      )
     }
   })
 
@@ -116,18 +83,7 @@
             <!-- Event location -->
             <span class="card__location mb-2">
               <VIcon color="primary">mdi-map-marker</VIcon>
-              <NuxtLink
-                v-if="event.location.map"
-                :to="event.location.map"
-                class="link"
-                @click.stop
-              >
-                {{ event.location.name }}
-                <VIcon size="x-small">mdi-open-in-new</VIcon>
-              </NuxtLink>
-              <span v-else>
-                {{ event.location.name }}
-              </span>
+              {{ event.location.name }}
             </span>
 
             <!-- Event start and end time -->
@@ -156,43 +112,6 @@
                 / {{ event.capacity }}
               </span>
             </span>
-
-            <!-- Event actions: Sign up perform action -->
-            <span
-              v-if="!useAuth.isLoggedIn && event.capacity && !eventFull(event)"
-              class="text-primary"
-            >
-              <br />
-              {{ $t('program.event.sign_in_to_register') }}
-            </span>
-          </template>
-
-          <!-- Event actions -->
-          <template v-if="event.capacity && useAuth.isLoggedIn" #actions>
-            <!-- Sign up to event -->
-            <VBtn
-              v-if="useAuth.isLoggedIn && showSignupButton(event)"
-              color="success"
-              variant="tonal"
-              :ripple="true"
-              density="comfortable"
-              :disabled="eventFull(event)"
-              @click.stop="signUpForEvent(event.id)"
-            >
-              {{ $t('program.event.sign_up') }}
-            </VBtn>
-
-            <!-- Opt out of event -->
-            <VBtn
-              v-if="useAuth.isLoggedIn && alreadyRegistered(event)"
-              color="primary"
-              variant="tonal"
-              :ripple="true"
-              density="comfortable"
-              @click.stop="optOutOfEvent(event.id)"
-            >
-              {{ $t('program.event.opt_out') }}
-            </VBtn>
           </template>
         </VCard>
       </div>
