@@ -10,6 +10,7 @@
   // Fetch company and event data from API
   const { data: companies } = await useFetch('/api/company')
   const { data: events, refresh: refreshEvents } = await useFetch('/api/event')
+  const { data: maps } = await useFetch('/api/image/standmap')
 
   // Group events by date
   const eventsByDate: any = computed(() =>
@@ -66,6 +67,14 @@
 
   const state = reactive({
     ...initialState,
+  })
+
+  const selectedStandMap = computed(() => {
+    if (!maps.value.some((map: any) => map.date === state.selectedDate))
+      return null
+
+    return maps.value.filter((map: any) => map.date === state.selectedDate)[0]
+      .url
   })
 
   // Alert state
@@ -153,9 +162,13 @@
       </VTab>
     </VTabs>
   </VContainer>
-
-  <VContainer v-if="state.selectedDate" class="d-flex justify-center">
-    <VBtn class="w-50" color="accent" @click="showStandMap = true">
+  <VContainer v-if="selectedStandMap" class="d-flex justify-center">
+    <VBtn
+      class="w-75"
+      max-width="600"
+      color="accent"
+      @click="showStandMap = true"
+    >
       <VIcon class="mx-3">mdi-map</VIcon>
       {{ $t('program.standmap') }}:
       {{ $t(`weekday.${getWeekdayFromDateTime(state.selectedDate)}`) }}
@@ -165,9 +178,10 @@
   <!-- TODO: #254 Replace static file with maps stored in Firebase -->
   <CommonModal v-if="showStandMap" @close-modal="showStandMap = false">
     <NuxtImg
-      :src="`/images/standmap/${state.selectedDate}.png`"
+      :src="selectedStandMap"
       alt="Standmap"
       object-fit="contain"
+      class="w-50"
     />
   </CommonModal>
 
