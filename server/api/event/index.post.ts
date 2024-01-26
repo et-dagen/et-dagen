@@ -4,8 +4,16 @@
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 
-  const { companyUID, capacity, date, description, location, title } =
-    await readBody(event)
+  const {
+    companyUID,
+    capacity,
+    date,
+    description,
+    location,
+    title,
+    signUpStart,
+    optOutDeadline,
+  } = await readBody(event)
 
   // check if data is defined.
   if (
@@ -17,7 +25,8 @@ export default defineEventHandler(async (event) => {
     !description ||
     !location.name ||
     (!location.map && location.map !== null) ||
-    !title
+    !title ||
+    (capacity && (!signUpStart || !optOutDeadline))
   )
     throw createError({
       statusCode: 400,
@@ -55,6 +64,14 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 400,
       statusMessage: 'Start time has to be before end time',
+    })
+
+  // check if sign up start and opt out deadline is before event start
+  if (signUpStart > date.start || optOutDeadline > date.start)
+    throw createError({
+      statusCode: 400,
+      statusMessage:
+        'Sign up start and opt out deadline must be before event start',
     })
 
   // TODO: Add support for different event types
