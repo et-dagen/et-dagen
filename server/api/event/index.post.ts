@@ -53,7 +53,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: `Capacity has to be a number or null '${capacity}'`,
     })
 
-  if (typeof capacity !== 'number' && !capacity === null && capacity <= 0)
+  if (typeof capacity !== 'number' && !(capacity === null) && capacity <= 0)
     throw createError({
       statusCode: 400,
       statusMessage: 'Capacity has to be a number and larger than 0',
