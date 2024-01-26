@@ -144,7 +144,8 @@
           "already_registered": "You are already registered for this event",
           "user_not_registered": "You are not registered for this event",
           "registration_unnecessary": "Registration is not necessary for this event",
-          "non_admin_user": "This requires admin privileges"
+          "non_admin_user": "This requires admin privileges",
+          "closed": "Registration is closed"
         }
       },
       "company": {
@@ -178,7 +179,8 @@
     "event": {
       "sign_up": "Sign up",
       "opt_out": "Opt out",
-      "sign_in_to_register": "Sign in to register"
+      "sign_in_to_register": "Sign in to register",
+      "registration_closed": "Registration in not open"
     }
   },
   "jobs": {
@@ -390,6 +392,10 @@
         "date": {
           "start": "Start Date",
           "end": "End Date"
+        },
+        "registration": {
+          "start": "Registration starts",
+          "end": "Registration ends"
         },
         "attendants": "Påmeldte deltakere"
       }
