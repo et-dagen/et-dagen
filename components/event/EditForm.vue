@@ -96,6 +96,10 @@
     companyUID: null,
     attendants: null,
     uid: null,
+    registration: {
+      start: null,
+      end: null,
+    },
   }
 
   // Set state to event data if data fetched successfully
@@ -186,6 +190,14 @@
     state.eventUID = state.uid
 
     state.location.map = state.location.map ? state.location.map : null
+
+    // set null registration datetime if capacity is null
+    state.registration.start =
+      state.capacity && state.registration.start
+        ? state.registration.start
+        : null
+    state.registration.end =
+      state.capacity && state.registration.end ? state.registration.end : null
   }
 
   const saveChanges = async () => {
@@ -201,10 +213,12 @@
     await $fetch('/api/event', {
       method: 'PUT',
       body: state,
-    }).catch((error) => displayErrorAlertFromMessage(error.statusMessage))
-
-    displaySuccessAlert('alert.success.event.edit.modified')
-    setTimeout(() => navigateTo(localePath('/admin/events')), 2000)
+    })
+      .then(() => {
+        displaySuccessAlert('alert.success.event.edit.modified')
+        setTimeout(() => navigateTo(localePath('/admin/events')), 2000)
+      })
+      .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
   }
 
   const createEvent = async () => {
@@ -220,10 +234,12 @@
     await $fetch('/api/event', {
       method: 'POST',
       body: state,
-    }).catch((error) => displayErrorAlertFromMessage(error.statusMessage))
-
-    displaySuccessAlert('alert.success.event.edit.created')
-    setTimeout(() => navigateTo(localePath('/admin/events')), 2000)
+    })
+      .then(() => {
+        displaySuccessAlert('alert.success.event.edit.created')
+        setTimeout(() => navigateTo(localePath('/admin/events')), 2000)
+      })
+      .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
   }
 </script>
 
@@ -297,6 +313,27 @@
           }"
           clearable
         />
+      </VRow>
+
+      <VRow v-if="state.capacity">
+        <VCol>
+          <FormTextInput
+            v-model="state.registration.start"
+            :content="{
+              label: $t('edit.event.attributes.registration.start'),
+            }"
+            :rules="[state.capacity ? useRequiredInput : null]"
+          />
+        </VCol>
+        <VCol>
+          <FormTextInput
+            v-model="state.registration.end"
+            :content="{
+              label: $t('edit.event.attributes.registration.end'),
+            }"
+            :rules="[state.capacity ? useRequiredInput : null]"
+          />
+        </VCol>
       </VRow>
 
       <!-- Datetime -->

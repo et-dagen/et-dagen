@@ -11,13 +11,12 @@ export default defineEventHandler(async (event) => {
     description,
     location,
     title,
-    signUpStart,
-    optOutDeadline,
+    registration,
   } = await readBody(event)
 
   // check if data is defined.
   if (
-    !companyUID ||
+    (!companyUID && companyUID !== 'etdagene') ||
     (typeof capacity === 'number' && capacity <= 0) ||
     (capacity !== null && typeof capacity !== 'number') ||
     !date.start ||
@@ -26,7 +25,7 @@ export default defineEventHandler(async (event) => {
     !location.name ||
     (!location.map && location.map !== null) ||
     !title ||
-    (capacity && (!signUpStart || !optOutDeadline))
+    (capacity && (!registration.start || !registration.end))
   )
     throw createError({
       statusCode: 400,
@@ -67,11 +66,11 @@ export default defineEventHandler(async (event) => {
     })
 
   // check if sign up start and opt out deadline is before event start
-  if (signUpStart > date.start || optOutDeadline > date.start)
+  if (registration.start > date.start || registration.end > date.start)
     throw createError({
       statusCode: 400,
       statusMessage:
-        'Sign up start and opt out deadline must be before event start',
+        'Sign up and opt out timestamps must be before event start',
     })
 
   // TODO: Add support for different event types
@@ -101,6 +100,7 @@ export default defineEventHandler(async (event) => {
       name: location.name,
     },
     title,
+    registration,
     // eventType,
   })
 

@@ -12,8 +12,7 @@ export default defineEventHandler(async (event) => {
     description,
     location,
     title,
-    signUpStart,
-    optOutDeadline,
+    registration,
   } = await readBody(event)
 
   // Check if user is authorized
@@ -39,9 +38,9 @@ export default defineEventHandler(async (event) => {
     date.end === null ||
     description === null ||
     location.name === null ||
-    location.map === null ||
+    (!location.map && location.map !== null) ||
     title === null ||
-    (capacity !== null && (!signUpStart || !optOutDeadline))
+    (capacity !== null && (!registration.start || !registration.end))
   )
     throw createError({
       statusCode: 400,
@@ -69,7 +68,10 @@ export default defineEventHandler(async (event) => {
     })
 
   // check if sign up start and opt out deadline is before event start
-  if (signUpStart > date.start || optOutDeadline > date.start)
+  if (
+    capacity &&
+    (registration.start > date.start || registration.end > date.start)
+  )
     throw createError({
       statusCode: 400,
       statusMessage:
@@ -103,6 +105,7 @@ export default defineEventHandler(async (event) => {
       name: location.name,
     },
     title,
+    registration,
     // eventType,
   }
 
