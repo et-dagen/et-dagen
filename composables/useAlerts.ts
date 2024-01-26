@@ -95,6 +95,14 @@ const errorMessageMap = new Map([
       message: 'non_admin_user',
     },
   ],
+  [
+    'Events: Error (register/registration-closed).',
+    {
+      source: 'event.register',
+      type: 'error',
+      message: 'closed',
+    },
+  ],
 ])
 
 export type AlertType = 'error' | 'info' | 'success' | 'warning' | undefined
