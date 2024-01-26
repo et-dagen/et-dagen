@@ -61,6 +61,16 @@
       event.value.attendants.length >= event.value.capacity
   )
 
+  const outsideRegistrationWindow = computed(
+    () =>
+      !useAuth.hasAccess(['admin']) &&
+      event.value.capacity &&
+      !presentWithinTimeWindow(
+        event.value.registration.start,
+        event.value.registration.end
+      )
+  )
+
   // check if user is already registered for event
   const showSignupButton = computed(
     () => hasCapacity.value && !alreadyRegistered.value && !eventFull.value
@@ -234,8 +244,18 @@
         {{ $t('program.event.sign_in_to_register') }}
       </div>
 
+      <div
+        v-if="useAuth.isLoggedIn && hasCapacity && outsideRegistrationWindow"
+        class="text-primary px-4 py-2 d-flex justify-center align-center"
+      >
+        <VIcon class="pr-3">mdi-calendar-clock</VIcon>
+        {{ $t('program.event.registration_closed') }}
+      </div>
+
       <!-- sign up options -->
-      <div v-if="hasCapacity && useAuth.isLoggedIn">
+      <div
+        v-if="hasCapacity && useAuth.isLoggedIn && !outsideRegistrationWindow"
+      >
         <!-- sign up -->
         <VBtn
           v-if="showSignupButton"
