@@ -11,6 +11,14 @@
     }
   })
 
+  const isRegisteredRestriction = computed(() => {
+    return (restriction: string) => {
+      return Object.values(dietaryFlags)
+        .map((entry) => entry.name)
+        .includes(restriction)
+    }
+  })
+
   const authStore = useAuthStore()
   const { user } = storeToRefs(authStore)
 </script>
@@ -57,10 +65,19 @@
                 :key="restriction"
                 class="d-flex align-center"
               >
-                <VIcon size="small" color="primary" class="mr-2">
-                  {{ dietaryIcon(restriction) }}
-                </VIcon>
-                {{ $t(`dietary_restrictions.${restriction}`) }}
+                <span v-if="isRegisteredRestriction(restriction)">
+                  <VIcon size="small" color="primary" class="mr-2">
+                    {{ dietaryIcon(restriction) }}
+                  </VIcon>
+                  {{ $t(`dietary_restrictions.${restriction}`) }}
+                </span>
+
+                <span v-else>
+                  <VIcon size="small" color="primary" class="mr-2">
+                    mdi-food-variant
+                  </VIcon>
+                  {{ restriction }}
+                </span>
               </li>
             </ul>
           </div>
