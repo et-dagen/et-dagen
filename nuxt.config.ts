@@ -2,6 +2,7 @@
 export default defineNuxtConfig({
   app: {
     head: {
+      title: 'E&T-dagene',
       link: [
         {
           rel: 'icon',
