@@ -1,4 +1,5 @@
 // POST /api/event/register/:eventUID
+
 // endpoint for signing up for an event
 export default defineEventHandler(async (event) => {
   const { user } = event.context
@@ -49,10 +50,16 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  if (!hasAccess(user, ['admin']) && data[eventUID].signUpStart < Date.now()) {
+  if (
+    !hasAccess(user, ['admin']) &&
+    !presentWithinTimeWindow(
+      data[eventUID].registration.start,
+      data[eventUID].registration.end
+    )
+  ) {
     throw createError({
       statusCode: 404,
-      statusMessage: 'Events: Error (register/registration-closed-signup).',
+      statusMessage: 'Events: Error (register/registration-closed).',
     })
   }
 

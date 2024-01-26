@@ -1,4 +1,5 @@
 // DELETE /api/event/register/:eventUID
+
 // endpoint for opting out of an event
 export default defineEventHandler(async (event) => {
   const { user } = event.context
@@ -42,13 +43,17 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  // check if sign up start and opt out deadline is before event start
   if (
     !hasAccess(user, ['admin']) &&
-    data[eventUID].optOutDeadline < Date.now()
+    !presentWithinTimeWindow(
+      data[eventUID].registration.start,
+      data[eventUID].registration.end
+    )
   ) {
     throw createError({
       statusCode: 404,
-      statusMessage: 'Events: Error (register/registration-closed-optout).',
+      statusMessage: 'Events: Error (register/registration-closed).',
     })
   }
 
