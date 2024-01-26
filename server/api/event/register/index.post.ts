@@ -49,6 +49,13 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  if (!hasAccess(user, ['admin']) && data[eventUID].signUpStart < Date.now()) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Events: Error (register/registration-closed-signup).',
+    })
+  }
+
   // Event does not have attendants
   if (!Object.hasOwn(data[eventUID], 'attendants')) {
     eventsRef

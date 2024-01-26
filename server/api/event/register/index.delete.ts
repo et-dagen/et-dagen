@@ -42,6 +42,16 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  if (
+    !hasAccess(user, ['admin']) &&
+    data[eventUID].optOutDeadline < Date.now()
+  ) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Events: Error (register/registration-closed-optout).',
+    })
+  }
+
   // Get attendee key for user
   const attendees = data[eventUID].attendants
 
