@@ -21,3 +21,9 @@ export const getHourAndMinuteStringFromString = (datetime: string) => {
 export const getTimeFromDatetime = (datetime: string): string => {
   return datetime.split('T')[1].replace('Z', '')
 }
+
+// checking if now is within a time window of ISO strings
+export const presentWithinTimeWindow = (start: string, end: string) => {
+  const now = new Date().toISOString()
+  return start < now && end > now
+}
