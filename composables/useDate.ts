@@ -40,6 +40,20 @@ const months = [
   'december',
 ]
 
+const weekdays = [
+  'sunday',
+  'monday',
+  'tuesday',
+  'wednesday',
+  'thursday',
+  'friday',
+  'saturday',
+]
+
+export const getWeekdayFromDateTime = (datetime: string): string => {
+  return weekdays[new Date(datetime).getDay()]
+}
+
 // Get month name from month index
 export const getFullMonthFromNumber = (month: number): string => {
   return months[month]

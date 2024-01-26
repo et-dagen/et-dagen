@@ -4,7 +4,9 @@
 
   // Fetch company and event data from API
   const { data: companies } = await useFetch('/api/company')
+
   const { data: events } = await useFetch('/api/event')
+  const { data: maps } = await useFetch('/api/image/standmap')
 
   // Group events by date
   const eventsByDate: any = computed(() =>
@@ -32,6 +34,16 @@
   const state = reactive({
     ...initialState,
   })
+
+  const selectedStandMap = computed(() => {
+    if (!maps.value?.some((map: any) => map.date === state.selectedDate))
+      return null
+
+    return maps.value.filter((map: any) => map.date === state.selectedDate)[0]
+      .url
+  })
+
+  const showStandMap = ref(false)
 </script>
 
 <template>
@@ -50,6 +62,28 @@
       </VTab>
     </VTabs>
   </VContainer>
+  <VContainer v-if="selectedStandMap" class="d-flex justify-center">
+    <VBtn
+      class="w-75"
+      max-width="600"
+      color="accent"
+      @click="showStandMap = true"
+      style="min-width: fit-content"
+    >
+      <VIcon class="mx-3">mdi-map</VIcon>
+      {{ $t('program.standmap') }}:
+      {{ $t(`weekday.${getWeekdayFromDateTime(state.selectedDate)}`) }}
+    </VBtn>
+  </VContainer>
+
+  <CommonModal v-if="showStandMap" @close-modal="showStandMap = false">
+    <NuxtImg
+      :src="selectedStandMap"
+      alt="Standmap"
+      object-fit="contain"
+      class="w-50"
+    />
+  </CommonModal>
 
   <!-- Timeline container -->
   <VContainer>

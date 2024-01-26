@@ -12,6 +12,11 @@
     "sign_in": "Sign in",
     "sign_out": "Sign out",
     "sign_up": "Register user",
+    "information": {
+      "studyprogramme": "Study Programme",
+      "currentyear": "Current Year",
+      "dietaryrestrictions": "Allergies and Restrictions"
+    },
     "register": {
       "title": "Register user",
       "full_name": "Full name",
@@ -176,6 +181,7 @@
   },
   "program": {
     "title": "Programme",
+    "standmap": "Stand Map",
     "event": {
       "sign_up": "Sign up",
       "opt_out": "Opt out",
@@ -458,5 +464,14 @@
     "vegan": "Vegan",
     "halal": "Halal",
     "kosher": "Kosher"
+  },
+  "weekday": {
+    "sunday": "Sunday",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday"
   }
 }
