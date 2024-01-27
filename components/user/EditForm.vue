@@ -137,9 +137,23 @@
         }),
       ])
     })
-      .then(() => {
+      .then(async () => {
         displaySuccessAlert('alert.success.user.edit')
-        setTimeout(cancel, 2000)
+        if (state.uid === auth.user?.uid) {
+          // sign out the new user
+          await signoutUser()
+
+          // navigate to sign in page
+          const localePath = useLocalePath()
+          await navigateTo({
+            path: localePath('/user/signin'),
+            query: {
+              registered: 'true',
+            },
+          })
+        } else {
+          setTimeout(cancel, 2000)
+        }
       })
       .catch((error) => {
         console.error(error)
