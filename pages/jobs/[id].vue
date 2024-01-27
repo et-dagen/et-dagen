@@ -82,7 +82,7 @@
           density="comfortable"
           @click="
             // TODO: add link for applying to jobs
-            navigateTo('/', {
+            navigateTo(job.applicationLink, {
               external: true,
               open: { target: '_blank' },
             })

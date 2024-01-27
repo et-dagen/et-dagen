@@ -365,6 +365,7 @@
         "company": "Company",
         "description": "Job Description",
         "deadline": "Application Deadline",
+        "application_link": "Job advertisement link",
         "jobtype": {
           "name": "Job Type",
           "full_time": "Full-time",
