@@ -5,7 +5,7 @@ const routes = [
     route: '/',
   },
   {
-    name: 'program',
+    name: 'programme',
     route: '/programme',
   },
   {

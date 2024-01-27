@@ -1,7 +1,7 @@
 {
   "nav": {
     "index": "Hjem",
-    "program": "Program",
+    "programme": "Program",
     "jobs": "Jobber",
     "contact": "Kontakt",
     "admin": "Administrasjon",
@@ -12,6 +12,11 @@
     "sign_in": "Logg inn",
     "sign_out": "Logg ut",
     "sign_up": "Registrer bruker",
+    "information": {
+      "studyprogramme": "Studieprogram",
+      "currentyear": "Årstrinn",
+      "dietaryrestrictions": "Allergener og restriksjoner"
+    },
     "register": {
       "title": "Registrer bruker",
       "full_name": "Fullt navn",
@@ -180,6 +185,7 @@
   },
   "program": {
     "title": "Program",
+    "standmap": "Se standkart",
     "event": {
       "sign_up": "Meld meg på",
       "opt_out": "Trekk påmelding",
@@ -190,7 +196,11 @@
     "title": "Stillingsannonser",
     "jobTypes": "Jobbtyper",
     "deadline": "Søknadsfrist",
-    "search": "Søk"
+    "search": "Søk",
+    "location": "Sted",
+    "company": "Bedrift",
+    "details": "Stillingsdetaljer",
+    "apply": "Søk her"
   },
   "admin": {
     "categories": "Kategorier",
@@ -454,5 +464,14 @@
     "vegan": "Vegansk",
     "halal": "Halal",
     "kosher": "Kosher"
+  },
+  "weekday": {
+    "sunday": "Søndag",
+    "monday": "Mandag",
+    "tuesday": "Tirsdag",
+    "wednesday": "Onsdag",
+    "thursday": "Torsdag",
+    "friday": "Fredag",
+    "saturday": "Lørdag"
   }
 }

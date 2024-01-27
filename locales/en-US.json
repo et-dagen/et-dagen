@@ -1,7 +1,7 @@
 {
   "nav": {
     "index": "Home",
-    "program": "Programme",
+    "programme": "Programme",
     "jobs": "Jobs",
     "contact": "Contact",
     "admin": "Administration",
@@ -12,6 +12,11 @@
     "sign_in": "Sign in",
     "sign_out": "Sign out",
     "sign_up": "Register user",
+    "information": {
+      "studyprogramme": "Study Programme",
+      "currentyear": "Current Year",
+      "dietaryrestrictions": "Allergies and Restrictions"
+    },
     "register": {
       "title": "Register user",
       "full_name": "Full name",
@@ -175,6 +180,7 @@
   },
   "program": {
     "title": "Programme",
+    "standmap": "Stand Map",
     "event": {
       "sign_up": "Sign up",
       "opt_out": "Opt out",
@@ -185,7 +191,11 @@
     "title": "Job Advertisements",
     "jobTypes": "Job Types",
     "deadline": "Deadline",
-    "search": "Search"
+    "search": "Search",
+    "location": "Location",
+    "company": "Company",
+    "details": "Job Details",
+    "apply": "Apply here"
   },
   "admin": {
     "categories": "Categories",
@@ -448,5 +458,14 @@
     "vegan": "Vegan",
     "halal": "Halal",
     "kosher": "Kosher"
+  },
+  "weekday": {
+    "sunday": "Sunday",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday"
   }
 }
