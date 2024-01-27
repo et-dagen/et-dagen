@@ -63,6 +63,10 @@
         "required": "Password is required",
         "confirmed": "Passwords must match"
       }
+    },
+    "page_not_found": {
+      "page_doesnt_exist": "This page doesn't exist",
+      "navigate_front_page": "Back to front page"
     }
   },
   "datetime": {
