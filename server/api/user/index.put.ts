@@ -19,8 +19,9 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'User not authorized',
     })
   const displayName = newData.name
+  const newEmail = newData.email
   // update name with ID
-  auth.updateUser(uid, { displayName })
+  auth.updateUser(uid, { displayName, email: newEmail })
 
   // send response to remove cookie
   sendNoContent(event, 204)
