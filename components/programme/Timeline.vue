@@ -67,8 +67,8 @@
       class="w-75"
       max-width="600"
       color="accent"
-      @click="showStandMap = true"
       style="min-width: fit-content"
+      @click="showStandMap = true"
     >
       <VIcon class="mx-3">mdi-map</VIcon>
       {{ $t('program.standmap') }}:
