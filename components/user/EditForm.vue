@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { compareObjects } from '../../composables/useObject'
   import { User } from '../../models/User'
-  import type { AlertType } from 'composables/useAlerts'
+  import { AlertType } from 'composables/useAlerts'
 
   const props = defineProps({
     user: {
