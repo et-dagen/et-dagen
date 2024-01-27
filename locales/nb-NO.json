@@ -148,7 +148,8 @@
           "already_registered": "Du er allerede påmeldt dette arrangementet",
           "user_not_registered": "Du er ikke påmeldt dette arrangementet",
           "registration_unnecessary": "Påmelding er ikke nødvendig for dette arrangementet",
-          "non_admin_user": "Dette krever administratorrettigheter"
+          "non_admin_user": "Dette krever administratorrettigheter",
+          "end_time_before_start_time": "Arrangementet kan ikke avslutte før det har startet"
         }
       },
       "company": {
