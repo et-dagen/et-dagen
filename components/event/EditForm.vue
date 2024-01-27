@@ -302,7 +302,7 @@
       <!-- Datetime -->
       <VRow>
         <VCol>
-          <FormTextInput
+          <FormDateTimeInput
             v-model="state.date.start"
             :content="{
               label: $t('edit.event.attributes.date.start'),
@@ -311,7 +311,7 @@
           />
         </VCol>
         <VCol>
-          <FormTextInput
+          <FormDateTimeInput
             v-model="state.date.end"
             :content="{
               label: $t('edit.event.attributes.date.end'),
