@@ -317,7 +317,7 @@
 
       <VRow v-if="state.capacity">
         <VCol>
-          <FormTextInput
+          <FormDateTimeInput
             v-model="state.registration.start"
             :content="{
               label: $t('edit.event.attributes.registration.start'),
@@ -326,7 +326,7 @@
           />
         </VCol>
         <VCol>
-          <FormTextInput
+          <FormDateTimeInput
             v-model="state.registration.end"
             :content="{
               label: $t('edit.event.attributes.registration.end'),
