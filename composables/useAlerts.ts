@@ -95,12 +95,20 @@ const errorMessageMap = new Map([
       message: 'non_admin_user',
     },
   ],
+  [
+    'Event Error: start-time-has-to-be-before-end-time',
+    {
+      source: 'event.register',
+      type: 'error',
+      message: 'end_time_before_start_time',
+    },
+  ],
 ])
 
 export type AlertType = 'error' | 'info' | 'success' | 'warning' | undefined
 export const getAlertTypeFromErrorMessage = (errorMessage: string) => {
   return (errorMessageMap.get(errorMessage)?.type || 'error') as AlertType
-}
+} // will always return "error" as AlertType
 
 export const mapErrorMessageToAlertInfo = (errorMessage: string) => {
   return errorMessageMap.get(errorMessage) || 'missing_error'
