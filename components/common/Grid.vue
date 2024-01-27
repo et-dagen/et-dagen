@@ -19,7 +19,7 @@
 
     // Set different max-widths for different screen sizes
     @media #{map-get(settings.$display-breakpoints, 'md-and-up')} {
-      max-width: 800px;
+      max-width: 900px;
     }
     @media #{map-get(settings.$display-breakpoints, 'sm')} {
       max-width: 600px;
