@@ -130,8 +130,11 @@
   }
 
   // Show appropriate error alert for failed API calls
-  const displayErrorAlertFromMessage = (errorMessage: string) => {
-    const content = getAlertContent(errorMessage)
+  const displayErrorAlertFromMessage = (
+    errorType: string,
+    errorMessage: string
+  ) => {
+    const content = getAlertContent(errorType, errorMessage)
     alertState.alertRoute = content.alertRoute
     alertState.type = content.type
     alertState.show = content.show
@@ -202,14 +205,14 @@
       method: 'PUT',
       body: state,
     })
-      .then((_data) => {
+      .then(() => {
         // Handle successful response
         displaySuccessAlert('alert.success.event.edit.modified')
         setTimeout(() => navigateTo(localePath('/admin/events')), 2000)
       })
       .catch((error) => {
         // Handle errors, including HTTP errors
-        displayErrorAlertFromMessage(error.message)
+        displayErrorAlertFromMessage('Event', error.statusMessage)
       })
   }
 
@@ -226,14 +229,14 @@
       method: 'POST',
       body: state,
     })
-      .then((_data) => {
+      .then(() => {
         // Handle successful response
         displaySuccessAlert('alert.success.event.edit.created')
         setTimeout(() => navigateTo(localePath('/admin/events')), 2000)
       })
       .catch((error) => {
         // Handle errors, including HTTP errors
-        displayErrorAlertFromMessage(error.message)
+        displayErrorAlertFromMessage('Event', error.message)
       })
   }
 </script>

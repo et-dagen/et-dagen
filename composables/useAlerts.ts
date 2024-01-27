@@ -121,8 +121,14 @@ export const getAlertRouteAndType = (errorMessage: string) => {
   }
 }
 
-export const getAlertContent = (message: string, showAlert = true) => {
-  const content = getAlertRouteAndType(message)
+export const getAlertContent = (
+  errorType: string,
+  errorMessage: string,
+  showAlert = true
+) => {
+  const content = getAlertRouteAndType(
+    `${errorType} Error: ${errorMessage.toLowerCase().replaceAll(' ', '-')}`
+  )
 
   return {
     alertRoute: content.route,
