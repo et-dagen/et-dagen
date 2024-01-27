@@ -67,7 +67,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Start time has to be before end time',
     })
 
-  // check if sign up start and opt out deadline is before event start
+  // registration window must be before event start
   if (
     capacity &&
     (registration.start > date.start || registration.end > date.start)
@@ -76,6 +76,13 @@ export default defineEventHandler(async (event) => {
       statusCode: 400,
       statusMessage:
         'Sign up start and opt out deadline must be before event start',
+    })
+
+  // registration window must open before it closes
+  if (capacity && registration.start > registration.end)
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Sign up start must be before sign up end',
     })
 
   // TODO: Add support for different event types
