@@ -209,7 +209,7 @@
           :content="{
             label: $t('edit.user.attributes.email'),
           }"
-          :rules="[useRequiredInput]"
+          :rules="[useRequiredInput, useValidateEmail]"
         />
       </VRow>
 
