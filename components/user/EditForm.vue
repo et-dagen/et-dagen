@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import { User } from '../../models/User'
-  import { AlertType } from 'composables/useAlerts'
 
   const props = defineProps({
     user: {
