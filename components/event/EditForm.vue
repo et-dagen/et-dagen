@@ -54,7 +54,7 @@
     if (!hasAccess(['admin', 'company']) || !event) return null
 
     if (hasAccess(['admin'])) {
-      return embedKeyIntoObjectValues(companies.value).map((company) => {
+      const list = embedKeyIntoObjectValues(companies.value).map((company) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { uid, name, ...remains } = company
         return {
@@ -62,6 +62,14 @@
           title: name,
         }
       })
+
+      // Add E&T-dagene as an option
+      list.push({
+        value: 'etdagene',
+        title: 'E&T-dagene',
+      })
+
+      return list
     }
 
     if (hasAccess(['company'])) {

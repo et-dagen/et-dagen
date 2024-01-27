@@ -181,6 +181,9 @@
           "modified": "Bedrift oppdatert",
           "deleted_logo": "Logo slettet"
         }
+      },
+      "user": {
+        "edit": "Bruker oppdatert"
       }
     }
   },
@@ -436,6 +439,23 @@
           "partner": "Partner",
           "sponsor": "Sponsor"
         }
+      }
+    },
+    "user": {
+      "title": "Rediger bruker",
+      "save": "Lagre",
+      "cancel": "Avbryt",
+      "attributes": {
+        "name": "Navn",
+        "email": "Epost",
+        "type": {
+          "name": "Brukertype",
+          "admin": "Administrator",
+          "company": "Bedrift",
+          "basic": "Basis"
+        },
+        "studyprogram": "Studieprogram",
+        "currentyear": "Studieår"
       }
     }
   },
