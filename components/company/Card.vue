@@ -25,7 +25,16 @@
 </template>
 
 <style scoped lang="scss">
+  @use 'vuetify/settings';
+
   img {
+    object-fit: contain;
+    position: absolute;
+    margin: auto;
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
     max-width: 100%;
     object-fit: contain;
     max-height: 100%;
