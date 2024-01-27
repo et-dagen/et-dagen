@@ -15,6 +15,7 @@ type newUser = {
   studyProgram?: string
   currentYear?: number
   name: string
+  dietaryRestrictions: string[] | null
 }
 
 // registers new user in firebase auth and db
@@ -76,6 +77,7 @@ export const registerUser = async (
     body: {
       studyProgram: newUser.studyProgram,
       currentYear: newUser.currentYear,
+      dietaryRestrictions: newUser.dietaryRestrictions,
     },
     query: {
       code: registrationCode,

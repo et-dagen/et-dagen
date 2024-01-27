@@ -2,6 +2,8 @@
   import { companyTypes as companyTypeNames } from '~/config/app.config'
   import type { Company } from '~/models/Company'
 
+  const localePath = useLocalePath()
+
   // get companies and companies from the API
   const { data: companies, refresh } = await useFetch('/api/company')
   const { data: codes, refresh: refreshCodes } = await useFetch('/api/code')
@@ -290,7 +292,7 @@
           class="ml-2 add_company"
           flat
           icon="mdi-plus"
-          @click="navigateTo('/company/edit')"
+          @click="navigateTo(localePath('/company/edit'))"
         >
         </VBtn>
       </div>
@@ -363,7 +365,9 @@
           <td v-else>-</td>
 
           <!-- company webpage -->
-          <td>{{ company.webpage }}</td>
+          <td class="truncate">
+            {{ company.webpage.replace('https://', '') }}
+          </td>
 
           <!-- company code -->
           <td v-if="hadCompanyCodes(company.uid)">
@@ -437,7 +441,9 @@
                   variant="text"
                   color="primary"
                   icon="mdi-pencil"
-                  @click="navigateTo(`/company/edit/${company.uid}`)"
+                  @click="
+                    navigateTo(localePath(`/company/edit/${company.uid}`))
+                  "
                 />
               </template>
 
@@ -479,7 +485,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    max-width: 200px;
+    max-width: 190px;
   }
 </style>
 models/RegistrationCode

@@ -1,16 +1,22 @@
 {
   "nav": {
     "index": "Home",
-    "program": "Programme",
+    "programme": "Programme",
     "jobs": "Jobs",
     "contact": "Contact",
     "admin": "Administration",
-    "user": "My profile"
+    "user": "My profile",
+    "program_nav": "SEE PROGRAM"
   },
   "user": {
     "sign_in": "Sign in",
     "sign_out": "Sign out",
     "sign_up": "Register user",
+    "information": {
+      "studyprogramme": "Study Programme",
+      "currentyear": "Current Year",
+      "dietaryrestrictions": "Allergies and Restrictions"
+    },
     "register": {
       "title": "Register user",
       "full_name": "Full name",
@@ -26,6 +32,12 @@
       "user_type": {
         "student": "Student user",
         "company": "Company user"
+      },
+      "dietary_restrictions": {
+        "name": "Allergens and restrictions",
+        "other": "Other restrictions",
+        "norestrictions": "No, I have no dietary restrictions",
+        "restrictions": "Yes, I have allergies and/or restrictions"
       }
     },
     "login": {
@@ -67,6 +79,29 @@
       "october": "October",
       "november": "November",
       "december": "December"
+    },
+    "times": {
+      "days": "Days",
+      "hours": "Hours",
+      "minutes": "Minutes",
+      "seconds": "Seconds"
+    }
+  },
+  "event": {
+    "take_off": "The event is taking off in",
+    "page": {
+      "details": {
+        "name": "Details",
+        "from": "From",
+        "to": "To",
+        "location": "Location",
+        "host": "Organiser"
+      },
+      "attendants": {
+        "name": "Registration",
+        "attendants": "Attendants",
+        "nocapacity": "No capacity limit"
+      }
     }
   },
   "contact": {
@@ -155,11 +190,22 @@
   },
   "program": {
     "title": "Programme",
+    "standmap": "Stand Map",
     "event": {
       "sign_up": "Sign up",
       "opt_out": "Opt out",
       "sign_in_to_register": "Sign in to register"
     }
+  },
+  "jobs": {
+    "title": "Job Advertisements",
+    "jobTypes": "Job Types",
+    "deadline": "Deadline",
+    "search": "Search",
+    "location": "Location",
+    "company": "Company",
+    "details": "Job Details",
+    "apply": "Apply here"
   },
   "admin": {
     "categories": "Categories",
@@ -231,14 +277,49 @@
           "partner": "Partner",
           "sponsor": "Sponsor"
         },
-        "code": "Company code"
+        "code": "Code"
       },
       "copied": "Copied UID!",
       "copiedcode": "Copied registration code!",
       "createcode": "Create code"
     },
     "jobs": {
-      "name": "Jobs"
+      "name": "Jobs",
+      "edit": "Edit Jobs",
+      "pagesize": "Jobs per page",
+      "filtertypes": {
+        "name": "Filter type",
+        "updated": "Last modified",
+        "jobtitle": "Job Title"
+      },
+      "filterorder": {
+        "name": "Order",
+        "descending": "Descending",
+        "ascending": "Ascending"
+      },
+      "selectall": "Select all",
+      "delete": {
+        "selected": "Delete selected",
+        "confirmtext": "Are you sure you want to delete the selected jobs?",
+        "confirm": "Yes, delete them",
+        "abort": "No, abort"
+      },
+      "attributes": {
+        "select": "Velg",
+        "title": "Title",
+        "description": "Description",
+        "company": "Company",
+        "location": "Location",
+        "deadline": "Deadline",
+        "jobtype": {
+          "name": "Job Type",
+          "full_time": "Full-time",
+          "graduate": "Graduate",
+          "summer_internship": "Summer internship"
+        },
+        "code": "Jobb Code"
+      },
+      "copied": "UID kopiert!"
     },
     "users": {
       "name": "Users",
@@ -279,6 +360,30 @@
     }
   },
   "edit": {
+    "jobs": {
+      "create": {
+        "title": "Create Job",
+        "action": "Create Job"
+      },
+      "edit": {
+        "title": "Edit Job",
+        "action": "Save Changes"
+      },
+      "cancel": "Cancel",
+      "attributes": {
+        "title": "Job Title",
+        "company": "Company",
+        "description": "Job Description",
+        "deadline": "Application Deadline",
+        "jobtype": {
+          "name": "Job Type",
+          "full_time": "Full-time",
+          "graduate": "Gratuate position",
+          "summer_internship": "Summer Internship"
+        },
+        "location": "Job Location"
+      }
+    },
     "event": {
       "create": {
         "title": "Create Event",
@@ -358,5 +463,36 @@
       "program": "Program",
       "jobs": "Jobs"
     }
+  },
+  "dietary_restrictions": {
+    "name": "Allergens and restrictions",
+    "gluten": "Gluten",
+    "shellfish": "shellfish",
+    "citrus": "Citrus fruits",
+    "egg": "Egg",
+    "fish": "Fish",
+    "peanuts": "Peanuts",
+    "soy": "Soy",
+    "milk": "Milk",
+    "nuts": "Nuts",
+    "celery": "Celery",
+    "mustard": "Mustard",
+    "sesame_seeds": "Sesame Seeds",
+    "sulfur_dioxide_sulphite": "Sulfor Oxide and Sulphites",
+    "lupine": "Lupine",
+    "mollusc": "Molluscs",
+    "vegetarian": "Vegetarian",
+    "vegan": "Vegan",
+    "halal": "Halal",
+    "kosher": "Kosher"
+  },
+  "weekday": {
+    "sunday": "Sunday",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday"
   }
 }

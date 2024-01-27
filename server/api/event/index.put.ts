@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
     date.end === null ||
     description === null ||
     location.name === null ||
-    location.map === null ||
+    (!location.map && location.map !== null) ||
     title === null
   )
     throw createError({

@@ -18,7 +18,7 @@
 <template>
   <div class="card elevation-3">
     <div class="card-content">
-      <img class="image" :src="content.image" />
+      <NuxtImg class="image" :src="content.image" />
       <div class="card-text pa-md-8 pa-sm-4">
         <div class="title bold text-primary py-3 text-md-h6">
           {{ content.position }}
@@ -44,6 +44,12 @@
     font-weight: bold;
   }
 
+  .image {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+
   .v-icon {
     color: rgb(var(--v-theme-primary));
   }
@@ -61,15 +67,6 @@
       grid-template-columns: 1fr 2fr;
       position: relative;
       overflow: hidden;
-
-      .image {
-        width: 100%;
-        height: 100% !important;
-        margin: 0;
-        // max-height: 100%;
-        object-fit: cover;
-        overflow: hidden;
-      }
 
       .actions {
         display: flex;

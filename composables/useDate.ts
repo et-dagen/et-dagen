@@ -40,6 +40,20 @@ const months = [
   'december',
 ]
 
+const weekdays = [
+  'sunday',
+  'monday',
+  'tuesday',
+  'wednesday',
+  'thursday',
+  'friday',
+  'saturday',
+]
+
+export const getWeekdayFromDateTime = (datetime: string): string => {
+  return weekdays[new Date(datetime).getDay()]
+}
+
 // Get month name from month index
 export const getFullMonthFromNumber = (month: number): string => {
   return months[month]
@@ -52,6 +66,19 @@ export const getNumericDayAndMonthString = (datetime: string): {} => {
   const month = date.getMonth() + 1
 
   return `${day < 10 ? `0${day}` : day}/${month + 1 < 10 ? `0${month}` : month}`
+}
+
+export const getDayAndMonthString = (datetime: string) => {
+  const nuxtApp = useNuxtApp()
+
+  const date = new Date(datetime)
+
+  const day = date.getDate()
+  const month = nuxtApp.$i18n.t(
+    `datetime.months.${getFullMonthFromNumber(date.getMonth())}`
+  )
+
+  return `${day}. ${month}`
 }
 
 // Get date string YYYY-MM-DD from datetime string YYYY-MM-DDThh:mm:ssZ
