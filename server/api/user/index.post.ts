@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
   if (!hasAccess(user, ['admin']) || !uid) {
     // prevent users from creating multiple instances in the db
     uid = user?.uid ?? decodedToken.uid
-    userType = user?.userType
+    userType = user?.userType ?? 'basic'
     companyUID = user?.companyUID
   }
 

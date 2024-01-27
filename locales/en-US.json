@@ -179,6 +179,16 @@
           "modified": "Successfully modified event",
           "deleted_logo": "Successfully deleted logo"
         }
+      },
+      "company": {
+        "edit": {
+          "created": "Company created",
+          "modified": "Company updated",
+          "deleted_logo": "Logo deleted"
+        }
+      },
+      "user": {
+        "edit": "User updated"
       }
     }
   },
@@ -426,6 +436,23 @@
           "partner": "Partner",
           "sponsor": "Sponsor"
         }
+      }
+    },
+    "user": {
+      "title": "Edit User",
+      "save": "Save Changes",
+      "canel": "Cancel",
+      "attributes": {
+        "name": "Name",
+        "email": "E-mail",
+        "type": {
+          "name": "User type",
+          "admin": "Administrator",
+          "company": "Comany",
+          "basic": "Basic"
+        },
+        "studyprogram": "Study programme",
+        "currentyear": "Current year"
       }
     }
   },
