@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import { compareObjects } from '../../composables/useObject'
   import { User } from '../../models/User'
   import { AlertType } from 'composables/useAlerts'
 
