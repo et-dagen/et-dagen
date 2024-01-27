@@ -200,7 +200,8 @@
     "location": "Sted",
     "company": "Bedrift",
     "details": "Stillingsdetaljer",
-    "apply": "Søk her"
+    "apply": "Søk her",
+    "type": "Jobbtype"
   },
   "admin": {
     "categories": "Kategorier",
