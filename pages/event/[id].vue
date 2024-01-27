@@ -61,15 +61,32 @@
       event.value.attendants.length >= event.value.capacity
   )
 
-  const outsideRegistrationWindow = computed(
-    () =>
-      !useAuth.hasAccess(['admin']) &&
-      event.value.capacity &&
-      !presentWithinTimeWindow(
-        event.value.registration.start,
-        event.value.registration.end
-      )
-  )
+  // does the event have any registration actions, and is user signed in
+  const hasEventActions = computed(() => useAuth.isLoggedIn && hasCapacity)
+
+  // check if registration actions should be rendered on client side
+  const showRegistrationAction = ref(false)
+
+  // check if current time is within registration window
+  const checkTimeWindow = setInterval(() => {
+    // stop checking if user is not signed in
+    if (!hasEventActions.value) {
+      clearInterval(checkTimeWindow)
+    }
+
+    // check if current time is within registration window
+    const isWithinTimeWindow = presentWithinTimeWindow(
+      event.value.registration.start,
+      event.value.registration.end
+    )
+
+    // show registration action if user is signed in and within time window
+    if (isWithinTimeWindow) {
+      showRegistrationAction.value = true
+    } else {
+      showRegistrationAction.value = false
+    }
+  }, 1000)
 
   // check if user is already registered for event
   const showSignupButton = computed(
@@ -245,7 +262,7 @@
       </div>
 
       <div
-        v-if="useAuth.isLoggedIn && hasCapacity && outsideRegistrationWindow"
+        v-if="hasEventActions && !showRegistrationAction"
         class="text-primary px-4 py-2 d-flex justify-center align-center"
       >
         <VIcon class="pr-3">mdi-calendar-clock</VIcon>
@@ -253,9 +270,7 @@
       </div>
 
       <!-- sign up options -->
-      <div
-        v-if="hasCapacity && useAuth.isLoggedIn && !outsideRegistrationWindow"
-      >
+      <div v-if="hasEventActions && showRegistrationAction">
         <!-- sign up -->
         <VBtn
           v-if="showSignupButton"
