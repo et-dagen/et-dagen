@@ -42,6 +42,7 @@
     jobType: null,
     location: null,
     title: null,
+    applicationLink: null,
     uid: null,
   }
 
@@ -261,6 +262,17 @@
           v-model="state.location"
           :content="{
             label: $t('edit.jobs.attributes.location'),
+          }"
+          :rules="[useRequiredInput]"
+        />
+      </VRow>
+
+      <!-- job application link-->
+      <VRow>
+        <FormTextInput
+          v-model="state.applicationLink"
+          :content="{
+            label: $t('edit.jobs.attributes.application_link'),
           }"
           :rules="[useRequiredInput]"
         />
