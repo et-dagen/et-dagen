@@ -68,6 +68,8 @@
         </VTab>
       </VTabs>
     </VContainer>
+
+    <!--View standmap button-->
     <VContainer v-if="selectedStandMap" class="d-flex justify-center">
       <VBtn
         class="w-75"
@@ -82,6 +84,7 @@
       </VBtn>
     </VContainer>
 
+    <!--Standmap-->
     <CommonModal v-if="showStandMap" @close-modal="showStandMap = false">
       <NuxtImg
         :src="selectedStandMap"
@@ -261,7 +264,8 @@
   @media #{map-get($display-breakpoints, 'xs')} {
     .container {
       transform: translateX(9rem);
-      max-width: 200px;
+      max-width: 450px;
+      width: fit-content;
     }
 
     .card {
@@ -310,7 +314,7 @@
   @media #{map-get($display-breakpoints, 'sm')} {
     .container {
       transform: translateX(9rem);
-      max-width: 200px;
+      width: fit-content;
     }
 
     .card {
