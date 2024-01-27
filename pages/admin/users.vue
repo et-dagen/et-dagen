@@ -336,7 +336,7 @@
                 />
               </template>
 
-              {{ $t('admin.user.edit') }}
+              {{ $t('admin.events.edit') }}
             </VTooltip>
           </td>
         </tr>
