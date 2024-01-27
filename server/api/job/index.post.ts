@@ -6,8 +6,15 @@ import { isValidDate } from '../../../composables/useDate'
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 
-  const { companyUID, title, description, deadline, jobType, location } =
-    await readBody(event)
+  const {
+    companyUID,
+    title,
+    description,
+    deadline,
+    jobType,
+    location,
+    applicationLink,
+  } = await readBody(event)
 
   // make sure all necessary data is included
   if (
@@ -16,7 +23,8 @@ export default defineEventHandler(async (event) => {
     !description ||
     !deadline ||
     !jobType ||
-    !location
+    !location ||
+    !applicationLink
   )
     throw createError({
       statusCode: 400,
@@ -67,6 +75,7 @@ export default defineEventHandler(async (event) => {
     deadline,
     jobType,
     location,
+    applicationLink,
   })
 
   sendNoContent(event, 201)
