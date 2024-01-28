@@ -180,6 +180,11 @@
           "modified": "Bedrift oppdatert",
           "deleted_logo": "Logo slettet"
         }
+      },
+      "job": {
+        "edit": {
+          "modified": "Jobb oppdatert"
+        }
       }
     }
   },

@@ -175,6 +175,18 @@
           "modified": "Successfully modified event",
           "deleted_logo": "Successfully deleted logo"
         }
+      },
+      "company": {
+        "edit": {
+          "created": "Company created",
+          "modified": "Comapny modified",
+          "deleted_logo": "Logo deleted"
+        }
+      },
+      "job": {
+        "edit": {
+          "modified": "Job updated"
+        }
       }
     }
   },
