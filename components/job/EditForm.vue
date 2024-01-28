@@ -282,6 +282,7 @@
       <VRow>
         <FormTextInput
           v-model="state.deadline"
+          type="date"
           :content="{
             label: $t('edit.jobs.attributes.deadline') + ' (YYYY-MM-DD)',
           }"
