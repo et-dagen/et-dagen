@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { User } from '../../models/User'
+  import type { User } from '../../models/User'
 
   const props = defineProps({
     user: {
@@ -299,7 +299,7 @@
     text-align: center;
   }
   .v-container {
-    max-width: 50rem !important;
+    max-width: 50rem;
   }
   .v-row {
     padding-block: 0.6rem;
