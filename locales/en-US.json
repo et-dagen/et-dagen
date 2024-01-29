@@ -63,6 +63,10 @@
         "required": "Password is required",
         "confirmed": "Passwords must match"
       }
+    },
+    "page_not_found": {
+      "page_doesnt_exist": "This page doesn't exist",
+      "navigate_front_page": "Back to front page"
     }
   },
   "datetime": {
@@ -150,7 +154,8 @@
           "user_not_registered": "You are not registered for this event",
           "registration_unnecessary": "Registration is not necessary for this event",
           "non_admin_user": "This requires admin privileges",
-          "closed": "Registration is closed"
+          "closed": "Registration is closed",
+          "end_time_before_start_time": "Events cannot end before they start"
         }
       },
       "company": {

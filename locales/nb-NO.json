@@ -63,6 +63,10 @@
         "required": "Passord er påkrevd",
         "confirmed": "Passordene må være like"
       }
+    },
+    "page_not_found": {
+      "page_doesnt_exist": "Denne siden finnes ikke",
+      "navigate_front_page": "Tilbake til forsiden"
     }
   },
   "datetime": {
@@ -149,7 +153,8 @@
           "user_not_registered": "Du er ikke påmeldt dette arrangementet",
           "registration_unnecessary": "Påmelding er ikke nødvendig for dette arrangementet",
           "non_admin_user": "Dette krever administratorrettigheter",
-          "closed": "Ikke åpent for registrering"
+          "closed": "Ikke åpent for registrering",
+          "end_time_before_start_time": "Arrangementet kan ikke avslutte før det har startet"
         }
       },
       "company": {
