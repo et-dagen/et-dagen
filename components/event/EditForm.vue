@@ -245,6 +245,7 @@
       return
     }
 
+    handleEmptyStateValues()
     await $fetch('/api/event', {
       method: 'POST',
       body: state,
