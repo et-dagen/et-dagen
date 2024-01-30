@@ -418,7 +418,7 @@
           "start": "Registration starts",
           "end": "Registration ends"
         },
-        "attendants": "Påmeldte deltakere",
+        "attendants": "Registered users",
         "user_id": "User ID",
         "sign_up": "Sign up"
       }
