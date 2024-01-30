@@ -188,8 +188,9 @@
       },
       "job": {
         "edit": {
-          "modified": "Jobb oppdatert"
-        }
+          "modified": "Jobb oppdatert",
+          "created": "Jobb opprettet"
+        },
       }
     }
   },

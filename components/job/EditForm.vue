@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import type { AlertType } from 'composables/useAlerts'
   const props = defineProps({
     jobUid: {
       type: String,
@@ -42,7 +41,7 @@
     jobType: null,
     location: null,
     title: null,
-    applicationLink: null,
+    applicationLink: '',
     uid: null,
   }
 
@@ -80,7 +79,7 @@
 
   // Show appropriate error alert for failed API calls
   const displayErrorAlertFromMessage = (errorMessage: string) => {
-    const content = getAlertContent(errorMessage)
+    const content = getAlertContent(errorMessage, 'Job')
     alertState.alertRoute = content.alertRoute
     alertState.type = content.type
     alertState.show = content.show
@@ -274,7 +273,7 @@
           :content="{
             label: $t('edit.jobs.attributes.application_link'),
           }"
-          :rules="[useRequiredInput]"
+          hint="Leave empty for no link"
         />
       </VRow>
 

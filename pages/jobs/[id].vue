@@ -81,7 +81,7 @@
 
     <!-- apply for job -->
     <div class="attendant-container">
-      <div>
+      <div v-if="job?.applicationLink && job.applicationLink.length">
         <VBtn
           color="primary"
           block

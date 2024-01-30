@@ -16,6 +16,8 @@ export default defineEventHandler(async (event) => {
     applicationLink,
   } = await readBody(event)
 
+  console.log(!!applicationLink)
+
   // make sure all necessary data is included
   if (
     !companyUID ||
@@ -24,7 +26,7 @@ export default defineEventHandler(async (event) => {
     !deadline ||
     !jobType ||
     !location ||
-    !applicationLink
+    typeof applicationLink !== 'string'
   )
     throw createError({
       statusCode: 400,

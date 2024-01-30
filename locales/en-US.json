@@ -190,7 +190,8 @@
       },
       "job": {
         "edit": {
-          "modified": "Job updated"
+          "modified": "Job updated",
+          "created": "Job created"
         }
       }
     }
