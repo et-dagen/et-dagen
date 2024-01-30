@@ -1,6 +1,4 @@
 <script setup lang="ts">
-  import type { AlertType } from 'composables/useAlerts'
-
   const localePath = useLocalePath()
 
   const props = defineProps({
@@ -437,6 +435,26 @@
 
     <!-- Edit Attandant -->
     <VContainer>
+      <VRow>
+        <VCol>
+          <FormTextInput
+            v-model="state.location.name"
+            :content="{
+              label: $t('edit.event.attributes.location.name'),
+            }"
+            :rules="[useRequiredInput]"
+          />
+          <VBtn
+            v-if="!editMode"
+            block
+            variant="flat"
+            color="success"
+            @click="createEvent"
+          >
+            {{ $t('edit.event.create.action') }}
+          </VBtn>
+        </VCol>
+      </VRow>
       <VCard v-if="hasAttendants" class="mx-auto" max-width="800">
         <VCardTitle>
           {{ $t('edit.event.attributes.attendants') }}

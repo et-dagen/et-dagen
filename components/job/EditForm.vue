@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import type { AlertType } from 'composables/useAlerts'
   const props = defineProps({
     jobUid: {
       type: String,
