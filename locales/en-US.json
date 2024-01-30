@@ -418,7 +418,9 @@
           "start": "Registration starts",
           "end": "Registration ends"
         },
-        "attendants": "Påmeldte deltakere"
+        "attendants": "Påmeldte deltakere",
+        "user_id": "User ID",
+        "sign_up": "Sign up"
       }
     },
     "company": {

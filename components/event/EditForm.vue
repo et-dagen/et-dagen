@@ -155,9 +155,6 @@
   // Boolean control states
   const editMode = computed(() => !!state.uid || !!state.eventUID)
   const isLoadingAttendants = ref(false)
-  const hasAttendants = computed(
-    () => Object.hasOwn(state, 'attendants') && !!state.attendants
-  )
 
   // Get updated event attendants
   const refreshAttendants = async () => {
@@ -257,6 +254,22 @@
         // Handle errors, including HTTP errors
         displayErrorAlertFromMessage('Event', error.message)
       })
+  }
+
+  const signUpForEventUid = ref('')
+
+  const signUpForEvent = () => {
+    $fetch('/api/event/register', {
+      method: 'POST',
+      body: { eventUID: props.eventUid, userUID: signUpForEventUid.value },
+    })
+      .then(() => {
+        refreshAttendants()
+        signUpForEventUid.value = ''
+      })
+      .catch((error) =>
+        displayErrorAlertFromMessage('Event', error.statusMessage)
+      )
   }
 </script>
 
@@ -434,29 +447,9 @@
     </VContainer>
 
     <!-- Edit Attandant -->
-    <VContainer>
-      <VRow>
-        <VCol>
-          <FormTextInput
-            v-model="state.location.name"
-            :content="{
-              label: $t('edit.event.attributes.location.name'),
-            }"
-            :rules="[useRequiredInput]"
-          />
-          <VBtn
-            v-if="!editMode"
-            block
-            variant="flat"
-            color="success"
-            @click="createEvent"
-          >
-            {{ $t('edit.event.create.action') }}
-          </VBtn>
-        </VCol>
-      </VRow>
-      <VCard v-if="hasAttendants" class="mx-auto" max-width="800">
-        <VCardTitle>
+    <VContainer v-if="editMode && state?.capacity">
+      <VCard class="mx-auto" max-width="800">
+        <VCardTitle class="d-flex align-center flex-wrap">
           {{ $t('edit.event.attributes.attendants') }}
           <VBtn
             icon="mdi-refresh"
@@ -466,11 +459,31 @@
             :loading="isLoadingAttendants"
             @click="refreshAttendants"
           />
+          <VSpacer />
+
+          <!-- sign up user for event -->
+          <FormTextInput
+            v-model="signUpForEventUid"
+            hide-details
+            density="compact"
+            class="mr-2"
+            :content="{
+              label: $t('edit.event.attributes.user_id'),
+            }"
+          />
+          <VBtn density="compact" color="success" @click="signUpForEvent">
+            {{ $t('edit.event.attributes.sign_up') }}
+          </VBtn>
         </VCardTitle>
 
         <VDivider />
 
-        <VVirtualScroll :items="attendantList" height="320" item-height="48">
+        <VVirtualScroll
+          v-if="state?.attendants"
+          :items="attendantList"
+          height="320"
+          item-height="48"
+        >
           <template #default="{ item }">
             <VListItem
               :title="`${getUserNameByUid(item[1])}`"

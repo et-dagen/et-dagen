@@ -419,7 +419,9 @@
         },
         "signupstart": "Påmelding åpner",
         "optoutdeadline": "Avmeldingsfrist",
-        "attendants": "Påmeldte deltakere"
+        "attendants": "Påmeldte deltakere",
+        "user_id": "Brukerid",
+        "sign_up": "Meld på"
       }
     },
     "company": {

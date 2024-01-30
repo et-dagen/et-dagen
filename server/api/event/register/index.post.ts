@@ -63,13 +63,22 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  if (userUID || !userUID.length)
+    await auth.getUser(userUID).catch(() => {
+      throw createError({
+        statusCode: 401,
+        statusMessage: 'Events: Error (register/user-not-exist).',
+      })
+    })
+
   // Event does not have attendants
   if (!Object.hasOwn(data[eventUID], 'attendants')) {
     eventsRef
       .child(eventUID)
       .child('attendants')
       .push(userUID || user.uid)
-    sendNoContent(event, 201)
+
+    return sendNoContent(event, 201)
   }
 
   // User is already registered for this event
