@@ -52,7 +52,7 @@
       <VCardText class="pt-5 pb-5">
         <strong>{{ $t('jobs.deadline') }}:</strong>
         {{ date.getDate() }}.
-        {{ $t(`datetime.months.${getFullMonthFromNumber(date.getMonth())}`) }}
+        {{ getFullMonthFromNumber(date.getMonth()) }}
         {{ date.getFullYear() }}
       </VCardText>
 

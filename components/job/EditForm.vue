@@ -280,7 +280,7 @@
 
       <!-- job deadline -->
       <VRow>
-        <FormTextInput
+        <FormDateTimeInput
           v-model="state.deadline"
           type="date"
           :content="{
