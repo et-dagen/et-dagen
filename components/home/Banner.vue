@@ -27,19 +27,11 @@
             {{ startDate.getDate() }}.
             {{
               !isSameMonth(content.date.start, content.date.end)
-                ? $t(
-                    `datetime.months.${getFullMonthFromNumber(
-                      startDate.getMonth()
-                    )}`
-                  )
+                ? getFullMonthFromNumber(startDate.getMonth())
                 : ''
             }}
             - {{ endDate.getDate() }}.
-            {{
-              $t(
-                `datetime.months.${getFullMonthFromNumber(endDate.getMonth())}`
-              )
-            }}
+            {{ getFullMonthFromNumber(endDate.getMonth()) }}
           </h5>
 
           <!-- h4 for under lg breakpoint and h3 above -->
