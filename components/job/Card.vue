@@ -56,9 +56,7 @@
           </span>
           <span class="d-none d-sm-flex">
             {{ $t('jobs.deadline') }}: {{ date.getDate() }}.
-            {{
-              $t(`datetime.months.${getFullMonthFromNumber(date.getMonth())}`)
-            }}
+            {{ getFullMonthFromNumber(date.getMonth()) }}
             {{ date.getFullYear() }}
           </span>
         </div>
