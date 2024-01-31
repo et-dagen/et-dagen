@@ -1,6 +1,4 @@
 <script setup lang="ts">
-  import { AlertType } from 'composables/useAlerts'
-
   const useAuth = useAuthStore()
 
   // get event id from route
