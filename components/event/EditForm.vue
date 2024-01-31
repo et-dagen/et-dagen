@@ -17,6 +17,10 @@
       query: { eventUID: props.eventUid },
     })
 
+    // allows adding capacity and registration start and end to an existing event
+    if (!Object.hasOwn(data[props.eventUid], 'registration'))
+      data[props.eventUid].registration = { start: null, end: null }
+
     return data
   })
 
@@ -202,6 +206,7 @@
       state.capacity && state.registration.start
         ? state.registration.start
         : null
+
     state.registration.end =
       state.capacity && state.registration.end ? state.registration.end : null
   }
