@@ -30,6 +30,17 @@
     />
 
     <template #append>
+      <!-- company admin nav -->
+      <NavButton
+        v-if="auth.hasAccess(['company', 'admin'])"
+        size="large"
+        :route="{
+          name: 'company_admin',
+          route: '/company/admin',
+        }"
+        class="mx-2 d-none d-lg-flex"
+      />
+
       <!-- admin nav button -->
       <NavButton
         v-if="auth.hasAccess(['admin'])"
