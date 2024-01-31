@@ -6,7 +6,8 @@
     "contact": "Contact",
     "admin": "Administration",
     "user": "My profile",
-    "program_nav": "SEE PROGRAM"
+    "program_nav": "SEE PROGRAM",
+    "company_admin": "Company Admin"
   },
   "user": {
     "sign_in": "Sign in",
@@ -126,7 +127,12 @@
   "company": {
     "main_partner": "Main partner",
     "partners": "Partners",
-    "sponsors": "Sponsors"
+    "sponsors": "Sponsors",
+    "admin": {
+      "title": "Company Admin",
+      "dietaryrestrictions": "Allergies and Restrictions",
+      "attendants": "Attendants"
+    }
   },
   "alert": {
     "close_alert": "Close",

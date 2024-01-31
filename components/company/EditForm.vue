@@ -329,7 +329,7 @@
 </template>
 
 <style scoped lang="scss">
-  @import 'vuetify/settings';
+  @use 'vuetify/settings';
   .title {
     text-align: center;
   }
@@ -338,5 +338,12 @@
   }
   .v-row {
     padding-block: 0.6rem;
+  }
+
+  @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
+    .v-container {
+      max-width: 95vw !important;
+      margin-block: 0.5rem;
+    }
   }
 </style>
