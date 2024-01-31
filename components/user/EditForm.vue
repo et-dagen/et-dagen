@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { User } from '../../models/User'
+  import type { User } from '../../models/User'
 
   const props = defineProps({
     user: {
@@ -8,6 +8,7 @@
     },
   })
 
+  const router = useRouter()
   // get study programmes
   const { data: studyProgrammes } = await useFetch('/api/programme')
   const programmeList = computed(() =>
@@ -49,8 +50,6 @@
   const auth = useAuthStore()
   const { hasAccess } = storeToRefs(auth)
   const isAdmin = computed(() => hasAccess.value(['admin']))
-
-  const localePath = useLocalePath()
 
   // Set state to user data plus companyUID
   const state = reactive({ companyUID: null, ...props.user })
@@ -151,19 +150,13 @@
             },
           })
         } else {
-          setTimeout(cancel, 2000)
+          setTimeout(() => router.back(), 2000)
         }
       })
       .catch((error) => {
         console.error(error)
         displayErrorAlertFromMessage(error.message)
       })
-  }
-
-  // navigate to edit page
-  // if user is not admin, it navigates to /user
-  const cancel = () => {
-    navigateTo(localePath('/admin/users'))
   }
 </script>
 
@@ -273,7 +266,7 @@
     <VContainer>
       <VRow justify="center">
         <VCol cols="6">
-          <VBtn block variant="outlined" color="error" @click="cancel">
+          <VBtn block variant="outlined" color="error" @click="router.back()">
             {{ $t('edit.user.cancel') }}
           </VBtn>
         </VCol>
@@ -299,7 +292,7 @@
     text-align: center;
   }
   .v-container {
-    max-width: 50rem !important;
+    max-width: 50rem;
   }
   .v-row {
     padding-block: 0.6rem;

@@ -95,12 +95,28 @@ const errorMessageMap = new Map([
       message: 'non_admin_user',
     },
   ],
+  [
+    'Events: Error (register/registration-closed).',
+    {
+      source: 'event.register',
+      type: 'error',
+      message: 'closed',
+    },
+  ],
+  [
+    'Event Error: start-time-has-to-be-before-end-time',
+    {
+      source: 'event.register',
+      type: 'error',
+      message: 'end_time_before_start_time',
+    },
+  ],
 ])
 
 export type AlertType = 'error' | 'info' | 'success' | 'warning' | undefined
 export const getAlertTypeFromErrorMessage = (errorMessage: string) => {
   return (errorMessageMap.get(errorMessage)?.type || 'error') as AlertType
-}
+} // will always return "error" as AlertType
 
 export const mapErrorMessageToAlertInfo = (errorMessage: string) => {
   return errorMessageMap.get(errorMessage) || 'missing_error'
@@ -121,8 +137,14 @@ export const getAlertRouteAndType = (errorMessage: string) => {
   }
 }
 
-export const getAlertContent = (message: string, showAlert = true) => {
-  const content = getAlertRouteAndType(message)
+export const getAlertContent = (
+  errorType: string,
+  errorMessage: string,
+  showAlert = true
+) => {
+  const content = getAlertRouteAndType(
+    `${errorType} Error: ${errorMessage.toLowerCase().replaceAll(' ', '-')}`
+  )
 
   return {
     alertRoute: content.route,

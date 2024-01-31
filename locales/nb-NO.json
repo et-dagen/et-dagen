@@ -6,7 +6,8 @@
     "contact": "Kontakt",
     "admin": "Administrasjon",
     "user": "Min profil",
-    "program_nav": "SE PROGRAM"
+    "program_nav": "SE PROGRAM",
+    "company_admin": "Bedriftsadmin"
   },
   "user": {
     "sign_in": "Logg inn",
@@ -63,6 +64,10 @@
         "required": "Passord er påkrevd",
         "confirmed": "Passordene må være like"
       }
+    },
+    "page_not_found": {
+      "page_doesnt_exist": "Denne siden finnes ikke",
+      "navigate_front_page": "Tilbake til forsiden"
     }
   },
   "datetime": {
@@ -94,13 +99,16 @@
         "name": "Detaljer",
         "from": "Fra",
         "to": "Til",
+        "reg_start": "Påmeldingsstart",
+        "reg_end": "Påmeldingsslutt",
         "location": "Sted",
         "host": "Arrangør"
       },
       "attendants": {
         "name": "Påmelding",
         "attendants": "Påmeldte",
-        "nocapacity": "Ingen kapasitetsbegrensning"
+        "nocapacity": "Ingen kapasitetsbegrensning",
+        "registered": "Du er påmeldt"
       }
     }
   },
@@ -122,7 +130,19 @@
   "company": {
     "main_partner": "Hovedpartner",
     "partners": "Partnere",
-    "sponsors": "Sponsorer"
+    "sponsors": "Sponsorer",
+    "admin": {
+      "title": "Bedriftsadministrasjon",
+      "dietaryrestrictions": "Allergener og restriksjoner",
+      "attendants": "Påmeldte deltakere",
+      "user": {
+        "attributes": {
+          "name": "Navn",
+          "studyprogramme": "Studieprogram",
+          "currentyear": "Årstrinn"
+        }
+      }
+    }
   },
   "alert": {
     "close_alert": "Lukk",
@@ -148,7 +168,9 @@
           "already_registered": "Du er allerede påmeldt dette arrangementet",
           "user_not_registered": "Du er ikke påmeldt dette arrangementet",
           "registration_unnecessary": "Påmelding er ikke nødvendig for dette arrangementet",
-          "non_admin_user": "Dette krever administratorrettigheter"
+          "non_admin_user": "Dette krever administratorrettigheter",
+          "closed": "Ikke åpent for registrering",
+          "end_time_before_start_time": "Arrangementet kan ikke avslutte før det har startet"
         }
       },
       "company": {
@@ -181,8 +203,11 @@
           "deleted_logo": "Logo slettet"
         }
       },
-      "user": {
-        "edit": "Bruker oppdatert"
+      "job": {
+        "edit": {
+          "modified": "Jobb oppdatert",
+          "created": "Jobb opprettet"
+        }
       }
     }
   },
@@ -192,7 +217,8 @@
     "event": {
       "sign_up": "Meld meg på",
       "opt_out": "Trekk påmelding",
-      "sign_in_to_register": "Logg inn for å melde deg på"
+      "sign_in_to_register": "Logg inn for å melde deg på",
+      "registration_closed": "Ikke åpent for påmelding"
     }
   },
   "jobs": {
@@ -203,7 +229,8 @@
     "location": "Sted",
     "company": "Bedrift",
     "details": "Stillingsdetaljer",
-    "apply": "Søk her"
+    "apply": "Søk her",
+    "type": "Jobbtype"
   },
   "admin": {
     "categories": "Kategorier",
@@ -374,6 +401,7 @@
         "company": "Bedrift",
         "description": "Stillingsbeskrivelse",
         "deadline": "Søknadsfrist",
+        "application_link": "Link til annonse",
         "jobtype": {
           "name": "Stillingstype",
           "full_time": "Fulltid",
@@ -406,7 +434,15 @@
           "start": "Startdato",
           "end": "Sluttdato"
         },
-        "attendants": "Påmeldte deltakere"
+        "registration": {
+          "start": "Påmelding åpner",
+          "end": "Påmelding stenger"
+        },
+        "signupstart": "Påmelding åpner",
+        "optoutdeadline": "Avmeldingsfrist",
+        "attendants": "Påmeldte deltakere",
+        "user_id": "Brukerid",
+        "sign_up": "Meld på"
       }
     },
     "company": {

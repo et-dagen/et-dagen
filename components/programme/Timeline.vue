@@ -58,7 +58,7 @@
           'v-tab--selected': state.selectedDate === date,
         }"
       >
-        {{ getNumericDayAndMonthString(date) }}
+        {{ getDayAndMonthString(date, true) }}
       </VTab>
     </VTabs>
   </VContainer>
@@ -72,7 +72,7 @@
     >
       <VIcon class="mx-3">mdi-map</VIcon>
       {{ $t('program.standmap') }}:
-      {{ $t(`weekday.${getWeekdayFromDateTime(state.selectedDate)}`) }}
+      {{ getWeekdayFromDateTime(state.selectedDate) }}
     </VBtn>
   </VContainer>
 
