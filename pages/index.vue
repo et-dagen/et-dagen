@@ -35,10 +35,10 @@
       :content="{
         caption: 'Få et innblikk i din fremtidige arbeidsplass',
         date: { start: '2023-02-14', end: '2023-02-15' },
-        image: 'https://cdn.vuetifyjs.com/images/parallax/material.jpg',
+        image: '/images/banner_graphics.png',
         title: 'Elektronikk & Teknologidagene',
       }"
-      class="my-5 d-flex justify-center"
+      class="my-16 d-flex justify-center"
     />
 
     <HomeCountDown

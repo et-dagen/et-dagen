@@ -22,7 +22,7 @@
     <VCard variant="flat" width="60vw" min-width="290px">
       <VRow>
         <!-- banner title and caption -->
-        <VCol cols="12" lg="7">
+        <VCol cols="12" md="7">
           <h5 class="pt-md-7">
             {{ startDate.getDate() }}.
             {{
@@ -43,12 +43,12 @@
         </VCol>
         <VCol cols="5">
           <!-- banner image -->
-          <VImg
-            class="d-none d-lg-flex elevation-3 rounded-lg"
-            :aspect-ratio="4 / 3"
-            cover
+          <NuxtImg
+            class="d-none d-md-flex rounded-lg"
+            height="250"
+            width="250"
             :src="content.image"
-          ></VImg>
+          />
         </VCol>
       </VRow>
     </VCard>
