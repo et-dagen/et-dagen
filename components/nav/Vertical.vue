@@ -53,6 +53,15 @@
           }"
         />
 
+        <NavButton
+          v-if="auth.hasAccess(['company', 'admin'])"
+          size="large"
+          :route="{
+            name: 'company_admin',
+            route: '/company/admin',
+          }"
+        />
+
         <!-- navigate to admin page -->
         <NavButton
           v-if="auth.hasAccess(['admin'])"

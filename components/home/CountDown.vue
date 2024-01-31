@@ -29,7 +29,7 @@
 
 <template>
   <!-- Event take off string -->
-  <VCard class="mx-auto pt-16 w-100 container" elevation="0">
+  <VCard class="mx-auto w-100 container" elevation="0">
     <VRow justify="center">
       <VCol class="text-center pb-sm-6 pb-2">
         <p class="text-sm-h4 text-h6">{{ $t('event.take_off') }}</p>

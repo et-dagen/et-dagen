@@ -47,118 +47,127 @@
 </script>
 
 <template>
-  <!-- Date selection tabs -->
-  <VContainer>
-    <VTabs v-model="state.selectedDate" fixed-tabs color="primary" class="tabs">
-      <VTab
-        v-for="date in dates"
-        :key="date"
-        :value="date"
-        :class="{
-          'v-tab--selected': state.selectedDate === date,
-        }"
+  <div class="timeline-container">
+    <!-- Date selection tabs -->
+    <VContainer>
+      <VTabs
+        v-model="state.selectedDate"
+        fixed-tabs
+        color="primary"
+        class="tabs"
       >
-        {{ getDayAndMonthString(date, true) }}
-      </VTab>
-    </VTabs>
-  </VContainer>
-  <VContainer v-if="selectedStandMap" class="d-flex justify-center">
-    <VBtn
-      class="w-75"
-      max-width="600"
-      color="accent"
-      style="min-width: fit-content"
-      @click="showStandMap = true"
-    >
-      <VIcon class="mx-3">mdi-map</VIcon>
-      {{ $t('program.standmap') }}:
-      {{ $t(`weekday.${getWeekdayFromDateTime(state.selectedDate)}`) }}
-    </VBtn>
-  </VContainer>
-
-  <CommonModal v-if="showStandMap" @close-modal="showStandMap = false">
-    <NuxtImg
-      :src="selectedStandMap"
-      alt="Standmap"
-      object-fit="contain"
-      class="w-50"
-    />
-  </CommonModal>
-
-  <!-- Timeline container -->
-  <VContainer>
-    <div v-if="eventsByDate[state.selectedDate]" class="container">
-      <div
-        v-for="event in eventsByDate[state.selectedDate]"
-        :key="event.id"
-        class="card__div"
-      >
-        <!-- Event card timestamp and date -->
-        <div class="card__timestamp">
-          <span class="date text-h5 text-primary bold">
-            {{ getNumericDayAndMonthString(event.date.start) }}
-          </span>
-          <br />
-          <span class="time text-h4 bold">
-            {{ getHourAndMinuteStringFromString(event.date.start) }}
-          </span>
-        </div>
-
-        <!-- Event card -->
-        <VCard
-          width="600"
-          elevation="2"
-          class="card mb-4"
-          variant="flat"
-          :ripple="false"
-          @click="() => navigateTo(localePath(`/event/${event.id}`))"
+        <VTab
+          v-for="date in dates"
+          :key="date"
+          :value="date"
+          :class="{
+            'v-tab--selected': state.selectedDate === date,
+          }"
         >
-          <template #title> {{ event.title }} </template>
+          {{ getNumericDayAndMonthString(date) }}
+        </VTab>
+      </VTabs>
+    </VContainer>
 
-          <!-- Display company name if found -->
-          <template v-if="companies[event.companyUID]" #subtitle>
-            {{ companies[event.companyUID].name }}
-          </template>
-          <template v-else #subtitle> E&T-dagene </template>
+    <!--View standmap button-->
+    <VContainer v-if="selectedStandMap" class="d-flex justify-center">
+      <VBtn
+        class="w-75"
+        max-width="600"
+        color="accent"
+        style="min-width: fit-content"
+        @click="showStandMap = true"
+      >
+        <VIcon class="mx-3">mdi-map</VIcon>
+        {{ $t('program.standmap') }}:
+        {{ $t(`weekday.${getWeekdayFromDateTime(state.selectedDate)}`) }}
+      </VBtn>
+    </VContainer>
 
-          <template #text>
-            <!-- Event location -->
-            <span class="card__location mb-2">
-              <VIcon color="primary">mdi-map-marker</VIcon>
-              {{ event.location.name }}
+    <!--Standmap-->
+    <CommonModal v-if="showStandMap" @close-modal="showStandMap = false">
+      <NuxtImg
+        :src="selectedStandMap"
+        alt="Standmap"
+        object-fit="contain"
+        class="w-50"
+      />
+    </CommonModal>
+
+    <!-- Timeline container -->
+    <VContainer>
+      <div v-if="eventsByDate[state.selectedDate]" class="container">
+        <div
+          v-for="event in eventsByDate[state.selectedDate]"
+          :key="event.id"
+          class="card__div"
+        >
+          <!-- Event card timestamp and date -->
+          <div class="card__timestamp">
+            <span class="date text-h5 text-primary bold">
+              {{ getNumericDayAndMonthString(event.date.start) }}
             </span>
+            <br />
+            <span class="time text-h4 bold">
+              {{ getHourAndMinuteStringFromString(event.date.start) }}
+            </span>
+          </div>
 
-            <!-- Event start and end time -->
-            <span class="card__timeinterval mb-2">
-              <VIcon color="primary">mdi-clock</VIcon>
-              <span>
-                {{ getHourAndMinuteStringFromString(event.date.start) }} -
-                {{ getHourAndMinuteStringFromString(event.date.end) }}
+          <!-- Event card -->
+          <VCard
+            elevation="2"
+            class="card mb-4"
+            variant="flat"
+            :ripple="false"
+            @click="() => navigateTo(localePath(`/event/${event.id}`))"
+          >
+            <template #title> {{ event.title }} </template>
+
+            <!-- Display company name if found -->
+            <template v-if="companies[event.companyUID]" #subtitle>
+              {{ companies[event.companyUID].name }}
+            </template>
+            <template v-else #subtitle> E&T-dagene </template>
+
+            <template #text>
+              <!-- Event location -->
+              <span class="card__location mb-2">
+                <VIcon color="primary">mdi-map-marker</VIcon>
+                {{ event.location.name }}
               </span>
-            </span>
 
-            <!-- Event capacity -->
-            <span v-if="event.capacity" class="card__attendees mb-2">
-              <!-- Group icon -->
-              <VIcon v-if="showGroupIcon(event)" color="primary">
-                mdi-account-group
-              </VIcon>
-              <VIcon v-else color="primary">mdi-account</VIcon>
-
-              <!-- Capacity count -->
-              <span>
-                <span v-if="hasAttendants(event)">
-                  {{ Object.values(event.attendants).length }}
+              <!-- Event start and end time -->
+              <span class="card__timeinterval mb-2">
+                <VIcon color="primary">mdi-clock</VIcon>
+                <span>
+                  {{ getHourAndMinuteStringFromString(event.date.start) }} -
+                  {{ getHourAndMinuteStringFromString(event.date.end) }}
                 </span>
-                <span v-else>0</span>
-                / {{ event.capacity }}
               </span>
-            </span>
-          </template>
-        </VCard>
+
+              <!-- Event capacity -->
+              <span v-if="event.capacity" class="card__attendees mb-2">
+                <!-- Group icon -->
+                <VIcon v-if="showGroupIcon(event)" color="primary">
+                  mdi-account-group
+                </VIcon>
+                <VIcon v-else color="primary">mdi-account</VIcon>
+
+                <!-- Capacity count -->
+                <span>
+                  <span v-if="hasAttendants(event)">
+                    {{ Object.values(event.attendants).length }}
+                  </span>
+                  <span v-else>0</span>
+                  / {{ event.capacity }}
+                </span>
+              </span>
+            </template>
+          </VCard>
+        </div>
       </div>
-    </div>
-  </VContainer>
+    </VContainer>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -168,6 +177,12 @@
     flex-direction: column;
     align-items: center;
     gap: 0.5rem !important;
+    max-width: 100vw;
+  }
+
+  .timeline-container {
+    width: 95vw !important;
+    margin: 0 auto; /* Center the container horizontally */
   }
 
   .v-tab {
@@ -183,6 +198,8 @@
   }
 
   .card {
+    width: 600px;
+
     &__timestamp {
       position: absolute;
       left: -9rem - 0.125rem;
@@ -245,10 +262,14 @@
     }
   }
 
-  @media #{map-get($display-breakpoints, 'sm-and-down')} {
+  @media #{map-get($display-breakpoints, 'xs')} {
     .container {
-      transform: translateX(9rem);
-      max-width: 200px;
+      transform: translateX(6.5rem);
+      width: 60vw;
+
+      .v-card {
+        width: 60vw !important;
+      }
     }
 
     .card {
@@ -286,7 +307,56 @@
     }
 
     .card {
-      width: 250px !important;
+      width: 50vw !important;
+    }
+
+    .tabs {
+      width: 100% !important;
+    }
+  }
+
+  @media #{map-get($display-breakpoints, 'sm')} {
+    .container {
+      transform: translateX(9rem);
+      width: fit-content;
+    }
+
+    .card {
+      left: -0.75rem;
+
+      &__timestamp {
+        position: absolute;
+        left: -6.7rem - 0.125rem;
+        top: 10px;
+        text-align: right;
+      }
+
+      &__div {
+        &::before {
+          // Node line
+          left: -1.8rem;
+        }
+
+        &::after {
+          // Node circle
+          $node-width: 1rem;
+          left: -1.8rem - calc($node-width / 2) + 0.125rem;
+          width: $node-width;
+          height: $node-width;
+        }
+      }
+    }
+
+    .date {
+      font-size: 1.2rem !important;
+    }
+
+    .time {
+      font-size: 1.4rem !important;
+    }
+
+    .card {
+      width: 50vw !important;
     }
 
     .tabs {
