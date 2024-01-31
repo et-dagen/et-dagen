@@ -11,6 +11,8 @@
     }
   })
 
+  const auth = useAuthStore()
+
   const localePath = useLocalePath()
   const isRegisteredRestriction = computed(() => {
     return (restriction: string) => {
@@ -27,7 +29,7 @@
 <template>
   <VContainer class="d-flex justify-center align-center mt-16">
     <VCard class="pa-4" style="width: 800px; max-width: 90vw" elevation="4">
-      <VRow class="h-100 ma-0">
+      <VRow class="d-flex justify-center h-100 ma-0">
         <VCol
           cols="12"
           lg="4"
@@ -42,7 +44,7 @@
             </VIcon>
           </NuxtLink>
         </VCol>
-        <VCol cols="12" lg="8">
+        <VCol v-if="!auth.hasAccess(['company'])" cols="12" lg="8">
           <h6>Information</h6>
           <VDivider class="my-2" />
           <p class="my-2">
