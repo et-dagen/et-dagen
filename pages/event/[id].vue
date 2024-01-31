@@ -213,13 +213,19 @@
         {{ eventEndString }}
       </VCardText>
 
-      <VCardText class="details__from py-0 pb-5 d-flex flex-wrap">
+      <VCardText
+        v-if="registrationStartString"
+        class="details__from py-0 pb-5 d-flex flex-wrap"
+      >
         <strong class="mr-2">{{ $t('event.page.details.reg_start') }}: </strong>
         <span>{{ registrationStartString }}</span>
       </VCardText>
 
-      <VCardText class="details__to py-0 pb-5 d-flex flex-wrap">
-        <strong class="mr-2">{{ $t('event.page.details.reg_start') }}: </strong>
+      <VCardText
+        v-if="registrationEndString"
+        class="details__to py-0 pb-5 d-flex flex-wrap"
+      >
+        <strong class="mr-2">{{ $t('event.page.details.reg_end') }}: </strong>
         <span>{{ registrationEndString }}</span>
       </VCardText>
 
