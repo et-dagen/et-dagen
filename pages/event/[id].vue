@@ -63,28 +63,28 @@
   const hasEventActions = computed(() => useAuth.isLoggedIn && hasCapacity)
 
   // check if registration actions should be rendered on client side
-  const showRegistrationAction = ref(false)
+  const showRegistrationAction = ref(
+    hasEventActions.value &&
+      presentWithinTimeWindow(
+        event.value.registration.start,
+        event.value.registration.end
+      )
+  )
 
-  // check if current time is within registration window
-  const checkTimeWindow = setInterval(() => {
-    // stop checking if user is not signed in
-    if (!hasEventActions.value) {
-      clearInterval(checkTimeWindow)
-    }
-
-    // check if current time is within registration window
-    const isWithinTimeWindow = presentWithinTimeWindow(
-      event.value.registration.start,
-      event.value.registration.end
+  // check if registration is open with interval if user is signed in and the event has a capacity
+  let registrationOpenInterval: ReturnType<typeof setInterval>
+  if (hasEventActions.value)
+    registrationOpenInterval = setInterval(
+      () =>
+        (showRegistrationAction.value = presentWithinTimeWindow(
+          event.value.registration.start,
+          event.value.registration.end
+        )),
+      1000
     )
 
-    // show registration action if user is signed in and within time window
-    if (isWithinTimeWindow) {
-      showRegistrationAction.value = true
-    } else {
-      showRegistrationAction.value = false
-    }
-  }, 1000)
+  // clear interval when unmounting the component
+  onBeforeUnmount(() => clearInterval(registrationOpenInterval))
 
   // check if user is already registered for event
   const showSignupButton = computed(
@@ -111,7 +111,7 @@
 
   // Show appropriate error alert for failed API calls
   const displayErrorAlertFromMessage = (errorMessage: string) => {
-    const content = getAlertContent(errorMessage)
+    const content = getAlertContent('Error', errorMessage)
     alertState.alertRoute = content.alertRoute
     alertState.type = content.type
     alertState.show = content.show
