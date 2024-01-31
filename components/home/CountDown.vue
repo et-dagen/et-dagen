@@ -37,9 +37,9 @@
     </VRow>
 
     <!-- Countdown -->
-    <VRow justify="center" class="mx-auto" style="max-width: 63vw">
+    <VRow justify="center">
       <!-- First col: Days numbers and string -->
-      <VCol cols="6" sm="3" class="px-md-2">
+      <VCol cols="3" class="px-md-2">
         <!-- Row containing numbers for days -->
         <VRow justify="center">
           <!-- VCard to get outlined box -->
@@ -63,7 +63,7 @@
       </VCol>
 
       <!-- Second col: Hours numbers and string -->
-      <VCol cols="6" sm="3" class="px-md-2">
+      <VCol cols="3" class="px-md-2">
         <!-- Row containing numbers for hours -->
         <VRow justify="center">
           <!-- VCard to get outlined box -->
@@ -87,7 +87,7 @@
       </VCol>
 
       <!-- Third col: Minutes numbers and string -->
-      <VCol cols="6" sm="3" class="px-md-2">
+      <VCol cols="3" class="px-md-2">
         <!-- Row containing numbers for minutes -->
         <VRow justify="center">
           <!-- VCard to get outlined box -->
@@ -111,7 +111,7 @@
       </VCol>
 
       <!-- Fourth col: Seconds numbers and string -->
-      <VCol cols="6" sm="3" class="px-md-2">
+      <VCol cols="3" class="px-md-2">
         <!-- Row containing numbers for seconds -->
         <VRow justify="center">
           <!-- VCard to get outlined box -->
