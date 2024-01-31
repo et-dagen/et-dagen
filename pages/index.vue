@@ -50,10 +50,13 @@
     />
 
     <div v-if="mainPartner !== null" class="py-10">
-      <h2 class="text-h4 text-md-h3 text-center pt-10 pb-3 font-weight-bold">
+      <h2 class="text-h4 text-md-h3 text-center pt-10 pb-4 font-weight-bold">
         {{ $t('company.main_partner') }}
       </h2>
-      <VDivider class="pb-lg-5 pb-2" />
+      <VDivider
+        class="pb-lg-5 pb-2 mx-auto"
+        style="width: 100%; max-width: 1000px"
+      />
       <CompanyHero
         :content="{
           name: mainPartner.name,
@@ -66,10 +69,13 @@
     </div>
 
     <div v-if="showPartners" class="py-10">
-      <h2 class="text-h3 text-center pt-10 pb-2 font-weight-bold">
+      <h2 class="text-h3 text-center pt-10 pb-4 font-weight-bold">
         {{ $t('company.partners') }}
       </h2>
-      <VDivider class="pb-lg-5 pb-2" />
+      <VDivider
+        class="pb-lg-5 pb-2 mx-auto"
+        style="width: 100%; max-width: 1000px"
+      />
       <CommonGrid>
         <CompanyCard
           v-for="partner in partners"
@@ -83,10 +89,13 @@
     </div>
 
     <div v-if="showSponsors" class="pt-10">
-      <h2 class="text-h3 text-center pt-10 pb-2 font-weight-bold">
+      <h2 class="text-h3 text-center pt-10 pb-4 font-weight-bold">
         {{ $t('company.sponsors') }}
       </h2>
-      <VDivider class="pb-lg-5 pb-2" />
+      <VDivider
+        class="pb-lg-5 pb-2 mx-auto"
+        style="width: 100%; max-width: 1000px"
+      />
       <CommonGrid>
         <CompanyCard
           v-for="sponsor in sponsors"
