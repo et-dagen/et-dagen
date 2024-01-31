@@ -6,7 +6,8 @@
     "contact": "Kontakt",
     "admin": "Administrasjon",
     "user": "Min profil",
-    "program_nav": "SE PROGRAM"
+    "program_nav": "SE PROGRAM",
+    "company_admin": "Bedriftsadmin"
   },
   "user": {
     "sign_in": "Logg inn",
@@ -126,7 +127,19 @@
   "company": {
     "main_partner": "Hovedpartner",
     "partners": "Partnere",
-    "sponsors": "Sponsorer"
+    "sponsors": "Sponsorer",
+    "admin": {
+      "title": "Bedriftsadministrasjon",
+      "dietaryrestrictions":"Allergener og restriksjoner",
+      "attendants": "Påmeldte deltakere",
+      "user": {
+        "attributes": {
+          "name": "Navn",
+          "studyprogramme": "Studieprogram",
+          "currentyear": "Årstrinn"
+        }
+      }
+    }
   },
   "alert": {
     "close_alert": "Lukk",
