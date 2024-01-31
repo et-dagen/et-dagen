@@ -31,9 +31,9 @@
   </VContainer>
 </template>
 
-<style lang="scss">
+<style scoped lang="scss">
   .v-container {
-    max-width: 26rem !important;
+    max-width: 26rem;
     margin-block: 0.5rem;
   }
 </style>
