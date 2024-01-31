@@ -24,7 +24,7 @@
 
 <template>
   <div
-    class="job-wrapper d-flex rounded-lg elevation-2"
+    class="job-wrapper d-flex rounded-lg elevation-2 px-md-7 py-md-3"
     @click="navigateTo(localePath(`/jobs/${content.jobUID}`))"
   >
     <NuxtImg :src="content.companyLogo" />
