@@ -63,7 +63,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  if (userUID && !userUID?.length)
+  if (userUID?.length)
     await auth.getUser(userUID).catch(() => {
       throw createError({
         statusCode: 401,
