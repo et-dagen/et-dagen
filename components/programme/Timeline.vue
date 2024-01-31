@@ -64,7 +64,7 @@
             'v-tab--selected': state.selectedDate === date,
           }"
         >
-          {{ getNumericDayAndMonthString(date) }}
+          {{ getDayAndMonthString(date, true) }}
         </VTab>
       </VTabs>
     </VContainer>
