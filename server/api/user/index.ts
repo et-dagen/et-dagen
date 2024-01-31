@@ -21,7 +21,9 @@ export default defineEventHandler(async (event) => {
   const { scope } = getQuery(event)
 
   // only admins can get other users than their own
-  if (!hasAccess(user, ['admin']) || !scope || scope !== 'all') return user
+  // TODO! Restrict company user access by adding custom endpoint for /api/company/events/users
+  if (!hasAccess(user, ['admin', 'company']) || !scope || scope !== 'all')
+    return user
 
   // reference to users
   const usersRef = db.ref('users')

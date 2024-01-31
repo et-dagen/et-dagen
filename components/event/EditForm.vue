@@ -27,7 +27,7 @@
     (props.eventUid && !event.value) ||
     (hasAccess(['company']) &&
       props.eventUid &&
-      props.eventUid !== user?.companyUID)
+      event.value[props.eventUid]?.companyUID !== user?.companyUID)
   )
     navigateTo(localePath('/event/edit'))
 
@@ -206,6 +206,11 @@
       state.capacity && state.registration.end ? state.registration.end : null
   }
 
+  const routeOnSuccess = () => {
+    const route = hasAccess(['admin']) ? '/admin/events' : '/company/admin'
+    return navigateTo(localePath(route))
+  }
+
   const saveChanges = async () => {
     const { valid } = await form.value.validate()
     try {
@@ -223,7 +228,7 @@
       .then(() => {
         // Handle successful response
         displaySuccessAlert('alert.success.event.edit.modified')
-        setTimeout(() => navigateTo(localePath('/admin/events')), 2000)
+        setTimeout(routeOnSuccess, 2000)
       })
       .catch((error) => {
         // Handle errors, including HTTP errors
@@ -248,7 +253,7 @@
       .then(() => {
         // Handle successful response
         displaySuccessAlert('alert.success.event.edit.created')
-        setTimeout(() => navigateTo(localePath('/admin/events')), 2000)
+        setTimeout(routeOnSuccess, 2000)
       })
       .catch((error) => {
         // Handle errors, including HTTP errors
@@ -414,12 +419,7 @@
     <VContainer>
       <VRow justify="center">
         <VCol cols="6">
-          <VBtn
-            block
-            variant="outlined"
-            color="error"
-            @click="navigateTo(localePath('/admin/events'))"
-          >
+          <VBtn block variant="outlined" color="error" @click="$router.back()">
             {{ $t('edit.event.cancel') }}
           </VBtn>
         </VCol>
@@ -511,7 +511,7 @@
 </template>
 
 <style scoped lang="scss">
-  @import 'vuetify/settings';
+  @use 'vuetify/settings';
 
   .title {
     text-align: center;
@@ -523,5 +523,12 @@
 
   .v-row {
     padding-block: 0.6rem;
+  }
+
+  @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
+    .v-container {
+      max-width: 95vw !important;
+      margin-block: 0.5rem;
+    }
   }
 </style>
