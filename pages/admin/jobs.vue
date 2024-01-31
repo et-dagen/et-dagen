@@ -40,6 +40,8 @@
 
   // filter and sort jobs based on options selected by job
   const filteredJobs = computed(() => {
+    if (!jobs.value) return []
+
     // map the selected job types to their names
     // eslint-disable-next-line
     const selectedJobTypes = jobTypeNames.filter((jobType, index) =>
@@ -64,16 +66,18 @@
     )
   })
 
-  // Split jobs into pages
+  // Split jobs into page
   const pages = computed(() =>
-    filteredJobs.value.reduce((resultArray, item, index) => {
-      const chunkIndex = Math.floor(index / pageSize.value)
-      if (!resultArray[chunkIndex]) {
-        resultArray[chunkIndex] = []
-      }
-      resultArray[chunkIndex].push(item)
-      return resultArray
-    }, [] as Job[][])
+    jobs.value
+      ? filteredJobs.value.reduce((resultArray, item, index) => {
+          const chunkIndex = Math.floor(index / pageSize.value)
+          if (!resultArray[chunkIndex]) {
+            resultArray[chunkIndex] = []
+          }
+          resultArray[chunkIndex].push(item)
+          return resultArray
+        }, [] as Job[][])
+      : []
   )
 
   // Delete seleceted jobs
