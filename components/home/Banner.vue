@@ -41,7 +41,7 @@
 
           <h6>{{ content.caption }}</h6>
         </VCol>
-        <VCol cols="5">
+        <VCol cols="5" class="d-flex flex-row-reverse">
           <!-- banner image -->
           <NuxtImg
             class="d-none d-md-flex rounded-lg"
