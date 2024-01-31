@@ -29,7 +29,7 @@
     (props.eventUid && !event.value) ||
     (hasAccess(['company']) &&
       props.eventUid &&
-      props.eventUid !== user?.companyUID)
+      event.value[props.eventUid]?.companyUID !== user?.companyUID)
   )
     navigateTo(localePath('/event/edit'))
 
