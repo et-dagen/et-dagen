@@ -6,48 +6,29 @@
     webpage: string
   }
 
-  const openInNewTab = () => {
-    navigateTo(company.content.webpage, {
-      external: true,
-      open: {
-        target: '_blank',
-      },
-    })
-  }
-
-  const company = defineProps({
+  defineProps({
     content: {
       type: Object as PropType<CompanyInfo>,
       required: true,
     },
   })
-  const { xs } = useDisplay()
 </script>
 
 <template>
   <div>
-    <VCard
-      :width="xs ? '90vw' : '65vw'"
-      max-height="100vh"
-      md="50v"
-      variant="flat"
-    >
-      <!-- This header should not be smaller than h3 for large screens -->
-      <h2
-        :class="`text-sm-h3 text-h4 text-center 
-        pt-10 pb-lg-6 pb-3 font-weight-bold`"
-      >
-        {{ $t('company.main_partner') }}
-      </h2>
-
+    <VCard class="companyWrapper" variant="flat">
       <VRow no-gutters>
         <!-- Company logo -->
-        <VCol cols="12" lg="7" style="cursor: pointer" class="pr-lg-3">
-          <VImg
-            class="w-100 rounded-lg companyImage"
-            :src="company.content.logo"
-            :alt="`${company.content.name}'s logo`"
-            @click="openInNewTab"
+        <VCol cols="12" lg="7" class="d-flex justify-center pr-lg-3">
+          <NuxtImg
+            class="companyImage"
+            :src="content.logo"
+            @click="
+              navigateTo(content.webpage, {
+                external: true,
+                open: { target: '_blank' },
+              })
+            "
           />
         </VCol>
 
@@ -55,11 +36,16 @@
         <VCol cols="12" lg="5" class="pt-lg-0 pt-3 pl-lg-3 companyHero">
           <h3
             class="text-h5 font-weight-bold clicker d-inline-block"
-            @click="openInNewTab"
+            @click="
+              navigateTo(content.webpage, {
+                external: true,
+                open: { target: '_blank' },
+              })
+            "
           >
-            {{ company.content.name }}
+            {{ content.name }}
           </h3>
-          <p class="pt-1 pt-lg-3">{{ company.content.description }}</p>
+          <p class="pt-1 pt-lg-3">{{ content.description }}</p>
         </VCol>
       </VRow>
     </VCard>
@@ -68,6 +54,15 @@
 
 <style setup lang="scss">
   @use 'vuetify/settings';
+
+  .companyWrapper {
+    max-height: 100vh;
+    width: 70vw;
+
+    @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
+      width: 90vw;
+    }
+  }
 
   .companyHero {
     > p {
@@ -98,6 +93,11 @@
     color: transparent;
     background-color: transparent;
     transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+    max-width: 100%;
+    object-fit: contain;
+    max-height: 100%;
+
     &:hover {
       transform: scale(1.03);
     }

@@ -1,16 +1,23 @@
 {
   "nav": {
     "index": "Home",
-    "program": "Programme",
+    "programme": "Programme",
     "jobs": "Jobs",
     "contact": "Contact",
-    "admin": "Administration",
-    "user": "My profile"
+    "admin": "Admin",
+    "user": "My profile",
+    "program_nav": "SEE PROGRAM",
+    "company": "My Events"
   },
   "user": {
     "sign_in": "Sign in",
     "sign_out": "Sign out",
     "sign_up": "Register user",
+    "information": {
+      "studyprogramme": "Study Programme",
+      "currentyear": "Current Year",
+      "dietaryrestrictions": "Allergies and Restrictions"
+    },
     "register": {
       "title": "Register user",
       "full_name": "Full name",
@@ -26,6 +33,12 @@
       "user_type": {
         "student": "Student user",
         "company": "Company user"
+      },
+      "dietary_restrictions": {
+        "name": "Allergens and restrictions",
+        "other": "Other restrictions",
+        "norestrictions": "No, I have no dietary restrictions",
+        "restrictions": "Yes, I have allergies and/or restrictions"
       }
     },
     "login": {
@@ -51,6 +64,10 @@
         "required": "Password is required",
         "confirmed": "Passwords must match"
       }
+    },
+    "page_not_found": {
+      "page_doesnt_exist": "This page doesn't exist",
+      "navigate_front_page": "Back to front page"
     }
   },
   "datetime": {
@@ -67,6 +84,32 @@
       "october": "October",
       "november": "November",
       "december": "December"
+    },
+    "times": {
+      "days": "Days",
+      "hours": "Hours",
+      "minutes": "Minutes",
+      "seconds": "Seconds"
+    }
+  },
+  "event": {
+    "take_off": "The event is taking off in",
+    "page": {
+      "details": {
+        "name": "Details",
+        "from": "From",
+        "to": "To",
+        "reg_start": "Registration start",
+        "reg_end": "Registration end",
+        "location": "Location",
+        "host": "Organiser"
+      },
+      "attendants": {
+        "name": "Registration",
+        "attendants": "Attendants",
+        "nocapacity": "No capacity limit",
+        "registered": "You are registered"
+      }
     }
   },
   "contact": {
@@ -87,7 +130,12 @@
   "company": {
     "main_partner": "Main partner",
     "partners": "Partners",
-    "sponsors": "Sponsors"
+    "sponsors": "Sponsors",
+    "admin": {
+      "title": "Company Admin",
+      "dietaryrestrictions": "Allergies and Restrictions",
+      "attendants": "Attendants"
+    }
   },
   "alert": {
     "close_alert": "Close",
@@ -114,7 +162,17 @@
           "already_registered": "You are already registered for this event",
           "user_not_registered": "You are not registered for this event",
           "registration_unnecessary": "Registration is not necessary for this event",
-          "non_admin_user": "This requires admin privileges"
+          "non_admin_user": "This requires admin privileges",
+          "closed": "Registration is closed",
+          "end_time_before_start_time": "Events cannot end before they start"
+        }
+      },
+      "company": {
+        "edit": {
+          "created": "Creation failed",
+          "modified": "Modification failed",
+          "modified_logo": "Logo modification failed",
+          "deleted_logo": "Logo deletion failed"
         }
       },
       "company": {
@@ -140,16 +198,42 @@
           "modified": "Successfully modified event",
           "deleted_logo": "Successfully deleted logo"
         }
+      },
+      "company": {
+        "edit": {
+          "created": "Company created",
+          "modified": "Comapny modified",
+          "deleted_logo": "Logo deleted"
+        }
+      },
+      "job": {
+        "edit": {
+          "modified": "Job updated",
+          "created": "Job created"
+        }
       }
     }
   },
   "program": {
     "title": "Programme",
+    "standmap": "Stand Map",
     "event": {
       "sign_up": "Sign up",
       "opt_out": "Opt out",
-      "sign_in_to_register": "Sign in to register"
+      "sign_in_to_register": "Sign in to register",
+      "registration_closed": "Registration in not open"
     }
+  },
+  "jobs": {
+    "title": "Job Advertisements",
+    "jobTypes": "Job Types",
+    "deadline": "Deadline",
+    "search": "Search",
+    "location": "Location",
+    "company": "Company",
+    "details": "Job Details",
+    "apply": "Apply here",
+    "type": "Job Type"
   },
   "admin": {
     "categories": "Categories",
@@ -187,7 +271,8 @@
         "time": "Time",
         "capacity": "Capacity"
       },
-      "copied": "Copied UID!"
+      "copied": "Copied UID!",
+      "overview": "Event Overview"
     },
     "company": {
       "name": "Companies",
@@ -221,14 +306,49 @@
           "partner": "Partner",
           "sponsor": "Sponsor"
         },
-        "code": "Company code"
+        "code": "Code"
       },
       "copied": "Copied UID!",
       "copiedcode": "Copied registration code!",
       "createcode": "Create code"
     },
     "jobs": {
-      "name": "Jobs"
+      "name": "Jobs",
+      "edit": "Edit Jobs",
+      "pagesize": "Jobs per page",
+      "filtertypes": {
+        "name": "Filter type",
+        "updated": "Last modified",
+        "jobtitle": "Job Title"
+      },
+      "filterorder": {
+        "name": "Order",
+        "descending": "Descending",
+        "ascending": "Ascending"
+      },
+      "selectall": "Select all",
+      "delete": {
+        "selected": "Delete selected",
+        "confirmtext": "Are you sure you want to delete the selected jobs?",
+        "confirm": "Yes, delete them",
+        "abort": "No, abort"
+      },
+      "attributes": {
+        "select": "Velg",
+        "title": "Title",
+        "description": "Description",
+        "company": "Company",
+        "location": "Location",
+        "deadline": "Deadline",
+        "jobtype": {
+          "name": "Job Type",
+          "full_time": "Full-time",
+          "graduate": "Graduate",
+          "summer_internship": "Summer internship"
+        },
+        "code": "Jobb Code"
+      },
+      "copied": "UID kopiert!"
     },
     "users": {
       "name": "Users",
@@ -269,6 +389,31 @@
     }
   },
   "edit": {
+    "jobs": {
+      "create": {
+        "title": "Create Job",
+        "action": "Create Job"
+      },
+      "edit": {
+        "title": "Edit Job",
+        "action": "Save Changes"
+      },
+      "cancel": "Cancel",
+      "attributes": {
+        "title": "Job Title",
+        "company": "Company",
+        "description": "Job Description",
+        "deadline": "Application Deadline",
+        "application_link": "Job advertisement link",
+        "jobtype": {
+          "name": "Job Type",
+          "full_time": "Full-time",
+          "graduate": "Gratuate position",
+          "summer_internship": "Summer Internship"
+        },
+        "location": "Job Location"
+      }
+    },
     "event": {
       "create": {
         "title": "Create Event",
@@ -292,7 +437,54 @@
           "start": "Start Date",
           "end": "End Date"
         },
-        "attendants": "Påmeldte deltakere"
+        "registration": {
+          "start": "Registration starts",
+          "end": "Registration ends"
+        },
+        "attendants": "Registered users",
+        "user_id": "User ID",
+        "sign_up": "Sign up"
+      }
+    },
+    "company": {
+      "create": {
+        "title": "Create Company",
+        "action": "Create Company"
+      },
+      "edit": {
+        "title": "Edit Company",
+        "action": "Save Changes"
+      },
+      "unlink_logo": "Unlink Logo",
+      "cancel": "Cancel",
+      "attributes": {
+        "name": "Company Name",
+        "description": "Description",
+        "logo": "Logo",
+        "webpage": "webpage",
+        "type": {
+          "name": "Company Type",
+          "main_partner": "Main Partner",
+          "partner": "Partner",
+          "sponsor": "Sponsor"
+        }
+      }
+    },
+    "user": {
+      "title": "Edit User",
+      "save": "Save Changes",
+      "canel": "Cancel",
+      "attributes": {
+        "name": "Name",
+        "email": "E-mail",
+        "type": {
+          "name": "User type",
+          "admin": "Administrator",
+          "company": "Comany",
+          "basic": "Basic"
+        },
+        "studyprogram": "Study programme",
+        "currentyear": "Current year"
       }
     },
     "company": {
@@ -331,5 +523,36 @@
       "program": "Program",
       "jobs": "Jobs"
     }
+  },
+  "dietary_restrictions": {
+    "name": "Allergens and restrictions",
+    "gluten": "Gluten",
+    "shellfish": "shellfish",
+    "citrus": "Citrus fruits",
+    "egg": "Egg",
+    "fish": "Fish",
+    "peanuts": "Peanuts",
+    "soy": "Soy",
+    "milk": "Milk",
+    "nuts": "Nuts",
+    "celery": "Celery",
+    "mustard": "Mustard",
+    "sesame_seeds": "Sesame Seeds",
+    "sulfur_dioxide_sulphite": "Sulfor Oxide and Sulphites",
+    "lupine": "Lupine",
+    "mollusc": "Molluscs",
+    "vegetarian": "Vegetarian",
+    "vegan": "Vegan",
+    "halal": "Halal",
+    "kosher": "Kosher"
+  },
+  "weekday": {
+    "sunday": "Sunday",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday"
   }
 }

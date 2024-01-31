@@ -43,6 +43,12 @@ and
 cp .env.example .env.development
 ```
 
+and
+
+```bash
+cp .env.example .env.development
+```
+
 Missing environment variables in the `.env` file will be provided by the project manager.
 
 ### Development

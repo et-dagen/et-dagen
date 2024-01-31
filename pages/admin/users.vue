@@ -2,6 +2,8 @@
   import { usertypes as usertypeNames } from '~/config/app.config'
   import type { User } from '~/models/User'
 
+  const localePath = useLocalePath()
+
   // fetch users and companies
   const { data: users, refresh } = await useFetch<User[]>('/api/user?scope=all')
   const { data: companies } = await useFetch('/api/company')
@@ -317,6 +319,24 @@
                   ? $t('admin.users.copied')
                   : user.uid
               }}
+            </VTooltip>
+          </td>
+
+          <!-- Edit user -->
+          <td>
+            <VTooltip location="top" color="primary">
+              <template #activator="{ props }">
+                <VBtn
+                  v-bind="props"
+                  size="small"
+                  variant="text"
+                  color="primary"
+                  icon="mdi-pencil"
+                  @click="navigateTo(localePath(`/user/edit/${user.uid}`))"
+                />
+              </template>
+
+              {{ $t('admin.events.edit') }}
             </VTooltip>
           </td>
         </tr>

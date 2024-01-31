@@ -13,9 +13,14 @@ export default defineEventHandler(async (event) => {
 
   // get request body and query param
   /* eslint-disable */
-  let { uid, userType, studyProgram, currentYear, companyUID } = await readBody(
-    event
-  )
+  let {
+    uid,
+    userType,
+    studyProgram,
+    currentYear,
+    companyUID,
+    dietaryRestrictions,
+  } = await readBody(event)
   const { code: registrationCode } = getQuery(event)
 
   // studyprogram is required when creating, or modifying your own, normal user
@@ -33,7 +38,7 @@ export default defineEventHandler(async (event) => {
   if (!hasAccess(user, ['admin']) || !uid) {
     // prevent users from creating multiple instances in the db
     uid = user?.uid ?? decodedToken.uid
-    userType = user?.userType
+    userType = user?.userType ?? 'basic'
     companyUID = user?.companyUID
   }
 
@@ -67,6 +72,7 @@ export default defineEventHandler(async (event) => {
     studyProgram: userType === 'company' ? null : studyProgram,
     currentYear: userType === 'company' ? null : currentYear,
     companyUID: userType === 'company' ? companyUID : null,
+    dietaryRestrictions: dietaryRestrictions ?? null,
     updated: Date.now(),
   })
 

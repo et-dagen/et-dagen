@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import type { AlertType } from 'composables/useAlerts'
+  const localePath = useLocalePath()
 
   const props = defineProps({
     eventUid: {
@@ -27,9 +27,9 @@
     (props.eventUid && !event.value) ||
     (hasAccess(['company']) &&
       props.eventUid &&
-      props.eventUid !== user?.companyUID)
+      event.value[props.eventUid]?.companyUID !== user?.companyUID)
   )
-    navigateTo('/event/edit')
+    navigateTo(localePath('/event/edit'))
 
   // Fetch all users
   // TODO: #188 Replace with API endpoint for getting only a sublist of known UIDs
@@ -52,7 +52,7 @@
     if (!hasAccess(['admin', 'company']) || !event) return null
 
     if (hasAccess(['admin'])) {
-      return embedKeyIntoObjectValues(companies.value).map((company) => {
+      const list = embedKeyIntoObjectValues(companies.value).map((company) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { uid, name, ...remains } = company
         return {
@@ -60,6 +60,14 @@
           title: name,
         }
       })
+
+      // Add E&T-dagene as an option
+      list.push({
+        value: 'etdagene',
+        title: 'E&T-dagene',
+      })
+
+      return list
     }
 
     if (hasAccess(['company'])) {
@@ -94,6 +102,10 @@
     companyUID: null,
     attendants: null,
     uid: null,
+    registration: {
+      start: null,
+      end: null,
+    },
   }
 
   // Set state to event data if data fetched successfully
@@ -128,8 +140,11 @@
   }
 
   // Show appropriate error alert for failed API calls
-  const displayErrorAlertFromMessage = (errorMessage: string) => {
-    const content = getAlertContent(errorMessage)
+  const displayErrorAlertFromMessage = (
+    errorType: string,
+    errorMessage: string
+  ) => {
+    const content = getAlertContent(errorType, errorMessage)
     alertState.alertRoute = content.alertRoute
     alertState.type = content.type
     alertState.show = content.show
@@ -140,9 +155,6 @@
   // Boolean control states
   const editMode = computed(() => !!state.uid || !!state.eventUID)
   const isLoadingAttendants = ref(false)
-  const hasAttendants = computed(
-    () => Object.hasOwn(state, 'attendants') && !!state.attendants
-  )
 
   // Get updated event attendants
   const refreshAttendants = async () => {
@@ -184,6 +196,19 @@
     state.eventUID = state.uid
 
     state.location.map = state.location.map ? state.location.map : null
+
+    // set null registration datetime if capacity is null
+    state.registration.start =
+      state.capacity && state.registration.start
+        ? state.registration.start
+        : null
+    state.registration.end =
+      state.capacity && state.registration.end ? state.registration.end : null
+  }
+
+  const routeOnSuccess = () => {
+    const route = hasAccess(['admin']) ? '/admin/events' : '/company/admin'
+    return navigateTo(localePath(route))
   }
 
   const saveChanges = async () => {
@@ -199,10 +224,16 @@
     await $fetch('/api/event', {
       method: 'PUT',
       body: state,
-    }).catch((error) => displayErrorAlertFromMessage(error.statusMessage))
-
-    displaySuccessAlert('alert.success.event.edit.modified')
-    setTimeout(() => navigateTo('/admin/events'), 2000)
+    })
+      .then(() => {
+        // Handle successful response
+        displaySuccessAlert('alert.success.event.edit.modified')
+        setTimeout(routeOnSuccess, 2000)
+      })
+      .catch((error) => {
+        // Handle errors, including HTTP errors
+        displayErrorAlertFromMessage('Event', error.statusMessage)
+      })
   }
 
   const createEvent = async () => {
@@ -218,10 +249,32 @@
     await $fetch('/api/event', {
       method: 'POST',
       body: state,
-    }).catch((error) => displayErrorAlertFromMessage(error.statusMessage))
+    })
+      .then(() => {
+        // Handle successful response
+        displaySuccessAlert('alert.success.event.edit.created')
+        setTimeout(routeOnSuccess, 2000)
+      })
+      .catch((error) => {
+        // Handle errors, including HTTP errors
+        displayErrorAlertFromMessage('Event', error.message)
+      })
+  }
 
-    displaySuccessAlert('alert.success.event.edit.created')
-    setTimeout(() => navigateTo('/admin/events'), 2000)
+  const signUpForEventUid = ref('')
+
+  const signUpForEvent = () => {
+    $fetch('/api/event/register', {
+      method: 'POST',
+      body: { eventUID: props.eventUid, userUID: signUpForEventUid.value },
+    })
+      .then(() => {
+        refreshAttendants()
+        signUpForEventUid.value = ''
+      })
+      .catch((error) =>
+        displayErrorAlertFromMessage('Event', error.statusMessage)
+      )
   }
 </script>
 
@@ -297,10 +350,31 @@
         />
       </VRow>
 
+      <VRow v-if="state.capacity">
+        <VCol>
+          <FormDateTimeInput
+            v-model="state.registration.start"
+            :content="{
+              label: $t('edit.event.attributes.registration.start'),
+            }"
+            :rules="[state.capacity ? useRequiredInput : null]"
+          />
+        </VCol>
+        <VCol>
+          <FormDateTimeInput
+            v-model="state.registration.end"
+            :content="{
+              label: $t('edit.event.attributes.registration.end'),
+            }"
+            :rules="[state.capacity ? useRequiredInput : null]"
+          />
+        </VCol>
+      </VRow>
+
       <!-- Datetime -->
       <VRow>
         <VCol>
-          <FormTextInput
+          <FormDateTimeInput
             v-model="state.date.start"
             :content="{
               label: $t('edit.event.attributes.date.start'),
@@ -309,7 +383,7 @@
           />
         </VCol>
         <VCol>
-          <FormTextInput
+          <FormDateTimeInput
             v-model="state.date.end"
             :content="{
               label: $t('edit.event.attributes.date.end'),
@@ -345,12 +419,7 @@
     <VContainer>
       <VRow justify="center">
         <VCol cols="6">
-          <VBtn
-            block
-            variant="outlined"
-            color="error"
-            @click="navigateTo('/admin/events')"
-          >
+          <VBtn block variant="outlined" color="error" @click="$router.back()">
             {{ $t('edit.event.cancel') }}
           </VBtn>
         </VCol>
@@ -378,9 +447,9 @@
     </VContainer>
 
     <!-- Edit Attandant -->
-    <VContainer>
-      <VCard v-if="hasAttendants" class="mx-auto" max-width="800">
-        <VCardTitle>
+    <VContainer v-if="editMode && state?.capacity">
+      <VCard class="mx-auto" max-width="800">
+        <VCardTitle class="d-flex align-center flex-wrap">
           {{ $t('edit.event.attributes.attendants') }}
           <VBtn
             icon="mdi-refresh"
@@ -390,11 +459,31 @@
             :loading="isLoadingAttendants"
             @click="refreshAttendants"
           />
+          <VSpacer />
+
+          <!-- sign up user for event -->
+          <FormTextInput
+            v-model="signUpForEventUid"
+            hide-details
+            density="compact"
+            class="mr-2"
+            :content="{
+              label: $t('edit.event.attributes.user_id'),
+            }"
+          />
+          <VBtn density="compact" color="success" @click="signUpForEvent">
+            {{ $t('edit.event.attributes.sign_up') }}
+          </VBtn>
         </VCardTitle>
 
         <VDivider />
 
-        <VVirtualScroll :items="attendantList" height="320" item-height="48">
+        <VVirtualScroll
+          v-if="state?.attendants"
+          :items="attendantList"
+          height="320"
+          item-height="48"
+        >
           <template #default="{ item }">
             <VListItem
               :title="`${getUserNameByUid(item[1])}`"

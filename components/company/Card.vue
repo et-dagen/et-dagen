@@ -9,10 +9,10 @@
 
 <template>
   <VCard
-    class="card pa-2"
-    height="125"
+    class="card pa-2 d-flex"
+    height="100"
     variant="flat"
-    max-width="250"
+    width="150"
     @click="
       navigateTo(content.webpage, {
         external: true,
@@ -20,11 +20,26 @@
       })
     "
   >
-    <VImg :width="500" aspect-ratio="4/3" contain :src="content.logo" />
+    <NuxtImg :src="content.logo" />
   </VCard>
 </template>
 
 <style scoped lang="scss">
+  @use 'vuetify/settings';
+
+  img {
+    object-fit: contain;
+    position: absolute;
+    margin: auto;
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    max-width: 100%;
+    object-fit: contain;
+    max-height: 100%;
+  }
+
   .card {
     color: transparent;
     background-color: transparent;

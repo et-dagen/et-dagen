@@ -1,6 +1,8 @@
 <script setup lang="ts">
   import type { Event } from '~/models/Event'
 
+  const localePath = useLocalePath()
+
   // Get events and companies from the API
   const { data: events, refresh } = await useFetch('/api/event')
   const { data: companies } = await useFetch('/api/company')
@@ -253,8 +255,21 @@
           class="ml-2 add_event"
           flat
           icon="mdi-plus"
-          @click="navigateTo('/event/edit')"
+          @click="navigateTo(localePath('/event/edit'))"
         >
+        </VBtn>
+
+        <!-- shortcut to see the company event overview page -->
+        <VBtn
+          color="info"
+          size="large"
+          rounded="lg"
+          class="ml-2"
+          flat
+          append-icon="mdi-open-in-new"
+          @click="navigateTo(localePath('/company/admin'))"
+        >
+          {{ $t('admin.events.overview') }}
         </VBtn>
       </div>
     </div>
@@ -349,7 +364,7 @@
                   variant="text"
                   color="primary"
                   icon="mdi-pencil"
-                  @click="navigateTo(`/event/edit/${event.id}`)"
+                  @click="navigateTo(localePath(`/event/edit/${event.id}`))"
                 />
               </template>
 

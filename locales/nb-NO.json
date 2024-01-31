@@ -1,16 +1,23 @@
 {
   "nav": {
     "index": "Hjem",
-    "program": "Program",
+    "programme": "Program",
     "jobs": "Jobber",
     "contact": "Kontakt",
-    "admin": "Administrasjon",
-    "user": "Min profil"
+    "admin": "Admin",
+    "user": "Min profil",
+    "program_nav": "SE PROGRAM",
+    "company": "Mine arrangementer"
   },
   "user": {
     "sign_in": "Logg inn",
     "sign_out": "Logg ut",
     "sign_up": "Registrer bruker",
+    "information": {
+      "studyprogramme": "Studieprogram",
+      "currentyear": "Årstrinn",
+      "dietaryrestrictions": "Allergener og restriksjoner"
+    },
     "register": {
       "title": "Registrer bruker",
       "full_name": "Fullt navn",
@@ -26,6 +33,12 @@
       "user_type": {
         "student": "Studentbruker",
         "company": "Bedriftsbruker"
+      },
+      "dietary_restrictions": {
+        "name": "Allergener og restriksjoner",
+        "other": "Andre restriksjoner",
+        "norestrictions": "Nei, jeg har ingen restriksjoner",
+        "restrictions": "Jeg har allergener og/eller restriksjoner"
       }
     },
     "login": {
@@ -51,6 +64,10 @@
         "required": "Passord er påkrevd",
         "confirmed": "Passordene må være like"
       }
+    },
+    "page_not_found": {
+      "page_doesnt_exist": "Denne siden finnes ikke",
+      "navigate_front_page": "Tilbake til forsiden"
     }
   },
   "datetime": {
@@ -67,6 +84,32 @@
       "october": "oktober",
       "november": "november",
       "december": "desember"
+    },
+    "times": {
+      "days": "Dager",
+      "hours": "Timer",
+      "minutes": "Minutter",
+      "seconds": "Sekunder"
+    }
+  },
+  "event": {
+    "take_off": "Arrangementet tar av om",
+    "page": {
+      "details": {
+        "name": "Detaljer",
+        "from": "Fra",
+        "to": "Til",
+        "reg_start": "Påmeldingsstart",
+        "reg_end": "Påmeldingsslutt",
+        "location": "Sted",
+        "host": "Arrangør"
+      },
+      "attendants": {
+        "name": "Påmelding",
+        "attendants": "Påmeldte",
+        "nocapacity": "Ingen kapasitetsbegrensning",
+        "registered": "Du er påmeldt"
+      }
     }
   },
   "contact": {
@@ -87,7 +130,19 @@
   "company": {
     "main_partner": "Hovedpartner",
     "partners": "Partnere",
-    "sponsors": "Sponsorer"
+    "sponsors": "Sponsorer",
+    "admin": {
+      "title": "Bedriftsadministrasjon",
+      "dietaryrestrictions": "Allergener og restriksjoner",
+      "attendants": "Påmeldte deltakere",
+      "user": {
+        "attributes": {
+          "name": "Navn",
+          "studyprogramme": "Studieprogram",
+          "currentyear": "Årstrinn"
+        }
+      }
+    }
   },
   "alert": {
     "close_alert": "Lukk",
@@ -113,7 +168,17 @@
           "already_registered": "Du er allerede påmeldt dette arrangementet",
           "user_not_registered": "Du er ikke påmeldt dette arrangementet",
           "registration_unnecessary": "Påmelding er ikke nødvendig for dette arrangementet",
-          "non_admin_user": "Dette krever administratorrettigheter"
+          "non_admin_user": "Dette krever administratorrettigheter",
+          "closed": "Ikke åpent for registrering",
+          "end_time_before_start_time": "Arrangementet kan ikke avslutte før det har startet"
+        }
+      },
+      "company": {
+        "edit": {
+          "created": "Bedriften ble ikke opprettet",
+          "modified": "Oppdatering misslykket",
+          "modified_logo": "Logo ble ikke oppdatert",
+          "deleted_logo": "Logo ble ikke slettet"
         }
       },
       "company": {
@@ -145,16 +210,35 @@
           "modified": "Bedrift oppdatert",
           "deleted_logo": "Logo slettet"
         }
+      },
+      "job": {
+        "edit": {
+          "modified": "Jobb oppdatert",
+          "created": "Jobb opprettet"
+        }
       }
     }
   },
   "program": {
     "title": "Program",
+    "standmap": "Se standkart",
     "event": {
       "sign_up": "Meld meg på",
       "opt_out": "Trekk påmelding",
-      "sign_in_to_register": "Logg inn for å melde deg på"
+      "sign_in_to_register": "Logg inn for å melde deg på",
+      "registration_closed": "Ikke åpent for påmelding"
     }
+  },
+  "jobs": {
+    "title": "Stillingsannonser",
+    "jobTypes": "Jobbtyper",
+    "deadline": "Søknadsfrist",
+    "search": "Søk",
+    "location": "Sted",
+    "company": "Bedrift",
+    "details": "Stillingsdetaljer",
+    "apply": "Søk her",
+    "type": "Jobbtype"
   },
   "admin": {
     "categories": "Kategorier",
@@ -192,7 +276,46 @@
         "time": "Tid",
         "capacity": "Kapasitet"
       },
-      "copied": "UID kopiert!"
+      "copied": "UID kopiert!",
+      "overview": "Eventoversikt"
+    },
+    "company": {
+      "name": "Bedrifter",
+      "edit": "Rediger",
+      "pagesize": "Bedrifter per side",
+      "filtertypes": {
+        "name": "Filtertype",
+        "updated": "Sist modifisert",
+        "companyname": "Bedriftsnavn"
+      },
+      "filterorder": {
+        "name": "Rekkefølge",
+        "descending": "Synkende",
+        "ascending": "Stigende"
+      },
+      "selectall": "Velg alle",
+      "delete": {
+        "selected": "Slett valgte",
+        "confirmtext": "Er du sikker på at du vil slette de valgte bedriftene?",
+        "confirm": "Ja, slett dem",
+        "abort": "Nei, avbryt"
+      },
+      "attributes": {
+        "select": "Velg",
+        "name": "Navn",
+        "logo": "Logo",
+        "webpage": "Nettside",
+        "type": {
+          "name": "Type",
+          "main_partner": "Hovedpartner",
+          "partner": "Partner",
+          "sponsor": "Sponsor"
+        },
+        "code": "Kode"
+      },
+      "copied": "UID kopiert!",
+      "copiedcode": "Kode kopiert!",
+      "createcode": "Opprett kode"
     },
     "company": {
       "name": "Bedrifter",
@@ -233,7 +356,43 @@
       "createcode": "Opprett kode"
     },
     "jobs": {
-      "name": "Jobber"
+      "name": "Jobber",
+      "edit": "Rediger",
+      "pagesize": "Jobber per side",
+      "filtertypes": {
+        "name": "Filtertype",
+        "updated": "Sist modifisert",
+        "jobtitle": "Stillingstittel"
+      },
+      "filterorder": {
+        "name": "Rekkefølge",
+        "descending": "Synkende",
+        "ascending": "Stigende"
+      },
+      "selectall": "Velg alle",
+      "delete": {
+        "selected": "Slett valgte",
+        "confirmtext": "Er du sikker på at du vil slette de valgte jobbene?",
+        "confirm": "Ja, slett dem",
+        "abort": "Nei, avbryt"
+      },
+      "attributes": {
+        "select": "Velg",
+        "title": "Tittel",
+        "description": "Beskrivelse",
+        "company": "Bedrift",
+        "location": "Sted",
+        "deadline": "Søkefrist",
+        "jobtype": {
+          "name": "Jobbtype",
+          "full_time": "Fulltid",
+          "part_time": "Deltid",
+          "graduate": "Graduate",
+          "summer_internship": "Sommerjobb"
+        },
+        "code": "Jobbkode"
+      },
+      "copied": "UID kopiert!"
     },
     "users": {
       "name": "Brukere",
@@ -274,6 +433,31 @@
     }
   },
   "edit": {
+    "jobs": {
+      "create": {
+        "title": "Opprett stillingsannonse",
+        "action": "Opprett"
+      },
+      "edit": {
+        "title": "Rediger stillingsannonse",
+        "action": "Lagre"
+      },
+      "cancel": "Avbryt",
+      "attributes": {
+        "title": "Stillingstittel",
+        "company": "Bedrift",
+        "description": "Stillingsbeskrivelse",
+        "deadline": "Søknadsfrist",
+        "application_link": "Link til annonse",
+        "jobtype": {
+          "name": "Stillingstype",
+          "full_time": "Fulltid",
+          "graduate": "Gratuate",
+          "summer_internship": "Sommerjobb"
+        },
+        "location": "Sted"
+      }
+    },
     "event": {
       "create": {
         "title": "Opprett arrangement",
@@ -297,7 +481,56 @@
           "start": "Startdato",
           "end": "Sluttdato"
         },
-        "attendants": "Påmeldte deltakere"
+        "registration": {
+          "start": "Påmelding åpner",
+          "end": "Påmelding stenger"
+        },
+        "signupstart": "Påmelding åpner",
+        "optoutdeadline": "Avmeldingsfrist",
+        "attendants": "Påmeldte deltakere",
+        "user_id": "Brukerid",
+        "sign_up": "Meld på"
+      }
+    },
+    "company": {
+      "create": {
+        "title": "Opprett bedrift",
+        "action": "Opprett"
+      },
+      "edit": {
+        "title": "Rediger bedrift",
+        "action": "Lagre"
+      },
+      "unlink_logo": "Frakoble logo",
+      "cancel": "Avbryt",
+      "attributes": {
+        "name": "Navn",
+        "description": "Beskrivelse",
+        "logo": "Logo",
+        "webpage": "Nettside",
+        "type": {
+          "name": "Bedriftstype",
+          "main_partner": "Hovedsponsor",
+          "partner": "Partner",
+          "sponsor": "Sponsor"
+        }
+      }
+    },
+    "user": {
+      "title": "Rediger bruker",
+      "save": "Lagre",
+      "cancel": "Avbryt",
+      "attributes": {
+        "name": "Navn",
+        "email": "Epost",
+        "type": {
+          "name": "Brukertype",
+          "admin": "Administrator",
+          "company": "Bedrift",
+          "basic": "Basis"
+        },
+        "studyprogram": "Studieprogram",
+        "currentyear": "Studieår"
       }
     },
     "company": {
@@ -336,5 +569,36 @@
       "program": "Program",
       "jobs": "Jobber"
     }
+  },
+  "dietary_restrictions": {
+    "name": "Allergener og restriksjoner",
+    "gluten": "Gluten",
+    "shellfish": "Skalldyr",
+    "citrus": "Sitrusfrukter",
+    "egg": "Egg",
+    "fish": "Fisk",
+    "peanuts": "Peanøtter",
+    "soy": "Soya",
+    "milk": "Melk",
+    "nuts": "Nøtter",
+    "celery": "Selleri",
+    "mustard": "Sennep",
+    "sesame_seeds": "Sesamfrø",
+    "sulfur_dioxide_sulphite": "Svoveldioksid og sulfitter",
+    "lupine": "Lupin",
+    "mollusc": "Bløtdyr",
+    "vegetarian": "Vegetar",
+    "vegan": "Vegansk",
+    "halal": "Halal",
+    "kosher": "Kosher"
+  },
+  "weekday": {
+    "sunday": "Søndag",
+    "monday": "Mandag",
+    "tuesday": "Tirsdag",
+    "wednesday": "Onsdag",
+    "thursday": "Torsdag",
+    "friday": "Fredag",
+    "saturday": "Lørdag"
   }
 }

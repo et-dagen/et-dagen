@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { LocaleObject } from '@nuxtjs/i18n/dist/runtime/composables'
+  import type { LocaleObject } from '@nuxtjs/i18n/dist/runtime/composables'
 
   const { locale, locales } = useI18n()
 
@@ -28,7 +28,7 @@
         <VBtn v-bind="props" rounded="lg" variant="text">
           <!-- dependent on current locale-->
           <template #prepend>
-            <VImg
+            <NuxtImg
               width="30"
               :src="`/images/flags/${currentLocale?.code}.svg`"
             />
