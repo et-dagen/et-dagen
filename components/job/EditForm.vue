@@ -343,7 +343,7 @@
 
   @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
     .v-container {
-      max-width: 26rem !important;
+      max-width: 95vw !important;
       margin-block: 0.5rem;
     }
   }
