@@ -32,9 +32,9 @@
     <template #append>
       <!-- company admin nav -->
       <NavButton
-        v-if="auth.hasAccess(['company', 'admin'])"
+        v-if="auth.hasAccess(['company'])"
         :route="{
-          name: 'company_admin',
+          name: 'company',
           route: '/company/admin',
         }"
         class="mx-2 d-none d-lg-flex"

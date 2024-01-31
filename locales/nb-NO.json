@@ -4,10 +4,10 @@
     "programme": "Program",
     "jobs": "Jobber",
     "contact": "Kontakt",
-    "admin": "Administrasjon",
+    "admin": "Admin",
     "user": "Min profil",
     "program_nav": "SE PROGRAM",
-    "company_admin": "Bedriftsadmin"
+    "company": "Mine arrangementer"
   },
   "user": {
     "sign_in": "Logg inn",
@@ -268,7 +268,8 @@
         "time": "Tid",
         "capacity": "Kapasitet"
       },
-      "copied": "UID kopiert!"
+      "copied": "UID kopiert!",
+      "overview": "Eventoversikt"
     },
     "company": {
       "name": "Bedrifter",
