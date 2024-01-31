@@ -54,7 +54,7 @@
     if (!hasAccess(['admin', 'company']) || !event) return null
 
     if (hasAccess(['admin'])) {
-      return embedKeyIntoObjectValues(companies.value).map((company) => {
+      const list = embedKeyIntoObjectValues(companies.value).map((company) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { uid, name, ...remains } = company
         return {
@@ -62,6 +62,14 @@
           title: name,
         }
       })
+
+      // Add E&T-dagene as an option
+      list.push({
+        value: 'etdagene',
+        title: 'E&T-dagene',
+      })
+
+      return list
     }
 
     if (hasAccess(['company'])) {
@@ -130,8 +138,11 @@
   }
 
   // Show appropriate error alert for failed API calls
-  const displayErrorAlertFromMessage = (errorMessage: string) => {
-    const content = getAlertContent(errorMessage)
+  const displayErrorAlertFromMessage = (
+    errorType: string,
+    errorMessage: string
+  ) => {
+    const content = getAlertContent(errorType, errorMessage)
     alertState.alertRoute = content.alertRoute
     alertState.type = content.type
     alertState.show = content.show
@@ -201,10 +212,16 @@
     await $fetch('/api/event', {
       method: 'PUT',
       body: state,
-    }).catch((error) => displayErrorAlertFromMessage(error.statusMessage))
-
-    displaySuccessAlert('alert.success.event.edit.modified')
-    setTimeout(() => navigateTo(localePath('/admin/events')), 2000)
+    })
+      .then(() => {
+        // Handle successful response
+        displaySuccessAlert('alert.success.event.edit.modified')
+        setTimeout(() => navigateTo(localePath('/admin/events')), 2000)
+      })
+      .catch((error) => {
+        // Handle errors, including HTTP errors
+        displayErrorAlertFromMessage('Event', error.statusMessage)
+      })
   }
 
   const createEvent = async () => {
@@ -216,14 +233,19 @@
       return
     }
 
-    handleEmptyStateValues()
     await $fetch('/api/event', {
       method: 'POST',
       body: state,
-    }).catch((error) => displayErrorAlertFromMessage(error.statusMessage))
-
-    displaySuccessAlert('alert.success.event.edit.created')
-    setTimeout(() => navigateTo(localePath('/admin/events')), 2000)
+    })
+      .then(() => {
+        // Handle successful response
+        displaySuccessAlert('alert.success.event.edit.created')
+        setTimeout(() => navigateTo(localePath('/admin/events')), 2000)
+      })
+      .catch((error) => {
+        // Handle errors, including HTTP errors
+        displayErrorAlertFromMessage('Event', error.message)
+      })
   }
 </script>
 
@@ -302,7 +324,7 @@
       <!-- Datetime -->
       <VRow>
         <VCol>
-          <FormTextInput
+          <FormDateTimeInput
             v-model="state.date.start"
             :content="{
               label: $t('edit.event.attributes.date.start'),
@@ -311,7 +333,7 @@
           />
         </VCol>
         <VCol>
-          <FormTextInput
+          <FormDateTimeInput
             v-model="state.date.end"
             :content="{
               label: $t('edit.event.attributes.date.end'),

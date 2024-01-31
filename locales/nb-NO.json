@@ -63,6 +63,10 @@
         "required": "Passord er påkrevd",
         "confirmed": "Passordene må være like"
       }
+    },
+    "page_not_found": {
+      "page_doesnt_exist": "Denne siden finnes ikke",
+      "navigate_front_page": "Tilbake til forsiden"
     }
   },
   "datetime": {
@@ -148,7 +152,8 @@
           "already_registered": "Du er allerede påmeldt dette arrangementet",
           "user_not_registered": "Du er ikke påmeldt dette arrangementet",
           "registration_unnecessary": "Påmelding er ikke nødvendig for dette arrangementet",
-          "non_admin_user": "Dette krever administratorrettigheter"
+          "non_admin_user": "Dette krever administratorrettigheter",
+          "end_time_before_start_time": "Arrangementet kan ikke avslutte før det har startet"
         }
       },
       "company": {
@@ -180,6 +185,12 @@
           "modified": "Bedrift oppdatert",
           "deleted_logo": "Logo slettet"
         }
+      },
+      "job": {
+        "edit": {
+          "modified": "Jobb oppdatert",
+          "created": "Jobb opprettet"
+        }
       }
     }
   },
@@ -200,7 +211,8 @@
     "location": "Sted",
     "company": "Bedrift",
     "details": "Stillingsdetaljer",
-    "apply": "Søk her"
+    "apply": "Søk her",
+    "type": "Jobbtype"
   },
   "admin": {
     "categories": "Kategorier",
@@ -371,6 +383,7 @@
         "company": "Bedrift",
         "description": "Stillingsbeskrivelse",
         "deadline": "Søknadsfrist",
+        "application_link": "Link til annonse",
         "jobtype": {
           "name": "Stillingstype",
           "full_time": "Fulltid",
@@ -428,6 +441,23 @@
           "partner": "Partner",
           "sponsor": "Sponsor"
         }
+      }
+    },
+    "user": {
+      "title": "Rediger bruker",
+      "save": "Lagre",
+      "cancel": "Avbryt",
+      "attributes": {
+        "name": "Navn",
+        "email": "Epost",
+        "type": {
+          "name": "Brukertype",
+          "admin": "Administrator",
+          "company": "Bedrift",
+          "basic": "Basis"
+        },
+        "studyprogram": "Studieprogram",
+        "currentyear": "Studieår"
       }
     }
   },
