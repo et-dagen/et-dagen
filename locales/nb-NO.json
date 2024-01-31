@@ -130,7 +130,7 @@
     "sponsors": "Sponsorer",
     "admin": {
       "title": "Bedriftsadministrasjon",
-      "dietaryrestrictions":"Allergener og restriksjoner",
+      "dietaryrestrictions": "Allergener og restriksjoner",
       "attendants": "Påmeldte deltakere",
       "user": {
         "attributes": {

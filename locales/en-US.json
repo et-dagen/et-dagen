@@ -127,11 +127,10 @@
   "company": {
     "main_partner": "Main partner",
     "partners": "Partners",
-    "sponsors": "Sponsors"
-    ,
+    "sponsors": "Sponsors",
     "admin": {
       "title": "Company Admin",
-      "dietaryrestrictions":"Allergies and Restrictions",
+      "dietaryrestrictions": "Allergies and Restrictions",
       "attendants": "Attendants"
     }
   },

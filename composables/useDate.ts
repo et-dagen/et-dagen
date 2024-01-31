@@ -73,7 +73,7 @@ export const getNumericDayAndMonthString = (datetime: string): {} => {
 
 export const getDayAndMonthString = (
   datetime: string,
-  shortenMonth: boolean = false
+  shortenMonth = false
 ) => {
   const date = new Date(datetime)
 
