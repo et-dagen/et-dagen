@@ -258,6 +258,19 @@
           @click="navigateTo(localePath('/event/edit'))"
         >
         </VBtn>
+
+        <!-- shortcut to see the company event overview page -->
+        <VBtn
+          color="info"
+          size="large"
+          rounded="lg"
+          class="ml-2"
+          flat
+          append-icon="mdi-open-in-new"
+          @click="navigateTo(localePath('/company/admin'))"
+        >
+          {{ $t('admin.events.overview') }}
+        </VBtn>
       </div>
     </div>
 

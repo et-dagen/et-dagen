@@ -54,10 +54,10 @@
         />
 
         <NavButton
-          v-if="auth.hasAccess(['company', 'admin'])"
+          v-if="auth.hasAccess(['company'])"
           size="large"
           :route="{
-            name: 'company_admin',
+            name: 'company',
             route: '/company/admin',
           }"
         />
