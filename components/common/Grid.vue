@@ -32,9 +32,9 @@
       }
     }
     @media #{map-get(settings.$display-breakpoints, 'xs')} {
-      max-width: 350px;
+      max-width: 60vw;
       > * {
-        min-width: 350px;
+        min-width: 150px;
       }
     }
   }

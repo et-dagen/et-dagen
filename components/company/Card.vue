@@ -10,9 +10,9 @@
 <template>
   <VCard
     class="card pa-2 d-flex"
-    height="125"
+    height="100"
     variant="flat"
-    max-width="250"
+    width="150"
     @click="
       navigateTo(content.webpage, {
         external: true,
