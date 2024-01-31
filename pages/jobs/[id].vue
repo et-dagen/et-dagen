@@ -49,19 +49,26 @@
         {{ $t('jobs.details') }}
       </VCardTitle>
 
-      <VCardText class="details__from pt-5 pb-5">
+      <VCardText class="pt-5 pb-5">
         <strong>{{ $t('jobs.deadline') }}:</strong>
         {{ date.getDate() }}.
-        {{ $t(`datetime.months.${getFullMonthFromNumber(date.getMonth())}`) }}
+        {{ getFullMonthFromNumber(date.getMonth()) }}
         {{ date.getFullYear() }}
       </VCardText>
 
-      <VCardText class="details__location py-0 pb-5">
+      <VCardText class="py-0 pb-5">
+        <strong>{{ $t('jobs.type') }}:</strong>
+        {{
+          $t(`admin.jobs.attributes.jobtype.${job.jobType.replace('-', '_')}`)
+        }}
+      </VCardText>
+
+      <VCardText class="py-0 pb-5">
         <strong>{{ $t('jobs.location') }}:</strong>
         {{ job.location }}
       </VCardText>
 
-      <VCardText class="details__host py-0 pb-5">
+      <VCardText class="py-0 pb-5">
         <strong>{{ $t('jobs.company') }}: </strong>
         <NuxtLink v-if="company" :to="company?.webpage" target="_blank">
           {{ company?.name }}
@@ -74,7 +81,7 @@
 
     <!-- apply for job -->
     <div class="attendant-container">
-      <div>
+      <div v-if="job?.applicationLink && job.applicationLink.length">
         <VBtn
           color="primary"
           block
@@ -82,7 +89,7 @@
           density="comfortable"
           @click="
             // TODO: add link for applying to jobs
-            navigateTo('/', {
+            navigateTo(job.applicationLink, {
               external: true,
               open: { target: '_blank' },
             })
