@@ -80,7 +80,7 @@
       >
         <VIcon class="mx-3">mdi-map</VIcon>
         {{ $t('program.standmap') }}:
-        {{ $t(`weekday.${getWeekdayFromDateTime(state.selectedDate)}`) }}
+        {{ getWeekdayFromDateTime(state.selectedDate) }}
       </VBtn>
     </VContainer>
 

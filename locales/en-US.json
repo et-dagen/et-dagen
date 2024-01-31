@@ -4,10 +4,10 @@
     "programme": "Programme",
     "jobs": "Jobs",
     "contact": "Contact",
-    "admin": "Administration",
+    "admin": "Admin",
     "user": "My profile",
     "program_nav": "SEE PROGRAM",
-    "company_admin": "Company Admin"
+    "company": "My Events"
   },
   "user": {
     "sign_in": "Sign in",
@@ -263,7 +263,8 @@
         "time": "Time",
         "capacity": "Capacity"
       },
-      "copied": "Copied UID!"
+      "copied": "Copied UID!",
+      "overview": "Event Overview"
     },
     "company": {
       "name": "Companies",
