@@ -54,7 +54,7 @@
         {{ $t('company.main_partner') }}
       </h2>
       <VDivider
-        class="pb-lg-5 pb-2 mx-auto"
+        class="pb-lg-8 pb-3 mx-auto"
         style="width: 100%; max-width: 1000px"
       />
       <CompanyHero
@@ -73,7 +73,7 @@
         {{ $t('company.partners') }}
       </h2>
       <VDivider
-        class="pb-lg-5 pb-2 mx-auto"
+        class="pb-lg-8 pb-3 mx-auto"
         style="width: 100%; max-width: 1000px"
       />
       <CommonGrid>
@@ -93,7 +93,7 @@
         {{ $t('company.sponsors') }}
       </h2>
       <VDivider
-        class="pb-lg-5 pb-2 mx-auto"
+        class="pb-lg-8 pb-3 mx-auto"
         style="width: 100%; max-width: 1000px"
       />
       <CommonGrid>
