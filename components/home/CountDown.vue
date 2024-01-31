@@ -32,16 +32,14 @@
   <VCard class="mx-auto w-100 container" elevation="0">
     <VRow justify="center">
       <VCol class="text-center pb-sm-6 pb-2">
-        <VCardTitle class="text-sm-h4 text-h6">{{
-          $t('event.take_off')
-        }}</VCardTitle>
+        <p class="text-sm-h4 text-h6">{{ $t('event.take_off') }}</p>
       </VCol>
     </VRow>
 
     <!-- Countdown -->
     <VRow justify="center">
       <!-- First col: Days numbers and string -->
-      <VCol cols="2.25" class="px-sm-2 px-1">
+      <VCol cols="3" class="px-md-2">
         <!-- Row containing numbers for days -->
         <VRow justify="center">
           <!-- VCard to get outlined box -->
@@ -65,7 +63,7 @@
       </VCol>
 
       <!-- Second col: Hours numbers and string -->
-      <VCol cols="2.25" class="px-sm-2 px-1">
+      <VCol cols="3" class="px-md-2">
         <!-- Row containing numbers for hours -->
         <VRow justify="center">
           <!-- VCard to get outlined box -->
@@ -89,7 +87,7 @@
       </VCol>
 
       <!-- Third col: Minutes numbers and string -->
-      <VCol cols="2.25" class="px-sm-2 px-1">
+      <VCol cols="3" class="px-md-2">
         <!-- Row containing numbers for minutes -->
         <VRow justify="center">
           <!-- VCard to get outlined box -->
@@ -113,7 +111,7 @@
       </VCol>
 
       <!-- Fourth col: Seconds numbers and string -->
-      <VCol cols="2.25" class="px-sm-2 px-1">
+      <VCol cols="3" class="px-md-2">
         <!-- Row containing numbers for seconds -->
         <VRow justify="center">
           <!-- VCard to get outlined box -->
