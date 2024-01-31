@@ -33,7 +33,6 @@
       <!-- company admin nav -->
       <NavButton
         v-if="auth.hasAccess(['company', 'admin'])"
-        size="large"
         :route="{
           name: 'company_admin',
           route: '/company/admin',
