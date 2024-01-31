@@ -24,6 +24,12 @@
     () => companies.value[event.value.companyUID] || null
   )
 
+  // check if event has capacity and attendants
+  const hasAttendants = computed(
+    () => !!event.value.attendants || Object.hasOwn(event.value, 'attendants')
+  )
+  const hasCapacity = computed(() => !!event.value.capacity)
+
   // get day and month strings from date
   const eventStartString = computed(
     () =>
@@ -38,11 +44,21 @@
       )} ${getHourAndMinuteStringFromString(event.value.date.end)}`
   )
 
-  // check if event has capacity and attendants
-  const hasAttendants = computed(
-    () => !!event.value.attendants || Object.hasOwn(event.value, 'attendants')
+  // get day and month strings from date
+  const registrationStartString = computed(() =>
+    hasCapacity.value
+      ? `${getDayAndMonthString(
+          event.value.registration.start
+        )} ${getHourAndMinuteStringFromString(event.value.registration.start)}`
+      : null
   )
-  const hasCapacity = computed(() => !!event.value.capacity)
+  const registrationEndString = computed(() =>
+    hasCapacity.value
+      ? `${getDayAndMonthString(
+          event.value.registration.end
+        )} ${getHourAndMinuteStringFromString(event.value.registration.end)}`
+      : null
+  )
 
   // check if user is already registered for event
   const alreadyRegistered = computed(
@@ -58,6 +74,35 @@
       hasAttendants.value &&
       event.value.attendants.length >= event.value.capacity
   )
+
+  // does the event have any registration actions, and is user signed in
+  const hasEventActions = computed(
+    () => useAuth.isLoggedIn && hasCapacity.value
+  )
+
+  // check if registration actions should be rendered on client side
+  const showRegistrationAction = ref(
+    hasEventActions.value &&
+      presentWithinTimeWindow(
+        event.value.registration.start,
+        event.value.registration.end
+      )
+  )
+
+  // check if registration is open with interval if user is signed in and the event has a capacity
+  let registrationOpenInterval: ReturnType<typeof setInterval>
+  if (hasEventActions.value)
+    registrationOpenInterval = setInterval(
+      () =>
+        (showRegistrationAction.value = presentWithinTimeWindow(
+          event.value.registration.start,
+          event.value.registration.end
+        )),
+      1000
+    )
+
+  // clear interval when unmounting the component
+  onBeforeUnmount(() => clearInterval(registrationOpenInterval))
 
   // check if user is already registered for event
   const showSignupButton = computed(
@@ -84,7 +129,7 @@
 
   // Show appropriate error alert for failed API calls
   const displayErrorAlertFromMessage = (errorMessage: string) => {
-    const content = getAlertContent(errorMessage)
+    const content = getAlertContent('Error', errorMessage)
     alertState.alertRoute = content.alertRoute
     alertState.type = content.type
     alertState.show = content.show
@@ -168,6 +213,16 @@
         {{ eventEndString }}
       </VCardText>
 
+      <VCardText class="details__from py-0 pb-5 d-flex flex-wrap">
+        <strong class="mr-2">{{ $t('event.page.details.reg_start') }}: </strong>
+        <span>{{ registrationStartString }}</span>
+      </VCardText>
+
+      <VCardText class="details__to py-0 pb-5 d-flex flex-wrap">
+        <strong class="mr-2">{{ $t('event.page.details.reg_start') }}: </strong>
+        <span>{{ registrationEndString }}</span>
+      </VCardText>
+
       <VCardText class="details__location py-0 pb-5">
         <strong>{{ $t('event.page.details.location') }}: </strong>
         <NuxtLink
@@ -198,24 +253,25 @@
 
     <!-- event registration -->
     <div class="attendant-container">
-      <VCard
-        class="attendants elevation-4"
-        height="84"
-        color="primary"
-        rounded="lg"
-      >
+      <VCard class="attendants elevation-4" color="primary" rounded="lg">
         <VCardTitle class="attendants__title">
           {{ $t('event.page.attendants.name') }}
         </VCardTitle>
 
         <VCardText v-if="hasCapacity" class="attendants__count">
           {{ $t('event.page.attendants.attendants') }}:
+
           <span v-if="hasAttendants">
             {{ Object.values(event.attendants).length }}
           </span>
           <span v-else>0</span>
 
           {{ event.capacity ? `/ ${event.capacity}` : '' }}
+
+          <p v-if="alreadyRegistered" class="mt-2">
+            {{ $t('event.page.attendants.registered') }}
+            <VIcon>mdi-check-circle</VIcon>
+          </p>
         </VCardText>
 
         <VCardText v-else>
@@ -232,8 +288,16 @@
         {{ $t('program.event.sign_in_to_register') }}
       </div>
 
+      <div
+        v-if="hasEventActions && !showRegistrationAction"
+        class="text-primary px-4 py-2 d-flex justify-center align-center"
+      >
+        <VIcon class="pr-3">mdi-calendar-clock</VIcon>
+        {{ $t('program.event.registration_closed') }}
+      </div>
+
       <!-- sign up options -->
-      <div v-if="hasCapacity && useAuth.isLoggedIn">
+      <div v-if="hasEventActions && showRegistrationAction">
         <!-- sign up -->
         <VBtn
           v-if="showSignupButton"

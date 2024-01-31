@@ -4,12 +4,19 @@
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 
-  const { companyUID, capacity, date, description, location, title } =
-    await readBody(event)
+  const {
+    companyUID,
+    capacity,
+    date,
+    description,
+    location,
+    title,
+    registration,
+  } = await readBody(event)
 
   // check if data is defined.
   if (
-    !companyUID ||
+    (!companyUID && companyUID !== 'etdagene') ||
     (typeof capacity === 'number' && capacity <= 0) ||
     (capacity !== null && typeof capacity !== 'number') ||
     !date.start ||
@@ -17,7 +24,8 @@ export default defineEventHandler(async (event) => {
     !description ||
     !location.name ||
     (!location.map && location.map !== null) ||
-    !title
+    !title ||
+    (capacity && (!registration.start || !registration.end))
   )
     throw createError({
       statusCode: 400,
@@ -44,7 +52,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: `Capacity has to be a number or null '${capacity}'`,
     })
 
-  if (typeof capacity !== 'number' && !capacity === null && capacity <= 0)
+  if (typeof capacity !== 'number' && !(capacity === null) && capacity <= 0)
     throw createError({
       statusCode: 400,
       statusMessage: 'Capacity has to be a number and larger than 0',
@@ -55,6 +63,21 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 400,
       statusMessage: 'Start time has to be before end time',
+    })
+
+  // registration window must be before event start
+  if (registration.start > date.start || registration.end > date.start)
+    throw createError({
+      statusCode: 400,
+      statusMessage:
+        'Sign up and opt out timestamps must be before event start',
+    })
+
+  // registration window must open before it closes
+  if (capacity && registration.start > registration.end)
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Sign up start must be before sign up end',
     })
 
   // TODO: Add support for different event types
@@ -84,6 +107,7 @@ export default defineEventHandler(async (event) => {
       name: location.name,
     },
     title,
+    registration,
     // eventType,
   })
 

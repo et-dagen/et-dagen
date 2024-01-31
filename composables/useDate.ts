@@ -51,7 +51,8 @@ const weekdays = [
 ]
 
 export const getWeekdayFromDateTime = (datetime: string): string => {
-  return weekdays[new Date(datetime).getDay()]
+  const nuxtApp = useNuxtApp()
+  return nuxtApp.$i18n.t(`weekday.${weekdays[new Date(datetime).getDay()]}`)
 }
 
 // Get month name from month index
@@ -72,7 +73,7 @@ export const getNumericDayAndMonthString = (datetime: string): {} => {
 
 export const getDayAndMonthString = (
   datetime: string,
-  shortenMonth: boolean = false
+  shortenMonth = false
 ) => {
   const date = new Date(datetime)
 

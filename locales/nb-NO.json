@@ -6,7 +6,8 @@
     "contact": "Kontakt",
     "admin": "Administrasjon",
     "user": "Min profil",
-    "program_nav": "SE PROGRAM"
+    "program_nav": "SE PROGRAM",
+    "company_admin": "Bedriftsadmin"
   },
   "user": {
     "sign_in": "Logg inn",
@@ -98,13 +99,16 @@
         "name": "Detaljer",
         "from": "Fra",
         "to": "Til",
+        "reg_start": "Påmeldingsstart",
+        "reg_end": "Påmeldingsslutt",
         "location": "Sted",
         "host": "Arrangør"
       },
       "attendants": {
         "name": "Påmelding",
         "attendants": "Påmeldte",
-        "nocapacity": "Ingen kapasitetsbegrensning"
+        "nocapacity": "Ingen kapasitetsbegrensning",
+        "registered": "Du er påmeldt"
       }
     }
   },
@@ -126,7 +130,19 @@
   "company": {
     "main_partner": "Hovedpartner",
     "partners": "Partnere",
-    "sponsors": "Sponsorer"
+    "sponsors": "Sponsorer",
+    "admin": {
+      "title": "Bedriftsadministrasjon",
+      "dietaryrestrictions": "Allergener og restriksjoner",
+      "attendants": "Påmeldte deltakere",
+      "user": {
+        "attributes": {
+          "name": "Navn",
+          "studyprogramme": "Studieprogram",
+          "currentyear": "Årstrinn"
+        }
+      }
+    }
   },
   "alert": {
     "close_alert": "Lukk",
@@ -153,6 +169,7 @@
           "user_not_registered": "Du er ikke påmeldt dette arrangementet",
           "registration_unnecessary": "Påmelding er ikke nødvendig for dette arrangementet",
           "non_admin_user": "Dette krever administratorrettigheter",
+          "closed": "Ikke åpent for registrering",
           "end_time_before_start_time": "Arrangementet kan ikke avslutte før det har startet"
         }
       },
@@ -200,7 +217,8 @@
     "event": {
       "sign_up": "Meld meg på",
       "opt_out": "Trekk påmelding",
-      "sign_in_to_register": "Logg inn for å melde deg på"
+      "sign_in_to_register": "Logg inn for å melde deg på",
+      "registration_closed": "Ikke åpent for påmelding"
     }
   },
   "jobs": {
@@ -416,7 +434,15 @@
           "start": "Startdato",
           "end": "Sluttdato"
         },
-        "attendants": "Påmeldte deltakere"
+        "registration": {
+          "start": "Påmelding åpner",
+          "end": "Påmelding stenger"
+        },
+        "signupstart": "Påmelding åpner",
+        "optoutdeadline": "Avmeldingsfrist",
+        "attendants": "Påmeldte deltakere",
+        "user_id": "Brukerid",
+        "sign_up": "Meld på"
       }
     },
     "company": {
