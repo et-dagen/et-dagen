@@ -52,7 +52,7 @@
 
       <!-- divider -->
       <VDivider
-        v-if="auth.hasAccess(['admin'])"
+        v-if="auth.hasAccess(['admin', 'company'])"
         vertical
         inset
         length="75%"
