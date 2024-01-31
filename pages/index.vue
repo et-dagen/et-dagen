@@ -46,23 +46,30 @@
         futureDate: '2024-02-14',
         futureTime: '10:00:00',
       }"
+      class="my-5"
     />
 
-    <CompanyHero
-      v-if="mainPartner !== null"
-      :content="{
-        name: mainPartner.name,
-        description: mainPartner.description,
-        logo: mainPartner.logo,
-        webpage: mainPartner.webpage,
-      }"
-      class="my-5 d-flex justify-center"
-    />
+    <div v-if="mainPartner !== null" class="py-10">
+      <h2 class="text-h4 text-md-h3 text-center pt-10 pb-3 font-weight-bold">
+        {{ $t('company.main_partner') }}
+      </h2>
+      <VDivider class="pb-lg-5 pb-2" />
+      <CompanyHero
+        :content="{
+          name: mainPartner.name,
+          description: mainPartner.description,
+          logo: mainPartner.logo,
+          webpage: mainPartner.webpage,
+        }"
+        class="my-3 d-flex justify-center"
+      />
+    </div>
 
-    <div v-if="showPartners">
-      <h2 class="text-h3 text-center pt-10 pb-lg-8 pb-5 font-weight-bold">
+    <div v-if="showPartners" class="py-10">
+      <h2 class="text-h3 text-center pt-10 pb-2 font-weight-bold">
         {{ $t('company.partners') }}
       </h2>
+      <VDivider class="pb-lg-5 pb-2" />
       <CommonGrid>
         <CompanyCard
           v-for="partner in partners"
@@ -75,10 +82,11 @@
       </CommonGrid>
     </div>
 
-    <div v-if="showSponsors">
-      <h2 class="text-h3 text-center pt-10 pb-lg-8 pb-5 font-weight-bold">
+    <div v-if="showSponsors" class="pt-10">
+      <h2 class="text-h3 text-center pt-10 pb-2 font-weight-bold">
         {{ $t('company.sponsors') }}
       </h2>
+      <VDivider class="pb-lg-5 pb-2" />
       <CommonGrid>
         <CompanyCard
           v-for="sponsor in sponsors"
