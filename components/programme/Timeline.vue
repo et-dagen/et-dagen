@@ -75,8 +75,8 @@
         class="w-75"
         max-width="600"
         color="accent"
-        @click="showStandMap = true"
         style="min-width: fit-content"
+        @click="showStandMap = true"
       >
         <VIcon class="mx-3">mdi-map</VIcon>
         {{ $t('program.standmap') }}:
@@ -115,7 +115,6 @@
 
           <!-- Event card -->
           <VCard
-            width="600"
             elevation="2"
             class="card mb-4"
             variant="flat"
@@ -199,6 +198,8 @@
   }
 
   .card {
+    width: 600px;
+
     &__timestamp {
       position: absolute;
       left: -9rem - 0.125rem;
@@ -263,9 +264,12 @@
 
   @media #{map-get($display-breakpoints, 'xs')} {
     .container {
-      transform: translateX(9rem);
-      max-width: 450px;
-      width: fit-content;
+      transform: translateX(6.5rem);
+      width: 60vw;
+
+      .v-card {
+        width: 60vw !important;
+      }
     }
 
     .card {
