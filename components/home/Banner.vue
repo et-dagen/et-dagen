@@ -43,12 +43,12 @@
         </VCol>
         <VCol cols="5">
           <!-- banner image -->
-          <VImg
-            class="d-none d-lg-flex elevation-3 rounded-lg"
-            :aspect-ratio="4 / 3"
-            cover
+          <NuxtImg
+            class="d-none d-lg-flex rounded-lg"
+            height="250"
+            width="250"
             :src="content.image"
-          ></VImg>
+          />
         </VCol>
       </VRow>
     </VCard>
