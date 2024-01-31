@@ -54,28 +54,3 @@
     </VCard>
   </div>
 </template>
-
-<style scoped lang="scss">
-  @use 'vuetify/settings';
-
-  .home-banner {
-    align-items: center;
-    display: flex;
-    gap: 4rem;
-    justify-content: center;
-    min-width: 310px;
-    padding-block: 1rem;
-    width: 100%;
-
-    // All direct descendants
-    > * {
-      max-width: 25%;
-    }
-
-    @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
-      > * {
-        max-width: 100%;
-      }
-    }
-  }
-</style>
