@@ -24,6 +24,12 @@
     () => companies.value[event.value.companyUID] || null
   )
 
+  // check if event has capacity and attendants
+  const hasAttendants = computed(
+    () => !!event.value.attendants || Object.hasOwn(event.value, 'attendants')
+  )
+  const hasCapacity = computed(() => !!event.value.capacity)
+
   // get day and month strings from date
   const eventStartString = computed(
     () =>
@@ -38,11 +44,21 @@
       )} ${getHourAndMinuteStringFromString(event.value.date.end)}`
   )
 
-  // check if event has capacity and attendants
-  const hasAttendants = computed(
-    () => !!event.value.attendants || Object.hasOwn(event.value, 'attendants')
+  // get day and month strings from date
+  const registrationStartString = computed(() =>
+    hasCapacity.value
+      ? `${getDayAndMonthString(
+          event.value.registration.start
+        )} ${getHourAndMinuteStringFromString(event.value.registration.start)}`
+      : null
   )
-  const hasCapacity = computed(() => !!event.value.capacity)
+  const registrationEndString = computed(() =>
+    hasCapacity.value
+      ? `${getDayAndMonthString(
+          event.value.registration.end
+        )} ${getHourAndMinuteStringFromString(event.value.registration.end)}`
+      : null
+  )
 
   // check if user is already registered for event
   const alreadyRegistered = computed(
@@ -60,7 +76,9 @@
   )
 
   // does the event have any registration actions, and is user signed in
-  const hasEventActions = computed(() => useAuth.isLoggedIn && hasCapacity)
+  const hasEventActions = computed(
+    () => useAuth.isLoggedIn && hasCapacity.value
+  )
 
   // check if registration actions should be rendered on client side
   const showRegistrationAction = ref(
@@ -195,6 +213,16 @@
         {{ eventEndString }}
       </VCardText>
 
+      <VCardText class="details__from py-0 pb-5 d-flex flex-wrap">
+        <strong class="mr-2">{{ $t('event.page.details.reg_start') }}: </strong>
+        <span>{{ registrationStartString }}</span>
+      </VCardText>
+
+      <VCardText class="details__to py-0 pb-5 d-flex flex-wrap">
+        <strong class="mr-2">{{ $t('event.page.details.reg_start') }}: </strong>
+        <span>{{ registrationEndString }}</span>
+      </VCardText>
+
       <VCardText class="details__location py-0 pb-5">
         <strong>{{ $t('event.page.details.location') }}: </strong>
         <NuxtLink
@@ -225,24 +253,25 @@
 
     <!-- event registration -->
     <div class="attendant-container">
-      <VCard
-        class="attendants elevation-4"
-        height="84"
-        color="primary"
-        rounded="lg"
-      >
+      <VCard class="attendants elevation-4" color="primary" rounded="lg">
         <VCardTitle class="attendants__title">
           {{ $t('event.page.attendants.name') }}
         </VCardTitle>
 
         <VCardText v-if="hasCapacity" class="attendants__count">
           {{ $t('event.page.attendants.attendants') }}:
+
           <span v-if="hasAttendants">
             {{ Object.values(event.attendants).length }}
           </span>
           <span v-else>0</span>
 
           {{ event.capacity ? `/ ${event.capacity}` : '' }}
+
+          <p v-if="alreadyRegistered" class="mt-2">
+            {{ $t('event.page.attendants.registered') }}
+            <VIcon>mdi-check-circle</VIcon>
+          </p>
         </VCardText>
 
         <VCardText v-else>

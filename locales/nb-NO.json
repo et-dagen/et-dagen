@@ -98,13 +98,16 @@
         "name": "Detaljer",
         "from": "Fra",
         "to": "Til",
+        "reg_start": "Påmeldingsstart",
+        "reg_end": "Påmeldingsslutt",
         "location": "Sted",
         "host": "Arrangør"
       },
       "attendants": {
         "name": "Påmelding",
         "attendants": "Påmeldte",
-        "nocapacity": "Ingen kapasitetsbegrensning"
+        "nocapacity": "Ingen kapasitetsbegrensning",
+        "registered": "Du er påmeldt"
       }
     }
   },
