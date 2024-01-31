@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import type { AlertType } from 'composables/useAlerts'
   import {
     useRequiredInput,
     useValidateEmail,

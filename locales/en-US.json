@@ -99,13 +99,16 @@
         "name": "Details",
         "from": "From",
         "to": "To",
+        "reg_start": "Registration start",
+        "reg_end": "Registration end",
         "location": "Location",
         "host": "Organiser"
       },
       "attendants": {
         "name": "Registration",
         "attendants": "Attendants",
-        "nocapacity": "No capacity limit"
+        "nocapacity": "No capacity limit",
+        "registered": "You are registered"
       }
     }
   },
@@ -160,6 +163,7 @@
           "user_not_registered": "You are not registered for this event",
           "registration_unnecessary": "Registration is not necessary for this event",
           "non_admin_user": "This requires admin privileges",
+          "closed": "Registration is closed",
           "end_time_before_start_time": "Events cannot end before they start"
         }
       },
@@ -208,7 +212,8 @@
     "event": {
       "sign_up": "Sign up",
       "opt_out": "Opt out",
-      "sign_in_to_register": "Sign in to register"
+      "sign_in_to_register": "Sign in to register",
+      "registration_closed": "Registration in not open"
     }
   },
   "jobs": {
@@ -423,7 +428,13 @@
           "start": "Start Date",
           "end": "End Date"
         },
-        "attendants": "Påmeldte deltakere"
+        "registration": {
+          "start": "Registration starts",
+          "end": "Registration ends"
+        },
+        "attendants": "Registered users",
+        "user_id": "User ID",
+        "sign_up": "Sign up"
       }
     },
     "company": {

@@ -96,6 +96,14 @@ const errorMessageMap = new Map([
     },
   ],
   [
+    'Events: Error (register/registration-closed).',
+    {
+      source: 'event.register',
+      type: 'error',
+      message: 'closed',
+    },
+  ],
+  [
     'Event Error: start-time-has-to-be-before-end-time',
     {
       source: 'event.register',
