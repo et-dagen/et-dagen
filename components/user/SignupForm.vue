@@ -191,7 +191,11 @@
               })
               .sort(),
           }"
-          :rules="[hasDietaryRestrictions ? useRequiredInput : null]"
+          :rules="[
+            hasDietaryRestrictions && !otherRestrictions
+              ? useRequiredInput
+              : null,
+          ]"
         />
       </VRow>
       <VRow v-if="hasDietaryRestrictions" class="mt-3 pt-0">
