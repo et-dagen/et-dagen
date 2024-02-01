@@ -9,10 +9,12 @@
   const { data: maps } = await useFetch('/api/image/standmap')
 
   // Group events by date
-  const eventsByDate: any = computed(() =>
-    sortDateGroupedEventsByStartTime(groupEventsByDateStart(events.value))
-  )
-  const dates = computed(() => Object.keys(eventsByDate.value)) // Get all dates from eventsByDate
+  const eventsByDate: any = computed(() => groupEventsByDateStart(events.value))
+  const dates = computed(() =>
+    Object.keys(eventsByDate.value).sort((a: string, b: string) =>
+      a.localeCompare(b)
+    )
+  ) // sort dates
 
   // Check if event has attendants
   const hasAttendants = computed(
