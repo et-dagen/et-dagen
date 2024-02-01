@@ -83,11 +83,11 @@
     <div class="job-actions mx-auto">
       <div class="job-filters d-flex justify-space-between">
         <!-- job types -->
-        <div>
+        <div style="min-width: fit-content">
           <p>{{ $t('jobs.jobTypes') }}</p>
           <VChipGroup
             v-model="jobTypes"
-            class="chip-group d-flex flex-nowrap me-auto"
+            class="chip-group me-auto"
             multiple
             mandatory
           >
@@ -108,11 +108,7 @@
         <!-- sort by deadline -->
         <div>
           <p>{{ $t('jobs.deadline') }}</p>
-          <VChipGroup
-            v-model="sortOrder"
-            class="chip-group d-flex flex-nowrap"
-            mandatory
-          >
+          <VChipGroup v-model="sortOrder" class="chip-group" mandatory>
             <VChip
               :class="`bg-neutral-lighten-4 ${
                 sortOrder === 'descending' ? 'v-chip--selected' : ''
@@ -166,7 +162,7 @@
   }
 
   .job-actions {
-    width: 500px;
+    width: 600px;
     max-width: 95vw;
   }
 
