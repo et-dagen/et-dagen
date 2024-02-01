@@ -46,7 +46,7 @@ const dietaryFlags = [
   { name: 'fish', icon: 'mdi-fish' },
   { name: 'peanuts', icon: 'mdi-peanut' },
   { name: 'soy', icon: 'mdi-soy-sauce' },
-  { name: 'milk', icon: 'mdi-cow' },
+  { name: 'milk', icon: 'mdi-cup' },
   { name: 'nuts', icon: 'mdi-peanut' },
   { name: 'celery', icon: 'mdi-leek' },
   { name: 'mustard', icon: 'mdi-food-variant' },
@@ -58,6 +58,7 @@ const dietaryFlags = [
   { name: 'vegan', icon: 'mdi-leaf' },
   { name: 'halal', icon: 'mdi-food-halal' },
   { name: 'kosher', icon: 'mdi-food-kosher' },
+  { name: 'lactose', icon: 'mdi-cow' },
 ]
 
 const usertypes = ['basic', 'company', 'admin']
