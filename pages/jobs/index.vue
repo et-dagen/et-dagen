@@ -79,59 +79,65 @@
       {{ $t('jobs.title') }}
     </h4>
 
-    <div class="job-filtering d-flex flex-nowrap mt-5 pl-5 pr-4">
-      <!-- job types -->
-      <div>
-        <p>{{ $t('jobs.jobTypes') }}</p>
-        <VChipGroup
-          v-model="jobTypes"
-          class="d-flex flex-nowrap"
-          multiple
-          mandatory
-        >
-          <VChip
-            v-for="(jobType, index) in jobTypeNames"
-            :key="index"
-            :class="`bg-neutral-lighten-4 ${
-              jobTypes.includes(index) ? 'v-chip--selected' : ''
-            }`"
+    <!-- page actions -->
+    <div class="job-actions mx-auto">
+      <div class="job-filters d-flex justify-space-between">
+        <!-- job types -->
+        <div>
+          <p>{{ $t('jobs.jobTypes') }}</p>
+          <VChipGroup
+            v-model="jobTypes"
+            class="chip-group d-flex flex-nowrap me-auto"
+            multiple
+            mandatory
           >
-            {{
-              $t(`admin.jobs.attributes.jobtype.${jobType.replace('-', '_')}`)
-            }}
-          </VChip>
-        </VChipGroup>
+            <VChip
+              v-for="(jobType, index) in jobTypeNames"
+              :key="index"
+              :class="`bg-neutral-lighten-4 ${
+                jobTypes.includes(index) ? 'v-chip--selected' : ''
+              }`"
+            >
+              {{
+                $t(`admin.jobs.attributes.jobtype.${jobType.replace('-', '_')}`)
+              }}
+            </VChip>
+          </VChipGroup>
+        </div>
+
+        <!-- sort by deadline -->
+        <div>
+          <p>{{ $t('jobs.deadline') }}</p>
+          <VChipGroup
+            v-model="sortOrder"
+            class="chip-group d-flex flex-nowrap"
+            mandatory
+          >
+            <VChip
+              :class="`bg-neutral-lighten-4 ${
+                sortOrder === 'descending' ? 'v-chip--selected' : ''
+              }`"
+              value="descending"
+            >
+              {{ $t('admin.users.filterorder.descending') }}
+            </VChip>
+            <VChip
+              :class="`bg-neutral-lighten-4 ${
+                sortOrder === 'ascending' ? 'v-chip--selected' : ''
+              }`"
+              style="margin-right: 0px !important"
+              value="ascending"
+            >
+              {{ $t('admin.users.filterorder.ascending') }}
+            </VChip>
+          </VChipGroup>
+        </div>
       </div>
 
-      <!-- sort by deadline -->
-      <div>
-        <p>{{ $t('jobs.deadline') }}</p>
-        <VChipGroup v-model="sortOrder" class="d-flex flex-nowrap" mandatory>
-          <VChip
-            :class="`bg-neutral-lighten-4 ${
-              sortOrder === 'descending' ? 'v-chip--selected' : ''
-            }`"
-            value="descending"
-          >
-            {{ $t('admin.users.filterorder.descending') }}
-          </VChip>
-          <VChip
-            :class="`bg-neutral-lighten-4 ${
-              sortOrder === 'ascending' ? 'v-chip--selected' : ''
-            }`"
-            value="ascending"
-          >
-            {{ $t('admin.users.filterorder.ascending') }}
-          </VChip>
-        </VChipGroup>
-      </div>
-    </div>
-
-    <!-- search field -->
-    <div>
+      <!-- search field -->
       <VTextField
         v-model="search"
-        class="search-field mx-auto mt-3"
+        class="search-field mt-3"
         :placeholder="$t('jobs.search') + '...'"
         variant="outlined"
         density="compact"
@@ -139,7 +145,7 @@
     </div>
 
     <!-- job list -->
-    <div class="job-list mx-auto">
+    <div v-if="jobs" class="job-list mx-auto">
       <JobCard
         v-for="(job, index) in filteredJobs"
         :key="index"
@@ -159,17 +165,16 @@
     }
   }
 
-  .job-filtering {
-    overflow: scroll !important;
-  }
-
-  .search-field {
-    width: 520px;
-    box-sizing: border-box;
+  .job-actions {
+    width: 500px;
     max-width: 95vw;
   }
 
-  .job-filtering::-webkit-scrollbar {
+  .job-filters {
+    overflow: scroll;
+  }
+
+  .job-filters::-webkit-scrollbar {
     display: none;
   }
 
@@ -179,12 +184,14 @@
     max-width: 95vw !important;
   }
 
-  .v-chip {
-    transition: 0.25s;
-    user-select: none;
-  }
-  .v-chip--selected {
-    background-color: rgb(var(--v-theme-accent)) !important;
-    color: rgb(var(--v-theme-background)) !important;
+  .chip-group {
+    .v-chip {
+      transition: 0.25s;
+      user-select: none;
+    }
+    .v-chip--selected {
+      background-color: rgb(var(--v-theme-accent)) !important;
+      color: rgb(var(--v-theme-background)) !important;
+    }
   }
 </style>
