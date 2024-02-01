@@ -80,7 +80,7 @@
     </h4>
 
     <!-- page actions -->
-    <div class="job-actions mx-auto">
+    <div class="job-actions mx-auto mt-10">
       <div class="job-filters d-flex justify-space-between">
         <!-- job types -->
         <div style="min-width: fit-content">
