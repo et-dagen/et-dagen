@@ -12,7 +12,7 @@
   // get study programmes
   const { data: studyProgrammes } = await useFetch('/api/programme')
   const programmeList = computed(() =>
-    studyProgrammes.value.map((prog: any) => prog.name)
+    studyProgrammes.value.map((prog: any) => prog.name).sort()
   )
   const yearOptions = computed(() => {
     return (studyProgram: string) => {

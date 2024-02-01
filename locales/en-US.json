@@ -512,7 +512,8 @@
     "vegetarian": "Vegetarian",
     "vegan": "Vegan",
     "halal": "Halal",
-    "kosher": "Kosher"
+    "kosher": "Kosher",
+    "lactose": "Lactose"
   },
   "weekday": {
     "sunday": "Sunday",
