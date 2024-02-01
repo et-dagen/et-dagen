@@ -45,6 +45,13 @@
       .url
   })
 
+  // sort dates by start time
+  const sortDatesByStartTime = computed(() => {
+    return (dateList: any) => {
+      return dateList.sort((a, b) => a.date.start.localeCompare(b.date.start))
+    }
+  })
+
   const showStandMap = ref(false)
 </script>
 
@@ -100,7 +107,9 @@
     <VContainer>
       <div v-if="eventsByDate[state.selectedDate]" class="container">
         <div
-          v-for="event in eventsByDate[state.selectedDate]"
+          v-for="event in sortDatesByStartTime(
+            eventsByDate[state.selectedDate]
+          )"
           :key="event.id"
           class="card__div"
         >
