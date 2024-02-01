@@ -42,6 +42,7 @@
         <VBtn
           v-for="language in availableLocales"
           :key="language.code"
+          :active="false"
           variant="text"
           :to="switchLocalePath(language.code)"
         >
