@@ -224,7 +224,7 @@
         {{ $t('event.page.details.name') }}
       </VCardTitle>
 
-      <VCardText class="details__from pt-5 pb-5">
+      <VCardText class="details__from pt-2 pb-0">
         <strong>{{ $t('event.page.details.from') }}:</strong>
         {{ eventStartString }}
       </VCardText>
@@ -236,7 +236,7 @@
 
       <VCardText
         v-if="registrationStartString"
-        class="details__from py-0 pb-5 d-flex flex-wrap"
+        class="details__from py-0 pb-0 d-flex flex-wrap"
       >
         <strong class="mr-2">{{ $t('event.page.details.reg_start') }}: </strong>
         <span>{{ registrationStartString }}</span>
@@ -302,7 +302,7 @@
 
           <span v-if="alreadyRegistered">
             {{ $t('event.page.attendants.registered') }}
-            <VIcon>mdi-check-circle</VIcon>
+            <VIcon style="margin-bottom: 2px">mdi-check-circle</VIcon>
           </span>
         </VCardText>
 
@@ -410,7 +410,7 @@
   .container {
     display: grid;
     width: 100vw;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 1.1fr 3fr;
     gap: 1rem;
     grid-template-areas: 'details image' 'attendants description';
 
