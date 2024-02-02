@@ -176,155 +176,159 @@
 </script>
 
 <template>
-  <!-- Header -->
-  <h3 v-if="editMode" class="title py-6 mt-4">
-    {{ $t('edit.company.edit.title') }}
-  </h3>
-  <h3 v-else class="title py-6 mt-4">
-    {{ $t('edit.company.create.title') }}
-  </h3>
+  <div class="mx-auto" style="max-width: 95vw">
+    <!-- Header -->
+    <h3 v-if="editMode" class="title py-6 mt-4">
+      {{ $t('edit.company.edit.title') }}
+    </h3>
+    <h3 v-else class="title py-6 mt-4">
+      {{ $t('edit.company.create.title') }}
+    </h3>
 
-  <!-- Alert component -->
-  <VSnackbar v-model="alertState.show">
-    {{ $t(`${alertState.alertRoute}`) }}
+    <!-- Alert component -->
+    <VSnackbar v-model="alertState.show">
+      {{ $t(`${alertState.alertRoute}`) }}
 
-    <template #actions>
-      <VBtn
-        :color="alertState.type"
-        variant="text"
-        @click="alertState.show = false"
-      >
-        {{ $t('alert.close_alert') }}
-      </VBtn>
-    </template>
-  </VSnackbar>
+      <template #actions>
+        <VBtn
+          :color="alertState.type"
+          variant="text"
+          @click="alertState.show = false"
+        >
+          {{ $t('alert.close_alert') }}
+        </VBtn>
+      </template>
+    </VSnackbar>
 
-  <!-- Edit Form -->
-  <VForm ref="form" @submit.prevent="saveChanges || createCompany">
-    <VContainer>
-      <!-- Name -->
-      <VRow>
-        <FormTextInput
-          v-model="state.name"
-          :content="{
-            label: $t('edit.company.attributes.name'),
-          }"
-          :rules="[useRequiredInput]"
-        />
-      </VRow>
-
-      <!-- Description -->
-      <VRow>
-        <FormTextareaInput
-          v-model="state.description"
-          :content="{
-            label: $t('edit.company.attributes.description'),
-          }"
-        />
-      </VRow>
-
-      <!-- Company Type -->
-      <VRow>
-        <FormSelectInput
-          v-model="state.type"
-          :content="{
-            label: $t('edit.company.attributes.type.name'),
-            options: [
-              {
-                title: $t('edit.company.attributes.type.main_partner'),
-                value: 'main-partner',
-              },
-              {
-                title: $t('edit.company.attributes.type.partner'),
-                value: 'partner',
-              },
-              {
-                title: $t('edit.company.attributes.type.sponsor'),
-                value: 'sponsor',
-              },
-            ],
-          }"
-          :rules="[useRequiredInput]"
-        />
-      </VRow>
-
-      <!-- Webpage -->
-      <VRow>
-        <FormTextInput
-          v-model="state.webpage"
-          :content="{
-            label: $t('edit.company.attributes.webpage'),
-          }"
-          :rules="[useRequiredInput]"
-        />
-      </VRow>
-
-      <!-- Logo -->
-      <!-- TODO: #190 Add code for uploading image after company creation -->
-      <VRow>
-        <VCol :cols="state.logo ? 9 : 12">
-          <FormFileInput
+    <!-- Edit Form -->
+    <VForm ref="form" @submit.prevent="saveChanges || createCompany">
+      <VContainer>
+        <!-- Name -->
+        <VRow>
+          <FormTextInput
+            v-model="state.name"
             :content="{
-              label: state.logo
-                ? `${state.logo.split('/').pop()}`
-                : $t('edit.company.attributes.logo'),
-              icon: 'mdi-image',
-              accept: ['image/png', 'image/jpeg'],
+              label: $t('edit.company.attributes.name'),
             }"
             :rules="[useRequiredInput]"
-            @change="setLogo"
           />
-        </VCol>
-        <VCol v-if="state.logo && user?.userType === 'admin'" cols="3">
-          <VBtn
-            variant="outlined"
-            block
-            height="56"
-            color="warning"
-            @click="state.logo = null"
-          >
-            {{ $t('edit.company.unlink_logo') }}
-          </VBtn>
-        </VCol>
-      </VRow>
-    </VContainer>
+        </VRow>
 
-    <!-- Actions -->
-    <VContainer>
-      <VRow justify="center">
-        <VCol cols="6">
-          <VBtn
-            block
-            variant="outlined"
-            color="error"
-            @click="navigateTo(localePath('/admin/companies'))"
-          >
-            {{ $t('edit.company.cancel') }}
-          </VBtn>
-        </VCol>
-        <VCol cols="6">
-          <VBtn
-            v-if="editMode"
-            block
-            variant="flat"
-            color="success"
-            @click="saveChanges"
-          >
-            {{ $t('edit.company.edit.action') }}
-          </VBtn>
-          <VBtn
-            v-if="!editMode"
-            block
-            variant="flat"
-            color="success"
-            @click="createCompany"
-          >
-            {{ $t('edit.company.create.action') }}
-          </VBtn>
-        </VCol>
-      </VRow>
-    </VContainer>
-  </VForm>
+        <!-- Description -->
+        <VRow>
+          <FormTextareaInput
+            v-model="state.description"
+            :content="{
+              label: $t('edit.company.attributes.description'),
+            }"
+          />
+        </VRow>
+
+        <!-- Company Type -->
+        <VRow>
+          <FormSelectInput
+            v-model="state.type"
+            :content="{
+              label: $t('edit.company.attributes.type.name'),
+              options: [
+                {
+                  title: $t('edit.company.attributes.type.main_partner'),
+                  value: 'main-partner',
+                },
+                {
+                  title: $t('edit.company.attributes.type.partner'),
+                  value: 'partner',
+                },
+                {
+                  title: $t('edit.company.attributes.type.sponsor'),
+                  value: 'sponsor',
+                },
+              ],
+            }"
+            :rules="[useRequiredInput]"
+          />
+        </VRow>
+
+        <!-- Webpage -->
+        <VRow>
+          <FormTextInput
+            v-model="state.webpage"
+            :content="{
+              label: $t('edit.company.attributes.webpage'),
+            }"
+            :rules="[useRequiredInput]"
+          />
+        </VRow>
+
+        <!-- Logo -->
+        <!-- TODO: #190 Add code for uploading image after company creation -->
+        <VRow style="overflow: scroll">
+          <VCol :cols="state.logo ? 9 : 12">
+            <FormFileInput
+              :content="{
+                label: state.logo
+                  ? `${state.logo.split('/').pop()}`
+                  : $t('edit.company.attributes.logo'),
+                icon: 'mdi-image',
+                accept: ['image/png', 'image/jpeg'],
+              }"
+              :rules="[useRequiredInput]"
+              clearable
+              @change="setLogo"
+            />
+          </VCol>
+          <VCol v-if="state.logo && user?.userType === 'admin'" cols="3">
+            <VBtn
+              variant="outlined"
+              block
+              height="56"
+              color="warning"
+              @click="state.logo = null"
+              style="min-width: fit-content"
+            >
+              {{ $t('edit.company.unlink_logo') }}
+            </VBtn>
+          </VCol>
+        </VRow>
+      </VContainer>
+
+      <!-- Actions -->
+      <VContainer>
+        <VRow justify="center">
+          <VCol cols="6">
+            <VBtn
+              block
+              variant="outlined"
+              color="error"
+              @click="navigateTo(localePath('/admin/companies'))"
+            >
+              {{ $t('edit.company.cancel') }}
+            </VBtn>
+          </VCol>
+          <VCol cols="6">
+            <VBtn
+              v-if="editMode"
+              block
+              variant="flat"
+              color="success"
+              @click="saveChanges"
+            >
+              {{ $t('edit.company.edit.action') }}
+            </VBtn>
+            <VBtn
+              v-if="!editMode"
+              block
+              variant="flat"
+              color="success"
+              @click="createCompany"
+            >
+              {{ $t('edit.company.create.action') }}
+            </VBtn>
+          </VCol>
+        </VRow>
+      </VContainer>
+    </VForm>
+  </div>
 </template>
 
 <style scoped lang="scss">

@@ -233,7 +233,8 @@
     "company": "Bedrift",
     "details": "Stillingsdetaljer",
     "apply": "Søk her",
-    "type": "Jobbtype"
+    "type": "Jobbtype",
+    "no_jobs": "Fant ingen stillingsannonser ⚠️"
   },
   "admin": {
     "categories": "Kategorier",

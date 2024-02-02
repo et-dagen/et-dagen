@@ -228,7 +228,8 @@
     "company": "Company",
     "details": "Job Details",
     "apply": "Apply here",
-    "type": "Job Type"
+    "type": "Job Type",
+    "no_jobs": "Could not find any job advertisements ⚠️"
   },
   "admin": {
     "categories": "Categories",
@@ -387,11 +388,11 @@
     "jobs": {
       "create": {
         "title": "Create Job",
-        "action": "Create Job"
+        "action": "Create"
       },
       "edit": {
         "title": "Edit Job",
-        "action": "Save Changes"
+        "action": "Save"
       },
       "cancel": "Cancel",
       "attributes": {
@@ -412,11 +413,11 @@
     "event": {
       "create": {
         "title": "Create Event",
-        "action": "Create Event"
+        "action": "Create"
       },
       "edit": {
         "title": "Edit Event",
-        "action": "Save Changes"
+        "action": "Save"
       },
       "cancel": "Cancel",
       "attributes": {
@@ -449,11 +450,11 @@
     "company": {
       "create": {
         "title": "Create Company",
-        "action": "Create Company"
+        "action": "Create"
       },
       "edit": {
         "title": "Edit Company",
-        "action": "Save Changes"
+        "action": "Save"
       },
       "unlink_logo": "Unlink Logo",
       "cancel": "Cancel",
@@ -472,7 +473,7 @@
     },
     "user": {
       "title": "Edit User",
-      "save": "Save Changes",
+      "save": "Save",
       "canel": "Cancel",
       "attributes": {
         "name": "Name",

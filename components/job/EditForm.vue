@@ -170,162 +170,164 @@
 </script>
 
 <template>
-  <!-- form header -->
-  <h3 v-if="editMode" class="title py-6 mt-4">
-    {{ $t('edit.jobs.edit.title') }}
-  </h3>
-  <h3 v-else class="title py-6 mt-4">
-    {{ $t('edit.jobs.create.title') }}
-  </h3>
+  <div class="mx-auto" style="max-width: 95vw">
+    <!-- form header -->
+    <h3 v-if="editMode" class="title py-6 mt-4">
+      {{ $t('edit.jobs.edit.title') }}
+    </h3>
+    <h3 v-else class="title py-6 mt-4">
+      {{ $t('edit.jobs.create.title') }}
+    </h3>
 
-  <!-- alert component -->
-  <VSnackbar v-model="alertState.show">
-    {{ $t(`${alertState.alertRoute}`) }}
+    <!-- alert component -->
+    <VSnackbar v-model="alertState.show">
+      {{ $t(`${alertState.alertRoute}`) }}
 
-    <template #actions>
-      <VBtn
-        :color="alertState.type"
-        variant="text"
-        @click="alertState.show = false"
-      >
-        {{ $t('alert.close_alert') }}
-      </VBtn>
-    </template>
-  </VSnackbar>
+      <template #actions>
+        <VBtn
+          :color="alertState.type"
+          variant="text"
+          @click="alertState.show = false"
+        >
+          {{ $t('alert.close_alert') }}
+        </VBtn>
+      </template>
+    </VSnackbar>
 
-  <!-- edit form -->
-  <VForm ref="form" @submit.prevent="saveChanges || createCompany">
-    <VContainer>
-      <!-- job title -->
-      <VRow>
-        <FormTextInput
-          v-model="state.title"
-          :content="{
-            label: $t('edit.jobs.attributes.title'),
-          }"
-          :rules="[useRequiredInput]"
-        />
-      </VRow>
+    <!-- edit form -->
+    <VForm ref="form" @submit.prevent="saveChanges || createCompany">
+      <VContainer>
+        <!-- job title -->
+        <VRow>
+          <FormTextInput
+            v-model="state.title"
+            :content="{
+              label: $t('edit.jobs.attributes.title'),
+            }"
+            :rules="[useRequiredInput]"
+          />
+        </VRow>
 
-      <!-- job description -->
-      <VRow>
-        <FormTextareaInput
-          v-model="state.description"
-          :content="{
-            label: $t('edit.jobs.attributes.description'),
-          }"
-          :rules="[useRequiredInput]"
-        />
-      </VRow>
+        <!-- job description -->
+        <VRow>
+          <FormTextareaInput
+            v-model="state.description"
+            :content="{
+              label: $t('edit.jobs.attributes.description'),
+            }"
+            :rules="[useRequiredInput]"
+          />
+        </VRow>
 
-      <!-- job owner company -->
-      <VRow>
-        <FormSelectInput
-          v-model="state.companyUID"
-          :content="{
-            label: $t('edit.jobs.attributes.company'),
-            options: companyList,
-          }"
-          :rules="[useRequiredInput]"
-        />
-      </VRow>
+        <!-- job owner company -->
+        <VRow>
+          <FormSelectInput
+            v-model="state.companyUID"
+            :content="{
+              label: $t('edit.jobs.attributes.company'),
+              options: companyList,
+            }"
+            :rules="[useRequiredInput]"
+          />
+        </VRow>
 
-      <!-- job type -->
-      <VRow>
-        <FormSelectInput
-          v-model="state.jobType"
-          :content="{
-            label: $t('edit.jobs.attributes.jobtype.name'),
-            options: [
-              {
-                title: $t('edit.jobs.attributes.jobtype.full_time'),
-                value: 'full-time',
-              },
-              {
-                title: $t('edit.jobs.attributes.jobtype.graduate'),
-                value: 'graduate',
-              },
-              {
-                title: $t('edit.jobs.attributes.jobtype.summer_internship'),
-                value: 'summer-internship',
-              },
-            ],
-          }"
-          :rules="[useRequiredInput]"
-        />
-      </VRow>
+        <!-- job type -->
+        <VRow>
+          <FormSelectInput
+            v-model="state.jobType"
+            :content="{
+              label: $t('edit.jobs.attributes.jobtype.name'),
+              options: [
+                {
+                  title: $t('edit.jobs.attributes.jobtype.full_time'),
+                  value: 'full-time',
+                },
+                {
+                  title: $t('edit.jobs.attributes.jobtype.graduate'),
+                  value: 'graduate',
+                },
+                {
+                  title: $t('edit.jobs.attributes.jobtype.summer_internship'),
+                  value: 'summer-internship',
+                },
+              ],
+            }"
+            :rules="[useRequiredInput]"
+          />
+        </VRow>
 
-      <!-- job location -->
-      <VRow>
-        <FormTextInput
-          v-model="state.location"
-          :content="{
-            label: $t('edit.jobs.attributes.location'),
-          }"
-          :rules="[useRequiredInput]"
-        />
-      </VRow>
+        <!-- job location -->
+        <VRow>
+          <FormTextInput
+            v-model="state.location"
+            :content="{
+              label: $t('edit.jobs.attributes.location'),
+            }"
+            :rules="[useRequiredInput]"
+          />
+        </VRow>
 
-      <!-- job application link-->
-      <VRow>
-        <FormTextInput
-          v-model="state.applicationLink"
-          :content="{
-            label: $t('edit.jobs.attributes.application_link'),
-          }"
-          hint="Leave empty for no link"
-        />
-      </VRow>
+        <!-- job application link-->
+        <VRow>
+          <FormTextInput
+            v-model="state.applicationLink"
+            :content="{
+              label: $t('edit.jobs.attributes.application_link'),
+            }"
+            hint="Leave empty for no link"
+          />
+        </VRow>
 
-      <!-- job deadline -->
-      <VRow>
-        <FormDateTimeInput
-          v-model="state.deadline"
-          type="date"
-          :content="{
-            label: $t('edit.jobs.attributes.deadline') + ' (YYYY-MM-DD)',
-          }"
-          :rules="[useRequiredInput]"
-        />
-      </VRow>
-    </VContainer>
+        <!-- job deadline -->
+        <VRow>
+          <FormDateTimeInput
+            v-model="state.deadline"
+            type="date"
+            :content="{
+              label: $t('edit.jobs.attributes.deadline') + ' (YYYY-MM-DD)',
+            }"
+            :rules="[useRequiredInput]"
+          />
+        </VRow>
+      </VContainer>
 
-    <!-- Actions -->
-    <VContainer>
-      <VRow justify="center">
-        <VCol cols="6">
-          <VBtn
-            block
-            variant="outlined"
-            color="error"
-            @click="navigateTo(localePath('/admin/jobs'))"
-          >
-            {{ $t('edit.jobs.cancel') }}
-          </VBtn>
-        </VCol>
-        <VCol cols="6">
-          <VBtn
-            v-if="editMode"
-            block
-            variant="flat"
-            color="success"
-            @click="saveChanges"
-          >
-            {{ $t('edit.jobs.edit.action') }}
-          </VBtn>
-          <VBtn
-            v-if="!editMode"
-            block
-            variant="flat"
-            color="success"
-            @click="createCompany"
-          >
-            {{ $t('edit.jobs.create.action') }}
-          </VBtn>
-        </VCol>
-      </VRow>
-    </VContainer>
-  </VForm>
+      <!-- Actions -->
+      <VContainer>
+        <VRow justify="center">
+          <VCol cols="6">
+            <VBtn
+              block
+              variant="outlined"
+              color="error"
+              @click="navigateTo(localePath('/admin/jobs'))"
+            >
+              {{ $t('edit.jobs.cancel') }}
+            </VBtn>
+          </VCol>
+          <VCol cols="6">
+            <VBtn
+              v-if="editMode"
+              block
+              variant="flat"
+              color="success"
+              @click="saveChanges"
+            >
+              {{ $t('edit.jobs.edit.action') }}
+            </VBtn>
+            <VBtn
+              v-if="!editMode"
+              block
+              variant="flat"
+              color="success"
+              @click="createCompany"
+            >
+              {{ $t('edit.jobs.create.action') }}
+            </VBtn>
+          </VCol>
+        </VRow>
+      </VContainer>
+    </VForm>
+  </div>
 </template>
 
 <style scoped lang="scss">
