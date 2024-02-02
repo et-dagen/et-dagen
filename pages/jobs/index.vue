@@ -149,6 +149,7 @@
         class="my-3"
       />
     </div>
+    <p v-else class="text-center">{{ $t('jobs.no_jobs') }}</p>
   </div>
 </template>
 
