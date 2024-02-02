@@ -71,6 +71,23 @@ export default defineEventHandler(async (event) => {
       })
     })
 
+  // check if user meets registration requirements
+  const meetsProgrammeRequirement =
+    data[eventUID]?.registration?.requirements?.programmes?.includes(
+      user?.studyProgram
+    ) ?? true
+  const meetsYearRequirement =
+    data[eventUID]?.registration?.requirements?.years?.includes(user?.year) ??
+    true
+  if (
+    !hasAccess(user, ['admin']) &&
+    (!meetsProgrammeRequirement || !meetsYearRequirement)
+  )
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Events: Error (register/requirements-not-met).',
+    })
+
   // Event does not have attendants
   if (!Object.hasOwn(data[eventUID], 'attendants')) {
     eventsRef
