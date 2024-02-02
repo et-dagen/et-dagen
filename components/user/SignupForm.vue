@@ -8,6 +8,15 @@
   import { dietaryFlags } from '~/config/app.config'
 
   const { data: studyProgrammes } = await useFetch('/api/programme')
+
+  // alphabetically sort study programmes
+  const programmeOptions = computed(() =>
+    Object.values(studyProgrammes.value)
+      .map((prog: any) => prog.name)
+      .sort((a, b) => a.localeCompare(b))
+  )
+
+  // get year options based on study programme
   const yearOptions = computed(() => {
     return (studyProgram: string) => {
       const programme = studyProgrammes.value.find(
@@ -25,6 +34,19 @@
           return []
       }
     }
+  })
+
+  // sort dietary restrictions alphabetically
+  const dietaryOptions = computed(() => {
+    const nuxtApp = useNuxtApp()
+    return dietaryFlags
+      .map((flag) => {
+        return {
+          title: nuxtApp.$i18n.t(`dietary_restrictions.${flag.name}`),
+          value: flag.name,
+        }
+      })
+      .sort((a, b) => a.title.localeCompare(b.title))
   })
 
   const initialState = {
@@ -182,16 +204,13 @@
           multiple
           :content="{
             label: $t('user.register.dietary_restrictions.name'),
-            options: dietaryFlags
-              .map((flag) => {
-                return {
-                  title: $t(`dietary_restrictions.${flag.name}`),
-                  value: flag.name,
-                }
-              })
-              .sort(),
+            options: dietaryOptions,
           }"
-          :rules="[hasDietaryRestrictions ? useRequiredInput : null]"
+          :rules="[
+            hasDietaryRestrictions && !otherRestrictions
+              ? useRequiredInput
+              : null,
+          ]"
         />
       </VRow>
       <VRow v-if="hasDietaryRestrictions" class="mt-3 pt-0">
@@ -216,7 +235,7 @@
               :content="{
                 label: $t('user.register.study_program'),
                 // eslint-disable-next-line vue/max-len
-                options: Object.values(studyProgrammes).map((prog: any) => prog.name),
+                options: programmeOptions,
               }"
               :rules="[state.userType === 'student' ? useRequiredInput : null]"
             />

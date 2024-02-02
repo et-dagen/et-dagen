@@ -53,7 +53,7 @@
           </VCard>
         </VRow>
         <!-- Row containing string for days -->
-        <VRow>
+        <VRow justify="center">
           <VCardText class="text-center px-sm-2 px-1">
             <h6 class="text-subtitle-2 text-sm-h6">
               {{ $t('datetime.times.days') }}
@@ -77,7 +77,7 @@
           </VCard>
         </VRow>
         <!-- Row containing string for hours -->
-        <VRow>
+        <VRow justify="center">
           <VCardText class="text-center px-sm-2 px-1">
             <h6 class="text-subtitle-2 text-sm-h6">
               {{ $t('datetime.times.hours') }}
@@ -101,7 +101,7 @@
           </VCard>
         </VRow>
         <!-- Row containing string for minutes -->
-        <VRow>
+        <VRow justify="center">
           <VCardText class="text-center px-sm-2 px-1">
             <h6 class="text-subtitle-2 text-sm-h6">
               {{ $t('datetime.times.minutes') }}
@@ -125,7 +125,7 @@
           </VCard>
         </VRow>
         <!-- Row containing string for seconds -->
-        <VRow>
+        <VRow justify="center">
           <VCardText class="text-center px-sm-2 px-1">
             <h6 class="text-subtitle-2 text-sm-h6">
               {{ $t('datetime.times.seconds') }}

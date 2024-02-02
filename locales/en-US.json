@@ -101,6 +101,8 @@
         "to": "To",
         "reg_start": "Registration start",
         "reg_end": "Registration end",
+        "reg_programme": "Study programmes",
+        "reg_year": "Year",
         "location": "Location",
         "host": "Organiser"
       },
@@ -158,6 +160,7 @@
         "event_doesnt_exist": "Event doesn't exist",
         "missing_event_id": "Missing event id",
         "register": {
+          "requirements_not_met": "This event is limited to certain study programmes and years",
           "event_is_full": "Event is full",
           "already_registered": "You are already registered for this event",
           "user_not_registered": "You are not registered for this event",
@@ -225,7 +228,8 @@
     "company": "Company",
     "details": "Job Details",
     "apply": "Apply here",
-    "type": "Job Type"
+    "type": "Job Type",
+    "no_jobs": "Could not find any job advertisements ⚠️"
   },
   "admin": {
     "categories": "Categories",
@@ -384,11 +388,11 @@
     "jobs": {
       "create": {
         "title": "Create Job",
-        "action": "Create Job"
+        "action": "Create"
       },
       "edit": {
         "title": "Edit Job",
-        "action": "Save Changes"
+        "action": "Save"
       },
       "cancel": "Cancel",
       "attributes": {
@@ -409,11 +413,11 @@
     "event": {
       "create": {
         "title": "Create Event",
-        "action": "Create Event"
+        "action": "Create"
       },
       "edit": {
         "title": "Edit Event",
-        "action": "Save Changes"
+        "action": "Save"
       },
       "cancel": "Cancel",
       "attributes": {
@@ -431,7 +435,12 @@
         },
         "registration": {
           "start": "Registration starts",
-          "end": "Registration ends"
+          "end": "Registration ends",
+          "limit": "Limit registration",
+          "requirements": {
+            "programmes": "Limit to study programmes",
+            "years": "Limit to years"
+          }
         },
         "attendants": "Registered users",
         "user_id": "User ID",
@@ -441,11 +450,11 @@
     "company": {
       "create": {
         "title": "Create Company",
-        "action": "Create Company"
+        "action": "Create"
       },
       "edit": {
         "title": "Edit Company",
-        "action": "Save Changes"
+        "action": "Save"
       },
       "unlink_logo": "Unlink Logo",
       "cancel": "Cancel",
@@ -464,7 +473,7 @@
     },
     "user": {
       "title": "Edit User",
-      "save": "Save Changes",
+      "save": "Save",
       "canel": "Cancel",
       "attributes": {
         "name": "Name",
@@ -512,7 +521,8 @@
     "vegetarian": "Vegetarian",
     "vegan": "Vegan",
     "halal": "Halal",
-    "kosher": "Kosher"
+    "kosher": "Kosher",
+    "lactose": "Lactose"
   },
   "weekday": {
     "sunday": "Sunday",

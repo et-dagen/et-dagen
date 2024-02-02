@@ -218,13 +218,12 @@
 
       <VSpacer />
 
-      <div>
+      <div class="d-flex flex-wrap" style="gap: 0.5rem">
         <!-- select all button -->
         <VBtn
           color="primary"
           size="large"
           rounded="lg"
-          class="mr-2"
           flat
           @click="
             () => {
@@ -289,7 +288,7 @@
           color="success"
           size="large"
           rounded="lg"
-          class="ml-2 add_company"
+          class="add_company"
           flat
           icon="mdi-plus"
           @click="navigateTo(localePath('/company/edit'))"
