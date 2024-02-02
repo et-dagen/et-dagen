@@ -235,6 +235,7 @@
     const hasProgrammeRequirement = selectedProgrammes.value.length > 0
     const hasYearsRequirement = selectedYears.value.length > 0
     if (
+      state.capacity &&
       limitRegistration.value &&
       (hasProgrammeRequirement || hasYearsRequirement)
     ) {
