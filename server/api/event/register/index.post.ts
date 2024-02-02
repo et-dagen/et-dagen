@@ -76,9 +76,14 @@ export default defineEventHandler(async (event) => {
     data[eventUID]?.registration?.requirements?.programmes?.includes(
       user?.studyProgram
     ) ?? true
+
   const meetsYearRequirement =
-    data[eventUID]?.registration?.requirements?.years?.includes(user?.year) ??
-    true
+    data[eventUID]?.registration?.requirements?.years?.includes(
+      user?.currentYear
+    ) ?? true
+
+  console.log(meetsProgrammeRequirement, meetsYearRequirement)
+
   if (
     !hasAccess(user, ['admin']) &&
     (!meetsProgrammeRequirement || !meetsYearRequirement)
