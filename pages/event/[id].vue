@@ -68,6 +68,17 @@
     () => event.value?.registration?.requirements?.years ?? null
   )
 
+  // check if user meets registration requirements
+  const meetsProgrammeRequirement =
+    event.value?.registration?.requirements?.programmes?.includes(
+      useAuth.user?.studyProgram
+    ) ?? true
+
+  const meetsYearRequirement =
+    event.value?.registration?.requirements?.years?.includes(
+      useAuth.user?.currentYear
+    ) ?? true
+
   // check if user is already registered for event
   const alreadyRegistered = computed(
     () =>
@@ -274,20 +285,25 @@
           {{ $t('event.page.attendants.name') }}
         </VCardTitle>
 
-        <VCardText v-if="hasCapacity" class="attendants__count">
-          <strong>{{ $t('event.page.attendants.attendants') }}: </strong>
+        <VCardText
+          v-if="hasCapacity"
+          class="attendants__count d-flex justify-space-between flex-wrap"
+        >
+          <span>
+            <strong>{{ $t('event.page.attendants.attendants') }}: </strong>
 
-          <span v-if="hasAttendants">
-            {{ Object.values(event.attendants).length }}
+            <span v-if="hasAttendants">
+              {{ Object.values(event.attendants).length }}
+            </span>
+            <span v-else>0</span>
+
+            {{ event.capacity ? `/ ${event.capacity}` : '' }}
           </span>
-          <span v-else>0</span>
 
-          {{ event.capacity ? `/ ${event.capacity}` : '' }}
-
-          <p v-if="alreadyRegistered" class="mt-2">
+          <span v-if="alreadyRegistered">
             {{ $t('event.page.attendants.registered') }}
             <VIcon>mdi-check-circle</VIcon>
-          </p>
+          </span>
         </VCardText>
 
         <VCardText v-else>
@@ -317,13 +333,15 @@
             >{{ $t('event.page.details.reg_programme') }}:
           </strong>
           <VDivider />
-          <p
-            v-for="programme in programmeRequirements"
-            :key="programme"
-            class="py-1 px-2"
-          >
-            {{ programme }}
-          </p>
+          <ul class="ml-6 mt-2">
+            <li
+              v-for="programme in programmeRequirements"
+              :key="programme"
+              class="py-1 px-2"
+            >
+              {{ programme }}
+            </li>
+          </ul>
         </VCardText>
       </VCard>
 
@@ -354,7 +372,9 @@
           variant="flat"
           :ripple="true"
           density="comfortable"
-          :disabled="eventFull"
+          :disabled="
+            eventFull || !meetsProgrammeRequirement || !meetsYearRequirement
+          "
           @click.stop="signUpForEvent"
         >
           {{ $t('program.event.sign_up') }}
