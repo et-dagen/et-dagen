@@ -80,7 +80,7 @@
     () =>
       hasCapacity.value &&
       hasAttendants.value &&
-      event.value.attendants.length >= event.value.capacity
+      Object.keys(event.value.attendants).length >= event.value.capacity
   )
 
   // does the event have any registration actions, and is user signed in
@@ -116,7 +116,7 @@
 
   // check if user is already registered for event
   const showSignupButton = computed(
-    () => hasCapacity.value && !alreadyRegistered.value && !eventFull.value
+    () => hasCapacity.value && !alreadyRegistered.value
   )
 
   // alert state
@@ -303,8 +303,8 @@
           </strong>
           <span
             v-for="year in hasYearsRequirements"
-            class="comma-separated"
             :key="year"
+            class="comma-separated"
             >{{ year }}</span
           >
         </VCardText>
@@ -319,8 +319,8 @@
           <VDivider />
           <p
             v-for="programme in programmeRequirements"
-            class="py-1 px-2"
             :key="programme"
+            class="py-1 px-2"
           >
             {{ programme }}
           </p>
@@ -351,7 +351,7 @@
           v-if="showSignupButton"
           color="success"
           block
-          variant="tonal"
+          variant="flat"
           :ripple="true"
           density="comfortable"
           :disabled="eventFull"
