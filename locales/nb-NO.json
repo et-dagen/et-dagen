@@ -101,6 +101,8 @@
         "to": "Til",
         "reg_start": "Påmeldingsstart",
         "reg_end": "Påmeldingsslutt",
+        "reg_programme": "Studieprogram",
+        "reg_year": "Årstrinn",
         "location": "Sted",
         "host": "Arrangør"
       },
@@ -164,6 +166,7 @@
       "event": {
         "event_doesnt_exist": "Arrangementet finnes ikke",
         "register": {
+          "requirements_not_met": "Arrangementet er begrenset til et annet studieprogram eller årstrinn",
           "event_is_full": "Arrangementet er fullt",
           "already_registered": "Du er allerede påmeldt dette arrangementet",
           "user_not_registered": "Du er ikke påmeldt dette arrangementet",
@@ -437,7 +440,12 @@
         },
         "registration": {
           "start": "Påmelding åpner",
-          "end": "Påmelding stenger"
+          "end": "Påmelding stenger",
+          "limit": "Begrens påmelding",
+          "requirements": {
+            "programmes": "Begrens til studieprogram",
+            "years": "Begrens til årstrinn"
+          }
         },
         "signupstart": "Påmelding åpner",
         "optoutdeadline": "Avmeldingsfrist",
