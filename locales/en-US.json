@@ -101,6 +101,8 @@
         "to": "To",
         "reg_start": "Registration start",
         "reg_end": "Registration end",
+        "reg_programme": "Study programmes",
+        "reg_year": "Year",
         "location": "Location",
         "host": "Organiser"
       },
@@ -158,6 +160,7 @@
         "event_doesnt_exist": "Event doesn't exist",
         "missing_event_id": "Missing event id",
         "register": {
+          "requirements_not_met": "This event is limited to certain study programmes and years",
           "event_is_full": "Event is full",
           "already_registered": "You are already registered for this event",
           "user_not_registered": "You are not registered for this event",
@@ -432,7 +435,12 @@
         },
         "registration": {
           "start": "Registration starts",
-          "end": "Registration ends"
+          "end": "Registration ends",
+          "limit": "Limit registration",
+          "requirements": {
+            "programmes": "Limit to study programmes",
+            "years": "Limit to years"
+          }
         },
         "attendants": "Registered users",
         "user_id": "User ID",

@@ -60,6 +60,25 @@
       : null
   )
 
+  const programmeRequirements = computed(
+    () => event.value?.registration?.requirements?.programmes ?? null
+  )
+
+  const hasYearsRequirements = computed(
+    () => event.value?.registration?.requirements?.years ?? null
+  )
+
+  // check if user meets registration requirements
+  const meetsProgrammeRequirement =
+    event.value?.registration?.requirements?.programmes?.includes(
+      useAuth.user?.studyProgram
+    ) ?? true
+
+  const meetsYearRequirement =
+    event.value?.registration?.requirements?.years?.includes(
+      useAuth.user?.currentYear
+    ) ?? true
+
   // check if user is already registered for event
   const alreadyRegistered = computed(
     () =>
@@ -72,7 +91,7 @@
     () =>
       hasCapacity.value &&
       hasAttendants.value &&
-      event.value.attendants.length >= event.value.capacity
+      Object.keys(event.value.attendants).length >= event.value.capacity
   )
 
   // does the event have any registration actions, and is user signed in
@@ -91,22 +110,24 @@
 
   // check if registration is open with interval if user is signed in and the event has a capacity
   let registrationOpenInterval: ReturnType<typeof setInterval>
-  if (hasEventActions.value)
-    registrationOpenInterval = setInterval(
-      () =>
-        (showRegistrationAction.value = presentWithinTimeWindow(
-          event.value.registration.start,
-          event.value.registration.end
-        )),
-      1000
-    )
+  onMounted(() => {
+    if (hasEventActions.value)
+      registrationOpenInterval = setInterval(
+        () =>
+          (showRegistrationAction.value = presentWithinTimeWindow(
+            event.value.registration.start,
+            event.value.registration.end
+          )),
+        1000
+      )
+  })
 
   // clear interval when unmounting the component
   onBeforeUnmount(() => clearInterval(registrationOpenInterval))
 
   // check if user is already registered for event
   const showSignupButton = computed(
-    () => hasCapacity.value && !alreadyRegistered.value && !eventFull.value
+    () => hasCapacity.value && !alreadyRegistered.value
   )
 
   // alert state
@@ -203,7 +224,7 @@
         {{ $t('event.page.details.name') }}
       </VCardTitle>
 
-      <VCardText class="details__from pt-5 pb-5">
+      <VCardText class="details__from pt-2 pb-0">
         <strong>{{ $t('event.page.details.from') }}:</strong>
         {{ eventStartString }}
       </VCardText>
@@ -215,7 +236,7 @@
 
       <VCardText
         v-if="registrationStartString"
-        class="details__from py-0 pb-5 d-flex flex-wrap"
+        class="details__from py-0 pb-0 d-flex flex-wrap"
       >
         <strong class="mr-2">{{ $t('event.page.details.reg_start') }}: </strong>
         <span>{{ registrationStartString }}</span>
@@ -264,24 +285,63 @@
           {{ $t('event.page.attendants.name') }}
         </VCardTitle>
 
-        <VCardText v-if="hasCapacity" class="attendants__count">
-          {{ $t('event.page.attendants.attendants') }}:
+        <VCardText
+          v-if="hasCapacity"
+          class="attendants__count d-flex justify-space-between flex-wrap"
+        >
+          <span>
+            <strong>{{ $t('event.page.attendants.attendants') }}: </strong>
 
-          <span v-if="hasAttendants">
-            {{ Object.values(event.attendants).length }}
+            <span v-if="hasAttendants">
+              {{ Object.values(event.attendants).length }}
+            </span>
+            <span v-else>0</span>
+
+            {{ event.capacity ? `/ ${event.capacity}` : '' }}
           </span>
-          <span v-else>0</span>
 
-          {{ event.capacity ? `/ ${event.capacity}` : '' }}
-
-          <p v-if="alreadyRegistered" class="mt-2">
+          <span v-if="alreadyRegistered">
             {{ $t('event.page.attendants.registered') }}
-            <VIcon>mdi-check-circle</VIcon>
-          </p>
+            <VIcon style="margin-bottom: 2px">mdi-check-circle</VIcon>
+          </span>
         </VCardText>
 
         <VCardText v-else>
           {{ $t('event.page.attendants.nocapacity') }}
+        </VCardText>
+
+        <VCardText
+          v-if="hasYearsRequirements"
+          class="reg__year py-0 pb-5 d-flex flex-wrap"
+        >
+          <strong class="mr-2"
+            >{{ $t('event.page.details.reg_year') }}:
+          </strong>
+          <span
+            v-for="year in hasYearsRequirements"
+            :key="year"
+            class="comma-separated"
+            >{{ year }}</span
+          >
+        </VCardText>
+
+        <VCardText
+          v-if="programmeRequirements"
+          class="reg__programme py-0 pb-5 d-flex flex-wrap flex-column"
+        >
+          <strong class="mr-2"
+            >{{ $t('event.page.details.reg_programme') }}:
+          </strong>
+          <VDivider />
+          <ul class="ml-6 mt-2">
+            <li
+              v-for="programme in programmeRequirements"
+              :key="programme"
+              class="py-1 px-2"
+            >
+              {{ programme }}
+            </li>
+          </ul>
         </VCardText>
       </VCard>
 
@@ -309,10 +369,12 @@
           v-if="showSignupButton"
           color="success"
           block
-          variant="tonal"
+          variant="flat"
           :ripple="true"
           density="comfortable"
-          :disabled="eventFull"
+          :disabled="
+            eventFull || !meetsProgrammeRequirement || !meetsYearRequirement
+          "
           @click.stop="signUpForEvent"
         >
           {{ $t('program.event.sign_up') }}
@@ -337,10 +399,18 @@
 
 <style scoped lang="scss">
   @use 'vuetify/settings';
+  .comma-separated {
+    &::after {
+      content: ',\00a0';
+    }
+    &:last-child::after {
+      content: '' !important;
+    }
+  }
   .container {
     display: grid;
     width: 100vw;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 1.1fr 3fr;
     gap: 1rem;
     grid-template-areas: 'details image' 'attendants description';
 
