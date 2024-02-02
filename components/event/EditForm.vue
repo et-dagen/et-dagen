@@ -35,6 +35,15 @@
   )
     navigateTo(localePath('/event/edit'))
 
+  const { data: studyProgrammes } = await useFetch('/api/programme')
+
+  // alphabetically sort study programmes
+  const programmeOptions = computed(() =>
+    Object.values(studyProgrammes.value)
+      .map((prog: any) => prog.name)
+      .sort((a, b) => a.localeCompare(b))
+  )
+
   // Fetch all users
   // TODO: #188 Replace with API endpoint for getting only a sublist of known UIDs
   const { data: users } = await useFetch('/api/user', {
@@ -109,6 +118,10 @@
     registration: {
       start: null,
       end: null,
+      requirements: {
+        programmes: null,
+        years: null,
+      },
     },
   }
 
@@ -117,6 +130,15 @@
     event.value
       ? { ...Object.values(embedKeyIntoObjectValues(event.value))[0] }
       : { ...initialState }
+  )
+
+  const selectedProgrammes = ref(
+    state?.registration?.requirements?.programmes || []
+  )
+  const selectedYears = ref(state?.registration?.requirements?.years || [])
+  const limitRegistration = ref(
+    state?.capacity &&
+      (selectedProgrammes.value.length > 0 || selectedYears.value.length > 0)
   )
 
   // Alert state
@@ -209,6 +231,26 @@
 
     state.registration.end =
       state.capacity && state.registration.end ? state.registration.end : null
+
+    const hasProgrammeRequirement = selectedProgrammes.value.length > 0
+    const hasYearsRequirement = selectedYears.value.length > 0
+    if (
+      limitRegistration.value &&
+      (hasProgrammeRequirement || hasYearsRequirement)
+    ) {
+      state.registration.requirements = {
+        programmes: null,
+        years: null,
+      }
+
+      if (hasProgrammeRequirement)
+        state.registration.requirements.programmes = selectedProgrammes.value
+
+      if (hasYearsRequirement)
+        state.registration.requirements.years = selectedYears.value
+    } else {
+      state.registration.requirements = null
+    }
   }
 
   const routeOnSuccess = () => {
@@ -352,6 +394,39 @@
             label: $t('edit.event.attributes.capacity'),
           }"
           clearable
+        />
+      </VRow>
+
+      <VSwitch
+        v-if="state.capacity"
+        v-model="limitRegistration"
+        :label="$t('edit.event.attributes.registration.limit')"
+        class="mt-4"
+      />
+
+      <VRow v-if="limitRegistration">
+        <FormSelectInput
+          v-model="selectedProgrammes"
+          :content="{
+            label: $t(
+              'edit.event.attributes.registration.requirements.programmes'
+            ),
+            options: programmeOptions,
+          }"
+          clearable
+          multiple
+        />
+      </VRow>
+
+      <VRow v-if="limitRegistration">
+        <FormSelectInput
+          v-model="selectedYears"
+          :content="{
+            label: $t('edit.event.attributes.registration.requirements.years'),
+            options: [1, 2, 3, 4, 5],
+          }"
+          clearable
+          multiple
         />
       </VRow>
 

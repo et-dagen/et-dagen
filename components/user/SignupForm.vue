@@ -13,7 +13,7 @@
   const programmeOptions = computed(() =>
     Object.values(studyProgrammes.value)
       .map((prog: any) => prog.name)
-      .sort()
+      .sort((a, b) => a.localeCompare(b))
   )
 
   // get year options based on study programme
