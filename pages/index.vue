@@ -38,7 +38,7 @@
         image: '/images/banner_graphics.png',
         title: 'Elektronikk & Teknologidagene',
       }"
-      class="my-16 d-flex justify-center"
+      class="my-4 my-xxl-16 d-flex justify-center"
     />
 
     <HomeCountDown
@@ -46,7 +46,7 @@
         futureDate: '2024-02-14',
         futureTime: '10:00:00',
       }"
-      class="my-5"
+      class="mb-5"
     />
 
     <div v-if="mainPartner !== null" class="py-10">
