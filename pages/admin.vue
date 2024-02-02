@@ -27,7 +27,7 @@
 
 <template>
   <div class="d-flex flex-column align-center my-10">
-    <div class="d-flex align-center">
+    <div class="w-100 d-flex justify-space-around align-center mb-8">
       <!-- title -->
       <h4 class="font-weight-bold text-center">
         {{ $t('nav.admin') }}
@@ -41,7 +41,7 @@
             size="45"
             elevation="0"
             variant="text"
-            class="d-flex d-lg-none ml-4 bg-primary"
+            class="d-flex d-lg-none ml-2 bg-primary"
             v-bind="props"
             icon="mdi-arrow-bottom-left"
           />
