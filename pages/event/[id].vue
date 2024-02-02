@@ -60,6 +60,14 @@
       : null
   )
 
+  const programmeRequirements = computed(
+    () => event.value?.registration?.requirements?.programmes ?? null
+  )
+
+  const hasYearsRequirements = computed(
+    () => event.value?.registration?.requirements?.years ?? null
+  )
+
   // check if user is already registered for event
   const alreadyRegistered = computed(
     () =>
@@ -91,15 +99,17 @@
 
   // check if registration is open with interval if user is signed in and the event has a capacity
   let registrationOpenInterval: ReturnType<typeof setInterval>
-  if (hasEventActions.value)
-    registrationOpenInterval = setInterval(
-      () =>
-        (showRegistrationAction.value = presentWithinTimeWindow(
-          event.value.registration.start,
-          event.value.registration.end
-        )),
-      1000
-    )
+  onMounted(() => {
+    if (hasEventActions.value)
+      registrationOpenInterval = setInterval(
+        () =>
+          (showRegistrationAction.value = presentWithinTimeWindow(
+            event.value.registration.start,
+            event.value.registration.end
+          )),
+        1000
+      )
+  })
 
   // clear interval when unmounting the component
   onBeforeUnmount(() => clearInterval(registrationOpenInterval))
@@ -265,7 +275,7 @@
         </VCardTitle>
 
         <VCardText v-if="hasCapacity" class="attendants__count">
-          {{ $t('event.page.attendants.attendants') }}:
+          <strong>{{ $t('event.page.attendants.attendants') }}: </strong>
 
           <span v-if="hasAttendants">
             {{ Object.values(event.attendants).length }}
@@ -282,6 +292,38 @@
 
         <VCardText v-else>
           {{ $t('event.page.attendants.nocapacity') }}
+        </VCardText>
+
+        <VCardText
+          v-if="hasYearsRequirements"
+          class="reg__year py-0 pb-5 d-flex flex-wrap"
+        >
+          <strong class="mr-2"
+            >{{ $t('event.page.details.reg_year') }}:
+          </strong>
+          <span
+            v-for="year in hasYearsRequirements"
+            class="comma-separated"
+            :key="year"
+            >{{ year }}</span
+          >
+        </VCardText>
+
+        <VCardText
+          v-if="programmeRequirements"
+          class="reg__programme py-0 pb-5 d-flex flex-wrap flex-column"
+        >
+          <strong class="mr-2"
+            >{{ $t('event.page.details.reg_programme') }}:
+          </strong>
+          <VDivider />
+          <p
+            v-for="programme in programmeRequirements"
+            class="py-1 px-2"
+            :key="programme"
+          >
+            {{ programme }}
+          </p>
         </VCardText>
       </VCard>
 
@@ -337,6 +379,14 @@
 
 <style scoped lang="scss">
   @use 'vuetify/settings';
+  .comma-separated {
+    &::after {
+      content: ',\00a0';
+    }
+    &:last-child::after {
+      content: '' !important;
+    }
+  }
   .container {
     display: grid;
     width: 100vw;
