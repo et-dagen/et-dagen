@@ -82,8 +82,6 @@ export default defineEventHandler(async (event) => {
       user?.currentYear
     ) ?? true
 
-  console.log(meetsProgrammeRequirement, meetsYearRequirement)
-
   if (
     !hasAccess(user, ['admin']) &&
     (!meetsProgrammeRequirement || !meetsYearRequirement)
