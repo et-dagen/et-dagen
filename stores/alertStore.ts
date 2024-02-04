@@ -1,4 +1,11 @@
-export type AlertType = 'error' | 'info' | 'success' | 'warning' | undefined
+export const alertTypes = [
+  'error',
+  'info',
+  'success',
+  'warning',
+  undefined,
+] as const
+export type AlertType = (typeof alertTypes)[number]
 
 export interface Alert {
   show: boolean
@@ -16,6 +23,7 @@ export const useAlertStore = defineStore('alert', {
   },
   actions: {
     alert(message: string = 'Default message', type: AlertType = undefined) {
+      console.info('Alert:', type, message)
       this.type = type
       this.message = message
       this.show = true
