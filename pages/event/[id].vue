@@ -1,5 +1,6 @@
 <script setup lang="ts">
   const useAuth = useAuthStore()
+  const useAlert = useAlertStore()
 
   // get event id from route
   const route = useRoute()
@@ -109,34 +110,6 @@
     () => hasCapacity.value && !alreadyRegistered.value && !eventFull.value
   )
 
-  // alert state
-  const initialAlertState = {
-    show: false,
-    alertRoute: '',
-    type: undefined as AlertType,
-  }
-
-  const alertState = reactive({
-    ...initialAlertState,
-  })
-
-  // Show appropriate success alert after signing up for event
-  const displaySuccessAlert = (alertRoute: string) => {
-    alertState.alertRoute = alertRoute
-    alertState.type = 'success'
-    alertState.show = true
-  }
-
-  // Show appropriate error alert for failed API calls
-  const displayErrorAlertFromMessage = (errorMessage: string) => {
-    const content = getAlertContent('Error', errorMessage)
-    alertState.alertRoute = content.alertRoute
-    alertState.type = content.type
-    alertState.show = content.show
-
-    console.error(errorMessage)
-  }
-
   // sign up for event
   const signUpForEvent = () => {
     $fetch('/api/event/register', {
@@ -144,8 +117,16 @@
       body: { eventUID: event.value.uid },
     })
       .then(() => refresh())
-      .then(() => displaySuccessAlert('alert.success.event.register.sign_up'))
-      .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
+      .then(() =>
+        useAlert.alert(
+          getI18nString('alert.success.event.register.sign_up'),
+          'success'
+        )
+      )
+      .catch((error: any) => {
+        const { type, message } = getResponseAlertContext(error.statusMessage)
+        useAlert.alert(message, type as AlertType)
+      })
   }
 
   // opt out of event
@@ -155,29 +136,21 @@
       body: { eventUID: event.value.uid },
     })
       .then(() => refresh())
-      .then(() => displaySuccessAlert('alert.success.event.register.opt_out'))
-      .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
+      .then(() =>
+        useAlert.alert(
+          getI18nString('alert.success.event.register.opt_out'),
+          'success'
+        )
+      )
+      .catch((error) => {
+        const { type, message } = getResponseAlertContext(error.statusMessage)
+        useAlert.alert(message, type as AlertType)
+      })
   }
 </script>
 
 <template>
   <VContainer class="container">
-    <!-- Vuetify alert component -->
-    <!-- TODO: #121 Make a custom reactive component for VSnackbar that takes in content prop -->
-    <VSnackbar v-model="alertState.show">
-      {{ $t(`${alertState.alertRoute}`) }}
-
-      <template #actions>
-        <VBtn
-          :color="alertState.type"
-          variant="text"
-          @click="alertState.show = false"
-        >
-          {{ $t('alert.close_alert') }}
-        </VBtn>
-      </template>
-    </VSnackbar>
-
     <!-- company logo -->
     <VCard
       class="d-flex justify-center align-center pa-4 image-container"

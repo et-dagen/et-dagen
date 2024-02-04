@@ -153,6 +153,7 @@
         "invalid": "Skjemaet er ikke gyldig"
       },
       "firebase": {
+        "user_not_authorized": "Du har ikke tilgang til denne ressursen",
         "email_in_use": "Eposten er allerede i bruk",
         "invalid_email": "Ugyldig epost",
         "user_not_found": "Brukeren ble ikke funnet",

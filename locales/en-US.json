@@ -146,6 +146,7 @@
         "invalid": "Invalid form"
       },
       "firebase": {
+        "user_not_authorized": "User not authorized",
         "email_in_use": "Email already in use",
         "invalid_email": "Invalid email address",
         "user_not_found": "User not found",
