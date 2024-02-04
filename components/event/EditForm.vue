@@ -230,7 +230,7 @@
     try {
       if (!valid) throw new Error('Form is not valid')
     } catch (error) {
-      displayErrorAlert('alert.error.form.invalid')
+      useAlerts.alert(getI18nString('alert.error.form.invalid'), 'error')
       return
     }
 
@@ -258,7 +258,7 @@
     try {
       if (!valid) throw new Error('Form is not valid')
     } catch (error) {
-      displayErrorAlert('alert.error.form.invalid')
+      useAlerts.alert(getI18nString('alert.error.form.invalid'), 'error')
       return
     }
 

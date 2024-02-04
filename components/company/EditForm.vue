@@ -89,7 +89,7 @@
     try {
       if (!valid) throw new Error('Form is not valid')
     } catch (error) {
-      displayErrorAlert('alert.error.form.invalid')
+      useAlerts.alert(getI18nString('alert.error.form.invalid'), 'error')
       return
     }
 
@@ -111,7 +111,13 @@
         )
         setTimeout(() => navigateTo(localePath('/admin/companies')), 2000)
       })
-      .catch((error) => getApiResponseAlertContext(error.statusMessage))
+      .catch((error) => {
+        const { type, message } = getApiResponseAlertContext(
+          error.statusMessage
+        )
+        useAlerts.alert(message, type)
+        console.error(error)
+      })
   }
 
   const createCompany = async () => {
@@ -120,7 +126,7 @@
     try {
       if (!valid) throw new Error('Form is not valid')
     } catch (error) {
-      displayErrorAlert('alert.error.form.invalid')
+      useAlerts.alert(getI18nString('alert.error.form.invalid'), 'error')
       return
     }
 
@@ -151,7 +157,13 @@
         )
         setTimeout(() => navigateTo(localePath('/admin/companies')), 2000)
       })
-      .catch((error) => getApiResponseAlertContext(error.statusMessage))
+      .catch((error) => {
+        const { type, message } = getApiResponseAlertContext(
+          error.statusMessage
+        )
+        useAlerts.alert(message, type)
+        console.error(error)
+      })
   }
 </script>
 
