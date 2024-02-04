@@ -1,5 +1,6 @@
 <script setup lang="ts">
   const localePath = useLocalePath()
+  const useAlerts = useAlertStore()
 
   const props = defineProps({
     eventUid: {
@@ -141,41 +142,6 @@
       (selectedProgrammes.value.length > 0 || selectedYears.value.length > 0)
   )
 
-  // Alert state
-  const initialAlertState = {
-    show: false,
-    alertRoute: '',
-    type: undefined as AlertType,
-  }
-
-  const alertState = reactive({
-    ...initialAlertState,
-  })
-
-  // Show appropriate success alert after signing up for event
-  const displaySuccessAlert = (alertRoute: string) => {
-    alertState.alertRoute = alertRoute
-    alertState.type = 'success'
-    alertState.show = true
-  }
-
-  const displayErrorAlert = (alertRoute: string) => {
-    alertState.alertRoute = alertRoute
-    alertState.type = 'error'
-    alertState.show = true
-  }
-
-  // Show appropriate error alert for failed API calls
-  const displayErrorAlertFromMessage = (
-    errorType: string,
-    errorMessage: string
-  ) => {
-    const content = getAlertContent(errorType, errorMessage)
-    alertState.alertRoute = content.alertRoute
-    alertState.type = content.type
-    alertState.show = content.show
-  }
-
   const form = ref()
 
   // Boolean control states
@@ -275,12 +241,15 @@
     })
       .then(() => {
         // Handle successful response
-        displaySuccessAlert('alert.success.event.edit.modified')
+        useAlerts.alert(
+          getI18nString('alert.success.event.edit.modified'),
+          'success'
+        )
         setTimeout(routeOnSuccess, 2000)
       })
       .catch((error) => {
         // Handle errors, including HTTP errors
-        displayErrorAlertFromMessage('Event', error.statusMessage)
+        getApiResponseAlertContext(error.statusMessage)
       })
   }
 
@@ -300,12 +269,15 @@
     })
       .then(() => {
         // Handle successful response
-        displaySuccessAlert('alert.success.event.edit.created')
+        useAlerts.alert(
+          getI18nString('alert.success.event.edit.created'),
+          'success'
+        )
         setTimeout(routeOnSuccess, 2000)
       })
       .catch((error) => {
         // Handle errors, including HTTP errors
-        displayErrorAlertFromMessage('Event', error.message)
+        getApiResponseAlertContext(error.statusMessage)
       })
   }
 
@@ -320,9 +292,7 @@
         refreshAttendants()
         signUpForEventUid.value = ''
       })
-      .catch((error) =>
-        displayErrorAlertFromMessage('Event', error.statusMessage)
-      )
+      .catch((error) => getApiResponseAlertContext(error.statusMessage))
   }
 </script>
 
@@ -335,21 +305,6 @@
     <h3 v-else class="title py-6 mt-4">
       {{ $t('edit.event.create.title') }}
     </h3>
-
-    <!-- Alert component -->
-    <VSnackbar v-model="alertState.show">
-      {{ $t(`${alertState.alertRoute}`) }}
-
-      <template #actions>
-        <VBtn
-          :color="alertState.type"
-          variant="text"
-          @click="alertState.show = false"
-        >
-          {{ $t('alert.close_alert') }}
-        </VBtn>
-      </template>
-    </VSnackbar>
 
     <!-- Edit Form -->
     <VForm ref="form" @submit.prevent="saveChanges || createEvent">

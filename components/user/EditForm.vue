@@ -68,39 +68,6 @@
     return !compareObjects(state, { companyUID: null, ...props.user })
   })
 
-  // Alert state
-  const initialAlertState = {
-    show: false,
-    alertRoute: '',
-    type: undefined as AlertType,
-  }
-
-  const alertState = reactive({
-    ...initialAlertState,
-  })
-
-  // Show appropriate success alert after signing up for company
-  const displaySuccessAlert = (alertRoute: string) => {
-    alertState.alertRoute = alertRoute
-    alertState.type = 'success'
-    alertState.show = true
-  }
-
-  // show appropriate error alert after signing up for company
-  const displayErrorAlert = (alertRoute: string) => {
-    alertState.alertRoute = alertRoute
-    alertState.type = 'error'
-    alertState.show = true
-  }
-
-  // Show appropriate error alert for failed API calls
-  const displayErrorAlertFromMessage = (errorMessage: string) => {
-    const content = getAlertContent(errorMessage)
-    alertState.alertRoute = content.alertRoute
-    alertState.type = content.type
-    alertState.show = content.show
-  }
-
   const form = ref()
 
   // save changes to user
@@ -155,7 +122,7 @@
       })
       .catch((error) => {
         console.error(error)
-        displayErrorAlertFromMessage(error.message)
+        getApiResponseAlertContext(error.statusMessage)
       })
   }
 </script>
@@ -165,21 +132,6 @@
   <h4 class="text-sm-h3 text-h4 font-weight-bold text-center pt-16 pb-4">
     {{ $t('edit.user.title') }}
   </h4>
-
-  <!-- Alert component -->
-  <VSnackbar v-model="alertState.show">
-    {{ $t(`${alertState.alertRoute}`) }}
-
-    <template #actions>
-      <VBtn
-        :color="alertState.type"
-        variant="text"
-        @click="alertState.show = false"
-      >
-        {{ $t('alert.close_alert') }}
-      </VBtn>
-    </template>
-  </VSnackbar>
 
   <!-- Edit Form -->
   <VForm ref="form" @submit.prevent="saveChanges">
