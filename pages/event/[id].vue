@@ -124,7 +124,9 @@
         )
       )
       .catch((error: any) => {
-        const { type, message } = getResponseAlertContext(error.statusMessage)
+        const { type, message } = getApiResponseAlertContext(
+          error.statusMessage
+        )
         useAlert.alert(message, type as AlertType)
       })
   }
@@ -143,7 +145,9 @@
         )
       )
       .catch((error) => {
-        const { type, message } = getResponseAlertContext(error.statusMessage)
+        const { type, message } = getApiResponseAlertContext(
+          error.statusMessage
+        )
         useAlert.alert(message, type as AlertType)
       })
   }
