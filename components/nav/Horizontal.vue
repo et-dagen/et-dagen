@@ -30,6 +30,16 @@
     />
 
     <template #append>
+      <!-- company admin nav -->
+      <NavButton
+        v-if="auth.hasAccess(['company'])"
+        :route="{
+          name: 'company',
+          route: '/company/admin',
+        }"
+        class="mx-2 d-none d-lg-flex"
+      />
+
       <!-- admin nav button -->
       <NavButton
         v-if="auth.hasAccess(['admin'])"
@@ -42,7 +52,7 @@
 
       <!-- divider -->
       <VDivider
-        v-if="auth.hasAccess(['admin'])"
+        v-if="auth.hasAccess(['admin', 'company'])"
         vertical
         inset
         length="75%"

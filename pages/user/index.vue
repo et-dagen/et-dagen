@@ -11,6 +11,9 @@
     }
   })
 
+  const auth = useAuthStore()
+
+  const localePath = useLocalePath()
   const isRegisteredRestriction = computed(() => {
     return (restriction: string) => {
       return Object.values(dietaryFlags)
@@ -25,8 +28,8 @@
 
 <template>
   <VContainer class="d-flex justify-center align-center mt-16">
-    <VCard class="w-75 pa-4" elevation="4">
-      <VRow class="h-100 ma-0">
+    <VCard class="pa-4" style="width: 800px; max-width: 90vw" elevation="4">
+      <VRow class="d-flex justify-center h-100 ma-0">
         <VCol
           cols="12"
           lg="4"
@@ -35,13 +38,13 @@
           <VIcon size="50" class="my-8" color="primary">mdi-account</VIcon>
           <h6>{{ user?.name }}</h6>
           <span class="text-neutral-lighten-2">{{ user?.email }}</span>
-          <NuxtLink to="/user/edit" class="mt-4">
+          <NuxtLink :to="localePath('/user/edit')" class="mt-4">
             <VIcon size="x-large" variant="plain" color="primary">
               mdi-pencil-box
             </VIcon>
           </NuxtLink>
         </VCol>
-        <VCol cols="12" lg="8">
+        <VCol v-if="!auth.hasAccess(['company'])" cols="12" lg="8">
           <h6>Information</h6>
           <VDivider class="my-2" />
           <p class="my-2">

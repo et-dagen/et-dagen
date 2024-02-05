@@ -1,4 +1,5 @@
 // POST /api/event/register/:eventUID
+
 // endpoint for signing up for an event
 export default defineEventHandler(async (event) => {
   const { user } = event.context
@@ -49,13 +50,55 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  if (
+    !hasAccess(user, ['admin']) &&
+    !presentWithinTimeWindow(
+      data[eventUID].registration.start,
+      data[eventUID].registration.end
+    )
+  ) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Events: Error (register/registration-closed).',
+    })
+  }
+
+  if (userUID?.length)
+    await auth.getUser(userUID).catch(() => {
+      throw createError({
+        statusCode: 401,
+        statusMessage: 'Events: Error (register/user-not-exist).',
+      })
+    })
+
+  // check if user meets registration requirements
+  const meetsProgrammeRequirement =
+    data[eventUID]?.registration?.requirements?.programmes?.includes(
+      user?.studyProgram
+    ) ?? true
+
+  const meetsYearRequirement =
+    data[eventUID]?.registration?.requirements?.years?.includes(
+      user?.currentYear
+    ) ?? true
+
+  if (
+    !hasAccess(user, ['admin']) &&
+    (!meetsProgrammeRequirement || !meetsYearRequirement)
+  )
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Events: Error (register/requirements-not-met).',
+    })
+
   // Event does not have attendants
   if (!Object.hasOwn(data[eventUID], 'attendants')) {
     eventsRef
       .child(eventUID)
       .child('attendants')
       .push(userUID || user.uid)
-    sendNoContent(event, 201)
+
+    return sendNoContent(event, 201)
   }
 
   // User is already registered for this event

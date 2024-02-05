@@ -4,9 +4,10 @@
     "programme": "Program",
     "jobs": "Jobber",
     "contact": "Kontakt",
-    "admin": "Administrasjon",
+    "admin": "Admin",
     "user": "Min profil",
-    "program_nav": "SE PROGRAM"
+    "program_nav": "SE PROGRAM",
+    "company": "Mine arrangementer"
   },
   "user": {
     "sign_in": "Logg inn",
@@ -98,13 +99,18 @@
         "name": "Detaljer",
         "from": "Fra",
         "to": "Til",
+        "reg_start": "Påmeldingsstart",
+        "reg_end": "Påmeldingsslutt",
+        "reg_programme": "Studieprogram",
+        "reg_year": "Årstrinn",
         "location": "Sted",
         "host": "Arrangør"
       },
       "attendants": {
         "name": "Påmelding",
         "attendants": "Påmeldte",
-        "nocapacity": "Ingen kapasitetsbegrensning"
+        "nocapacity": "Ingen kapasitetsbegrensning",
+        "registered": "Du er påmeldt"
       }
     }
   },
@@ -126,7 +132,19 @@
   "company": {
     "main_partner": "Hovedpartner",
     "partners": "Partnere",
-    "sponsors": "Sponsorer"
+    "sponsors": "Sponsorer",
+    "admin": {
+      "title": "Bedriftsadministrasjon",
+      "dietaryrestrictions": "Allergener og restriksjoner",
+      "attendants": "Påmeldte deltakere",
+      "user": {
+        "attributes": {
+          "name": "Navn",
+          "studyprogramme": "Studieprogram",
+          "currentyear": "Årstrinn"
+        }
+      }
+    }
   },
   "alert": {
     "close_alert": "Lukk",
@@ -148,11 +166,13 @@
       "event": {
         "event_doesnt_exist": "Arrangementet finnes ikke",
         "register": {
+          "requirements_not_met": "Arrangementet er begrenset til et annet studieprogram eller årstrinn",
           "event_is_full": "Arrangementet er fullt",
           "already_registered": "Du er allerede påmeldt dette arrangementet",
           "user_not_registered": "Du er ikke påmeldt dette arrangementet",
           "registration_unnecessary": "Påmelding er ikke nødvendig for dette arrangementet",
           "non_admin_user": "Dette krever administratorrettigheter",
+          "closed": "Ikke åpent for registrering",
           "end_time_before_start_time": "Arrangementet kan ikke avslutte før det har startet"
         }
       },
@@ -186,8 +206,11 @@
           "deleted_logo": "Logo slettet"
         }
       },
-      "user": {
-        "edit": "Bruker oppdatert"
+      "job": {
+        "edit": {
+          "modified": "Jobb oppdatert",
+          "created": "Jobb opprettet"
+        }
       }
     }
   },
@@ -197,7 +220,8 @@
     "event": {
       "sign_up": "Meld meg på",
       "opt_out": "Trekk påmelding",
-      "sign_in_to_register": "Logg inn for å melde deg på"
+      "sign_in_to_register": "Logg inn for å melde deg på",
+      "registration_closed": "Ikke åpent for påmelding"
     }
   },
   "jobs": {
@@ -208,7 +232,9 @@
     "location": "Sted",
     "company": "Bedrift",
     "details": "Stillingsdetaljer",
-    "apply": "Søk her"
+    "apply": "Søk her",
+    "type": "Jobbtype",
+    "no_jobs": "Fant ingen stillingsannonser ⚠️"
   },
   "admin": {
     "categories": "Kategorier",
@@ -246,7 +272,8 @@
         "time": "Tid",
         "capacity": "Kapasitet"
       },
-      "copied": "UID kopiert!"
+      "copied": "UID kopiert!",
+      "overview": "Eventoversikt"
     },
     "company": {
       "name": "Bedrifter",
@@ -379,6 +406,7 @@
         "company": "Bedrift",
         "description": "Stillingsbeskrivelse",
         "deadline": "Søknadsfrist",
+        "application_link": "Link til annonse",
         "jobtype": {
           "name": "Stillingstype",
           "full_time": "Fulltid",
@@ -411,7 +439,20 @@
           "start": "Startdato",
           "end": "Sluttdato"
         },
-        "attendants": "Påmeldte deltakere"
+        "registration": {
+          "start": "Påmelding åpner",
+          "end": "Påmelding stenger",
+          "limit": "Begrens påmelding",
+          "requirements": {
+            "programmes": "Begrens til studieprogram",
+            "years": "Begrens til årstrinn"
+          }
+        },
+        "signupstart": "Påmelding åpner",
+        "optoutdeadline": "Avmeldingsfrist",
+        "attendants": "Påmeldte deltakere",
+        "user_id": "Brukerid",
+        "sign_up": "Meld på"
       }
     },
     "company": {
@@ -488,7 +529,8 @@
     "vegetarian": "Vegetar",
     "vegan": "Vegansk",
     "halal": "Halal",
-    "kosher": "Kosher"
+    "kosher": "Kosher",
+    "lactose": "Laktose"
   },
   "weekday": {
     "sunday": "Søndag",

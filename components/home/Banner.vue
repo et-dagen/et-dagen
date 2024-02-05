@@ -22,24 +22,16 @@
     <VCard variant="flat" width="60vw" min-width="290px">
       <VRow>
         <!-- banner title and caption -->
-        <VCol cols="12" lg="7">
+        <VCol cols="12" md="7">
           <h5 class="pt-md-7">
             {{ startDate.getDate() }}.
             {{
               !isSameMonth(content.date.start, content.date.end)
-                ? $t(
-                    `datetime.months.${getFullMonthFromNumber(
-                      startDate.getMonth()
-                    )}`
-                  )
+                ? getFullMonthFromNumber(startDate.getMonth())
                 : ''
             }}
             - {{ endDate.getDate() }}.
-            {{
-              $t(
-                `datetime.months.${getFullMonthFromNumber(endDate.getMonth())}`
-              )
-            }}
+            {{ getFullMonthFromNumber(endDate.getMonth()) }}
           </h5>
 
           <!-- h4 for under lg breakpoint and h3 above -->
@@ -49,41 +41,16 @@
 
           <h6>{{ content.caption }}</h6>
         </VCol>
-        <VCol cols="5">
+        <VCol cols="5" class="d-flex flex-row-reverse">
           <!-- banner image -->
-          <VImg
-            class="d-none d-lg-flex elevation-3 rounded-lg"
-            :aspect-ratio="4 / 3"
-            cover
+          <NuxtImg
+            class="d-none d-md-flex rounded-lg"
+            height="250"
+            width="250"
             :src="content.image"
-          ></VImg>
+          />
         </VCol>
       </VRow>
     </VCard>
   </div>
 </template>
-
-<style scoped lang="scss">
-  @use 'vuetify/settings';
-
-  .home-banner {
-    align-items: center;
-    display: flex;
-    gap: 4rem;
-    justify-content: center;
-    min-width: 310px;
-    padding-block: 1rem;
-    width: 100%;
-
-    // All direct descendants
-    > * {
-      max-width: 25%;
-    }
-
-    @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
-      > * {
-        max-width: 100%;
-      }
-    }
-  }
-</style>

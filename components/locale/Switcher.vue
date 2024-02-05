@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { LocaleObject } from '@nuxtjs/i18n/dist/runtime/composables'
+  import type { LocaleObject } from '@nuxtjs/i18n/dist/runtime/composables'
 
   const { locale, locales } = useI18n()
 
@@ -42,6 +42,7 @@
         <VBtn
           v-for="language in availableLocales"
           :key="language.code"
+          :active="false"
           variant="text"
           :to="switchLocalePath(language.code)"
         >
