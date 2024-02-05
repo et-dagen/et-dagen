@@ -70,6 +70,26 @@
     hasDietaryRestrictionsBool.value = false
   }
 
+  const getDietaryRestrictionsOptions = ($t) => {
+    const options = dietaryFlags
+      .map((flag) => ({
+        title: $t(`dietary_restrictions.${flag.name}`),
+        value: flag.name,
+      }))
+      .sort()
+
+    // Check if there are any additional dietary restrictions in state
+    state.dietaryRestrictions.forEach((restriction) => {
+      if (!options.some((option) => option.value === restriction)) {
+        options.push({
+          title: restriction, // Use the restriction as the title
+          value: restriction,
+        })
+      }
+    })
+    return options
+  }
+
   // Reset currentYear if programme doesn't have that year
   watch(
     () => state.studyProgram,
@@ -318,14 +338,7 @@
           multiple
           :content="{
             label: $t('user.register.dietary_restrictions.name'),
-            options: dietaryFlags
-              .map((flag) => {
-                return {
-                  title: $t(`dietary_restrictions.${flag.name}`),
-                  value: flag.name,
-                }
-              })
-              .sort(),
+            options: getDietaryRestrictionsOptions($t),
           }"
           :rules="[hasDietaryRestrictions ? useRequiredInput : null]"
         />
