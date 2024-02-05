@@ -83,14 +83,16 @@
       .sort()
 
     // Check if there are any additional dietary restrictions in state
-    state.dietaryRestrictions.forEach((restriction) => {
-      if (!options.some((option) => option.value === restriction)) {
-        options.push({
-          title: restriction, // Use the restriction as the title
-          value: restriction,
-        })
-      }
-    })
+    if (state.dietaryRestrictions && state.dietaryRestrictions.length > 0) {
+      state.dietaryRestrictions.forEach((restriction) => {
+        if (!options.some((option) => option.value === restriction)) {
+          options.push({
+            title: restriction,
+            value: restriction,
+          })
+        }
+      })
+    }
     return options
   }
 
