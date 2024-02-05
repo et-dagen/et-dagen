@@ -214,8 +214,8 @@
 
     <!-- event description -->
     <VCard class="description elevation-4" rounded="lg">
-      <VCardTitle class="title">{{ event?.title }}</VCardTitle>
-      <VCardText class="text">{{ event?.description }}</VCardText>
+      <VCardTitle class="description__title">{{ event?.title }}</VCardTitle>
+      <VCardText class="description__text">{{ event?.description }}</VCardText>
     </VCard>
 
     <!-- event details -->
@@ -424,6 +424,10 @@
 
     .description {
       grid-area: description;
+
+      &__text {
+        white-space: pre-line;
+      }
     }
     .details {
       grid-area: details;
