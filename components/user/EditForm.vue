@@ -58,16 +58,20 @@
   const state = reactive({ companyUID: null, ...props.user })
 
   const hasDietaryRestrictions = ref(state.dietaryRestrictions)
+
   const otherRestrictions = ref<null | string>(null)
 
   // initially assumed to have dietary restrictions
   const hasDietaryRestrictionsBool = ref(true)
+  let initialHasDietaryRestrictionsBool = true
+
   // set dietary restrictions to false if there is none
   if (
     !hasDietaryRestrictions.value ||
     Object.keys(hasDietaryRestrictions.value).length === 0
   ) {
     hasDietaryRestrictionsBool.value = false
+    initialHasDietaryRestrictionsBool = false
   }
 
   const getDietaryRestrictionsOptions = ($t) => {
@@ -102,6 +106,10 @@
   // check if user has changed
   const hasChanged = computed(() => {
     if (otherRestrictions.value && otherRestrictions.value !== '') {
+      return true
+    } else if (
+      initialHasDietaryRestrictionsBool !== hasDietaryRestrictionsBool.value
+    ) {
       return true
     } else {
       return !compareObjects(state, { companyUID: null, ...props.user })
@@ -163,6 +171,10 @@
       otherRestrictions?.value
         .split(',')
         .map((restriction) => state.dietaryRestrictions?.push(restriction))
+    }
+    // check if all dietary restrictions should be removed
+    if (hasDietaryRestrictionsBool.value === false) {
+      state.dietaryRestrictions = []
     }
 
     // update user
