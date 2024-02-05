@@ -398,7 +398,7 @@
       "attributes": {
         "title": "Job Title",
         "company": "Company",
-        "description": "Job Description",
+        "description": "Job Description (mandatory)",
         "deadline": "Application Deadline",
         "application_link": "Job advertisement link",
         "jobtype": {
@@ -424,7 +424,7 @@
         "title": "Title",
         "company": "Company",
         "capacity": "Capacity",
-        "description": "Description",
+        "description": "Description (mandatory)",
         "location": {
           "name": "Name of Place",
           "map": "Map Link"
