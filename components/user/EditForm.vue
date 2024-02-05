@@ -1,6 +1,8 @@
 <script setup lang="ts">
   import { User } from '../../models/User'
 
+  import { dietaryFlags } from '~/config/app.config'
+
   const props = defineProps({
     user: {
       type: Object as PropType<User>,
@@ -55,6 +57,19 @@
   // Set state to user data plus companyUID
   const state = reactive({ companyUID: null, ...props.user })
 
+  const hasDietaryRestrictions = ref(state.dietaryRestrictions)
+  const otherRestrictions = ref<null | string>(null)
+
+  // initially assumed to have dietary restrictions
+  const hasDietaryRestrictionsBool = ref(true)
+  // set dietary restrictions to false if there is none
+  if (
+    !hasDietaryRestrictions.value ||
+    Object.keys(hasDietaryRestrictions.value).length === 0
+  ) {
+    hasDietaryRestrictionsBool.value = false
+  }
+
   // Reset currentYear if programme doesn't have that year
   watch(
     () => state.studyProgram,
@@ -66,7 +81,11 @@
 
   // check if user has changed
   const hasChanged = computed(() => {
-    return !compareObjects(state, { companyUID: null, ...props.user })
+    if (otherRestrictions.value && otherRestrictions.value !== '') {
+      return true
+    } else {
+      return !compareObjects(state, { companyUID: null, ...props.user })
+    }
   })
 
   // Alert state
@@ -117,6 +136,13 @@
 
     if (state.userType !== 'company') {
       state.companyUID = null
+    }
+
+    // check for other dietary restrictions
+    if (otherRestrictions.value && otherRestrictions.value !== '') {
+      otherRestrictions?.value
+        .split(',')
+        .map((restriction) => state.dietaryRestrictions?.push(restriction))
     }
 
     // update user
@@ -265,6 +291,52 @@
             options: yearOptions(state.studyProgram),
           }"
           :rules="[useRequiredInput]"
+        />
+      </VRow>
+
+      <!-- dietary restrictions -->
+
+      <VRow>
+        <VRadioGroup
+          v-model="hasDietaryRestrictionsBool"
+          :label="$t('user.register.dietary_restrictions.name')"
+        >
+          <VRadio
+            :label="$t('user.register.dietary_restrictions.norestrictions')"
+            :value="false"
+          ></VRadio>
+          <VRadio
+            :label="$t('user.register.dietary_restrictions.restrictions')"
+            :value="true"
+          ></VRadio>
+        </VRadioGroup>
+      </VRow>
+
+      <VRow v-if="hasDietaryRestrictionsBool">
+        <FormSelectInput
+          v-model="state.dietaryRestrictions"
+          multiple
+          :content="{
+            label: $t('user.register.dietary_restrictions.name'),
+            options: dietaryFlags
+              .map((flag) => {
+                return {
+                  title: $t(`dietary_restrictions.${flag.name}`),
+                  value: flag.name,
+                }
+              })
+              .sort(),
+          }"
+          :rules="[hasDietaryRestrictions ? useRequiredInput : null]"
+        />
+      </VRow>
+
+      <VRow v-if="hasDietaryRestrictionsBool" class="mt-3 pt-0">
+        <FormTextInput
+          v-model="otherRestrictions"
+          :content="{
+            label: $t('user.register.dietary_restrictions.other'),
+          }"
         />
       </VRow>
     </VContainer>
