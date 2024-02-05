@@ -61,8 +61,6 @@
           </span>
         </div>
       </template>
-
-      <p class="px-4 mb-4 text-subtitle-2">{{ content.description }}</p>
     </VCard>
   </div>
 </template>
