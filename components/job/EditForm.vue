@@ -119,12 +119,17 @@
     }
   })
 
+  const validDescription = computed(
+    () => state.description && state.description !== '<p></p>'
+  )
+
   // save changes to existing job
   const saveChanges = async () => {
     // throw error on invalid form
     const { valid } = await form.value.validate()
     try {
-      if (!valid || !state.description) throw new Error('Form is not valid')
+      if (!valid || !validDescription.value)
+        throw new Error('Form is not valid')
     } catch (error) {
       displayErrorAlert('alert.error.form.invalid')
       return
@@ -150,7 +155,8 @@
     // throw error on invalid form
     const { valid } = await form.value.validate()
     try {
-      if (!valid || !state.description) throw new Error('Form is not valid')
+      if (!valid || !validDescription.value)
+        throw new Error('Form is not valid')
     } catch (error) {
       displayErrorAlert('alert.error.form.invalid')
       return
