@@ -283,8 +283,8 @@
               block
               height="56"
               color="warning"
-              @click="state.logo = null"
               style="min-width: fit-content"
+              @click="state.logo = null"
             >
               {{ $t('edit.company.unlink_logo') }}
             </VBtn>
