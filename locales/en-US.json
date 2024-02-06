@@ -532,5 +532,17 @@
     "thursday": "Thursday",
     "friday": "Friday",
     "saturday": "Saturday"
+  },
+  "formattext": {
+    "bold": "Bold",
+    "italic": "Italic",
+    "strikethrough": "Strikethrough",
+    "paragraph": "Paragraph",
+    "heading": "Heading",
+    "bulletlist": "Bullet list",
+    "numberedlist": "Numbered list",
+    "linebreak": "Line break",
+    "undo": "Undo",
+    "redo": "Redo"
   }
 }

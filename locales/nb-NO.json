@@ -540,5 +540,17 @@
     "thursday": "Torsdag",
     "friday": "Fredag",
     "saturday": "Lørdag"
+  },
+  "formattext": {
+    "bold": "Tykk",
+    "italic": "Kursiv",
+    "strikethrough": "Gjennomstreking",
+    "paragraph": "Paragraf",
+    "heading": "Overskrift",
+    "bulletlist": "Punktliste",
+    "numberedlist": "Nummerert liste",
+    "linebreak": "Linjeskift",
+    "undo": "Angre",
+    "redo": "Gjør om"
   }
 }
