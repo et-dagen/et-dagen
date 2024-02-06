@@ -124,7 +124,7 @@
     .description {
       grid-area: description;
 
-      &:v-deep {
+      &::v-deep {
         li {
           list-style-position: inside;
 
@@ -140,6 +140,10 @@
         h6 {
           font-size: 1.05rem !important;
         }
+      }
+
+      &__text {
+        white-space: pre-line;
       }
     }
     .details {
