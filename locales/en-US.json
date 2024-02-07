@@ -14,9 +14,11 @@
     "sign_out": "Sign out",
     "sign_up": "Register user",
     "information": {
+      "title": "Information",
       "studyprogramme": "Study Programme",
       "currentyear": "Current Year",
-      "dietaryrestrictions": "Allergies and Restrictions"
+      "dietaryrestrictions": "Allergies and Restrictions",
+      "events": "My Events"
     },
     "register": {
       "title": "Register user",
