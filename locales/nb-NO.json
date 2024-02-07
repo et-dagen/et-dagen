@@ -508,7 +508,8 @@
     "header": {
       "resources": "Ressurser",
       "organisation": "Organisasjon",
-      "join": "Vil dere delta?"
+      "join": "Bedrift?",
+      "some": "Følg oss"
     },
     "link": {
       "contact": "Kontakt oss",

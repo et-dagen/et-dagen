@@ -500,7 +500,8 @@
     "header": {
       "resources": "Resources",
       "organisation": "Organisation",
-      "join": "Wish to join us?"
+      "join": "Company?",
+      "some": "Follow us"
     },
     "link": {
       "contact": "Contact Us",
