@@ -100,6 +100,10 @@
     }
   })
 
+  const validDescription = computed(
+    () => state.description && state.description !== '<p></p>'
+  )
+
   // Initial state in case of missing props or API bounce
   const initialState = {
     title: null,
@@ -228,7 +232,8 @@
   const saveChanges = async () => {
     const { valid } = await form.value.validate()
     try {
-      if (!valid) throw new Error('Form is not valid')
+      if (!valid || !validDescription.value)
+        throw new Error('Form is not valid')
     } catch (error) {
       useAlerts.alert(getI18nString('alert.error.form.invalid'), 'error')
       return
@@ -256,7 +261,8 @@
   const createEvent = async () => {
     const { valid } = await form.value.validate()
     try {
-      if (!valid) throw new Error('Form is not valid')
+      if (!valid || !validDescription.value)
+        throw new Error('Form is not valid')
     } catch (error) {
       useAlerts.alert(getI18nString('alert.error.form.invalid'), 'error')
       return
@@ -322,12 +328,10 @@
 
         <!-- Description -->
         <VRow>
-          <FormTextareaInput
+          <FormRichTextInput
             v-model="state.description"
-            :content="{
-              label: $t('edit.event.attributes.description'),
-            }"
-            :rules="[useRequiredInput]"
+            :label="$t('edit.event.attributes.description')"
+            style="width: 100%"
           />
         </VRow>
 

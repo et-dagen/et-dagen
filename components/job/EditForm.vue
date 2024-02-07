@@ -88,12 +88,17 @@
     }
   })
 
+  const validDescription = computed(
+    () => state.description && state.description !== '<p></p>'
+  )
+
   // save changes to existing job
   const saveChanges = async () => {
     // throw error on invalid form
     const { valid } = await form.value.validate()
     try {
-      if (!valid) throw new Error('Form is not valid')
+      if (!valid || !validDescription.value)
+        throw new Error('Form is not valid')
     } catch (error) {
       useAlerts.alert(getI18nString('alert.error.form.invalid'), 'error')
       return
@@ -122,7 +127,8 @@
     // throw error on invalid form
     const { valid } = await form.value.validate()
     try {
-      if (!valid) throw new Error('Form is not valid')
+      if (!valid || !validDescription.value)
+        throw new Error('Form is not valid')
     } catch (error) {
       useAlerts.alert(getI18nString('alert.error.form.invalid'), 'error')
       return
@@ -170,12 +176,10 @@
 
         <!-- job description -->
         <VRow>
-          <FormTextareaInput
+          <FormRichTextInput
             v-model="state.description"
-            :content="{
-              label: $t('edit.jobs.attributes.description'),
-            }"
-            :rules="[useRequiredInput]"
+            :label="$t('edit.jobs.attributes.description')"
+            style="width: 100%"
           />
         </VRow>
 

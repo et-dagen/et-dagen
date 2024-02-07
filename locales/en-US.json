@@ -14,9 +14,11 @@
     "sign_out": "Sign out",
     "sign_up": "Register user",
     "information": {
+      "title": "Information",
       "studyprogramme": "Study Programme",
       "currentyear": "Current Year",
-      "dietaryrestrictions": "Allergies and Restrictions"
+      "dietaryrestrictions": "Allergies and Restrictions",
+      "events": "My Events"
     },
     "register": {
       "title": "Register user",
@@ -272,7 +274,12 @@
     "standmap": "Stand Map",
     "event": {
       "sign_up": "Sign up",
-      "opt_out": "Opt out",
+      "opt_out": {
+        "name": "Opt out",
+        "confirmtext": "Are you sure you want to opt out?",
+        "confirm": "Yes, remove me",
+        "abort": "No, abort"
+      },
       "sign_in_to_register": "Sign in to register",
       "registration_closed": "Registration in not open"
     }
@@ -456,7 +463,7 @@
       "attributes": {
         "title": "Job Title",
         "company": "Company",
-        "description": "Job Description",
+        "description": "Job Description (mandatory)",
         "deadline": "Application Deadline",
         "application_link": "Job advertisement link",
         "jobtype": {
@@ -482,7 +489,7 @@
         "title": "Title",
         "company": "Company",
         "capacity": "Capacity",
-        "description": "Description",
+        "description": "Description (mandatory)",
         "location": {
           "name": "Name of Place",
           "map": "Map Link"
@@ -562,13 +569,13 @@
   "dietary_restrictions": {
     "name": "Allergens and restrictions",
     "gluten": "Gluten",
-    "shellfish": "shellfish",
+    "shellfish": "Shellfish",
     "citrus": "Citrus fruits",
     "egg": "Egg",
     "fish": "Fish",
     "peanuts": "Peanuts",
     "soy": "Soy",
-    "milk": "Milk",
+    "milk": "Milk proteins",
     "nuts": "Nuts",
     "celery": "Celery",
     "mustard": "Mustard",
@@ -590,5 +597,17 @@
     "thursday": "Thursday",
     "friday": "Friday",
     "saturday": "Saturday"
+  },
+  "formattext": {
+    "bold": "Bold",
+    "italic": "Italic",
+    "strikethrough": "Strikethrough",
+    "paragraph": "Paragraph",
+    "heading": "Heading",
+    "bulletlist": "Bullet list",
+    "numberedlist": "Numbered list",
+    "linebreak": "Line break",
+    "undo": "Undo",
+    "redo": "Redo"
   }
 }

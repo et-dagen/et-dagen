@@ -14,9 +14,11 @@
     "sign_out": "Logg ut",
     "sign_up": "Registrer bruker",
     "information": {
+      "title": "Informasjon",
       "studyprogramme": "Studieprogram",
       "currentyear": "Årstrinn",
-      "dietaryrestrictions": "Allergener og restriksjoner"
+      "dietaryrestrictions": "Allergener og restriksjoner",
+      "events": "Mine arrangementer"
     },
     "register": {
       "title": "Registrer bruker",
@@ -280,7 +282,12 @@
     "standmap": "Se standkart",
     "event": {
       "sign_up": "Meld meg på",
-      "opt_out": "Trekk påmelding",
+      "opt_out": {
+        "name": "Trekk påmelding",
+        "confirmtext": "Er du sikker på at du vil melde deg av?",
+        "confirm": "Ja, meld meg av",
+        "abort": "Nei, avbryt"
+      },
       "sign_in_to_register": "Logg inn for å melde deg på",
       "registration_closed": "Ikke åpent for påmelding"
     }
@@ -465,7 +472,7 @@
       "attributes": {
         "title": "Stillingstittel",
         "company": "Bedrift",
-        "description": "Stillingsbeskrivelse",
+        "description": "Stillingsbeskrivelse (obligatorisk)",
         "deadline": "Søknadsfrist",
         "application_link": "Link til annonse",
         "jobtype": {
@@ -491,7 +498,7 @@
         "title": "Tittel",
         "company": "Bedrift",
         "capacity": "Kapasitet",
-        "description": "Beskrivelse",
+        "description": "Beskrivelse (obligatorisk)",
         "location": {
           "name": "Stedsnavn",
           "map": "Kartlink"
@@ -579,7 +586,7 @@
     "fish": "Fisk",
     "peanuts": "Peanøtter",
     "soy": "Soya",
-    "milk": "Melk",
+    "milk": "Melkeprotein",
     "nuts": "Nøtter",
     "celery": "Selleri",
     "mustard": "Sennep",
@@ -601,5 +608,17 @@
     "thursday": "Torsdag",
     "friday": "Fredag",
     "saturday": "Lørdag"
+  },
+  "formattext": {
+    "bold": "Tykk",
+    "italic": "Kursiv",
+    "strikethrough": "Gjennomstreking",
+    "paragraph": "Paragraf",
+    "heading": "Overskrift",
+    "bulletlist": "Punktliste",
+    "numberedlist": "Nummerert liste",
+    "linebreak": "Linjeskift",
+    "undo": "Angre",
+    "redo": "Gjør om"
   }
 }
