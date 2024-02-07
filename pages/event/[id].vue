@@ -1,5 +1,6 @@
 <script setup lang="ts">
   const useAuth = useAuthStore()
+  const localePath = useLocalePath()
 
   // get event id from route
   const route = useRoute()
@@ -233,6 +234,17 @@
 
     <!-- event details -->
     <VCard class="details elevation-4" rounded="lg">
+      <!-- edit event -->
+      <VBtn
+        v-if="useAuth.hasAccess(['admin'])"
+        class="edit-event"
+        variant="text"
+        icon="mdi-pencil"
+        size="small"
+        color="primary"
+        @click="() => navigateTo(localePath(`/event/edit/${event.uid}`))"
+      />
+
       <VCardTitle class="details__title">
         {{ $t('event.page.details.name') }}
       </VCardTitle>
@@ -495,6 +507,12 @@
     }
     .details {
       grid-area: details;
+
+      .edit-event {
+        position: absolute;
+        right: 0.5rem;
+        top: 0.5rem;
+      }
     }
 
     .attendant-container {

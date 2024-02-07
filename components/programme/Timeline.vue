@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  const useAuth = useAuthStore()
+
   // use locale path for navigation
   const localePath = useLocalePath()
 
@@ -132,6 +134,17 @@
             :ripple="false"
             @click="() => navigateTo(localePath(`/event/${event.id}`))"
           >
+            <!-- edit event -->
+            <VBtn
+              v-if="useAuth.hasAccess(['admin'])"
+              class="edit-event"
+              variant="text"
+              icon="mdi-pencil"
+              size="small"
+              color="primary"
+              @click="() => navigateTo(localePath(`/event/edit/${event.id}`))"
+            />
+
             <template #title> {{ event.title }} </template>
 
             <!-- Display company name if found -->
@@ -255,6 +268,12 @@
           display: none !important;
         }
       }
+    }
+
+    .edit-event {
+      position: absolute;
+      right: 0.5rem;
+      top: 0.5rem;
     }
 
     &__location,
