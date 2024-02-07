@@ -38,7 +38,6 @@
       display: block;
       width: 80%;
       max-width: 100vw;
-      max-width: 100vh;
     }
   }
 </style>
