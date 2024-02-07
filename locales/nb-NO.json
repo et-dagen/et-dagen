@@ -219,7 +219,12 @@
     "standmap": "Se standkart",
     "event": {
       "sign_up": "Meld meg på",
-      "opt_out": "Trekk påmelding",
+      "opt_out": {
+        "name": "Trekk påmelding",
+        "confirmtext": "Er du sikker på at du vil melde deg av?",
+        "confirm": "Ja, meld meg av",
+        "abort": "Nei, avbryt"
+      },
       "sign_in_to_register": "Logg inn for å melde deg på",
       "registration_closed": "Ikke åpent for påmelding"
     }
