@@ -14,9 +14,11 @@
     "sign_out": "Sign out",
     "sign_up": "Register user",
     "information": {
+      "title": "Information",
       "studyprogramme": "Study Programme",
       "currentyear": "Current Year",
-      "dietaryrestrictions": "Allergies and Restrictions"
+      "dietaryrestrictions": "Allergies and Restrictions",
+      "events": "My Events"
     },
     "register": {
       "title": "Register user",
@@ -214,7 +216,12 @@
     "standmap": "Stand Map",
     "event": {
       "sign_up": "Sign up",
-      "opt_out": "Opt out",
+      "opt_out": {
+        "name": "Opt out",
+        "confirmtext": "Are you sure you want to opt out?",
+        "confirm": "Yes, remove me",
+        "abort": "No, abort"
+      },
       "sign_in_to_register": "Sign in to register",
       "registration_closed": "Registration in not open"
     }
