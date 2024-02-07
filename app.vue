@@ -1,7 +1,7 @@
 <template>
   <VApp>
     <NuxtLayout>
-      <NuxtPage />
+      <NuxtPage :keepalive="true" />
     </NuxtLayout>
   </VApp>
 </template>
