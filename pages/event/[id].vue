@@ -158,8 +158,11 @@
     console.error(errorMessage)
   }
 
+  const loading = ref(false)
   // sign up for event
   const signUpForEvent = () => {
+    loading.value = true
+
     $fetch('/api/event/register', {
       method: 'POST',
       body: { eventUID: event.value.uid },
@@ -167,10 +170,14 @@
       .then(() => refresh())
       .then(() => displaySuccessAlert('alert.success.event.register.sign_up'))
       .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
+      .finally(() => (loading.value = false))
   }
 
+  const dialog = ref(false)
   // opt out of event
   const optOutOfEvent = () => {
+    loading.value = true
+
     $fetch('/api/event/register', {
       method: 'DELETE',
       body: { eventUID: event.value.uid },
@@ -178,6 +185,10 @@
       .then(() => refresh())
       .then(() => displaySuccessAlert('alert.success.event.register.opt_out'))
       .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
+      .finally(() => {
+        loading.value = false
+        dialog.value = false
+      })
   }
 </script>
 
@@ -370,6 +381,7 @@
         <VBtn
           v-if="showSignupButton"
           color="success"
+          :loading="loading"
           block
           variant="flat"
           :ripple="true"
@@ -382,18 +394,50 @@
           {{ $t('program.event.sign_up') }}
         </VBtn>
 
-        <!-- opt out -->
-        <VBtn
-          v-if="alreadyRegistered"
-          color="primary"
-          block
-          variant="tonal"
-          :ripple="true"
-          density="comfortable"
-          @click.stop="optOutOfEvent"
-        >
-          {{ $t('program.event.opt_out') }}
-        </VBtn>
+        <!-- opt out modal -->
+        <VDialog v-if="alreadyRegistered" v-model="dialog" width="500">
+          <template #activator="{ props }">
+            <VBtn
+              v-bind="props"
+              color="primary"
+              block
+              variant="tonal"
+              :ripple="true"
+              density="comfortable"
+            >
+              {{ $t('program.event.opt_out.name') }}
+            </VBtn>
+          </template>
+
+          <template #default="{ isActive }">
+            <VCard rounded="lg" class="text-center pa-6">
+              <h6>{{ $t('program.event.opt_out.confirmtext') }}</h6>
+
+              <div
+                class="d-flex justify-center flex-wrap mt-6"
+                style="gap: 1.5rem"
+              >
+                <VBtn
+                  size="large"
+                  variant="outlined"
+                  color="primary"
+                  :loading="loading"
+                  @click="optOutOfEvent"
+                >
+                  {{ $t('program.event.opt_out.confirm') }}
+                </VBtn>
+                <VBtn
+                  size="large"
+                  flat
+                  color="success"
+                  @click="isActive.value = false"
+                >
+                  {{ $t('program.event.opt_out.abort') }}
+                </VBtn>
+              </div>
+            </VCard>
+          </template>
+        </VDialog>
       </div>
     </div>
   </VContainer>
