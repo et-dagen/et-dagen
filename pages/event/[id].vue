@@ -1,5 +1,6 @@
 <script setup lang="ts">
   const useAuth = useAuthStore()
+  const localePath = useLocalePath()
 
   // get event id from route
   const route = useRoute()
@@ -359,13 +360,16 @@
       </VCard>
 
       <!-- Event actions: Sign up perform action -->
-      <div
+      <VBtn
         v-if="!useAuth.isLoggedIn && hasCapacity && !eventFull"
-        class="text-primary px-4 py-2 d-flex justify-center align-center"
+        rounded="lg"
+        variant="text"
+        class="text-primary px-4 py-2 d-flex justify-center align-center login"
+        prepend-icon="mdi-login"
+        @click="navigateTo(localePath('/user/signin'))"
       >
-        <VIcon class="pr-3 pb-1">mdi-lock</VIcon>
         {{ $t('program.event.sign_in_to_register') }}
-      </div>
+      </VBtn>
 
       <div
         v-if="hasEventActions && !showRegistrationAction"
@@ -453,6 +457,11 @@
       content: '' !important;
     }
   }
+
+  .login {
+    font-size: 1rem;
+  }
+
   .container {
     display: grid;
     width: 100vw;
