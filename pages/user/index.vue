@@ -86,6 +86,10 @@
           </div>
         </VCol>
       </VRow>
+      <div class="pt-10">
+        <h5 class="text-h5">Upload CV (pdf)</h5>
+        <VFileInput accept="application/pdf" />
+      </div>
     </VCard>
   </VContainer>
 </template>
