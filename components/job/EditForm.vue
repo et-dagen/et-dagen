@@ -6,6 +6,8 @@
       default: null,
     },
   })
+  const useAlerts = useAlertStore()
+
   // Fetch job data if props are provided
   const auth = useAuthStore()
   const { hasAccess, user } = storeToRefs(auth)
@@ -51,39 +53,6 @@
       ? { ...Object.values(embedKeyIntoObjectValues(job.value))[0] }
       : { ...initialState }
   )
-
-  // Alert state
-  const initialAlertState = {
-    show: false,
-    alertRoute: '',
-    type: undefined as AlertType,
-  }
-
-  const alertState = reactive({
-    ...initialAlertState,
-  })
-
-  // Show appropriate success alert after signing up for job
-  const displaySuccessAlert = (alertRoute: string) => {
-    alertState.alertRoute = alertRoute
-    alertState.type = 'success'
-    alertState.show = true
-  }
-
-  // show appropriate error alert after signing up for job
-  const displayErrorAlert = (alertRoute: string) => {
-    alertState.alertRoute = alertRoute
-    alertState.type = 'error'
-    alertState.show = true
-  }
-
-  // Show appropriate error alert for failed API calls
-  const displayErrorAlertFromMessage = (errorMessage: string) => {
-    const content = getAlertContent(errorMessage, 'Job')
-    alertState.alertRoute = content.alertRoute
-    alertState.type = content.type
-    alertState.show = content.show
-  }
 
   const form = ref()
 
@@ -131,7 +100,7 @@
       if (!valid || !validDescription.value)
         throw new Error('Form is not valid')
     } catch (error) {
-      displayErrorAlert('alert.error.form.invalid')
+      useAlerts.alert(getI18nString('alert.error.form.invalid'), 'error')
       return
     }
 
@@ -145,10 +114,13 @@
       body: rest,
     })
       .then(() => {
-        displaySuccessAlert('alert.success.job.edit.modified')
+        useAlerts.alert(
+          getI18nString('alert.success.job.edit.modified'),
+          'success'
+        )
         setTimeout(() => navigateTo(localePath('/admin/jobs')), 2000)
       })
-      .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
+      .catch((error) => getApiResponseAlertContext(error.statusMessage))
   }
 
   const createCompany = async () => {
@@ -158,7 +130,7 @@
       if (!valid || !validDescription.value)
         throw new Error('Form is not valid')
     } catch (error) {
-      displayErrorAlert('alert.error.form.invalid')
+      useAlerts.alert(getI18nString('alert.error.form.invalid'), 'error')
       return
     }
 
@@ -168,10 +140,13 @@
       body: state,
     })
       .then(() => {
-        displaySuccessAlert('alert.success.job.edit.created')
+        useAlerts.alert(
+          getI18nString('alert.success.job.edit.created'),
+          'success'
+        )
         setTimeout(() => navigateTo(localePath('/admin/jobs')), 2000)
       })
-      .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
+      .catch((error) => getApiResponseAlertContext(error.statusMessage))
   }
 </script>
 
@@ -184,21 +159,6 @@
     <h3 v-else class="title py-6 mt-4">
       {{ $t('edit.jobs.create.title') }}
     </h3>
-
-    <!-- alert component -->
-    <VSnackbar v-model="alertState.show">
-      {{ $t(`${alertState.alertRoute}`) }}
-
-      <template #actions>
-        <VBtn
-          :color="alertState.type"
-          variant="text"
-          @click="alertState.show = false"
-        >
-          {{ $t('alert.close_alert') }}
-        </VBtn>
-      </template>
-    </VSnackbar>
 
     <!-- edit form -->
     <VForm ref="form" @submit.prevent="saveChanges || createCompany">
