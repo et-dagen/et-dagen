@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
   if (!jobUID)
     throw createError({
       statusCode: 400,
-      statusMessage: 'Missing jobUID',
+      statusMessage: 'Error (job/missing-job-uid).',
     })
 
   // check if any of the newData values are null
@@ -19,7 +19,7 @@ export default defineEventHandler(async (event) => {
   if (valuesArr.includes(null))
     throw createError({
       statusCode: 401,
-      statusMessage: 'Cannot remove single fields from the database entry',
+      statusMessage: 'Error (job/cannot-remove-single-fields).',
     })
 
   const jobsRef = db.ref('jobs')
@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
   if (!data)
     throw createError({
       statusCode: 404,
-      statusMessage: 'Job not found',
+      statusMessage: 'Error (job/not-found).',
     })
 
   const dbData = data[Object.keys(data)[0]]
@@ -49,13 +49,13 @@ export default defineEventHandler(async (event) => {
   if (!newKeys.every((key) => oldKeys.includes(key)))
     throw createError({
       statusCode: 400,
-      statusMessage: 'Cannot add single fields to the database entry',
+      statusMessage: 'Error (job/cannot-remove-single-fields).',
     })
 
   if (newData.deadline && !isValidDate(newData.deadline))
     throw createError({
       statusCode: 400,
-      statusMessage: 'Date must be of the ISO 8601 format',
+      statusMessage: 'Error (job/invalid-date).',
     })
 
   const isAdmin = hasAccess(user, ['admin'])
@@ -66,7 +66,7 @@ export default defineEventHandler(async (event) => {
   if (!isAdmin && !isCompanyAdmin)
     throw createError({
       statusCode: 401,
-      statusMessage: 'User not authorized',
+      statusMessage: 'Error (firebase/user-not-authorized).',
     })
 
   jobsRef.child(jobUID).update(newData)
