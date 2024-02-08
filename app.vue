@@ -2,7 +2,7 @@
   <VApp>
     <CommonAlert />
     <NuxtLayout>
-      <NuxtPage />
+      <NuxtPage :keepalive="true" />
     </NuxtLayout>
   </VApp>
 </template>
