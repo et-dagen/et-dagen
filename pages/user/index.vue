@@ -24,6 +24,37 @@
 
   const authStore = useAuthStore()
   const { user } = storeToRefs(authStore)
+
+  const uploadResume = async (event: any) => {
+    console.log('Uploading resume')
+    // console.log(event.target.files[0])
+    const resumeFile = event.target.files[0]
+    // console.log(auth.user?.uid)
+    if (!resumeFile) return
+    const bodyData = new FormData()
+    bodyData.append('file', resumeFile)
+    bodyData.append('userUID', auth.user?.uid)
+
+    await useFetch('/api/resume', {
+      method: 'POST',
+      body: bodyData,
+    }).then((URL) => {
+      console.log(`${URL.data.value}`)
+      console.log('Resume finished uploading')
+    })
+  }
+
+  const deleteResume = async () => {
+    console.log('Deleting resume')
+    await useFetch('/api/resume', {
+      method: 'DELETE',
+      body: {
+        userUID: auth.user?.uid,
+      },
+    })
+      .then(() => console.log('Resume deleted'))
+      .catch((error) => console.log(error.message))
+  }
 </script>
 
 <template>
@@ -87,8 +118,17 @@
         </VCol>
       </VRow>
       <div class="pt-10">
-        <h5 class="text-h5">Upload CV (pdf)</h5>
-        <VFileInput accept="application/pdf" />
+        <h5 class="text-h5">Upload resume (pdf)</h5>
+        <VFileInput
+          accept="application/pdf"
+          label="Upload resume"
+          :persistent-hint="true"
+          hint="Upload resume"
+          clearable
+          color="standard"
+          @change="uploadResume"
+        />
+        <VBtn color="error" @click="deleteResume">Delete resume</VBtn>
       </div>
     </VCard>
   </VContainer>
