@@ -1,5 +1,6 @@
 <script setup lang="ts">
   const localePath = useLocalePath()
+  const useAlerts = useAlertStore()
 
   const initialState = {
     email: '',
@@ -10,16 +11,6 @@
     ...initialState,
   })
 
-  const initialAlertState = {
-    show: false,
-    alertRoute: '',
-    type: undefined as AlertType,
-  }
-
-  const alertState = reactive({
-    ...initialAlertState,
-  })
-
   const isRegistering = ref<boolean>(false)
 
   const form = ref()
@@ -27,12 +18,10 @@
     isRegistering.value = true
     signinUser(state.email, state.password)
       .catch((error) => {
-        const content = getAlertRouteAndType(error.message)
-
-        alertState.alertRoute = content.route
-        alertState.type = content.type as AlertType
-        alertState.show = true
-
+        const { type, message } = getApiResponseAlertContext(
+          error.statusMessage
+        )
+        useAlerts.alert(message, type as AlertType)
         console.error(error)
       })
       .finally(() => {
@@ -42,46 +31,28 @@
 
   const resetPassword = () => {
     if (!state.email) {
-      alertState.alertRoute = 'alert.error.form.missing_email'
-      alertState.type = 'error'
-      alertState.show = true
-
+      useAlerts.alert(getI18nString('alert.error.form.missing_email'), 'error')
       return
     }
 
     requestPasswordReset(state.email)
-      .then(() => {
-        alertState.alertRoute = 'alert.success.firebase.reset_password'
-        alertState.type = 'success'
-        alertState.show = true
-      })
+      .then(() =>
+        useAlerts.alert(
+          getI18nString('alert.success.firebase.reset_password'),
+          'success'
+        )
+      )
       .catch((error) => {
-        const content = getAlertRouteAndType(error.message)
-
-        alertState.alertRoute = content.route
-        alertState.type = content.type as AlertType
-        alertState.show = true
-
+        const { type, message } = getApiResponseAlertContext(
+          error.statusMessage
+        )
+        useAlerts.alert(message, type as AlertType)
         console.error(error)
       })
   }
 </script>
 
 <template>
-  <VSnackbar v-model="alertState.show">
-    {{ $t(`${alertState.alertRoute}`) }}
-
-    <template #actions>
-      <v-btn
-        :color="alertState.type"
-        variant="text"
-        @click="alertState.show = false"
-      >
-        {{ $t('alert.close_alert') }}
-      </v-btn>
-    </template>
-  </VSnackbar>
-
   <VForm ref="form" @submit.prevent="submit">
     <VContainer>
       <VRow>

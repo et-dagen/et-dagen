@@ -10,6 +10,8 @@
   const auth = useAuthStore()
   const { hasAccess, user } = storeToRefs(auth)
 
+  const useAlerts = useAlertStore()
+
   // fetch company data
   const { data: company } = await useFetch('/api/company', {
     method: 'GET',
@@ -44,39 +46,6 @@
       : { ...initialState }
   )
 
-  // Alert state
-  const initialAlertState = {
-    show: false,
-    alertRoute: '',
-    type: undefined as AlertType,
-  }
-
-  const alertState = reactive({
-    ...initialAlertState,
-  })
-
-  // Show appropriate success alert after signing up for company
-  const displaySuccessAlert = (alertRoute: string) => {
-    alertState.alertRoute = alertRoute
-    alertState.type = 'success'
-    alertState.show = true
-  }
-
-  // show appropriate error alert after signing up for company
-  const displayErrorAlert = (alertRoute: string) => {
-    alertState.alertRoute = alertRoute
-    alertState.type = 'error'
-    alertState.show = true
-  }
-
-  // Show appropriate error alert for failed API calls
-  const displayErrorAlertFromMessage = (errorMessage: string) => {
-    const content = getAlertContent(errorMessage)
-    alertState.alertRoute = content.alertRoute
-    alertState.type = content.type
-    alertState.show = content.show
-  }
-
   const form = ref()
   const file = ref()
 
@@ -105,7 +74,12 @@
       .then(({ URL }) => {
         state.logo = URL
       })
-      .catch(() => displayErrorAlert('alert.error.company.edit.modified'))
+      .catch(() =>
+        useAlerts.alert(
+          getI18nString('alert.error.company.edit.modified'),
+          'error'
+        )
+      )
   }
 
   // save changes to existing company
@@ -115,7 +89,7 @@
     try {
       if (!valid) throw new Error('Form is not valid')
     } catch (error) {
-      displayErrorAlert('alert.error.form.invalid')
+      useAlerts.alert(getI18nString('alert.error.form.invalid'), 'error')
       return
     }
 
@@ -131,10 +105,19 @@
       body: rest,
     })
       .then(() => {
-        displaySuccessAlert('alert.success.company.edit.modified')
+        useAlerts.alert(
+          getI18nString('alert.success.company.edit.modified'),
+          'success'
+        )
         setTimeout(() => navigateTo(localePath('/admin/companies')), 2000)
       })
-      .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
+      .catch((error) => {
+        const { type, message } = getApiResponseAlertContext(
+          error.statusMessage
+        )
+        useAlerts.alert(message, type)
+        console.error(error)
+      })
   }
 
   const createCompany = async () => {
@@ -143,7 +126,7 @@
     try {
       if (!valid) throw new Error('Form is not valid')
     } catch (error) {
-      displayErrorAlert('alert.error.form.invalid')
+      useAlerts.alert(getI18nString('alert.error.form.invalid'), 'error')
       return
     }
 
@@ -168,10 +151,19 @@
         })
       }) // add logo newly created company if provided
       .then(() => {
-        displaySuccessAlert('alert.success.company.edit.created')
+        useAlerts.alert(
+          getI18nString('alert.success.company.edit.created'),
+          'success'
+        )
         setTimeout(() => navigateTo(localePath('/admin/companies')), 2000)
       })
-      .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
+      .catch((error) => {
+        const { type, message } = getApiResponseAlertContext(
+          error.statusMessage
+        )
+        useAlerts.alert(message, type)
+        console.error(error)
+      })
   }
 </script>
 
@@ -184,21 +176,6 @@
     <h3 v-else class="title py-6 mt-4">
       {{ $t('edit.company.create.title') }}
     </h3>
-
-    <!-- Alert component -->
-    <VSnackbar v-model="alertState.show">
-      {{ $t(`${alertState.alertRoute}`) }}
-
-      <template #actions>
-        <VBtn
-          :color="alertState.type"
-          variant="text"
-          @click="alertState.show = false"
-        >
-          {{ $t('alert.close_alert') }}
-        </VBtn>
-      </template>
-    </VSnackbar>
 
     <!-- Edit Form -->
     <VForm ref="form" @submit.prevent="saveChanges || createCompany">
