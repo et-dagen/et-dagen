@@ -1,7 +1,7 @@
-// POST /api/cv
+// POST /api/resume
 // endpoint for inserting pdf into storage bucket
 
-export default eventHandler(async (event) => {
+export default defineEventHandler(async (event) => {
   const { user } = event.context
 
   // get request body
@@ -19,7 +19,7 @@ export default eventHandler(async (event) => {
   if (userUID !== user.uid)
     throw createError({
       statusCode: 401,
-      statusMessage: 'Cannot upload CV to other users',
+      statusMessage: 'Cannot upload resume to other users',
     })
 
   // check if body content is defined
@@ -47,7 +47,7 @@ export default eventHandler(async (event) => {
 
   const options = {
     resumable: false,
-    public: true,
+    public: false,
   }
 
   // save pdf buffer to created reference
@@ -66,6 +66,6 @@ export default eventHandler(async (event) => {
 
   const userRef = db.ref(`users/${userUID}`)
 
-  userRef.update({ cv: URL })
+  userRef.update({ resume: URL })
   return URL
 })
