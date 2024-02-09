@@ -139,11 +139,13 @@
       "title": "Bedriftsadministrasjon",
       "dietaryrestrictions": "Allergener og restriksjoner",
       "attendants": "Påmeldte deltakere",
+      "copiedemail": "Epost kopiert!",
       "user": {
         "attributes": {
           "name": "Navn",
           "studyprogramme": "Studieprogram",
-          "currentyear": "Årstrinn"
+          "currentyear": "År",
+          "email": "Epost"
         }
       }
     }
