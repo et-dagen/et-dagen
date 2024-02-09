@@ -252,6 +252,9 @@
       "firebase": {
         "reset_password": "Epost for tilbakestilling av passord er sendt"
       },
+      "user": {
+        "edit": "Brukeren ble oppdatert"
+      },
       "event": {
         "register": {
           "sign_up": "Du er påmeldt dette arrangementet",

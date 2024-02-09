@@ -243,6 +243,9 @@
       "firebase": {
         "reset_password": "Password reset email sent"
       },
+      "user": {
+        "edit": "User updated"
+      },
       "event": {
         "register": {
           "sign_up": "Successfully registered to event",
