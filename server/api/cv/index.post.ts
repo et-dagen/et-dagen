@@ -5,30 +5,32 @@ export default eventHandler(async (event) => {
   const { user } = event.context
 
   // get request body
-  const body = await readBody(event)
+  const body = await readMultipartFormData(event)
+  const file = body?.[0]
+  const userUID = body?.[1].data.toString()
 
   // check if user is authorized
-  if (!hasAccess(user, ['basic']))
+  if (!hasAccess(user, ['basic', 'admin']))
     throw createError({
       statusCode: 400,
       statusMessage: 'User not authorized',
     })
 
-  if (body.userUID !== user.UID)
+  if (userUID !== user.uid)
     throw createError({
       statusCode: 401,
-      statusMessage: 'Cannot upload to other users',
+      statusMessage: 'Cannot upload CV to other users',
     })
 
   // check if body content is defined
-  if (!body.file || !body.user || !body.userUID)
+  if (!file || !user || !userUID)
     throw createError({
       statusCode: 402,
       statusMessage: 'Firebase: Error (storage/data-not-defined)',
     })
 
   // check if file is correct type (only pdf is allowed)
-  if (body.file.type !== 'document/pdf') {
+  if (file.type !== 'application/pdf') {
     throw createError({
       statusCode: 400,
       statusMessage: 'Firebase: Error (storage/unsupported-file-type)',
@@ -37,11 +39,11 @@ export default eventHandler(async (event) => {
 
   // get storage bucket
   const bucket = storage.bucket()
-  const filePath = `${body.storagePath}/${body.file.filename}`
+  const filePath = `users/${userUID}/${file.filename}`
   const fileRef = bucket.file(filePath)
 
   // create new buffer
-  const documentBuffer = Buffer.from(body.file.data)
+  const documentBuffer = Buffer.from(file.data)
 
   const options = {
     resumable: false,
@@ -60,8 +62,10 @@ export default eventHandler(async (event) => {
   })
 
   // return public url of pdf
-  const URL = `https://storage.googleapis.com/${bucket.name}/${body.filePath}`
-  return {
-    URL,
-  }
+  const URL = `https://storage.googleapis.com/${bucket.name}/${filePath}`
+
+  const userRef = db.ref(`users/${userUID}`)
+
+  userRef.update({ cv: URL })
+  return URL
 })
