@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { useEditor, EditorContent } from '@tiptap/vue-3'
+  // eslint-disable-next-line import/no-named-as-default
   import StarterKit from '@tiptap/starter-kit'
 
   const props = defineProps({
@@ -33,9 +34,9 @@
     <div v-if="editor" class="mb-4 tools">
       <!-- header -->
       <VTooltip location="top" color="primary">
-        <template #activator="{ props }">
+        <template #activator="{ props: activatorProps }">
           <VBtn
-            v-bind="props"
+            v-bind="activatorProps"
             :class="{ 'is-active': editor.isActive('heading', { level: 6 }) }"
             variant="flat"
             size="small"
@@ -51,9 +52,9 @@
 
       <!-- paragraph -->
       <VTooltip location="top" color="primary">
-        <template #activator="{ props }">
+        <template #activator="{ props: activatorProps }">
           <VBtn
-            v-bind="props"
+            v-bind="activatorProps"
             :class="{ 'is-active': editor.isActive('paragraph') }"
             variant="flat"
             size="small"
@@ -69,9 +70,9 @@
 
       <!-- bold text -->
       <VTooltip location="top" color="primary">
-        <template #activator="{ props }">
+        <template #activator="{ props: activatorProps }">
           <VBtn
-            v-bind="props"
+            v-bind="activatorProps"
             :disabled="!editor.can().chain().focus().toggleBold().run()"
             :class="{ 'is-active': editor.isActive('bold') }"
             variant="flat"
@@ -88,9 +89,9 @@
 
       <!-- italic text -->
       <VTooltip location="top" color="primary">
-        <template #activator="{ props }">
+        <template #activator="{ props: activatorProps }">
           <VBtn
-            v-bind="props"
+            v-bind="activatorProps"
             :disabled="!editor.can().chain().focus().toggleItalic().run()"
             :class="{ 'is-active': editor.isActive('italic') }"
             variant="flat"
@@ -107,9 +108,9 @@
 
       <!-- strikethrough text -->
       <VTooltip location="top" color="primary">
-        <template #activator="{ props }">
+        <template #activator="{ props: activatorProps }">
           <VBtn
-            v-bind="props"
+            v-bind="activatorProps"
             :disabled="!editor.can().chain().focus().toggleStrike().run()"
             :class="{ 'is-active': editor.isActive('strike') }"
             variant="flat"
@@ -126,9 +127,9 @@
 
       <!-- bullet list -->
       <VTooltip location="top" color="primary">
-        <template #activator="{ props }">
+        <template #activator="{ props: activatorProps }">
           <VBtn
-            v-bind="props"
+            v-bind="activatorProps"
             :class="{ 'is-active': editor.isActive('bulletList') }"
             variant="flat"
             size="small"
@@ -144,9 +145,9 @@
 
       <!-- numbered list -->
       <VTooltip location="top" color="primary">
-        <template #activator="{ props }">
+        <template #activator="{ props: activatorProps }">
           <VBtn
-            v-bind="props"
+            v-bind="activatorProps"
             :class="{ 'is-active': editor.isActive('orderedList') }"
             variant="flat"
             size="small"
@@ -162,9 +163,9 @@
 
       <!-- line break -->
       <VTooltip location="top" color="primary">
-        <template #activator="{ props }">
+        <template #activator="{ props: activatorProps }">
           <VBtn
-            v-bind="props"
+            v-bind="activatorProps"
             variant="flat"
             size="small"
             :ripple="true"
@@ -179,9 +180,9 @@
 
       <!-- undo -->
       <VTooltip location="top" color="primary">
-        <template #activator="{ props }">
+        <template #activator="{ props: activatorProps }">
           <VBtn
-            v-bind="props"
+            v-bind="activatorProps"
             :disabled="!editor.can().chain().focus().undo().run()"
             variant="flat"
             size="small"
@@ -197,9 +198,9 @@
 
       <!-- redo -->
       <VTooltip location="top" color="primary">
-        <template #activator="{ props }">
+        <template #activator="{ props: activatorProps }">
           <VBtn
-            v-bind="props"
+            v-bind="activatorProps"
             :disabled="!editor.can().chain().focus().redo().run()"
             variant="flat"
             size="small"
