@@ -115,7 +115,7 @@
         const { type, message } = getApiResponseAlertContext(
           error.statusMessage
         )
-        useAlerts.alert(message, type)
+        useAlerts.alert(message, type as AlertType)
         console.error(error)
       })
   }
@@ -161,7 +161,7 @@
         const { type, message } = getApiResponseAlertContext(
           error.statusMessage
         )
-        useAlerts.alert(message, type)
+        useAlerts.alert(message, type as AlertType)
         console.error(error)
       })
   }
