@@ -17,7 +17,7 @@
   const jobTypes = ref([0, 1, 2])
 
   // sorting by deadline
-  const sortOrder = ref('descending')
+  const sortOrder = ref('ascending')
 
   // search string: keywords separated by spaces
   const search = ref('')
@@ -111,20 +111,20 @@
           <VChipGroup v-model="sortOrder" class="chip-group" mandatory>
             <VChip
               :class="`bg-neutral-lighten-4 ${
-                sortOrder === 'descending' ? 'v-chip--selected' : ''
-              }`"
-              value="descending"
-            >
-              {{ $t('admin.users.filterorder.descending') }}
-            </VChip>
-            <VChip
-              :class="`bg-neutral-lighten-4 ${
                 sortOrder === 'ascending' ? 'v-chip--selected' : ''
               }`"
               style="margin-right: 0px !important"
               value="ascending"
             >
               {{ $t('admin.users.filterorder.ascending') }}
+            </VChip>
+            <VChip
+              :class="`bg-neutral-lighten-4 ${
+                sortOrder === 'descending' ? 'v-chip--selected' : ''
+              }`"
+              value="descending"
+            >
+              {{ $t('admin.users.filterorder.descending') }}
             </VChip>
           </VChipGroup>
         </div>
