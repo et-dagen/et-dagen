@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { dietaryFlags } from '~/config/app.config'
   const localePath = useLocalePath()
+  const { text, copy, copied } = useClipboard()
 
   definePageMeta({
     // route and all sub routes are protected
@@ -195,6 +196,9 @@
                     <th>
                       {{ $t('company.admin.user.attributes.currentyear') }}
                     </th>
+                    <th>
+                      {{ $t('company.admin.user.attributes.email') }}
+                    </th>
                     <th>{{ $t('company.admin.dietaryrestrictions') }}</th>
                   </tr>
                 </thead>
@@ -206,6 +210,26 @@
                     <td>{{ user.name }}</td>
                     <td>{{ user.studyProgram }}</td>
                     <td>{{ user.currentYear }}</td>
+                    <td>
+                      <VTooltip location="top" color="primary">
+                        <template #activator="{ props }">
+                          <VBtn
+                            v-bind="props"
+                            size="small"
+                            variant="text"
+                            icon="mdi-content-copy"
+                            color="primary"
+                            @click="copy(user.email)"
+                          />
+                        </template>
+
+                        {{
+                          copied && text === user.email
+                            ? $t('company.admin.copiedemail')
+                            : user.email
+                        }}
+                      </VTooltip>
+                    </td>
                     <td>
                       <span
                         v-if="user?.dietaryRestrictions"

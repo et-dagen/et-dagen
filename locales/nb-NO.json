@@ -9,6 +9,11 @@
     "program_nav": "SE PROGRAM",
     "company": "Mine arrangementer"
   },
+  "home": {
+    "banner": {
+      "slogan": "Få et innblikk i din fremtidige arbeidsplass"
+    }
+  },
   "user": {
     "sign_in": "Logg inn",
     "sign_out": "Logg ut",
@@ -139,11 +144,13 @@
       "title": "Bedriftsadministrasjon",
       "dietaryrestrictions": "Allergener og restriksjoner",
       "attendants": "Påmeldte deltakere",
+      "copiedemail": "Epost kopiert!",
       "user": {
         "attributes": {
           "name": "Navn",
           "studyprogramme": "Studieprogram",
-          "currentyear": "Årstrinn"
+          "currentyear": "År",
+          "email": "Epost"
         }
       }
     }
@@ -251,6 +258,9 @@
     "success": {
       "firebase": {
         "reset_password": "Epost for tilbakestilling av passord er sendt"
+      },
+      "user": {
+        "edit": "Brukeren ble oppdatert"
       },
       "event": {
         "register": {

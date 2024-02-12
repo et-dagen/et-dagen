@@ -33,7 +33,7 @@
   <div class="ma-10">
     <HomeBanner
       :content="{
-        caption: 'Få et innblikk i din fremtidige arbeidsplass',
+        caption: $t('home.banner.slogan'),
         date: { start: '2023-02-14', end: '2023-02-15' },
         image: '/images/banner_graphics.png',
         title: 'Elektronikk & Teknologidagene',

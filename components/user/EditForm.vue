@@ -165,7 +165,8 @@
       ])
     })
       .then(async () => {
-        displaySuccessAlert('alert.success.user.edit')
+        useAlerts.alert(getI18nString('alert.success.user.edit'), 'success')
+
         if (state.uid === auth.user?.uid) {
           // sign out the new user
           await signoutUser()
