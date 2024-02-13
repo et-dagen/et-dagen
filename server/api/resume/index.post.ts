@@ -47,7 +47,7 @@ export default defineEventHandler(async (event) => {
 
   const options = {
     resumable: false,
-    public: false,
+    public: true,
   }
 
   // save pdf buffer to created reference

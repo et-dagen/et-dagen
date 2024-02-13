@@ -18,13 +18,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'User can only delete their own resume',
     })
 
-  // console.log('USER RESUME: ', user.resume)
-
-  const file = user.resume
-
-  console.log(`FILE INFO: ${file}`)
-
-  // const documentBuffer = Buffer.from(file.data)
+  const file = user.resume.split('/')
 
   if (!file)
     throw createError({
@@ -32,20 +26,16 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'User does not have a resume',
     })
 
-  const filename = file.split('/')[-1]
+  // Get last element in array to get specific file name
+  const filename = file[file.length - 1]
 
   // get storage bucket
   const bucket = storage.bucket()
   const filePath = `users/${userUID}/${filename}`
   const fileRef = bucket.file(filePath)
 
-  console.log(`FILEREF NAME: ${fileRef}`)
-
   // delete pdf buffer at reference
-  try {
-    await fileRef.delete()
-  } catch (error) {
-    // console.error('Error deleting file:', error)
+  await fileRef.delete().catch(() => {
     sendError(
       event,
       createError({
@@ -53,10 +43,11 @@ export default defineEventHandler(async (event) => {
         statusMessage: 'Firebase: Error (storage/cannot-delete-file).',
       })
     )
-  }
+  })
 
-  // const userRef = db.ref('users')
-  // userRef.child(userUID).child('resume').remove()
+  // Delete file reference from database
+  const userRef = db.ref('users')
+  userRef.child(userUID).child('resume').remove()
 
   sendNoContent(event, 204)
 })
