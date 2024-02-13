@@ -41,11 +41,14 @@
     }).then((URL) => {
       console.log(`${URL.data.value}`)
       console.log('Resume finished uploading')
+      location.reload()
+      console.log(`Your resume: ${auth.user?.resume}`)
     })
   }
 
   const deleteResume = async () => {
     console.log('Deleting resume')
+    console.log('USER RESUME: ', auth.user?.resume)
     await useFetch('/api/resume', {
       method: 'DELETE',
       body: {
