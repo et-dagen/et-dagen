@@ -80,11 +80,11 @@
   })
 
   // Show appropriate success alert after signing up for company
-  const displaySuccessAlert = (alertRoute: string) => {
-    alertState.alertRoute = alertRoute
-    alertState.type = 'success'
-    alertState.show = true
-  }
+  // const displaySuccessAlert = (alertRoute: string) => {
+  //   alertState.alertRoute = alertRoute
+  //   alertState.type = 'success'
+  //   alertState.show = true
+  // }
 
   // show appropriate error alert after signing up for company
   const displayErrorAlert = (alertRoute: string) => {
@@ -136,7 +136,8 @@
       ])
     })
       .then(async () => {
-        displaySuccessAlert('alert.success.user.edit')
+        useAlerts.alert(getI18nString('alert.success.user.edit'), 'success')
+
         if (state.uid === auth.user?.uid) {
           // sign out the new user
           await signoutUser()

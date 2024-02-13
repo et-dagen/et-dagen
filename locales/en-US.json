@@ -136,7 +136,16 @@
     "admin": {
       "title": "Company Admin",
       "dietaryrestrictions": "Allergies and Restrictions",
-      "attendants": "Attendants"
+      "attendants": "Attendants",
+      "copiedemail": "Email copied!",
+      "user": {
+        "attributes": {
+          "name": "Name",
+          "studyprogramme": "Programme",
+          "currentyear": "Year",
+          "email": "Email"
+        }
+      }
     }
   },
   "alert": {
@@ -182,6 +191,9 @@
     "success": {
       "firebase": {
         "reset_password": "Password reset email sent"
+      },
+      "user": {
+        "edit": "User updated"
       },
       "event": {
         "register": {
