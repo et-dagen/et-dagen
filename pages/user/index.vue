@@ -26,10 +26,7 @@
   const { user } = storeToRefs(authStore)
 
   const uploadResume = async (event: any) => {
-    console.log('Uploading resume')
-    // console.log(event.target.files[0])
     const resumeFile = event.target.files[0]
-    // console.log(auth.user?.uid)
     if (!resumeFile) return
     const bodyData = new FormData()
     bodyData.append('file', resumeFile)
@@ -38,25 +35,27 @@
     await useFetch('/api/resume', {
       method: 'POST',
       body: bodyData,
-    }).then((URL) => {
-      console.log(`${URL.data.value}`)
-      console.log('Resume finished uploading')
-      location.reload()
-      console.log(`Your resume: ${auth.user?.resume}`)
     })
+      .then(() => {
+        location.reload()
+      })
+      .catch((error) => console.log(error.message))
   }
 
   const deleteResume = async () => {
-    console.log('Deleting resume')
-    console.log('USER RESUME: ', auth.user?.resume)
     await useFetch('/api/resume', {
       method: 'DELETE',
       body: {
         userUID: auth.user?.uid,
       },
     })
-      .then(() => console.log('Resume deleted'))
+      .then(() => location.reload())
       .catch((error) => console.log(error.message))
+  }
+
+  const getFileName = (URL: string) => {
+    const list = URL.split('/')
+    return list[list.length - 1]
   }
 </script>
 
@@ -121,17 +120,29 @@
         </VCol>
       </VRow>
       <div class="pt-10">
-        <h5 class="text-h5">Upload resume (pdf)</h5>
-        <VFileInput
-          accept="application/pdf"
-          label="Upload resume"
-          :persistent-hint="true"
-          hint="Upload resume"
-          clearable
-          color="standard"
-          @change="uploadResume"
-        />
-        <VBtn color="error" @click="deleteResume">Delete resume</VBtn>
+        <h6 v-if="auth.user?.resume" class="pb-4">
+          Your resume:
+          <NuxtLink
+            :to="auth.user.resume"
+            :external="true"
+            target="_blank"
+            class="text-blue"
+            >{{ getFileName(auth.user.resume) }}</NuxtLink
+          >
+        </h6>
+        <VRow>
+          <VCol cols="6">
+            <VFileInput
+              accept="application/pdf"
+              label="Upload resume"
+              color="standard"
+              @change="uploadResume"
+            />
+          </VCol>
+          <VCol v-if="auth.user?.resume" cols="6">
+            <VBtn color="error" @click="deleteResume">Delete resume</VBtn>
+          </VCol>
+        </VRow>
       </div>
     </VCard>
   </VContainer>
