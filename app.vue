@@ -2,10 +2,7 @@
   <VApp>
     <CommonAlert />
     <NuxtLayout>
-      <NuxtPage
-        :keepalive="true"
-        :keep-alive-props="{ include: ['pages/programme.vue'] }"
-      />
+      <NuxtPage :keepalive="{ include: 'Programme' }" />
     </NuxtLayout>
   </VApp>
 </template>
