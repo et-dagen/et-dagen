@@ -117,33 +117,44 @@
               </li>
             </ul>
           </div>
+          <div class="pt-5">
+            <h6>{{ $t('user.resume.resume') }}</h6>
+            <VDivider class="my-2" />
+            <p v-if="auth.user?.resume" class="my-2">
+              <strong>{{ $t('user.resume.your_resume') }}: </strong>
+              <NuxtLink
+                :to="auth.user.resume"
+                :external="true"
+                target="_blank"
+                class="text-blue"
+                >{{ getFileName(auth.user.resume) }}</NuxtLink
+              >
+            </p>
+            <VRow no-gutters>
+              <VCol cols="12" :sm="auth.user?.resume !== undefined ? 7 : 12">
+                <VFileInput
+                  :active="auth.user?.resume !== undefined"
+                  accept="application/pdf"
+                  :label="$t('user.resume.upload_resume')"
+                  base-color="standard"
+                  color="standard"
+                  @change="uploadResume"
+                />
+              </VCol>
+              <VCol
+                v-if="auth.user?.resume"
+                cols="12"
+                sm="5"
+                class="d-flex justify-center"
+              >
+                <VBtn color="error" @click="deleteResume">{{
+                  $t('user.resume.delete_resume')
+                }}</VBtn>
+              </VCol>
+            </VRow>
+          </div>
         </VCol>
       </VRow>
-      <div class="pt-10">
-        <h6 v-if="auth.user?.resume" class="pb-4">
-          Your resume:
-          <NuxtLink
-            :to="auth.user.resume"
-            :external="true"
-            target="_blank"
-            class="text-blue"
-            >{{ getFileName(auth.user.resume) }}</NuxtLink
-          >
-        </h6>
-        <VRow>
-          <VCol cols="6">
-            <VFileInput
-              accept="application/pdf"
-              label="Upload resume"
-              color="standard"
-              @change="uploadResume"
-            />
-          </VCol>
-          <VCol v-if="auth.user?.resume" cols="6">
-            <VBtn color="error" @click="deleteResume">Delete resume</VBtn>
-          </VCol>
-        </VRow>
-      </div>
     </VCard>
   </VContainer>
 </template>
