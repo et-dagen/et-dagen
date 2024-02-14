@@ -46,6 +46,12 @@
       "password": "Passord",
       "remember": "Husk meg",
       "forgot": "Glemt passord?"
+    },
+    "resume": {
+      "resume": "CV",
+      "upload_resume": "Last opp CV",
+      "your_resume": "Din CV",
+      "delete_resume": "Slett CV"
     }
   },
   "error": {

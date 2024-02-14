@@ -46,6 +46,12 @@
       "password": "Password",
       "remember": "Remember me",
       "forgot": "Forgot password?"
+    },
+    "resume": {
+      "resume": "resume",
+      "upload_resume": "Upload resume",
+      "your_resume": "Your resume",
+      "delete_resume": "Delete resume"
     }
   },
   "error": {
@@ -486,7 +492,7 @@
     "user": {
       "title": "Edit User",
       "save": "Save",
-      "canel": "Cancel",
+      "cancel": "Cancel",
       "attributes": {
         "name": "Name",
         "email": "E-mail",
