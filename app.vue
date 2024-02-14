@@ -2,7 +2,7 @@
   <VApp>
     <CommonAlert />
     <NuxtLayout>
-      <NuxtPage :keepalive="true" />
+      <NuxtPage :keepalive="{ include: 'Programme' }" />
     </NuxtLayout>
   </VApp>
 </template>
