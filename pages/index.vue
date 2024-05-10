@@ -34,7 +34,7 @@
     <HomeBanner
       :content="{
         caption: $t('home.banner.slogan'),
-        date: { start: '2023-02-14', end: '2023-02-15' },
+        date: { start: '2025-02-10', end: '2025-02-14' },
         image: '/images/banner_graphics.png',
         title: 'Elektronikk & Teknologidagene',
       }"
@@ -43,7 +43,7 @@
 
     <HomeCountDown
       :content="{
-        futureDate: '2024-02-14',
+        futureDate: '2025-02-10',
         futureTime: '10:00:00',
       }"
       class="mb-5"
