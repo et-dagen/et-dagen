@@ -55,12 +55,6 @@ Start the development server on `http://localhost:3000`
 pnpm dev
 ```
 
-or optionally with Turbo if installed:
-
-```bash
-turbo dev
-```
-
 ### Production
 
 Locally preview production build:
