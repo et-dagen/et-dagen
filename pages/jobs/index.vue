@@ -113,6 +113,7 @@
               :class="`bg-neutral-lighten-4 ${
                 sortOrder === 'ascending' ? 'v-chip--selected' : ''
               }`"
+              style="margin-right: 0px !important"
               value="ascending"
             >
               {{ $t('admin.users.filterorder.ascending') }}
