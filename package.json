@@ -16,7 +16,7 @@
     "lint:prettier": "prettier --check .",
     "lint": "pnpm lint:js && pnpm lint:prettier",
     "lintfix": "prettier --write --list-different . && pnpm lint:js --fix",
-    "prepare": "husky install"
+    "prepare": "husky"
   },
   "husky": {
     "hooks": {
