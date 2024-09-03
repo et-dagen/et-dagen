@@ -19,7 +19,7 @@
     signinUser(state.email, state.password)
       .catch((error) => {
         const { type, message } = getApiResponseAlertContext(
-          error.statusMessage
+          error.statusMessage,
         )
         useAlerts.alert(message, type as AlertType)
         console.error(error)
@@ -39,12 +39,12 @@
       .then(() =>
         useAlerts.alert(
           getI18nString('alert.success.firebase.reset_password'),
-          'success'
-        )
+          'success',
+        ),
       )
       .catch((error) => {
         const { type, message } = getApiResponseAlertContext(
-          error.statusMessage
+          error.statusMessage,
         )
         useAlerts.alert(message, type as AlertType)
         console.error(error)

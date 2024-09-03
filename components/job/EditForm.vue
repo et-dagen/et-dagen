@@ -51,7 +51,7 @@
   const state = reactive(
     props.jobUid && job.value
       ? { ...Object.values(embedKeyIntoObjectValues(job.value))[0] }
-      : { ...initialState }
+      : { ...initialState },
   )
 
   const form = ref()
@@ -89,7 +89,7 @@
   })
 
   const validDescription = computed(
-    () => state.description && state.description !== '<p></p>'
+    () => state.description && state.description !== '<p></p>',
   )
 
   // save changes to existing job
@@ -116,7 +116,7 @@
       .then(() => {
         useAlerts.alert(
           getI18nString('alert.success.job.edit.modified'),
-          'success'
+          'success',
         )
         setTimeout(() => navigateTo(localePath('/admin/jobs')), 2000)
       })
@@ -142,7 +142,7 @@
       .then(() => {
         useAlerts.alert(
           getI18nString('alert.success.job.edit.created'),
-          'success'
+          'success',
         )
         setTimeout(() => navigateTo(localePath('/admin/jobs')), 2000)
       })

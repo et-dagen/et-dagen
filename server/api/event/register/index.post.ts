@@ -54,7 +54,7 @@ export default defineEventHandler(async (event) => {
     !hasAccess(user, ['admin']) &&
     !presentWithinTimeWindow(
       data[eventUID].registration.start,
-      data[eventUID].registration.end
+      data[eventUID].registration.end,
     )
   ) {
     throw createError({
@@ -74,12 +74,12 @@ export default defineEventHandler(async (event) => {
   // check if user meets registration requirements
   const meetsProgrammeRequirement =
     data[eventUID]?.registration?.requirements?.programmes?.includes(
-      user?.studyProgram
+      user?.studyProgram,
     ) ?? true
 
   const meetsYearRequirement =
     data[eventUID]?.registration?.requirements?.years?.includes(
-      user?.currentYear
+      user?.currentYear,
     ) ?? true
 
   if (

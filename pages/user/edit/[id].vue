@@ -18,7 +18,7 @@
 
   const route = useRoute()
   const user = computed(() =>
-    data.value.find((user) => user.uid === route.params.id)
+    data.value.find((user) => user.uid === route.params.id),
   )
 
   // navigate to admin page if user doesn't exist

@@ -21,7 +21,7 @@ type newUser = {
 // registers new user in firebase auth and db
 export const registerUser = async (
   newUser: newUser,
-  registrationCode?: string
+  registrationCode?: string,
 ) => {
   // studyprogram and current year are required when not creating a company user
   if (!registrationCode && (!newUser.studyProgram || !newUser.currentYear))
@@ -61,7 +61,7 @@ export const registerUser = async (
   const { user } = await createUserWithEmailAndPassword(
     auth,
     newUser.email,
-    newUser.password
+    newUser.password,
   )
 
   // set displayname in firebase auth

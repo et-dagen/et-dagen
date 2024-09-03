@@ -42,7 +42,7 @@
   const programmeOptions = computed(() =>
     Object.values(studyProgrammes.value)
       .map((prog: any) => prog.name)
-      .sort((a, b) => a.localeCompare(b))
+      .sort((a, b) => a.localeCompare(b)),
   )
 
   // Fetch all users
@@ -95,13 +95,13 @@
               value: uid,
               title: name,
             }
-          })
+          }),
       )
     }
   })
 
   const validDescription = computed(
-    () => state.description && state.description !== '<p></p>'
+    () => state.description && state.description !== '<p></p>',
   )
 
   // Initial state in case of missing props or API bounce
@@ -134,16 +134,16 @@
   const state = reactive(
     event.value
       ? { ...Object.values(embedKeyIntoObjectValues(event.value))[0] }
-      : { ...initialState }
+      : { ...initialState },
   )
 
   const selectedProgrammes = ref(
-    state?.registration?.requirements?.programmes || []
+    state?.registration?.requirements?.programmes || [],
   )
   const selectedYears = ref(state?.registration?.requirements?.years || [])
   const limitRegistration = ref(
     state?.capacity &&
-      (selectedProgrammes.value.length > 0 || selectedYears.value.length > 0)
+      (selectedProgrammes.value.length > 0 || selectedYears.value.length > 0),
   )
 
   const form = ref()
@@ -248,7 +248,7 @@
         // Handle successful response
         useAlerts.alert(
           getI18nString('alert.success.event.edit.modified'),
-          'success'
+          'success',
         )
         setTimeout(routeOnSuccess, 2000)
       })
@@ -277,7 +277,7 @@
         // Handle successful response
         useAlerts.alert(
           getI18nString('alert.success.event.edit.created'),
-          'success'
+          'success',
         )
         setTimeout(routeOnSuccess, 2000)
       })
@@ -370,7 +370,7 @@
             v-model="selectedProgrammes"
             :content="{
               label: $t(
-                'edit.event.attributes.registration.requirements.programmes'
+                'edit.event.attributes.registration.requirements.programmes',
               ),
               options: programmeOptions,
             }"
@@ -384,7 +384,7 @@
             v-model="selectedYears"
             :content="{
               label: $t(
-                'edit.event.attributes.registration.requirements.years'
+                'edit.event.attributes.registration.requirements.years',
               ),
               options: [1, 2, 3, 4, 5],
             }"

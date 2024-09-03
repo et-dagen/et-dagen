@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
   // only applicable when creating a new company user
   if (registrationCode) {
     const { isValid, companyUID: codeCompanyUID } = await validateCode(
-      registrationCode as string
+      registrationCode as string,
     )
 
     // a valid code is required when creating a new company user
