@@ -46,6 +46,11 @@ module.exports = {
         imports: 'only-multiline', // Enforce trailing commas in multi-line imports
         exports: 'only-multiline', // Enforce trailing commas in multi-line exports
         functions: 'only-multiline', // Do not enforce trailing commas in function parameters and arguments
+        arrays: 'always-multiline', // Always enforce trailing commas in multi-line arrays
+        objects: 'always-multiline', // Always enforce trailing commas in multi-line objects
+        imports: 'only-multiline', // Enforce trailing commas in multi-line imports
+        exports: 'only-multiline', // Enforce trailing commas in multi-line exports
+        functions: 'only-multiline', // Do not enforce trailing commas in function parameters and arguments
       },
     ],
 
@@ -81,7 +86,10 @@ module.exports = {
       {
         code: 100,
         template: 100,
+        code: 100,
+        template: 100,
         tabWidth: 2,
+        comments: 100,
         comments: 100,
         ignorePattern: '',
         ignoreComments: true,
