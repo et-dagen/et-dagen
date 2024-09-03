@@ -32,7 +32,7 @@
         flat
         :subtitle="
           $t(
-            `admin.jobs.attributes.jobtype.${content.jobType.replace('-', '_')}`
+            `admin.jobs.attributes.jobtype.${content.jobType.replace('-', '_')}`,
           )
         "
       >
@@ -47,8 +47,8 @@
                 $t(
                   `admin.jobs.attributes.jobtype.${content.jobType.replace(
                     '-',
-                    '_'
-                  )}`
+                    '_',
+                  )}`,
                 )
               }}
               -

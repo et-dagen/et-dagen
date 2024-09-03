@@ -36,7 +36,7 @@
     if (!events.value) return []
 
     const filteredEvents = events.value.filter((event: any) =>
-      Object.values(event?.attendants ?? {}).includes(user.value?.uid)
+      Object.values(event?.attendants ?? {}).includes(user.value?.uid),
     )
 
     return filteredEvents.map((event: any) => {

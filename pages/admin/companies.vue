@@ -13,7 +13,7 @@
 
   // process companies
   const companiesWithId = computed(() =>
-    embedKeyIntoObjectValues(companies.value)
+    embedKeyIntoObjectValues(companies.value),
   )
 
   // check if company has a code
@@ -21,7 +21,7 @@
     return (companyUID: string) => {
       if (!codes.value) return false
       return Object.values(codes.value)?.some(
-        (code: any) => code?.companyUID === companyUID
+        (code: any) => code?.companyUID === companyUID,
       )
     }
   })
@@ -64,12 +64,12 @@
     // map the selected company types to their names
     // eslint-disable-next-line
     const selectedCompanyTypes = companyTypeNames.filter((companyType, index) =>
-      companyTypes.value.includes(index)
+      companyTypes.value.includes(index),
     )
 
     // filter out companies with the selectd company types
     const filterByCompanyType = companiesWithId.value?.filter((company) =>
-      selectedCompanyTypes.includes(company.type ?? 'sponsor')
+      selectedCompanyTypes.includes(company.type ?? 'sponsor'),
     )
 
     // reset company selection when filters change
@@ -94,7 +94,7 @@
       }
       resultArray[chunkIndex].push(item)
       return resultArray
-    }, [] as Company[][])
+    }, [] as Company[][]),
   )
 
   // Delete seleceted companies
@@ -103,7 +103,7 @@
     const queries = []
 
     const selectedCompanies = pages.value[currentPage.value - 1].map(
-      (company, index) => (selected.value[index] ? company.uid : undefined)
+      (company, index) => (selected.value[index] ? company.uid : undefined),
     )
 
     for (const uid of selectedCompanies)
@@ -114,7 +114,7 @@
             body: {
               companyUID: uid,
             },
-          })
+          }),
         )
     try {
       await Promise.all(queries)
@@ -162,8 +162,8 @@
             {{
               $t(
                 `admin.company.attributes.type.${formatCompanyType(
-                  companyType
-                )}`
+                  companyType,
+                )}`,
               )
             }}
           </VChip>
@@ -229,7 +229,7 @@
             () => {
               /* @ts-ignore */
               filteredCompanies.forEach(
-                (company, index) => (selected[index] = true)
+                (company, index) => (selected[index] = true),
               )
             }
           "
@@ -351,8 +351,8 @@
             {{
               $t(
                 `admin.company.attributes.type.${formatCompanyType(
-                  company.type
-                )}`
+                  company.type,
+                )}`,
               )
             }}
           </td>

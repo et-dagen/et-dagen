@@ -41,7 +41,7 @@
   const eventAttandantList = computed(() => {
     return (event: any) => {
       return users.value.filter((user: any) =>
-        Object.values(event?.attendants || {}).includes(user.uid)
+        Object.values(event?.attendants || {}).includes(user.uid),
       )
     }
   })

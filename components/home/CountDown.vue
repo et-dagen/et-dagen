@@ -13,15 +13,15 @@
   const timeDiff = ref(
     calculateTimeDifference(
       cdProps.content.futureDate,
-      cdProps.content.futureTime
-    )
+      cdProps.content.futureTime,
+    ),
   )
 
   onMounted(() => {
     setInterval(() => {
       timeDiff.value = calculateTimeDifference(
         cdProps.content.futureDate,
-        cdProps.content.futureTime
+        cdProps.content.futureTime,
       )
     }, 1000)
   })

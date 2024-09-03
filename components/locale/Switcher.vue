@@ -9,13 +9,13 @@
   // returns a list of locales, exluding current locale
   const availableLocales = computed(() => {
     return (locales.value as LocaleObject[]).filter(
-      (language) => language.code !== locale.value
+      (language) => language.code !== locale.value,
     )
   })
 
   const currentLocale = computed(() => {
     return (locales.value as LocaleObject[]).find(
-      (language) => language.code === locale.value
+      (language) => language.code === locale.value,
     )
   })
 </script>

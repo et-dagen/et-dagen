@@ -45,12 +45,12 @@
     // map the selected job types to their names
     // eslint-disable-next-line
     const selectedJobTypes = jobTypeNames.filter((jobType, index) =>
-      jobTypes.value.includes(index)
+      jobTypes.value.includes(index),
     )
 
     // filter out jobs with the selectd job types
     const filterByJobType = jobsWithId.value?.filter((job) =>
-      selectedJobTypes.includes(job.jobType ?? 'sponsor')
+      selectedJobTypes.includes(job.jobType ?? 'sponsor'),
     )
 
     // reset job selection when filters change
@@ -77,7 +77,7 @@
           resultArray[chunkIndex].push(item)
           return resultArray
         }, [] as Job[][])
-      : []
+      : [],
   )
 
   // Delete seleceted jobs
@@ -86,7 +86,7 @@
     const queries = []
 
     const selectedJobs = pages.value[currentPage.value - 1].map((job, index) =>
-      selected.value[index] ? job.uid : undefined
+      selected.value[index] ? job.uid : undefined,
     )
 
     for (const uid of selectedJobs)
@@ -97,7 +97,7 @@
             query: {
               jobUID: uid,
             },
-          })
+          }),
         )
     try {
       await Promise.all(queries)

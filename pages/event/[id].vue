@@ -23,12 +23,12 @@
 
   // get company information
   const company = computed(
-    () => companies.value[event.value.companyUID] || null
+    () => companies.value[event.value.companyUID] || null,
   )
 
   // check if event has capacity and attendants
   const hasAttendants = computed(
-    () => !!event.value.attendants || Object.hasOwn(event.value, 'attendants')
+    () => !!event.value.attendants || Object.hasOwn(event.value, 'attendants'),
   )
   const hasCapacity = computed(() => !!event.value.capacity)
 
@@ -36,56 +36,56 @@
   const eventStartString = computed(
     () =>
       `${getDayAndMonthString(
-        event.value.date.start
-      )} ${getHourAndMinuteStringFromString(event.value.date.start)}`
+        event.value.date.start,
+      )} ${getHourAndMinuteStringFromString(event.value.date.start)}`,
   )
   const eventEndString = computed(
     () =>
       `${getDayAndMonthString(
-        event.value.date.end
-      )} ${getHourAndMinuteStringFromString(event.value.date.end)}`
+        event.value.date.end,
+      )} ${getHourAndMinuteStringFromString(event.value.date.end)}`,
   )
 
   // get day and month strings from date
   const registrationStartString = computed(() =>
     hasCapacity.value
       ? `${getDayAndMonthString(
-          event.value.registration.start
+          event.value.registration.start,
         )} ${getHourAndMinuteStringFromString(event.value.registration.start)}`
-      : null
+      : null,
   )
   const registrationEndString = computed(() =>
     hasCapacity.value
       ? `${getDayAndMonthString(
-          event.value.registration.end
+          event.value.registration.end,
         )} ${getHourAndMinuteStringFromString(event.value.registration.end)}`
-      : null
+      : null,
   )
 
   const programmeRequirements = computed(
-    () => event.value?.registration?.requirements?.programmes ?? null
+    () => event.value?.registration?.requirements?.programmes ?? null,
   )
 
   const hasYearsRequirements = computed(
-    () => event.value?.registration?.requirements?.years ?? null
+    () => event.value?.registration?.requirements?.years ?? null,
   )
 
   // check if user meets registration requirements
   const meetsProgrammeRequirement =
     event.value?.registration?.requirements?.programmes?.includes(
-      useAuth.user?.studyProgram
+      useAuth.user?.studyProgram,
     ) ?? true
 
   const meetsYearRequirement =
     event.value?.registration?.requirements?.years?.includes(
-      useAuth.user?.currentYear
+      useAuth.user?.currentYear,
     ) ?? true
 
   // check if user is already registered for event
   const alreadyRegistered = computed(
     () =>
       hasAttendants.value &&
-      Object.values(event.value.attendants).includes(useAuth?.user?.uid)
+      Object.values(event.value.attendants).includes(useAuth?.user?.uid),
   )
 
   // check if event is full
@@ -93,12 +93,12 @@
     () =>
       hasCapacity.value &&
       hasAttendants.value &&
-      Object.keys(event.value.attendants).length >= event.value.capacity
+      Object.keys(event.value.attendants).length >= event.value.capacity,
   )
 
   // does the event have any registration actions, and is user signed in
   const hasEventActions = computed(
-    () => useAuth.isLoggedIn && hasCapacity.value
+    () => useAuth.isLoggedIn && hasCapacity.value,
   )
 
   // check if registration actions should be rendered on client side
@@ -106,8 +106,8 @@
     hasEventActions.value &&
       presentWithinTimeWindow(
         event.value.registration.start,
-        event.value.registration.end
-      )
+        event.value.registration.end,
+      ),
   )
 
   // check if registration is open with interval if user is signed in and the event has a capacity
@@ -118,9 +118,9 @@
         () =>
           (showRegistrationAction.value = presentWithinTimeWindow(
             event.value.registration.start,
-            event.value.registration.end
+            event.value.registration.end,
           )),
-        1000
+        1000,
       )
   })
 
@@ -129,7 +129,7 @@
 
   // check if user is already registered for event
   const showSignupButton = computed(
-    () => hasCapacity.value && !alreadyRegistered.value
+    () => hasCapacity.value && !alreadyRegistered.value,
   )
 
   const loading = ref(false)
@@ -145,12 +145,12 @@
       .then(() =>
         useAlert.alert(
           getI18nString('alert.success.event.register.sign_up'),
-          'success'
-        )
+          'success',
+        ),
       )
       .catch((error: any) => {
         const { type, message } = getApiResponseAlertContext(
-          error.statusMessage
+          error.statusMessage,
         )
         useAlert.alert(message, type as AlertType)
       })
@@ -170,12 +170,12 @@
       .then(() =>
         useAlert.alert(
           getI18nString('alert.success.event.register.opt_out'),
-          'success'
-        )
+          'success',
+        ),
       )
       .catch((error) => {
         const { type, message } = getApiResponseAlertContext(
-          error.statusMessage
+          error.statusMessage,
         )
         useAlert.alert(message, type as AlertType)
       })

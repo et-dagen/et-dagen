@@ -44,7 +44,7 @@ export const addEventIDAsProperty = (eventsObject: any) => {
 
 // Sort date-grouped events by start time
 export const sortDateGroupedEventsByStartTime = (
-  events: Record<string, any[]>
+  events: Record<string, any[]>,
 ) => {
   // tslint:disable-next-line: forin
   for (const eventsOfDate of Object.entries(events)) {
