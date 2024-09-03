@@ -41,13 +41,14 @@ module.exports = {
     'comma-dangle': [
       'error',
       {
-        arrays: 'always-multiline',
-        objects: 'always-multiline',
-        imports: 'only-multiline',
-        exports: 'only-multiline',
-        functions: 'never',
+        arrays: 'always-multiline', // Always enforce trailing commas in multi-line arrays
+        objects: 'always-multiline', // Always enforce trailing commas in multi-line objects
+        imports: 'only-multiline', // Enforce trailing commas in multi-line imports
+        exports: 'only-multiline', // Enforce trailing commas in multi-line exports
+        functions: 'only-multiline', // Do not enforce trailing commas in function parameters and arguments
       },
     ],
+    
     'comma-spacing': [
       'error',
       {
@@ -78,10 +79,10 @@ module.exports = {
     'vue/max-len': [
       'error',
       {
-        code: 80,
-        template: 80,
+        code: 100,
+        template: 100,
         tabWidth: 2,
-        comments: 80,
+        comments: 100,
         ignorePattern: '',
         ignoreComments: true,
         ignoreTrailingComments: false,

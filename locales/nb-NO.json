@@ -137,9 +137,9 @@
     }
   },
   "company": {
-    "main_partner": "Hovedpartner 2024",
-    "partners": "Partnere 2024",
-    "sponsors": "Sponsorer 2024",
+    "main_partner": "Fjorårets hovedpartner",
+    "partners": "Fjorårets partnere",
+    "sponsors": "Fjorårets sponsorer",
     "admin": {
       "title": "Bedriftsadministrasjon",
       "dietaryrestrictions": "Allergener og restriksjoner",
