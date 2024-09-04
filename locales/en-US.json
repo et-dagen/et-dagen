@@ -137,9 +137,9 @@
     }
   },
   "company": {
-    "main_partner": "Main partner",
-    "partners": "Partners",
-    "sponsors": "Sponsors",
+    "main_partner": "Last year's main partner",
+    "partners": "Last year's partners",
+    "sponsors": "Last year's sponsors",
     "admin": {
       "title": "Company Admin",
       "dietaryrestrictions": "Allergies and Restrictions",

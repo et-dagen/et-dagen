@@ -3,4 +3,5 @@ module.exports = {
   semi: false,
   vueIndentScriptAndStyle: true,
   endOfLine: 'auto',
+  trailingComma: 'all',
 }

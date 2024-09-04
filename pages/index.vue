@@ -4,28 +4,28 @@
   const mainPartner = computed(
     () =>
       Object.values(companies.value).find(
-        (company: any) => company.type === 'main-partner' && !!company.logo
-      ) || null
+        (company: any) => company.type === 'main-partner' && !!company.logo,
+      ) || null,
   )
 
   const partners =
     computed(() =>
       Object.values(companies.value).filter(
-        (company: any) => company.type === 'partner' && !!company.logo
-      )
+        (company: any) => company.type === 'partner' && !!company.logo,
+      ),
     ) || null
   const showPartners = computed(
-    () => partners.value !== null && partners.value.length !== 0
+    () => partners.value !== null && partners.value.length !== 0,
   )
 
   const sponsors =
     computed(() =>
       Object.values(companies.value).filter(
-        (company: any) => company.type === 'sponsor' && !!company.logo
-      )
+        (company: any) => company.type === 'sponsor' && !!company.logo,
+      ),
     ) || null
   const showSponsors = computed(
-    () => sponsors.value !== null && sponsors.value.length !== 0
+    () => sponsors.value !== null && sponsors.value.length !== 0,
   )
 </script>
 

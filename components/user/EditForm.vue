@@ -16,12 +16,12 @@
   // get study programmes
   const { data: studyProgrammes } = await useFetch('/api/programme')
   const programmeList = computed(() =>
-    studyProgrammes.value.map((prog: any) => prog.name).sort()
+    studyProgrammes.value.map((prog: any) => prog.name).sort(),
   )
   const yearOptions = computed(() => {
     return (studyProgram: string) => {
       const programme = studyProgrammes.value.find(
-        (prog: any) => prog.name === studyProgram
+        (prog: any) => prog.name === studyProgram,
       )
 
       if (!programme || programme.type === 'integrated') return [1, 2, 3, 4, 5]
@@ -103,7 +103,7 @@
     (program) => {
       if (!yearOptions.value(program).includes(Number(state.currentYear)))
         state.currentYear = ''
-    }
+    },
   )
 
   // check if user has changed

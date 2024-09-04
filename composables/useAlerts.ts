@@ -10,7 +10,7 @@ export const getApiResponseAlertContext = (response: string) => {
   // split response to get type and message
   const [responseType, message] = response.toLowerCase().split(' ') as [
     AlertType,
-    string
+    string,
   ]
 
   // if unknown response type or incorrect format, return input
@@ -27,7 +27,7 @@ export const getApiResponseAlertContext = (response: string) => {
 
   // get error message from i18n
   const errorMessage = nuxtApp.$i18n.t(
-    `alert.api.${responseType}.${formattedMessage}`
+    `alert.api.${responseType}.${formattedMessage}`,
   )
 
   // message includes alert. if not found

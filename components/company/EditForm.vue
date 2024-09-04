@@ -43,7 +43,7 @@
   const state = reactive(
     props.companyUid && company.value
       ? { ...Object.values(embedKeyIntoObjectValues(company.value))[0] }
-      : { ...initialState }
+      : { ...initialState },
   )
 
   const form = ref()
@@ -77,8 +77,8 @@
       .catch(() =>
         useAlerts.alert(
           getI18nString('alert.error.company.edit.modified'),
-          'error'
-        )
+          'error',
+        ),
       )
   }
 
@@ -107,13 +107,13 @@
       .then(() => {
         useAlerts.alert(
           getI18nString('alert.success.company.edit.modified'),
-          'success'
+          'success',
         )
         setTimeout(() => navigateTo(localePath('/admin/companies')), 2000)
       })
       .catch((error) => {
         const { type, message } = getApiResponseAlertContext(
-          error.statusMessage
+          error.statusMessage,
         )
         useAlerts.alert(message, type as AlertType)
         console.error(error)
@@ -153,13 +153,13 @@
       .then(() => {
         useAlerts.alert(
           getI18nString('alert.success.company.edit.created'),
-          'success'
+          'success',
         )
         setTimeout(() => navigateTo(localePath('/admin/companies')), 2000)
       })
       .catch((error) => {
         const { type, message } = getApiResponseAlertContext(
-          error.statusMessage
+          error.statusMessage,
         )
         useAlerts.alert(message, type as AlertType)
         console.error(error)

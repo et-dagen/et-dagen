@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
       createError({
         statusCode: 500,
         statusMessage: 'Error (storage/cannot-upload-file).',
-      })
+      }),
     )
   })
 
