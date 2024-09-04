@@ -5,10 +5,10 @@
       <ContactCard
         class="mx-auto w-75"
         :content="{
-          name: 'Marius Liebig',
+          name: 'Andrea Gladhaug',
           position: $t('contact.positions.business'),
           email: 'bedriftansvarlig@et-dagen.no',
-          phone: '+47 923 13 055',
+          phone: '+47 489 58 605',
           image: '/images/board/business.jpg',
         }"
       />
