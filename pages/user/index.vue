@@ -13,6 +13,7 @@
   })
 
   const auth = useAuthStore()
+  const useAlerts = useAlertStore()
 
   const localePath = useLocalePath()
   const isRegisteredRestriction = computed(() => {
@@ -46,6 +47,80 @@
       }
     })
   })
+
+  const isSelectingFile = ref(false)
+  const fileInput = ref<HTMLInputElement | null>(null)
+  const handleFileInput = () => {
+    isSelectingFile.value = true
+
+    // After obtaining the focus when closing the FilePicker, return the button state to normal
+    window.addEventListener(
+      'focus',
+      () => {
+        isSelectingFile.value = false
+      },
+      { once: true }
+    )
+
+    // Trigger click on the FileInput
+    fileInput?.value?.click()
+  }
+
+  const uploadResume = async (event: any) => {
+    const resumeFile = event.target.files[0]
+    if (!resumeFile) return
+
+    const bodyData = new FormData()
+    bodyData.append('file', resumeFile)
+    bodyData.append('userUID', auth.user?.uid)
+
+    await useFetch('/api/resume', {
+      method: 'POST',
+      body: bodyData,
+    })
+      .then(() => {
+        useAlerts.alert(
+          getI18nString('alert.success.user.resume.updated'),
+          'success'
+        )
+        setTimeout(() => location.reload(), 1000)
+      })
+      .catch((error) => {
+        const { type, message } = getApiResponseAlertContext(
+          error.statusMessage
+        )
+        useAlerts.alert(message, type as AlertType)
+        console.error(error)
+      })
+  }
+
+  const deleteResume = async () => {
+    await useFetch('/api/resume', {
+      method: 'DELETE',
+      body: {
+        userUID: auth.user?.uid,
+      },
+    })
+      .then(() => {
+        useAlerts.alert(
+          getI18nString('alert.success.user.resume.deleted'),
+          'success'
+        )
+        setTimeout(() => location.reload(), 1000)
+      })
+      .catch((error) => {
+        const { type, message } = getApiResponseAlertContext(
+          error.statusMessage
+        )
+        useAlerts.alert(message, type as AlertType)
+        console.error(error)
+      })
+  }
+
+  const getFileName = (URL: string) => {
+    const list = URL.split('/')
+    return list[list.length - 1]
+  }
 </script>
 
 <template>
@@ -105,6 +180,63 @@
                 </span>
               </li>
             </ul>
+          </div>
+          <div class="pt-5">
+            <h6>{{ $t('user.resume.resume') }}</h6>
+            <VDivider class="my-2" />
+            <p v-if="auth.user?.resume" class="my-2">
+              <strong>{{ $t('user.resume.my_resume') }}: </strong>
+              <NuxtLink
+                :to="auth.user?.resume"
+                :external="true"
+                target="_blank"
+                class="text-blue"
+                >{{ getFileName(auth.user?.resume) }}</NuxtLink
+              >
+            </p>
+            <VRow no-gutters>
+              <VCol cols="12" :sm="auth.user?.resume !== undefined ? 6 : 12">
+                <VFileInput
+                  ref="fileInput"
+                  class="d-none"
+                  :active="auth.user?.resume !== undefined"
+                  accept="application/pdf"
+                  :label="$t('user.resume.upload_resume')"
+                  base-color="standard"
+                  color="standard"
+                  @change="uploadResume"
+                />
+                <VBtn
+                  color="success"
+                  prepend-icon="mdi-upload"
+                  variant="text"
+                  block
+                  @click="handleFileInput"
+                >
+                  {{
+                    auth.user?.resume === undefined
+                      ? $t('user.resume.upload_resume')
+                      : $t('user.resume.update_resume')
+                  }}
+                </VBtn>
+              </VCol>
+              <VCol
+                v-if="auth.user?.resume"
+                cols="12"
+                sm="6"
+                class="d-flex justify-center"
+              >
+                <VBtn
+                  color="error"
+                  prepend-icon="mdi-delete"
+                  block
+                  class="ml-sm-6"
+                  @click="deleteResume"
+                >
+                  {{ $t('user.resume.delete_resume') }}
+                </VBtn>
+              </VCol>
+            </VRow>
           </div>
         </VCol>
       </VRow>
