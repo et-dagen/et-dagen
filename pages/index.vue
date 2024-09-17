@@ -34,7 +34,7 @@
     <HomeBanner
       :content="{
         caption: $t('home.banner.slogan'),
-        date: { start: '2025-02-10', end: '2025-02-14' },
+        date: { start: '2025-02-12', end: '2025-02-14' },
         image: '/images/banner_graphics.png',
         title: 'Elektronikk & Teknologidagene',
       }"
