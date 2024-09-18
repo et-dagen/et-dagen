@@ -11,8 +11,8 @@
   const { text, copy, copied } = useClipboard()
 
   // Proces events and retrieve dates
-  const eventsWithID = computed(() => addEventIDAsProperty(events.value))
-  const eventDates = computed(() => getEventDates(events.value))
+  const eventsWithID = computed(() => addEventIDAsProperty(events.value ?? []))
+  const eventDates = computed(() => getEventDates(events.value ?? []))
 
   // State for filtering and selecting events
   const selectedDates = ref<number[]>(eventDates.value.map((_, i) => i))
