@@ -31,14 +31,14 @@
   )
 
   const date = computed(() => {
-    const endDate = new Date(info.value.date.end).toISOString().split('T')[0]
-    const startDate = new Date(info.value.date.start)
-      .toISOString()
-      .split('T')[0]
-    const time = new Date(info.value.date.start)
-      .toISOString()
-      .split('T')[1]
-      .split('.')[0]
+    // Default date if no date is found
+    const endDateString = info.value?.date?.end ?? '2024-02-10T10:00:00'
+    const startDateString = info.value?.date?.start ?? '2024-02-14T10:00:00'
+    const timeString = info.value?.date?.start ?? '2024-02-01T10:00:00'
+
+    const endDate = new Date(endDateString).toISOString().split('T')[0]
+    const startDate = new Date(startDateString).toISOString().split('T')[0]
+    const time = new Date(timeString).toISOString().split('T')[1].split('.')[0]
 
     return {
       end: endDate, // yyyy-mm-dd
