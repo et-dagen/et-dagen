@@ -54,6 +54,7 @@
       :content="{
         caption: $t('home.banner.slogan'),
         date: { start: date.start, end: date.end },
+
         image: '/images/banner_graphics.png',
         title: 'Elektronikk & Teknologidagene',
       }"
