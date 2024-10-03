@@ -1,5 +1,6 @@
 <script setup lang="ts">
   const { data: companies } = await useFetch('/api/company')
+  const { data: info } = await useFetch('/api/generalInfo')
 
   const mainPartner = computed(
     () =>
@@ -14,6 +15,7 @@
         (company: any) => company.type === 'partner' && !!company.logo,
       ),
     ) || null
+
   const showPartners = computed(
     () => partners.value !== null && partners.value.length !== 0,
   )
@@ -27,6 +29,23 @@
   const showSponsors = computed(
     () => sponsors.value !== null && sponsors.value.length !== 0,
   )
+
+  const date = computed(() => {
+    // Default date if no date is found
+    const endDateString = info.value?.date?.end ?? '2024-02-10T10:00:00'
+    const startDateString = info.value?.date?.start ?? '2024-02-14T10:00:00'
+    const timeString = info.value?.date?.start ?? '2024-02-01T10:00:00'
+
+    const endDate = new Date(endDateString).toISOString().split('T')[0]
+    const startDate = new Date(startDateString).toISOString().split('T')[0]
+    const time = new Date(timeString).toISOString().split('T')[1].split('.')[0]
+
+    return {
+      end: endDate, // yyyy-mm-dd
+      start: startDate, // yyyy-mm-dd
+      time, // hh:mm:ss
+    }
+  })
 </script>
 
 <template>
@@ -34,7 +53,8 @@
     <HomeBanner
       :content="{
         caption: $t('home.banner.slogan'),
-        date: { start: '2025-02-12', end: '2025-02-14' },
+        date: { start: date.start, end: date.end },
+
         image: '/images/banner_graphics.png',
         title: 'Elektronikk & Teknologidagene',
       }"
@@ -43,8 +63,8 @@
 
     <HomeCountDown
       :content="{
-        futureDate: '2025-02-10',
-        futureTime: '10:00:00',
+        futureDate: date.start,
+        futureTime: date.time,
       }"
       class="mb-5"
     />
