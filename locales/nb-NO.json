@@ -7,7 +7,8 @@
     "admin": "Admin",
     "user": "Min profil",
     "program_nav": "SE PROGRAM",
-    "company": "Mine arrangementer"
+    "company": "Mine arrangementer",
+    "stands": "Stands"
   },
   "home": {
     "banner": {
@@ -301,6 +302,9 @@
       "sign_in_to_register": "Logg inn for å melde deg på",
       "registration_closed": "Ikke åpent for påmelding"
     }
+  },
+  "stands": {
+    "title": "Standkart"
   },
   "jobs": {
     "title": "Stillingsannonser",

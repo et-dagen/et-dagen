@@ -16,6 +16,10 @@ const routes = [
     name: 'contact',
     route: '/contact',
   },
+  {
+    name: 'stands',
+    route: '/stands',
+  },
 ]
 
 const adminCategories = [

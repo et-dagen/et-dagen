@@ -7,7 +7,8 @@
     "admin": "Admin",
     "user": "My profile",
     "program_nav": "SEE PROGRAM",
-    "company": "My Events"
+    "company": "My Events",
+    "stands": "Stands"
   },
   "home": {
     "banner": {
@@ -300,6 +301,9 @@
       "sign_in_to_register": "Sign in to register",
       "registration_closed": "Registration in not open"
     }
+  },
+  "stands": {
+    "title": "Standmap"
   },
   "jobs": {
     "title": "Job Advertisements",
