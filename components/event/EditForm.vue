@@ -283,7 +283,11 @@
       })
       .catch((error) => {
         // Handle errors, including HTTP errors
-        getApiResponseAlertContext(error.statusMessage)
+        const { type, message } = getApiResponseAlertContext(
+          error.statusMessage,
+        )
+        useAlerts.alert(message, type as AlertType)
+        console.error(error)
       })
   }
 
