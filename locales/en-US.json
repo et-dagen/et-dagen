@@ -53,6 +53,13 @@
       "password": "Password",
       "remember": "Remember me",
       "forgot": "Forgot password?"
+    },
+    "resume": {
+      "resume": "Resumé",
+      "update_resume": "Update resumé",
+      "upload_resume": "Upload resumé",
+      "my_resume": "My resumé",
+      "delete_resume": "Delete resumé"
     }
   },
   "error": {
@@ -258,7 +265,11 @@
         "reset_password": "Password reset email sent"
       },
       "user": {
-        "edit": "User updated"
+        "edit": "User updated",
+        "resume": {
+          "updated": "CV updated",
+          "deleted": "CV deleted"
+        }
       },
       "event": {
         "register": {
@@ -431,6 +442,7 @@
     "users": {
       "name": "Users",
       "pagesize": "Users per page",
+      "download_resumes": "Download resumés",
       "usertypes": {
         "name": "User types",
         "admin": "Admins",

@@ -53,6 +53,13 @@
       "password": "Passord",
       "remember": "Husk meg",
       "forgot": "Glemt passord?"
+    },
+    "resume": {
+      "resume": "CV",
+      "update_resume": "Oppdater CV",
+      "upload_resume": "Last opp CV",
+      "my_resume": "Min CV",
+      "delete_resume": "Slett min CV"
     }
   },
   "error": {
@@ -260,7 +267,11 @@
         "reset_password": "Epost for tilbakestilling av passord er sendt"
       },
       "user": {
-        "edit": "Brukeren ble oppdatert"
+        "edit": "Brukeren ble oppdatert",
+        "resume": {
+          "updated": "CV ble oppdatert",
+          "deleted": "CV ble slettet"
+        }
       },
       "event": {
         "register": {
@@ -433,6 +444,7 @@
     "users": {
       "name": "Brukere",
       "pagesize": "Brukere per side",
+      "download_resumes": "Last ned CV-er",
       "usertypes": {
         "name": "Brukertyper",
         "admin": "Administratorer",
