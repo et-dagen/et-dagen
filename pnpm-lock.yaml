@@ -41,12 +41,12 @@ dependencies:
   pinia:
     specifier: ^2.3.0
     version: 2.3.0(typescript@5.7.2)(vue@3.5.13)
-  sass:
-    specifier: ^1.83.0
-    version: 1.83.0
   sass-migrator:
     specifier: ^2.3.0
     version: 2.3.0
+  vuetify:
+    specifier: ^3.7.6
+    version: 3.7.6(typescript@5.7.2)(vite-plugin-vuetify@2.0.4)(vue@3.5.13)
   vuetify-nuxt-module:
     specifier: ^0.18.3
     version: 0.18.3(rollup@4.29.1)(typescript@5.7.2)(vite@6.0.6)(vue@3.5.13)
@@ -97,6 +97,9 @@ devDependencies:
   prettier:
     specifier: ^3.3.3
     version: 3.4.2
+  sass:
+    specifier: ^1.83.0
+    version: 1.83.0
   typescript:
     specifier: ^5.5.4
     version: 5.7.2

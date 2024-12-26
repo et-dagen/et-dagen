@@ -47,6 +47,7 @@
     "nuxt": "^3.13.0",
     "nuxt-vitest": "^0.11.5",
     "prettier": "^3.3.3",
+    "sass": "^1.83.0",
     "typescript": "^5.5.4"
   },
   "dependencies": {
@@ -62,8 +63,8 @@
     "firebase": "^11.1.0",
     "firebase-admin": "^13.0.2",
     "pinia": "^2.3.0",
-    "sass": "^1.83.0",
     "sass-migrator": "^2.3.0",
+    "vuetify": "^3.7.6",
     "vuetify-nuxt-module": "^0.18.3"
   }
 }
