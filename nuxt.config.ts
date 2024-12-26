@@ -76,14 +76,14 @@ export default defineNuxtConfig({
     locales: [
       {
         code: 'no',
-        iso: 'nb-NO',
+        language: 'nb-NO',
         name: 'Norsk',
         file: 'nb-NO.json',
         isCatchallLocale: true,
       },
       {
         code: 'en',
-        iso: 'en-US',
+        language: 'en-US',
         name: 'English',
         file: 'en-US.json',
       },
@@ -124,4 +124,6 @@ export default defineNuxtConfig({
   devServer: {
     host: '0.0.0.0', // default: localhost
   },
+
+  compatibilityDate: '2024-12-26',
 })
