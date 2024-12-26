@@ -137,9 +137,9 @@
     }
   },
   "company": {
-    "main_partner": "Fjorårets hovedpartner",
-    "partners": "Fjorårets partnere",
-    "sponsors": "Fjorårets sponsorer",
+    "main_partner": "Hovedpartner",
+    "partners": "Partnere",
+    "sponsors": "Sponsorer",
     "admin": {
       "title": "Bedriftsadministrasjon",
       "dietaryrestrictions": "Allergener og restriksjoner",
