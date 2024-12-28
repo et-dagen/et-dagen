@@ -383,7 +383,8 @@
           "name": "Type",
           "main_partner": "Hovedpartner",
           "partner": "Partner",
-          "sponsor": "Sponsor"
+          "sponsor": "Sponsor",
+          "old": "Gammel"
         },
         "code": "Kode"
       },
@@ -553,7 +554,8 @@
           "name": "Bedriftstype",
           "main_partner": "Hovedsponsor",
           "partner": "Partner",
-          "sponsor": "Sponsor"
+          "sponsor": "Sponsor",
+          "old": "Gammel"
         }
       }
     },
