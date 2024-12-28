@@ -95,7 +95,7 @@ devDependencies:
     specifier: ^0.11.5
     version: 0.11.5(@vitejs/plugin-vue-jsx@4.1.1)(@vitejs/plugin-vue@5.2.1)(rollup@4.29.1)(vite@6.0.6)(vitest@0.33.0)(vue-router@4.5.0)(vue@3.5.13)
   prettier:
-    specifier: ^3.3.3
+    specifier: ^3.4.2
     version: 3.4.2
   sass:
     specifier: ^1.83.0
