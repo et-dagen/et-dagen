@@ -382,7 +382,8 @@
           "name": "Type",
           "main_partner": "Main partner",
           "partner": "Partner",
-          "sponsor": "Sponsor"
+          "sponsor": "Sponsor",
+          "old": "Old"
         },
         "code": "Code"
       },
@@ -549,7 +550,8 @@
           "name": "Company Type",
           "main_partner": "Main Partner",
           "partner": "Partner",
-          "sponsor": "Sponsor"
+          "sponsor": "Sponsor",
+          "old": "Old"
         }
       }
     },
