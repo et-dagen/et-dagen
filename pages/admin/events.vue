@@ -11,8 +11,8 @@
   const { text, copy, copied } = useClipboard()
 
   // Proces events and retrieve dates
-  const eventsWithID = computed(() => addEventIDAsProperty(events.value))
-  const eventDates = computed(() => getEventDates(events.value))
+  const eventsWithID = computed(() => addEventIDAsProperty(events.value ?? []))
+  const eventDates = computed(() => getEventDates(events.value ?? []))
 
   // State for filtering and selecting events
   const selectedDates = ref<number[]>(eventDates.value.map((_, i) => i))
@@ -50,12 +50,12 @@
   const filteredEvents = computed(() => {
     // eslint-disable-next-line
     const selectedEventDate = eventDates.value.filter((date, index) =>
-      selectedDates.value.includes(index)
+      selectedDates.value.includes(index),
     )
 
     const filteredByEventDate = Object.values(eventsWithID.value)?.filter(
       (event: any) =>
-        selectedEventDate.includes(getDateFromDatetime(event.date.start))
+        selectedEventDate.includes(getDateFromDatetime(event.date.start)),
     )
 
     selected.value = []
@@ -78,7 +78,7 @@
       }
       resultArray[chunkIndex].push(item)
       return resultArray
-    }, [] as Event[][])
+    }, [] as Event[][]),
   )
   // Delete seleceted events
   const deleteEvents = async () => {
@@ -86,7 +86,7 @@
     const queries = []
 
     const selectedEvents = pages.value[currentPage.value - 1].map(
-      (event, index) => (selected.value[index] ? event.id : undefined)
+      (event, index) => (selected.value[index] ? event.id : undefined),
     )
 
     for (const uid of selectedEvents)
@@ -97,7 +97,7 @@
             body: {
               eventUID: uid,
             },
-          })
+          }),
         )
     try {
       await Promise.all(queries)

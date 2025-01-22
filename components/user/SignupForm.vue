@@ -13,14 +13,14 @@
   const programmeOptions = computed(() =>
     Object.values(studyProgrammes.value)
       .map((prog: any) => prog.name)
-      .sort((a, b) => a.localeCompare(b))
+      .sort((a, b) => a.localeCompare(b)),
   )
 
   // get year options based on study programme
   const yearOptions = computed(() => {
     return (studyProgram: string) => {
       const programme = studyProgrammes.value.find(
-        (prog: any) => prog.name === studyProgram
+        (prog: any) => prog.name === studyProgram,
       )
 
       if (!programme || programme.type === 'integrated') return [1, 2, 3, 4, 5]
@@ -71,7 +71,7 @@
     (program) => {
       if (!yearOptions.value(program).includes(Number(state.currentYear)))
         state.currentYear = ''
-    }
+    },
   )
 
   const form = ref()
@@ -106,15 +106,13 @@
         currentYear:
           userType === 'student' ? Number(user.currentYear) : undefined,
       },
-      user.registrationCode ?? undefined // Only send registration code if user is a company
+      user.registrationCode ?? undefined, // Only send registration code if user is a company
     )
       .catch((error) => {
-        const content = getAlertRouteAndType(error.message)
-
-        alertState.alertRoute = content.route
-        alertState.type = content.type as AlertType
-        alertState.show = true
-
+        const { type, message } = getApiResponseAlertContext(
+          error.statusMessage,
+        )
+        useAlerts.alert(message, type as AlertType)
         console.error(error)
       })
       .finally(() => {
@@ -177,7 +175,7 @@
             useRequiredInput,
             useRequireEqualPasswords(
               state.password,
-              state.passwordConfirmation
+              state.passwordConfirmation,
             ),
           ]"
           confirm-password

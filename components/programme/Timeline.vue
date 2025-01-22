@@ -12,13 +12,14 @@
   const eventsByDate: any = computed(() => groupEventsByDateStart(events.value))
   const dates = computed(() =>
     Object.keys(eventsByDate.value).sort((a: string, b: string) =>
-      a.localeCompare(b)
-    )
+      a.localeCompare(b),
+    ),
   ) // sort dates
 
   // Check if event has attendants
   const hasAttendants = computed(
-    () => (event: any) => event.attendants || Object.hasOwn(event, 'attendants')
+    () => (event: any) =>
+      event.attendants || Object.hasOwn(event, 'attendants'),
   )
 
   // Check if event has more than two attendants
@@ -108,7 +109,7 @@
       <div v-if="eventsByDate[state.selectedDate]" class="container">
         <div
           v-for="event in sortDatesByStartTime(
-            eventsByDate[state.selectedDate]
+            eventsByDate[state.selectedDate],
           )"
           :key="event.id"
           class="card__div"

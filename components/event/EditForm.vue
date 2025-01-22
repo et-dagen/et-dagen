@@ -41,7 +41,7 @@
   const programmeOptions = computed(() =>
     Object.values(studyProgrammes.value)
       .map((prog: any) => prog.name)
-      .sort((a, b) => a.localeCompare(b))
+      .sort((a, b) => a.localeCompare(b)),
   )
 
   // Fetch all users
@@ -94,7 +94,7 @@
               value: uid,
               title: name,
             }
-          })
+          }),
       )
     }
   })
@@ -129,16 +129,16 @@
   const state = reactive(
     event.value
       ? { ...Object.values(embedKeyIntoObjectValues(event.value))[0] }
-      : { ...initialState }
+      : { ...initialState },
   )
 
   const selectedProgrammes = ref(
-    state?.registration?.requirements?.programmes || []
+    state?.registration?.requirements?.programmes || [],
   )
   const selectedYears = ref(state?.registration?.requirements?.years || [])
   const limitRegistration = ref(
     state?.capacity &&
-      (selectedProgrammes.value.length > 0 || selectedYears.value.length > 0)
+      (selectedProgrammes.value.length > 0 || selectedYears.value.length > 0),
   )
 
   // Alert state
@@ -152,13 +152,6 @@
     ...initialAlertState,
   })
 
-  // Show appropriate success alert after signing up for event
-  const displaySuccessAlert = (alertRoute: string) => {
-    alertState.alertRoute = alertRoute
-    alertState.type = 'success'
-    alertState.show = true
-  }
-
   const displayErrorAlert = (alertRoute: string) => {
     alertState.alertRoute = alertRoute
     alertState.type = 'error'
@@ -168,7 +161,7 @@
   // Show appropriate error alert for failed API calls
   const displayErrorAlertFromMessage = (
     errorType: string,
-    errorMessage: string
+    errorMessage: string,
   ) => {
     const content = getAlertContent(errorType, errorMessage)
     alertState.alertRoute = content.alertRoute
@@ -275,7 +268,10 @@
     })
       .then(() => {
         // Handle successful response
-        displaySuccessAlert('alert.success.event.edit.modified')
+        useAlerts.alert(
+          getI18nString('alert.success.event.edit.modified'),
+          'success',
+        )
         setTimeout(routeOnSuccess, 2000)
       })
       .catch((error) => {
@@ -300,7 +296,10 @@
     })
       .then(() => {
         // Handle successful response
-        displaySuccessAlert('alert.success.event.edit.created')
+        useAlerts.alert(
+          getI18nString('alert.success.event.edit.created'),
+          'success',
+        )
         setTimeout(routeOnSuccess, 2000)
       })
       .catch((error) => {
@@ -321,7 +320,7 @@
         signUpForEventUid.value = ''
       })
       .catch((error) =>
-        displayErrorAlertFromMessage('Event', error.statusMessage)
+        displayErrorAlertFromMessage('Event', error.statusMessage),
       )
   }
 </script>
@@ -411,7 +410,7 @@
             v-model="selectedProgrammes"
             :content="{
               label: $t(
-                'edit.event.attributes.registration.requirements.programmes'
+                'edit.event.attributes.registration.requirements.programmes',
               ),
               options: programmeOptions,
             }"
@@ -425,7 +424,7 @@
             v-model="selectedYears"
             :content="{
               label: $t(
-                'edit.event.attributes.registration.requirements.years'
+                'edit.event.attributes.registration.requirements.years',
               ),
               options: [1, 2, 3, 4, 5],
             }"

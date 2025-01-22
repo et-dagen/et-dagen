@@ -1,6 +1,6 @@
 export const calculateTimeDifference = (
   futureDate: string,
-  futureTime: string
+  futureTime: string,
 ): object | null => {
   // Define current date and future date + time
   const currentDate = new Date()

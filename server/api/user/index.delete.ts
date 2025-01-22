@@ -28,7 +28,7 @@ export default defineEventHandler(async (event) => {
   // remove users from db
   usersRef.update(
     // format UIDs array as object with the UIDs as keys and values null
-    Object.assign({}, ...(UIDs as string[]).map((uid) => ({ [uid]: null })))
+    Object.assign({}, ...(UIDs as string[]).map((uid) => ({ [uid]: null }))),
   )
 
   // remove firebase auth users

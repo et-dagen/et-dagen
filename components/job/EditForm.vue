@@ -49,7 +49,7 @@
   const state = reactive(
     props.jobUid && job.value
       ? { ...Object.values(embedKeyIntoObjectValues(job.value))[0] }
-      : { ...initialState }
+      : { ...initialState },
   )
 
   // Alert state
@@ -62,13 +62,6 @@
   const alertState = reactive({
     ...initialAlertState,
   })
-
-  // Show appropriate success alert after signing up for job
-  const displaySuccessAlert = (alertRoute: string) => {
-    alertState.alertRoute = alertRoute
-    alertState.type = 'success'
-    alertState.show = true
-  }
 
   // show appropriate error alert after signing up for job
   const displayErrorAlert = (alertRoute: string) => {
@@ -140,7 +133,10 @@
       body: rest,
     })
       .then(() => {
-        displaySuccessAlert('alert.success.job.edit.modified')
+        useAlerts.alert(
+          getI18nString('alert.success.job.edit.modified'),
+          'success',
+        )
         setTimeout(() => navigateTo(localePath('/admin/jobs')), 2000)
       })
       .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
@@ -162,7 +158,10 @@
       body: state,
     })
       .then(() => {
-        displaySuccessAlert('alert.success.job.edit.created')
+        useAlerts.alert(
+          getI18nString('alert.success.job.edit.created'),
+          'success',
+        )
         setTimeout(() => navigateTo(localePath('/admin/jobs')), 2000)
       })
       .catch((error) => displayErrorAlertFromMessage(error.statusMessage))

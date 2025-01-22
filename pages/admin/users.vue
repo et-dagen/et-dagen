@@ -37,12 +37,12 @@
     // map the selected user types to their names
     // eslint-disable-next-line
     const selectedUsertypes = usertypeNames.filter((usertype, index) =>
-      usertypes.value.includes(index)
+      usertypes.value.includes(index),
     )
 
     // filter out users with the selectd user types
     const filteredByUsertype = users.value?.filter((user) =>
-      selectedUsertypes.includes(user.userType ?? 'basic')
+      selectedUsertypes.includes(user.userType ?? 'basic'),
     )
 
     // reset user selection when filters change
@@ -72,7 +72,7 @@
       resultArray[chunkIndex].push(item)
 
       return resultArray
-    }, [] as User[][])
+    }, [] as User[][]),
   )
 
   const deleteUsers = async () => {

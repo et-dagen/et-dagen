@@ -27,12 +27,10 @@
     isRegistering.value = true
     signinUser(state.email, state.password)
       .catch((error) => {
-        const content = getAlertRouteAndType(error.message)
-
-        alertState.alertRoute = content.route
-        alertState.type = content.type as AlertType
-        alertState.show = true
-
+        const { type, message } = getApiResponseAlertContext(
+          error.statusMessage,
+        )
+        useAlerts.alert(message, type as AlertType)
         console.error(error)
       })
       .finally(() => {
@@ -50,18 +48,17 @@
     }
 
     requestPasswordReset(state.email)
-      .then(() => {
-        alertState.alertRoute = 'alert.success.firebase.reset_password'
-        alertState.type = 'success'
-        alertState.show = true
-      })
+      .then(() =>
+        useAlerts.alert(
+          getI18nString('alert.success.firebase.reset_password'),
+          'success',
+        ),
+      )
       .catch((error) => {
-        const content = getAlertRouteAndType(error.message)
-
-        alertState.alertRoute = content.route
-        alertState.type = content.type as AlertType
-        alertState.show = true
-
+        const { type, message } = getApiResponseAlertContext(
+          error.statusMessage,
+        )
+        useAlerts.alert(message, type as AlertType)
         console.error(error)
       })
   }

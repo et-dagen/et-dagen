@@ -41,7 +41,7 @@
   const state = reactive(
     props.companyUid && company.value
       ? { ...Object.values(embedKeyIntoObjectValues(company.value))[0] }
-      : { ...initialState }
+      : { ...initialState },
   )
 
   // Alert state
@@ -55,26 +55,11 @@
     ...initialAlertState,
   })
 
-  // Show appropriate success alert after signing up for company
-  const displaySuccessAlert = (alertRoute: string) => {
-    alertState.alertRoute = alertRoute
-    alertState.type = 'success'
-    alertState.show = true
-  }
-
   // show appropriate error alert after signing up for company
   const displayErrorAlert = (alertRoute: string) => {
     alertState.alertRoute = alertRoute
     alertState.type = 'error'
     alertState.show = true
-  }
-
-  // Show appropriate error alert for failed API calls
-  const displayErrorAlertFromMessage = (errorMessage: string) => {
-    const content = getAlertContent(errorMessage)
-    alertState.alertRoute = content.alertRoute
-    alertState.type = content.type
-    alertState.show = content.show
   }
 
   const form = ref()
@@ -105,7 +90,12 @@
       .then(({ URL }) => {
         state.logo = URL
       })
-      .catch(() => displayErrorAlert('alert.error.company.edit.modified'))
+      .catch(() =>
+        useAlerts.alert(
+          getI18nString('alert.error.company.edit.modified'),
+          'error',
+        ),
+      )
   }
 
   // save changes to existing company
@@ -131,10 +121,19 @@
       body: rest,
     })
       .then(() => {
-        displaySuccessAlert('alert.success.company.edit.modified')
+        useAlerts.alert(
+          getI18nString('alert.success.company.edit.modified'),
+          'success',
+        )
         setTimeout(() => navigateTo(localePath('/admin/companies')), 2000)
       })
-      .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
+      .catch((error) => {
+        const { type, message } = getApiResponseAlertContext(
+          error.statusMessage,
+        )
+        useAlerts.alert(message, type as AlertType)
+        console.error(error)
+      })
   }
 
   const createCompany = async () => {
@@ -168,10 +167,19 @@
         })
       }) // add logo newly created company if provided
       .then(() => {
-        displaySuccessAlert('alert.success.company.edit.created')
+        useAlerts.alert(
+          getI18nString('alert.success.company.edit.created'),
+          'success',
+        )
         setTimeout(() => navigateTo(localePath('/admin/companies')), 2000)
       })
-      .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
+      .catch((error) => {
+        const { type, message } = getApiResponseAlertContext(
+          error.statusMessage,
+        )
+        useAlerts.alert(message, type as AlertType)
+        console.error(error)
+      })
   }
 </script>
 
@@ -242,6 +250,10 @@
                 {
                   title: $t('edit.company.attributes.type.sponsor'),
                   value: 'sponsor',
+                },
+                {
+                  title: $t('edit.company.attributes.type.old'),
+                  value: 'old',
                 },
               ],
             }"

@@ -45,6 +45,18 @@ and
 cp .env.example .env.development
 ```
 
+and
+
+```bash
+cp .env.example .env.development
+```
+
+and
+
+```bash
+cp .env.example .env.development
+```
+
 Missing environment variables in the `.env` file will be provided by the project manager.
 
 ### Development
@@ -53,12 +65,6 @@ Start the development server on `http://localhost:3000`
 
 ```bash
 pnpm dev
-```
-
-or optionally with Turbo if installed:
-
-```bash
-turbo dev
 ```
 
 ### Production

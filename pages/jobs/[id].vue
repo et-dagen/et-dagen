@@ -135,6 +135,25 @@
 
     .description {
       grid-area: description;
+
+      :deep(li) {
+        list-style-position: inside;
+        p {
+          display: inline;
+        }
+      }
+
+      :deep(h5) {
+        font-size: 1.15rem !important;
+      }
+
+      :deep(h6) {
+        font-size: 1.05rem !important;
+      }
+
+      &__text {
+        white-space: pre-line;
+      }
     }
     .details {
       grid-area: details;
