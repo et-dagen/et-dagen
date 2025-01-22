@@ -94,6 +94,22 @@
   <VContainer class="d-flex flex-column">
     <h4 class="text-center pt-4 pb-7">{{ $t('company.admin.title') }}</h4>
 
+    <div class="d-flex flex-column w-full">
+      <v-btn-toggle v-model="toggle" color="primary" mandatory>
+        <v-btn icon="mdi-format-align-left" class="w-50 bg-white" value="left">
+          Mine arrangement
+        </v-btn>
+        <v-btn
+          icon="mdi-format-align-center"
+          class="w-50 bg-gray"
+          value="center"
+        >
+          CV
+        </v-btn>
+      </v-btn-toggle>
+      <pre class="pt-2">{{ toggle }}</pre>
+    </div>
+
     <!-- edit event -->
     <VCard v-for="event in events" :key="event.uid" elevation="3">
       <VBtn
