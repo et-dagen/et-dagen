@@ -137,9 +137,9 @@
     }
   },
   "company": {
-    "main_partner": "Last year's main partner",
-    "partners": "Last year's partners",
-    "sponsors": "Last year's sponsors",
+    "main_partner": "Main partner",
+    "partners": "Partners",
+    "sponsors": "Sponsors",
     "admin": {
       "title": "Company Admin",
       "dietaryrestrictions": "Allergies and Restrictions",
@@ -382,7 +382,8 @@
           "name": "Type",
           "main_partner": "Main partner",
           "partner": "Partner",
-          "sponsor": "Sponsor"
+          "sponsor": "Sponsor",
+          "old": "Old"
         },
         "code": "Code"
       },
@@ -549,7 +550,8 @@
           "name": "Company Type",
           "main_partner": "Main Partner",
           "partner": "Partner",
-          "sponsor": "Sponsor"
+          "sponsor": "Sponsor",
+          "old": "Old"
         }
       }
     },

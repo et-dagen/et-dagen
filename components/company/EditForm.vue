@@ -220,6 +220,10 @@
                   title: $t('edit.company.attributes.type.sponsor'),
                   value: 'sponsor',
                 },
+                {
+                  title: $t('edit.company.attributes.type.old'),
+                  value: 'old',
+                },
               ],
             }"
             :rules="[useRequiredInput]"

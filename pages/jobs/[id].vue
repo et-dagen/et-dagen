@@ -138,22 +138,19 @@
     .description {
       grid-area: description;
 
-      &::v-deep {
-        li {
-          list-style-position: inside;
-
-          p {
-            display: inline;
-          }
+      :deep(li) {
+        list-style-position: inside;
+        p {
+          display: inline;
         }
+      }
 
-        h5 {
-          font-size: 1.15rem !important;
-        }
+      :deep(h5) {
+        font-size: 1.15rem !important;
+      }
 
-        h6 {
-          font-size: 1.05rem !important;
-        }
+      :deep(h6) {
+        font-size: 1.05rem !important;
       }
 
       &__text {
