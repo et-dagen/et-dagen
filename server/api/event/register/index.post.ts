@@ -113,10 +113,17 @@ export default defineEventHandler(async (event) => {
   if (
     Object.values(data[eventUID].attendants).length >= data[eventUID]?.capacity
   ) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Error (event/register/event-is-full).',
-    })
+    // Ensure queue subsection exists
+    if (!data[eventUID].queue) {
+      eventsRef.child(eventUID).child('queue').set({})
+    }
+
+    // Add user to queue
+    eventsRef
+      .child(eventUID)
+      .child('queue')
+      .push(userUID || user.uid)
+    return sendNoContent(event, 201)
   }
 
   // Add user to attendants

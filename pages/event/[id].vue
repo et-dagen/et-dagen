@@ -32,6 +32,11 @@
   )
   const hasCapacity = computed(() => !!event.value.capacity)
 
+  // Get the number of queued users
+  const totalQueued = computed(() => {
+    return event.value.queue ? Object.keys(event.value.queue).length : 0
+  })
+
   // get day and month strings from date
   const eventStartString = computed(
     () =>
@@ -88,6 +93,13 @@
       Object.values(event.value.attendants).includes(useAuth?.user?.uid),
   )
 
+  // check if user is already registered for queue
+  const alreadyQueued = computed(
+    () =>
+      hasAttendants.value &&
+      Object.values(event.value.queue).includes(useAuth?.user?.uid),
+  )
+
   // check if event is full
   const eventFull = computed(
     () =>
@@ -129,7 +141,12 @@
 
   // check if user is already registered for event
   const showSignupButton = computed(
-    () => hasCapacity.value && !alreadyRegistered.value,
+    () => hasCapacity.value && !alreadyRegistered.value && !eventFull,
+  )
+
+  // check if user is eligable for queue for event
+  const showQueueButton = computed(
+    () => hasCapacity.value && !alreadyRegistered.value && eventFull,
   )
 
   const loading = ref(false)
@@ -145,6 +162,30 @@
       .then(() =>
         useAlert.alert(
           getI18nString('alert.success.event.register.sign_up'),
+          'success',
+        ),
+      )
+      .catch((error: any) => {
+        const { type, message } = getApiResponseAlertContext(
+          error.statusMessage,
+        )
+        useAlert.alert(message, type as AlertType)
+      })
+      .finally(() => (loading.value = false))
+  }
+
+  // Add user to the queue
+  const addToQueue = () => {
+    loading.value = true
+
+    $fetch('/api/event/register', {
+      method: 'POST',
+      body: { eventUID: event.value.uid },
+    })
+      .then(() => refresh())
+      .then(() =>
+        useAlert.alert(
+          getI18nString('alert.success.event.register.queue'),
           'success',
         ),
       )
@@ -184,6 +225,35 @@
         dialog.value = false
       })
   }
+
+  // opt out of Queue
+  /*
+  const optOutOfQueue = () => {
+    loading.value = true
+
+    $fetch('/api/event/register', {
+      method: 'DELETE',
+      body: { eventUID: event.value.uid },
+    })
+      .then(() => refresh())
+      .then(() =>
+        useAlert.alert(
+          getI18nString('alert.success.event.register.opt_out_queue'),
+          'success',
+        ),
+      )
+      .catch((error) => {
+        const { type, message } = getApiResponseAlertContext(
+          error.statusMessage,
+        )
+        useAlert.alert(message, type as AlertType)
+      })
+      .finally(() => {
+        loading.value = false
+        dialog.value = false
+      })
+  }
+  */
 </script>
 
 <template>
@@ -300,6 +370,10 @@
             <span v-else>0</span>
 
             {{ event.capacity ? `/ ${event.capacity}` : '' }}
+
+            <strong>{{ $t('event.page.queue.name') }}: </strong>
+
+            {{ totalQueued }}
           </span>
 
           <span v-if="alreadyRegistered">
@@ -384,6 +458,22 @@
           @click.stop="signUpForEvent"
         >
           {{ $t('program.event.sign_up') }}
+        </VBtn>
+
+        <VBtn
+          v-else-if="showQueueButton"
+          color="success"
+          :loading="loading"
+          block
+          variant="flat"
+          :ripple="true"
+          density="comfortable"
+          :disabled="
+            alreadyQueued || !meetsProgrammeRequirement || !meetsYearRequirement
+          "
+          @click.stop="addToQueue"
+        >
+          {{ $t('program.event.enqueue') }}
         </VBtn>
 
         <!-- opt out modal -->
