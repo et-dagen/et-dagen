@@ -33,6 +33,7 @@
     description: null,
     type: null,
     webpage: null,
+    cvaccess: false,
     logo: null,
     uid: null,
   }
@@ -118,20 +119,22 @@
     // update company
     await $fetch('/api/company', {
       method: 'PUT',
+      saveChanges,
       body: rest,
     })
       .then(() => {
-        useAlerts.alert(
-          getI18nString('alert.success.company.edit.modified'),
-          'success',
-        )
+        // useAlerts.alert(
+        //   getI18nString('alert.success.company.edit.modified'),
+        //   'success',
+        // )
         setTimeout(() => navigateTo(localePath('/admin/companies')), 2000)
       })
       .catch((error) => {
         const { type, message } = getApiResponseAlertContext(
           error.statusMessage,
         )
-        useAlerts.alert(message, type as AlertType)
+        // useAlerts.alert(message, type as AlertType)
+        console.log(message, type)
         console.error(error)
       })
   }
@@ -272,13 +275,24 @@
           />
         </VRow>
 
+        <!-- CV Access -->
         <VRow>
-          <FormTextInput
-            v-model="state.cv_access"
+          <FormSelectInput
+            v-model="state.cvaccess"
             :content="{
-              label: $t('edit.company.attributes.cv_access'),
+              label: $t('edit.company.attributes.cvaccess.name'),
+              options: [
+                {
+                  title: $t('edit.company.attributes.cvaccess.yes'),
+                  value: true,
+                },
+                {
+                  title: $t('edit.company.attributes.cvaccess.no'),
+                  value: false,
+                },
+              ],
             }"
-            :rules="[useRequiredInput]"
+            :rules="[]"
           />
         </VRow>
 

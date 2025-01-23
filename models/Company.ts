@@ -5,5 +5,5 @@ export interface Company {
   name: string
   uid?: string | null
   webpage: string
-  cv_access: boolean
+  cvaccess: boolean
 }

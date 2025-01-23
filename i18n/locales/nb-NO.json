@@ -320,7 +320,11 @@
           "old": "Gammel"
         },
         "code": "Kode",
-        "cv_access": "CV tilgang"
+        "cvaccess": {
+          "name": "CV tilgang", 
+          "yes": "Ja",
+          "no": "Nei"
+        }
       },
       "copied": "UID kopiert!",
       "copiedcode": "Kode kopiert!",
@@ -484,7 +488,11 @@
         "description": "Beskrivelse",
         "logo": "Logo",
         "webpage": "Nettside",
-        "cv_access": "CV tilgang",
+        "cvaccess": {
+          "name": "CV tilgang", 
+          "yes": "Ja",
+          "no": "Nei"
+        },
         "type": {
           "name": "Bedriftstype",
           "main_partner": "Hovedsponsor",
