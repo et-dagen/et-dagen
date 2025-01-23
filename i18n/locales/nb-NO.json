@@ -319,7 +319,8 @@
           "sponsor": "Sponsor",
           "old": "Gammel"
         },
-        "code": "Kode"
+        "code": "Kode",
+        "cv_access": "CV tilgang"
       },
       "copied": "UID kopiert!",
       "copiedcode": "Kode kopiert!",
@@ -483,6 +484,7 @@
         "description": "Beskrivelse",
         "logo": "Logo",
         "webpage": "Nettside",
+        "cv_access": "CV tilgang",
         "type": {
           "name": "Bedriftstype",
           "main_partner": "Hovedsponsor",

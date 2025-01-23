@@ -321,7 +321,8 @@
           "sponsor": "Sponsor",
           "old": "Old"
         },
-        "code": "Code"
+        "code": "Code",
+        "cv_access": "CV access"
       },
       "copied": "Copied UID!",
       "copiedcode": "Copied registration code!",
@@ -482,6 +483,7 @@
         "description": "Description",
         "logo": "Logo",
         "webpage": "webpage",
+        "cv_access": "CV access",
         "type": {
           "name": "Company Type",
           "main_partner": "Main Partner",

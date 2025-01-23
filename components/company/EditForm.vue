@@ -272,6 +272,16 @@
           />
         </VRow>
 
+        <VRow>
+          <FormTextInput
+            v-model="state.cv_access"
+            :content="{
+              label: $t('edit.company.attributes.cv_access'),
+            }"
+            :rules="[useRequiredInput]"
+          />
+        </VRow>
+
         <!-- Logo -->
         <!-- TODO: #190 Add code for uploading image after company creation -->
         <VRow style="overflow: scroll">
