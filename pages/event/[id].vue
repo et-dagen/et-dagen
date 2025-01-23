@@ -1,4 +1,7 @@
 <script setup lang="ts">
+  import AttendantsList from '~/components/event/AttendantsList.vue'
+  import { type User } from '~/models/User'
+
   const useAuth = useAuthStore()
   const useAlert = useAlertStore()
   const localePath = useLocalePath()
@@ -13,6 +16,10 @@
     query: {
       eventUID: eventUid,
     },
+  })
+
+  const { data: users } = await useFetch('/api/user', {
+    query: { scope: 'all' },
   })
 
   // fetch all companies
@@ -31,6 +38,12 @@
     () => !!event.value.attendants || Object.hasOwn(event.value, 'attendants'),
   )
   const hasCapacity = computed(() => !!event.value.capacity)
+
+  const attendants = computed<User[]>(() =>
+    Object.values(event.value.attendants).map((uid) =>
+      users.value?.find((user) => user.uid === uid),
+    ),
+  )
 
   // Get the number of queued users
   const totalQueued = computed(() => {
@@ -275,8 +288,9 @@
     <VCard class="description elevation-4" rounded="lg">
       <VCardTitle class="description__title">{{ event?.title }}</VCardTitle>
       <!-- eslint-disable vue/no-v-text-v-html-on-component vue/no-v-html -->
-      <VCardText class="description__text" v-html="event?.description" />
+      <VCardText class="description__text mb-3" v-html="event?.description" />
       <!-- eslint-enable -->
+      <AttendantsList v-if="hasAttendants" :user-list="attendants" />
     </VCard>
 
     <!-- event details -->
