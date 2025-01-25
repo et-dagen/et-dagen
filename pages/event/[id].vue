@@ -47,7 +47,9 @@
 
   // Get the number of queued users
   const totalQueued = computed(() => {
-    return event.value.queue ? Object.keys(event.value.queue).length : 0
+    return event.value.queue || {}
+      ? Object.keys(event.value.queue || {}).length
+      : 0
   })
 
   // get day and month strings from date
@@ -109,8 +111,9 @@
   // check if user is already registered for queue
   const alreadyQueued = computed(
     () =>
-      hasAttendants.value &&
-      Object.values(event.value.queue).includes(useAuth?.user?.uid),
+      (hasAttendants.value &&
+        Object.values(event.value.queue || {}).includes(useAuth?.user?.uid)) ??
+      false,
   )
 
   // check if event is full
@@ -118,7 +121,7 @@
     () =>
       hasCapacity.value &&
       hasAttendants.value &&
-      Object.keys(event.value.attendants).length >= event.value.capacity,
+      Object.keys(event.value.attendants || {}).length >= event.value.capacity,
   )
 
   // does the event have any registration actions, and is user signed in
@@ -154,12 +157,12 @@
 
   // check if user is already registered for event
   const showSignupButton = computed(
-    () => hasCapacity.value && !alreadyRegistered.value && !eventFull,
+    () => hasCapacity.value && !alreadyRegistered.value && !eventFull.value,
   )
 
   // check if user is eligable for queue for event
   const showQueueButton = computed(
-    () => hasCapacity.value && !alreadyRegistered.value && eventFull,
+    () => hasCapacity.value && !alreadyRegistered.value && eventFull.value,
   )
 
   const loading = ref(false)
@@ -474,6 +477,7 @@
           {{ $t('program.event.sign_up') }}
         </VBtn>
 
+        <!-- Enqueue -->
         <VBtn
           v-else-if="showQueueButton"
           color="success"

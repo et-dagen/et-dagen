@@ -119,10 +119,12 @@ export default defineEventHandler(async (event) => {
     }
 
     // Add user to queue
+    const timestamp = Date.now().toString()
     eventsRef
       .child(eventUID)
       .child('queue')
-      .push(userUID || user.uid)
+      .child(timestamp)
+      .set(userUID || user.uid)
     return sendNoContent(event, 201)
   }
 

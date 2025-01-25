@@ -83,6 +83,16 @@ export default defineEventHandler(async (event) => {
   // Update attendants
   eventsRef.child(eventUID).child('attendants').set(attendees)
 
+  // Move the next user from the queue to attendants
+  const queue = data[eventUID].queue || {}
+  const nextUserKey = Object.keys(queue).sort()[0]
+  if (nextUserKey) {
+    const nextUserUID = queue[nextUserKey]
+    delete queue[nextUserKey]
+    eventsRef.child(eventUID).child('queue').set(queue)
+    eventsRef.child(eventUID).child('attendants').push(nextUserUID)
+  }
+
   // User successfully opted out of event
   sendNoContent(event, 201)
 })

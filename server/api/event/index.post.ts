@@ -97,7 +97,6 @@ export default defineEventHandler(async (event) => {
     },
     title,
     registration,
-    queue: {}, // Initialize an empty queue
   })
 
   sendNoContent(event, 201)
