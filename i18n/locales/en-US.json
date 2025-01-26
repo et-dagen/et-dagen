@@ -120,7 +120,8 @@
         "registered": "You are registered"
       },
       "queue": {
-        "name": "Venteliste"
+        "name": "Venteliste",
+        "position": "Position in queue"
       }
     }
   },

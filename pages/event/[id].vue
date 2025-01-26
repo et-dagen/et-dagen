@@ -270,6 +270,17 @@
       })
   }
   */
+
+  // get user's position in the queue
+  const userQueuePosition = computed(() => {
+    if (!event.value.queue) return null
+    const queueEntries = Object.entries(event.value.queue)
+    const sortedQueue = queueEntries.sort(([a], [b]) => a.localeCompare(b))
+    const userUid = useAuth.user?.uid
+    if (!userUid) return null
+    const userIndex = sortedQueue.findIndex(([, uid]) => uid === userUid)
+    return userIndex !== -1 ? userIndex + 1 : null
+  })
 </script>
 
 <template>
@@ -388,7 +399,9 @@
 
             {{ event.capacity ? `/ ${event.capacity}` : '' }}
 
-            <strong>{{ $t('event.page.queue.name') }}: </strong>
+            <strong style="margin-left: 10px">
+              {{ $t('event.page.queue.name') }}:
+            </strong>
 
             {{ totalQueued }}
           </span>
@@ -397,6 +410,11 @@
             {{ $t('event.page.attendants.registered') }}
             <VIcon style="margin-bottom: 2px">mdi-check-circle</VIcon>
           </span>
+
+          <div v-if="alreadyQueued">
+            {{ $t('event.page.queue.position') }}:
+            {{ userQueuePosition }}
+          </div>
         </VCardText>
 
         <VCardText v-else>
