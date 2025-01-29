@@ -119,11 +119,28 @@ export default defineEventHandler(async (event) => {
     }
 
     // Add user to queue
-    const timestamp = Date.now().toString()
+    let timestamp = Date.now()
+    let timestampString = timestamp.toString()
+    let keyExists = true
+    while (keyExists) {
+      const snapshot = await eventsRef
+        .child(eventUID)
+        .child('queue')
+        .child(timestampString)
+        .once('value')
+      if (snapshot.exists()) {
+        console.log('Key exists, incrementing timestamp')
+        timestamp = timestamp + 1
+        timestampString = timestamp.toString()
+      } else {
+        keyExists = false
+        console.log('Key does not exist')
+      }
+    }
     eventsRef
       .child(eventUID)
       .child('queue')
-      .child(timestamp)
+      .child(timestampString)
       .set(userUID || user.uid)
     return sendNoContent(event, 201)
   }
