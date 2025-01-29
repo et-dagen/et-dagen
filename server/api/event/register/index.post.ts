@@ -118,6 +118,19 @@ export default defineEventHandler(async (event) => {
       eventsRef.child(eventUID).child('queue').set({})
     }
 
+    // Check if the user is already in the queue
+    const queueSnapshot = await eventsRef
+      .child(eventUID)
+      .child('queue')
+      .once('value')
+    const queueData = queueSnapshot.val()
+    if (queueData && Object.values(queueData).includes(userUID || user.uid)) {
+      throw createError({
+        statusCode: 404,
+        statusMessage: 'User is already in the queue',
+      })
+    }
+
     // Add user to queue
     let timestamp = Date.now()
     let timestampString = timestamp.toString()
@@ -129,12 +142,10 @@ export default defineEventHandler(async (event) => {
         .child(timestampString)
         .once('value')
       if (snapshot.exists()) {
-        console.log('Key exists, incrementing timestamp')
         timestamp = timestamp + 1
         timestampString = timestamp.toString()
       } else {
         keyExists = false
-        console.log('Key does not exist')
       }
     }
     eventsRef
