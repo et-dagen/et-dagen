@@ -1,34 +1,69 @@
-// GET /api/job
-// endpoint for fetching resumes from db
+// GET /api/user
+// endpoint for fetching user data with resumes from database
+
+const isValidFirebaseStorageLink = async (link: string): Promise<boolean> => {
+  // check if link is a string
+  if (typeof link !== 'string') return false
+
+  // check if link is a firebase storage link
+  const isFirebaseLink =
+    link.startsWith('https://firebasestorage.googleapis.com/v0/b/') &&
+    link.includes('o/') &&
+    link.includes('resumes%2F') &&
+    link.includes('?alt=media')
+
+  if (!isFirebaseLink) return false
+
+  // verify if the link is actually saved in the storage database
+  try {
+    const response = await fetch(link, { method: 'HEAD' })
+    return response.ok
+  } catch (error) {
+    return false
+  }
+}
 
 export default defineEventHandler(async (event) => {
-  const { user } = event.context
+  const { decodedToken, user } = event.context
 
-  // check if user is authorized
-  if (!hasAccess(user, ['admin']))
+  // user is not authenticated
+  if (!decodedToken)
     throw createError({
-      statusCode: 400,
-      statusMessage: 'User not authorized',
+      statusCode: 401,
+      statusMessage: 'User not authenticated',
     })
 
-  const userUID = user.uid
-
-  // get storage bucket
-  const bucket = storage.bucket()
-  const filePath = `users/${userUID}/resume.pdf`
-  const fileRef = bucket.file(filePath)
-
-  // check if file exists
-  const [exists] = await fileRef.exists()
-  if (!exists) {
+  if (!user)
     throw createError({
       statusCode: 404,
-      statusMessage: 'Resume not found',
+      statusMessage: 'User data not found',
     })
-  }
 
-  // get public url of pdf
-  const URL = `https://storage.googleapis.com/${bucket.name}/${filePath}`
+  // get scope from query params
+  const { scope } = getQuery(event)
 
-  return { url: URL }
+  // only admins can get other users than their own
+  // TODO! Restrict company user access by adding custom endpoint for /api/company/events/users
+  if (!hasAccess(user, ['admin', 'company']) || !scope || scope !== 'all')
+    return user
+
+  // reference to users
+  const usersRef = db.ref('users')
+
+  // get all users from db
+  const snapshot = await usersRef.once('value')
+  const dbUsers = snapshot.val()
+
+  // get the first 1000 users from firebase auth
+  const firebaseUsers = await auth.listUsers()
+
+  // combine users from db and firebase auth, only include users with cv_access field
+  const users = firebaseUsers.users
+    .map((firebaseUser) => ({
+      ...formatFirebaseUser(firebaseUser),
+      ...dbUsers[firebaseUser.uid],
+    }))
+    .filter((user) => user.resume && isValidFirebaseStorageLink(user.resume))
+
+  return users
 })
