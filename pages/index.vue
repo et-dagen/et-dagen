@@ -69,13 +69,13 @@
       class="mb-5"
     />
 
+    <HomeVuetifyCarousel />
+
     <div class="py-10">
       <h2 class="text-h4 text-md-h3 text-center pt-10 pb-4 font-weight-bold">
         {{ $t('informasjon.title') }}
       </h2>
-      <p>
-        {{ $t('informasjon.text') }}
-      </p>
+      {{ $t('informasjon.text') }}
     </div>
 
     <div v-if="mainPartner !== null" class="py-10">
