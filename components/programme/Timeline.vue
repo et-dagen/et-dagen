@@ -100,7 +100,7 @@
         :src="selectedStandMap"
         alt="Standmap"
         object-fit="contain"
-        class="w-75"
+        class="w-50"
       />
     </CommonModal>
 

@@ -35,7 +35,8 @@ export const getApiResponseAlertContext = (response: string) => {
     return { type: 'error', message: nuxtApp.$i18n.t('alert.default_message') }
 
   return {
-    type: responseType,
-    message: errorMessage,
+    alertRoute: content.route,
+    type: content.type as AlertType,
+    show: showAlert,
   }
 }
