@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'User not authorized',
     })
 
-  const { description, logo, name, type, webpage, cvaccess } =
+  const { description, logo, name, type, webpage, cvAccess } =
     await readBody(event)
 
   const companiesRef = db.ref('companies')
@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
     name,
     type,
     webpage,
-    cvaccess,
+    cvAccess,
   })
 
   return {

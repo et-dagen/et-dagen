@@ -33,7 +33,7 @@
     description: null,
     type: null,
     webpage: null,
-    cvaccess: false,
+    cvAccess: false,
     logo: null,
     uid: null,
   }
@@ -278,16 +278,16 @@
         <!-- CV Access -->
         <VRow>
           <FormSelectInput
-            v-model="state.cvaccess"
+            v-model="state.cvAccess"
             :content="{
-              label: $t('edit.company.attributes.cvaccess.name'),
+              label: $t('edit.company.attributes.cvAccess.name'),
               options: [
                 {
-                  title: $t('edit.company.attributes.cvaccess.yes'),
+                  title: $t('edit.company.attributes.cvAccess.yes'),
                   value: true,
                 },
                 {
-                  title: $t('edit.company.attributes.cvaccess.no'),
+                  title: $t('edit.company.attributes.cvAccess.no'),
                   value: false,
                 },
               ],

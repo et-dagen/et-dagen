@@ -332,7 +332,7 @@
           <th>{{ $t('admin.company.attributes.type.name') }}</th>
           <th>{{ $t('admin.company.attributes.logo') }}</th>
           <th>{{ $t('admin.company.attributes.webpage') }}</th>
-          <th>{{ $t('admin.company.attributes.cvaccess.name') }}</th>
+          <th>{{ $t('admin.company.attributes.cvAccess.name') }}</th>
           <th>{{ $t('admin.company.attributes.code') }}</th>
           <th class="text-center">UID</th>
           <th></th>
@@ -373,7 +373,7 @@
           <td class="truncate">
             {{
               $t(
-                `admin.company.attributes.cvaccess.${company.cvaccess ? 'yes' : 'no'}`,
+                `admin.company.attributes.cvAccess.${company.cvAccess ? 'yes' : 'no'}`,
               )
             }}
           </td>

@@ -151,7 +151,8 @@
           "currentyear": "År",
           "email": "Epost"
         }
-      }
+      },
+       "cvAccess_restriction": "CV tilgang er begrenset"
     }
   },
   "alert": {
@@ -320,7 +321,7 @@
           "old": "Gammel"
         },
         "code": "Kode",
-        "cvaccess": {
+        "cvAccess": {
           "name": "CV tilgang", 
           "yes": "Ja",
           "no": "Nei"
@@ -488,7 +489,7 @@
         "description": "Beskrivelse",
         "logo": "Logo",
         "webpage": "Nettside",
-        "cvaccess": {
+        "cvAccess": {
           "name": "CV tilgang", 
           "yes": "Ja",
           "no": "Nei"

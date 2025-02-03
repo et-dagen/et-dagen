@@ -151,7 +151,8 @@
           "currentyear": "Year",
           "email": "Email"
         }
-      }
+      },
+      "cvAccess_restriction": "CV access is restricted"
     }
   },
   "alert": {
@@ -322,7 +323,7 @@
           "old": "Old"
         },
         "code": "Code",
-        "cvaccess": {
+        "cvAccess": {
           "name": "CV access", 
           "yes": "Yes",
           "no": "No"
@@ -487,7 +488,7 @@
         "description": "Description",
         "logo": "Logo",
         "webpage": "webpage",
-        "cvaccess": {
+        "cvAccess": {
           "name": "CV access", 
           "yes": "Yes",
           "no": "No"

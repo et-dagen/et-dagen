@@ -8,9 +8,31 @@
   const resumeUsers = computed(() => {
     return users.filter((user) => user.resume)
   })
+
+  const { data: companies, pending } = await useFetch<{
+    [key: string]: { cvAccess: boolean }
+  }>('/api/company')
+
+  const useAuth = useAuthStore()
+  const cvAccess = computed(() => {
+    if (pending.value) {
+      return false
+    }
+    if (useAuth.user?.userType === 'admin') {
+      console.log('admin')
+      return true
+    }
+    if (useAuth.user?.userType === 'company') {
+      const companyUID = useAuth.user?.companyUID
+      const company =
+        companyUID && companies.value ? companies.value[companyUID] : null
+      return company?.cvAccess === true
+    }
+    return false
+  })
 </script>
 <template>
-  <v-card class="mx-auto">
+  <v-card v-if="cvAccess" class="mx-auto">
     <v-list>
       <v-list-item v-for="user in resumeUsers" :key="user.uid" class="py-3">
         <v-list-item-title>{{ user.name }}</v-list-item-title>
