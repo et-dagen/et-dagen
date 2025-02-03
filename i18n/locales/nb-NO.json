@@ -152,7 +152,7 @@
           "email": "Epost"
         }
       },
-       "cvAccess_restriction": "CV tilgang er begrenset"
+      "cvAccess_restriction": "CV tilgang er begrenset"
     }
   },
   "alert": {
@@ -322,7 +322,7 @@
         },
         "code": "Kode",
         "cvAccess": {
-          "name": "CV tilgang", 
+          "name": "CV tilgang",
           "yes": "Ja",
           "no": "Nei"
         }
@@ -490,7 +490,7 @@
         "logo": "Logo",
         "webpage": "Nettside",
         "cvAccess": {
-          "name": "CV tilgang", 
+          "name": "CV tilgang",
           "yes": "Ja",
           "no": "Nei"
         },

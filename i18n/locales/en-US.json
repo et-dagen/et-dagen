@@ -324,7 +324,7 @@
         },
         "code": "Code",
         "cvAccess": {
-          "name": "CV access", 
+          "name": "CV access",
           "yes": "Yes",
           "no": "No"
         }
@@ -489,7 +489,7 @@
         "logo": "Logo",
         "webpage": "webpage",
         "cvAccess": {
-          "name": "CV access", 
+          "name": "CV access",
           "yes": "Yes",
           "no": "No"
         },

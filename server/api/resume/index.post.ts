@@ -57,7 +57,7 @@ export default defineEventHandler(async (event) => {
       createError({
         statusCode: 500,
         statusMessage: 'Firebase: Error (storage/cannot-upload-file).',
-      })
+      }),
     )
   })
 
