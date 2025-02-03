@@ -152,7 +152,10 @@
           "email": "Epost"
         }
       },
-      "cvAccess_restriction": "CV tilgang er begrenset"
+      "cvAccess_restriction": "CV tilgang er begrenset",
+      "year": "Årstrinn",
+      "event": "Arrangement",
+      "resume": "CV"
     }
   },
   "alert": {

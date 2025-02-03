@@ -152,7 +152,10 @@
           "email": "Email"
         }
       },
-      "cvAccess_restriction": "CV access is restricted"
+      "cvAccess_restriction": "CV access is restricted",
+      "year": "Year",
+      "event": "Events",
+      "resume": "Resumes"
     }
   },
   "alert": {

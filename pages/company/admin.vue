@@ -40,10 +40,10 @@
     <div class="d-flex flex-column w-full">
       <v-btn-toggle v-model="toggle" color="primary" mandatory>
         <v-btn icon="mdi-format-align-left" class="w-50 bg-white" value="event">
-          <span class="text-sm">Arrangement</span>
+          <span class="text-sm">{{ $t('company.admin.event') }} </span>
         </v-btn>
         <v-btn icon="mdi-format-align-center" class="w-50 bg-gray" value="cv">
-          CV
+          <span class="text-sm">{{ $t('company.admin.resume') }} </span>
         </v-btn>
       </v-btn-toggle>
     </div>

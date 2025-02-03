@@ -38,7 +38,8 @@
         <v-list-item-title>{{ user.name }}</v-list-item-title>
 
         <v-list-item-subtitle class="text-high-emphasis"
-          >{{ user.studyProgram }} - {{ user.currentYear }} klasse
+          >{{ user.studyProgram }} - {{ user.currentYear }}
+          {{ $t('company.admin.year') }}
         </v-list-item-subtitle>
 
         <template #append>
