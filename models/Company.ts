@@ -5,4 +5,5 @@ export interface Company {
   name: string
   uid?: string | null
   webpage: string
+  cvAccess: boolean
 }

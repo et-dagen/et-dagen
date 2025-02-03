@@ -42,10 +42,8 @@
 
     <!-- job description -->
     <VCard class="description elevation-4" rounded="lg">
-      <VCardTitle class="description__title">{{ job?.title }}</VCardTitle>
-      <!-- eslint-disable vue/no-v-text-v-html-on-component vue/no-v-html -->
-      <VCardText class="description__text" v-html="job?.description" />
-      <!-- eslint-enable -->
+      <VCardTitle class="title">{{ job?.title }}</VCardTitle>
+      <VCardText class="text">{{ job?.description }}</VCardText>
     </VCard>
 
     <!-- job details -->
