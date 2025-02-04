@@ -69,6 +69,8 @@
       class="mb-5"
     />
 
+    <div style="height: 140px"></div>
+
     <HomeVuetifyCarousel />
 
     <div class="py-10">
