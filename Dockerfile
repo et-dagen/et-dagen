@@ -1,5 +1,5 @@
 # Set base image with pnpm enabled
-FROM node:20-alpine AS base
+FROM node:21-alpine AS base
 RUN apk update \
     && apk upgrade \
     && corepack enable pnpm
@@ -12,7 +12,7 @@ RUN pnpm install
 RUN pnpm build
 
 # Run
-FROM node:20-alpine as prod
+FROM node:21-alpine as prod
 WORKDIR /app
 COPY --from=build /app /app
 ENV PORT=8080
