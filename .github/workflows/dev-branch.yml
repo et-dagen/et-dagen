@@ -14,15 +14,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
-
-      - name: Set up Node.js
+      - name: Set Node.js version
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20 # Matches the Node.js version that caused the error
           cache: 'pnpm'
+
+      - name: Disable corepack strict verification (Temporary)
+        run: echo 'COREPACK_ENABLE_STRICT=false' >> $GITHUB_ENV
+
+      - name: Install pnpm@8.15.4
+        run: |
+          corepack enable
+          corepack prepare pnpm@8.15.4 --activate
+          pnpm clear-cache
 
       - name: Install dependencies
         run: pnpm install
@@ -31,31 +36,3 @@ jobs:
         run: |
           pnpm lint
           pnpm build
-  deploy_dev:
-    name: Deploy to dev
-    if: github.event_name == 'pull_request'
-    needs: [lint_build]
-    runs-on: ubuntu-latest
-    environment:
-      name: Development
-      url: 'http://dev.etdagen.no' # Doesnt work
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8.15.4
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install
-
-      - name: Deploy to live dev
-        run: |
-          # Replace with deployment script
