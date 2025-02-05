@@ -301,6 +301,7 @@
       "enqueue": "Meld meg på venteliste",
       "opt_out": {
         "name": "Trekk påmelding",
+        "queue": "Trekk køplass",
         "confirmtext": "Er du sikker på at du vil melde deg av?",
         "confirm": "Ja, meld meg av",
         "abort": "Nei, avbryt"

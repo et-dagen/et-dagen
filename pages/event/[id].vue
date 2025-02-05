@@ -497,7 +497,7 @@
 
         <!-- Enqueue -->
         <VBtn
-          v-else-if="showQueueButton"
+          v-else-if="showQueueButton && !alreadyQueued"
           color="success"
           :loading="loading"
           block
@@ -524,6 +524,55 @@
               density="comfortable"
             >
               {{ $t('program.event.opt_out.name') }}
+            </VBtn>
+          </template>
+
+          <template #default="{ isActive }">
+            <VCard rounded="lg" class="text-center pa-6">
+              <h6>{{ $t('program.event.opt_out.confirmtext') }}</h6>
+
+              <div
+                class="d-flex justify-center flex-wrap mt-6"
+                style="gap: 1.5rem"
+              >
+                <VBtn
+                  size="large"
+                  variant="outlined"
+                  color="primary"
+                  :loading="loading"
+                  @click="optOutOfEvent"
+                >
+                  {{ $t('program.event.opt_out.confirm') }}
+                </VBtn>
+                <VBtn
+                  size="large"
+                  flat
+                  color="success"
+                  @click="isActive.value = false"
+                >
+                  {{ $t('program.event.opt_out.abort') }}
+                </VBtn>
+              </div>
+            </VCard>
+          </template>
+        </VDialog>
+
+        <!-- opt out modal -->
+        <VDialog
+          v-if="!alreadyRegistered && alreadyQueued"
+          v-model="dialog"
+          width="500"
+        >
+          <template #activator="{ props }">
+            <VBtn
+              v-bind="props"
+              color="primary"
+              block
+              variant="tonal"
+              :ripple="true"
+              density="comfortable"
+            >
+              {{ $t('program.event.opt_out.queue') }}
             </VBtn>
           </template>
 

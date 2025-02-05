@@ -300,6 +300,7 @@
       "enqueue": "Enqueue",
       "opt_out": {
         "name": "Opt out",
+        "queue": "Opt out of queue",
         "confirmtext": "Are you sure you want to opt out?",
         "confirm": "Yes, remove me",
         "abort": "No, abort"
