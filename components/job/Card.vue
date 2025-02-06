@@ -67,6 +67,7 @@
 </template>
 
 <style scoped lang="scss">
+  @use 'sass:map';
   @use 'vuetify/settings';
 
   img {
@@ -75,7 +76,7 @@
     width: 175px;
     max-height: 125px;
 
-    @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
+    @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
       width: 125px;
     }
   }

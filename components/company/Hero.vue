@@ -53,13 +53,14 @@
 </template>
 
 <style setup lang="scss">
+  @use 'sass:map';
   @use 'vuetify/settings';
 
   .companyWrapper {
     max-height: 100vh;
     width: 70vw;
 
-    @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
+    @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
       width: 90vw;
     }
   }
@@ -72,13 +73,13 @@
       text-overflow: ellipsis;
       -webkit-box-orient: vertical;
 
-      @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
+      @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
         -webkit-line-clamp: 12;
       }
-      @media #{map-get(settings.$display-breakpoints, 'md')} {
+      @media #{map.get(settings.$display-breakpoints, 'md')} {
         -webkit-line-clamp: 8;
       }
-      @media #{map-get(settings.$display-breakpoints, 'lg-and-up')} {
+      @media #{map.get(settings.$display-breakpoints, 'lg-and-up')} {
         -webkit-line-clamp: 6;
       }
     }

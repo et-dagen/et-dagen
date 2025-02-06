@@ -35,6 +35,25 @@
             GitHub
           </NuxtLink>
         </li>
+        <li>
+          <span class="header fade text-h4">{{
+            $t('footer.header.some')
+          }}</span>
+          <NuxtLink to="https://www.instagram.com/etdagene/" target="_blank">
+            Instagram
+          </NuxtLink>
+          <NuxtLink to="https://www.facebook.com/etdagen" target="_blank">
+            Facebook
+          </NuxtLink>
+          <!-- eslint-disable vue/max-len -->
+          <NuxtLink
+            :to="`https://www.linkedin.com/company/elektronikk-og-teknologidagene-ntnu/`"
+            target="_blank"
+          >
+            <!-- eslint-enable -->
+            Linkedin
+          </NuxtLink>
+        </li>
       </ul>
     </section>
     <section class="bottom">
@@ -46,6 +65,7 @@
 </template>
 
 <style scoped lang="scss">
+  @use 'sass:map';
   @use 'vuetify/settings';
 
   * {
@@ -98,7 +118,7 @@
     }
   }
 
-  @media #{map-get(settings.$display-breakpoints, 'md-and-up')} {
+  @media #{map.get(settings.$display-breakpoints, 'md-and-up')} {
     footer section {
       &.top ul {
         grid-template-columns: repeat(4, 1fr);
@@ -106,7 +126,7 @@
     }
   }
 
-  @media #{map-get(settings.$display-breakpoints, 'sm')} {
+  @media #{map.get(settings.$display-breakpoints, 'sm')} {
     footer section {
       &.top ul {
         grid-template-columns: repeat(3, 1fr);
@@ -118,7 +138,7 @@
     }
   }
 
-  @media #{map-get(settings.$display-breakpoints, 'xs')} {
+  @media #{map.get(settings.$display-breakpoints, 'xs')} {
     footer section {
       &.top ul {
         grid-template-columns: repeat(2, 1fr);

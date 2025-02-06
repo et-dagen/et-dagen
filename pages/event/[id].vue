@@ -2,6 +2,7 @@
   import AttendantsList from '~/components/event/AttendantsList.vue'
   import { type User } from '~/models/User'
 
+  const localePath = useLocalePath()
   const useAuth = useAuthStore()
 
   // get event id from route
@@ -186,7 +187,7 @@
       .then(() => refresh())
       .then(() =>
         useAlert.alert(
-          getI18nString('alert.success.event.register.opt_out'),
+          getI18nString('alert.success.event.register.opt_out.name'),
           'success',
         ),
       )
@@ -426,7 +427,7 @@
           density="comfortable"
           @click.stop="optOutOfEvent"
         >
-          {{ $t('program.event.opt_out') }}
+          {{ $t('program.event.opt_out.name') }}
         </VBtn>
       </div>
     </div>
@@ -434,7 +435,9 @@
 </template>
 
 <style scoped lang="scss">
+  @use 'sass:map';
   @use 'vuetify/settings';
+
   .comma-separated {
     &::after {
       content: ',\00a0';
@@ -500,17 +503,17 @@
       grid-area: attendants;
     }
 
-    @media #{map-get(settings.$display-breakpoints, 'lg-and-up')} {
+    @media #{map.get(settings.$display-breakpoints, 'lg-and-up')} {
       max-width: 1080px;
     }
 
-    @media #{map-get(settings.$display-breakpoints, 'md-and-down')} {
+    @media #{map.get(settings.$display-breakpoints, 'md-and-down')} {
       max-width: 750px;
       grid-template-areas: 'image' 'details' 'attendants' 'description';
       grid-template-columns: 1fr;
     }
 
-    @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
+    @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
       max-width: 420px;
     }
   }
