@@ -19,9 +19,11 @@
     "sign_out": "Logg ut",
     "sign_up": "Registrer bruker",
     "information": {
+      "title": "Informasjon",
       "studyprogramme": "Studieprogram",
       "currentyear": "Årstrinn",
-      "dietaryrestrictions": "Allergener og restriksjoner"
+      "dietaryrestrictions": "Allergener og restriksjoner",
+       "events": "Mine arrangementer"
     },
     "register": {
       "title": "Registrer bruker",
@@ -165,6 +167,63 @@
   },
   "alert": {
     "close_alert": "Lukk",
+    "default_message": "Oi! Noe gikk galt.",
+    "api": {
+      "error": {
+        "general": {
+          "missing-data": "Ikke all data er oppgitt"
+        },
+        "firebase": {
+          "user-not-found": "Brukeren ble ikke funnet",
+          "user-not-authorized": "Du har ikke tilgang til denne ressursen",
+          "not-signed-in": "Du er ikke logget inn",
+          "storage": {
+            "missing-file-or-path": "Fil eller sti mangler",
+            "unsupported-file-type": "Ugyldig filtype",
+            "cannot-upload-file": "Kan ikke laste opp fil"
+          }
+        },
+        "code": {
+          "not-found": "Koden ble ikke funnet",
+          "missing-company-uid": "Bedrifts-UID mangler"
+        },
+        "company": {
+          "not-found": "Bedriften ble ikke funnet",
+          "require-company-uid": "Bedriftsbrukere må oppgi companyUID",
+          "missing-name-webpage-type": "Mangler navn, nettside eller type"
+        },
+        "event": {
+          "not-found": "Arrangementer eksisterer ikke",
+          "not-owner": "Kan ikke endre på andre bedrifters arrangementer",
+          "missing-event-uid": "eventUID mangler",
+          "incorrect-capacity": "Kapasitet må være number eller null",
+          "wrong-format-capacity": "Kapasitet må være et tall større enn null",
+          "start-after-end": "Starttid må være før arrangementslutt",
+          "registration-after-event": "Påmelding må være før arrangementet",
+          "registration-start-after-end": "Påmelding må starte før påmeldingsslutt",
+          "register": {
+            "registration-unnecessary": "Påmelding er ikke nødvendig for dette arrangementet",
+            "user-not-registered": "Brukeren er ikke påmeldt dette arrangementet",
+            "already-registered": "Brukeren er allerede påmeldt dette arrangementet",
+            "registration-closed": "Påmelding er stengt",
+            "event-is-full": "Arrangementet er fullt",
+            "not-owner": "Kan ikke endre på andre brukere"
+          }
+        },
+        "job": {
+          "not-found": "Annonse ble ikke funnet",
+          "missing-job-uid": "jobUID mangler",
+          "invalid-date": "Dato må være på ISO 8601 format",
+          "cannot-remove-single-field": "Kan ikke fjerne ett enkelt felt fra databasen"
+        },
+        "user": {
+          "not-found": "Bruker ble ikke funnet",
+          "doesnt-exists": "Brukeren eksisterer ikke",
+          "missing-programme": "Studieprogram mangler",
+          "invalid-code": "Ugyldig registreringskode"
+        }
+      }
+    },
     "error": {
       "default": "Oi! Noe gikk galt.",
       "form": {
@@ -173,6 +232,7 @@
       },
       "firebase": {
         "email_in_use": "Eposten er allerede i bruk",
+        "user_not_authorized": "Du har ikke tilgang til denne ressursen",
         "invalid_email": "Ugyldig epost",
         "user_not_found": "Brukeren ble ikke funnet",
         "wrong_password": "Feil passord"
@@ -239,7 +299,12 @@
     "standmap": "Se standkart",
     "event": {
       "sign_up": "Meld meg på",
-      "opt_out": "Trekk påmelding",
+      "opt_out": {
+        "name": "Trekk påmelding",
+        "confirmtext": "Er du sikker på at du vil melde deg av?",
+        "confirm": "Ja, meld meg av",
+        "abort": "Nei, avbryt"
+      },
       "sign_in_to_register": "Logg inn for å melde deg på",
       "registration_closed": "Ikke åpent for påmelding"
     }
@@ -533,6 +598,7 @@
     "header": {
       "resources": "Ressurser",
       "organisation": "Organisasjon",
+      "some": "Følg oss",
       "join": "Vil dere delta?"
     },
     "link": {
@@ -572,5 +638,17 @@
     "thursday": "Torsdag",
     "friday": "Fredag",
     "saturday": "Lørdag"
+  },
+  "formattext": {
+    "bold": "Bold",
+    "italic": "Italic",
+    "strikethrough": "Strikethrough",
+    "paragraph": "Paragraph",
+    "heading": "Heading",
+    "bulletlist": "Bullet list",
+    "numberedlist": "Numbered list",
+    "linebreak": "Line break",
+    "undo": "Undo",
+    "redo": "Redo"
   }
 }

@@ -69,7 +69,7 @@ export const getNumericDayAndMonthString = (datetime: string): {} => {
   const day = date.getDate()
   const month = date.getMonth() + 1
 
-  return `${day < 10 ? `0${day}` : day}/${month + 1 < 10 ? `0${month}` : month}`
+  return `${day < 10 ? '0' : ''}${day}/${month < 10 ? '0' : ''}${month}`
 }
 
 export const getDayAndMonthString = (

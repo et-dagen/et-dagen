@@ -7,6 +7,8 @@
   } from '@/composables/useForm'
   import { dietaryFlags } from '~/config/app.config'
 
+  const useAlerts = useAlertStore()
+
   const { data: studyProgrammes } = await useFetch('/api/programme')
 
   // alphabetically sort study programmes
@@ -119,32 +121,9 @@
         isRegistering.value = false
       })
   }
-
-  const initialAlertState = {
-    show: false,
-    alertRoute: '',
-    type: undefined as AlertType,
-  }
-
-  const alertState = reactive({
-    ...initialAlertState,
-  })
 </script>
 
 <template>
-  <VSnackbar v-model="alertState.show">
-    {{ $t(`${alertState.alertRoute}`) }}
-
-    <template #actions>
-      <v-btn
-        :color="alertState.type"
-        variant="text"
-        @click="alertState.show = false"
-      >
-        {{ $t('alert.close_alert') }}
-      </v-btn>
-    </template>
-  </VSnackbar>
   <VForm ref="form" @submit.prevent="submit">
     <VContainer>
       <VRow>
@@ -298,7 +277,7 @@
     margin-inline: 20% !important;
   }
 
-  @media #{map.get($display-breakpoints, 'sm-and-down')} {
+  @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
     .v-tab {
       font-size: 1rem;
     }

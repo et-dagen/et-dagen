@@ -2,6 +2,7 @@
   import AttendantsList from '~/components/event/AttendantsList.vue'
   import { type User } from '~/models/User'
 
+  const localePath = useLocalePath()
   const useAuth = useAuthStore()
 
   // get event id from route
@@ -186,7 +187,7 @@
       .then(() => refresh())
       .then(() =>
         useAlert.alert(
-          getI18nString('alert.success.event.register.opt_out'),
+          getI18nString('alert.success.event.register.opt_out.name'),
           'success',
         ),
       )
@@ -426,7 +427,7 @@
           density="comfortable"
           @click.stop="optOutOfEvent"
         >
-          {{ $t('program.event.opt_out') }}
+          {{ $t('program.event.opt_out.name') }}
         </VBtn>
       </div>
     </div>

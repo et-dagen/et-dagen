@@ -6,6 +6,8 @@
       default: null,
     },
   })
+
+  const useAlerts = useAlertStore()
   // Fetch job data if props are provided
   const auth = useAuthStore()
   const { hasAccess, user } = storeToRefs(auth)
@@ -52,32 +54,6 @@
       : { ...initialState },
   )
 
-  // Alert state
-  const initialAlertState = {
-    show: false,
-    alertRoute: '',
-    type: undefined as AlertType,
-  }
-
-  const alertState = reactive({
-    ...initialAlertState,
-  })
-
-  // show appropriate error alert after signing up for job
-  const displayErrorAlert = (alertRoute: string) => {
-    alertState.alertRoute = alertRoute
-    alertState.type = 'error'
-    alertState.show = true
-  }
-
-  // Show appropriate error alert for failed API calls
-  const displayErrorAlertFromMessage = (errorMessage: string) => {
-    const content = getAlertContent(errorMessage, 'Job')
-    alertState.alertRoute = content.alertRoute
-    alertState.type = content.type
-    alertState.show = content.show
-  }
-
   const form = ref()
 
   // Boolean control states
@@ -112,14 +88,19 @@
     }
   })
 
+  const validDescription = computed(
+    () => state.description && state.description !== '<p></p>',
+  )
+
   // save changes to existing job
   const saveChanges = async () => {
     // throw error on invalid form
     const { valid } = await form.value.validate()
     try {
-      if (!valid) throw new Error('Form is not valid')
+      if (!valid || !validDescription.value)
+        throw new Error('Form is not valid')
     } catch (error) {
-      displayErrorAlert('alert.error.form.invalid')
+      useAlerts.alert(getI18nString('alert.error.form.invalid'), 'error')
       return
     }
 
@@ -139,16 +120,17 @@
         )
         setTimeout(() => navigateTo(localePath('/admin/jobs')), 2000)
       })
-      .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
+      .catch((error) => getApiResponseAlertContext(error.statusMessage))
   }
 
   const createCompany = async () => {
     // throw error on invalid form
     const { valid } = await form.value.validate()
     try {
-      if (!valid) throw new Error('Form is not valid')
+      if (!valid || !validDescription.value)
+        throw new Error('Form is not valid')
     } catch (error) {
-      displayErrorAlert('alert.error.form.invalid')
+      useAlerts.alert(getI18nString('alert.error.form.invalid'), 'error')
       return
     }
 
@@ -164,7 +146,7 @@
         )
         setTimeout(() => navigateTo(localePath('/admin/jobs')), 2000)
       })
-      .catch((error) => displayErrorAlertFromMessage(error.statusMessage))
+      .catch((error) => getApiResponseAlertContext(error.statusMessage))
   }
 </script>
 
@@ -177,21 +159,6 @@
     <h3 v-else class="title py-6 mt-4">
       {{ $t('edit.jobs.create.title') }}
     </h3>
-
-    <!-- alert component -->
-    <VSnackbar v-model="alertState.show">
-      {{ $t(`${alertState.alertRoute}`) }}
-
-      <template #actions>
-        <VBtn
-          :color="alertState.type"
-          variant="text"
-          @click="alertState.show = false"
-        >
-          {{ $t('alert.close_alert') }}
-        </VBtn>
-      </template>
-    </VSnackbar>
 
     <!-- edit form -->
     <VForm ref="form" @submit.prevent="saveChanges || createCompany">
@@ -209,12 +176,10 @@
 
         <!-- job description -->
         <VRow>
-          <FormTextareaInput
+          <FormRichTextInput
             v-model="state.description"
-            :content="{
-              label: $t('edit.jobs.attributes.description'),
-            }"
-            :rules="[useRequiredInput]"
+            :label="$t('edit.jobs.attributes.description')"
+            style="width: 100%"
           />
         </VRow>
 
@@ -330,7 +295,7 @@
 </template>
 
 <style scoped lang="scss">
-  @import 'vuetify/settings';
+  @use 'vuetify/settings';
   .title {
     text-align: center;
   }

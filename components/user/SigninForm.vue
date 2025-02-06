@@ -1,5 +1,6 @@
 <script setup lang="ts">
   const localePath = useLocalePath()
+  const useAlerts = useAlertStore()
 
   const initialState = {
     email: '',
@@ -8,16 +9,6 @@
 
   const state = reactive({
     ...initialState,
-  })
-
-  const initialAlertState = {
-    show: false,
-    alertRoute: '',
-    type: undefined as AlertType,
-  }
-
-  const alertState = reactive({
-    ...initialAlertState,
   })
 
   const isRegistering = ref<boolean>(false)
@@ -40,10 +31,7 @@
 
   const resetPassword = () => {
     if (!state.email) {
-      alertState.alertRoute = 'alert.error.form.missing_email'
-      alertState.type = 'error'
-      alertState.show = true
-
+      useAlerts.alert(getI18nString('alert.error.form.missing_email'), 'error')
       return
     }
 
@@ -65,20 +53,6 @@
 </script>
 
 <template>
-  <VSnackbar v-model="alertState.show">
-    {{ $t(`${alertState.alertRoute}`) }}
-
-    <template #actions>
-      <v-btn
-        :color="alertState.type"
-        variant="text"
-        @click="alertState.show = false"
-      >
-        {{ $t('alert.close_alert') }}
-      </v-btn>
-    </template>
-  </VSnackbar>
-
   <VForm ref="form" @submit.prevent="submit">
     <VContainer>
       <VRow>
@@ -130,7 +104,7 @@
 
 <style scoped lang="scss">
   @use 'sass:map';
-  @import 'vuetify/settings';
+  @use 'vuetify/settings';
 
   .v-container {
     max-width: 26rem !important;
@@ -171,7 +145,7 @@
     }
   }
 
-  @media #{map.get($display-breakpoints, 'sm-and-down')} {
+  @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
     .v-tab {
       font-size: 1rem;
     }
