@@ -252,7 +252,7 @@
 
 <style scoped lang="scss">
   @use 'sass:map';
-  @import 'vuetify/settings';
+  @use 'vuetify/settings';
 
   .v-container {
     max-width: 26rem !important;
