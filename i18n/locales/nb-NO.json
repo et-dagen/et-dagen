@@ -9,6 +9,11 @@
     "program_nav": "SE PROGRAM",
     "company": "Bedrift"
   },
+  "home": {
+    "banner": {
+      "slogan": "Få et innblikk i din fremtidige arbeidsplass"
+    }
+  },
   "user": {
     "sign_in": "Logg inn",
     "sign_out": "Logg ut",

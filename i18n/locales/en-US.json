@@ -9,6 +9,11 @@
     "program_nav": "SEE PROGRAM",
     "company": "Company"
   },
+  "home": {
+    "banner": {
+      "slogan": "Explore your future workplace"
+    }
+  },
   "user": {
     "sign_in": "Sign in",
     "sign_out": "Sign out",
