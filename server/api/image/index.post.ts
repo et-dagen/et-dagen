@@ -8,7 +8,7 @@ export default defineEventHandler(async (event) => {
   if (!hasAccess(user, ['admin']))
     throw createError({
       statusCode: 401,
-      statusMessage: 'User not authorized',
+      statusMessage: 'Error (firebase/user-not-authorized).',
     })
 
   // get request body
@@ -20,14 +20,14 @@ export default defineEventHandler(async (event) => {
   if (!file || !storagePath)
     throw createError({
       statusCode: 400,
-      statusMessage: 'Missing file or storagePath',
+      statusMessage: 'Error (firebase/storage/missing-file-or-path',
     })
 
   // check if file is correct type
   if (!(file.type === 'image/jpeg' || file.type === 'image/png'))
     throw createError({
       statusCode: 400,
-      statusMessage: 'Firebase: Error (storage/unsupported-file-type).',
+      statusMessage: 'Error (firebase/storage/unsupported-file-type).',
     })
 
   // get storage bucket
