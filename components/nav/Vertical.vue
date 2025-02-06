@@ -88,12 +88,13 @@
 </template>
 
 <style lang="scss">
+  @use 'sass:map';
   @use 'vuetify/settings';
 
   .v-navigation-drawer--active {
     width: 400px !important;
 
-    @media #{map-get(settings.$display-breakpoints, "xs")} {
+    @media #{map.get(settings.$display-breakpoints, "xs")} {
       width: 100vw !important;
     }
   }

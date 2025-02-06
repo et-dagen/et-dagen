@@ -46,6 +46,7 @@
 </template>
 
 <style scoped lang="scss">
+  @use 'sass:map';
   @use 'vuetify/settings';
 
   * {
@@ -98,7 +99,7 @@
     }
   }
 
-  @media #{map-get(settings.$display-breakpoints, 'md-and-up')} {
+  @media #{map.get(settings.$display-breakpoints, 'md-and-up')} {
     footer section {
       &.top ul {
         grid-template-columns: repeat(4, 1fr);
@@ -106,7 +107,7 @@
     }
   }
 
-  @media #{map-get(settings.$display-breakpoints, 'sm')} {
+  @media #{map.get(settings.$display-breakpoints, 'sm')} {
     footer section {
       &.top ul {
         grid-template-columns: repeat(3, 1fr);
@@ -118,7 +119,7 @@
     }
   }
 
-  @media #{map-get(settings.$display-breakpoints, 'xs')} {
+  @media #{map.get(settings.$display-breakpoints, 'xs')} {
     footer section {
       &.top ul {
         grid-template-columns: repeat(2, 1fr);

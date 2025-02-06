@@ -183,7 +183,9 @@
 </template>
 
 <style scoped lang="scss">
-  @import 'vuetify/settings';
+  @use 'sass:map';
+  @use 'vuetify/settings';
+
   .container {
     display: flex;
     flex-direction: column;
@@ -274,7 +276,7 @@
     }
   }
 
-  @media #{map-get($display-breakpoints, 'xs')} {
+  @media #{map.get($display-breakpoints, 'xs')} {
     .container {
       transform: translateX(6.5rem);
       width: 60vw;
@@ -327,7 +329,7 @@
     }
   }
 
-  @media #{map-get($display-breakpoints, 'sm')} {
+  @media #{map.get($display-breakpoints, 'sm')} {
     .container {
       transform: translateX(9rem);
       width: fit-content;

@@ -129,6 +129,7 @@
 </template>
 
 <style scoped lang="scss">
+  @use 'sass:map';
   @import 'vuetify/settings';
 
   .v-container {
@@ -170,7 +171,7 @@
     }
   }
 
-  @media #{map-get($display-breakpoints, 'sm-and-down')} {
+  @media #{map.get($display-breakpoints, 'sm-and-down')} {
     .v-tab {
       font-size: 1rem;
     }

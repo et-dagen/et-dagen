@@ -155,10 +155,11 @@
 </template>
 
 <style lang="scss">
+  @use 'sass:map';
   @use 'vuetify/settings';
 
   .job-page {
-    @media #{map-get(settings.$display-breakpoints, 'md-and-up')} {
+    @media #{map.get(settings.$display-breakpoints, 'md-and-up')} {
       align-items: center !important;
     }
   }
