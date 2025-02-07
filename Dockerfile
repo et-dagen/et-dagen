@@ -5,8 +5,10 @@ RUN apk update \
     && corepack enable pnpm \
     && apk add --no-cache python3 make g++ zlib-dev vips-dev
 
+RUN corepack prepare pnpm@8.6.0 --activate
+
 # Build project
-FROM base as build
+FROM base AS build
 WORKDIR /app
 COPY . .
 
@@ -14,8 +16,9 @@ COPY . .
 RUN pnpm install
 RUN pnpm build
 
-# Run the app
-FROM node:21-alpine as prod
+# Run
+FROM node:21-alpine AS prod
+
 WORKDIR /app
 COPY --from=build /app /app
 
