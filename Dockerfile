@@ -4,6 +4,8 @@ RUN apk update \
     && apk upgrade \
     && corepack enable pnpm
 
+RUN corepack prepare pnpm@8.6.0 --activate
+
 # Build project
 FROM base as build
 WORKDIR /app
