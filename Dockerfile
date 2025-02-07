@@ -7,14 +7,14 @@ RUN apk update \
 RUN corepack prepare pnpm@8.6.0 --activate
 
 # Build project
-FROM base as build
+FROM base AS build
 WORKDIR /app
 COPY . .
 RUN pnpm install
 RUN pnpm build
 
 # Run
-FROM node:21-alpine as prod
+FROM node:21-alpine AS prod
 WORKDIR /app
 COPY --from=build /app /app
 ENV PORT=8080
