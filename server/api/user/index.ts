@@ -22,7 +22,12 @@ export default defineEventHandler(async (event) => {
 
   // only admins can get other users than their own
   // TODO! Restrict company user access by adding custom endpoint for /api/company/events/users
-  if (!hasAccess(user, ['admin', 'company']) || !scope || scope !== 'all')
+  if (
+    !hasAccess(user, ['admin', 'basic', 'company']) ||
+    !scope ||
+    scope !== 'all'
+  )
+    // basic users need to be able to get attendant list! Is this a security risk?
     return user
 
   // reference to users
