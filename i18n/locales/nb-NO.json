@@ -124,6 +124,10 @@
         "attendants": "Påmeldte",
         "nocapacity": "Ingen kapasitetsbegrensning",
         "registered": "Du er påmeldt"
+      },
+      "queue": {
+        "name": "Venteliste",
+        "position": "Plassering i køen"
       }
     }
   },
@@ -272,7 +276,9 @@
       "event": {
         "register": {
           "sign_up": "Du er påmeldt dette arrangementet",
-          "opt_out": "Du har meldt deg av dette arrangementet"
+          "opt_out": "Du har meldt deg av dette arrangementet",
+          "queue": "Du er nå på venteliste for dette arrangementet",
+          "opt_out_queue": "Du har meldt deg køen av dette arrangementet"
         },
         "edit": {
           "created": "Arrangement opprettet",
@@ -299,8 +305,10 @@
     "standmap": "Se standkart",
     "event": {
       "sign_up": "Meld meg på",
+      "enqueue": "Meld meg på venteliste",
       "opt_out": {
         "name": "Trekk påmelding",
+        "queue": "Trekk køplass",
         "confirmtext": "Er du sikker på at du vil melde deg av?",
         "confirm": "Ja, meld meg av",
         "abort": "Nei, avbryt"
