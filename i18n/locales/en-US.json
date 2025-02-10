@@ -7,7 +7,7 @@
     "admin": "Admin",
     "user": "My profile",
     "program_nav": "SEE PROGRAM",
-    "company": "My Events"
+    "company": "Company"
   },
   "home": {
     "banner": {
@@ -53,6 +53,12 @@
       "password": "Password",
       "remember": "Remember me",
       "forgot": "Forgot password?"
+    },
+    "resume": {
+      "resume": "resume",
+      "upload_resume": "Upload resume",
+      "your_resume": "Your resume",
+      "delete_resume": "Delete resume"
     }
   },
   "error": {
@@ -156,7 +162,11 @@
           "currentyear": "Year",
           "email": "Email"
         }
-      }
+      },
+      "cvAccess_restriction": "CV access is restricted",
+      "year": "Year",
+      "event": "Events",
+      "resume": "Resumes"
     }
   },
   "alert": {
@@ -225,8 +235,8 @@
         "invalid": "Invalid form"
       },
       "firebase": {
-        "user_not_authorized": "User not authorized",
         "email_in_use": "Email already in use",
+        "user_not_authorized": "User not authorized",
         "invalid_email": "Invalid email address",
         "user_not_found": "User not found",
         "wrong_password": "Incorrect password"
@@ -393,7 +403,12 @@
           "sponsor": "Sponsor",
           "old": "Old"
         },
-        "code": "Code"
+        "code": "Code",
+        "cvAccess": {
+          "name": "CV access",
+          "yes": "Yes",
+          "no": "No"
+        }
       },
       "copied": "Copied UID!",
       "copiedcode": "Copied registration code!",
@@ -489,7 +504,7 @@
       "attributes": {
         "title": "Job Title",
         "company": "Company",
-        "description": "Job Description (mandatory)",
+        "description": "Job Description",
         "deadline": "Application Deadline",
         "application_link": "Job advertisement link",
         "jobtype": {
@@ -515,7 +530,7 @@
         "title": "Title",
         "company": "Company",
         "capacity": "Capacity",
-        "description": "Description (mandatory)",
+        "description": "Description",
         "location": {
           "name": "Name of Place",
           "map": "Map Link"
@@ -554,6 +569,11 @@
         "description": "Description",
         "logo": "Logo",
         "webpage": "webpage",
+        "cvAccess": {
+          "name": "CV access",
+          "yes": "Yes",
+          "no": "No"
+        },
         "type": {
           "name": "Company Type",
           "main_partner": "Main Partner",
@@ -566,7 +586,7 @@
     "user": {
       "title": "Edit User",
       "save": "Save",
-      "canel": "Cancel",
+      "cancel": "Cancel",
       "attributes": {
         "name": "Name",
         "email": "E-mail",
@@ -585,8 +605,8 @@
     "header": {
       "resources": "Resources",
       "organisation": "Organisation",
-      "join": "Company?",
-      "some": "Follow us"
+      "some": "Follow us",
+      "join": "Wish to join us?"
     },
     "link": {
       "contact": "Contact Us",
@@ -597,13 +617,13 @@
   "dietary_restrictions": {
     "name": "Allergens and restrictions",
     "gluten": "Gluten",
-    "shellfish": "Shellfish",
+    "shellfish": "shellfish",
     "citrus": "Citrus fruits",
     "egg": "Egg",
     "fish": "Fish",
     "peanuts": "Peanuts",
     "soy": "Soy",
-    "milk": "Milk proteins",
+    "milk": "Milk",
     "nuts": "Nuts",
     "celery": "Celery",
     "mustard": "Mustard",

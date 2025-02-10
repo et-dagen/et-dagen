@@ -9,7 +9,6 @@
   // Fetch company data if props are provided
   const auth = useAuthStore()
   const { hasAccess, user } = storeToRefs(auth)
-
   const useAlerts = useAlertStore()
 
   // fetch company data
@@ -35,6 +34,7 @@
     description: null,
     type: null,
     webpage: null,
+    cvAccess: false,
     logo: null,
     uid: null,
   }
@@ -241,6 +241,27 @@
           />
         </VRow>
 
+        <!-- CV Access -->
+        <VRow>
+          <FormSelectInput
+            v-model="state.cvAccess"
+            :content="{
+              label: $t('edit.company.attributes.cvAccess.name'),
+              options: [
+                {
+                  title: $t('edit.company.attributes.cvAccess.yes'),
+                  value: true,
+                },
+                {
+                  title: $t('edit.company.attributes.cvAccess.no'),
+                  value: false,
+                },
+              ],
+            }"
+            :rules="[]"
+          />
+        </VRow>
+
         <!-- Logo -->
         <!-- TODO: #190 Add code for uploading image after company creation -->
         <VRow style="overflow: scroll">
@@ -313,7 +334,7 @@
 </template>
 
 <style scoped lang="scss">
-  @import 'vuetify/settings';
+  @use 'vuetify/settings';
   .title {
     text-align: center;
   }

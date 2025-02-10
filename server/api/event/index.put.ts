@@ -84,11 +84,21 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Error (event/registration-start-after-end).',
     })
 
+  // TODO: Add support for different event types
+  // check if the eventtype is valid
+  // if (!['presentation', 'dinner', 'other'].includes(eventType))
+  //   throw createError({
+  //     statusCode: 400,
+  //     statusMessage:
+  //       "Eventtype has to be either 'presentation', 'dinner' or 'other'",
+  //   })
+
   // Get database reference
   const eventRef = db.ref(`events/${eventUID}`)
 
   // Add defined inputs to updates-object
   const updates = {
+    // limitedCapacity,
     capacity,
     companyUID,
     date: {
@@ -102,6 +112,7 @@ export default defineEventHandler(async (event) => {
     },
     title,
     registration,
+    // eventType,
   }
 
   // Update database information

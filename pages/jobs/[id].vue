@@ -119,7 +119,9 @@
 </template>
 
 <style scoped lang="scss">
+  @use 'sass:map';
   @use 'vuetify/settings';
+
   .container {
     display: grid;
     width: 100vw;
@@ -176,17 +178,17 @@
       grid-area: attendants;
     }
 
-    @media #{map-get(settings.$display-breakpoints, 'lg-and-up')} {
+    @media #{map.get(settings.$display-breakpoints, 'lg-and-up')} {
       max-width: 1080px;
     }
 
-    @media #{map-get(settings.$display-breakpoints, 'md-and-down')} {
+    @media #{map.get(settings.$display-breakpoints, 'md-and-down')} {
       max-width: 750px;
       grid-template-areas: 'image' 'details' 'attendants' 'description';
       grid-template-columns: 1fr;
     }
 
-    @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
+    @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
       max-width: 420px;
     }
   }

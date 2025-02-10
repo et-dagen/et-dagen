@@ -6,8 +6,8 @@
       default: null,
     },
   })
-  const useAlerts = useAlertStore()
 
+  const useAlerts = useAlertStore()
   // Fetch job data if props are provided
   const auth = useAuthStore()
   const { hasAccess, user } = storeToRefs(auth)
@@ -295,7 +295,7 @@
 </template>
 
 <style scoped lang="scss">
-  @import 'vuetify/settings';
+  @use 'vuetify/settings';
   .title {
     text-align: center;
   }

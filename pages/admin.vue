@@ -93,6 +93,7 @@
 </template>
 
 <style lang="scss">
+  @use 'sass:map';
   @use 'vuetify/settings';
 
   .categories {
@@ -107,11 +108,11 @@
   .administration {
     width: 80rem;
 
-    @media #{map-get(settings.$display-breakpoints, 'lg-and-down')} {
+    @media #{map.get(settings.$display-breakpoints, 'lg-and-down')} {
       width: 60rem;
     }
 
-    @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
+    @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
       width: 95vw;
     }
   }

@@ -560,7 +560,7 @@
 </template>
 
 <style scoped lang="scss">
-  @import 'vuetify/settings';
+  @use 'vuetify/settings';
 
   .title {
     text-align: center;

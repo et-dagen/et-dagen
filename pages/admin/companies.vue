@@ -332,6 +332,7 @@
           <th>{{ $t('admin.company.attributes.type.name') }}</th>
           <th>{{ $t('admin.company.attributes.logo') }}</th>
           <th>{{ $t('admin.company.attributes.webpage') }}</th>
+          <th>{{ $t('admin.company.attributes.cvAccess.name') }}</th>
           <th>{{ $t('admin.company.attributes.code') }}</th>
           <th class="text-center">UID</th>
           <th></th>
@@ -366,6 +367,15 @@
           <!-- company webpage -->
           <td class="truncate">
             {{ company.webpage.replace('https://', '') }}
+          </td>
+
+          <!-- company cv access -->
+          <td class="truncate">
+            {{
+              $t(
+                `admin.company.attributes.cvAccess.${company.cvAccess ? 'yes' : 'no'}`,
+              )
+            }}
           </td>
 
           <!-- company code -->

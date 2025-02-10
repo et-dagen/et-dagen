@@ -59,13 +59,10 @@
   const state = reactive({ companyUID: null, ...props.user })
 
   const hasDietaryRestrictions = ref(state.dietaryRestrictions)
-
   const otherRestrictions = ref<null | string>(null)
-
   // initially assumed to have dietary restrictions
   const hasDietaryRestrictionsBool = ref(true)
   let initialHasDietaryRestrictionsBool = true
-
   // set dietary restrictions to false if there is none
   if (
     !hasDietaryRestrictions.value ||
@@ -74,7 +71,6 @@
     hasDietaryRestrictionsBool.value = false
     initialHasDietaryRestrictionsBool = false
   }
-
   const getDietaryRestrictionsOptions = ($t) => {
     const options = dietaryFlags
       .map((flag) => ({
@@ -82,7 +78,6 @@
         value: flag.name,
       }))
       .sort()
-
     // Check if there are any additional dietary restrictions in state
     if (state.dietaryRestrictions && state.dietaryRestrictions.length > 0) {
       state.dietaryRestrictions.forEach((restriction) => {
@@ -277,7 +272,6 @@
       </VRow>
 
       <!-- dietary restrictions -->
-
       <VRow>
         <VRadioGroup
           v-model="hasDietaryRestrictionsBool"
@@ -293,7 +287,6 @@
           ></VRadio>
         </VRadioGroup>
       </VRow>
-
       <VRow v-if="hasDietaryRestrictionsBool">
         <FormSelectInput
           v-model="state.dietaryRestrictions"
@@ -305,7 +298,6 @@
           :rules="[hasDietaryRestrictions ? useRequiredInput : null]"
         />
       </VRow>
-
       <VRow v-if="hasDietaryRestrictionsBool" class="mt-3 pt-0">
         <FormTextInput
           v-model="otherRestrictions"
@@ -341,7 +333,7 @@
 </template>
 
 <style scoped lang="scss">
-  @import 'vuetify/settings';
+  @use 'vuetify/settings';
   .title {
     text-align: center;
   }

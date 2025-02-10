@@ -11,7 +11,8 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Error (firebase/user-not-authorized).',
     })
 
-  const { description, logo, name, type, webpage } = await readBody(event)
+  const { description, logo, name, type, webpage, cvAccess } =
+    await readBody(event)
 
   const companiesRef = db.ref('companies')
 
@@ -28,6 +29,7 @@ export default defineEventHandler(async (event) => {
     name,
     type,
     webpage,
+    cvAccess,
   })
 
   return {

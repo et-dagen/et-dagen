@@ -62,7 +62,7 @@ export default defineEventHandler(async (event) => {
   if (date.start > date.end)
     throw createError({
       statusCode: 400,
-      statusMessage: 'Error (event/start-after-end).',
+      statusMessage: 'Start time has to be before end time',
     })
 
   // registration window must be before event start
@@ -79,11 +79,21 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Error (event/registration-start-after-end).',
     })
 
+  // TODO: Add support for different event types
+  // check if the eventtype is valid
+  // if (!['presentation', 'dinner', 'other'].includes(eventType))
+  //   throw createError({
+  //     statusCode: 400,
+  //     statusMessage:
+  //       "Eventtype has to be either 'presentation', 'dinner' or 'other'",
+  //   })
+
   // all checks made, so push data to db
   const eventsRef = db.ref('events')
 
   // endtime and description don't have to be defined
   eventsRef.push({
+    // limitedCapacity,
     capacity,
     companyUID,
     date: {
@@ -97,6 +107,7 @@ export default defineEventHandler(async (event) => {
     },
     title,
     registration,
+    // eventType,
   })
 
   sendNoContent(event, 201)

@@ -6,13 +6,11 @@ export const alertTypes = [
   undefined,
 ] as const
 export type AlertType = (typeof alertTypes)[number]
-
 export interface Alert {
   show: boolean
   type: AlertType
   message: string
 }
-
 export const useAlertStore = defineStore('alert', {
   state: (): Alert => {
     return {

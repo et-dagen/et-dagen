@@ -2,9 +2,9 @@
   import AttendantsList from '~/components/event/AttendantsList.vue'
   import { type User } from '~/models/User'
 
+  const localePath = useLocalePath()
   const useAuth = useAuthStore()
   const useAlert = useAlertStore()
-  const localePath = useLocalePath()
 
   // get event id from route
   const route = useRoute()
@@ -166,6 +166,7 @@
   )
 
   const loading = ref(false)
+
   // sign up for event
   const signUpForEvent = () => {
     loading.value = true
@@ -226,7 +227,7 @@
       .then(() => refresh())
       .then(() =>
         useAlert.alert(
-          getI18nString('alert.success.event.register.opt_out'),
+          getI18nString('alert.success.event.register.opt_out.name'),
           'success',
         ),
       )
@@ -526,11 +527,9 @@
               {{ $t('program.event.opt_out.name') }}
             </VBtn>
           </template>
-
           <template #default="{ isActive }">
             <VCard rounded="lg" class="text-center pa-6">
               <h6>{{ $t('program.event.opt_out.confirmtext') }}</h6>
-
               <div
                 class="d-flex justify-center flex-wrap mt-6"
                 style="gap: 1.5rem"
@@ -611,7 +610,9 @@
 </template>
 
 <style scoped lang="scss">
+  @use 'sass:map';
   @use 'vuetify/settings';
+
   .comma-separated {
     &::after {
       content: ',\00a0';
@@ -624,7 +625,6 @@
   .login {
     font-size: 1rem;
   }
-
   .container {
     display: grid;
     width: 100vw;
@@ -682,17 +682,17 @@
       grid-area: attendants;
     }
 
-    @media #{map-get(settings.$display-breakpoints, 'lg-and-up')} {
+    @media #{map.get(settings.$display-breakpoints, 'lg-and-up')} {
       max-width: 1080px;
     }
 
-    @media #{map-get(settings.$display-breakpoints, 'md-and-down')} {
+    @media #{map.get(settings.$display-breakpoints, 'md-and-down')} {
       max-width: 750px;
       grid-template-areas: 'image' 'details' 'attendants' 'description';
       grid-template-columns: 1fr;
     }
 
-    @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
+    @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
       max-width: 420px;
     }
   }

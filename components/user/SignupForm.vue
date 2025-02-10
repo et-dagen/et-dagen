@@ -10,6 +10,7 @@
   const useAlerts = useAlertStore()
 
   const { data: studyProgrammes } = await useFetch('/api/programme')
+
   // alphabetically sort study programmes
   const programmeOptions = computed(() =>
     Object.values(studyProgrammes.value)
@@ -250,7 +251,8 @@
 </template>
 
 <style scoped lang="scss">
-  @import 'vuetify/settings';
+  @use 'sass:map';
+  @use 'vuetify/settings';
 
   .v-container {
     max-width: 26rem !important;
@@ -275,7 +277,7 @@
     margin-inline: 20% !important;
   }
 
-  @media #{map-get($display-breakpoints, 'sm-and-down')} {
+  @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
     .v-tab {
       font-size: 1rem;
     }
