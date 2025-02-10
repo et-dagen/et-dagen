@@ -69,12 +69,39 @@ export default defineEventHandler(async (event) => {
         (attendant) => attendant[1] === user.uid,
       )?.[0]
 
+  // Get event from database
+  const queueRef = db.ref(`events/${eventUID}/queue`)
+  const snapshotQueue = await queueRef.once('value')
+  const queueData = snapshotQueue.val()
+
   // User is not registered for this event
-  if (!attendantUID) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Error (event/register/user-not-registered).',
-    })
+  // Ensure the queue exists in Firebase
+  if (!queueData) {
+    if (!attendantUID) {
+      throw createError({
+        statusCode: 404,
+        statusMessage:
+          'Error (event/register/user-not-registered-or-queued-tata).',
+      })
+    }
+  } else {
+    const queueEntries = Object.entries(queueData || {})
+    const userInQueue = queueEntries.find(
+      ([_key, value]) => value === (userUID || user.uid),
+    ) || [undefined, undefined]
+
+    if (userInQueue[0]) {
+      const queueKey = userInQueue[0]
+      delete queueData[queueKey]
+      await queueRef.set(queueData)
+      sendNoContent(event, 201)
+      return 0
+    } else if (!attendantUID) {
+      throw createError({
+        statusCode: 404,
+        statusMessage: 'Error (event/register/user-not-registered-or-queued).',
+      })
+    }
   }
 
   // Remove user from attendants
@@ -82,6 +109,16 @@ export default defineEventHandler(async (event) => {
 
   // Update attendants
   eventsRef.child(eventUID).child('attendants').set(attendees)
+
+  // Move the next user from the queue to attendants
+  const queue = data[eventUID].queue || {}
+  const nextUserKey = Object.keys(queue).sort()[0]
+  if (nextUserKey) {
+    const nextUserUID = queue[nextUserKey]
+    delete queue[nextUserKey]
+    eventsRef.child(eventUID).child('queue').set(queue)
+    eventsRef.child(eventUID).child('attendants').push(nextUserUID)
+  }
 
   // User successfully opted out of event
   sendNoContent(event, 201)

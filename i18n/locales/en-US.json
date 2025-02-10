@@ -124,6 +124,10 @@
         "attendants": "Attendants",
         "nocapacity": "No capacity limit",
         "registered": "You are registered"
+      },
+      "queue": {
+        "name": "Queue",
+        "position": "Position in queue"
       }
     }
   },
@@ -273,7 +277,9 @@
       "event": {
         "register": {
           "sign_up": "Successfully registered to event",
-          "opt_out": "Successfully opted out of event"
+          "opt_out": "Successfully opted out of event",
+          "queue": "Successfully registered to event queue",
+          "opt_out_queue": "Successfully opted out of event queue"
         },
         "edit": {
           "created": "Successfully created event",
@@ -301,8 +307,10 @@
     "standmap": "Stand Map",
     "event": {
       "sign_up": "Sign up",
+      "enqueue": "Enqueue",
       "opt_out": {
         "name": "Opt out",
+        "queue": "Opt out of queue",
         "confirmtext": "Are you sure you want to opt out?",
         "confirm": "Yes, remove me",
         "abort": "No, abort"

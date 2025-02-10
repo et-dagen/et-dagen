@@ -45,6 +45,13 @@
     ),
   )
 
+  // Get the number of queued users
+  const totalQueued = computed(() => {
+    return event.value.queue || {}
+      ? Object.keys(event.value.queue || {}).length
+      : 0
+  })
+
   // get day and month strings from date
   const eventStartString = computed(
     () =>
@@ -101,12 +108,20 @@
       Object.values(event.value.attendants).includes(useAuth?.user?.uid),
   )
 
+  // check if user is already registered for queue
+  const alreadyQueued = computed(
+    () =>
+      (hasAttendants.value &&
+        Object.values(event.value.queue || {}).includes(useAuth?.user?.uid)) ??
+      false,
+  )
+
   // check if event is full
   const eventFull = computed(
     () =>
       hasCapacity.value &&
       hasAttendants.value &&
-      Object.keys(event.value.attendants).length >= event.value.capacity,
+      Object.keys(event.value.attendants || {}).length >= event.value.capacity,
   )
 
   // does the event have any registration actions, and is user signed in
@@ -142,7 +157,12 @@
 
   // check if user is already registered for event
   const showSignupButton = computed(
-    () => hasCapacity.value && !alreadyRegistered.value,
+    () => hasCapacity.value && !alreadyRegistered.value && !eventFull.value,
+  )
+
+  // check if user is eligable for queue for event
+  const showQueueButton = computed(
+    () => hasCapacity.value && !alreadyRegistered.value && eventFull.value,
   )
 
   const loading = ref(false)
@@ -159,6 +179,30 @@
       .then(() =>
         useAlert.alert(
           getI18nString('alert.success.event.register.sign_up'),
+          'success',
+        ),
+      )
+      .catch((error: any) => {
+        const { type, message } = getApiResponseAlertContext(
+          error.statusMessage,
+        )
+        useAlert.alert(message, type as AlertType)
+      })
+      .finally(() => (loading.value = false))
+  }
+
+  // Add user to the queue
+  const addToQueue = () => {
+    loading.value = true
+
+    $fetch('/api/event/register', {
+      method: 'POST',
+      body: { eventUID: event.value.uid },
+    })
+      .then(() => refresh())
+      .then(() =>
+        useAlert.alert(
+          getI18nString('alert.success.event.register.queue'),
           'success',
         ),
       )
@@ -198,6 +242,46 @@
         dialog.value = false
       })
   }
+
+  // opt out of Queue
+  /*
+  const optOutOfQueue = () => {
+    loading.value = true
+
+    $fetch('/api/event/register', {
+      method: 'DELETE',
+      body: { eventUID: event.value.uid },
+    })
+      .then(() => refresh())
+      .then(() =>
+        useAlert.alert(
+          getI18nString('alert.success.event.register.opt_out_queue'),
+          'success',
+        ),
+      )
+      .catch((error) => {
+        const { type, message } = getApiResponseAlertContext(
+          error.statusMessage,
+        )
+        useAlert.alert(message, type as AlertType)
+      })
+      .finally(() => {
+        loading.value = false
+        dialog.value = false
+      })
+  }
+  */
+
+  // get user's position in the queue
+  const userQueuePosition = computed(() => {
+    if (!event.value.queue) return null
+    const queueEntries = Object.entries(event.value.queue)
+    const sortedQueue = queueEntries.sort(([a], [b]) => a.localeCompare(b))
+    const userUid = useAuth.user?.uid
+    if (!userUid) return null
+    const userIndex = sortedQueue.findIndex(([, uid]) => uid === userUid)
+    return userIndex !== -1 ? userIndex + 1 : null
+  })
 </script>
 
 <template>
@@ -315,12 +399,23 @@
             <span v-else>0</span>
 
             {{ event.capacity ? `/ ${event.capacity}` : '' }}
+
+            <strong style="margin-left: 10px">
+              {{ $t('event.page.queue.name') }}:
+            </strong>
+
+            {{ totalQueued }}
           </span>
 
           <span v-if="alreadyRegistered">
             {{ $t('event.page.attendants.registered') }}
             <VIcon style="margin-bottom: 2px">mdi-check-circle</VIcon>
           </span>
+
+          <div v-if="alreadyQueued">
+            {{ $t('event.page.queue.position') }}:
+            {{ userQueuePosition }}
+          </div>
         </VCardText>
 
         <VCardText v-else>
@@ -401,6 +496,23 @@
           {{ $t('program.event.sign_up') }}
         </VBtn>
 
+        <!-- Enqueue -->
+        <VBtn
+          v-else-if="showQueueButton && !alreadyQueued"
+          color="success"
+          :loading="loading"
+          block
+          variant="flat"
+          :ripple="true"
+          density="comfortable"
+          :disabled="
+            alreadyQueued || !meetsProgrammeRequirement || !meetsYearRequirement
+          "
+          @click.stop="addToQueue"
+        >
+          {{ $t('program.event.enqueue') }}
+        </VBtn>
+
         <!-- opt out modal -->
         <VDialog v-if="alreadyRegistered" v-model="dialog" width="500">
           <template #activator="{ props }">
@@ -418,6 +530,55 @@
           <template #default="{ isActive }">
             <VCard rounded="lg" class="text-center pa-6">
               <h6>{{ $t('program.event.opt_out.confirmtext') }}</h6>
+              <div
+                class="d-flex justify-center flex-wrap mt-6"
+                style="gap: 1.5rem"
+              >
+                <VBtn
+                  size="large"
+                  variant="outlined"
+                  color="primary"
+                  :loading="loading"
+                  @click="optOutOfEvent"
+                >
+                  {{ $t('program.event.opt_out.confirm') }}
+                </VBtn>
+                <VBtn
+                  size="large"
+                  flat
+                  color="success"
+                  @click="isActive.value = false"
+                >
+                  {{ $t('program.event.opt_out.abort') }}
+                </VBtn>
+              </div>
+            </VCard>
+          </template>
+        </VDialog>
+
+        <!-- opt out modal -->
+        <VDialog
+          v-if="!alreadyRegistered && alreadyQueued"
+          v-model="dialog"
+          width="500"
+        >
+          <template #activator="{ props }">
+            <VBtn
+              v-bind="props"
+              color="primary"
+              block
+              variant="tonal"
+              :ripple="true"
+              density="comfortable"
+            >
+              {{ $t('program.event.opt_out.queue') }}
+            </VBtn>
+          </template>
+
+          <template #default="{ isActive }">
+            <VCard rounded="lg" class="text-center pa-6">
+              <h6>{{ $t('program.event.opt_out.confirmtext') }}</h6>
+
               <div
                 class="d-flex justify-center flex-wrap mt-6"
                 style="gap: 1.5rem"

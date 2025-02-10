@@ -113,10 +113,47 @@ export default defineEventHandler(async (event) => {
   if (
     Object.values(data[eventUID].attendants).length >= data[eventUID]?.capacity
   ) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Error (event/register/event-is-full).',
-    })
+    // Ensure queue subsection exists
+    if (!data[eventUID].queue) {
+      eventsRef.child(eventUID).child('queue').set({})
+    }
+
+    // Check if the user is already in the queue
+    const queueSnapshot = await eventsRef
+      .child(eventUID)
+      .child('queue')
+      .once('value')
+    const queueData = queueSnapshot.val()
+    if (queueData && Object.values(queueData).includes(userUID || user.uid)) {
+      throw createError({
+        statusCode: 404,
+        statusMessage: 'User is already in the queue',
+      })
+    }
+
+    // Add user to queue
+    let timestamp = Date.now()
+    let timestampString = timestamp.toString()
+    let keyExists = true
+    while (keyExists) {
+      const snapshot = await eventsRef
+        .child(eventUID)
+        .child('queue')
+        .child(timestampString)
+        .once('value')
+      if (snapshot.exists()) {
+        timestamp = timestamp + 1
+        timestampString = timestamp.toString()
+      } else {
+        keyExists = false
+      }
+    }
+    eventsRef
+      .child(eventUID)
+      .child('queue')
+      .child(timestampString)
+      .set(userUID || user.uid)
+    return sendNoContent(event, 201)
   }
 
   // Add user to attendants
