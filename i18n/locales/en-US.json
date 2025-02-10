@@ -126,7 +126,7 @@
         "registered": "You are registered"
       },
       "queue": {
-        "name": "Venteliste",
+        "name": "Queue",
         "position": "Position in queue"
       }
     }
