@@ -10,7 +10,7 @@
   const programFilter = ref<string[] | null>(null)
 
   const currentPage = ref(1)
-  const itemsPerPage = ref(1)
+  const itemsPerPage = ref(10)
 
   const filteredResumeUsers = computed(() => {
     return users
@@ -147,7 +147,7 @@
       <v-pagination
         v-model:model-value="currentPage"
         :length="totalPages"
-        :total-visible="3"
+        :total-visible="5"
         density="comfortable"
       ></v-pagination>
     </div>
