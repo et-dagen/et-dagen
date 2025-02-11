@@ -33,7 +33,7 @@
   const date = computed(() => {
     // Default date if no date is found
     const endDateString = info.value?.date?.end ?? '2024-02-10T10:00:00'
-    const startDateString = info.value?.date?.start ?? '2024-02-14T10:00:00'
+    const startDateString = info.value?.date?.start ?? '2024-02-13T10:00:00'
     const timeString = info.value?.date?.start ?? '2024-02-01T10:00:00'
 
     const endDate = new Date(endDateString).toISOString().split('T')[0]
