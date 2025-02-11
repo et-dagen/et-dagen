@@ -166,7 +166,16 @@
       "cvAccess_restriction": "CV access is restricted",
       "year": "Year",
       "event": "Events",
-      "resume": "Resumes"
+      "resume": "Resumes",
+      "noResumes": "No resumes matches the search criteria",
+      "filterTypes": {
+        "name": "Year"
+      },
+      "filterOrder": {
+        "name": "Order",
+        "descending": "Descending",
+        "ascending": "Ascending"
+      }
     }
   },
   "alert": {
