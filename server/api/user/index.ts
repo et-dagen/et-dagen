@@ -8,13 +8,13 @@ export default defineEventHandler(async (event) => {
   if (!decodedToken)
     throw createError({
       statusCode: 401,
-      statusMessage: 'User not authenticated',
+      statusMessage: 'Error (firebase/user-not-authorized).',
     })
 
   if (!user)
     throw createError({
       statusCode: 404,
-      statusMessage: 'User data not found',
+      statusMessage: 'Error (user/not-found).',
     })
 
   // get scope from query params
@@ -22,7 +22,12 @@ export default defineEventHandler(async (event) => {
 
   // only admins can get other users than their own
   // TODO! Restrict company user access by adding custom endpoint for /api/company/events/users
-  if (!hasAccess(user, ['admin', 'company']) || !scope || scope !== 'all')
+  if (
+    !hasAccess(user, ['admin', 'basic', 'company']) ||
+    !scope ||
+    scope !== 'all'
+  )
+    // basic users need to be able to get attendant list! Is this a security risk?
     return user
 
   // reference to users

@@ -42,8 +42,10 @@
 
     <!-- job description -->
     <VCard class="description elevation-4" rounded="lg">
-      <VCardTitle class="title">{{ job?.title }}</VCardTitle>
-      <VCardText class="text">{{ job?.description }}</VCardText>
+      <VCardTitle class="description__title">{{ job?.title }}</VCardTitle>
+      <!-- eslint-disable vue/no-v-text-v-html-on-component vue/no-v-html -->
+      <VCardText class="description__text" v-html="job?.description" />
+      <!-- eslint-enable -->
     </VCard>
 
     <!-- job details -->
@@ -117,7 +119,9 @@
 </template>
 
 <style scoped lang="scss">
+  @use 'sass:map';
   @use 'vuetify/settings';
+
   .container {
     display: grid;
     width: 100vw;
@@ -174,17 +178,17 @@
       grid-area: attendants;
     }
 
-    @media #{map-get(settings.$display-breakpoints, 'lg-and-up')} {
+    @media #{map.get(settings.$display-breakpoints, 'lg-and-up')} {
       max-width: 1080px;
     }
 
-    @media #{map-get(settings.$display-breakpoints, 'md-and-down')} {
+    @media #{map.get(settings.$display-breakpoints, 'md-and-down')} {
       max-width: 750px;
       grid-template-areas: 'image' 'details' 'attendants' 'description';
       grid-template-columns: 1fr;
     }
 
-    @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
+    @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
       max-width: 420px;
     }
   }

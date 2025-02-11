@@ -9,6 +9,7 @@
   // Fetch company data if props are provided
   const auth = useAuthStore()
   const { hasAccess, user } = storeToRefs(auth)
+  const useAlerts = useAlertStore()
 
   // fetch company data
   const { data: company } = await useFetch('/api/company', {
@@ -44,24 +45,6 @@
       ? { ...Object.values(embedKeyIntoObjectValues(company.value))[0] }
       : { ...initialState },
   )
-
-  // Alert state
-  const initialAlertState = {
-    show: false,
-    alertRoute: '',
-    type: undefined as AlertType,
-  }
-
-  const alertState = reactive({
-    ...initialAlertState,
-  })
-
-  // show appropriate error alert after signing up for company
-  const displayErrorAlert = (alertRoute: string) => {
-    alertState.alertRoute = alertRoute
-    alertState.type = 'error'
-    alertState.show = true
-  }
 
   const form = ref()
   const file = ref()
@@ -106,7 +89,7 @@
     try {
       if (!valid) throw new Error('Form is not valid')
     } catch (error) {
-      displayErrorAlert('alert.error.form.invalid')
+      useAlerts.alert(getI18nString('alert.error.form.invalid'), 'error')
       return
     }
 
@@ -119,22 +102,20 @@
     // update company
     await $fetch('/api/company', {
       method: 'PUT',
-      saveChanges,
       body: rest,
     })
       .then(() => {
-        // useAlerts.alert(
-        //   getI18nString('alert.success.company.edit.modified'),
-        //   'success',
-        // )
+        useAlerts.alert(
+          getI18nString('alert.success.company.edit.modified'),
+          'success',
+        )
         setTimeout(() => navigateTo(localePath('/admin/companies')), 2000)
       })
       .catch((error) => {
         const { type, message } = getApiResponseAlertContext(
           error.statusMessage,
         )
-        // useAlerts.alert(message, type as AlertType)
-        console.log(message, type)
+        useAlerts.alert(message, type as AlertType)
         console.error(error)
       })
   }
@@ -145,7 +126,7 @@
     try {
       if (!valid) throw new Error('Form is not valid')
     } catch (error) {
-      displayErrorAlert('alert.error.form.invalid')
+      useAlerts.alert(getI18nString('alert.error.form.invalid'), 'error')
       return
     }
 
@@ -195,21 +176,6 @@
     <h3 v-else class="title py-6 mt-4">
       {{ $t('edit.company.create.title') }}
     </h3>
-
-    <!-- Alert component -->
-    <VSnackbar v-model="alertState.show">
-      {{ $t(`${alertState.alertRoute}`) }}
-
-      <template #actions>
-        <VBtn
-          :color="alertState.type"
-          variant="text"
-          @click="alertState.show = false"
-        >
-          {{ $t('alert.close_alert') }}
-        </VBtn>
-      </template>
-    </VSnackbar>
 
     <!-- Edit Form -->
     <VForm ref="form" @submit.prevent="saveChanges || createCompany">
@@ -368,7 +334,7 @@
 </template>
 
 <style scoped lang="scss">
-  @import 'vuetify/settings';
+  @use 'vuetify/settings';
   .title {
     text-align: center;
   }

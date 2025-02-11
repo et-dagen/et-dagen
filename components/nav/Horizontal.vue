@@ -89,13 +89,14 @@
 
 <style lang="scss">
   @use 'vuetify/settings';
+  @use 'sass:map';
 
   .v-app-bar {
     padding-left: 3rem !important;
     padding-right: 3rem !important;
 
     // on sm breakpoint set padding to 1rem
-    @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
+    @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
       padding-left: 1rem !important;
       padding-right: 1rem !important;
     }

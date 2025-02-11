@@ -152,6 +152,7 @@
 </template>
 
 <style scoped lang="scss">
+  @use 'sass:map';
   @use 'vuetify/settings';
 
   .container {
@@ -167,7 +168,7 @@
   .v-card {
     min-width: 90px;
 
-    @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
+    @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
       min-width: 60px;
     }
   }
@@ -183,7 +184,7 @@
     height: 50px;
     font-size: 1.5em;
 
-    @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
+    @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
       width: 75%;
       height: 40px;
       font-size: 1.2em;

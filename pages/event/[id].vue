@@ -2,7 +2,9 @@
   import AttendantsList from '~/components/event/AttendantsList.vue'
   import { type User } from '~/models/User'
 
+  const localePath = useLocalePath()
   const useAuth = useAuthStore()
+  const useAlert = useAlertStore()
 
   // get event id from route
   const route = useRoute()
@@ -42,6 +44,13 @@
       users.value?.find((user) => user.uid === uid),
     ),
   )
+
+  // Get the number of queued users
+  const totalQueued = computed(() => {
+    return event.value.queue || {}
+      ? Object.keys(event.value.queue || {}).length
+      : 0
+  })
 
   // get day and month strings from date
   const eventStartString = computed(
@@ -99,12 +108,20 @@
       Object.values(event.value.attendants).includes(useAuth?.user?.uid),
   )
 
+  // check if user is already registered for queue
+  const alreadyQueued = computed(
+    () =>
+      (hasAttendants.value &&
+        Object.values(event.value.queue || {}).includes(useAuth?.user?.uid)) ??
+      false,
+  )
+
   // check if event is full
   const eventFull = computed(
     () =>
       hasCapacity.value &&
       hasAttendants.value &&
-      Object.keys(event.value.attendants).length >= event.value.capacity,
+      Object.keys(event.value.attendants || {}).length >= event.value.capacity,
   )
 
   // does the event have any registration actions, and is user signed in
@@ -140,22 +157,20 @@
 
   // check if user is already registered for event
   const showSignupButton = computed(
-    () => hasCapacity.value && !alreadyRegistered.value,
+    () => hasCapacity.value && !alreadyRegistered.value && !eventFull.value,
   )
 
-  // alert state
-  const initialAlertState = {
-    show: false,
-    alertRoute: '',
-    type: undefined as AlertType,
-  }
+  // check if user is eligable for queue for event
+  const showQueueButton = computed(
+    () => hasCapacity.value && !alreadyRegistered.value && eventFull.value,
+  )
 
-  const alertState = reactive({
-    ...initialAlertState,
-  })
+  const loading = ref(false)
 
   // sign up for event
   const signUpForEvent = () => {
+    loading.value = true
+
     $fetch('/api/event/register', {
       method: 'POST',
       body: { eventUID: event.value.uid },
@@ -176,9 +191,35 @@
       .finally(() => (loading.value = false))
   }
 
+  // Add user to the queue
+  const addToQueue = () => {
+    loading.value = true
+
+    $fetch('/api/event/register', {
+      method: 'POST',
+      body: { eventUID: event.value.uid },
+    })
+      .then(() => refresh())
+      .then(() =>
+        useAlert.alert(
+          getI18nString('alert.success.event.register.queue'),
+          'success',
+        ),
+      )
+      .catch((error: any) => {
+        const { type, message } = getApiResponseAlertContext(
+          error.statusMessage,
+        )
+        useAlert.alert(message, type as AlertType)
+      })
+      .finally(() => (loading.value = false))
+  }
+
   const dialog = ref(false)
   // opt out of event
   const optOutOfEvent = () => {
+    loading.value = true
+
     $fetch('/api/event/register', {
       method: 'DELETE',
       body: { eventUID: event.value.uid },
@@ -186,7 +227,7 @@
       .then(() => refresh())
       .then(() =>
         useAlert.alert(
-          getI18nString('alert.success.event.register.opt_out'),
+          getI18nString('alert.success.event.register.opt_out.name'),
           'success',
         ),
       )
@@ -201,26 +242,50 @@
         dialog.value = false
       })
   }
+
+  // opt out of Queue
+  /*
+  const optOutOfQueue = () => {
+    loading.value = true
+
+    $fetch('/api/event/register', {
+      method: 'DELETE',
+      body: { eventUID: event.value.uid },
+    })
+      .then(() => refresh())
+      .then(() =>
+        useAlert.alert(
+          getI18nString('alert.success.event.register.opt_out_queue'),
+          'success',
+        ),
+      )
+      .catch((error) => {
+        const { type, message } = getApiResponseAlertContext(
+          error.statusMessage,
+        )
+        useAlert.alert(message, type as AlertType)
+      })
+      .finally(() => {
+        loading.value = false
+        dialog.value = false
+      })
+  }
+  */
+
+  // get user's position in the queue
+  const userQueuePosition = computed(() => {
+    if (!event.value.queue) return null
+    const queueEntries = Object.entries(event.value.queue)
+    const sortedQueue = queueEntries.sort(([a], [b]) => a.localeCompare(b))
+    const userUid = useAuth.user?.uid
+    if (!userUid) return null
+    const userIndex = sortedQueue.findIndex(([, uid]) => uid === userUid)
+    return userIndex !== -1 ? userIndex + 1 : null
+  })
 </script>
 
 <template>
   <VContainer class="container">
-    <!-- Vuetify alert component -->
-    <!-- TODO: #121 Make a custom reactive component for VSnackbar that takes in content prop -->
-    <VSnackbar v-model="alertState.show">
-      {{ $t(`${alertState.alertRoute}`) }}
-
-      <template #actions>
-        <VBtn
-          :color="alertState.type"
-          variant="text"
-          @click="alertState.show = false"
-        >
-          {{ $t('alert.close_alert') }}
-        </VBtn>
-      </template>
-    </VSnackbar>
-
     <!-- company logo -->
     <VCard
       class="d-flex justify-center align-center pa-4 image-container"
@@ -334,12 +399,23 @@
             <span v-else>0</span>
 
             {{ event.capacity ? `/ ${event.capacity}` : '' }}
+
+            <strong style="margin-left: 10px">
+              {{ $t('event.page.queue.name') }}:
+            </strong>
+
+            {{ totalQueued }}
           </span>
 
           <span v-if="alreadyRegistered">
             {{ $t('event.page.attendants.registered') }}
             <VIcon style="margin-bottom: 2px">mdi-check-circle</VIcon>
           </span>
+
+          <div v-if="alreadyQueued">
+            {{ $t('event.page.queue.position') }}:
+            {{ userQueuePosition }}
+          </div>
         </VCardText>
 
         <VCardText v-else>
@@ -382,13 +458,16 @@
       </VCard>
 
       <!-- Event actions: Sign up perform action -->
-      <div
+      <VBtn
         v-if="!useAuth.isLoggedIn && hasCapacity && !eventFull"
-        class="text-primary px-4 py-2 d-flex justify-center align-center"
+        rounded="lg"
+        variant="text"
+        class="text-primary px-4 py-2 d-flex justify-center align-center login"
+        prepend-icon="mdi-login"
+        @click="navigateTo(localePath('/user/signin'))"
       >
-        <VIcon class="pr-3 pb-1">mdi-lock</VIcon>
         {{ $t('program.event.sign_in_to_register') }}
-      </div>
+      </VBtn>
 
       <div
         v-if="hasEventActions && !showRegistrationAction"
@@ -404,6 +483,7 @@
         <VBtn
           v-if="showSignupButton"
           color="success"
+          :loading="loading"
           block
           variant="flat"
           :ripple="true"
@@ -416,25 +496,123 @@
           {{ $t('program.event.sign_up') }}
         </VBtn>
 
-        <!-- opt out -->
+        <!-- Enqueue -->
         <VBtn
-          v-if="alreadyRegistered"
-          color="primary"
+          v-else-if="showQueueButton && !alreadyQueued"
+          color="success"
+          :loading="loading"
           block
-          variant="tonal"
+          variant="flat"
           :ripple="true"
           density="comfortable"
-          @click.stop="optOutOfEvent"
+          :disabled="
+            alreadyQueued || !meetsProgrammeRequirement || !meetsYearRequirement
+          "
+          @click.stop="addToQueue"
         >
-          {{ $t('program.event.opt_out') }}
+          {{ $t('program.event.enqueue') }}
         </VBtn>
+
+        <!-- opt out modal -->
+        <VDialog v-if="alreadyRegistered" v-model="dialog" width="500">
+          <template #activator="{ props }">
+            <VBtn
+              v-bind="props"
+              color="primary"
+              block
+              variant="tonal"
+              :ripple="true"
+              density="comfortable"
+            >
+              {{ $t('program.event.opt_out.name') }}
+            </VBtn>
+          </template>
+          <template #default="{ isActive }">
+            <VCard rounded="lg" class="text-center pa-6">
+              <h6>{{ $t('program.event.opt_out.confirmtext') }}</h6>
+              <div
+                class="d-flex justify-center flex-wrap mt-6"
+                style="gap: 1.5rem"
+              >
+                <VBtn
+                  size="large"
+                  variant="outlined"
+                  color="primary"
+                  :loading="loading"
+                  @click="optOutOfEvent"
+                >
+                  {{ $t('program.event.opt_out.confirm') }}
+                </VBtn>
+                <VBtn
+                  size="large"
+                  flat
+                  color="success"
+                  @click="isActive.value = false"
+                >
+                  {{ $t('program.event.opt_out.abort') }}
+                </VBtn>
+              </div>
+            </VCard>
+          </template>
+        </VDialog>
+
+        <!-- opt out modal -->
+        <VDialog
+          v-if="!alreadyRegistered && alreadyQueued"
+          v-model="dialog"
+          width="500"
+        >
+          <template #activator="{ props }">
+            <VBtn
+              v-bind="props"
+              color="primary"
+              block
+              variant="tonal"
+              :ripple="true"
+              density="comfortable"
+            >
+              {{ $t('program.event.opt_out.queue') }}
+            </VBtn>
+          </template>
+
+          <template #default="{ isActive }">
+            <VCard rounded="lg" class="text-center pa-6">
+              <h6>{{ $t('program.event.opt_out.confirmtext') }}</h6>
+
+              <div
+                class="d-flex justify-center flex-wrap mt-6"
+                style="gap: 1.5rem"
+              >
+                <VBtn
+                  size="large"
+                  variant="outlined"
+                  color="primary"
+                  :loading="loading"
+                  @click="optOutOfEvent"
+                >
+                  {{ $t('program.event.opt_out.confirm') }}
+                </VBtn>
+                <VBtn
+                  size="large"
+                  flat
+                  color="success"
+                  @click="isActive.value = false"
+                >
+                  {{ $t('program.event.opt_out.abort') }}
+                </VBtn>
+              </div>
+            </VCard>
+          </template>
+        </VDialog>
       </div>
     </div>
   </VContainer>
 </template>
 
 <style scoped lang="scss">
+  @use 'sass:map';
   @use 'vuetify/settings';
+
   .comma-separated {
     &::after {
       content: ',\00a0';
@@ -442,6 +620,10 @@
     &:last-child::after {
       content: '' !important;
     }
+  }
+
+  .login {
+    font-size: 1rem;
   }
   .container {
     display: grid;
@@ -500,17 +682,17 @@
       grid-area: attendants;
     }
 
-    @media #{map-get(settings.$display-breakpoints, 'lg-and-up')} {
+    @media #{map.get(settings.$display-breakpoints, 'lg-and-up')} {
       max-width: 1080px;
     }
 
-    @media #{map-get(settings.$display-breakpoints, 'md-and-down')} {
+    @media #{map.get(settings.$display-breakpoints, 'md-and-down')} {
       max-width: 750px;
       grid-template-areas: 'image' 'details' 'attendants' 'description';
       grid-template-columns: 1fr;
     }
 
-    @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
+    @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
       max-width: 420px;
     }
   }

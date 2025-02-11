@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   if (!hasAccess(user, ['admin', 'company']))
     throw createError({
       statusCode: 401,
-      statusMessage: 'User not authorized',
+      statusMessage: 'Error (firebase/user-not-authorized).',
     })
 
   const eventsRef = db.ref('events')
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
   if (!companyUID && !hasAccess(user, ['admin']))
     throw createError({
       statusCode: 400,
-      statusMessage: 'Company user must specify companyUID',
+      statusMessage: 'Error (company/require-company-uid).',
     })
 
   // fetch accessible events for user

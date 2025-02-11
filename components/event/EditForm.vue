@@ -1,5 +1,6 @@
 <script setup lang="ts">
   const localePath = useLocalePath()
+  const useAlerts = useAlertStore()
 
   const props = defineProps({
     eventUid: {
@@ -99,6 +100,10 @@
     }
   })
 
+  const validDescription = computed(
+    () => state.description && state.description !== '<p></p>',
+  )
+
   // Initial state in case of missing props or API bounce
   const initialState = {
     title: null,
@@ -140,34 +145,6 @@
     state?.capacity &&
       (selectedProgrammes.value.length > 0 || selectedYears.value.length > 0),
   )
-
-  // Alert state
-  const initialAlertState = {
-    show: false,
-    alertRoute: '',
-    type: undefined as AlertType,
-  }
-
-  const alertState = reactive({
-    ...initialAlertState,
-  })
-
-  const displayErrorAlert = (alertRoute: string) => {
-    alertState.alertRoute = alertRoute
-    alertState.type = 'error'
-    alertState.show = true
-  }
-
-  // Show appropriate error alert for failed API calls
-  const displayErrorAlertFromMessage = (
-    errorType: string,
-    errorMessage: string,
-  ) => {
-    const content = getAlertContent(errorType, errorMessage)
-    alertState.alertRoute = content.alertRoute
-    alertState.type = content.type
-    alertState.show = content.show
-  }
 
   const form = ref()
 
@@ -255,9 +232,10 @@
   const saveChanges = async () => {
     const { valid } = await form.value.validate()
     try {
-      if (!valid) throw new Error('Form is not valid')
+      if (!valid || !validDescription.value)
+        throw new Error('Form is not valid')
     } catch (error) {
-      displayErrorAlert('alert.error.form.invalid')
+      useAlerts.alert(getI18nString('alert.error.form.invalid'), 'error')
       return
     }
 
@@ -276,16 +254,17 @@
       })
       .catch((error) => {
         // Handle errors, including HTTP errors
-        displayErrorAlertFromMessage('Event', error.statusMessage)
+        getApiResponseAlertContext(error.statusMessage)
       })
   }
 
   const createEvent = async () => {
     const { valid } = await form.value.validate()
     try {
-      if (!valid) throw new Error('Form is not valid')
+      if (!valid || !validDescription.value)
+        throw new Error('Form is not valid')
     } catch (error) {
-      displayErrorAlert('alert.error.form.invalid')
+      useAlerts.alert(getI18nString('alert.error.form.invalid'), 'error')
       return
     }
 
@@ -304,7 +283,7 @@
       })
       .catch((error) => {
         // Handle errors, including HTTP errors
-        displayErrorAlertFromMessage('Event', error.message)
+        getApiResponseAlertContext(error.statusMessage)
       })
   }
 
@@ -319,9 +298,7 @@
         refreshAttendants()
         signUpForEventUid.value = ''
       })
-      .catch((error) =>
-        displayErrorAlertFromMessage('Event', error.statusMessage),
-      )
+      .catch((error) => getApiResponseAlertContext(error.statusMessage))
   }
 </script>
 
@@ -334,21 +311,6 @@
     <h3 v-else class="title py-6 mt-4">
       {{ $t('edit.event.create.title') }}
     </h3>
-
-    <!-- Alert component -->
-    <VSnackbar v-model="alertState.show">
-      {{ $t(`${alertState.alertRoute}`) }}
-
-      <template #actions>
-        <VBtn
-          :color="alertState.type"
-          variant="text"
-          @click="alertState.show = false"
-        >
-          {{ $t('alert.close_alert') }}
-        </VBtn>
-      </template>
-    </VSnackbar>
 
     <!-- Edit Form -->
     <VForm ref="form" @submit.prevent="saveChanges || createEvent">
@@ -366,12 +328,10 @@
 
         <!-- Description -->
         <VRow>
-          <FormTextareaInput
+          <FormRichTextInput
             v-model="state.description"
-            :content="{
-              label: $t('edit.event.attributes.description'),
-            }"
-            :rules="[useRequiredInput]"
+            :label="$t('edit.event.attributes.description')"
+            style="width: 100%"
           />
         </VRow>
 
@@ -600,7 +560,7 @@
 </template>
 
 <style scoped lang="scss">
-  @import 'vuetify/settings';
+  @use 'vuetify/settings';
 
   .title {
     text-align: center;

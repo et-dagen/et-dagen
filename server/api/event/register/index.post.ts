@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
   if (!user) {
     throw createError({
       statusCode: 401,
-      statusMessage: 'Firebase: Error (auth/user-not-found).',
+      statusMessage: 'Error (firebase/auth/user-not-found).',
     })
   }
 
@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
   if (!eventUID) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Events: Error (event/missing-event-id).',
+      statusMessage: 'Error (event/missing-event-id).',
     })
   }
 
@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
   if (userUID && userUID !== user.uid && !hasAccess(user, ['admin'])) {
     throw createError({
       statusCode: 401,
-      statusMessage: 'Events: Error (register/non-admin-user).',
+      statusMessage: 'Error (event/register/non-admin-user).',
     })
   }
 
@@ -39,14 +39,14 @@ export default defineEventHandler(async (event) => {
   if (!data || !data[eventUID]) {
     throw createError({
       statusCode: 404,
-      statusMessage: 'Events: Error (event/event-doesnt-exists).',
+      statusMessage: 'Error (event/not-found).',
     })
   }
 
   if (!data[eventUID].capacity) {
     throw createError({
       statusCode: 404,
-      statusMessage: 'Events: Error (register/registration-unnecessary).',
+      statusMessage: 'Error (event/register/registration-unnecessary).',
     })
   }
 
@@ -59,7 +59,7 @@ export default defineEventHandler(async (event) => {
   ) {
     throw createError({
       statusCode: 404,
-      statusMessage: 'Events: Error (register/registration-closed).',
+      statusMessage: 'Error (event/register/registration-closed).',
     })
   }
 
@@ -67,7 +67,7 @@ export default defineEventHandler(async (event) => {
     await auth.getUser(userUID).catch(() => {
       throw createError({
         statusCode: 401,
-        statusMessage: 'Events: Error (register/user-not-exist).',
+        statusMessage: 'Error (user/doesnt-exist).',
       })
     })
 
@@ -105,7 +105,7 @@ export default defineEventHandler(async (event) => {
   if (Object.values(data[eventUID].attendants).includes(userUID || user.uid)) {
     throw createError({
       statusCode: 404,
-      statusMessage: 'Events: Error (register/already-registered).',
+      statusMessage: 'Error (event/register/already-registered).',
     })
   }
 
@@ -113,10 +113,47 @@ export default defineEventHandler(async (event) => {
   if (
     Object.values(data[eventUID].attendants).length >= data[eventUID]?.capacity
   ) {
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Events: Error (register/event-is-full).',
-    })
+    // Ensure queue subsection exists
+    if (!data[eventUID].queue) {
+      eventsRef.child(eventUID).child('queue').set({})
+    }
+
+    // Check if the user is already in the queue
+    const queueSnapshot = await eventsRef
+      .child(eventUID)
+      .child('queue')
+      .once('value')
+    const queueData = queueSnapshot.val()
+    if (queueData && Object.values(queueData).includes(userUID || user.uid)) {
+      throw createError({
+        statusCode: 404,
+        statusMessage: 'User is already in the queue',
+      })
+    }
+
+    // Add user to queue
+    let timestamp = Date.now()
+    let timestampString = timestamp.toString()
+    let keyExists = true
+    while (keyExists) {
+      const snapshot = await eventsRef
+        .child(eventUID)
+        .child('queue')
+        .child(timestampString)
+        .once('value')
+      if (snapshot.exists()) {
+        timestamp = timestamp + 1
+        timestampString = timestamp.toString()
+      } else {
+        keyExists = false
+      }
+    }
+    eventsRef
+      .child(eventUID)
+      .child('queue')
+      .child(timestampString)
+      .set(userUID || user.uid)
+    return sendNoContent(event, 201)
   }
 
   // Add user to attendants

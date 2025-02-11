@@ -1,6 +1,8 @@
 <script setup lang="ts">
   import type { User } from '../../models/User'
 
+  import { dietaryFlags } from '~/config/app.config'
+
   const props = defineProps({
     user: {
       type: Object as PropType<User>,
@@ -9,6 +11,8 @@
   })
 
   const router = useRouter()
+  const useAlerts = useAlertStore()
+
   // get study programmes
   const { data: studyProgrammes } = await useFetch('/api/programme')
   const programmeList = computed(() =>
@@ -54,6 +58,40 @@
   // Set state to user data plus companyUID
   const state = reactive({ companyUID: null, ...props.user })
 
+  const hasDietaryRestrictions = ref(state.dietaryRestrictions)
+  const otherRestrictions = ref<null | string>(null)
+  // initially assumed to have dietary restrictions
+  const hasDietaryRestrictionsBool = ref(true)
+  let initialHasDietaryRestrictionsBool = true
+  // set dietary restrictions to false if there is none
+  if (
+    !hasDietaryRestrictions.value ||
+    Object.keys(hasDietaryRestrictions.value).length === 0
+  ) {
+    hasDietaryRestrictionsBool.value = false
+    initialHasDietaryRestrictionsBool = false
+  }
+  const getDietaryRestrictionsOptions = ($t) => {
+    const options = dietaryFlags
+      .map((flag) => ({
+        title: $t(`dietary_restrictions.${flag.name}`),
+        value: flag.name,
+      }))
+      .sort()
+    // Check if there are any additional dietary restrictions in state
+    if (state.dietaryRestrictions && state.dietaryRestrictions.length > 0) {
+      state.dietaryRestrictions.forEach((restriction) => {
+        if (!options.some((option) => option.value === restriction)) {
+          options.push({
+            title: restriction,
+            value: restriction,
+          })
+        }
+      })
+    }
+    return options
+  }
+
   // Reset currentYear if programme doesn't have that year
   watch(
     () => state.studyProgram,
@@ -65,41 +103,16 @@
 
   // check if user has changed
   const hasChanged = computed(() => {
-    return !compareObjects(state, { companyUID: null, ...props.user })
+    if (otherRestrictions.value && otherRestrictions.value !== '') {
+      return true
+    } else if (
+      initialHasDietaryRestrictionsBool !== hasDietaryRestrictionsBool.value
+    ) {
+      return true
+    } else {
+      return !compareObjects(state, { companyUID: null, ...props.user })
+    }
   })
-
-  // Alert state
-  const initialAlertState = {
-    show: false,
-    alertRoute: '',
-    type: undefined as AlertType,
-  }
-
-  const alertState = reactive({
-    ...initialAlertState,
-  })
-
-  // Show appropriate success alert after signing up for company
-  // const displaySuccessAlert = (alertRoute: string) => {
-  //   alertState.alertRoute = alertRoute
-  //   alertState.type = 'success'
-  //   alertState.show = true
-  // }
-
-  // show appropriate error alert after signing up for company
-  const displayErrorAlert = (alertRoute: string) => {
-    alertState.alertRoute = alertRoute
-    alertState.type = 'error'
-    alertState.show = true
-  }
-
-  // Show appropriate error alert for failed API calls
-  const displayErrorAlertFromMessage = (errorMessage: string) => {
-    const content = getAlertContent(errorMessage)
-    alertState.alertRoute = content.alertRoute
-    alertState.type = content.type
-    alertState.show = content.show
-  }
 
   const form = ref()
 
@@ -110,12 +123,23 @@
     try {
       if (!valid) throw new Error('Form is not valid')
     } catch (error) {
-      displayErrorAlert('alert.error.form.invalid')
+      useAlerts.alert(getI18nString('alert.error.form.invalid'), 'error')
       return
     }
 
     if (state.userType !== 'company') {
       state.companyUID = null
+    }
+
+    // check for other dietary restrictions
+    if (otherRestrictions.value && otherRestrictions.value !== '') {
+      otherRestrictions?.value
+        .split(',')
+        .map((restriction) => state.dietaryRestrictions?.push(restriction))
+    }
+    // check if all dietary restrictions should be removed
+    if (hasDietaryRestrictionsBool.value === false) {
+      state.dietaryRestrictions = []
     }
 
     // update user
@@ -156,7 +180,7 @@
       })
       .catch((error) => {
         console.error(error)
-        displayErrorAlertFromMessage(error.message)
+        getApiResponseAlertContext(error.statusMessage)
       })
   }
 </script>
@@ -166,21 +190,6 @@
   <h4 class="text-sm-h3 text-h4 font-weight-bold text-center pt-16 pb-4">
     {{ $t('edit.user.title') }}
   </h4>
-
-  <!-- Alert component -->
-  <VSnackbar v-model="alertState.show">
-    {{ $t(`${alertState.alertRoute}`) }}
-
-    <template #actions>
-      <VBtn
-        :color="alertState.type"
-        variant="text"
-        @click="alertState.show = false"
-      >
-        {{ $t('alert.close_alert') }}
-      </VBtn>
-    </template>
-  </VSnackbar>
 
   <!-- Edit Form -->
   <VForm ref="form" @submit.prevent="saveChanges">
@@ -261,6 +270,42 @@
           :rules="[useRequiredInput]"
         />
       </VRow>
+
+      <!-- dietary restrictions -->
+      <VRow>
+        <VRadioGroup
+          v-model="hasDietaryRestrictionsBool"
+          :label="$t('user.register.dietary_restrictions.name')"
+        >
+          <VRadio
+            :label="$t('user.register.dietary_restrictions.norestrictions')"
+            :value="false"
+          ></VRadio>
+          <VRadio
+            :label="$t('user.register.dietary_restrictions.restrictions')"
+            :value="true"
+          ></VRadio>
+        </VRadioGroup>
+      </VRow>
+      <VRow v-if="hasDietaryRestrictionsBool">
+        <FormSelectInput
+          v-model="state.dietaryRestrictions"
+          multiple
+          :content="{
+            label: $t('user.register.dietary_restrictions.name'),
+            options: getDietaryRestrictionsOptions($t),
+          }"
+          :rules="[hasDietaryRestrictions ? useRequiredInput : null]"
+        />
+      </VRow>
+      <VRow v-if="hasDietaryRestrictionsBool" class="mt-3 pt-0">
+        <FormTextInput
+          v-model="otherRestrictions"
+          :content="{
+            label: $t('user.register.dietary_restrictions.other'),
+          }"
+        />
+      </VRow>
     </VContainer>
 
     <!-- Actions -->
@@ -288,7 +333,7 @@
 </template>
 
 <style scoped lang="scss">
-  @import 'vuetify/settings';
+  @use 'vuetify/settings';
   .title {
     text-align: center;
   }

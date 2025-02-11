@@ -100,7 +100,7 @@
         :src="selectedStandMap"
         alt="Standmap"
         object-fit="contain"
-        class="w-50"
+        class="w-75"
       />
     </CommonModal>
 
@@ -183,7 +183,9 @@
 </template>
 
 <style scoped lang="scss">
-  @import 'vuetify/settings';
+  @use 'sass:map';
+  @use 'vuetify/settings';
+
   .container {
     display: flex;
     flex-direction: column;
@@ -274,7 +276,7 @@
     }
   }
 
-  @media #{map-get($display-breakpoints, 'xs')} {
+  @media #{map.get(settings.$display-breakpoints, 'xs')} {
     .container {
       transform: translateX(6.5rem);
       width: 60vw;
@@ -327,7 +329,7 @@
     }
   }
 
-  @media #{map-get($display-breakpoints, 'sm')} {
+  @media #{map.get(settings.$display-breakpoints, 'sm')} {
     .container {
       transform: translateX(9rem);
       width: fit-content;

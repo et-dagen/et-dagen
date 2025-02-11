@@ -104,16 +104,18 @@
 </template>
 
 <style scoped lang="scss">
+  @use 'sass:map';
   @use 'vuetify/settings';
+
   .v-container {
     // Set different max-widths for different screen sizes
-    @media #{map-get(settings.$display-breakpoints, 'md-and-up')} {
+    @media #{map.get(settings.$display-breakpoints, 'md-and-up')} {
       max-width: 900px !important;
     }
-    @media #{map-get(settings.$display-breakpoints, 'sm')} {
+    @media #{map.get(settings.$display-breakpoints, 'sm')} {
       max-width: 600px !important;
     }
-    @media #{map-get(settings.$display-breakpoints, 'xs')} {
+    @media #{map.get(settings.$display-breakpoints, 'xs')} {
       max-width: 350px !important;
     }
   }
