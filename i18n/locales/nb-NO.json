@@ -155,7 +155,16 @@
       "cvAccess_restriction": "CV tilgang er begrenset",
       "year": "Årstrinn",
       "event": "Arrangement",
-      "resume": "CV"
+      "resume": "CV",
+      "noResumes": "Ingen CVer matcher søket",
+      "filterTypes": {
+        "name": "Årstrinn"
+      },
+      "filterOrder": {
+        "name": "Rekkefølge",
+        "descending": "Synkende",
+        "ascending": "Stigende"
+      }
     }
   },
   "alert": {
