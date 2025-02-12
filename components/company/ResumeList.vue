@@ -7,7 +7,7 @@
 
   const filterOrder = ref('ascending')
   const userYearsNames = ['1', '2', '3', '4', '5']
-  const useryears = ref([0, 1, 2, 3, 4])
+  // const useryears = ref([0, 1, 2, 3, 4])
   // const availableFilters = ['1', '2', '3', '4', '5']
   const programFilter = ref<string[]>([...userYearsNames])
 
@@ -21,15 +21,7 @@
   watch(currentPage, () => (selected.value = []))
   watch(itemsPerPage, () => (currentPage.value = 1))
 
-  console.log(`users${users}`)
-  console.log(`lkd${programFilter}`)
-
   const filteredResumeUsers = computed(() => {
-    const selectedUserYears = userYearsNames.filter((_, index) =>
-      useryears.value.includes(index),
-    )
-    console.log(selectedUserYears)
-
     const filteredByUserYear = users.filter((user) => {
       if (programFilter.value && programFilter.value.length > 0) {
         return (
