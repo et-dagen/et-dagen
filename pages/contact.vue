@@ -5,10 +5,10 @@
       <ContactCard
         class="mx-auto w-75"
         :content="{
-          name: 'Andrea Gladhaug',
+          name: 'Johnny Nguyen',
           position: $t('contact.positions.business'),
           email: 'bedriftansvarlig@et-dagen.no',
-          phone: '+47 489 58 605',
+          phone: '+47 921 18 424',
           image: '/images/board/business.jpg',
         }"
       />
@@ -19,82 +19,82 @@
       <CommonGrid>
         <ContactGridCard
           :content="{
-            name: 'Amalie Fridfeldt Hauge',
+            name: 'Nhan-Daniel Vinh Nguyen',
             position: $t('contact.positions.head'),
             email: 'leder@et-dagen.no',
-            phone: '+47 902 04 787',
+            phone: '+47 473 55 881',
             image: '/images/board/manager.jpg',
           }"
         />
         <ContactGridCard
           :content="{
-            name: 'Magnus Arnfinn Aubell',
+            name: 'Marek Myrebøe Engels',
             position: $t('contact.positions.deputyHead'),
             email: 'nestleder@et-dagen.no',
-            phone: '+47 466 75 353',
+            phone: '+47 401 70 610',
             image: '/images/board/deputy_manager.jpg',
           }"
         />
         <ContactGridCard
           :content="{
-            name: 'Bethlehem Taglo Lewtie',
+            name: 'Lisa Radford',
             position: $t('contact.positions.finance'),
             email: 'okonomi@et-dagen.no',
-            phone: '+47 483 935 04',
+            phone: '+47 479 59 828',
             image: '/images/board/finance.jpg',
           }"
         />
         <ContactGridCard
           :content="{
-            name: 'Andreas Teodor Nysæter',
+            name: 'Kjartan Roalsvik',
             position: $t('contact.positions.logistics'),
             email: 'logistikk@et-dagen.no',
-            phone: '+47 468 869 97',
+            phone: '+47 911 82 880',
             image: '/images/board/logistics.jpg',
           }"
         />
         <ContactGridCard
           :content="{
-            name: 'Andrea Gladhaug',
+            name: 'Johnny Ngo Nguyen',
             position: $t('contact.positions.business'),
             email: 'bedriftansvarlig@et-dagen.no',
-            phone: '+47 489 586 05',
+            phone: '+47 921 18 424',
             image: '/images/board/business.jpg',
           }"
         />
         <ContactGridCard
           :content="{
-            name: 'Jon Arne Lund',
+            name: 'Hanne Gaaren',
             position: $t('contact.positions.spons'),
             email: 'spons@et-dagen.no',
-            phone: '+47 977 036 74',
+            phone: '+47 958 71 575',
             image: '/images/board/sponsor.jpg',
           }"
         />
         <ContactGridCard
           :content="{
-            name: 'Elias Drøpping',
+            name: 'Fride Fossheim',
             position: $t('contact.positions.marketing'),
             email: 'mfansvarlig@et-dagen.no',
-            phone: '+47 908 89 682',
+            phone: '+47 954 00 451',
             image: '/images/board/marketing.jpg',
           }"
         />
         <ContactGridCard
           :content="{
-            name: ' Peder Ingmar Dahl',
+            name: 'Lisa Bruun Paulsen',
             position: $t('contact.positions.IT'),
             email: 'itansvarlig@et-dagen.no',
-            phone: '+47 912 460 56',
+            phone: '+47 481 19 419',
             image: '/images/board/it.jpg',
           }"
         />
         <ContactGridCard
           :content="{
-            name: 'Karin Skinderhaug',
+            name: 'Eva Skillingstad',
             position: $t('contact.positions.travel'),
             email: 'turansvarlig@et-dagen.no',
-            phone: '+47 484 578 35',
+            phone: '+47 916 97 196',
             image: '/images/board/travel.jpg',
           }"
         />
