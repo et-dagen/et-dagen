@@ -19,7 +19,7 @@
       <CommonGrid>
         <ContactGridCard
           :content="{
-            name: 'Daniel Nguyen',
+            name: 'Nhan-Daniel Vinh Nguyen',
             position: $t('contact.positions.head'),
             email: 'leder@et-dagen.no',
             phone: '+47 473 55 881',
@@ -55,7 +55,7 @@
         />
         <ContactGridCard
           :content="{
-            name: 'Johnny Nguyen',
+            name: 'Johnny Ngo Nguyen',
             position: $t('contact.positions.business'),
             email: 'bedriftansvarlig@et-dagen.no',
             phone: '+47 921 18 424',
