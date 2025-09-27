@@ -92,10 +92,38 @@
   @use 'sass:map';
 
   .v-app-bar {
+    display: flex;
+    align-items: center;
     padding-left: 3rem !important;
     padding-right: 3rem !important;
 
-    // on sm breakpoint set padding to 1rem
+    .v-toolbar__prepend,
+    .v-toolbar__append {
+      flex: 1 1 0;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+
+    .v-toolbar__prepend {
+      justify-content: flex-start;
+    }
+    .v-toolbar__append {
+      justify-content: flex-end;
+    }
+
+    .v-toolbar__content {
+      flex: 0 1 auto;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
     @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
       padding-left: 1rem !important;
       padding-right: 1rem !important;
