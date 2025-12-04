@@ -1,8 +1,10 @@
 <template>
   <div>
-    <button @click="toggleCamera">
-      {{ camera?.isRunning ? 'Stop camera' : 'Start camera' }}
-    </button>
+    <CameraButton
+      :is-starting="isCameraStarting"
+      :is-running="isCameraRunning"
+      @toggle="toggleCamera"
+    />
 
     <CameraFeed
       ref="camera"
@@ -19,6 +21,8 @@
   import type { CameraFeedExposed } from '~/components/camera/CameraFeed.vue'
 
   const camera = ref<CameraFeedExposed | null>(null)
+  const isCameraStarting = computed(() => camera.value?.isStarting ?? false)
+  const isCameraRunning = computed(() => camera.value?.isRunning ?? false)
 
   function toggleCamera() {
     if (!camera.value) return
