@@ -1,16 +1,18 @@
 <template>
-  <div>
+  <div class="qr-scanner">
+    <CameraFeed
+      ref="camera"
+      :callback-interval="100"
+      :width="400"
+      :height="400"
+      @callback-frame="onCallbackFrame"
+      @error="onError"
+    />
+
     <CameraButton
       :is-starting="isCameraStarting"
       :is-running="isCameraRunning"
       @toggle="toggleCamera"
-    />
-
-    <CameraFeed
-      ref="camera"
-      :callback-interval="100"
-      @callback-frame="onCallbackFrame"
-      @error="onError"
     />
   </div>
 </template>
@@ -48,3 +50,11 @@
     alert(`Camera error: ${err}`)
   }
 </script>
+
+<style scoped>
+  .qr-scanner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+</style>

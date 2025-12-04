@@ -17,14 +17,16 @@
 
   const props = defineProps<{
     callbackInterval?: number
+    width?: number
+    height?: number
   }>()
 
   const video = ref<HTMLVideoElement | null>(null)
   const canvas = ref<HTMLCanvasElement | null>(null)
   let stream: MediaStream | null = null
   const animationFrameId: number | null = null
-  let width = 0
-  let height = 0
+  let videoWidth = 0
+  let videoHeight = 0
 
   const isRunning = ref(false)
   const isStarting = ref(false)
@@ -37,7 +39,11 @@
     isStarting.value = true
     try {
       stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: 'environment' } },
+        video: {
+          facingMode: { ideal: 'environment' },
+          width: props.width ? { ideal: props.width } : undefined,
+          height: props.height ? { ideal: props.height } : undefined,
+        },
       })
     } catch (err: any) {
       isStarting.value = false
@@ -50,10 +56,10 @@
     video.value!.srcObject = stream
     await video.value!.play()
 
-    width = video.value!.videoWidth
-    height = video.value!.videoHeight
-    canvas.value!.width = width
-    canvas.value!.height = height
+    videoWidth = video.value!.videoWidth
+    videoHeight = video.value!.videoHeight
+    canvas.value!.width = videoWidth
+    canvas.value!.height = videoHeight
 
     isStarting.value = false
     isRunning.value = true
@@ -90,10 +96,10 @@
 
     const loop = (time: number) => {
       if (!isRunning.value) return
-      ctx.drawImage(video.value!, 0, 0, width, height)
+      ctx.drawImage(video.value!, 0, 0, videoWidth, videoHeight)
 
       if (time - last > interval) {
-        const imageData = ctx.getImageData(0, 0, width, height)
+        const imageData = ctx.getImageData(0, 0, videoWidth, videoHeight)
         emit('callbackFrame', imageData)
         last = time
       }
@@ -103,6 +109,17 @@
 
     requestAnimationFrame(loop)
   }
+
+  onMounted(() => {
+    if (canvas.value && props.width && props.height) {
+      canvas.value.width = props.width
+      canvas.value.height = props.height
+
+      const ctx = canvas.value.getContext('2d')!
+      ctx.fillStyle = 'black'
+      ctx.fillRect(0, 0, props.width, props.height)
+    }
+  })
 
   onBeforeUnmount(() => {
     if (stream) stream.getTracks().forEach((t) => t.stop())
