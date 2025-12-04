@@ -62,6 +62,7 @@
     "dotenv": "^16.4.7",
     "firebase": "^11.2.0",
     "firebase-admin": "^13.0.2",
+    "jsqr": "^1.4.0",
     "pinia": "^2.3.1",
     "sass-migrator": "^2.3.1",
     "vuetify": "^3.7.9",
