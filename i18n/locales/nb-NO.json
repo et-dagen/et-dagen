@@ -496,7 +496,10 @@
         "company": "Bedrift"
       },
       "copied": "UID kopiert!"
-    }
+    },
+    "scan" : {
+      "name": "Skann QR"
+    },
   },
   "edit": {
     "jobs": {
