@@ -3,6 +3,13 @@
   import AttendantsList from '~/components/event/AttendantsList.vue'
   import { type User } from '~/models/User'
 
+  interface AttendantMeta {
+    attended: boolean
+    registeredAt: number
+  }
+
+  interface Attendant extends User, AttendantMeta {}
+
   const localePath = useLocalePath()
   const useAuth = useAuthStore()
   const useAlert = useAlertStore()
@@ -28,6 +35,7 @@
 
   // embed uid into object
   const event = computed(() => embedKeyIntoObjectValues(data.value)[0])
+  console.log(event.value)
 
   // get company information
   const company = computed(
@@ -40,11 +48,22 @@
   )
   const hasCapacity = computed(() => !!event.value.capacity)
 
-  const attendants = computed<User[]>(() =>
-    Object.values(event.value.attendants).map((uid) =>
-      users.value?.find((user) => user.uid === uid),
-    ),
+  const attendants = computed<Attendant[]>(() =>
+    (Object.entries(event.value.attendants ?? {}) as [string, AttendantMeta][])
+      .map(([uid, meta]) => {
+        const user = users.value?.find((u: any) => u.uid === uid)
+        if (!user) return null
+
+        return {
+          ...user,
+          attended: meta.attended,
+          registeredAt: meta.registeredAt,
+        }
+      })
+      .filter((a): a is Attendant => Boolean(a)),
   )
+
+  console.log(attendants.value)
 
   // Get the number of queued users
   const totalQueued = computed(() => {
@@ -103,11 +122,14 @@
     ) ?? true
 
   // check if user is already registered for event
-  const alreadyRegistered = computed(
-    () =>
-      hasAttendants.value &&
-      Object.values(event.value.attendants).includes(useAuth?.user?.uid),
-  )
+  const alreadyRegistered = computed(() => {
+    const uid = useAuth?.user?.uid
+    if (!uid) return false
+
+    return (
+      hasAttendants.value && Object.hasOwn(event.value.attendants ?? {}, uid)
+    )
+  })
 
   // check if user is already registered for queue
   const alreadyQueued = computed(
