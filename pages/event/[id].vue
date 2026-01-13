@@ -1,14 +1,7 @@
 <script setup lang="ts">
   import * as qrcode from 'qrcode'
   import AttendantsList from '~/components/event/AttendantsList.vue'
-  import { type User } from '~/models/User'
-
-  interface AttendantMeta {
-    attended: boolean
-    registeredAt: number
-  }
-
-  interface Attendant extends User, AttendantMeta {}
+  import { type AttendantMetadata, type Attendant } from '~/models/Attendant'
 
   const localePath = useLocalePath()
   const useAuth = useAuthStore()
@@ -49,7 +42,12 @@
   const hasCapacity = computed(() => !!event.value.capacity)
 
   const attendants = computed<Attendant[]>(() =>
-    (Object.entries(event.value.attendants ?? {}) as [string, AttendantMeta][])
+    (
+      Object.entries(event.value.attendants ?? {}) as [
+        string,
+        AttendantMetadata,
+      ][]
+    )
       .map(([uid, meta]) => {
         const user = users.value?.find((u: any) => u.uid === uid)
         if (!user) return null
