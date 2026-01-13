@@ -36,6 +36,7 @@
     "@nuxtjs/eslint-config-typescript": "^12.1.0",
     "@nuxtjs/i18n": "^9.1.5",
     "@types/node": "^22.13.0",
+    "@types/qrcode": "^1.5.6",
     "@typescript-eslint/parser": "^5.62.0",
     "@vueuse/core": "^10.11.1",
     "@vueuse/nuxt": "^10.11.1",
@@ -64,6 +65,7 @@
     "firebase-admin": "^13.0.2",
     "jsqr": "^1.4.0",
     "pinia": "^2.3.1",
+    "qrcode": "^1.5.4",
     "sass-migrator": "^2.3.1",
     "vuetify": "^3.7.9",
     "vuetify-nuxt-module": "^0.18.3"

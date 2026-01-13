@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import * as qrcode from 'qrcode'
   import AttendantsList from '~/components/event/AttendantsList.vue'
   import { type User } from '~/models/User'
 
@@ -282,6 +283,21 @@
     const userIndex = sortedQueue.findIndex(([, uid]) => uid === userUid)
     return userIndex !== -1 ? userIndex + 1 : null
   })
+
+  const uidSvgUrl = ref('')
+
+  onMounted(async () => {
+    const uid = useAuth?.user?.uid
+    if (uid) {
+      const svg = await qrcode.toString(uid, {
+        type: 'svg',
+        width: 200,
+        margin: 1,
+      })
+
+      uidSvgUrl.value = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
+    }
+  })
 </script>
 
 <template>
@@ -468,6 +484,10 @@
       >
         {{ $t('program.event.sign_in_to_register') }}
       </VBtn>
+
+      <span v-if="alreadyRegistered" class="qr-wrapper">
+        <img :src="uidSvgUrl" alt="QR code" />
+      </span>
 
       <div
         v-if="hasEventActions && !showRegistrationAction"
@@ -680,6 +700,11 @@
     }
     .attendants {
       grid-area: attendants;
+    }
+
+    .qr-wrapper {
+      display: flex;
+      justify-content: center;
     }
 
     @media #{map.get(settings.$display-breakpoints, 'lg-and-up')} {
