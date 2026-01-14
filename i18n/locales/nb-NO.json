@@ -123,7 +123,9 @@
         "name": "Påmelding",
         "attendants": "Påmeldte",
         "nocapacity": "Ingen kapasitetsbegrensning",
-        "registered": "Du er påmeldt"
+        "registered": "Du er påmeldt",
+        "scan": "Skann påmeldte",
+        "attended": "Deltok"
       },
       "queue": {
         "name": "Venteliste",
@@ -496,9 +498,6 @@
         "company": "Bedrift"
       },
       "copied": "UID kopiert!"
-    },
-    "scan" : {
-      "name": "Skann QR"
     },
   },
   "edit": {

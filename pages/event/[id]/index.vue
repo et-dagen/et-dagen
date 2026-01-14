@@ -7,6 +7,8 @@
   const useAuth = useAuthStore()
   const useAlert = useAlertStore()
 
+  const isAdmin = useAuth.hasAccess(['admin'])
+
   // get event id from route
   const route = useRoute()
   const eventUid = route.params.id
@@ -294,11 +296,13 @@
   */
 
   // get user's position in the queue
+
+  const userUid = useAuth.user?.uid
+
   const userQueuePosition = computed(() => {
     if (!event.value.queue) return null
     const queueEntries = Object.entries(event.value.queue)
     const sortedQueue = queueEntries.sort(([a], [b]) => a.localeCompare(b))
-    const userUid = useAuth.user?.uid
     if (!userUid) return null
     const userIndex = sortedQueue.findIndex(([, uid]) => uid === userUid)
     return userIndex !== -1 ? userIndex + 1 : null
@@ -307,9 +311,8 @@
   const uidSvgUrl = ref('')
 
   onMounted(async () => {
-    const uid = useAuth?.user?.uid
-    if (uid) {
-      const svg = await qrcode.toString(uid, {
+    if (userUid) {
+      const svg = await qrcode.toString(userUid, {
         type: 'svg',
         width: 200,
         margin: 1,
@@ -348,7 +351,7 @@
     <VCard class="details elevation-4" rounded="lg">
       <!-- edit event -->
       <VBtn
-        v-if="useAuth.hasAccess(['admin'])"
+        v-if="isAdmin"
         class="edit-event"
         variant="text"
         icon="mdi-pencil"
@@ -508,6 +511,15 @@
       <span v-if="alreadyRegistered" class="qr-wrapper">
         <img :src="uidSvgUrl" alt="QR code" />
       </span>
+
+      <v-btn
+        v-if="isAdmin"
+        variant="tonal"
+        append-icon="mdi-camera"
+        :to="`${route.path}/scan_attendants`"
+      >
+        {{ $t('event.page.attendants.scan') }}
+      </v-btn>
 
       <div
         v-if="hasEventActions && !showRegistrationAction"

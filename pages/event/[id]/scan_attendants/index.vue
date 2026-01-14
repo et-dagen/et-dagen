@@ -22,9 +22,25 @@
   import jsQR from 'jsqr'
   import type { CameraFeedExposed } from '~/components/camera/CameraFeed.vue'
 
+  const route = useRoute()
+  const eventUid = route.params.id as string
+
   const camera = ref<CameraFeedExposed | null>(null)
   const isCameraStarting = computed(() => camera.value?.isStarting ?? false)
   const isCameraRunning = computed(() => camera.value?.isRunning ?? false)
+
+  const markAttended = async (userUid: string) => {
+    if (!userUid) return
+
+    await $fetch('/api/event/attended', {
+      method: 'PATCH',
+      body: {
+        eventUID: eventUid,
+        userUID: userUid,
+        attended: true,
+      },
+    })
+  }
 
   function toggleCamera() {
     if (!camera.value) return
@@ -40,7 +56,10 @@
     const code = jsQR(imageData.data, imageData.width, imageData.height)
 
     if (code) {
-      console.log('QR detected:', code.data)
+      const userUid = code.data
+      console.log('QR detected:', userUid)
+      camera.value?.stop()
+      markAttended(userUid)
     } else {
       console.log('No QR code found')
     }
