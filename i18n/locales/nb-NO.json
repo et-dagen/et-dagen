@@ -668,5 +668,9 @@
     "linebreak": "Line break",
     "undo": "Undo",
     "redo": "Redo"
+  },
+  "faq": {
+  "heading": "Om E&T-dagene",
+  "subheading": "Ofte stilte spørsmål"
   }
 }

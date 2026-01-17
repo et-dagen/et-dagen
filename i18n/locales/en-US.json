@@ -667,5 +667,9 @@
     "linebreak": "Line break",
     "undo": "Undo",
     "redo": "Redo"
+  },
+  "faq": {
+    "heading": "About Elektronikk- og teknologidagene",
+    "subheading": "FAQ"
   }
 }
