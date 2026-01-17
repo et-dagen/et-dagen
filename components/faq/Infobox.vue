@@ -1,6 +1,10 @@
 <template>
   <div class="infobox">
-    <button class="infobox-title" @click="isOpen = !isOpen">
+    <button
+      class="infobox-title"
+      :class="{ 'infobox-title-selected': isOpen }"
+      @click="isOpen = !isOpen"
+    >
       {{ title }}
     </button>
 
@@ -25,25 +29,34 @@
 
 <style scoped>
   .infobox {
-    border-bottom: 1px solid #2d2d2d;
-    background: rgba(var(--v-theme-accent), 0.08);
-    border-bottom: 1px solid rgb(195, 60, 59);
-    /* border-color: (rgb(195, 60, 59), var(--v-border-opacity)); */
+    margin-bottom: 20px;
   }
 
   .infobox-title {
-    width: 100%;
     text-align: left;
+    font-weight: 550;
+    border-bottom: 2px solid rgb(var(--v-theme-neutral-lighten-3));
+
+    width: 100%;
     padding: 12px;
-    border: none;
-    cursor: pointer;
+
     transition: 200ms;
   }
+
   .infobox-title:hover {
-    color: rgb(195, 60, 59);
+    color: rgb(var(--v-theme-primary-darken-1));
+    border-color: rgb(var(--v-theme-neutral-lighten-1));
+
+    padding-bottom: 14px;
+    padding-top: 10px;
+  }
+  .infobox-title-selected {
+    border: none;
   }
 
   .infobox-content {
-    padding: 12px;
+    padding: 15px;
+    border-bottom: 2px solid;
+    border-color: rgb(var(--v-theme-primary));
   }
 </style>
