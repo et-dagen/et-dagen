@@ -124,7 +124,9 @@
         "name": "Registration",
         "attendants": "Attendants",
         "nocapacity": "No capacity limit",
-        "registered": "You are registered"
+        "registered": "You are registered",
+        "scan": "Scan attendants",
+        "attended": "Attended"
       },
       "queue": {
         "name": "Queue",

@@ -1,4 +1,4 @@
-// DELETE /api/event/event/register/:eventUID
+// DELETE /api/event/register/:eventUID
 
 // endpoint for opting out of an event
 export default defineEventHandler(async (event) => {
@@ -31,12 +31,12 @@ export default defineEventHandler(async (event) => {
   }
 
   // Get event from database
-  const eventsRef = db.ref('events')
-  const snapshot = await eventsRef.orderByKey().equalTo(eventUID).once('value')
+  const eventRef = db.ref(`events/${eventUID}`)
+  const snapshot = await eventRef.once('value')
   const data = snapshot.val()
 
   // Event does not exist
-  if (!data || !data[eventUID]) {
+  if (!data) {
     throw createError({
       statusCode: 404,
       statusMessage: 'Error (event/not-found).',
@@ -46,10 +46,7 @@ export default defineEventHandler(async (event) => {
   // check if sign up start and opt out deadline is before event start
   if (
     !hasAccess(user, ['admin']) &&
-    !presentWithinTimeWindow(
-      data[eventUID].registration.start,
-      data[eventUID].registration.end,
-    )
+    !presentWithinTimeWindow(data.registration.start, data.registration.end)
   ) {
     throw createError({
       statusCode: 404,
@@ -57,67 +54,40 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // Get attendee key for user
-  const attendees = data[eventUID].attendants
+  const attendants = data.attendants ?? {}
+  const targetUID = userUID ?? user.uid
+  const queue = data.queue ?? {}
 
-  // Delete other user if admin, and userUID provided in body
-  const attendantUID: string | undefined = userUID
-    ? Object.entries(attendees ?? {}).find(
-        (attendant) => attendant[1] === userUID,
-      )?.[0]
-    : Object.entries(attendees ?? {}).find(
-        (attendant) => attendant[1] === user.uid,
-      )?.[0]
+  const queuedEntry = Object.entries(queue).find(([, uid]) => uid === targetUID)
 
-  // Get event from database
-  const queueRef = db.ref(`events/${eventUID}/queue`)
-  const snapshotQueue = await queueRef.once('value')
-  const queueData = snapshotQueue.val()
-
-  // User is not registered for this event
-  // Ensure the queue exists in Firebase
-  if (!queueData) {
-    if (!attendantUID) {
-      throw createError({
-        statusCode: 404,
-        statusMessage:
-          'Error (event/register/user-not-registered-or-queued-tata).',
-      })
-    }
-  } else {
-    const queueEntries = Object.entries(queueData || {})
-    const userInQueue = queueEntries.find(
-      ([_key, value]) => value === (userUID || user.uid),
-    ) || [undefined, undefined]
-
-    if (userInQueue[0]) {
-      const queueKey = userInQueue[0]
-      delete queueData[queueKey]
-      await queueRef.set(queueData)
-      sendNoContent(event, 201)
-      return 0
-    } else if (!attendantUID) {
-      throw createError({
-        statusCode: 404,
-        statusMessage: 'Error (event/register/user-not-registered-or-queued).',
-      })
-    }
+  if (queuedEntry) {
+    const [queueKey] = queuedEntry
+    await eventRef.child('queue').child(queueKey).remove()
+    sendNoContent(event, 201)
+    return
   }
 
-  // Remove user from attendants
-  delete attendees[attendantUID]
+  if (!Object.hasOwn(attendants, targetUID)) {
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Error (event/register/user-not-registered-or-queued).',
+    })
+  }
 
-  // Update attendants
-  eventsRef.child(eventUID).child('attendants').set(attendees)
+  await eventRef.child('attendants').child(targetUID).remove()
 
   // Move the next user from the queue to attendants
-  const queue = data[eventUID].queue || {}
-  const nextUserKey = Object.keys(queue).sort()[0]
-  if (nextUserKey) {
-    const nextUserUID = queue[nextUserKey]
-    delete queue[nextUserKey]
-    eventsRef.child(eventUID).child('queue').set(queue)
-    eventsRef.child(eventUID).child('attendants').push(nextUserUID)
+  const nextQueueKey = Object.keys(queue).sort()[0]
+
+  if (nextQueueKey) {
+    const nextUID = queue[nextQueueKey]
+
+    await eventRef.child('queue').child(nextQueueKey).remove()
+
+    await eventRef.child('attendants').child(nextUID).set({
+      attended: false,
+      registeredAt: Date.now(),
+    })
   }
 
   // User successfully opted out of event
