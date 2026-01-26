@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import { type AttendantMetadata } from '~/models/Attendant'
+
   const localePath = useLocalePath()
   const useAlerts = useAlertStore()
 
@@ -50,7 +52,16 @@
   const { data: users } = await useFetch('/api/user', {
     query: { scope: 'all' },
   })
-  const attendantList = computed(() => Object.entries(state.attendants))
+
+  const attendantList = computed(() =>
+    (
+      Object.entries(state.attendants ?? {}) as [string, AttendantMetadata][]
+    ).map(([uid, meta]) => ({
+      uid,
+      attended: meta.attended,
+      registeredAt: meta.registeredAt,
+    })),
+  )
 
   // Get user name by UID
   const getUserNameByUid = computed(() => (uid: string) => {
@@ -534,8 +545,8 @@
           >
             <template #default="{ item }">
               <VListItem
-                :title="`${getUserNameByUid(item[1])}`"
-                :subtitle="`UID: ${item[0]}`"
+                :title="getUserNameByUid(item.uid)"
+                :subtitle="`UID: ${item.uid}`"
               >
                 <template #prepend>
                   <VIcon class="bg-primary">mdi-account</VIcon>
@@ -547,8 +558,8 @@
                     size="x-small"
                     variant="tonal"
                     color="error"
-                    @click="removeFromEvent(item[1])"
-                  ></VBtn>
+                    @click="removeFromEvent(item.uid)"
+                  />
                 </template>
               </VListItem>
             </template>
