@@ -35,6 +35,10 @@ const adminCategories = [
     name: 'users',
     icon: 'account-outline',
   },
+  {
+    name: 'scan',
+    icon: 'camera',
+  },
 ]
 
 // allergens
