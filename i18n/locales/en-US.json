@@ -670,8 +670,33 @@
     "undo": "Undo",
     "redo": "Redo"
   },
-  "faq": {
-    "heading": "About Elektronikk- og teknologidagene",
-    "subheading": "FAQ"
+  "forcompanies": {
+    "about": {
+      "heading": "About E&T-dagene",
+
+      "p1": "E&T-dagene is a yearly career fair hosted by students from ELSYS, NTNU. ELSYS is a study programme combining among other things physics, electronics, signal processing and circuit design, where students early on in their studies are faced with projects and real-world problem solving.",
+      "p2": "As a participating company at E&T-dagene, you will get a unique opportunity to meet highly motivated and enthusiastic masters engineering students, with a wide variety of specialties within electronic engineering. ELSYS has specialties within signal processing, machine learning, acoustics, radiosystems, both analog and digital electronics- and systems design, space systems and quantum technology.",
+      "p3": "E&T-dagene are promoted to students ahead of the fair, and the venue is Glassgården (in EL-bygget at Gløshaugen), which lies connected to one of the three largest auditoriums at Gløshaugen, as well as many other lecture- and reading halls. Glassgården is therefore one of the most well-fitting locations on Gløshaugen to attract students, and you will be able to meet students from among others; ELSYS, Cybernetics and Robotics, and Energy-studies.",
+      "contactus": "If you do have any questions, or wish to participate, please contact us at: bedriftansvarlig{'@'}et-dagen.no"
+    },
+    "faq": {
+      "heading": "FAQ",
+      "questions": {
+        "q1": "What we offer",
+        "q2": "How can I sign my company up?",
+        "q3": "What events do E&T-dagene help me organize?",
+        "q4": "Tips to succeed at E&T-dagene",
+        "q5": "Arrival by car",
+        "q6": "Extra equipment"
+      },
+      "answers": {
+        "a1": "-CV database: An online service, helping engineering students and companies get in contact. Students can easily register their CV and job/internship applications with you, and you can announce open positions. As a participating company, you get one full year of access to the CV-database. -Interviews: We arrange for rooms that can be used for interviews during E&T-dagene and the day after. -Contact person: You will be provided a contact person specific to your company. This person will be available to you the entire duration of the career fairs. -Food and drink: We arrange for food and drinks for all participants from your company, and a separate break room. -Company presentations: This is a great opportunity to inform about and inspire students to pursue your company. We arrange auditoriums and promotions ahead of the presentation. -Company quick-fire presentations: A series of short company presentations, where all participating companies get to present themselves and the summer jobs they advertise.",
+        "a2": "Please contact us directly at bedriftansvarlig{'@'}et-dagen.no for more information on signup and prices.",
+        "a3": "We help organize the stand, company presentations and interviews/speedinterviews.",
+        "a4": "1 Be engaged and approachable. An open body language and genuine interest make it more inviting for students to engage with you, and help you attract good candidates. 2 Recruitment and job advertisements. Many of the students visiting E&T-dagene are on the lookout for a summer job, an internship or a permanent job at your company. Do you have open job advertisements? Make them easy to find on your stand! Clear QR-codes on the stand lower the boundaries for potential applicants, and make it easier to apply after visiting your stand. 3 Take up some space! Students are drawn to stands that can be seen and heard. Make sure your stand doesn’t appear closed off. Open surfaces invite conversation. The more approachable and lively the stand, the more stop by. 4 Make the stand memorable. A small giveaway, a good conversation or a fun activity can be the thing that makes the students remember your stand among the others afterwards. 5 After-the-fact followup. If you meet especially motivated students, encourage them to stay in touch with your company. This can be valuable for future recruitment.",
+        "a5": "The closest point of arrival by car/taxi is on the south end of Frimerket; the field behind the main building.",
+        "a6": "Outside of what is included in your package, extra stand equipment can be ordered. E.g. extra tables, coffee or displays. Contact bedriftansvarlig{'@'}et-dagen.no."
+      }
+    }
   }
 }
