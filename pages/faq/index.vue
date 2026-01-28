@@ -58,20 +58,6 @@
 
           <ul>
             <li>
-              <b>Kontaktperson</b>: Vi stiller med en egen kontaktperson til
-              hver bedrift, som er tilgjengelig under hele programmet.
-            </li>
-          </ul>
-
-          <ul>
-            <li>
-              <b>Mat og Drikke</b>: Vi stiller med mat og drikke til bedriftene,
-              samt et oppholdsrom.
-            </li>
-          </ul>
-
-          <ul>
-            <li>
               <b>Bedriftspresentasjon</b>: En mulighet til å informere og vekke
               interesse hos studentene. Vi stiller med auditorium og promotering
               i forkant.
@@ -83,6 +69,20 @@
               <b>Speedbedpress</b>: En rekke korte bedriftspresentasjoner der de
               deltagende bedriftene informerer om seg selv og sommerjobbene de
               utlyser.
+            </li>
+          </ul>
+
+          <ul>
+            <li>
+              <b>Kontaktperson</b>: Vi stiller med en egen kontaktperson til
+              hver bedrift, som er tilgjengelig under hele programmet.
+            </li>
+          </ul>
+
+          <ul>
+            <li>
+              <b>Mat og Drikke</b>: Vi stiller med mat og drikke til deltakerne
+              fra bedriften din, samt et oppholdsrom.
             </li>
           </ul>
         </Infobox>
