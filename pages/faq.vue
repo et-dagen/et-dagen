@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import Infobox from '../../components/faq/Infobox.vue'
+  import Infobox from '../components/faq/Infobox.vue'
 </script>
 
 /* TODO: Add translation for the text*/
@@ -17,13 +17,6 @@
         <p>{{ $t('forcompanies.about.p2') }}</p>
         <br />
         <br />
-        <!-- <p>
-            Ved å bli medlem av E&T-dagene, får din bedrift en
-            <emph>ettertraktet</emph> mulighet for eksponering blant Gløshaugens
-            skarpeste, gjennom en standplass i vakre Glassgården på NTNU, og
-            mulighet til å holde egne bedriftspresentasjoner, intervjuer, bla
-            bla bla.
-          </p> -->
 
         <p>{{ $t('forcompanies.about.p3') }}</p>
         <br />
