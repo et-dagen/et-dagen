@@ -674,9 +674,9 @@
     "about": {
       "heading": "About E&T-dagene",
 
-      "p1": "E&T-dagene is a yearly career fair hosted by students from ELSYS, NTNU. ELSYS is a study programme combining among other things physics, electronics, signal processing and circuit design, where students early on in their studies are faced with projects and real-world problem solving.",
-      "p2": "As a participating company at E&T-dagene, you will get a unique opportunity to meet highly motivated and enthusiastic masters engineering students, with a wide variety of specialties within electronic engineering. ELSYS has specialties within signal processing, machine learning, acoustics, radiosystems, both analog and digital electronics- and systems design, space systems and quantum technology.",
-      "p3": "E&T-dagene are promoted to students ahead of the fair, and the venue is Glassgården (in EL-bygget at Gløshaugen), which lies connected to one of the three largest auditoriums at Gløshaugen, as well as many other lecture- and reading halls. Glassgården is therefore one of the most well-fitting locations on Gløshaugen to attract students, and you will be able to meet students from among others; ELSYS, Cybernetics and Robotics, and Energy-studies.",
+      "p1": "The Electronics- and technology days is a yearly career fair hosted by students from Electronic Systems design and Innovation, NTNU. ELSYS is a study programme combining among other things physics, electronics, signal processing and circuit design, where students early on in their studies are faced with projects and real-world problem solving.",
+      "p2": "As a participating company at the E&T days, you will get a unique opportunity to meet highly motivated and enthusiastic masters engineering students, with a wide variety of specialties within electronic engineering. ELSYS has specialties within signal processing, machine learning, acoustics, radiosystems, both analog and digital electronics- and systems design, space systems and quantum technology.",
+      "p3": "The E&T days are promoted to students ahead of the fair, and the venue is Glassgården (in EL-bygget at NTNU Gløshaugen), which lies connected to one of the three largest auditoriums at Gløshaugen, as well as many other lecture- and reading halls. Glassgården is therefore one of the most well-fitting locations on Gløshaugen to attract students, and you will be able to meet students from among others; ELSYS, Cybernetics and Robotics, and Energy-studies.",
       "contactus": "If you do have any questions, or wish to participate, please contact us at: bedriftansvarlig{'@'}et-dagen.no"
     },
     "faq": {
@@ -684,8 +684,8 @@
       "questions": {
         "q1": "What we offer",
         "q2": "How can I sign my company up?",
-        "q3": "What events do E&T-dagene help me organize?",
-        "q4": "Tips to succeed at E&T-dagene",
+        "q3": "What events do the E&T days help me organize?",
+        "q4": "Tips to succeed at the E&T days",
         "q5": "Arrival by car",
         "q6": "Extra equipment"
       },
