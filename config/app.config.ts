@@ -16,6 +16,10 @@ const routes = [
     name: 'contact',
     route: '/contact',
   },
+  {
+    name: 'faq',
+    route: '/faq',
+  },
 ]
 
 const adminCategories = [
