@@ -260,7 +260,7 @@
       </VRow>
 
       <!-- current year -->
-      <VRow v-if="isAdmin && state.userType !== 'company'">
+      <VRow v-if="state.userType !== 'company'">
         <FormSelectInput
           v-model="state.currentYear"
           :content="{
