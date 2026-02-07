@@ -64,11 +64,8 @@
 
     if (code) {
       const userUid = code.data
-      console.log('QR detected:', userUid)
       camera.value?.stop()
       markAttended(userUid)
-    } else {
-      console.log('No QR code found')
     }
   }
 
