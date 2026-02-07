@@ -15,7 +15,6 @@
   })
 
   const event = computed(() => embedKeyIntoObjectValues(data.value)[0])
-  console.log(event.value)
 
   const eventTitle = computed(() => event?.value?.title ?? '')
 
@@ -79,32 +78,97 @@
 </script>
 
 <template>
-  <div class="qr-scanner">
-    <h1 v-if="eventTitle" class="event-title">
-      {{ eventTitle }}
-    </h1>
+  <div class="page">
+    <header class="header">
+      <h2 class="event-title" :title="eventTitle">
+        {{ eventTitle }}
+      </h2>
+    </header>
 
-    <CameraFeed
-      ref="camera"
-      :callback-interval="100"
-      :width="400"
-      :height="400"
-      @callback-frame="onCallbackFrame"
-      @error="onError"
-    />
+    <div class="scanner-section">
+      <div class="scanner-card">
+        <CameraFeed
+          ref="camera"
+          class="camera"
+          :callback-interval="100"
+          :width="400"
+          :height="400"
+          @callback-frame="onCallbackFrame"
+          @error="onError"
+        />
+      </div>
 
-    <CameraButton
-      :is-starting="isCameraStarting"
-      :is-running="isCameraRunning"
-      @toggle="toggleCamera"
-    />
+      <CameraButton
+        class="camera-button"
+        :is-starting="isCameraStarting"
+        :is-running="isCameraRunning"
+        @toggle="toggleCamera"
+      />
+    </div>
   </div>
 </template>
 
 <style scoped>
-  .qr-scanner {
+  .page {
+    padding: 1rem;
+    padding-bottom: env(safe-area-inset-bottom);
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .header {
+    margin-bottom: 0.75rem;
+  }
+
+  .event-title {
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.3;
+    text-align: center;
+    color: #111;
+
+    word-break: break-word;
+    overflow-wrap: anywhere;
+
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .scanner-section {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 0.75rem;
+  }
+
+  .scanner-card {
+    padding: 0.75rem;
+
+    display: flex;
+    justify-content: center;
+  }
+
+  .camera {
+    width: 100%;
+    max-width: 360px;
+    aspect-ratio: 1 / 1;
+
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .camera-button {
+    margin-top: 0.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .event-title {
+      font-size: 1.15rem;
+    }
+
+    .scanner-card {
+      padding: 1rem;
+    }
   }
 </style>
