@@ -1,7 +1,16 @@
 // GET /api/image/standmap
 // endpoint for fetching stand maps from storage
 
-export default defineEventHandler(async () => {
+export default defineEventHandler(async (event) => {
+  // Mark as low importance - only log when debugging
+  setLogImportance(event, 'debug')
+  setResourceContext(
+    event,
+    'image',
+    'standmap',
+    'list',
+    'List stand map images',
+  )
   // get storage bucket
   const maps = await storage
     .bucket()
