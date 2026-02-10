@@ -351,6 +351,7 @@
     "events": {
       "name": "Events",
       "edit": "Edit event",
+      "attendant_emails": "Attendant emails",
       "pagesize": "Events per page",
       "dates": "Date",
       "filtertypes": {
