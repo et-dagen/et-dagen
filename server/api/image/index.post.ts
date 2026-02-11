@@ -4,6 +4,15 @@
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 
+  // Set resource context for wide event logging
+  setResourceContext(
+    event,
+    'image',
+    undefined,
+    'upload',
+    'Upload image to storage',
+  )
+
   // only admins can post to storage bucket
   if (!hasAccess(user, ['admin']))
     throw createError({
