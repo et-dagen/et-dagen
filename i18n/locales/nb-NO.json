@@ -349,6 +349,7 @@
     "events": {
       "name": "Arrangementer",
       "edit": "Rediger",
+      "attendant_emails": "Deltaker-e-poster",
       "pagesize": "Arrangementer per side",
       "dates": "Dato",
       "filtertypes": {
