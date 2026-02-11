@@ -352,6 +352,28 @@
             </VTooltip>
           </td>
 
+          <!-- Attendant emails -->
+          <td>
+            <VTooltip location="top" color="primary">
+              <template #activator="{ props }">
+                <VBtn
+                  v-bind="props"
+                  size="small"
+                  variant="text"
+                  color="primary"
+                  icon="mdi-email-outline"
+                  @click="
+                    navigateTo(`/api/event/attendants?eventUID=${event.id}`, {
+                      open: { target: '_blank' },
+                    })
+                  "
+                />
+              </template>
+
+              {{ $t('admin.events.attendant_emails') }}
+            </VTooltip>
+          </td>
+
           <!-- Edit event -->
           <td>
             <VTooltip location="top" color="primary">
