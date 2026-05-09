@@ -150,9 +150,9 @@
     }
   },
   "company": {
-    "main_partner": "Hovedpartner",
-    "partners": "Partnere",
-    "sponsors": "Sponsorer",
+    "main_partner": "Hovedpartner i 2026",
+    "partners": "Partnere 2026",
+    "sponsors": "Sponsorer 2026",
     "admin": {
       "title": "Bedriftsadministrasjon",
       "dietaryrestrictions": "Allergener og restriksjoner",
