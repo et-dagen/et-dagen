@@ -184,8 +184,14 @@ function shouldSample(event: WideEvent): boolean {
   // In development, log everything
   if (process.env.NODE_ENV === 'development') return true
 
-  // Sample rate for successful requests (default 100% in dev, configurable in prod)
-  const sampleRate = parseFloat(getLogConfig().logSampleRate ?? '1.0')
+  // Sample rate for successful requests (default 100% in dev, configurable in prod).
+  // Guard against a misconfigured env var: parseFloat can yield NaN (or an
+  // out-of-range value), and `Math.random() < NaN` is always false — which would
+  // silently drop *all* successful-request logs. Fall back to 1.0 and clamp to [0,1].
+  const parsed = parseFloat(getLogConfig().logSampleRate ?? '')
+  const sampleRate = Number.isFinite(parsed)
+    ? Math.min(Math.max(parsed, 0), 1)
+    : 1
   return Math.random() < sampleRate
 }
 
@@ -272,6 +278,9 @@ export function logWideEvent(event: WideEvent, level: LogLevel = 'info'): void {
   // Output as JSON for structured log aggregation, colourised per level when
   // writing to an interactive terminal (see shouldColorize).
   const output = colorize(JSON.stringify(logEntry), level)
+
+  // Writing to the console is this function's entire purpose, so the no-console
+  // rule (error under NODE_ENV=production) is intentionally disabled here.
 
   switch (level) {
     case 'debug':

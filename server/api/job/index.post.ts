@@ -116,7 +116,9 @@ export default defineEventHandler(async (event) => {
       applicationLink,
     })
     newJobKey = ref.key
-    return Promise.resolve()
+    // Adopt the push promise so the write is actually awaited/timed and a
+    // write failure is caught instead of returning 201 prematurely.
+    return Promise.resolve(ref)
   })
 
   addEventContext(event, 'created_job_id', newJobKey)

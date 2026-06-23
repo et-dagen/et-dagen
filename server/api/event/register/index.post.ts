@@ -39,7 +39,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // Track if this is an admin action on behalf of another user
-  const isAdminAction = userUID && userUID !== user.uid
+  const isAdminAction = Boolean(userUID && userUID !== user.uid)
   addEventContext(event, 'is_admin_action', isAdminAction)
 
   // Only admins can modify event attendants
