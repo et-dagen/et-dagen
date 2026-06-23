@@ -15,6 +15,20 @@ import {
   determineOutcome,
   type WideEvent,
 } from '../utils/logger'
+import { pickSafeQuery } from '../utils/wideEventHelpers'
+
+// Query parameters safe to record in logs. Everything else is dropped.
+const SAFE_QUERY_PARAMS = [
+  'eventUID',
+  'companyUID',
+  'jobUID',
+  'userUID',
+  'programme',
+  'year',
+  'limit',
+  'offset',
+  'page',
+] as const
 
 export default defineEventHandler((event) => {
   const startTime = Date.now()
@@ -33,33 +47,46 @@ export default defineEventHandler((event) => {
     wideEvent.trace_id = traceId
   }
 
-  // Extract query parameters (sanitized)
-  const query = getQuery(event)
-  if (Object.keys(query).length > 0) {
-    wideEvent.query = query as Record<string, unknown>
+  // Extract query parameters (allow-listed to avoid logging sensitive data)
+  const query = getQuery(event) as Record<string, unknown>
+  const safeQuery = pickSafeQuery(query, SAFE_QUERY_PARAMS)
+  if (Object.keys(safeQuery).length > 0) {
+    wideEvent.query = safeQuery
   }
 
   // Attach to event context so other middleware/handlers can enrich it
   event.context.wideEvent = wideEvent
   event.context.requestStartTime = startTime
 
-  // Register response hook to capture final status and emit log
-  event.node.res.on('finish', () => {
-    const duration = Date.now() - startTime
-    wideEvent.duration_ms = duration
+  // Emit exactly once — on normal completion ('finish') or abort ('close').
+  let emitted = false
+  const emit = () => {
+    if (emitted) return
+    emitted = true
+
+    wideEvent.duration_ms = Date.now() - startTime
     wideEvent.status_code = event.node.res.statusCode
-    wideEvent.outcome = determineOutcome(event.node.res.statusCode)
+
+    let outcome = determineOutcome(event.node.res.statusCode)
+    // Reconcile: a handler flagged an error but the status still reads success.
+    if (outcome === 'success' && wideEvent.error) {
+      outcome = 'client_error'
+    }
+    wideEvent.outcome = outcome
 
     // Determine log level based on outcome
     const level =
-      wideEvent.outcome === 'error'
+      outcome === 'error'
         ? 'error'
-        : wideEvent.outcome === 'client_error'
+        : outcome === 'client_error'
           ? 'warn'
           : 'info'
 
     logWideEvent(wideEvent, level)
-  })
+  }
+
+  event.node.res.on('finish', emit)
+  event.node.res.on('close', emit)
 })
 
 // Type augmentation for H3 event context

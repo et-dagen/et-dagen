@@ -16,21 +16,7 @@ export default defineEventHandler(async (event) => {
     .once('value')
 
   // Track database operation in wide event
-  if (wideEvent) {
-    wideEvent.db = wideEvent.db ?? {
-      queries: 0,
-      reads: 0,
-      writes: 0,
-      operations: [],
-    }
-    wideEvent.db.queries++
-    wideEvent.db.reads++
-    wideEvent.db.operations?.push({
-      type: 'read',
-      ref: `users/${decodedToken.uid}`,
-      duration_ms: Date.now() - dbReadStart,
-    })
-  }
+  trackDbRead(event, `users/${decodedToken.uid}`, dbReadStart)
 
   // get user object
   const data = snapshot.val()
