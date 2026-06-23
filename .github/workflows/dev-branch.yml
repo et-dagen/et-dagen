@@ -12,25 +12,25 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v2
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          version: 8
+          bun-version: 1.3.14
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
-          cache: 'pnpm'
+          node-version: 22
 
       - name: Install dependencies
-        run: pnpm install
+        run: bun install --frozen-lockfile
 
       - name: Run linting and testing
         run: |
-          pnpm lint
-          pnpm build
+          bun run lint
+          bun run build
   deploy_dev:
     name: Deploy to dev
     if: github.event_name == 'pull_request'
@@ -41,20 +41,20 @@ jobs:
       url: 'http://dev.etdagen.no' # Doesnt work
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v2
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          version: 8
+          bun-version: 1.3.14
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 18
-          cache: 'pnpm'
+          node-version: 22
 
       - name: Install dependencies
-        run: pnpm install
+        run: bun install --frozen-lockfile
 
       - name: Deploy to live dev
         run: |
