@@ -4,12 +4,21 @@
 export default defineEventHandler((event) => {
   const { user } = event.context
 
+  // Set resource context for wide event logging
+  setResourceContext(event, 'user', user?.uid, 'signout', 'Sign out user')
+  setLogImportance(event, 'warn')
+
   // user is not authenticated
-  if (!user)
+  if (!user) {
+    setErrorContext(event, {
+      code: 'firebase/not-signed-in',
+      message: 'User not authenticated',
+    })
     throw createError({
       statusCode: 401,
       statusMessage: 'Error (firebase/not-signed-in).',
     })
+  }
 
   deleteCookie(event, '_token')
 

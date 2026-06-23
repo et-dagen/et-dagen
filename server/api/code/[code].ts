@@ -3,7 +3,18 @@
 
 export default defineEventHandler(async (event) => {
   const code = getRouterParam(event, 'code') as string
-  const { isValid } = await validateCode(code)
+
+  // Set resource context for wide event logging
+  setResourceContext(event, 'code', code, 'get', 'Validate registration code')
+
+  const { isValid } = await withDbTiming(
+    event,
+    'registrationCodes',
+    'read',
+    () => validateCode(code),
+  )
+
+  addEventContext(event, 'is_valid', isValid)
 
   return {
     isValid,

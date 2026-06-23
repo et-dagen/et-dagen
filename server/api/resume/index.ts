@@ -26,18 +26,31 @@ const isValidFirebaseStorageLink = async (link: string): Promise<boolean> => {
 export default defineEventHandler(async (event) => {
   const { decodedToken, user } = event.context
 
+  // Set resource context for wide event logging
+  setResourceContext(event, 'resume', undefined, 'list', 'List user resumes')
+
   // user is not authenticated
-  if (!decodedToken)
+  if (!decodedToken) {
+    setErrorContext(event, {
+      code: 'auth/not-authenticated',
+      message: 'User not authenticated',
+    })
     throw createError({
       statusCode: 401,
       statusMessage: 'User not authenticated',
     })
+  }
 
-  if (!user)
+  if (!user) {
+    setErrorContext(event, {
+      code: 'user/not-found',
+      message: 'User data not found',
+    })
     throw createError({
       statusCode: 404,
       statusMessage: 'User data not found',
     })
+  }
 
   // get scope from query params
   const { scope } = getQuery(event)
@@ -51,7 +64,9 @@ export default defineEventHandler(async (event) => {
   const usersRef = db.ref('users')
 
   // get all users from db
-  const snapshot = await usersRef.once('value')
+  const snapshot = await withDbTiming(event, 'users', 'read', () =>
+    usersRef.once('value'),
+  )
   const dbUsers = snapshot.val()
 
   // get the first 1000 users from firebase auth
@@ -64,6 +79,9 @@ export default defineEventHandler(async (event) => {
       ...dbUsers[firebaseUser.uid],
     }))
     .filter((user) => user.resume && isValidFirebaseStorageLink(user.resume))
+
+  // Add result metadata to wide event
+  addEventContext(event, 'result_count', users.length)
 
   return users
 })
