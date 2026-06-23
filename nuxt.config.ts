@@ -20,6 +20,10 @@ export default defineNuxtConfig({
     },
   },
   runtimeConfig: {
+    // wide-event logging (read by server/utils/logger.ts)
+    logLevel: process.env.LOG_LEVEL ?? '',
+    logSampleRate: process.env.LOG_SAMPLE_RATE ?? '',
+    serviceName: process.env.SERVICE_NAME ?? '',
     // used by firebase admin sdk
     firebaseAdminType: process.env.NUXT_FIREBASE_ADMIN_TYPE ?? '',
     firebaseAdminProjectId: process.env.NUXT_FIREBASE_ADMIN_PROJECT_ID ?? '',

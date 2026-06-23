@@ -4,12 +4,27 @@
 export default defineEventHandler(async (event) => {
   const { decodedToken, user } = event.context
 
+  // Set resource context for wide event logging
+  setResourceContext(
+    event,
+    'user',
+    user?.uid ?? decodedToken?.uid,
+    'create',
+    'Create or update user',
+  )
+  setLogImportance(event, 'warn')
+
   // user is not authenticated
-  if (!decodedToken)
+  if (!decodedToken) {
+    setErrorContext(event, {
+      code: 'firebase/user-not-authenticated',
+      message: 'User not authenticated',
+    })
     throw createError({
       statusCode: 401,
       statusMessage: 'Error (firebase/user-not-authenticated).',
     })
+  }
 
   // get request body and query param
   /* eslint-disable */
@@ -28,11 +43,16 @@ export default defineEventHandler(async (event) => {
     !registrationCode &&
     (!studyProgram || !currentYear) &&
     !hasAccess(user, ['admin', 'company'])
-  )
+  ) {
+    setErrorContext(event, {
+      code: 'user/missing-programme',
+      message: 'Study programme is required',
+    })
     throw createError({
       statusCode: 400,
       statusMessage: 'Error (user/missing-programme)',
     })
+  }
 
   // only admins can modify usertypes and other users than their own
   if (!hasAccess(user, ['admin']) || !uid) {
@@ -50,11 +70,16 @@ export default defineEventHandler(async (event) => {
     )
 
     // a valid code is required when creating a new company user
-    if (!isValid)
+    if (!isValid) {
+      setErrorContext(event, {
+        code: 'user/invalid-code',
+        message: 'Invalid registration code',
+      })
       throw createError({
         statusCode: 401,
         statusMessage: 'Error (user/invalid-code).',
       })
+    }
 
     userType = 'company'
     companyUID = codeCompanyUID
@@ -62,6 +87,10 @@ export default defineEventHandler(async (event) => {
     // remove registration code from db
     deleteCode(registrationCode as string)
   }
+
+  addEventContext(event, 'target_uid', uid)
+  addEventContext(event, 'target_user_type', userType ?? null)
+  addEventContext(event, 'used_registration_code', Boolean(registrationCode))
 
   // reference to users
   const usersRef = db.ref('users')
@@ -75,6 +104,7 @@ export default defineEventHandler(async (event) => {
     dietaryRestrictions: dietaryRestrictions ?? null,
     updated: Date.now(),
   })
+  trackDbWrite(event, `users/${uid}`)
 
   // user successfully modified
   sendNoContent(event, 201)
