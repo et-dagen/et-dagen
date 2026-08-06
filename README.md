@@ -28,7 +28,7 @@ Install dependencies:
 cd ./et-dagen
 
 # Install dependencies
-pnpm install
+bun install
 ```
 
 ### Setup
@@ -64,7 +64,7 @@ Missing environment variables in the `.env` file will be provided by the project
 Start the development server on `http://localhost:3000`
 
 ```bash
-pnpm dev
+bun run dev
 ```
 
 ### Production
@@ -72,7 +72,7 @@ pnpm dev
 Locally preview production build:
 
 ```bash
-pnpm preview
+bun run preview
 ```
 
 ### Deployment
@@ -113,7 +113,7 @@ The project uses the following branch naming conventions:
 
 - See [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0-beta.4/#summary) conventions for commit messages.
 
-- The projects has been configured with a [husky pre-commit](https://github.com/typicode/husky) hook that runs `pnpm lintfix` before every commit. This ensures that the code style is consistent.
+- The projects has been configured with a [husky pre-commit](https://github.com/typicode/husky) hook that runs `bun run lintfix` before every commit. This ensures that the code style is consistent.
 
 ### Pull requests
 
