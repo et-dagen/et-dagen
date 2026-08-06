@@ -46,7 +46,7 @@
         />
         <ContactGridCard
           :content="{
-            name: 'Even Cornelius Bjerke Gjerde',
+            name: 'Even Gjerde',
             position: $t('contact.positions.logistics'),
             email: 'logistikk@et-dagen.no',
             phone: '+47 969 00 876',
