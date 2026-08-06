@@ -38,7 +38,7 @@
     "oxc-parser": "0.132.0"
   },
   "devDependencies": {
-    "@nuxt/devtools": "^1.7.0",
+    "@nuxt/devtools": "^2.6.4",
     "@nuxtjs/eslint-config-typescript": "^12.1.0",
     "@nuxtjs/i18n": "^9.1.5",
     "@types/node": "^22.13.0",
