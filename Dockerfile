@@ -1,33 +1,21 @@
-# Set base image with pnpm enabled
-FROM node:21-alpine AS base
+# Build project with bun (node kept available for tooling that shells out to it)
+FROM oven/bun:1.3.14-alpine AS build
 RUN apk update \
     && apk upgrade \
-    && corepack enable pnpm 
-   # && apk add --no-cache python3 make g++ zlib-dev vips-dev
+    && apk add --no-cache nodejs
 
-RUN corepack prepare pnpm@8.6.0 --activate
-
-# Build project
-FROM base AS build
 WORKDIR /app
 COPY . .
 
 # Install dependencies and build the project
-RUN pnpm install
-RUN pnpm build
+RUN bun install --frozen-lockfile
+RUN bun run build
 
 # Run
-FROM node:21-alpine AS prod
+FROM node:22-alpine AS prod
 
 WORKDIR /app
-COPY --from=build /app /app
-
-# Enable pnpm in production environment
-#RUN corepack enable pnpm
-
-# Install sharp for production in the correct environment
-#RUN apk add --no-cache vips-dev
-#RUN pnpm rebuild sharp
+COPY --from=build /app/.output /app/.output
 
 ENV PORT=8080
 EXPOSE 8080
