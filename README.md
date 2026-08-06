@@ -11,7 +11,7 @@ Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introdu
 ### Pre-requisites
 
 - [Node.js](https://nodejs.org/en/) (v20.2.0 or higher)
-- [pnpm](https://pnpm.io/installation) (v8.10.5 or higher)
+- [bun]([https://pnpm.io/installation](https://bun.com/))
 
 ### Installation
 
