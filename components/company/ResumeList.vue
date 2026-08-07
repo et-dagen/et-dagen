@@ -87,7 +87,7 @@
 
   const { data: companies, pending } = await useFetch<{
     [key: string]: { cvAccess: boolean }
-  }>('/api/company')
+  }>('/api/v1/company')
 
   const useAuth = useAuthStore()
   const cvAccess = computed(() => {

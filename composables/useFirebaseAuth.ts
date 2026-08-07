@@ -40,7 +40,7 @@ export const registerUser = async (
   // check validity of registratin code
   // only applicable if creating a company user
   if (registrationCode) {
-    const { isValid } = await $fetch(`/api/code/${registrationCode}`)
+    const { isValid } = await $fetch(`/api/v1/code/${registrationCode}`)
 
     // do not attempt to create user if the code is invalid
     if (!isValid)
@@ -69,7 +69,7 @@ export const registerUser = async (
 
   // get idToken and register user in db
   const idToken = await user.getIdToken()
-  await $fetch('/api/user', {
+  await $fetch('/api/v1/user', {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${idToken}`,
@@ -124,7 +124,7 @@ export const signoutUser = async () => {
   await auth.signOut()
 
   // remove token cookie
-  await $fetch('/api/user/signout', {
+  await $fetch('/api/v1/user/signout', {
     method: 'POST',
   })
 
@@ -152,7 +152,7 @@ export const initUser = () => {
     const idToken = await user.getIdToken()
 
     try {
-      authStore.user = await $fetch<User>('/api/user', {
+      authStore.user = await $fetch<User>('/api/v1/user', {
         headers: {
           Authorization: `Bearer ${idToken}`,
         },

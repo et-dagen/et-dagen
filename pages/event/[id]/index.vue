@@ -14,19 +14,19 @@
   const eventUid = route.params.id
 
   // fetch event information from query
-  const { data, refresh } = await useFetch('/api/event', {
+  const { data, refresh } = await useFetch('/api/v1/event', {
     method: 'GET',
     query: {
       eventUID: eventUid,
     },
   })
 
-  const { data: users } = await useFetch('/api/user', {
+  const { data: users } = await useFetch('/api/v1/user', {
     query: { scope: 'all' },
   })
 
   // fetch all companies
-  const { data: companies } = await useFetch('/api/company')
+  const { data: companies } = await useFetch('/api/v1/company')
 
   // embed uid into object
   const event = computed(() => embedKeyIntoObjectValues(data.value)[0])
@@ -194,7 +194,7 @@
   const signUpForEvent = () => {
     loading.value = true
 
-    $fetch('/api/event/register', {
+    $fetch('/api/v1/event/register', {
       method: 'POST',
       body: { eventUID: event.value.uid },
     })
@@ -218,7 +218,7 @@
   const addToQueue = () => {
     loading.value = true
 
-    $fetch('/api/event/register', {
+    $fetch('/api/v1/event/register', {
       method: 'POST',
       body: { eventUID: event.value.uid },
     })
@@ -243,7 +243,7 @@
   const optOutOfEvent = () => {
     loading.value = true
 
-    $fetch('/api/event/register', {
+    $fetch('/api/v1/event/register', {
       method: 'DELETE',
       body: { eventUID: event.value.uid },
     })
@@ -271,7 +271,7 @@
   const optOutOfQueue = () => {
     loading.value = true
 
-    $fetch('/api/event/register', {
+    $fetch('/api/v1/event/register', {
       method: 'DELETE',
       body: { eventUID: event.value.uid },
     })

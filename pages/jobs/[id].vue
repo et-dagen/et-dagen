@@ -7,14 +7,14 @@
   const jobUID = route.params.id
 
   // fetch job information from query
-  const { data } = await useFetch('/api/job', {
+  const { data } = await useFetch('/api/v1/job', {
     query: {
       jobUID,
     },
   })
 
   // fetch all companies
-  const { data: companies } = await useFetch('/api/company')
+  const { data: companies } = await useFetch('/api/v1/company')
 
   // embed uid into object
   const job = computed(() => embedKeyIntoObjectValues(data.value)[0])

@@ -14,7 +14,7 @@
   const useAlerts = useAlertStore()
 
   // get study programmes
-  const { data: studyProgrammes } = await useFetch('/api/programme')
+  const { data: studyProgrammes } = await useFetch('/api/v1/programme')
   const programmeList = computed(() =>
     studyProgrammes.value.map((prog: any) => prog.name).sort(),
   )
@@ -38,7 +38,7 @@
   })
 
   // get companies
-  const { data: companies } = await useFetch('/api/company')
+  const { data: companies } = await useFetch('/api/v1/company')
   const companyList = computed(() => {
     return embedKeyIntoObjectValues(companies.value).map((company) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -145,13 +145,13 @@
     // update user
     await useAsyncData('update-user', async () => {
       await Promise.all([
-        $fetch('/api/user', {
+        $fetch('/api/v1/user', {
           method: 'POST',
           body: {
             ...state,
           },
         }),
-        $fetch('/api/user', {
+        $fetch('/api/v1/user', {
           method: 'PUT',
           body: {
             ...state,
