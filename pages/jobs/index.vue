@@ -2,8 +2,8 @@
   import { jobTypes as jobTypeNames } from '~/config/app.config'
 
   // fetch jobs and companies
-  const { data: jobs } = await useFetch('/api/job')
-  const { data: companies } = await useFetch('/api/company')
+  const { data: jobs } = await useFetch('/api/v1/job')
+  const { data: companies } = await useFetch('/api/v1/company')
 
   // format company data
   const company = computed(() => (UID: string) => {

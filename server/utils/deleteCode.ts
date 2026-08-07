@@ -1,5 +1,5 @@
 // utility function for deleting a registration code
-// used when registering a company user or calling DELETE /api/code
+// used when registering a company user or calling DELETE /api/v1/code
 
 export const deleteCode = async (code: string) => {
   // reference to registration codes

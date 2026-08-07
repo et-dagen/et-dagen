@@ -5,8 +5,8 @@
   const localePath = useLocalePath()
 
   // get jobs and jobs from the API
-  const { data: jobs, refresh } = await useFetch('/api/job')
-  const { data: companies } = await useFetch('/api/company')
+  const { data: jobs, refresh } = await useFetch('/api/v1/job')
+  const { data: companies } = await useFetch('/api/v1/company')
 
   // allow copying the job id to the clipboard
   const { text, copy, copied } = useClipboard()
@@ -92,7 +92,7 @@
     for (const uid of selectedJobs)
       !uid ||
         queries.push(
-          $fetch('/api/job', {
+          $fetch('/api/v1/job', {
             method: 'DELETE',
             query: {
               jobUID: uid,

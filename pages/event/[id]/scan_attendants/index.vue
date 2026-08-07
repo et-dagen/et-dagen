@@ -7,7 +7,7 @@
   const eventUid = route.params.id as string
 
   // fetch event information from query
-  const { data } = await useFetch('/api/event', {
+  const { data } = await useFetch('/api/v1/event', {
     method: 'GET',
     query: {
       eventUID: eventUid,
@@ -28,7 +28,7 @@
     if (!userUid) return
 
     try {
-      await $fetch('/api/event/attended', {
+      await $fetch('/api/v1/event/attended', {
         method: 'PATCH',
         body: {
           eventUID: eventUid,

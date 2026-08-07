@@ -25,7 +25,7 @@
   const authStore = useAuthStore()
   const { user } = storeToRefs(authStore)
 
-  // const { data } = await useFetch('/api/event')
+  // const { data } = await useFetch('/api/v1/event')
 
   // // embed uid into object
   // const events = computed(() => embedKeyIntoObjectValues(data.value))
@@ -53,7 +53,7 @@
     bodyData.append('file', resumeFile)
     bodyData.append('userUID', auth.user?.uid)
 
-    await useFetch('/api/resume', {
+    await useFetch('/api/v1/resume', {
       method: 'POST',
       body: bodyData,
     })
@@ -64,7 +64,7 @@
   }
 
   const deleteResume = async () => {
-    await useFetch('/api/resume', {
+    await useFetch('/api/v1/resume', {
       method: 'DELETE',
       body: {
         userUID: auth.user?.uid,

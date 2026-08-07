@@ -14,7 +14,7 @@
     },
   })
 
-  const { data } = await useFetch('/api/user', { query: { scope: 'all' } })
+  const { data } = await useFetch('/api/v1/user', { query: { scope: 'all' } })
 
   const route = useRoute()
   const user = computed(() =>

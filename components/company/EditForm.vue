@@ -12,7 +12,7 @@
   const useAlerts = useAlertStore()
 
   // fetch company data
-  const { data: company } = await useFetch('/api/company', {
+  const { data: company } = await useFetch('/api/v1/company', {
     method: 'GET',
     query: {
       companyUID: props.companyUid,
@@ -67,7 +67,7 @@
     formData.append('storagePath', `companies/${state.uid}`)
 
     // posting image to storage bucket
-    await $fetch('/api/image', {
+    await $fetch('/api/v1/image', {
       method: 'POST',
       body: formData,
     })
@@ -100,7 +100,7 @@
     // eslint-disable-next-line
     const { uid, ...rest } = state
     // update company
-    await $fetch('/api/company', {
+    await $fetch('/api/v1/company', {
       method: 'PUT',
       body: rest,
     })
@@ -131,7 +131,7 @@
     }
 
     // create company
-    await $fetch('/api/company', {
+    await $fetch('/api/v1/company', {
       method: 'POST',
       body: state,
     })
@@ -145,7 +145,7 @@
         // update company logo with UID
         // eslint-disable-next-line
         const { uid, logo, ...rest } = state
-        await $fetch('/api/company', {
+        await $fetch('/api/v1/company', {
           method: 'PUT',
           body: { companyUID: uid, logo },
         })

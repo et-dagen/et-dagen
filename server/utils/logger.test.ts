@@ -40,10 +40,10 @@ describe('generateRequestId', () => {
 
 describe('createWideEvent', () => {
   it('seeds required defaults', () => {
-    const e = createWideEvent('req_1', 'GET', '/api/event')
+    const e = createWideEvent('req_1', 'GET', '/api/v1/event')
     expect(e.request_id).toBe('req_1')
     expect(e.method).toBe('GET')
-    expect(e.path).toBe('/api/event')
+    expect(e.path).toBe('/api/v1/event')
     expect(e.outcome).toBe('success')
     expect(e.db).toEqual({ queries: 0, reads: 0, writes: 0, operations: [] })
     expect(typeof e.timestamp).toBe('string')
