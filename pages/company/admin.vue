@@ -16,7 +16,7 @@
 
   // get all events accessible to the user
   const useAuth = useAuthStore()
-  const { data } = await useFetch('/api/company/events', {
+  const { data } = await useFetch('/api/v1/company/events', {
     method: 'GET',
     query: {
       companyUID: useAuth.user?.companyUID,
@@ -25,10 +25,10 @@
   const events = computed(() => embedKeyIntoObjectValues(data.value))
 
   // get all companies
-  const { data: companies } = await useFetch('/api/company')
+  const { data: companies } = await useFetch('/api/v1/company')
 
   // get all users
-  const { data: users } = await useFetch('/api/user', {
+  const { data: users } = await useFetch('/api/v1/user', {
     method: 'GET',
     query: {
       scope: 'all',
