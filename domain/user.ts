@@ -1,20 +1,18 @@
-import type { StudyProgramme } from '@/domain/ntnu'
+import type { EmailAddress } from '@/domain/email'
+import type { StudyProgramme, StudyYear } from '@/domain/ntnu'
+import type { ISO8601String } from '@/domain/time'
+import type { HasName } from '@/domain/traits'
+import type { DietaryRestriction } from '@/domain/allergen'
 
 export type Role = 'admin' | 'coordinator' | 'company' | 'user'
 
 export interface BaseUser {
   uid: string
-  email: string
+  email: EmailAddress
   roles: Role[]
-  updated: number
-  dietaryRestrictions?: string[]
-}
-
-/**
- * Some users should have names
- */
-export interface UserWithName {
-  name: string
+  /** When the record last changed */
+  updated: ISO8601String
+  dietaryRestrictions?: DietaryRestriction[]
 }
 
 /**
@@ -24,9 +22,9 @@ export interface UserWithName {
  * For keeping track of programme attendence and progression for limited events.
  * Student users have to enlist for events.
  */
-export interface StudentUser extends BaseUser, UserWithName {
+export interface StudentUser extends BaseUser, HasName {
   programme: StudyProgramme
-  year: number
+  year: StudyYear
 }
 
 /**
@@ -38,8 +36,8 @@ export interface StudentUser extends BaseUser, UserWithName {
  * Automatically signed up to events hosted by companies under their responsibility,
  * not counted as attendants but hosts.
  */
-export interface CoordinatorUser extends StudentUser, UserWithName {
-  companyUID: string[] // company coordinators can have multiple companies
+export interface CoordinatorUser extends StudentUser {
+  companyUid: string[] // company coordinators can have multiple companies
 }
 
 /**
@@ -50,5 +48,5 @@ export interface CoordinatorUser extends StudentUser, UserWithName {
  * Cannot sign up for events, but are counted in counter for hosting.
  */
 export interface CompanyUser extends BaseUser {
-  companyUID: string
+  companyUid: string
 }

@@ -21,6 +21,15 @@ export type ProgrammeType =
   | MasterProgramme
   | IntegratedMasterProgramme
 
+/**
+ * A year a student can be in
+ *
+ * @remarks
+ * Derived from the programme definitions rather than restated, so adding a programme with a
+ * different length widens this automatically instead of leaving the two to drift apart.
+ */
+export type StudyYear = ProgrammeType['years'][number]
+
 export interface StudyProgramme {
   uid: string
   name: string
