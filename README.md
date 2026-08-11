@@ -143,6 +143,6 @@ Coverage today is limited to pure server utilities (`server/**/*.{test,spec}.ts`
 There are two typecheck commands, and the split is deliberate:
 
 - `bun run typecheck` checks the plain-TypeScript surface (`server/`, `stores/`, `composables/`, `middleware/`, `plugins/`, …). It is clean, and **CI blocks merges on it**.
-- `bun run typecheck:full` additionally checks Vue SFCs with `vue-tsc`. These carry pre-existing type errors that predate any typechecking in this repo, so CI reports it but does not block.
+- `bun run typecheck:full` additionally checks Vue SFCs with `vue-tsc`. These carry pre-existing type errors that predate any typechecking in this repo, so it cannot be a plain pass/fail gate yet.
 
-As SFC errors are fixed, fold that surface into the gating command and drop the advisory job.
+Instead CI runs `typecheck:full` as a **ratchet**: it passes while the error count stays at or below the number recorded in `.github/typecheck-baseline.txt`, and fails only if a change _adds_ errors. When you fix some, lower the baseline to match. When it reaches zero, fold the SFC surface into the gating command and delete the job.
