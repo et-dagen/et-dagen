@@ -1,0 +1,10 @@
+# Code owners for et-dagen.
+#
+# This exists to gate production releases. The `prod` branch ruleset requires
+# code owner review, so every `dev` -> `prod` pull request needs an approval
+# from a member of @et-dagen/managers.
+#
+# Ordinary feature pull requests into `dev` are unaffected: `dev` requires no
+# approvals, and code owner review is only enforced by the `prod` ruleset.
+
+* @et-dagen/managers

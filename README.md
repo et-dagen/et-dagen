@@ -73,7 +73,20 @@ bun run build      # nuxt build
 
 ### Deployment
 
-Create a pull request from `dev` to `prod`. When it is merged, the production build is deployed automatically to Digital Ocean using their App Platform.
+Deploying means merging `dev` into `prod`. Open the release pull request with the release checklist pre-filled:
+
+**[Open a release PR](https://github.com/et-dagen/et-dagen/compare/prod...dev?template=release.md&expand=1)**
+
+The `?template=release.md` part matters — without it you get the ordinary feature template instead of the checklist.
+
+A release requires:
+
+- all four CI checks green,
+- an approving review from a member of [@et-dagen/managers](https://github.com/orgs/et-dagen/teams/managers),
+- every review conversation resolved,
+- the checklist actually worked through, not just ticked.
+
+Merge with a **merge commit**, never a squash. When it merges, the production build deploys automatically to Digital Ocean using their App Platform.
 
 Control the deployment logs in [Digital Ocean Control Panel](https://cloud.digitalocean.com/apps).
 
@@ -100,7 +113,7 @@ The project uses a two-branch flow:
 - `dev` — the default branch and integration target. All feature work is merged here.
 - `prod` — production. Only ever updated by a `dev` → `prod` pull request, which triggers the Digital Ocean deploy.
 
-Both branches are protected: no force-pushes, no deletion, and no merging until CI is green.
+Both branches are protected: no force-pushes, no deletion, and no merging until CI is green. `dev` needs no approving review; `prod` needs one from @et-dagen/managers.
 
 Merge `dev` → `prod` with a **merge commit**, not a squash. Squashing a release would give `prod` a commit sharing no ancestry with `dev`, and the two branches would then conflict on every subsequent release. Feature branches into `dev` should be squashed.
 
@@ -126,6 +139,16 @@ Because feature branches are squash-merged, the **pull request title** becomes t
 
 - Pull requests should be created for all new features and bugs. The pull request should be assigned to the person who should review it. The pull request should be labeled with the appropriate label(s).
 - A pull request cannot be merged until the `lint`, `typecheck`, `test` and `build` checks pass.
+
+### Who can merge
+
+Write access comes from organisation membership, not from per-person grants on this repository. In practice:
+
+- **Organisation members** can review and merge into `dev`.
+- **Members of @et-dagen/managers** can additionally approve a release into `prod`.
+- **Everyone else** is welcome to fork the repository and open a pull request. Those PRs are automatically labelled `external-contribution`, and an approval from an external contributor does not satisfy the branch ruleset.
+
+If you are contributing regularly and keep having to fork, ask an organisation owner to add you to the organisation.
 
 ## Testing
 
