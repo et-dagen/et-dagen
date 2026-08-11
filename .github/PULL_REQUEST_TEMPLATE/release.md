@@ -1,10 +1,6 @@
----
-name: Release (dev to prod)
-about: Deploy the current state of dev to production
-title: 'deploy: release <!-- date or version -->'
----
-
 <!--
+  Title this pull request: deploy: release <date>
+
   This is the release checklist for merging `dev` into `prod`. Merging this PR
   deploys to production via Digital Ocean.
 
