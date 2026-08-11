@@ -3,11 +3,10 @@
 import {
   initializeApp,
   cert,
-  App,
   getApps,
   getApp,
-  ServiceAccount,
 } from 'firebase-admin/app'
+import type { App, ServiceAccount } from 'firebase-admin/app'
 import { getAuth } from 'firebase-admin/auth'
 import { getDatabase } from 'firebase-admin/database'
 import { getStorage } from 'firebase-admin/storage'

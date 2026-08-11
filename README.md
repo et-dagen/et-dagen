@@ -10,8 +10,8 @@ Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introdu
 
 ### Pre-requisites
 
-- [Node.js](https://nodejs.org/en/) (v20.2.0 or higher)
-- [bun](https://bun.com/)
+- [Node.js](https://nodejs.org/en/) v22 or higher (see `.nvmrc`)
+- [bun](https://bun.com/) 1.3.14 (see the `packageManager` field in `package.json`)
 
 ### Installation
 
@@ -37,23 +37,6 @@ Create a `.env` file in the project root by copying the `.env.example` file:
 
 ```bash
 cp .env.example .env
-```
-
-and
-
-```bash
-cp .env.example .env.development
-```
-
-and
-
-```bash
-cp .env.example .env.development
-```
-
-and
-
-```bash
 cp .env.example .env.development
 ```
 
@@ -75,9 +58,22 @@ Locally preview production build:
 bun run preview
 ```
 
+### Checks
+
+The same checks CI runs on every pull request can be run locally:
+
+```bash
+bun run lint       # eslint + prettier --check
+bun run typecheck  # gating typecheck (see tsconfig.typecheck.json)
+bun run test       # vitest
+bun run build      # nuxt build
+```
+
+`bun run lintfix` fixes most lint and formatting failures in place.
+
 ### Deployment
 
-Create pull request from `dev` to `main` branch. When the pull request is approved and merged, the production build will be deployed automatically to Digital Ocean using their App Platform.
+Create a pull request from `dev` to `prod`. When it is merged, the production build is deployed automatically to Digital Ocean using their App Platform.
 
 Control the deployment logs in [Digital Ocean Control Panel](https://cloud.digitalocean.com/apps).
 
@@ -93,15 +89,23 @@ When opening a branch for the issue, click the `Create a branch` under `Developm
 
 When the issue is completed, create a pull request and assign the pull request to the person who should review it. The issue should be moved to the `In review` column on the project board.
 
-When the pull request is approved, merge it into the `main` branch and close the issue.
+When the pull request is approved and CI is green, merge it into `dev` and close the issue.
 
 ### Branches
 
-_NB! All branches created working on issues should be branched off of `main`._
+_NB! All branches created working on issues should be branched off of `dev`._
 
-The project uses the following branch naming conventions:
+The project uses a two-branch flow:
 
-- `main` - The main branch. This branch is protected and requires a pull request to be merged.
+- `dev` — the default branch and integration target. All feature work is merged here.
+- `prod` — production. Only ever updated by a `dev` → `prod` pull request, which triggers the Digital Ocean deploy.
+
+Both branches are protected: no force-pushes, no deletion, and no merging until CI is green.
+
+Merge `dev` → `prod` with a **merge commit**, not a squash. Squashing a release would give `prod` a commit sharing no ancestry with `dev`, and the two branches would then conflict on every subsequent release. Feature branches into `dev` should be squashed.
+
+Branch naming conventions:
+
 - `feature/issue_number-issue-title-in-kebab-case` - A branch for a new feature.
 - `docs/...` - A branch for documentation.
 - `fix/...` - A branch for a bug fix.
@@ -111,14 +115,34 @@ The project uses the following branch naming conventions:
 
 ### Commits
 
-- See [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0-beta.4/#summary) conventions for commit messages.
+Commit messages must follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/). This is enforced, not just recommended — two [husky](https://github.com/typicode/husky) hooks run locally:
 
-- The projects has been configured with a [husky pre-commit](https://github.com/typicode/husky) hook that runs `bun run lintfix` before every commit. This ensures that the code style is consistent.
+- `pre-commit` runs `lint-staged`, which applies `prettier --write` and `eslint --fix` to staged files.
+- `commit-msg` runs `commitlint`, which rejects messages that do not parse as Conventional Commits. Allowed types are listed in `commitlint.config.mjs`.
+
+Because feature branches are squash-merged, the **pull request title** becomes the commit subject on `dev` — so it must be conventional too. CI checks this and reports it, without blocking.
 
 ### Pull requests
 
 - Pull requests should be created for all new features and bugs. The pull request should be assigned to the person who should review it. The pull request should be labeled with the appropriate label(s).
+- A pull request cannot be merged until the `lint`, `typecheck`, `test` and `build` checks pass.
 
 ## Testing
 
-_To be improved._
+Tests run on [Vitest](https://vitest.dev/):
+
+```bash
+bun run test        # single run, as CI does it
+bun run test:watch  # watch mode
+```
+
+Coverage today is limited to pure server utilities (`server/**/*.{test,spec}.ts`) — see `vitest.config.mjs`. Component and composable tests need a Nuxt runtime environment via `@nuxt/test-utils`, which is not set up yet.
+
+### Type checking
+
+There are two typecheck commands, and the split is deliberate:
+
+- `bun run typecheck` checks the plain-TypeScript surface (`server/`, `stores/`, `composables/`, `middleware/`, `plugins/`, …). It is clean, and **CI blocks merges on it**.
+- `bun run typecheck:full` additionally checks Vue SFCs with `vue-tsc`. These carry pre-existing type errors that predate any typechecking in this repo, so CI reports it but does not block.
+
+As SFC errors are fixed, fold that surface into the gating command and drop the advisory job.
