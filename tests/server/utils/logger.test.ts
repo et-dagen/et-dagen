@@ -5,7 +5,7 @@ import {
   determineOutcome,
   logWideEvent,
   type WideEvent,
-} from './logger'
+} from '@/server/utils/logger'
 
 const ORIGINAL_ENV = { ...process.env }
 
