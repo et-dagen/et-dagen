@@ -68,7 +68,6 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     '@pinia/nuxt',
     'vuetify-nuxt-module',
-    'nuxt-vitest',
     '@vueuse/nuxt',
     '@nuxt/image',
   ],
@@ -95,14 +94,6 @@ export default defineNuxtConfig({
     defaultLocale: 'no',
     vueI18n: 'config/i18n.config.ts',
     detectBrowserLanguage: false,
-  },
-
-  pinia: {
-    autoImports: [
-      'defineStore',
-      ['defineStore', 'definePiniaStore'],
-      'storeToRefs',
-    ],
   },
 
   image: {

@@ -1,0 +1,55 @@
+name: Flag external contributions
+
+# pull_request_target runs in the context of the base repository, so it has a
+# token that can label and comment on pull requests opened from forks. It
+# deliberately never checks out or executes the fork's code — doing so with
+# this trigger would hand write-scoped credentials to untrusted contributors.
+on:
+  pull_request_target:
+    types: [opened, reopened]
+
+permissions:
+  pull-requests: write
+
+jobs:
+  flag:
+    name: flag external contribution
+    runs-on: ubuntu-latest
+    # author_association is MEMBER for organisation members, OWNER for org
+    # owners, and COLLABORATOR for anyone granted direct repository access.
+    # Everyone else — the case this job exists for — is CONTRIBUTOR,
+    # FIRST_TIME_CONTRIBUTOR or NONE.
+    if: >-
+      github.event.pull_request.author_association != 'MEMBER' &&
+      github.event.pull_request.author_association != 'OWNER' &&
+      github.event.pull_request.author_association != 'COLLABORATOR'
+    steps:
+      - name: Label and annotate
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+          ASSOCIATION: ${{ github.event.pull_request.author_association }}
+          FROM_FORK: ${{ github.event.pull_request.head.repo.fork }}
+        run: |
+          gh label create external-contribution \
+            --repo "$REPO" \
+            --color D93F0B \
+            --description "Opened by someone outside the et-dagen organisation" \
+            --force
+
+          gh pr edit "$PR" --repo "$REPO" --add-label external-contribution
+
+          gh pr comment "$PR" --repo "$REPO" --body "$(cat <<EOF
+          ### :warning: External contribution
+
+          This pull request was opened by @$AUTHOR, who is **not a member of the et-dagen organisation** (\`author_association: $ASSOCIATION\`, from a fork: \`$FROM_FORK\`).
+
+          Thanks for contributing! For reviewers, the usual care applies:
+
+          - Read the diff in full before approving. Pay particular attention to changes under \`.github/\`, to \`package.json\` scripts, and to any new dependency.
+          - CI does not run this branch's workflow definitions against our secrets, and workflows from forks get a read-only token. Do not work around that.
+          - Only organisation members can merge. An approval from an external contributor does not satisfy the branch ruleset.
+          EOF
+          )"
