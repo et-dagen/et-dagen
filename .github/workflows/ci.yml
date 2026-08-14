@@ -1,0 +1,105 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [dev, prod]
+  push:
+    branches: [dev, prod]
+  workflow_dispatch:
+
+# Superseded runs on the same ref are pointless once a new commit lands.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # The four jobs below are the required status checks. They are declared
+  # separately rather than as a matrix so their names stay stable — branch
+  # ruleset contexts match on job name, and matrix names ("check (lint)") are
+  # easy to break by editing the matrix.
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: bun run lint
+
+  typecheck:
+    name: typecheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: bun run typecheck
+
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: bun run test
+
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - run: bun run build
+
+  # --- Advisory jobs: reported, never merge-blocking -----------------------
+
+  # Vue SFCs carry pre-existing type errors that predate any typechecking in
+  # this repo, so this cannot be a plain pass/fail gate yet. Instead it is a
+  # ratchet: it passes while the error count holds at or below the recorded
+  # baseline and fails only if a change *adds* errors.
+  #
+  # When you fix SFC errors, lower .github/typecheck-baseline.txt to match.
+  # When it reaches 0, fold the SFC surface into `bun run typecheck` and delete
+  # this job along with the baseline file.
+  typecheck-sfc:
+    name: typecheck (vue, ratchet)
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Compare SFC type errors against baseline
+        run: |
+          baseline=$(tr -cd '0-9' < .github/typecheck-baseline.txt)
+          # typecheck:full exits non-zero whenever errors exist, which is the
+          # normal state here, so its status is deliberately discarded.
+          count=$(bun run typecheck:full 2>&1 | grep -cE 'error TS' || true)
+
+          echo "Baseline: $baseline    Current: $count" >> "$GITHUB_STEP_SUMMARY"
+
+          if [ "$count" -gt "$baseline" ]; then
+            echo "::error::Vue SFC type errors rose from $baseline to $count."
+            echo "This change introduces new type errors. Run 'bun run typecheck:full' locally." >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+
+          if [ "$count" -lt "$baseline" ]; then
+            echo "::notice::SFC type errors down from $baseline to $count. Lower .github/typecheck-baseline.txt to $count to lock the improvement in."
+            echo "Errors went **down**. Lower the baseline to \`$count\` to lock this in." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+  # Squash merges take their commit subject from the PR title, so an
+  # unconventional title lands an unconventional commit on dev.
+  pr-title:
+    name: pr title (advisory)
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      - name: Lint pull request title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: echo "$PR_TITLE" | bunx --bun commitlint

@@ -7,14 +7,14 @@
   const jobUID = route.params.id
 
   // fetch job information from query
-  const { data } = await useFetch('/api/job', {
+  const { data } = await useFetch('/api/v1/job', {
     query: {
       jobUID,
     },
   })
 
   // fetch all companies
-  const { data: companies } = await useFetch('/api/company')
+  const { data: companies } = await useFetch('/api/v1/company')
 
   // embed uid into object
   const job = computed(() => embedKeyIntoObjectValues(data.value)[0])
@@ -119,7 +119,9 @@
 </template>
 
 <style scoped lang="scss">
+  @use 'sass:map';
   @use 'vuetify/settings';
+
   .container {
     display: grid;
     width: 100vw;
@@ -131,29 +133,28 @@
       max-height: 300px;
 
       .image {
-        width: 100%;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
       }
     }
 
     .description {
       grid-area: description;
 
-      &::v-deep {
-        li {
-          list-style-position: inside;
-
-          p {
-            display: inline;
-          }
+      :deep(li) {
+        list-style-position: inside;
+        p {
+          display: inline;
         }
+      }
 
-        h5 {
-          font-size: 1.15rem !important;
-        }
+      :deep(h5) {
+        font-size: 1.15rem !important;
+      }
 
-        h6 {
-          font-size: 1.05rem !important;
-        }
+      :deep(h6) {
+        font-size: 1.05rem !important;
       }
 
       &__text {
@@ -179,17 +180,17 @@
       grid-area: attendants;
     }
 
-    @media #{map-get(settings.$display-breakpoints, 'lg-and-up')} {
+    @media #{map.get(settings.$display-breakpoints, 'lg-and-up')} {
       max-width: 1080px;
     }
 
-    @media #{map-get(settings.$display-breakpoints, 'md-and-down')} {
+    @media #{map.get(settings.$display-breakpoints, 'md-and-down')} {
       max-width: 750px;
       grid-template-areas: 'image' 'details' 'attendants' 'description';
       grid-template-columns: 1fr;
     }
 
-    @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
+    @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
       max-width: 420px;
     }
   }

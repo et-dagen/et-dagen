@@ -4,15 +4,15 @@
   const localePath = useLocalePath()
 
   // Get events and companies from the API
-  const { data: events, refresh } = await useFetch('/api/event')
-  const { data: companies } = await useFetch('/api/company')
+  const { data: events, refresh } = await useFetch('/api/v1/event')
+  const { data: companies } = await useFetch('/api/v1/company')
 
   // Allow copying the event id to the clipboard
   const { text, copy, copied } = useClipboard()
 
   // Proces events and retrieve dates
-  const eventsWithID = computed(() => addEventIDAsProperty(events.value))
-  const eventDates = computed(() => getEventDates(events.value))
+  const eventsWithID = computed(() => addEventIDAsProperty(events.value ?? []))
+  const eventDates = computed(() => getEventDates(events.value ?? []))
 
   // State for filtering and selecting events
   const selectedDates = ref<number[]>(eventDates.value.map((_, i) => i))
@@ -92,7 +92,7 @@
     for (const uid of selectedEvents)
       !uid ||
         queries.push(
-          $fetch('/api/event', {
+          $fetch('/api/v1/event', {
             method: 'DELETE',
             body: {
               eventUID: uid,
@@ -349,6 +349,31 @@
                   ? $t('admin.events.copied')
                   : event.id
               }}
+            </VTooltip>
+          </td>
+
+          <!-- Attendant emails -->
+          <td>
+            <VTooltip location="top" color="primary">
+              <template #activator="{ props }">
+                <VBtn
+                  v-bind="props"
+                  size="small"
+                  variant="text"
+                  color="primary"
+                  icon="mdi-email-outline"
+                  @click="
+                    navigateTo(
+                      `/api/v1/event/attendants?eventUID=${event.id}`,
+                      {
+                        open: { target: '_blank' },
+                      },
+                    )
+                  "
+                />
+              </template>
+
+              {{ $t('admin.events.attendant_emails') }}
             </VTooltip>
           </td>
 

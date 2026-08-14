@@ -5,8 +5,8 @@
   const localePath = useLocalePath()
 
   // get companies and companies from the API
-  const { data: companies, refresh } = await useFetch('/api/company')
-  const { data: codes, refresh: refreshCodes } = await useFetch('/api/code')
+  const { data: companies, refresh } = await useFetch('/api/v1/company')
+  const { data: codes, refresh: refreshCodes } = await useFetch('/api/v1/code')
 
   // allow copying the company id to the clipboard
   const { text, copy, copied } = useClipboard()
@@ -109,7 +109,7 @@
     for (const uid of selectedCompanies)
       !uid ||
         queries.push(
-          $fetch('/api/company', {
+          $fetch('/api/v1/company', {
             method: 'DELETE',
             body: {
               companyUID: uid,
@@ -131,7 +131,7 @@
   }
 
   const createNewCode = async (companyUID: string) => {
-    await $fetch('/api/code', {
+    await $fetch('/api/v1/code', {
       method: 'POST',
       query: {
         companyUID,
@@ -332,6 +332,7 @@
           <th>{{ $t('admin.company.attributes.type.name') }}</th>
           <th>{{ $t('admin.company.attributes.logo') }}</th>
           <th>{{ $t('admin.company.attributes.webpage') }}</th>
+          <th>{{ $t('admin.company.attributes.cvAccess.name') }}</th>
           <th>{{ $t('admin.company.attributes.code') }}</th>
           <th class="text-center">UID</th>
           <th></th>
@@ -366,6 +367,15 @@
           <!-- company webpage -->
           <td class="truncate">
             {{ company.webpage.replace('https://', '') }}
+          </td>
+
+          <!-- company cv access -->
+          <td class="truncate">
+            {{
+              $t(
+                `admin.company.attributes.cvAccess.${company.cvAccess ? 'yes' : 'no'}`,
+              )
+            }}
           </td>
 
           <!-- company code -->

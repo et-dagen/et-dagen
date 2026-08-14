@@ -9,11 +9,10 @@
   // Fetch company data if props are provided
   const auth = useAuthStore()
   const { hasAccess, user } = storeToRefs(auth)
-
   const useAlerts = useAlertStore()
 
   // fetch company data
-  const { data: company } = await useFetch('/api/company', {
+  const { data: company } = await useFetch('/api/v1/company', {
     method: 'GET',
     query: {
       companyUID: props.companyUid,
@@ -35,6 +34,7 @@
     description: null,
     type: null,
     webpage: null,
+    cvAccess: false,
     logo: null,
     uid: null,
   }
@@ -67,7 +67,7 @@
     formData.append('storagePath', `companies/${state.uid}`)
 
     // posting image to storage bucket
-    await $fetch('/api/image', {
+    await $fetch('/api/v1/image', {
       method: 'POST',
       body: formData,
     })
@@ -100,7 +100,7 @@
     // eslint-disable-next-line
     const { uid, ...rest } = state
     // update company
-    await $fetch('/api/company', {
+    await $fetch('/api/v1/company', {
       method: 'PUT',
       body: rest,
     })
@@ -131,7 +131,7 @@
     }
 
     // create company
-    await $fetch('/api/company', {
+    await $fetch('/api/v1/company', {
       method: 'POST',
       body: state,
     })
@@ -145,7 +145,7 @@
         // update company logo with UID
         // eslint-disable-next-line
         const { uid, logo, ...rest } = state
-        await $fetch('/api/company', {
+        await $fetch('/api/v1/company', {
           method: 'PUT',
           body: { companyUID: uid, logo },
         })
@@ -220,6 +220,10 @@
                   title: $t('edit.company.attributes.type.sponsor'),
                   value: 'sponsor',
                 },
+                {
+                  title: $t('edit.company.attributes.type.old'),
+                  value: 'old',
+                },
               ],
             }"
             :rules="[useRequiredInput]"
@@ -234,6 +238,27 @@
               label: $t('edit.company.attributes.webpage'),
             }"
             :rules="[useRequiredInput]"
+          />
+        </VRow>
+
+        <!-- CV Access -->
+        <VRow>
+          <FormSelectInput
+            v-model="state.cvAccess"
+            :content="{
+              label: $t('edit.company.attributes.cvAccess.name'),
+              options: [
+                {
+                  title: $t('edit.company.attributes.cvAccess.yes'),
+                  value: true,
+                },
+                {
+                  title: $t('edit.company.attributes.cvAccess.no'),
+                  value: false,
+                },
+              ],
+            }"
+            :rules="[]"
           />
         </VRow>
 
@@ -309,7 +334,7 @@
 </template>
 
 <style scoped lang="scss">
-  @import 'vuetify/settings';
+  @use 'vuetify/settings';
   .title {
     text-align: center;
   }

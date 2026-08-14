@@ -3,10 +3,10 @@
   const localePath = useLocalePath()
 
   // Fetch company and event data from API
-  const { data: companies } = await useFetch('/api/company')
+  const { data: companies } = await useFetch('/api/v1/company')
 
-  const { data: events } = await useFetch('/api/event')
-  const { data: maps } = await useFetch('/api/image/standmap')
+  const { data: events } = await useFetch('/api/v1/event')
+  const { data: maps } = await useFetch('/api/v1/image/standmap')
 
   // Group events by date
   const eventsByDate: any = computed(() => groupEventsByDateStart(events.value))
@@ -183,7 +183,9 @@
 </template>
 
 <style scoped lang="scss">
-  @import 'vuetify/settings';
+  @use 'sass:map';
+  @use 'vuetify/settings';
+
   .container {
     display: flex;
     flex-direction: column;
@@ -274,7 +276,7 @@
     }
   }
 
-  @media #{map-get($display-breakpoints, 'xs')} {
+  @media #{map.get(settings.$display-breakpoints, 'xs')} {
     .container {
       transform: translateX(6.5rem);
       width: 60vw;
@@ -327,7 +329,7 @@
     }
   }
 
-  @media #{map-get($display-breakpoints, 'sm')} {
+  @media #{map.get(settings.$display-breakpoints, 'sm')} {
     .container {
       transform: translateX(9rem);
       width: fit-content;

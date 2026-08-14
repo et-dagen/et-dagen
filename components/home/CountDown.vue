@@ -10,14 +10,16 @@
     content: { type: Object as PropType<CountDownContent>, required: true },
   })
 
-  const timeDiff = ref(
-    calculateTimeDifference(
-      cdProps.content.futureDate,
-      cdProps.content.futureTime,
-    ),
-  )
+  // Initialize to null to avoid hydration mismatch - SSR and client will both render null initially
+  const timeDiff = ref<ReturnType<typeof calculateTimeDifference> | null>(null)
 
   onMounted(() => {
+    // Calculate initial value only on client side
+    timeDiff.value = calculateTimeDifference(
+      cdProps.content.futureDate,
+      cdProps.content.futureTime,
+    )
+
     setInterval(() => {
       timeDiff.value = calculateTimeDifference(
         cdProps.content.futureDate,
@@ -152,6 +154,7 @@
 </template>
 
 <style scoped lang="scss">
+  @use 'sass:map';
   @use 'vuetify/settings';
 
   .container {
@@ -167,7 +170,7 @@
   .v-card {
     min-width: 90px;
 
-    @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
+    @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
       min-width: 60px;
     }
   }
@@ -183,7 +186,7 @@
     height: 50px;
     font-size: 1.5em;
 
-    @media #{map-get(settings.$display-breakpoints, 'sm-and-down')} {
+    @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
       width: 75%;
       height: 40px;
       font-size: 1.2em;

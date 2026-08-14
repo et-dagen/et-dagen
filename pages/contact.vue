@@ -5,10 +5,10 @@
       <ContactCard
         class="mx-auto w-75"
         :content="{
-          name: 'Andrea Gladhaug',
+          name: 'William Bryde',
           position: $t('contact.positions.business'),
           email: 'bedriftansvarlig@et-dagen.no',
-          phone: '+47 489 58 605',
+          phone: '+47 995 41 223',
           image: '/images/board/business.jpg',
         }"
       />
@@ -19,82 +19,82 @@
       <CommonGrid>
         <ContactGridCard
           :content="{
-            name: 'Amalie Fridfeldt Hauge',
+            name: 'Fredrik Sanner',
             position: $t('contact.positions.head'),
             email: 'leder@et-dagen.no',
-            phone: '+47 902 04 787',
+            phone: '+47 412 89 452',
             image: '/images/board/manager.jpg',
           }"
         />
         <ContactGridCard
           :content="{
-            name: 'Magnus Arnfinn Aubell',
+            name: 'Vegard Geirsson Ultveit',
             position: $t('contact.positions.deputyHead'),
             email: 'nestleder@et-dagen.no',
-            phone: '+47 466 75 353',
+            phone: '+47 483 44 104',
             image: '/images/board/deputy_manager.jpg',
           }"
         />
         <ContactGridCard
           :content="{
-            name: 'Bethlehem Taglo Lewtie',
+            name: 'Eirik Hoel',
             position: $t('contact.positions.finance'),
             email: 'okonomi@et-dagen.no',
-            phone: '+47 483 935 04',
+            phone: '+47 953 07 334',
             image: '/images/board/finance.jpg',
           }"
         />
         <ContactGridCard
           :content="{
-            name: 'Andreas Teodor Nysæter',
+            name: 'Even Gjerde',
             position: $t('contact.positions.logistics'),
             email: 'logistikk@et-dagen.no',
-            phone: '+47 468 869 97',
+            phone: '+47 969 00 876',
             image: '/images/board/logistics.jpg',
           }"
         />
         <ContactGridCard
           :content="{
-            name: 'Andrea Gladhaug',
+            name: 'William Bryde',
             position: $t('contact.positions.business'),
             email: 'bedriftansvarlig@et-dagen.no',
-            phone: '+47 489 586 05',
+            phone: '+47 995 41 223',
             image: '/images/board/business.jpg',
           }"
         />
         <ContactGridCard
           :content="{
-            name: 'Jon Arne Lund',
+            name: 'Ruben Johnsen',
             position: $t('contact.positions.spons'),
             email: 'spons@et-dagen.no',
-            phone: '+47 977 036 74',
+            phone: '+47 469 44 567',
             image: '/images/board/sponsor.jpg',
           }"
         />
         <ContactGridCard
           :content="{
-            name: 'Elias Drøpping',
+            name: 'Anna Lina Hollum',
             position: $t('contact.positions.marketing'),
             email: 'mfansvarlig@et-dagen.no',
-            phone: '+47 908 89 682',
+            phone: '+47 977 47 450',
             image: '/images/board/marketing.jpg',
           }"
         />
         <ContactGridCard
           :content="{
-            name: ' Peder Ingmar Dahl',
+            name: 'Selma Olsen Storbugt',
             position: $t('contact.positions.IT'),
             email: 'itansvarlig@et-dagen.no',
-            phone: '+47 912 460 56',
+            phone: '+47 412 89 917',
             image: '/images/board/it.jpg',
           }"
         />
         <ContactGridCard
           :content="{
-            name: 'Karin Skinderhaug',
+            name: 'Elias Møinichen Alsos',
             position: $t('contact.positions.travel'),
             email: 'turansvarlig@et-dagen.no',
-            phone: '+47 484 578 35',
+            phone: '+47 941 74 073',
             image: '/images/board/travel.jpg',
           }"
         />
@@ -104,16 +104,18 @@
 </template>
 
 <style scoped lang="scss">
+  @use 'sass:map';
   @use 'vuetify/settings';
+
   .v-container {
     // Set different max-widths for different screen sizes
-    @media #{map-get(settings.$display-breakpoints, 'md-and-up')} {
+    @media #{map.get(settings.$display-breakpoints, 'md-and-up')} {
       max-width: 900px !important;
     }
-    @media #{map-get(settings.$display-breakpoints, 'sm')} {
+    @media #{map.get(settings.$display-breakpoints, 'sm')} {
       max-width: 600px !important;
     }
-    @media #{map-get(settings.$display-breakpoints, 'xs')} {
+    @media #{map.get(settings.$display-breakpoints, 'xs')} {
       max-width: 350px !important;
     }
   }

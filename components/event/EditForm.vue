@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import { type AttendantMetadata } from '~/models/Attendant'
+
   const localePath = useLocalePath()
   const useAlerts = useAlertStore()
 
@@ -14,7 +16,7 @@
   const { data: event } = await useAsyncData('event', async () => {
     if (!props.eventUid) return
 
-    const data = await $fetch('/api/event', {
+    const data = await $fetch('/api/v1/event', {
       query: { eventUID: props.eventUid },
     })
 
@@ -36,7 +38,7 @@
   )
     navigateTo(localePath('/event/edit'))
 
-  const { data: studyProgrammes } = await useFetch('/api/programme')
+  const { data: studyProgrammes } = await useFetch('/api/v1/programme')
 
   // alphabetically sort study programmes
   const programmeOptions = computed(() =>
@@ -47,10 +49,19 @@
 
   // Fetch all users
   // TODO: #188 Replace with API endpoint for getting only a sublist of known UIDs
-  const { data: users } = await useFetch('/api/user', {
+  const { data: users } = await useFetch('/api/v1/user', {
     query: { scope: 'all' },
   })
-  const attendantList = computed(() => Object.entries(state.attendants))
+
+  const attendantList = computed(() =>
+    (
+      Object.entries(state.attendants ?? {}) as [string, AttendantMetadata][]
+    ).map(([uid, meta]) => ({
+      uid,
+      attended: meta.attended,
+      registeredAt: meta.registeredAt,
+    })),
+  )
 
   // Get user name by UID
   const getUserNameByUid = computed(() => (uid: string) => {
@@ -60,7 +71,7 @@
     )
   })
 
-  const { data: companies } = await useFetch('/api/company')
+  const { data: companies } = await useFetch('/api/v1/company')
   // Format companies for select input
   const companyList = computed(() => {
     if (!hasAccess(['admin', 'company']) || !event) return null
@@ -155,7 +166,7 @@
   // Get updated event attendants
   const refreshAttendants = async () => {
     isLoadingAttendants.value = true
-    const data = await $fetch('/api/event', {
+    const data = await $fetch('/api/v1/event', {
       query: { eventUID: props.eventUid || state.uid },
     })
     if (!data) return
@@ -171,7 +182,7 @@
   // TODO: #184 Add code for removing user from event
 
   const removeFromEvent = async (userUID: string) => {
-    await $fetch('/api/event/register', {
+    await $fetch('/api/v1/event/register', {
       method: 'DELETE',
       body: {
         eventUID: props.eventUid || state.uid,
@@ -240,7 +251,7 @@
     }
 
     handleEmptyStateValues()
-    await $fetch('/api/event', {
+    await $fetch('/api/v1/event', {
       method: 'PUT',
       body: state,
     })
@@ -269,7 +280,7 @@
     }
 
     handleEmptyStateValues()
-    await $fetch('/api/event', {
+    await $fetch('/api/v1/event', {
       method: 'POST',
       body: state,
     })
@@ -290,7 +301,7 @@
   const signUpForEventUid = ref('')
 
   const signUpForEvent = () => {
-    $fetch('/api/event/register', {
+    $fetch('/api/v1/event/register', {
       method: 'POST',
       body: { eventUID: props.eventUid, userUID: signUpForEventUid.value },
     })
@@ -534,8 +545,8 @@
           >
             <template #default="{ item }">
               <VListItem
-                :title="`${getUserNameByUid(item[1])}`"
-                :subtitle="`UID: ${item[0]}`"
+                :title="getUserNameByUid(item.uid)"
+                :subtitle="`UID: ${item.uid}`"
               >
                 <template #prepend>
                   <VIcon class="bg-primary">mdi-account</VIcon>
@@ -547,8 +558,8 @@
                     size="x-small"
                     variant="tonal"
                     color="error"
-                    @click="removeFromEvent(item[1])"
-                  ></VBtn>
+                    @click="removeFromEvent(item.uid)"
+                  />
                 </template>
               </VListItem>
             </template>
@@ -560,7 +571,7 @@
 </template>
 
 <style scoped lang="scss">
-  @import 'vuetify/settings';
+  @use 'vuetify/settings';
 
   .title {
     text-align: center;

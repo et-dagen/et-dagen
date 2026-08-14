@@ -1,0 +1,332 @@
+/**
+ * Wide-event structured logging utility
+ *
+ * Implements the principles from https://loggingsucks.com/
+ * - One comprehensive log event per request per service
+ * - High cardinality fields for powerful querying
+ * - Structured JSON output for easy parsing
+ */
+
+export type LogLevel = 'debug' | 'info' | 'warn' | 'error'
+
+/**
+ * Log importance determines the minimum log level for a request to be logged.
+ * - 'debug': Low importance (image fetches, static data reads) - only logged when LOG_LEVEL=debug
+ * - 'info': Normal importance (standard API calls) - logged at info level and above
+ * - 'warn': High importance (mutations, auth events) - always logged at warn+ in production
+ * - 'error': Critical - always logged
+ *
+ * Note: Errors and slow requests are ALWAYS logged regardless of importance setting.
+ *
+ * Importance is expressed using the same scale as the log level.
+ */
+export type LogImportance = LogLevel
+
+export interface WideEvent {
+  // Core identifiers
+  timestamp: string
+  request_id: string
+  trace_id?: string
+
+  // Service info
+  service: string
+  version: string
+  environment: string
+  region?: string
+
+  // Request details
+  method: string
+  path: string
+  query?: Record<string, unknown>
+  status_code?: number
+  duration_ms?: number
+
+  // User context (added by middleware)
+  user?: {
+    uid: string
+    email?: string
+    name?: string
+    access_level?: string
+    study_program?: string
+    current_year?: number
+  }
+
+  // Auth context
+  auth?: {
+    authenticated: boolean
+    token_valid?: boolean
+    auth_method?: 'bearer' | 'cookie'
+  }
+
+  // Business context (added by handlers)
+  resource?: {
+    type: string
+    id?: string
+    action: string
+    description?: string // Human-readable description of what this endpoint does
+  }
+
+  // Database operations
+  db?: {
+    queries: number
+    reads: number
+    writes: number
+    operations?: Array<{
+      type: 'read' | 'write' | 'delete'
+      ref: string
+      duration_ms?: number
+    }>
+  }
+
+  // Error details
+  error?: {
+    type: string
+    code: string
+    message: string
+    stack?: string
+    retriable?: boolean
+  }
+
+  // Outcome
+  outcome: 'success' | 'error' | 'client_error'
+
+  // Log importance - determines if this request should be logged based on log level
+  _importance?: LogImportance
+
+  // Custom fields for business-specific data
+  [key: string]: unknown
+}
+
+// Generate a unique request ID
+export function generateRequestId(): string {
+  const timestamp = Date.now().toString(36)
+  const randomPart = Math.random().toString(36).substring(2, 10)
+  return `req_${timestamp}_${randomPart}`
+}
+
+/**
+ * Resolve logging config. Prefers Nuxt runtimeConfig (discoverable, typed) and
+ * falls back to raw process.env so the utility also works outside a Nitro
+ * request context (e.g. unit tests).
+ */
+function getLogConfig(): {
+  logLevel?: string
+  logSampleRate?: string
+  serviceName?: string
+} {
+  try {
+    // useRuntimeConfig is auto-imported in the Nitro server context
+    const config = useRuntimeConfig()
+    return {
+      logLevel: (config.logLevel as string) || process.env.LOG_LEVEL,
+      logSampleRate:
+        (config.logSampleRate as string) || process.env.LOG_SAMPLE_RATE,
+      serviceName: (config.serviceName as string) || process.env.SERVICE_NAME,
+    }
+  } catch {
+    return {
+      logLevel: process.env.LOG_LEVEL,
+      logSampleRate: process.env.LOG_SAMPLE_RATE,
+      serviceName: process.env.SERVICE_NAME,
+    }
+  }
+}
+
+// Get log level from config/environment or default based on NODE_ENV
+function getLogLevel(): LogLevel {
+  const level = getLogConfig().logLevel?.toLowerCase()
+  if (
+    level === 'debug' ||
+    level === 'info' ||
+    level === 'warn' ||
+    level === 'error'
+  ) {
+    return level
+  }
+  return process.env.NODE_ENV === 'development' ? 'debug' : 'info'
+}
+
+const LOG_LEVEL_PRIORITY: Record<LogLevel, number> = {
+  debug: 0,
+  info: 1,
+  warn: 2,
+  error: 3,
+}
+
+function shouldLog(level: LogLevel, importance?: LogImportance): boolean {
+  const currentLevel = getLogLevel()
+
+  // If importance is set, check if current log level allows this importance
+  // e.g., if importance is 'debug' but LOG_LEVEL is 'info', skip it
+  if (
+    importance &&
+    LOG_LEVEL_PRIORITY[importance] < LOG_LEVEL_PRIORITY[currentLevel]
+  ) {
+    return false
+  }
+
+  return LOG_LEVEL_PRIORITY[level] >= LOG_LEVEL_PRIORITY[currentLevel]
+}
+
+// Tail sampling decision - always keep errors and slow requests
+function shouldSample(event: WideEvent): boolean {
+  // Always keep errors
+  if (event.outcome === 'error') return true
+  if (event.status_code && event.status_code >= 500) return true
+  if (event.error) return true
+
+  // Always keep slow requests (above 2000ms threshold)
+  if (event.duration_ms && event.duration_ms > 2000) return true
+
+  // Always keep admin users for audit purposes
+  if (event.user?.access_level === 'admin') return true
+
+  // In development, log everything
+  if (process.env.NODE_ENV === 'development') return true
+
+  // Sample rate for successful requests (default 100% in dev, configurable in prod).
+  // Guard against a misconfigured env var: parseFloat can yield NaN (or an
+  // out-of-range value), and `Math.random() < NaN` is always false — which would
+  // silently drop *all* successful-request logs. Fall back to 1.0 and clamp to [0,1].
+  const parsed = parseFloat(getLogConfig().logSampleRate ?? '')
+  const sampleRate = Number.isFinite(parsed)
+    ? Math.min(Math.max(parsed, 0), 1)
+    : 1
+  return Math.random() < sampleRate
+}
+
+/**
+ * Mask an email for logging: keep first char + domain (e.g. a***@example.com).
+ */
+function maskEmail(email: string): string {
+  const at = email.indexOf('@')
+  if (at <= 0) return '***'
+  return `${email[0]}***${email.slice(at)}`
+}
+
+// ANSI colour codes per log level for human-readable terminal output
+const ANSI_RESET = '\x1B[0m'
+const LEVEL_COLORS: Record<LogLevel, string> = {
+  debug: '\x1B[90m', // grey
+  info: '\x1B[36m', // cyan
+  warn: '\x1B[33m', // yellow
+  error: '\x1B[31m', // red
+}
+
+/**
+ * Whether to wrap output in ANSI colours.
+ * - LOG_COLOR=always|never forces the behaviour
+ * - default ('auto'): only when writing to an interactive TTY outside production,
+ *   so piped/aggregated logs stay clean, parseable JSON.
+ */
+function shouldColorize(): boolean {
+  const mode = process.env.LOG_COLOR?.toLowerCase()
+  if (mode === 'always') return true
+  if (mode === 'never') return false
+  return process.env.NODE_ENV !== 'production' && Boolean(process.stdout.isTTY)
+}
+
+/**
+ * Colour a rendered log line for the given level, or return it unchanged
+ * when colouring is disabled.
+ */
+function colorize(line: string, level: LogLevel): string {
+  if (!shouldColorize()) return line
+  return `${LEVEL_COLORS[level]}${line}${ANSI_RESET}`
+}
+
+// Sanitize sensitive data from logs
+function sanitizeEvent(event: WideEvent): WideEvent {
+  const sanitized = { ...event }
+
+  // Internal-only field — never emit it
+  delete sanitized._importance
+
+  // Mask PII in the user block. Full email is kept in development for debugging.
+  if (sanitized.user) {
+    sanitized.user = { ...sanitized.user }
+    if (
+      process.env.NODE_ENV === 'production' &&
+      typeof sanitized.user.email === 'string'
+    ) {
+      sanitized.user.email = maskEmail(sanitized.user.email)
+    }
+  }
+
+  // Remove stack traces in production unless it's a server error
+  if (process.env.NODE_ENV === 'production' && sanitized.error?.stack) {
+    if (sanitized.status_code && sanitized.status_code < 500) {
+      sanitized.error = { ...sanitized.error }
+      delete sanitized.error.stack
+    }
+  }
+
+  return sanitized
+}
+
+// Main logging function
+export function logWideEvent(event: WideEvent, level: LogLevel = 'info'): void {
+  if (!shouldLog(level, event._importance)) return
+  if (!shouldSample(event)) return
+
+  const sanitized = sanitizeEvent(event)
+  const logEntry = {
+    level,
+    ...sanitized,
+  }
+
+  // Output as JSON for structured log aggregation, colourised per level when
+  // writing to an interactive terminal (see shouldColorize).
+  const output = colorize(JSON.stringify(logEntry), level)
+
+  // Writing to the console is this function's entire purpose, so the no-console
+  // rule (error under NODE_ENV=production) is intentionally disabled here.
+
+  switch (level) {
+    case 'debug':
+      console.debug(output)
+      break
+    case 'info':
+      console.info(output)
+      break
+    case 'warn':
+      console.warn(output)
+      break
+    case 'error':
+      console.error(output)
+      break
+  }
+}
+
+// Helper to create a partial wide event that can be enriched
+export function createWideEvent(
+  requestId: string,
+  method: string,
+  path: string,
+): WideEvent {
+  return {
+    timestamp: new Date().toISOString(),
+    request_id: requestId,
+    service: getLogConfig().serviceName ?? 'et-dagen-api',
+    version: process.env.npm_package_version ?? '1.0.0',
+    environment: process.env.NODE_ENV ?? 'development',
+    method,
+    path,
+    outcome: 'success',
+    db: {
+      queries: 0,
+      reads: 0,
+      writes: 0,
+      operations: [],
+    },
+  }
+}
+
+// Helper to determine outcome from status code
+export function determineOutcome(
+  statusCode: number,
+): 'success' | 'error' | 'client_error' {
+  if (statusCode >= 500) return 'error'
+  if (statusCode >= 400) return 'client_error'
+  return 'success'
+}

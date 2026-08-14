@@ -20,6 +20,10 @@ export default defineNuxtConfig({
     },
   },
   runtimeConfig: {
+    // wide-event logging (read by server/utils/logger.ts)
+    logLevel: process.env.LOG_LEVEL ?? '',
+    logSampleRate: process.env.LOG_SAMPLE_RATE ?? '',
+    serviceName: process.env.SERVICE_NAME ?? '',
     // used by firebase admin sdk
     firebaseAdminType: process.env.NUXT_FIREBASE_ADMIN_TYPE ?? '',
     firebaseAdminProjectId: process.env.NUXT_FIREBASE_ADMIN_PROJECT_ID ?? '',
@@ -64,7 +68,6 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     '@pinia/nuxt',
     'vuetify-nuxt-module',
-    'nuxt-vitest',
     '@vueuse/nuxt',
     '@nuxt/image',
   ],
@@ -76,14 +79,14 @@ export default defineNuxtConfig({
     locales: [
       {
         code: 'no',
-        iso: 'nb-NO',
+        language: 'nb-NO',
         name: 'Norsk',
         file: 'nb-NO.json',
         isCatchallLocale: true,
       },
       {
         code: 'en',
-        iso: 'en-US',
+        language: 'en-US',
         name: 'English',
         file: 'en-US.json',
       },
@@ -91,14 +94,6 @@ export default defineNuxtConfig({
     defaultLocale: 'no',
     vueI18n: 'config/i18n.config.ts',
     detectBrowserLanguage: false,
-  },
-
-  pinia: {
-    autoImports: [
-      'defineStore',
-      ['defineStore', 'definePiniaStore'],
-      'storeToRefs',
-    ],
   },
 
   image: {
@@ -124,4 +119,6 @@ export default defineNuxtConfig({
   devServer: {
     host: '0.0.0.0', // default: localhost
   },
+
+  compatibilityDate: '2024-12-26',
 })

@@ -1,0 +1,19 @@
+// Ratchet config for the *gating* typecheck (`bun run typecheck`).
+//
+// It inherits Nuxt's generated config verbatim — including the auto-import and
+// module type augmentations under .nuxt/ — and adds no overrides. Because plain
+// `tsc` does not parse Vue SFCs, this checks the whole plain-TypeScript surface
+// of the app (server/, stores/, composables/, middleware/, plugins/, models/,
+// config/) and silently skips .vue files.
+//
+// That split is deliberate. The TS surface is clean today and CI blocks merges
+// on it. The SFCs under pages/ and components/ carry pre-existing type debt
+// that predates any typechecking in this repo; they are covered by
+// `bun run typecheck:full` (vue-tsc), which runs advisory-only in CI until the
+// debt is paid down.
+//
+// Note this cannot live in the root tsconfig.json: that one pins
+// `files: ["./models/Meta.d.ts"]`, which narrows the program to a single file.
+{
+  "extends": "./.nuxt/tsconfig.json"
+}

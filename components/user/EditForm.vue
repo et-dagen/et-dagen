@@ -14,7 +14,7 @@
   const useAlerts = useAlertStore()
 
   // get study programmes
-  const { data: studyProgrammes } = await useFetch('/api/programme')
+  const { data: studyProgrammes } = await useFetch('/api/v1/programme')
   const programmeList = computed(() =>
     studyProgrammes.value.map((prog: any) => prog.name).sort(),
   )
@@ -38,7 +38,7 @@
   })
 
   // get companies
-  const { data: companies } = await useFetch('/api/company')
+  const { data: companies } = await useFetch('/api/v1/company')
   const companyList = computed(() => {
     return embedKeyIntoObjectValues(companies.value).map((company) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -59,13 +59,10 @@
   const state = reactive({ companyUID: null, ...props.user })
 
   const hasDietaryRestrictions = ref(state.dietaryRestrictions)
-
   const otherRestrictions = ref<null | string>(null)
-
   // initially assumed to have dietary restrictions
   const hasDietaryRestrictionsBool = ref(true)
   let initialHasDietaryRestrictionsBool = true
-
   // set dietary restrictions to false if there is none
   if (
     !hasDietaryRestrictions.value ||
@@ -74,7 +71,6 @@
     hasDietaryRestrictionsBool.value = false
     initialHasDietaryRestrictionsBool = false
   }
-
   const getDietaryRestrictionsOptions = ($t) => {
     const options = dietaryFlags
       .map((flag) => ({
@@ -82,7 +78,6 @@
         value: flag.name,
       }))
       .sort()
-
     // Check if there are any additional dietary restrictions in state
     if (state.dietaryRestrictions && state.dietaryRestrictions.length > 0) {
       state.dietaryRestrictions.forEach((restriction) => {
@@ -150,13 +145,13 @@
     // update user
     await useAsyncData('update-user', async () => {
       await Promise.all([
-        $fetch('/api/user', {
+        $fetch('/api/v1/user', {
           method: 'POST',
           body: {
             ...state,
           },
         }),
-        $fetch('/api/user', {
+        $fetch('/api/v1/user', {
           method: 'PUT',
           body: {
             ...state,
@@ -265,7 +260,7 @@
       </VRow>
 
       <!-- current year -->
-      <VRow v-if="isAdmin && state.userType !== 'company'">
+      <VRow v-if="state.userType !== 'company'">
         <FormSelectInput
           v-model="state.currentYear"
           :content="{
@@ -277,7 +272,6 @@
       </VRow>
 
       <!-- dietary restrictions -->
-
       <VRow>
         <VRadioGroup
           v-model="hasDietaryRestrictionsBool"
@@ -293,7 +287,6 @@
           ></VRadio>
         </VRadioGroup>
       </VRow>
-
       <VRow v-if="hasDietaryRestrictionsBool">
         <FormSelectInput
           v-model="state.dietaryRestrictions"
@@ -305,7 +298,6 @@
           :rules="[hasDietaryRestrictions ? useRequiredInput : null]"
         />
       </VRow>
-
       <VRow v-if="hasDietaryRestrictionsBool" class="mt-3 pt-0">
         <FormTextInput
           v-model="otherRestrictions"
@@ -341,7 +333,7 @@
 </template>
 
 <style scoped lang="scss">
-  @import 'vuetify/settings';
+  @use 'vuetify/settings';
   .title {
     text-align: center;
   }

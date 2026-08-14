@@ -39,7 +39,9 @@
 </template>
 
 <style scoped lang="scss">
+  @use 'sass:map';
   @use 'vuetify/settings';
+
   .bold {
     font-weight: bold;
   }
@@ -84,10 +86,10 @@
     }
 
     // Set different max-widths for different screen sizes
-    @media #{map-get(settings.$display-breakpoints, 'sm-and-up')} {
+    @media #{map.get(settings.$display-breakpoints, 'sm-and-up')} {
       max-width: 600px !important;
     }
-    @media #{map-get(settings.$display-breakpoints, 'sm')} {
+    @media #{map.get(settings.$display-breakpoints, 'sm')} {
       width: 450px !important;
       .actions {
         font-size: 0.9rem !important;

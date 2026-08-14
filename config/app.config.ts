@@ -16,6 +16,10 @@ const routes = [
     name: 'contact',
     route: '/contact',
   },
+  {
+    name: 'faq',
+    route: '/faq',
+  },
 ]
 
 const adminCategories = [
@@ -62,7 +66,7 @@ const dietaryFlags = [
 ]
 
 const usertypes = ['basic', 'company', 'admin']
-const companyTypes = ['main-partner', 'partner', 'sponsor']
+const companyTypes = ['main-partner', 'partner', 'sponsor', 'old']
 const jobTypes = ['full-time', 'graduate', 'summer-internship']
 
 export {

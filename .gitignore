@@ -12,3 +12,4 @@ dist
 .idea
 *.key.json
 .vscode
+pnpm-lock.yaml

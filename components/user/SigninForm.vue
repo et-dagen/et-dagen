@@ -103,7 +103,8 @@
 </template>
 
 <style scoped lang="scss">
-  @import 'vuetify/settings';
+  @use 'sass:map';
+  @use 'vuetify/settings';
 
   .v-container {
     max-width: 26rem !important;
@@ -144,7 +145,7 @@
     }
   }
 
-  @media #{map-get($display-breakpoints, 'sm-and-down')} {
+  @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
     .v-tab {
       font-size: 1rem;
     }
