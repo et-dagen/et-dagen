@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { dietaryFlags } from '~/config/app.config'
+  import type { Event } from '~/models/Event'
 
   definePageMeta({
     // route is protected
@@ -25,26 +26,26 @@
   const authStore = useAuthStore()
   const { user } = storeToRefs(authStore)
 
-  // const { data } = await useFetch('/api/v1/event')
+  const { data } = await useFetch<Record<string, Event>>('/api/v1/event')
 
-  // // embed uid into object
-  // const events = computed(() => embedKeyIntoObjectValues(data.value))
+  // embed uid into object
+  const events = computed(() => embedKeyIntoObjectValues(data.value ?? {}))
 
-  // // return list of the events the user is signed up for
-  // const userEvents = computed(() => {
-  //   if (!events.value) return []
+  // return list of the events the user is signed up for
+  const userEvents = computed(() => {
+    if (!events.value) return []
 
-  //   const filteredEvents = events.value.filter((event: any) =>
-  //     Object.values(event?.attendants ?? {}).includes(user.value?.uid),
-  //   )
+    const filteredEvents = events.value.filter((event: any) =>
+      Object.values(event?.attendants ?? {}).includes(user.value?.uid),
+    )
 
-  //   return filteredEvents.map((event: any) => {
-  //     return {
-  //       title: event.title,
-  //       uid: event.uid,
-  //     }
-  //   })
-  // })
+    return filteredEvents.map((event: any) => {
+      return {
+        title: event.title,
+        uid: event.uid,
+      }
+    })
+  })
 
   const uploadResume = async (event: any) => {
     const resumeFile = event.target.files[0]
@@ -203,7 +204,7 @@
 
 <style scoped lang="scss">
   @use 'vuetify/settings';
-  
+
   .allergies {
     flex-wrap: wrap;
     list-style: none;
