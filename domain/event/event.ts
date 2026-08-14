@@ -1,7 +1,20 @@
+import { opaqueUid, type Brand } from '@/domain/brand'
+import type { CompanyUid } from '@/domain/business/company'
 import type { ISO8601String } from '@/domain/time/instant'
 import type { HasDuration } from '@/domain/traits'
 import type { HasLocation } from '@/domain/event/location'
 import type { Registration } from '@/domain/event/registration'
+
+/**
+ * Identifies an event
+ *
+ * @remarks
+ * Branded for the same reason as `JobUid`: an event carries a `companyUid` too, and the two must
+ * not interchange where a rule decides who may edit the event.
+ */
+export type EventUid = Brand<string, 'EventUid'>
+
+export const EventUid = opaqueUid<EventUid>('Event uid')
 
 /**
  * A scheduled happening hosted by a company
@@ -12,9 +25,9 @@ import type { Registration } from '@/domain/event/registration'
  * finishing before it begins.
  */
 export interface Event {
-  uid: string
+  uid: EventUid
   /** uid of the hosting company, which is also what decides who may edit the event */
-  companyUid: string
+  companyUid: CompanyUid
   start: ISO8601String
 }
 

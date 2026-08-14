@@ -73,3 +73,30 @@ declare const tag: unique symbol
  * types in this domain that use it.
  */
 export type Brand<T, B extends string> = T & { readonly [tag]: B }
+
+/**
+ * The way in for an identifier whose format belongs to someone else
+ *
+ * @remarks
+ * Most brands in this domain promise something checkable — `ISO8601String` has been matched against
+ * the calendar, `MapLink` against a host allowlist. An entity uid promises only *which kind of thing
+ * it identifies*, and that is not a property of the string. Firebase decides what a user uid looks
+ * like; the database decides what a company uid looks like. Encoding either shape in a check here
+ * would mean a change of provider or store breaks every rule that holds one.
+ *
+ * So the only rejected value is the empty string — which no store ever issues, and which would
+ * otherwise flow into an ownership comparison as a uid equal to nothing.
+ *
+ * Shared rather than restated per uid type because the four are identical, and a validator copied
+ * four times is one that eventually disagrees with itself. The reasoning specific to each lives on
+ * that type's own documentation.
+ *
+ * @param label - Names the identifier in the error message
+ */
+export const opaqueUid = <T extends Brand<string, string>>(label: string) => ({
+  /** @throws RangeError when the value is empty */
+  parse: (value: string): T => {
+    if (value.length === 0) throw new RangeError(`${label} is empty`)
+    return value as T
+  },
+})

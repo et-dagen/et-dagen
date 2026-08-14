@@ -1,4 +1,3 @@
-export type { Brand } from '@/domain/brand'
 export { Duration, type DurationLiteral, type DurationParts } from './duration'
 export { Instant, type ISO8601Literal, type ISO8601String } from './instant'
 export { contains, endOf, withinTimeWindow, type Interval } from './interval'

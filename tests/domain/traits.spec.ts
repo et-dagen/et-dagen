@@ -1,15 +1,16 @@
 import { describe, expect, it } from 'vitest'
-import type {
-  Company,
-  CompanyWithDescription,
-  ListedCompany,
+import {
+  CompanyUid,
+  type Company,
+  type CompanyWithDescription,
+  type ListedCompany,
 } from '~/domain/business/company'
-import type { Job } from '~/domain/business/job'
+import { JobUid, type Job } from '~/domain/business/job'
 import type { HasDescription, HasLogo, HasWebpage } from '~/domain/traits'
 import { HttpUrl } from '~/domain/url'
 
 const acme: Company = {
-  uid: 'c1',
+  uid: CompanyUid.parse('c1'),
   name: 'Acme',
   relationship: 'partner',
 }
@@ -65,8 +66,8 @@ describe('bounds over a capability', () => {
   it('accepts an entity that satisfies the trait structurally without declaring it', () => {
     // Job never mentions HasDescription. TypeScript matches by shape, so it qualifies anyway.
     const job: Job = {
-      uid: 'j1',
-      companyUid: 'c1',
+      uid: JobUid.parse('j1'),
+      companyUid: CompanyUid.parse('c1'),
       description: 'Graduate role',
       location: { name: 'Trondheim' },
       title: 'Engineer',
