@@ -1,13 +1,15 @@
 import type { EmailAddress } from '@/domain/email'
 import type { StudyProgramme, StudyYear } from '@/domain/ntnu'
-import type { ISO8601String } from '@/domain/time'
+import type { Brand, ISO8601String } from '@/domain/time'
 import type { HasName } from '@/domain/traits'
 import type { DietaryRestriction } from '@/domain/allergen'
 
 export type Role = 'admin' | 'coordinator' | 'company' | 'user'
 
+export type UserUid = Brand<string, 'UserUid'>
+
 export interface BaseUser {
-  uid: string
+  uid: UserUid
   email: EmailAddress
   roles: Role[]
   /** When the record last changed */
