@@ -4,8 +4,8 @@
   const localePath = useLocalePath()
 
   // Get events and companies from the API
-  const { data: events, refresh } = await useFetch('/api/event')
-  const { data: companies } = await useFetch('/api/company')
+  const { data: events, refresh } = await useFetch('/api/v1/event')
+  const { data: companies } = await useFetch('/api/v1/company')
 
   // Allow copying the event id to the clipboard
   const { text, copy, copied } = useClipboard()
@@ -92,7 +92,7 @@
     for (const uid of selectedEvents)
       !uid ||
         queries.push(
-          $fetch('/api/event', {
+          $fetch('/api/v1/event', {
             method: 'DELETE',
             body: {
               eventUID: uid,
@@ -363,9 +363,12 @@
                   color="primary"
                   icon="mdi-email-outline"
                   @click="
-                    navigateTo(`/api/event/attendants?eventUID=${event.id}`, {
-                      open: { target: '_blank' },
-                    })
+                    navigateTo(
+                      `/api/v1/event/attendants?eventUID=${event.id}`,
+                      {
+                        open: { target: '_blank' },
+                      },
+                    )
                   "
                 />
               </template>

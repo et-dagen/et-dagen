@@ -13,7 +13,7 @@
   const { hasAccess, user } = storeToRefs(auth)
 
   // fetch job data
-  const { data: job } = await useFetch('/api/job', {
+  const { data: job } = await useFetch('/api/v1/job', {
     method: 'GET',
     query: {
       jobUID: props.jobUid,
@@ -21,7 +21,7 @@
   })
 
   // fetch company data
-  const { data: companies } = await useFetch('/api/company', {
+  const { data: companies } = await useFetch('/api/v1/company', {
     method: 'GET',
   })
 
@@ -109,7 +109,7 @@
     // eslint-disable-next-line
     const { uid, ...rest } = state
     // update job
-    await $fetch('/api/job', {
+    await $fetch('/api/v1/job', {
       method: 'PUT',
       body: rest,
     })
@@ -135,7 +135,7 @@
     }
 
     // create job
-    await $fetch('/api/job', {
+    await $fetch('/api/v1/job', {
       method: 'POST',
       body: state,
     })

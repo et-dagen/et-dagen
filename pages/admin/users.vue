@@ -5,8 +5,10 @@
   const localePath = useLocalePath()
 
   // fetch users and companies
-  const { data: users, refresh } = await useFetch<User[]>('/api/user?scope=all')
-  const { data: companies } = await useFetch('/api/company')
+  const { data: users, refresh } = await useFetch<User[]>(
+    '/api/v1/user?scope=all',
+  )
+  const { data: companies } = await useFetch('/api/v1/company')
 
   // utility from VueUse module to allow copying to clipboard
   const { text, copy, copied } = useClipboard()
@@ -86,7 +88,7 @@
 
     try {
       // delete selected users
-      await $fetch('/api/user', {
+      await $fetch('/api/v1/user', {
         method: 'DELETE',
         body: {
           UIDs: selectedUsers,

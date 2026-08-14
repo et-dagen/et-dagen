@@ -17,14 +17,11 @@
     "lint:prettier": "prettier --check .",
     "lint": "bun run lint:js && bun run lint:prettier",
     "lintfix": "bun run lint:prettier && bun run lint:js --fix",
+    "typecheck": "tsc --noEmit -p tsconfig.typecheck.json",
+    "typecheck:full": "nuxt typecheck",
     "test": "vitest run",
     "test:watch": "vitest",
     "prepare": "husky"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "lint-staged": {
     "*.{js,ts,vue,css,scss,md,yml}": [
@@ -38,7 +35,9 @@
     "oxc-parser": "0.132.0"
   },
   "devDependencies": {
-    "@nuxt/devtools": "^2.6.4",
+    "@commitlint/cli": "^21.2.1",
+    "@commitlint/config-conventional": "^21.2.0",
+    "@nuxt/devtools": "^3.3.1",
     "@nuxtjs/eslint-config-typescript": "^12.1.0",
     "@nuxtjs/i18n": "^9.1.5",
     "@types/node": "^22.13.0",
@@ -52,10 +51,11 @@
     "husky": "^9.1.7",
     "lint-staged": "^15.4.3",
     "nuxt": "^3.15.4",
-    "nuxt-vitest": "^0.11.5",
     "prettier": "^3.4.2",
     "sass": "^1.83.4",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "vitest": "^3",
+    "vue-tsc": "^3.3.9"
   },
   "dependencies": {
     "@intlify/core-base": "^10.0.5",

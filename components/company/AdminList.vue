@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  const { data: companies } = await useFetch('/api/company')
+  const { data: companies } = await useFetch('/api/v1/company')
   const localePath = useLocalePath()
 </script>
 

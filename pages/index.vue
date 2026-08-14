@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  const { data: companies } = await useFetch('/api/company')
-  const { data: info } = await useFetch('/api/generalInfo')
+  const { data: companies } = await useFetch('/api/v1/company')
+  const { data: info } = await useFetch('/api/v1/generalInfo')
 
   const mainPartner = computed(
     () =>

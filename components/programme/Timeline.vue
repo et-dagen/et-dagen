@@ -3,10 +3,10 @@
   const localePath = useLocalePath()
 
   // Fetch company and event data from API
-  const { data: companies } = await useFetch('/api/company')
+  const { data: companies } = await useFetch('/api/v1/company')
 
-  const { data: events } = await useFetch('/api/event')
-  const { data: maps } = await useFetch('/api/image/standmap')
+  const { data: events } = await useFetch('/api/v1/event')
+  const { data: maps } = await useFetch('/api/v1/image/standmap')
 
   // Group events by date
   const eventsByDate: any = computed(() => groupEventsByDateStart(events.value))

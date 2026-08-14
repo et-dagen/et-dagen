@@ -9,7 +9,7 @@
 
   const useAlerts = useAlertStore()
 
-  const { data: studyProgrammes } = await useFetch('/api/programme')
+  const { data: studyProgrammes } = await useFetch('/api/v1/programme')
 
   // alphabetically sort study programmes
   const programmeOptions = computed(() =>
