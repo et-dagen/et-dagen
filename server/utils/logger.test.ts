@@ -123,6 +123,74 @@ describe('logWideEvent', () => {
     expect(out).toBeNull()
   })
 
+  it('never samples warnings, even at rate 0', () => {
+    process.env.NODE_ENV = 'production'
+    process.env.LOG_LEVEL = 'warn'
+    process.env.LOG_SAMPLE_RATE = '0'
+    const e = createWideEvent('r', 'GET', '/')
+    e.status_code = 400
+    e.outcome = 'client_error'
+    const out = emit(e, 'warn')
+    expect(out).not.toBeNull()
+    expect(out.sample_rate).toBeUndefined()
+  })
+
+  it('defaults to sampling 10% of successful requests in production', () => {
+    process.env.NODE_ENV = 'production'
+    process.env.LOG_LEVEL = 'info'
+    delete process.env.LOG_SAMPLE_RATE
+    const e = createWideEvent('r', 'GET', '/')
+    e.status_code = 200
+
+    vi.spyOn(Math, 'random').mockReturnValue(0.05)
+    expect(emit(e, 'info')?.sample_rate).toBe(0.1)
+
+    vi.spyOn(Math, 'random').mockReturnValue(0.5)
+    expect(emit(e, 'info')).toBeNull()
+  })
+
+  it('keeps every successful request when the rate is 1', () => {
+    process.env.NODE_ENV = 'production'
+    process.env.LOG_LEVEL = 'info'
+    process.env.LOG_SAMPLE_RATE = '1'
+    const e = createWideEvent('r', 'GET', '/')
+    e.status_code = 200
+    vi.spyOn(Math, 'random').mockReturnValue(0.99)
+    const out = emit(e, 'info')
+    expect(out).not.toBeNull()
+    expect(out.sample_rate).toBeUndefined()
+  })
+
+  it('falls back to the default rate when the value is unparseable', () => {
+    process.env.NODE_ENV = 'production'
+    process.env.LOG_LEVEL = 'info'
+    process.env.LOG_SAMPLE_RATE = 'not-a-number'
+    const e = createWideEvent('r', 'GET', '/')
+    e.status_code = 200
+    vi.spyOn(Math, 'random').mockReturnValue(0.05)
+    expect(emit(e, 'info')?.sample_rate).toBe(0.1)
+  })
+
+  it('keeps everything outside production when the rate is unset', () => {
+    process.env.NODE_ENV = 'test'
+    process.env.LOG_LEVEL = 'info'
+    delete process.env.LOG_SAMPLE_RATE
+    const e = createWideEvent('r', 'GET', '/')
+    e.status_code = 200
+    vi.spyOn(Math, 'random').mockReturnValue(0.99)
+    expect(emit(e, 'info')).not.toBeNull()
+  })
+
+  it('always keeps slow successful requests', () => {
+    process.env.NODE_ENV = 'production'
+    process.env.LOG_LEVEL = 'info'
+    process.env.LOG_SAMPLE_RATE = '0'
+    const e = createWideEvent('r', 'GET', '/')
+    e.status_code = 200
+    e.duration_ms = 2500
+    expect(emit(e, 'info')).not.toBeNull()
+  })
+
   it('always keeps admin requests for audit', () => {
     process.env.NODE_ENV = 'production'
     process.env.LOG_LEVEL = 'info'
