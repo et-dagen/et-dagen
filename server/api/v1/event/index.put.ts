@@ -1,6 +1,41 @@
 // PUT /api/v1/event
 // Endpoint for overwriting existing events
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['Event'],
+    summary: 'Overwrite existing event',
+    description:
+      'Admin, or the owning company user. Replaces the whole event record, so every field must ' +
+      'be supplied.',
+    security: [{ bearerAuth: [] }, { cookieAuth: [] }],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // requestBody: {
+    //   required: true,
+    //   content: {
+    //     'application/json': {
+    //       schema: {
+    //         type: 'object',
+    //         required: ['eventUID', 'companyUID'],
+    //         properties: {
+    //           eventUID: { type: 'string' },
+    //           companyUID: { type: 'string' },
+    //         },
+    //         additionalProperties: true,
+    //       },
+    //     },
+    //   },
+    // },
+    // responses: {
+    //   204: { description: 'Updated' },
+    //   400: { description: 'Error (general/missing-data). and capacity/date validation errors' },
+    //   401: { description: 'Error (event/not-owner). or Error (firebase/user-not-authorized).' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 

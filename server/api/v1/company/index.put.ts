@@ -1,6 +1,38 @@
 // PUT /api/v1/company
 // endpoint for modifying companies in the db
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['Company'],
+    summary: 'Modify company',
+    description:
+      'Admin, or a company user editing their own company. Non-admins cannot change `type` - it ' +
+      'is stripped server-side.',
+    security: [{ bearerAuth: [] }, { cookieAuth: [] }],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // requestBody: {
+    //   required: true,
+    //   content: {
+    //     'application/json': {
+    //       schema: {
+    //         type: 'object',
+    //         required: ['companyUID'],
+    //         properties: { companyUID: { type: 'string' } },
+    //         additionalProperties: true,
+    //       },
+    //     },
+    //   },
+    // },
+    // responses: {
+    //   204: { description: 'Updated' },
+    //   401: { description: 'Error (firebase/user-not-authorized).' },
+    //   404: { description: 'Error (company/not-found).' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 

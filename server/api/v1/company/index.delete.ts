@@ -1,6 +1,35 @@
 // DELETE /api/v1/company
 // endpoint for removing a company from db
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['Company'],
+    summary: 'Remove company',
+    description:
+      'Admin only. Also deletes every storage object under companies/<companyUID>/.',
+    security: [{ bearerAuth: [] }, { cookieAuth: [] }],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // requestBody: {
+    //   required: true,
+    //   content: {
+    //     'application/json': {
+    //       schema: {
+    //         type: 'object',
+    //         required: ['companyUID'],
+    //         properties: { companyUID: { type: 'string' } },
+    //       },
+    //     },
+    //   },
+    // },
+    // responses: {
+    //   204: { description: 'Removed' },
+    //   401: { description: 'Error (firebase/user-not-authorized).' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 

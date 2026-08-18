@@ -1,6 +1,47 @@
 // POST /api/v1/company
 // endpoint for creating companies in the db
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['Company'],
+    summary: 'Create company',
+    description:
+      'Admin only. Note the request field is named `type`, while models/Company.ts calls it ' +
+      '`companyType`.',
+    security: [{ bearerAuth: [] }, { cookieAuth: [] }],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // requestBody: {
+    //   required: true,
+    //   content: {
+    //     'application/json': {
+    //       schema: {
+    //         type: 'object',
+    //         required: ['name', 'webpage', 'type'],
+    //         properties: {
+    //           name: { type: 'string' },
+    //           webpage: { type: 'string' },
+    //           type: {
+    //             type: 'string',
+    //             enum: ['main-partner', 'partner', 'sponsor', 'old'],
+    //           },
+    //           description: { type: 'string', nullable: true },
+    //           logo: { type: 'string', nullable: true },
+    //           cvAccess: { type: 'boolean' },
+    //         },
+    //       },
+    //     },
+    //   },
+    // },
+    // responses: {
+    //   200: { description: 'Created. Returns { companyUID }' },
+    //   400: { description: 'Error (company/missing-name-webpage-type).' },
+    //   401: { description: 'Error (firebase/user-not-authorized).' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 

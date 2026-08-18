@@ -1,6 +1,38 @@
 // DELETE /api/v1/resume
 // endpoint for deleting existing resumes
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['Resume'],
+    summary: 'Delete user resume',
+    description:
+      'Users may delete their own resume; admins may delete the resume of any ' +
+      'user. Uses 402 when the user has no resume.',
+    security: [{ bearerAuth: [] }, { cookieAuth: [] }],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // requestBody: {
+    //   required: true,
+    //   content: {
+    //     'application/json': {
+    //       schema: {
+    //         type: 'object',
+    //         properties: { userUID: { type: 'string' } },
+    //       },
+    //     },
+    //   },
+    // },
+    // responses: {
+    //   204: { description: 'Deleted' },
+    //   400: { description: 'User not authorized' },
+    //   401: { description: 'User can only delete their own resume' },
+    //   402: { description: 'User does not have a resume' },
+    //   500: { description: 'Firebase: Error (storage/cannot-delete-file).' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 

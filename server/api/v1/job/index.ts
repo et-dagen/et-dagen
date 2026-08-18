@@ -1,6 +1,31 @@
 // GET /api/v1/job
 // endpoint for fetching jobs from db
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['Job'],
+    summary: 'List jobs or fetch one',
+    description:
+      'Public. Without jobUID returns every job listing keyed by UID.',
+    security: [],
+    parameters: [
+      {
+        name: 'jobUID',
+        in: 'query',
+        required: false,
+        schema: { type: 'string' },
+        description: 'Omit to list all job listings',
+      },
+    ],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // responses: {
+    //   200: { description: 'Map of job UID to Job, or null' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { jobUID } = getQuery(event)
 
