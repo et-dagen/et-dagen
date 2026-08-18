@@ -63,19 +63,35 @@ jobs:
 
       # Built separately rather than via ./.github/actions/setup, because each
       # ref needs its own dependency install inside its own checkout.
+      #
+      # The base branch has no docs:build until this pipeline is merged into
+      # it, so its spec is best-effort: without a baseline there is nothing to
+      # diff against, and the comment says so instead of failing the check.
+      # Once dev and prod both carry the pipeline this guard is dead weight.
       - name: Build both specs
         run: |
           for dir in base head; do
+            if [ ! -f "$dir/scripts/build-docs.ts" ]; then
+              echo "::notice::$dir has no docs pipeline yet - skipping its spec"
+              continue
+            fi
             (cd "$dir" && bun install --frozen-lockfile && bun run docs:build)
           done
 
       - name: Diff the two specs
         id: diff
         run: |
-          docker run --rm -v "$PWD:/w" -w /w "$OASDIFF_IMAGE" \
-            changelog /w/base/docs-dist/api/openapi.json \
-                      /w/head/docs-dist/api/openapi.json \
-            --format markdown > changelog.md || echo "" > changelog.md
+          if [ ! -f base/docs-dist/api/openapi.json ]; then
+            echo 'No baseline: the target branch does not generate a spec yet,' \
+                 'so there is nothing to compare against.' > changelog.md
+          elif [ ! -f head/docs-dist/api/openapi.json ]; then
+            echo 'This branch does not generate a spec.' > changelog.md
+          else
+            docker run --rm -v "$PWD:/w" -w /w "$OASDIFF_IMAGE" \
+              changelog /w/base/docs-dist/api/openapi.json \
+                        /w/head/docs-dist/api/openapi.json \
+              --format markdown > changelog.md || echo "" > changelog.md
+          fi
 
           if [ ! -s changelog.md ]; then
             echo 'No changes to the API surface.' > changelog.md
@@ -114,6 +130,7 @@ jobs:
         with:
           name: openapi-spec
           path: head/docs-dist/api/openapi.*
+          if-no-files-found: ignore
 
   # ---------------------------------------------------------------------------
   # Merges: rebuild the whole site from both refs and publish it.
