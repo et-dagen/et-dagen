@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>E&amp;T-dagene documentation</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+      }
+      body {
+        font:
+          16px/1.6 system-ui,
+          sans-serif;
+        max-width: 40rem;
+        margin: 0 auto;
+        padding: 4rem 1.5rem;
+      }
+      h1 {
+        font-size: 1.6rem;
+        margin: 0 0 0.5rem;
+      }
+      p.lede {
+        margin: 0 0 2.5rem;
+        opacity: 0.75;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+        display: grid;
+        gap: 0.75rem;
+      }
+      a.card {
+        display: block;
+        padding: 1rem 1.25rem;
+        border: 1px solid currentColor;
+        border-radius: 8px;
+        text-decoration: none;
+        color: inherit;
+      }
+      a.card strong {
+        display: block;
+      }
+      a.card span {
+        opacity: 0.7;
+        font-size: 0.9rem;
+      }
+      .banner {
+        background: #fff4e5;
+        color: #7a4a12;
+        padding: 10px 16px;
+        border-radius: 6px;
+        margin-bottom: 2rem;
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    {{BANNER}}
+    <h1>E&amp;T-dagene documentation</h1>
+    <p class="lede">
+      Generated from source on every merge. Nothing here is written by hand.
+    </p>
+    <ul>
+      <li>
+        <a class="card" href="./api/">
+          <strong>API reference</strong>
+          <span>Every HTTP endpoint, with auth requirements. OpenAPI 3.1.</span>
+        </a>
+      </li>
+      <li>
+        <a class="card" href="./code/">
+          <strong>Source reference</strong>
+          <span
+            >TypeDoc across server, models, composables, config, stores and
+            plugins.</span
+          >
+        </a>
+      </li>
+      <li>
+        <a class="card" href="./api/openapi.json">
+          <strong>openapi.json</strong>
+          <span>Machine-readable spec. YAML also available.</span>
+        </a>
+      </li>
+    </ul>
+  </body>
+</html>

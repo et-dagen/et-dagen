@@ -72,6 +72,25 @@ export default defineNuxtConfig({
     '@nuxt/image',
   ],
 
+  nitro: {
+    experimental: {
+      openAPI: true,
+    },
+    openAPI: {
+      meta: {
+        title: 'E&T-dagene API',
+        description: 'HTTP API for etdagen.no',
+        // Overridden by the docs workflow with branch + short SHA
+        version: process.env.DOCS_VERSION ?? 'dev',
+      },
+      // The spec is served in `nuxt dev`, and prerendered to a static file by
+      // the docs workflow. It is never part of the production image — the docs
+      // are published to docs.etdagen.no instead, so the live site exposes no
+      // route enumerating the API.
+      production: process.env.DOCS_BUILD === 'true' ? 'prerender' : false,
+    },
+  },
+
   i18n: {
     lazy: false,
     langDir: 'locales',

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Unreleased API changes</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+      }
+      body {
+        font:
+          16px/1.6 system-ui,
+          sans-serif;
+        max-width: 52rem;
+        margin: 0 auto;
+        padding: 2.5rem 1.5rem 5rem;
+      }
+      .banner {
+        background: #fff4e5;
+        color: #7a4a12;
+        padding: 10px 16px;
+        border-radius: 6px;
+        margin-bottom: 2rem;
+        font-size: 0.9rem;
+      }
+      h1 {
+        font-size: 1.6rem;
+        margin: 0 0 0.5rem;
+      }
+      p.lede {
+        margin: 0 0 2rem;
+        opacity: 0.75;
+      }
+      nav {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-bottom: 2.5rem;
+      }
+      nav a {
+        border: 1px solid currentColor;
+        border-radius: 6px;
+        padding: 0.5rem 0.9rem;
+        text-decoration: none;
+        color: inherit;
+        font-size: 0.9rem;
+      }
+      .changelog {
+        border-top: 1px solid;
+        padding-top: 1.5rem;
+      }
+      .changelog table {
+        border-collapse: collapse;
+        width: 100%;
+      }
+      .changelog td,
+      .changelog th {
+        text-align: left;
+        padding: 0.4rem 0.8rem 0.4rem 0;
+      }
+      code {
+        font-family: ui-monospace, monospace;
+        font-size: 0.9em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="banner">
+      Unreleased — built from <code>dev</code>. <a href="../">Stable docs</a>
+    </div>
+    <h1>Unreleased API changes</h1>
+    <p class="lede">
+      What <code>dev</code> changes relative to what is deployed on
+      <code>prod</code>. The full reference for this branch is linked below.
+    </p>
+    <nav>
+      <a href="./api/">Full API reference (dev)</a>
+      <a href="./code/">Source reference (dev)</a>
+      <a href="./api/openapi.json">openapi.json</a>
+    </nav>
+    <div class="changelog">{{CHANGELOG}}</div>
+  </body>
+</html>
