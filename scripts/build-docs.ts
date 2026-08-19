@@ -103,12 +103,58 @@ const apiDir = join(OUT, 'api')
 rmSync(OUT, { recursive: true, force: true })
 mkdirSync(apiDir, { recursive: true })
 
-writeFileSync(
-  join(apiDir, 'openapi.json'),
-  `${JSON.stringify(spec, null, 2)}\n`,
+const write = (name: string, document: object) => {
+  writeFileSync(
+    join(apiDir, `${name}.json`),
+    `${JSON.stringify(document, null, 2)}\n`,
+  )
+  writeFileSync(join(apiDir, `${name}.yaml`), toYaml(document))
+}
+
+// The combined document stays the canonical download for tooling.
+write('openapi', spec)
+
+/**
+ * Scalar renders one document per API version, chosen from a dropdown, rather
+ * than merging every version into one sidebar where the v1 and v2 tags would
+ * collide. Versions are derived from the paths themselves, so adding
+ * /api/v2/** is enough for it to show up - neither this script nor the page
+ * template needs editing.
+ */
+const versionOf = (path: string) =>
+  path.match(/^\/api\/(v\d+)\//)?.[1] ?? 'other'
+
+const versions = new Map<string, Record<string, unknown>>()
+for (const [path, item] of Object.entries(paths)) {
+  const version = versionOf(path)
+  if (!versions.has(version)) versions.set(version, {})
+  versions.get(version)![path] = item
+}
+
+// Newest first, and it is the one that opens by default.
+const ordered = [...versions.keys()].sort((a, b) =>
+  b.localeCompare(a, undefined, { numeric: true }),
 )
-writeFileSync(join(apiDir, 'openapi.yaml'), toYaml(spec))
-console.log(`› spec written: ${Object.keys(paths).length} paths`)
+
+const sources = ordered.map((version, index) => {
+  const label = version === 'other' ? 'Unversioned' : version
+  write(`openapi-${version}`, {
+    ...spec,
+    info: { ...spec.info, title: `${spec.info.title} ${label}` },
+    paths: versions.get(version),
+  })
+  return {
+    slug: version,
+    title: label,
+    url: `./openapi-${version}.json`,
+    default: index === 0,
+  }
+})
+
+console.log(
+  `› spec written: ${Object.keys(paths).length} paths across ` +
+    `${sources.length} version(s): ${ordered.join(', ')}`,
+)
 
 // 3 — self-host the Scalar bundle; nothing is loaded from a CDN
 cpSync(
@@ -123,10 +169,9 @@ const banner = LABEL
   : ''
 
 const template = (name: string) =>
-  readFileSync(join(ROOT, 'docs', name), 'utf8').replaceAll(
-    '{{BANNER}}',
-    banner,
-  )
+  readFileSync(join(ROOT, 'docs', name), 'utf8')
+    .replaceAll('{{BANNER}}', banner)
+    .replaceAll('{{SOURCES}}', JSON.stringify(sources, null, 2))
 
 writeFileSync(join(apiDir, 'index.html'), template('api.html'))
 writeFileSync(join(OUT, 'index.html'), template('index.html'))
