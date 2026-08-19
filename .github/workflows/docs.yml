@@ -195,7 +195,7 @@ jobs:
           #
           # To move to etdagene.no later, edit docs/CNAME - one file, one line.
           # Nothing here needs to change.
-          DOCS_DOMAIN: 'false'
+          DOCS_DOMAIN: 'true'
         run: |
           if [ ! -f scripts/build-docs.ts ]; then
             echo "::warning::prod has no docs pipeline yet - publishing /next/ only"
