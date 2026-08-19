@@ -3,7 +3,7 @@
 
 defineRouteMeta({
   openAPI: {
-    tags: ['Code'],
+    tags: ['Code', 'internal'],
     summary: 'Create registration code',
     description:
       'Generates a code of the form <company-name>-<random8> for the given company. Admin only.',

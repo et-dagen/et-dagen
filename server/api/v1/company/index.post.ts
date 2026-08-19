@@ -3,7 +3,7 @@
 
 defineRouteMeta({
   openAPI: {
-    tags: ['Company'],
+    tags: ['Company', 'internal'],
     summary: 'Create company',
     description:
       'Admin only. Note the request field is named `type`, while models/Company.ts calls it ' +

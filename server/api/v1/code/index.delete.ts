@@ -3,7 +3,7 @@
 
 defineRouteMeta({
   openAPI: {
-    tags: ['Code'],
+    tags: ['Code', 'internal'],
     summary: 'Delete registration code',
     description: 'Removes a registration code by its code string. Admin only.',
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],

@@ -9,6 +9,7 @@
  *   DOCS_VERSION  info.version in the spec    (default: local)
  *   DOCS_SERVER   servers[0].url in the spec  (default: https://etdagen.no)
  *   DOCS_LABEL    banner text, e.g. "next"    (default: none)
+ *   DOCS_INTERNAL include admin-only routes    (default: false)
  */
 import { spawnSync } from 'node:child_process'
 import {
@@ -28,6 +29,7 @@ const OUT = resolve(ROOT, process.env.DOCS_OUT ?? 'docs-dist')
 const VERSION = process.env.DOCS_VERSION ?? 'local'
 const SERVER = process.env.DOCS_SERVER ?? 'https://etdagen.no'
 const LABEL = process.env.DOCS_LABEL ?? ''
+const INCLUDE_INTERNAL = process.env.DOCS_INTERNAL === 'true'
 
 const run = (cmd: string, args: string[], env: NodeJS.ProcessEnv = {}) => {
   const res = spawnSync(cmd, args, {
@@ -87,9 +89,61 @@ const raw = JSON.parse(readFileSync(rawPath, 'utf8'))
 
 // Nitro documents every server route it knows about, including its own
 // /_openapi.json and the app's page routes. Only the versioned API ships.
-const paths = Object.fromEntries(
+const apiPaths = Object.fromEntries(
   Object.entries(raw.paths).filter(([path]) => path.startsWith('/api/')),
 )
+
+/**
+ * Operations tagged `internal` are administrative: the handler rejects anyone
+ * who is not an admin, and no public client ever calls them. They are dropped
+ * from the published spec so docs.etdagen.no does not hand out a
+ * machine-readable index of the admin surface.
+ *
+ * This is friction, not protection. The handlers are open source and the routes
+ * stay reachable - the authorisation check inside each handler is the only
+ * thing keeping them safe, and hiding an operation here never substitutes for
+ * one. Build with DOCS_INTERNAL=true to get the complete spec locally.
+ */
+const INTERNAL_TAG = 'internal'
+const METHODS = ['get', 'put', 'post', 'delete', 'patch', 'options', 'head']
+
+let hidden = 0
+const paths: Record<string, unknown> = {}
+
+for (const [path, item] of Object.entries(apiPaths)) {
+  const kept: Record<string, unknown> = {}
+
+  for (const [key, value] of Object.entries(item as Record<string, unknown>)) {
+    const tags = (value as { tags?: string[] })?.tags
+    const isInternal =
+      METHODS.includes(key) &&
+      Array.isArray(tags) &&
+      tags.includes(INTERNAL_TAG)
+
+    if (isInternal && !INCLUDE_INTERNAL) {
+      hidden += 1
+      continue
+    }
+
+    // The tag is a build-time marker, not something a reader needs to see.
+    kept[key] =
+      isInternal && Array.isArray(tags)
+        ? { ...(value as object), tags: tags.filter((t) => t !== INTERNAL_TAG) }
+        : value
+  }
+
+  // A path whose every operation was internal disappears entirely.
+  if (METHODS.some((method) => method in kept)) paths[path] = kept
+}
+
+if (hidden) {
+  console.log(
+    `› ${hidden} internal operation(s) withheld from the spec` +
+      ' (DOCS_INTERNAL=true to include them)',
+  )
+} else if (INCLUDE_INTERNAL) {
+  console.log('› DOCS_INTERNAL=true - internal operations included')
+}
 
 // servers[0] is derived from the prerender's own origin, so it always comes
 // out as http://localhost. Point it at the real deployment instead.

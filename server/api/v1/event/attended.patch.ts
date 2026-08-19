@@ -3,7 +3,7 @@
 
 defineRouteMeta({
   openAPI: {
-    tags: ['Event'],
+    tags: ['Event', 'internal'],
     summary: 'Set attendance status for attendant',
     description:
       'Admin only. Marks a registered attendant as having attended, or reverses it.',

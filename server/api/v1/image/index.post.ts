@@ -3,7 +3,7 @@
 
 defineRouteMeta({
   openAPI: {
-    tags: ['Image'],
+    tags: ['Image', 'internal'],
     summary: 'Upload image to storage',
     description:
       'Admin only. JPEG and PNG only. Multipart parts are read POSITIONALLY - part 0 must be the ' +

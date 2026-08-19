@@ -3,7 +3,7 @@
 
 defineRouteMeta({
   openAPI: {
-    tags: ['Company'],
+    tags: ['Company', 'internal'],
     summary: 'Remove company',
     description:
       'Admin only. Also deletes every storage object under companies/<companyUID>/.',

@@ -3,7 +3,7 @@
 
 defineRouteMeta({
   openAPI: {
-    tags: ['Event'],
+    tags: ['Event', 'internal'],
     summary: 'List attendant emails',
     description:
       'Admin only. Resolves each attendant UID to its Firebase email; unresolvable UIDs are ' +

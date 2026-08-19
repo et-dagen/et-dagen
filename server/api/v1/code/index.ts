@@ -3,7 +3,7 @@
 
 defineRouteMeta({
   openAPI: {
-    tags: ['Code'],
+    tags: ['Code', 'internal'],
     summary: 'List registration codes',
     description:
       'Returns every registration code keyed by its database UID. Admin only.',
