@@ -1,0 +1,25 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "name": "E&T-dagene source reference",
+  "entryPointStrategy": "expand",
+  "entryPoints": [
+    "server",
+    "models",
+    "composables",
+    "config",
+    "middleware",
+    "plugins",
+    "stores"
+  ],
+  "exclude": ["**/*.test.ts", "**/node_modules/**"],
+  "tsconfig": "tsconfig.typecheck.json",
+  "out": "docs-dist/code",
+  "githubPages": false,
+  "hideGenerator": true,
+  "skipErrorChecking": true,
+  "validation": {
+    "notExported": false,
+    "invalidLink": true,
+    "notDocumented": false
+  }
+}

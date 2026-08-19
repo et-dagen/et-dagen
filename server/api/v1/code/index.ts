@@ -1,6 +1,24 @@
 // GET /api/v1/code
 // endpoint for retrieving codes in the db
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['Code'],
+    summary: 'List registration codes',
+    description:
+      'Returns every registration code keyed by its database UID. Admin only.',
+    security: [{ bearerAuth: [] }, { cookieAuth: [] }],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // responses: {
+    //   200: { description: 'Map of code UID to { code, companyUID }' },
+    //   401: { description: 'Error (firebase/user-not-authorized).' },
+    //   404: { description: 'Error (code/not-found). No codes exist.' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 

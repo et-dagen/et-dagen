@@ -1,6 +1,34 @@
 // POST /api/v1/code
 // endpoint for creating registration codes in the db
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['Code'],
+    summary: 'Create registration code',
+    description:
+      'Generates a code of the form <company-name>-<random8> for the given company. Admin only.',
+    security: [{ bearerAuth: [] }, { cookieAuth: [] }],
+    parameters: [
+      {
+        name: 'companyUID',
+        in: 'query',
+        required: true,
+        schema: { type: 'string' },
+        description: 'Company the code registers users to',
+      },
+    ],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // responses: {
+    //   201: { description: 'Created, empty body' },
+    //   400: { description: 'Error (code/missing-company-uid).' },
+    //   401: { description: 'Error (firebase/user-not-authorized).' },
+    //   404: { description: 'Error (company/not-found).' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 

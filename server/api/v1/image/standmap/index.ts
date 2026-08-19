@@ -1,6 +1,22 @@
 // GET /api/v1/image/standmap
 // endpoint for fetching stand maps from storage
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['Image'],
+    summary: 'List stand map images',
+    description:
+      'Public. Returns stand map image URLs from the storage bucket, sorted by filename.',
+    security: [],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // responses: {
+    //   200: { description: 'Sorted list of stand map image URLs' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   // Mark as low importance - only log when debugging
   setLogImportance(event, 'debug')

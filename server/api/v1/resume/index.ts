@@ -23,6 +23,34 @@ const isValidFirebaseStorageLink = async (link: string): Promise<boolean> => {
   }
 }
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['Resume'],
+    summary: 'List user resumes',
+    description:
+      'Returns the calling user by default. scope=all lists every user holding a resume and ' +
+      'requires admin or a company account with CV access.',
+    security: [{ bearerAuth: [] }, { cookieAuth: [] }],
+    parameters: [
+      {
+        name: 'scope',
+        in: 'query',
+        required: false,
+        schema: { type: 'string' },
+        description: 'Set to all to list every resume holder',
+      },
+    ],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // responses: {
+    //   200: { description: 'User, or map of UID to User when scope=all' },
+    //   401: { description: 'User not authenticated' },
+    //   404: { description: 'User data not found' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { decodedToken, user } = event.context
 
