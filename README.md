@@ -73,22 +73,19 @@ bun run build      # nuxt build
 
 ### Deployment
 
-Deploying means merging `dev` into `prod`. Open the release pull request with the release checklist pre-filled:
+A release moves `prod` forward to a commit that is already on `dev`. Digital Ocean App Platform deploys whatever `prod` points at, so production runs the exact commit CI tested on `dev`.
 
-**[Open a release PR](https://github.com/et-dagen/et-dagen/compare/prod...dev?template=release.md&expand=1)**
+1. Open **[Promote to production](https://github.com/et-dagen/et-dagen/actions/workflows/promote.yml)** in the Actions tab and choose **Run workflow**.
+2. Leave `ref` as `dev` to release the latest commit, or enter a commit SHA from `dev` to release an earlier one.
+3. The `verify` job checks that the commit is on `dev`, that `prod` can fast-forward to it, and that `lint`, `typecheck`, `test` and `build` passed on it. Its summary lists the changes being released and the [release checklist](.github/RELEASE_CHECKLIST.md).
+4. A member of [@et-dagen/managers](https://github.com/orgs/et-dagen/teams/managers) works through the checklist and approves the `production-promotion` deployment.
+5. The `promote` job fast-forwards `prod`, tags the commit `release-<date>`, and publishes release notes under [Releases](https://github.com/et-dagen/et-dagen/releases). Digital Ocean then builds and deploys.
 
-The `?template=release.md` part matters — without it you get the ordinary feature template instead of the checklist.
+Follow the deploy in the [Digital Ocean control panel](https://cloud.digitalocean.com/apps).
 
-A release requires:
+**Rolling back.** Redeploy the previous deployment from the Digital Ocean control panel, then fix the problem on `dev` and release again. Do not push to `prod` by hand.
 
-- all four CI checks green,
-- an approving review from a member of [@et-dagen/managers](https://github.com/orgs/et-dagen/teams/managers),
-- every review conversation resolved,
-- the checklist actually worked through, not just ticked.
-
-Merge with a **merge commit**, never a squash. When it merges, the production build deploys automatically to Digital Ocean using their App Platform.
-
-Control the deployment logs in [Digital Ocean Control Panel](https://cloud.digitalocean.com/apps).
+**If `verify` says `prod` cannot fast-forward**, `prod` has a commit that `dev` lacks, usually from an emergency fix made on `prod`. Open a pull request from `prod` into `dev` and merge it with a **merge commit**, never a squash, then run the workflow again.
 
 ## Development guidelines
 
@@ -111,11 +108,9 @@ _NB! All branches created working on issues should be branched off of `dev`._
 The project uses a two-branch flow:
 
 - `dev` — the default branch and integration target. All feature work is merged here.
-- `prod` — production. Only ever updated by a `dev` → `prod` pull request, which triggers the Digital Ocean deploy.
+- `prod` — production. Only ever moved forward by the **Promote to production** workflow, which triggers the Digital Ocean deploy.
 
-Both branches are protected: no force-pushes, no deletion, and no merging until CI is green. `dev` needs no approving review; `prod` needs one from @et-dagen/managers.
-
-Merge `dev` → `prod` with a **merge commit**, not a squash. Squashing a release would give `prod` a commit sharing no ancestry with `dev`, and the two branches would then conflict on every subsequent release. Feature branches into `dev` should be squashed.
+Both branches are protected: no force-pushes, no deletion, and no merging until CI is green. Nobody pushes to `prod` directly; only the release workflow can, after a manager approves. Feature branches into `dev` should be squashed.
 
 Branch naming conventions:
 
@@ -145,7 +140,7 @@ Because feature branches are squash-merged, the **pull request title** becomes t
 Write access comes from organisation membership, not from per-person grants on this repository. In practice:
 
 - **Organisation members** can review and merge into `dev`.
-- **Members of @et-dagen/managers** can additionally approve a release into `prod`.
+- **Members of @et-dagen/managers** can additionally approve a release to production.
 - **Everyone else** is welcome to fork the repository and open a pull request. Those PRs are automatically labelled `external-contribution`, and an approval from an external contributor does not satisfy the branch ruleset.
 
 If you are contributing regularly and keep having to fork, ask an organisation owner to add you to the organisation.
