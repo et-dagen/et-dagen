@@ -1,5 +1,5 @@
 import type { EmailAddress } from '@/domain/email'
-import type { StudyProgramme, StudyYear } from '@/domain/ntnu'
+import type { StudyProgramme, Term } from '@/domain/ntnu'
 import type { ISO8601String } from '@/domain/time'
 import type { HasName } from '@/domain/traits'
 import type { DietaryRestriction } from '@/domain/allergen'
@@ -24,7 +24,8 @@ export interface BaseUser {
  */
 export interface StudentUser extends BaseUser, HasName {
   programme: StudyProgramme
-  year: StudyYear
+  /** Last term before graduating. The study year is derived from it with `yearAt` */
+  expectedGraduation: Term
 }
 
 /**

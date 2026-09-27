@@ -5,6 +5,7 @@ import {
   isOpen,
   type Registration,
 } from '~/domain/event/registration'
+import { Term } from '@/domain/ntnu'
 import { Duration } from '@/domain/time/duration'
 import { Instant } from '@/domain/time/instant'
 
@@ -47,24 +48,37 @@ describe('hasSpots', () => {
 })
 
 describe('admits', () => {
+  const student = {
+    programme: 'mtdt',
+    year: 5,
+    graduation: Term.parse('2027-spring'),
+  } as const
+
   it('lets anyone in when the event carries no rule', () => {
-    expect(admits(open, { programme: 'mtiot', year: 1 })).toBe(true)
-    expect(admits(open, {})).toBe(true)
+    expect(admits(open, student)).toEqual({ ok: true })
+    expect(admits(open, null)).toEqual({ ok: true })
   })
 
-  it('applies the rule when there is one', () => {
+  it('applies the rule when there is one, and says what was unmet', () => {
     const restricted: Registration = {
       ...open,
       eligibility: {
-        kind: 'every',
+        kind: 'and',
         rules: [
           { kind: 'programme', programmes: ['mtdt'] },
           { kind: 'year', years: [4, 5] },
         ],
       },
     }
-    expect(admits(restricted, { programme: 'mtdt', year: 5 })).toBe(true)
-    expect(admits(restricted, { programme: 'mtdt', year: 2 })).toBe(false)
-    expect(admits(restricted, { programme: 'mtiot', year: 5 })).toBe(false)
+    expect(admits(restricted, student)).toEqual({ ok: true })
+    expect(admits(restricted, { ...student, year: 2 })).toEqual({
+      ok: false,
+      reason: 'unmet',
+      unmet: { kind: 'year', years: [4, 5] },
+    })
+    expect(admits(restricted, null)).toEqual({
+      ok: false,
+      reason: 'notEnrolled',
+    })
   })
 })
