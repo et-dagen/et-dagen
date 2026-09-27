@@ -90,6 +90,11 @@ export interface WideEvent {
   // Outcome
   outcome: 'success' | 'error' | 'client_error'
 
+  // Fraction of comparable events kept, present only when this event survived
+  // sampling (i.e. rate < 1). Multiply counts by 1/sample_rate to reconstruct
+  // real traffic volume from sampled logs.
+  sample_rate?: number
+
   // Log importance - determines if this request should be logged based on log level
   _importance?: LogImportance
 
@@ -168,31 +173,51 @@ function shouldLog(level: LogLevel, importance?: LogImportance): boolean {
   return LOG_LEVEL_PRIORITY[level] >= LOG_LEVEL_PRIORITY[currentLevel]
 }
 
-// Tail sampling decision - always keep errors and slow requests
-function shouldSample(event: WideEvent): boolean {
-  // Always keep errors
-  if (event.outcome === 'error') return true
-  if (event.status_code && event.status_code >= 500) return true
-  if (event.error) return true
+/**
+ * Fraction of successful requests kept in production when LOG_SAMPLE_RATE is
+ * unset. Nothing that carries a warning or an error is ever sampled, so this
+ * only thins out the high-volume, uninteresting happy path.
+ */
+const DEFAULT_PRODUCTION_SAMPLE_RATE = 0.1
+
+/**
+ * Configured sample rate for successful requests.
+ *
+ * Guard against a misconfigured env var: parseFloat can yield NaN (or an
+ * out-of-range value), and `Math.random() < NaN` is always false — which would
+ * silently drop *all* successful-request logs. Fall back to the default and
+ * clamp to [0,1].
+ */
+function getConfiguredSampleRate(): number {
+  const parsed = parseFloat(getLogConfig().logSampleRate ?? '')
+  if (Number.isFinite(parsed)) return Math.min(Math.max(parsed, 0), 1)
+  return process.env.NODE_ENV === 'production'
+    ? DEFAULT_PRODUCTION_SAMPLE_RATE
+    : 1
+}
+
+/**
+ * Tail sampling decision, expressed as the probability this event is kept.
+ * A rate of 1 means "always keep" — warnings, errors, slow and admin requests
+ * are never thinned. Only successful requests are subject to the sample rate.
+ */
+function samplingRateFor(event: WideEvent, level: LogLevel): number {
+  // Never sample anything logged as a warning or an error
+  if (level === 'warn' || level === 'error') return 1
+  if (event.outcome !== 'success') return 1
+  if (event.status_code && event.status_code >= 400) return 1
+  if (event.error) return 1
 
   // Always keep slow requests (above 2000ms threshold)
-  if (event.duration_ms && event.duration_ms > 2000) return true
+  if (event.duration_ms && event.duration_ms > 2000) return 1
 
   // Always keep admin users for audit purposes
-  if (event.user?.access_level === 'admin') return true
+  if (event.user?.access_level === 'admin') return 1
 
   // In development, log everything
-  if (process.env.NODE_ENV === 'development') return true
+  if (process.env.NODE_ENV === 'development') return 1
 
-  // Sample rate for successful requests (default 100% in dev, configurable in prod).
-  // Guard against a misconfigured env var: parseFloat can yield NaN (or an
-  // out-of-range value), and `Math.random() < NaN` is always false — which would
-  // silently drop *all* successful-request logs. Fall back to 1.0 and clamp to [0,1].
-  const parsed = parseFloat(getLogConfig().logSampleRate ?? '')
-  const sampleRate = Number.isFinite(parsed)
-    ? Math.min(Math.max(parsed, 0), 1)
-    : 1
-  return Math.random() < sampleRate
+  return getConfiguredSampleRate()
 }
 
 /**
@@ -267,9 +292,13 @@ function sanitizeEvent(event: WideEvent): WideEvent {
 // Main logging function
 export function logWideEvent(event: WideEvent, level: LogLevel = 'info'): void {
   if (!shouldLog(level, event._importance)) return
-  if (!shouldSample(event)) return
+
+  const sampleRate = samplingRateFor(event, level)
+  if (sampleRate < 1 && Math.random() >= sampleRate) return
 
   const sanitized = sanitizeEvent(event)
+  if (sampleRate < 1) sanitized.sample_rate = sampleRate
+
   const logEntry = {
     level,
     ...sanitized,

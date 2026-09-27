@@ -4,7 +4,8 @@
 # code owner review, so every `dev` -> `prod` pull request needs an approval
 # from a member of @et-dagen/managers.
 #
-# Ordinary feature pull requests into `dev` are unaffected: `dev` requires no
-# approvals, and code owner review is only enforced by the `prod` ruleset.
+# Ordinary feature pull requests into `dev` are unaffected by this file: `dev`
+# requires one approval from any member with write access, and code owner
+# review is only enforced by the `prod` ruleset.
 
 * @et-dagen/managers
