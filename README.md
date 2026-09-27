@@ -78,7 +78,7 @@ A release moves `prod` forward to a commit that is already on `dev`. Digital Oce
 1. Open **[Promote to production](https://github.com/et-dagen/et-dagen/actions/workflows/promote.yml)** in the Actions tab and choose **Run workflow**.
 2. Leave `ref` as `dev` to release the latest commit, or enter a commit SHA from `dev` to release an earlier one.
 3. The `verify` job checks that the commit is on `dev`, that `prod` can fast-forward to it, and that `lint`, `typecheck`, `test` and `build` passed on it. Its summary lists the changes being released and the [release checklist](.github/RELEASE_CHECKLIST.md).
-4. A member of [@et-dagen/managers](https://github.com/orgs/et-dagen/teams/managers) works through the checklist and approves the `production-promotion` deployment.
+4. A member of [@et-dagen/managers](https://github.com/orgs/et-dagen/teams/managers) works through the checklist and approves the `production` deployment.
 5. The `promote` job fast-forwards `prod`, tags the commit `release-<date>`, and publishes release notes under [Releases](https://github.com/et-dagen/et-dagen/releases). Digital Ocean then builds and deploys.
 
 Follow the deploy in the [Digital Ocean control panel](https://cloud.digitalocean.com/apps).

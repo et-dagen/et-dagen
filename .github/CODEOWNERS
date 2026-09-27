@@ -3,7 +3,7 @@
 # The `prod` branch ruleset requires code owner review, so a pull request into
 # `prod` needs an approval from a member of @et-dagen/managers. Releases no
 # longer use such pull requests: the "Promote to production" workflow moves
-# `prod` after a manager approves the `production-promotion` environment. This
+# `prod` after a manager approves the `production` environment. This
 # file still covers the rare pull request from `prod` back into `dev`, and any
 # pull request someone opens against `prod` by mistake.
 #
