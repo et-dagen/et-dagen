@@ -17,11 +17,12 @@ const student = {
   registration: {
     // The subject's own attributes are judged, which is only correct because the first conjunct
     // pins the applicant to the subject. Registering on behalf of another user is an admin-only
-    // boolean leaf and never reaches here.
+    // boolean leaf and never reaches here. Only the yes or no is used; a handler that wants to
+    // say why calls `admits` itself for the verdict.
     create: (subject, target, env) =>
       target.targetUserUid === subject.uid &&
       isOpen(target.event.registration, env.now) &&
-      admits(target.event.registration, subject),
+      admits(target.event.registration, subject.applicant).ok,
     delete: (subject, target, env) =>
       target.targetUserUid === subject.uid &&
       isOpen(target.event.registration, env.now),

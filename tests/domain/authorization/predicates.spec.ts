@@ -14,12 +14,14 @@ const coordinator: Subject = {
     [co('a'), new Set(['ent:job:manage', 'ent:event:manage'])],
     [co('b'), new Set(['ent:event:manage'])],
   ]),
+  applicant: null,
 }
 
 const student: Subject = {
   uid: UserUid.parse('u2'),
   roles: ['user'],
   companies: new Map(),
+  applicant: null,
 }
 
 describe('can', () => {

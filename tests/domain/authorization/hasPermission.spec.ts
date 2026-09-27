@@ -7,6 +7,7 @@ import type { HasRegistration } from '~/domain/event/event'
 import type { EligibilityRule } from '~/domain/authorization/eligibility'
 import { CompanyUid } from '@/domain/business/company'
 import { Duration } from '@/domain/time/duration'
+import { Term, type StudyYear } from '@/domain/ntnu'
 import { Instant } from '@/domain/time/instant'
 import { UserUid, type Role } from '@/domain/user'
 
@@ -17,8 +18,7 @@ const co = CompanyUid.parse
 const subjectOf = (subject: {
   roles: Role[]
   companies?: Record<string, Entitlement[]>
-  programme?: string
-  year?: number | string
+  applicant?: { programme: string; year: StudyYear }
   uid?: string
 }): Subject => ({
   uid: UserUid.parse(subject.uid ?? 'self'),
@@ -29,8 +29,9 @@ const subjectOf = (subject: {
       new Set(entitlements),
     ]),
   ),
-  programme: subject.programme,
-  year: subject.year,
+  applicant: subject.applicant
+    ? { ...subject.applicant, graduation: Term.parse('2028-spring') }
+    : null,
 })
 
 const opens = Instant.parse('2026-08-01T10:00:00.000Z')
@@ -49,7 +50,10 @@ const eventWith = (eligibility?: EligibilityRule): HasRegistration => ({
 })
 
 const admin = subjectOf({ roles: ['admin'] })
-const student = subjectOf({ roles: ['user'], programme: 'mtdt', year: 4 })
+const student = subjectOf({
+  roles: ['user'],
+  applicant: { programme: 'mtdt', year: 4 },
+})
 
 describe('default deny', () => {
   it('denies an absent subject', () => {
@@ -183,7 +187,7 @@ describe('registration eligibility', () => {
   const restricted = {
     targetUserUid: UserUid.parse('self'),
     event: eventWith({
-      kind: 'every',
+      kind: 'and',
       rules: [
         { kind: 'programme', programmes: ['mtdt'] },
         { kind: 'year', years: [4, 5] },
@@ -197,26 +201,26 @@ describe('registration eligibility', () => {
   it('admits a student the rule names and refuses one it does not', () => {
     expect(create(student)).toBe(true)
     expect(
-      create(subjectOf({ roles: ['user'], programme: 'mtiot', year: 4 })),
+      create(
+        subjectOf({
+          roles: ['user'],
+          applicant: { programme: 'mtiot', year: 4 },
+        }),
+      ),
     ).toBe(false)
     expect(
-      create(subjectOf({ roles: ['user'], programme: 'mtdt', year: 2 })),
+      create(
+        subjectOf({
+          roles: ['user'],
+          applicant: { programme: 'mtdt', year: 2 },
+        }),
+      ),
     ).toBe(false)
   })
 
-  it('reads a legacy string year as a number', () => {
-    // Widening against the endpoint this replaces, which compared '4' to 4 with
-    // Array.includes and denied. Asserted explicitly so a regression is loud.
-    expect(
-      create(subjectOf({ roles: ['user'], programme: 'mtdt', year: '4' })),
-    ).toBe(true)
-  })
-
-  it('fails closed on an attribute the subject does not carry', () => {
-    expect(create(subjectOf({ roles: ['user'], year: 4 }))).toBe(false)
-    expect(create(subjectOf({ roles: ['user'], programme: 'mtdt' }))).toBe(
-      false,
-    )
+  it('fails closed on a subject that is not an enrolled student', () => {
+    expect(create(subjectOf({ roles: ['user'] }))).toBe(false)
+    expect(create(subjectOf({ roles: ['company'] }))).toBe(false)
   })
 })
 

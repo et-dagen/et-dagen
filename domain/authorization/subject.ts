@@ -1,4 +1,5 @@
 import type { Applicant } from '@/domain/authorization/eligibility'
+import { Term, type StudyYear } from '@/domain/ntnu'
 import type { Entitlement } from '@/domain/authorization/entitlements'
 import { CompanyUid } from '@/domain/business/company'
 import { UserUid, type Role } from '@/domain/user'
@@ -18,15 +19,15 @@ import { UserUid, type Role } from '@/domain/user'
  *
  * Collapsing them would hand `admits` a whole user, and nothing would then stop a future
  * eligibility rule keying off `roles` — reintroducing the role-based coupling this migration
- * exists to remove. `Subject` extends `Applicant` rather than restating its fields, so a subject
- * reaches `admits` with no translation step, and the widening stays one-directional: a subject is
- * an applicant, never the reverse.
+ * exists to remove. `Subject` holds an `Applicant` rather than extending it, because only an
+ * enrolled student has one: company users, and students outside their programme, carry `null`,
+ * and `admits` refuses them before any rule runs.
  *
  * Entitlements are held per company rather than per subject, because a coordinator may be attached
  * to several companies on different contract tiers. That collapses ownership and entitlement into
  * one predicate — see {@link can}.
  */
-export interface Subject extends Applicant {
+export interface Subject {
   /**
    * The asking user's identity
    *
@@ -38,6 +39,8 @@ export interface Subject extends Applicant {
   roles: readonly Role[]
   /** Associated companies → that company's resolved entitlements. Empty for students. */
   companies: ReadonlyMap<CompanyUid, ReadonlySet<Entitlement>>
+  /** The student attributes eligibility may judge, or null when not an enrolled student */
+  applicant: Applicant | null
 }
 
 /**
@@ -51,10 +54,11 @@ export interface Subject extends Applicant {
  * checked, and nothing has checked a payload that just came off the wire — so the wire type states
  * what is actually known. {@link deserializeSubject} is the boundary where the promise is made.
  */
-export interface SerializedSubject extends Applicant {
+export interface SerializedSubject {
   uid: string
   roles: Role[]
   companies: Record<string, Entitlement[]>
+  applicant: { programme: string; year: number; graduation: string } | null
 }
 
 export const serializeSubject = (subject: Subject): SerializedSubject => ({
@@ -66,9 +70,23 @@ export const serializeSubject = (subject: Subject): SerializedSubject => ({
       [...entitlements],
     ]),
   ),
-  programme: subject.programme,
-  year: subject.year,
+  applicant: subject.applicant && { ...subject.applicant },
 })
+
+const STUDY_YEARS: readonly number[] = [1, 2, 3, 4, 5]
+
+const parseApplicant = (
+  applicant: NonNullable<SerializedSubject['applicant']>,
+): Applicant => {
+  if (!STUDY_YEARS.includes(applicant.year)) {
+    throw new RangeError(`Not a study year: ${applicant.year}`)
+  }
+  return {
+    programme: applicant.programme,
+    year: applicant.year as StudyYear,
+    graduation: Term.parse(applicant.graduation),
+  }
+}
 
 /**
  * Rebuild a {@link Subject} from its wire shape
@@ -78,7 +96,8 @@ export const serializeSubject = (subject: Subject): SerializedSubject => ({
  * nowhere downstream. An empty uid throws rather than producing a subject that would compare equal
  * to nothing and silently fail every ownership rule.
  *
- * @throws RangeError when the payload carries an empty user or company uid
+ * @throws RangeError when the payload carries an empty user or company uid, or an invalid year or
+ * term
  */
 export const deserializeSubject = (subject: SerializedSubject): Subject => ({
   uid: UserUid.parse(subject.uid),
@@ -89,6 +108,5 @@ export const deserializeSubject = (subject: SerializedSubject): Subject => ({
       new Set(entitlements),
     ]),
   ),
-  programme: subject.programme,
-  year: subject.year,
+  applicant: subject.applicant && parseApplicant(subject.applicant),
 })
