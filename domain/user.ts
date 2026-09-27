@@ -1,5 +1,5 @@
 import type { EmailAddress } from '@/domain/email'
-import type { StudyProgramme, StudyYear } from '@/domain/ntnu'
+import type { StudyProgramme, Term } from '@/domain/ntnu'
 import { opaqueUid, type Brand } from '@/domain/brand'
 import type { CompanyUid } from '@/domain/business/company'
 import type { ISO8601String } from '@/domain/time'
@@ -48,7 +48,8 @@ export interface BaseUser {
  */
 export interface StudentUser extends BaseUser, HasName {
   programme: StudyProgramme
-  year: StudyYear
+  /** Last term before graduating. The study year is derived from it with `yearAt` */
+  expectedGraduation: Term
 }
 
 /**

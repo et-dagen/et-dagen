@@ -2,6 +2,7 @@ import {
   satisfies,
   type Applicant,
   type EligibilityRule,
+  type Verdict,
 } from '@/domain/authorization/eligibility'
 import type { ISO8601String } from '@/domain/time/instant'
 import { contains, type Interval } from '@/domain/time/interval'
@@ -49,13 +50,15 @@ export const hasSpots = (
   attending < registration.attendanceLimit
 
 /**
- * Whether an event's rule admits this applicant
+ * Whether an event's rule admits this applicant, and if not, why
  *
  * @remarks
  * An event with no rule admits everyone, so callers need not repeat that convention.
  */
 export const admits = (
   registration: Registration,
-  applicant: Applicant,
-): boolean =>
-  !registration.eligibility || satisfies(registration.eligibility, applicant)
+  applicant: Applicant | null,
+): Verdict =>
+  registration.eligibility
+    ? satisfies(registration.eligibility, applicant)
+    : { ok: true }
