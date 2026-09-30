@@ -1,7 +1,8 @@
 <!--
-  The release checklist. The "Promote to production" workflow prints this file
-  in its run summary, and the manager approving the release works through it
-  before pressing Approve. Edit this file to change what a release requires.
+  The release checklist. The "Promote to production" workflow copies this file
+  into a "Release <commit>" issue for every release. The approving manager ticks
+  it there and fills in the two sections at the bottom, then approves the run.
+  Edit this file to change what a release requires.
 -->
 
 ## Before approving
@@ -37,7 +38,14 @@ ticked box that nobody checked.
 
 - [ ] Someone is available to watch the deploy and roll back if needed
 - [ ] Not deploying immediately before an event, or immediately before everyone leaves for the day
-- [ ] Rollback is known: redeploy the previous deployment from the Digital Ocean control panel, then fix forward on `dev`. Note anything that makes this harder, such as data migrations or new secrets
+
+## Rollback plan
+
+_Edit this issue and replace this line. Usually: redeploy the previous deployment from the Digital Ocean control panel, then fix forward on `dev`. Note anything that makes rollback harder, such as data migrations, changed environment variables or new secrets._
+
+## Testing notes
+
+_Edit this issue and replace this line: what you tested, on what, and what you saw. Include anything you could not test, and why._
 
 ## After approving
 

@@ -4,9 +4,11 @@ name: Promote to production
 # Digital Ocean deploys whatever `prod` points at, so production runs the exact
 # commit that CI tested on `dev`, not a new merge commit built for the release.
 #
-# Run it from the Actions tab. The `promote` job waits for an approval from
-# @et-dagen/managers through the `production` environment, which is
-# also the only place the deploy key is readable.
+# Run it from the Actions tab. `verify` opens a "Release <commit>" issue with the
+# change list and the release checklist. The approving manager ticks the
+# checklist there, which keeps a record of every release, and then approves the
+# `production` environment. That environment is also the only place the deploy
+# key is readable. `promote` closes the issue when the release is out.
 
 on:
   workflow_dispatch:
@@ -31,8 +33,10 @@ jobs:
     permissions:
       contents: read
       checks: read
+      issues: write
     outputs:
       sha: ${{ steps.resolve.outputs.sha }}
+      issue: ${{ steps.issue.outputs.number }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -89,21 +93,33 @@ jobs:
           done
           exit $failed
 
-      - name: Summarise the release
+      - name: Open the release issue
+        id: issue
         env:
           SHA: ${{ steps.resolve.outputs.sha }}
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           {
-            echo "## Release candidate \`${SHA:0:7}\`"
+            echo "Release candidate \`$SHA\`, started by @$GITHUB_ACTOR in [this workflow run]($RUN_URL)."
             echo
-            echo "Changes that reach production if this is approved:"
+            echo "Work through the checklist below in this issue, then approve the \`production\` environment on the run. The workflow closes this issue once the release is out, or if it is rejected."
+            echo
+            echo "## What is being released"
             echo
             git log --first-parent --format='- %s (%h)' "origin/prod..$SHA"
             echo
-            echo "---"
-            echo
-            # The checklist file opens with an HTML comment for editors; the summary skips it.
+            # The checklist file opens with an HTML comment for editors; the issue skips it.
             sed '/^<!--/,/^-->/d' .github/RELEASE_CHECKLIST.md
+          } > release-issue.md
+
+          gh label create release --color 0e8a16 --description "Release checklist for one production release" 2>/dev/null || true
+          url=$(gh issue create --title "Release ${SHA:0:7}" --label release --body-file release-issue.md)
+          echo "number=${url##*/}" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Release candidate \`${SHA:0:7}\`"
+            echo
+            echo "Work through the checklist in [the release issue]($url), then approve the \`production\` environment above."
           } >> "$GITHUB_STEP_SUMMARY"
 
   promote:
@@ -115,8 +131,10 @@ jobs:
       url: https://etdagen.no
     permissions:
       contents: write
+      issues: write
     env:
       SHA: ${{ needs.verify.outputs.sha }}
+      ISSUE: ${{ needs.verify.outputs.issue }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -158,8 +176,26 @@ jobs:
         run: |
           gh release create "$TAG" --verify-tag --title "$TAG" --generate-notes \
             ${PREVIOUS:+--notes-start-tag "$PREVIOUS"}
-          {
-            echo "Released \`${SHA:0:7}\` as [$TAG](https://github.com/$GITHUB_REPOSITORY/releases/tag/$TAG)."
-            echo
-            echo "Digital Ocean is now deploying it. Finish the post-deploy checks in the release checklist."
-          } >> "$GITHUB_STEP_SUMMARY"
+          message="Released \`${SHA:0:7}\` as [$TAG](https://github.com/$GITHUB_REPOSITORY/releases/tag/$TAG). Digital Ocean is now deploying it; finish the post-deploy checks above."
+          gh issue close "$ISSUE" --reason completed --comment "$message"
+          echo "$message" >> "$GITHUB_STEP_SUMMARY"
+
+  close-unreleased:
+    name: close unreleased
+    # Runs when the release did not happen: the approval was rejected, or promote failed.
+    needs: [verify, promote]
+    if: ${{ always() && needs.verify.outputs.issue != '' && needs.promote.result != 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Close the release issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          ISSUE: ${{ needs.verify.outputs.issue }}
+          RESULT: ${{ needs.promote.result }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh issue close "$ISSUE" --reason "not planned" \
+            --comment "Not released: the promote job ended as '$RESULT' in [this run]($RUN_URL). Nothing reached production."

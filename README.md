@@ -77,9 +77,11 @@ A release moves `prod` forward to a commit that is already on `dev`. Digital Oce
 
 1. Open **[Promote to production](https://github.com/et-dagen/et-dagen/actions/workflows/promote.yml)** in the Actions tab and choose **Run workflow**.
 2. Leave `ref` as `dev` to release the latest commit, or enter a commit SHA from `dev` to release an earlier one.
-3. The `verify` job checks that the commit is on `dev`, that `prod` can fast-forward to it, and that `lint`, `typecheck`, `test` and `build` passed on it. Its summary lists the changes being released and the [release checklist](.github/RELEASE_CHECKLIST.md).
-4. A member of [@et-dagen/managers](https://github.com/orgs/et-dagen/teams/managers) works through the checklist and approves the `production` deployment.
-5. The `promote` job fast-forwards `prod`, tags the commit `release-<date>`, and publishes release notes under [Releases](https://github.com/et-dagen/et-dagen/releases). Digital Ocean then builds and deploys.
+3. The `verify` job checks that the commit is on `dev`, that `prod` can fast-forward to it, and that `lint`, `typecheck`, `test` and `build` passed on it. It then opens a **Release `<commit>`** issue with the changes being released and the [release checklist](.github/RELEASE_CHECKLIST.md).
+4. A member of [@et-dagen/managers](https://github.com/orgs/et-dagen/teams/managers) ticks the checklist in that issue, fills in the rollback plan and testing notes, and then approves the `production` deployment on the workflow run.
+5. The `promote` job fast-forwards `prod`, tags the commit `release-<date>`, publishes release notes under [Releases](https://github.com/et-dagen/et-dagen/releases), and closes the issue. Digital Ocean then builds and deploys.
+
+Past releases, with their ticked checklists, are the closed issues labelled [`release`](https://github.com/et-dagen/et-dagen/issues?q=label%3Arelease). A rejected or failed release closes its issue as not planned.
 
 Follow the deploy in the [Digital Ocean control panel](https://cloud.digitalocean.com/apps).
 
