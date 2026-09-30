@@ -67,10 +67,18 @@ jobs:
       - name: Check prod can fast-forward
         env:
           SHA: ${{ steps.resolve.outputs.sha }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           if [ "$(git rev-parse origin/prod)" = "$SHA" ]; then
-            echo "::error::prod is already at $SHA. There is nothing to release."
-            exit 1
+            # prod may be here because an earlier run pushed it and then failed to tag or
+            # publish. Let this run finish that; refuse only a commit fully released.
+            tag=$(git tag --points-at "$SHA" --list 'release-*' | head -n 1)
+            if [ -n "$tag" ] && gh release view "$tag" > /dev/null 2>&1; then
+              echo "::error::$SHA is already released as $tag. There is nothing to release."
+              exit 1
+            fi
+            echo "::notice::prod is already at $SHA but its release is incomplete. This run completes the tag and release notes."
+            exit 0
           fi
           if ! git merge-base --is-ancestor origin/prod "$SHA"; then
             echo "::error::prod has commits that $SHA does not contain. Merge prod into dev with a merge commit first (README, Deployment)."
@@ -145,7 +153,8 @@ jobs:
 
       - name: Fast-forward prod
         # A plain push, never forced: if prod moved while this waited for approval,
-        # the push is rejected and nothing is released.
+        # the push is rejected and nothing is released. If prod is already at the
+        # commit, from an earlier run that failed later on, the push does nothing.
         run: git push origin "$SHA:refs/heads/prod"
 
       - name: Tag the release
@@ -155,16 +164,20 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          base="release-$(date -u +%Y-%m-%d)"
-          tag="$base"
-          n=2
-          while git rev-parse --quiet --verify "refs/tags/$tag" > /dev/null; do
-            tag="$base-$n"
-            n=$((n + 1))
-          done
-          previous=$(git tag --list 'release-*' --sort=-creatordate | head -n 1)
-          git tag -a "$tag" "$SHA" -m "Released by $ACTOR"
-          git push origin "refs/tags/$tag"
+          previous=$(git tag --list 'release-*' --sort=-creatordate --no-contains "$SHA" | head -n 1)
+          # Reuse a tag an earlier, interrupted run already put on this commit.
+          tag=$(git tag --points-at "$SHA" --list 'release-*' | head -n 1)
+          if [ -z "$tag" ]; then
+            base="release-$(date -u +%Y-%m-%d)"
+            tag="$base"
+            n=2
+            while git rev-parse --quiet --verify "refs/tags/$tag" > /dev/null; do
+              tag="$base-$n"
+              n=$((n + 1))
+            done
+            git tag -a "$tag" "$SHA" -m "Released by $ACTOR"
+            git push origin "refs/tags/$tag"
+          fi
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           echo "previous=$previous" >> "$GITHUB_OUTPUT"
 
@@ -174,8 +187,10 @@ jobs:
           TAG: ${{ steps.tag.outputs.tag }}
           PREVIOUS: ${{ steps.tag.outputs.previous }}
         run: |
-          gh release create "$TAG" --verify-tag --title "$TAG" --generate-notes \
-            ${PREVIOUS:+--notes-start-tag "$PREVIOUS"}
+          if ! gh release view "$TAG" > /dev/null 2>&1; then
+            gh release create "$TAG" --verify-tag --title "$TAG" --generate-notes \
+              ${PREVIOUS:+--notes-start-tag "$PREVIOUS"}
+          fi
           message="Released \`${SHA:0:7}\` as [$TAG](https://github.com/$GITHUB_REPOSITORY/releases/tag/$TAG). Digital Ocean is now deploying it; finish the post-deploy checks above."
           gh issue close "$ISSUE" --reason completed --comment "$message"
           echo "$message" >> "$GITHUB_STEP_SUMMARY"

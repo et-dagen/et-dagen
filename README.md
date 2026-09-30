@@ -112,7 +112,7 @@ The project uses a two-branch flow:
 - `dev` — the default branch and integration target. All feature work is merged here.
 - `prod` — production. Only ever moved forward by the **Promote to production** workflow, which triggers the Digital Ocean deploy.
 
-Both branches are protected: no force-pushes, no deletion, and no merging until CI is green. Nobody pushes to `prod` directly; only the release workflow can, after a manager approves. Feature branches into `dev` should be squashed.
+Both branches are protected: no force-pushes, no deletion, and no merging until CI is green. Nobody pushes to `prod` directly; only the release workflow can, after a manager approves. A pull request into `dev` needs one approval, from @et-dagen/managers if it touches `.github/`, and a new push dismisses earlier approvals. Feature branches into `dev` should be squashed.
 
 Branch naming conventions:
 
@@ -142,7 +142,7 @@ Because feature branches are squash-merged, the **pull request title** becomes t
 Write access comes from organisation membership, not from per-person grants on this repository. In practice:
 
 - **Organisation members** can review and merge into `dev`.
-- **Members of @et-dagen/managers** can additionally approve a release to production.
+- **Members of @et-dagen/managers** can additionally approve a release to production, and must approve any pull request that changes `.github/` (workflows, rulesets, code owners).
 - **Everyone else** is welcome to fork the repository and open a pull request. Those PRs are automatically labelled `external-contribution`, and an approval from an external contributor does not satisfy the branch ruleset.
 
 If you are contributing regularly and keep having to fork, ask an organisation owner to add you to the organisation.
