@@ -1,6 +1,39 @@
 // DELETE /api/v1/event
 // Endpoint for deleting existing events
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['Event'],
+    summary: 'Delete existing event',
+    description:
+      'Admin, or the owning company user. companyUID is used for the ownership check.',
+    security: [{ bearerAuth: [] }, { cookieAuth: [] }],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // requestBody: {
+    //   required: true,
+    //   content: {
+    //     'application/json': {
+    //       schema: {
+    //         type: 'object',
+    //         required: ['eventUID'],
+    //         properties: {
+    //           eventUID: { type: 'string' },
+    //           companyUID: { type: 'string' },
+    //         },
+    //       },
+    //     },
+    //   },
+    // },
+    // responses: {
+    //   204: { description: 'Removed' },
+    //   400: { description: 'Error (event/missing-event-uid).' },
+    //   401: { description: 'Error (event/not-owner). or Error (firebase/user-not-authorized).' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 

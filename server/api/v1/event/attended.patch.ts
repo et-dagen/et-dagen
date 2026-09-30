@@ -1,6 +1,41 @@
 // PATCH /api/v1/event/attended
 // Admin-only: set attended = true/false for an attendant
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['Event'],
+    summary: 'Set attendance status for attendant',
+    description:
+      'Admin only. Marks a registered attendant as having attended, or reverses it.',
+    security: [{ bearerAuth: [] }, { cookieAuth: [] }],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // requestBody: {
+    //   required: true,
+    //   content: {
+    //     'application/json': {
+    //       schema: {
+    //         type: 'object',
+    //         required: ['eventUID', 'userUID', 'attended'],
+    //         properties: {
+    //           eventUID: { type: 'string' },
+    //           userUID: { type: 'string' },
+    //           attended: { type: 'boolean' },
+    //         },
+    //       },
+    //     },
+    //   },
+    // },
+    // responses: {
+    //   204: { description: 'Updated' },
+    //   400: { description: 'Error (event/attended/invalid-payload).' },
+    //   401: { description: 'Error (event/attended/not-admin).' },
+    //   404: { description: 'Error (event/not-found). or Error (event/attended/user-not-attendant).' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { user } = event.context
   const { eventUID, userUID, attended } = await readBody(event)

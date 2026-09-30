@@ -1,6 +1,32 @@
 // GET /api/v1/event
 // endpoint for fetching events from db
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['Event'],
+    summary: 'List events or fetch one',
+    description:
+      'Public. Without eventUID returns every event keyed by UID; with it returns a single-entry ' +
+      'map.',
+    security: [],
+    parameters: [
+      {
+        name: 'eventUID',
+        in: 'query',
+        required: false,
+        schema: { type: 'string' },
+        description: 'Omit to list all events',
+      },
+    ],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // responses: {
+    //   200: { description: 'Map of event UID to Event, or null' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { eventUID } = getQuery(event)
 

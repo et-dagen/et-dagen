@@ -1,6 +1,47 @@
 // POST /api/v1/image
 // endpoint for posting an image to storage bucket
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['Image'],
+    summary: 'Upload image to storage',
+    description:
+      'Admin only. JPEG and PNG only. Multipart parts are read POSITIONALLY - part 0 must be the ' +
+      'file and part 1 the storage path.',
+    security: [{ bearerAuth: [] }, { cookieAuth: [] }],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // requestBody: {
+    //   required: true,
+    //   content: {
+    //     'multipart/form-data': {
+    //       schema: {
+    //         type: 'object',
+    //         properties: {
+    //           file: { type: 'string', format: 'binary', description: 'Part 0. image/jpeg or image/png.' },
+    //           storagePath: { type: 'string', description: 'Part 1. Destination prefix in the bucket.' },
+    //         },
+    //       },
+    //     },
+    //   },
+    // },
+    // responses: {
+    //   200: {
+    //     description: 'Public storage URL',
+    //     content: {
+    //       'application/json': {
+    //         schema: { type: 'object', properties: { URL: { type: 'string' } } },
+    //       },
+    //     },
+    //   },
+    //   400: { description: 'Missing file or path, or unsupported file type' },
+    //   401: { description: 'Error (firebase/user-not-authorized).' },
+    //   500: { description: 'Error (storage/cannot-upload-file).' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 

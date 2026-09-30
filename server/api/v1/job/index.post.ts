@@ -3,6 +3,47 @@
 
 import { isValidDate } from '../../../../composables/useDate'
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['Job'],
+    summary: 'Create new job listing',
+    description:
+      'Admin, or a company user creating a listing for their own company.',
+    security: [{ bearerAuth: [] }, { cookieAuth: [] }],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // requestBody: {
+    //   required: true,
+    //   content: {
+    //     'application/json': {
+    //       schema: {
+    //         type: 'object',
+    //         required: ['companyUID', 'title', 'description', 'jobType', 'location', 'deadline'],
+    //         properties: {
+    //           companyUID: { type: 'string' },
+    //           title: { type: 'string' },
+    //           description: { type: 'string' },
+    //           location: { type: 'string' },
+    //           deadline: { type: 'string', format: 'date-time' },
+    //           jobType: {
+    //             type: 'string',
+    //             enum: ['full-time', 'graduate', 'summer-internship'],
+    //           },
+    //         },
+    //       },
+    //     },
+    //   },
+    // },
+    // responses: {
+    //   201: { description: 'Created, empty body' },
+    //   400: { description: 'Error (general/missing-data). or Error (job/invalid-date).' },
+    //   401: { description: 'Error (firebase/user-not-authorized).' },
+    //   404: { description: 'Error (company/not-found).' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 

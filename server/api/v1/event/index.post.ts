@@ -1,6 +1,64 @@
 // POST /api/v1/event
 // Endpoint for adding a new event to db
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['Event'],
+    summary: 'Create event',
+    description:
+      'Admin, or a company user creating an event for their own company. Capacity may be null ' +
+      '(unlimited); when set, a registration window is required and must open before it closes ' +
+      'and close before the event starts.',
+    security: [{ bearerAuth: [] }, { cookieAuth: [] }],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // requestBody: {
+    //   required: true,
+    //   content: {
+    //     'application/json': {
+    //       schema: {
+    //         type: 'object',
+    //         required: ['companyUID', 'date', 'description', 'location', 'title'],
+    //         properties: {
+    //           companyUID: { type: 'string' },
+    //           title: { type: 'string' },
+    //           description: { type: 'string' },
+    //           capacity: { type: 'integer', nullable: true, minimum: 1 },
+    //           date: {
+    //             type: 'object',
+    //             properties: {
+    //               start: { type: 'string', format: 'date-time' },
+    //               end: { type: 'string', format: 'date-time' },
+    //             },
+    //           },
+    //           location: {
+    //             type: 'object',
+    //             properties: {
+    //               name: { type: 'string' },
+    //               map: { type: 'string', nullable: true },
+    //             },
+    //           },
+    //           registration: {
+    //             type: 'object',
+    //             properties: {
+    //               start: { type: 'string', format: 'date-time' },
+    //               end: { type: 'string', format: 'date-time' },
+    //             },
+    //           },
+    //         },
+    //       },
+    //     },
+    //   },
+    // },
+    // responses: {
+    //   201: { description: 'Created, empty body' },
+    //   400: { description: 'Error (general/missing-data). Also event/wrong-format-capacity, event/registration-after-event, event/registration-start-after-end, and two free-text messages.' },
+    //   401: { description: 'Error (event/not-owner). or Error (firebase/user-not-authorized).' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 

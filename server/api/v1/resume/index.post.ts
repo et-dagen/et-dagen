@@ -1,6 +1,42 @@
 // POST /api/v1/resume
 // endpoint for inserting pdf into storage bucket
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['Resume'],
+    summary: 'Upload user resume',
+    description:
+      'PDF only. Multipart parts are read POSITIONALLY, not by name - part 0 must be the file ' +
+      'and part 1 the userUID. Returns the storage URL as a bare string, not an object. Uses 402 ' +
+      'for missing data.',
+    security: [{ bearerAuth: [] }, { cookieAuth: [] }],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // requestBody: {
+    //   required: true,
+    //   content: {
+    //     'multipart/form-data': {
+    //       schema: {
+    //         type: 'object',
+    //         properties: {
+    //           file: { type: 'string', format: 'binary', description: 'Part 0. application/pdf only.' },
+    //           userUID: { type: 'string', description: 'Part 1.' },
+    //         },
+    //       },
+    //     },
+    //   },
+    // },
+    // responses: {
+    //   200: { description: 'Storage URL as a bare string', content: { 'application/json': { schema: { type: 'string' } } } },
+    //   400: { description: 'User not authorized, or unsupported file type' },
+    //   401: { description: 'Cannot upload resume to other users' },
+    //   402: { description: 'Firebase: Error (storage/data-not-defined)' },
+    //   500: { description: 'Firebase: Error (storage/cannot-upload-file).' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 

@@ -1,6 +1,39 @@
 // DELETE /api/v1/user
 // endpoint for removing a user in the database
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['User'],
+    summary: 'Delete user(s)',
+    description:
+      'Deletes the caller when no UIDs are supplied. Passing UIDs requires admin.',
+    security: [{ bearerAuth: [] }, { cookieAuth: [] }],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // requestBody: {
+    //   content: {
+    //     'application/json': {
+    //       schema: {
+    //         type: 'object',
+    //         properties: {
+    //           UIDs: {
+    //             type: 'array',
+    //             items: { type: 'string' },
+    //             description: 'Admin only. Omit to delete the calling user.',
+    //           },
+    //         },
+    //       },
+    //     },
+    //   },
+    // },
+    // responses: {
+    //   204: { description: 'Deleted' },
+    //   401: { description: 'Error (firebase/user-not-authorized).' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 

@@ -3,6 +3,38 @@
 
 import { isValidDate } from '../../../../composables/useDate'
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['Job'],
+    summary: 'Edit job listing',
+    description:
+      'Admin, or the owning company user. Individual fields cannot be blanked out.',
+    security: [{ bearerAuth: [] }, { cookieAuth: [] }],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // requestBody: {
+    //   required: true,
+    //   content: {
+    //     'application/json': {
+    //       schema: {
+    //         type: 'object',
+    //         required: ['jobUID'],
+    //         properties: { jobUID: { type: 'string' } },
+    //         additionalProperties: true,
+    //       },
+    //     },
+    //   },
+    // },
+    // responses: {
+    //   204: { description: 'Updated' },
+    //   400: { description: 'Error (job/missing-job-uid). or Error (job/invalid-date).' },
+    //   401: { description: 'Error (job/cannot-remove-single-fields). or Error (firebase/user-not-authorized).' },
+    //   404: { description: 'Error (job/not-found).' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 
