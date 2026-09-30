@@ -1,30 +1,11 @@
 <!--
-  Title this pull request: deploy: release <date>
-
-  This is the release checklist for merging `dev` into `prod`. Merging this PR
-  deploys to production via Digital Ocean.
-
-  Merge with a MERGE COMMIT, never a squash — squashing breaks shared ancestry
-  between dev and prod and causes conflicts on every later release.
-
-  Requires an approval from @et-dagen/managers.
+  The release checklist. The "Promote to production" workflow copies this file
+  into a "Release <commit>" issue for every release. The approving manager ticks
+  it there and fills in the two sections at the bottom, then approves the run.
+  Edit this file to change what a release requires.
 -->
 
-## What is being released
-
-<!-- Summarise the user-visible changes. Link the PRs or issues included. -->
-
-## Rollback plan
-
-<!--
-  How do we get back if this goes wrong? Usually: redeploy the previous
-  successful deployment from the Digital Ocean control panel. Note anything
-  that makes rollback harder — data migrations, changed env vars, new secrets.
--->
-
----
-
-## Pre-merge checklist
+## Before approving
 
 Tick each box only after actually doing it. Write what you observed next to
 anything non-obvious — an unticked box with a note is far more useful than a
@@ -32,11 +13,11 @@ ticked box that nobody checked.
 
 ### Automated
 
-- [ ] CI is green on this PR (`lint`, `typecheck`, `test`, `build`)
+- [ ] The `verify` job passed: the commit is on `dev`, `prod` can fast-forward to it, and `lint`, `typecheck`, `test` and `build` are green on it
 - [ ] The `typecheck (vue, ratchet)` job has not regressed
 - [ ] No new dependency warnings or Renovate security alerts introduced by this release
 
-### Manually verified against `dev`
+### Manually verified on the commit being released
 
 - [ ] Front page loads, in both `nb-NO` and `en-US`
 - [ ] Sign in, sign out, and sign up work
@@ -58,16 +39,17 @@ ticked box that nobody checked.
 - [ ] Someone is available to watch the deploy and roll back if needed
 - [ ] Not deploying immediately before an event, or immediately before everyone leaves for the day
 
+## Rollback plan
+
+_Edit this issue and replace this line. Usually: redeploy the previous deployment from the Digital Ocean control panel, then fix forward on `dev`. Note anything that makes rollback harder, such as data migrations, changed environment variables or new secrets._
+
 ## Testing notes
 
-<!--
-  What did you actually test, on what, and what did you see? Include anything
-  you could not test and why.
--->
+_Edit this issue and replace this line: what you tested, on what, and what you saw. Include anything you could not test, and why._
 
-## Post-deploy verification
+## After approving
 
-To be completed by whoever merges, after Digital Ocean reports success:
+Once Digital Ocean reports success:
 
 - [ ] https://etdagen.no loads
 - [ ] Spot-checked the specific features this release changed

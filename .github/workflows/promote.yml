@@ -1,0 +1,216 @@
+name: Promote to production
+
+# Releases a commit that is already on `dev` by fast-forwarding `prod` to it.
+# Digital Ocean deploys whatever `prod` points at, so production runs the exact
+# commit that CI tested on `dev`, not a new merge commit built for the release.
+#
+# Run it from the Actions tab. `verify` opens a "Release <commit>" issue with the
+# change list and the release checklist. The approving manager ticks the
+# checklist there, which keeps a record of every release, and then approves the
+# `production` environment. That environment is also the only place the deploy
+# key is readable. `promote` closes the issue when the release is out.
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: Commit SHA, tag or branch on dev to release. Leave as dev for the latest commit.
+        required: true
+        default: dev
+
+# One release at a time, and never cancel a release that is waiting for approval.
+concurrency:
+  group: promote-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: read
+      issues: write
+    outputs:
+      sha: ${{ steps.resolve.outputs.sha }}
+      issue: ${{ steps.issue.outputs.number }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve the commit
+        id: resolve
+        env:
+          REF: ${{ inputs.ref }}
+        run: |
+          git fetch --quiet origin dev prod
+          sha=$(git rev-parse --verify --quiet "origin/$REF^{commit}" || git rev-parse --verify --quiet "$REF^{commit}" || true)
+          if [ -z "$sha" ]; then
+            echo "::error::Could not find a commit for '$REF'."
+            exit 1
+          fi
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+
+      - name: Check the commit is on dev
+        env:
+          SHA: ${{ steps.resolve.outputs.sha }}
+        run: |
+          if ! git merge-base --is-ancestor "$SHA" origin/dev; then
+            echo "::error::$SHA is not on dev. Only commits that are already on dev can be released."
+            exit 1
+          fi
+
+      - name: Check prod can fast-forward
+        env:
+          SHA: ${{ steps.resolve.outputs.sha }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$(git rev-parse origin/prod)" = "$SHA" ]; then
+            # prod may be here because an earlier run pushed it and then failed to tag or
+            # publish. Let this run finish that; refuse only a commit fully released.
+            tag=$(git tag --points-at "$SHA" --list 'release-*' | head -n 1)
+            if [ -n "$tag" ] && gh release view "$tag" > /dev/null 2>&1; then
+              echo "::error::$SHA is already released as $tag. There is nothing to release."
+              exit 1
+            fi
+            echo "::notice::prod is already at $SHA but its release is incomplete. This run completes the tag and release notes."
+            exit 0
+          fi
+          if ! git merge-base --is-ancestor origin/prod "$SHA"; then
+            echo "::error::prod has commits that $SHA does not contain. Merge prod into dev with a merge commit first (README, Deployment)."
+            exit 1
+          fi
+
+      - name: Check CI passed on the commit
+        env:
+          SHA: ${{ steps.resolve.outputs.sha }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          failed=0
+          for check in lint typecheck test build; do
+            conclusion=$(gh api "repos/$GITHUB_REPOSITORY/commits/$SHA/check-runs?check_name=$check&filter=latest" \
+              --jq '[.check_runs[] | select(.app.slug == "github-actions")][0].conclusion // "missing"')
+            if [ "$conclusion" != success ]; then
+              echo "::error::CI check '$check' is '$conclusion' on $SHA. Wait for CI, re-run it, or pick a later commit."
+              failed=1
+            fi
+          done
+          exit $failed
+
+      - name: Open the release issue
+        id: issue
+        env:
+          SHA: ${{ steps.resolve.outputs.sha }}
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          {
+            echo "Release candidate \`$SHA\`, started by @$GITHUB_ACTOR in [this workflow run]($RUN_URL)."
+            echo
+            echo "Work through the checklist below in this issue, then approve the \`production\` environment on the run. The workflow closes this issue once the release is out, or if it is rejected."
+            echo
+            echo "## What is being released"
+            echo
+            git log --first-parent --format='- %s (%h)' "origin/prod..$SHA"
+            echo
+            # The checklist file opens with an HTML comment for editors; the issue skips it.
+            sed '/^<!--/,/^-->/d' .github/RELEASE_CHECKLIST.md
+          } > release-issue.md
+
+          gh label create release --color 0e8a16 --description "Release checklist for one production release" 2>/dev/null || true
+          url=$(gh issue create --title "Release ${SHA:0:7}" --label release --body-file release-issue.md)
+          echo "number=${url##*/}" >> "$GITHUB_OUTPUT"
+          {
+            echo "## Release candidate \`${SHA:0:7}\`"
+            echo
+            echo "Work through the checklist in [the release issue]($url), then approve the \`production\` environment above."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  promote:
+    name: promote
+    needs: verify
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: https://etdagen.no
+    permissions:
+      contents: write
+      issues: write
+    env:
+      SHA: ${{ needs.verify.outputs.sha }}
+      ISSUE: ${{ needs.verify.outputs.issue }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # The prod ruleset lets deploy keys bypass the pull request rule. The
+          # default token cannot push to prod.
+          ssh-key: ${{ secrets.PROD_DEPLOY_KEY }}
+
+      - name: Fast-forward prod
+        # A plain push, never forced: if prod moved while this waited for approval,
+        # the push is rejected and nothing is released. If prod is already at the
+        # commit, from an earlier run that failed later on, the push does nothing.
+        run: git push origin "$SHA:refs/heads/prod"
+
+      - name: Tag the release
+        id: tag
+        env:
+          ACTOR: ${{ github.actor }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          previous=$(git tag --list 'release-*' --sort=-creatordate --no-contains "$SHA" | head -n 1)
+          # Reuse a tag an earlier, interrupted run already put on this commit.
+          tag=$(git tag --points-at "$SHA" --list 'release-*' | head -n 1)
+          if [ -z "$tag" ]; then
+            base="release-$(date -u +%Y-%m-%d)"
+            tag="$base"
+            n=2
+            while git rev-parse --quiet --verify "refs/tags/$tag" > /dev/null; do
+              tag="$base-$n"
+              n=$((n + 1))
+            done
+            git tag -a "$tag" "$SHA" -m "Released by $ACTOR"
+            git push origin "refs/tags/$tag"
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "previous=$previous" >> "$GITHUB_OUTPUT"
+
+      - name: Publish release notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.tag.outputs.tag }}
+          PREVIOUS: ${{ steps.tag.outputs.previous }}
+        run: |
+          if ! gh release view "$TAG" > /dev/null 2>&1; then
+            gh release create "$TAG" --verify-tag --title "$TAG" --generate-notes \
+              ${PREVIOUS:+--notes-start-tag "$PREVIOUS"}
+          fi
+          message="Released \`${SHA:0:7}\` as [$TAG](https://github.com/$GITHUB_REPOSITORY/releases/tag/$TAG). Digital Ocean is now deploying it; finish the post-deploy checks above."
+          gh issue close "$ISSUE" --reason completed --comment "$message"
+          echo "$message" >> "$GITHUB_STEP_SUMMARY"
+
+  close-unreleased:
+    name: close unreleased
+    # Runs when the release did not happen: the approval was rejected, or promote failed.
+    needs: [verify, promote]
+    if: ${{ always() && needs.verify.outputs.issue != '' && needs.promote.result != 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+      - name: Close the release issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          ISSUE: ${{ needs.verify.outputs.issue }}
+          RESULT: ${{ needs.promote.result }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh issue close "$ISSUE" --reason "not planned" \
+            --comment "Not released: the promote job ended as '$RESULT' in [this run]($RUN_URL). Nothing reached production."

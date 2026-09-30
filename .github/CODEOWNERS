@@ -1,11 +1,13 @@
 # Code owners for et-dagen.
 #
-# This exists to gate production releases. The `prod` branch ruleset requires
-# code owner review, so every `dev` -> `prod` pull request needs an approval
-# from a member of @et-dagen/managers.
+# Only the repository's own machinery is owned. The `dev` ruleset requires code
+# owner review, so a pull request into `dev` that touches `.github/` needs an
+# approval from @et-dagen/managers. Every other pull request needs one approval
+# from any member with write access.
 #
-# Ordinary feature pull requests into `dev` are unaffected by this file: `dev`
-# requires one approval from any member with write access, and code owner
-# review is only enforced by the `prod` ruleset.
+# This protects releases. The "Promote to production" workflow runs from `dev`
+# and receives the production deploy key once a manager approves a release.
+# Without this rule, a changed workflow could be merged with an ordinary
+# approval and read the key on the next approved release.
 
-* @et-dagen/managers
+/.github/ @et-dagen/managers
