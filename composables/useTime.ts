@@ -1,3 +1,5 @@
+import { getLocalISOString } from '@/domain/time'
+
 // Numerise time string hh:mm:ss to object { hour: number, minute: number, second: number }
 export const timeStringToNumericObject = (time: string) => {
   const [hour, minute, second] = time.split(':')
@@ -22,15 +24,7 @@ export const getTimeFromDatetime = (datetime: string): string => {
   return datetime.split('T')[1].replace('Z', '')
 }
 
-// get local ISO string from date compensating for timezone offset
-export const getLocalISOString = (date: Date) => {
-  const offsetMs = date.getTimezoneOffset() * 60 * 1000
-  const msLocal = date.getTime() - offsetMs
-  const dateLocal = new Date(msLocal)
-  const iso = dateLocal.toISOString()
-  const isoLocal = iso.slice(0, 19)
-  return isoLocal
-}
+export { getLocalISOString }
 
 // checking if now is within a time window of ISO strings
 export const presentWithinTimeWindow = (start: string, end: string) => {
