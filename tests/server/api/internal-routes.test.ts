@@ -19,7 +19,7 @@ import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 
-const API_DIR = join(import.meta.dirname, 'v1')
+const API_DIR = join(import.meta.dirname, '../../../server/api/v1')
 
 /**
  * Handlers that check for admin but are still published, because a non-admin

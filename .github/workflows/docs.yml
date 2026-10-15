@@ -97,7 +97,10 @@ jobs:
             echo 'No changes to the API surface.' > changelog.md
           fi
 
+      # Pull requests from forks get a read-only token, so commenting would fail
+      # the check for every outside contributor. The spec is still built and uploaded.
       - name: Comment on the pull request
+        if: github.event.pull_request.head.repo.full_name == github.repository
         uses: actions/github-script@v7
         with:
           script: |
@@ -143,6 +146,11 @@ jobs:
     name: publish
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+    # A dev push and a release can land together. Each run rebuilds the whole site
+    # from both branches, so let them deploy one after the other, never cancelled.
+    concurrency:
+      group: docs-pages
+      cancel-in-progress: false
     permissions:
       contents: read
       pages: write
