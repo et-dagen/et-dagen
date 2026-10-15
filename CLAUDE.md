@@ -65,8 +65,10 @@ The target layout, and how to place code while both shapes exist, is in `ARCHITE
 - Commit messages and pull request titles are Conventional Commits with the types in
   `commitlint.config.mjs` (`feat`, `fix`, `refactor`, `docs`, `test`, `ci`, `chore`, ...).
 - Keep pull requests small, ideally under ~400 changed lines. Large ones wait weeks for review.
-- Pull requests into `dev` are squash-merged and need one approval. The only exception is syncing
-  `prod` back into `dev`, which must be a merge commit (`gh pr merge <n> --merge`).
+- Pull requests into `dev` are squash-merged and need one approval; changes to `.github/workflows/`
+  need a manager's. The only exception to squashing is syncing `prod` back into `dev`, which must be
+  a merge commit (`gh pr merge <n> --merge`).
+- Never merge with `--admin` or another rule bypass unless a human explicitly asks for it.
 - Releases do not go through pull requests into `prod`; see the README's Deployment section.
 - Fill in the pull request template, and keep the description true to the diff.
 
