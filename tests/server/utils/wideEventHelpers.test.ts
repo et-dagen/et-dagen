@@ -10,8 +10,8 @@ import {
   setErrorContext,
   pickSafeQuery,
   withDbTiming,
-} from './wideEventHelpers'
-import { createWideEvent, type WideEvent } from './logger'
+} from '@/server/utils/wideEventHelpers'
+import { createWideEvent, type WideEvent } from '@/server/utils/logger'
 
 // Minimal H3Event stub — helpers only touch event.context.wideEvent
 function stubEvent(wideEvent?: WideEvent): H3Event {
