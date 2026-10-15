@@ -18,9 +18,7 @@
     isRegistering.value = true
     signinUser(state.email, state.password)
       .catch((error) => {
-        const { type, message } = getApiResponseAlertContext(
-          error.statusMessage,
-        )
+        const { type, message } = getErrorAlertContext(error)
         useAlerts.alert(message, type as AlertType)
         console.error(error)
       })
@@ -43,9 +41,7 @@
         ),
       )
       .catch((error) => {
-        const { type, message } = getApiResponseAlertContext(
-          error.statusMessage,
-        )
+        const { type, message } = getErrorAlertContext(error)
         useAlerts.alert(message, type as AlertType)
         console.error(error)
       })

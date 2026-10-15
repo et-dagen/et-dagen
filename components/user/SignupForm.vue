@@ -84,7 +84,10 @@
     if (!form.value) return
 
     const { valid } = await form.value.validate()
-    if (!valid) throw new Error('Form is not valid')
+    if (!valid) {
+      useAlerts.alert(useNuxtApp().$i18n.t('alert.error.form.invalid'), 'error')
+      return
+    }
 
     // add other restrictions if submitted
     if (otherRestrictions.value && otherRestrictions.value !== '') {
@@ -111,9 +114,7 @@
       user.registrationCode ?? undefined, // Only send registration code if user is a company
     )
       .catch((error) => {
-        const { type, message } = getApiResponseAlertContext(
-          error.statusMessage,
-        )
+        const { type, message } = getErrorAlertContext(error)
         useAlerts.alert(message, type as AlertType)
         console.error(error)
       })
