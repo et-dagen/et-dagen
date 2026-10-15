@@ -32,12 +32,25 @@ export const hasPermission = <R extends keyof Permissions>(
   if (!subject) return false
 
   return subject.roles.some((role) => {
-    const check = (ROLES as RolesWithPermissions)[role]?.[resource]?.[
-      action
-    ] as PermissionCheck<R> | undefined
+    const check = ownEntry(
+      ownEntry(ownEntry(ROLES as RolesWithPermissions, role), resource),
+      action,
+    ) as PermissionCheck<R> | undefined
 
     if (check == null) return false
     if (typeof check === 'boolean') return check
-    return data != null && check(subject, data, env)
+    return data != null && check(subject, data, env) === true
   })
 }
+
+/**
+ * Read a key the table itself declares, never one inherited from `Object.prototype`
+ *
+ * @remarks
+ * Names can reach this from a request at runtime. `toString` or `constructor` would otherwise resolve
+ * to a built-in method, run as a predicate, and return something truthy.
+ */
+const ownEntry = (table: unknown, key: PropertyKey): unknown =>
+  table != null && typeof table === 'object' && Object.hasOwn(table, key)
+    ? (table as Record<PropertyKey, unknown>)[key]
+    : undefined

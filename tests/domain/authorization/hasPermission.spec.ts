@@ -71,6 +71,18 @@ describe('default deny', () => {
   it('denies a predicate leaf invoked without data', () => {
     expect(hasPermission(student, 'user', 'update')).toBe(false)
   })
+
+  it('denies names that only exist on Object.prototype', () => {
+    // A name read from a request at runtime must not reach an inherited method,
+    // which would run as a predicate and return a truthy string.
+    const own = { uid: UserUid.parse('self'), scope: 'own' as const }
+    const anyResource = hasPermission as (...args: unknown[]) => boolean
+    expect(anyResource(student, 'user', 'toString', own)).toBe(false)
+    expect(anyResource(student, 'toString', 'call', own)).toBe(false)
+    expect(anyResource(admin, 'company', 'constructor', { uid: co('a') })).toBe(
+      false,
+    )
+  })
 })
 
 describe('boolean leaves', () => {
