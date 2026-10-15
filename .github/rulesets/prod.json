@@ -36,5 +36,7 @@
     { "type": "non_fast_forward" },
     { "type": "deletion" }
   ],
-  "bypass_actors": []
+  "bypass_actors": [
+    { "actor_id": null, "actor_type": "DeployKey", "bypass_mode": "always" }
+  ]
 }

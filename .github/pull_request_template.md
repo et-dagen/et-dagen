@@ -25,7 +25,7 @@ Closes #
 
 ## Checklist
 
-- [ ] Branched off `dev` and targeting `dev` (release PRs to `prod` excepted)
+- [ ] Branched off `dev` and targeting `dev`
 - [ ] `bun run lint`, `bun run typecheck`, `bun run test` and `bun run build` pass locally
 - [ ] Added or updated tests where it made sense
 - [ ] Documentation updated if behaviour or setup changed
