@@ -4,6 +4,8 @@ The second version of the [E&T-dagen website](https://etdagen.no). This time bui
 
 **_NB!_** _You can find further reading materials in the [Repository Wiki](https://github.com/et-dagen/et-dagen/wiki) if the content in this README is not satisfactory_
 
+How the code is structured is in [ARCHITECTURE.md](ARCHITECTURE.md). Coding agents follow [CLAUDE.md](CLAUDE.md), which [AGENTS.md](AGENTS.md) points to. Report security problems privately as described in [SECURITY.md](SECURITY.md).
+
 ## Getting started
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
