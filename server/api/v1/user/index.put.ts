@@ -1,6 +1,35 @@
 // PUT /api/v1/user
 // endpoint for updating the name of a user in the database
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['User'],
+    summary: 'Update user profile',
+    description:
+      'Authenticated users may update themselves. Targeting another uid requires admin.',
+    security: [{ bearerAuth: [] }, { cookieAuth: [] }],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // requestBody: {
+    //   required: true,
+    //   content: {
+    //     'application/json': {
+    //       schema: {
+    //         type: 'object',
+    //         properties: { uid: { type: 'string', description: 'Admin only' } },
+    //         additionalProperties: true,
+    //       },
+    //     },
+    //   },
+    // },
+    // responses: {
+    //   204: { description: 'Updated' },
+    //   401: { description: 'Error (firebase/not-signed-in). or Error (firebase/user-not-authorized).' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { user } = event.context
   const { uid, ...newData } = await readBody(event)

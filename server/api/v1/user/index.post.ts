@@ -1,6 +1,50 @@
 // POST /api/v1/user
 // endpoint for creating or updating a user in the database
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['User'],
+    summary: 'Create or update user',
+    description:
+      'Called after Firebase sign-up. A registration code upgrades the account to a company ' +
+      'user. Requires a valid token but no database record yet.',
+    security: [{ bearerAuth: [] }, { cookieAuth: [] }],
+    parameters: [
+      {
+        name: 'code',
+        in: 'query',
+        required: false,
+        schema: { type: 'string' },
+        description: 'Registration code linking the user to a company',
+      },
+    ],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // requestBody: {
+    //   required: true,
+    //   content: {
+    //     'application/json': {
+    //       schema: {
+    //         type: 'object',
+    //         properties: {
+    //           uid: { type: 'string', description: 'Admin only' },
+    //           name: { type: 'string' },
+    //           studyProgram: { type: 'string' },
+    //           currentYear: { type: 'integer' },
+    //         },
+    //       },
+    //     },
+    //   },
+    // },
+    // responses: {
+    //   201: { description: 'Created, empty body' },
+    //   400: { description: 'Error (user/missing-programme)' },
+    //   401: { description: 'Error (firebase/user-not-authenticated). or Error (user/invalid-code).' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { decodedToken, user } = event.context
 

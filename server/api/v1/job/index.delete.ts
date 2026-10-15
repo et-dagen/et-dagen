@@ -1,6 +1,35 @@
 // DELETE /api/v1/job
 // endpoint for removing a job from db
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['Job'],
+    summary: 'Remove job listing',
+    description:
+      'Admin, or the owning company user. Ownership is resolved from the stored record, so ' +
+      'authorization happens after the lookup. This is the only DELETE that takes a query ' +
+      'parameter rather than a body.',
+    security: [{ bearerAuth: [] }, { cookieAuth: [] }],
+    parameters: [
+      {
+        name: 'jobUID',
+        in: 'query',
+        required: true,
+        schema: { type: 'string' },
+      },
+    ],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // responses: {
+    //   204: { description: 'Removed' },
+    //   400: { description: 'Error (job/missing-job-uid).' },
+    //   401: { description: 'Error (firebase/user-not-authorized).' },
+    //   404: { description: 'Error (job/not-found).' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 

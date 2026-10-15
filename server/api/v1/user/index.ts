@@ -1,6 +1,58 @@
 // GET /api/v1/user
 // endpoint for fetching user data from database
 
+defineRouteMeta({
+  openAPI: {
+    // The $global block is merged into the root of the generated document by
+    // Nitro. It is declared here once for the whole API - if this route is
+    // ever removed, move the block to another handler or the published spec
+    // loses its security schemes.
+    $global: {
+      components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            description:
+              'Firebase ID token. server/middleware/auth.ts exchanges it for the _token cookie ' +
+              'on first use.',
+          },
+          cookieAuth: {
+            type: 'apiKey',
+            in: 'cookie',
+            name: '_token',
+            description:
+              'httpOnly cookie set from a bearer token, valid for one day. Interchangeable with ' +
+              'bearerAuth.',
+          },
+        },
+      },
+    },
+    tags: ['User'],
+    summary: 'Fetch current user or list all users',
+    description:
+      'Returns the authenticated user by default. scope=all lists every user and requires admin.',
+    security: [{ bearerAuth: [] }, { cookieAuth: [] }],
+    parameters: [
+      {
+        name: 'scope',
+        in: 'query',
+        required: false,
+        schema: { type: 'string', enum: ['all'] },
+        description: 'Admin only. Lists all users.',
+      },
+    ],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // responses: {
+    //   200: { description: 'User, or map of UID to User when scope=all' },
+    //   401: { description: 'Error (firebase/user-not-authorized).' },
+    //   404: { description: 'Error (user/not-found).' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { decodedToken, user } = event.context
 

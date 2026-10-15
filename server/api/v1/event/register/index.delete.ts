@@ -1,6 +1,41 @@
 // DELETE /api/v1/event/register/:eventUID
 
 // endpoint for opting out of an event
+defineRouteMeta({
+  openAPI: {
+    tags: ['Event'],
+    summary: 'Opt user out of event',
+    description:
+      'Any authenticated user may opt themselves out. Supplying another userUID requires admin. ' +
+      'Promotes the first queued user when a spot frees up. Returns 201, not 204.',
+    security: [{ bearerAuth: [] }, { cookieAuth: [] }],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // requestBody: {
+    //   required: true,
+    //   content: {
+    //     'application/json': {
+    //       schema: {
+    //         type: 'object',
+    //         required: ['eventUID'],
+    //         properties: {
+    //           eventUID: { type: 'string' },
+    //           userUID: { type: 'string', description: 'Admin only' },
+    //         },
+    //       },
+    //     },
+    //   },
+    // },
+    // responses: {
+    //   201: { description: 'Opted out, empty body' },
+    //   400: { description: 'Error (event/missing-event-id).' },
+    //   401: { description: 'Error (event/register/not-owner).' },
+    //   404: { description: 'Error (event/register/user-not-registered-or-queued).' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { user } = event.context
 

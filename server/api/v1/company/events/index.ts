@@ -1,6 +1,33 @@
 // GET /api/v1/company/events
 // endpoint for fetching all company events from db
 
+defineRouteMeta({
+  openAPI: {
+    tags: ['Company'],
+    summary: 'List company events',
+    description:
+      'Admin sees all events; a company user sees only their own and must supply companyUID.',
+    security: [{ bearerAuth: [] }, { cookieAuth: [] }],
+    parameters: [
+      {
+        name: 'companyUID',
+        in: 'query',
+        required: false,
+        schema: { type: 'string' },
+        description: 'Required for company users, optional for admins',
+      },
+    ],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // responses: {
+    //   200: { description: 'Map of event UID to Event, or null' },
+    //   400: { description: 'Error (company/require-company-uid).' },
+    //   401: { description: 'Error (firebase/user-not-authorized).' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { user } = event.context
   const { companyUID } = getQuery(event)

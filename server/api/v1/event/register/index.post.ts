@@ -1,6 +1,42 @@
 // POST /api/v1/event/register/:eventUID
 
 // endpoint for signing up for an event
+defineRouteMeta({
+  openAPI: {
+    tags: ['Event'],
+    summary: 'Register user for event',
+    description:
+      'Any authenticated user may register themselves. Supplying a userUID other than your own ' +
+      'requires admin. Registers to the queue when the event is full. Note eventUID and userUID ' +
+      'are read from the body, despite the :eventUID in the file header comment.',
+    security: [{ bearerAuth: [] }, { cookieAuth: [] }],
+    // TODO(api-docs): fill in the request/response schemas below.
+    // Shapes are sketched from current handler behaviour - verify each
+    // against the handler before uncommenting.
+    // requestBody: {
+    //   required: true,
+    //   content: {
+    //     'application/json': {
+    //       schema: {
+    //         type: 'object',
+    //         required: ['eventUID'],
+    //         properties: {
+    //           eventUID: { type: 'string' },
+    //           userUID: { type: 'string', description: 'Admin only' },
+    //         },
+    //       },
+    //     },
+    //   },
+    // },
+    // responses: {
+    //   201: { description: 'Registered or queued, empty body' },
+    //   400: { description: 'Error (event/missing-event-id).' },
+    //   401: { description: 'Error (event/register/non-admin-user). etc.' },
+    //   404: { description: 'Registration closed, already registered, already queued, or requirements not met' },
+    // },
+  },
+})
+
 export default defineEventHandler(async (event) => {
   const { user } = event.context
   const { eventUID, userUID } = await readBody(event)
