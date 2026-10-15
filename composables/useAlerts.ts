@@ -39,3 +39,27 @@ export const getApiResponseAlertContext = (response: string) => {
     message: errorMessage,
   }
 }
+
+// Firebase Auth errors carry a `code`, not the server's `statusMessage`
+const firebaseAuthAlertKeys: Record<string, string> = {
+  'auth/email-already-in-use': 'alert.error.firebase.email_in_use',
+  'auth/invalid-email': 'alert.error.firebase.invalid_email',
+  'auth/user-not-found': 'alert.error.firebase.user_not_found',
+  'auth/wrong-password': 'alert.error.firebase.wrong_password',
+  'auth/invalid-credential': 'alert.error.firebase.wrong_password',
+}
+
+export const firebaseAuthAlertKey = (error: unknown): string | undefined => {
+  const code = (error as { code?: unknown } | null)?.code
+  return typeof code === 'string' ? firebaseAuthAlertKeys[code] : undefined
+}
+
+// alert for any error thrown by a form submit, from Firebase Auth or the API
+export const getErrorAlertContext = (error: unknown) => {
+  const key = firebaseAuthAlertKey(error)
+  if (key) return { type: 'error', message: useNuxtApp().$i18n.t(key) }
+
+  return getApiResponseAlertContext(
+    (error as { statusMessage?: string } | null)?.statusMessage ?? '',
+  )
+}
