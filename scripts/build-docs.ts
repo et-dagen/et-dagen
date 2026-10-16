@@ -237,15 +237,10 @@ run('bunx', ['typedoc', '--out', join(OUT, 'code')])
 // GitHub Pages needs .nojekyll or it drops directories beginning with _
 writeFileSync(join(OUT, '.nojekyll'), '')
 
-// Publishing a CNAME before its DNS record exists takes the site OFFLINE:
-// GitHub adopts the custom domain and redirects the github.io URL to a host
-// that does not resolve, so both addresses break until DNS catches up. The
-// domain is therefore opt-in, and stays off until someone deliberately turns
-// it on. See the DOCS_DOMAIN block in .github/workflows/docs.yml for the
-// switch-over order.
-//
-// docs/CNAME is the single source of the hostname - edit that one file to
-// move the docs to etdagene.no later.
+// Copies docs/CNAME into the site as a record of the hostname. GitHub ignores
+// it when Pages is deployed from Actions; the domain is set in Repo Settings >
+// Pages. See the DOCS_DOMAIN block in .github/workflows/docs.yml for how to
+// change it.
 if (!LABEL && process.env.DOCS_DOMAIN === 'true') {
   cpSync(join(ROOT, 'docs/CNAME'), join(OUT, 'CNAME'))
   console.log('› CNAME published')

@@ -184,25 +184,22 @@ jobs:
         env:
           DOCS_OUT: ${{ github.workspace }}/site
           DOCS_SERVER: https://etdagen.no
-          # ── Custom domain switch ────────────────────────────────────
-          # 'false' publishes to https://et-dagen.github.io/et-dagen/.
-          # 'true'  publishes docs/CNAME, moving the site to the hostname
-          #         named in that file (currently docs.etdagen.no).
+          # ── Custom domain ───────────────────────────────────────────
+          # 'true' copies docs/CNAME into the site. GitHub ignores that file
+          # when Pages is deployed from Actions, as it is here, so it is a
+          # record of the hostname only. The domain itself is set in Repo
+          # Settings > Pages (currently docs.etdagen.no).
           #
-          # Order matters. Setting this to 'true' before the DNS record
-          # resolves takes the docs OFFLINE: GitHub adopts the custom domain
-          # and starts redirecting the github.io URL to a host that does not
-          # answer, so BOTH addresses break until DNS catches up.
+          # To change the domain, in this order:
+          #   1. Have the DNS admin add:  <host> CNAME et-dagen.github.io
+          #   2. Confirm it resolves:     dig +short <host>
+          #   3. Set it in Pages:  gh api -X PUT repos/et-dagen/et-dagen/pages -f cname=<host>
+          #   4. Wait for the certificate, then tick "Enforce HTTPS" again;
+          #      changing the domain switches it off
+          #   5. Update docs/CNAME to match
           #
-          # To switch over, in this order:
-          #   1. Have the DNS admin add:  docs CNAME et-dagen.github.io
-          #   2. Confirm it resolves:     dig +short docs.etdagen.no
-          #   3. Flip this to 'true' and merge
-          #   4. Repo Settings > Pages picks the domain up from the artifact;
-          #      tick "Enforce HTTPS" once the certificate is issued
-          #
-          # To move to etdagene.no later, edit docs/CNAME - one file, one line.
-          # Nothing here needs to change.
+          # Setting the domain before DNS resolves takes the docs offline:
+          # GitHub redirects the github.io URL to a host that does not answer.
           DOCS_DOMAIN: 'true'
         run: |
           if [ ! -f scripts/build-docs.ts ]; then
