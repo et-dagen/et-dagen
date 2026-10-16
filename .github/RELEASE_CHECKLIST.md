@@ -19,7 +19,7 @@ ticked box that nobody checked.
 
 ### Manually verified on the commit being released
 
-- [ ] Front page loads, in both `nb-NO` and `en-US`
+- [ ] Front page loads, in both `nb-NO` and `en-GB`
 - [ ] Sign in, sign out, and sign up work
 - [ ] An admin can create, edit and delete an event
 - [ ] An admin can create, edit and delete a job listing

@@ -105,9 +105,9 @@ export default defineNuxtConfig({
       },
       {
         code: 'en',
-        language: 'en-US',
+        language: 'en-GB',
         name: 'English',
-        file: 'en-US.json',
+        file: 'en-GB.json',
       },
     ],
     defaultLocale: 'no',
