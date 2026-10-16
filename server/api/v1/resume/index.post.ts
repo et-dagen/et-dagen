@@ -7,7 +7,7 @@ defineRouteMeta({
     summary: 'Upload user resume',
     description:
       'PDF only. Multipart parts are read POSITIONALLY, not by name - part 0 must be the file ' +
-      'and part 1 the userUID. Returns the storage URL as a bare string, not an object. Uses 402 ' +
+      'and part 1 the userUID. Returns the storage URL as a bare string, not an object. Uses 400 ' +
       'for missing data.',
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],
     // TODO(api-docs): fill in the request/response schemas below.
@@ -31,7 +31,6 @@ defineRouteMeta({
     //   200: { description: 'Storage URL as a bare string', content: { 'application/json': { schema: { type: 'string' } } } },
     //   400: { description: 'User not authorized, or unsupported file type' },
     //   401: { description: 'Cannot upload resume to other users' },
-    //   402: { description: 'Firebase: Error (storage/data-not-defined)' },
     //   500: { description: 'Firebase: Error (storage/cannot-upload-file).' },
     // },
   },
@@ -81,7 +80,7 @@ export default defineEventHandler(async (event) => {
       message: 'Required resume data is missing',
     })
     throw createError({
-      statusCode: 402,
+      statusCode: 400,
       statusMessage: 'Firebase: Error (storage/data-not-defined)',
     })
   }

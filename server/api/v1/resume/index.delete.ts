@@ -7,7 +7,7 @@ defineRouteMeta({
     summary: 'Delete user resume',
     description:
       'Users may delete their own resume; admins may delete the resume of any ' +
-      'user. Uses 402 when the user has no resume.',
+      'user. Uses 404 when the user has no resume.',
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],
     // TODO(api-docs): fill in the request/response schemas below.
     // Shapes are sketched from current handler behaviour - verify each
@@ -27,7 +27,7 @@ defineRouteMeta({
     //   204: { description: 'Deleted' },
     //   400: { description: 'User not authorized' },
     //   401: { description: 'User can only delete their own resume' },
-    //   402: { description: 'User does not have a resume' },
+    //   404: { description: 'User does not have a resume' },
     //   500: { description: 'Firebase: Error (storage/cannot-delete-file).' },
     // },
   },
@@ -74,7 +74,7 @@ export default defineEventHandler(async (event) => {
       message: 'User does not have a resume',
     })
     throw createError({
-      statusCode: 402,
+      statusCode: 404,
       statusMessage: 'User does not have a resume',
     })
   }
