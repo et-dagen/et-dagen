@@ -55,7 +55,7 @@ The target layout, and how to place code while both shapes exist, is in `ARCHITE
   `MapLink`, ...) and their `parse`/`tryParse` functions at boundaries. Only the owning module casts to a brand.
 - **Authorization**: v1 uses `server/utils/hasAccess.ts`. The ABAC model (`domain/authorization`,
   `hasPermission`) replaces it once it is wired in; do not add new `hasAccess` call sites to new code.
-- **Translations**: user-facing text goes in both `i18n/locales/en-US.json` and `nb-NO.json`.
+- **Translations**: user-facing text goes in both `i18n/locales/en-GB.json` and `nb-NO.json`.
 - **Comments**: TSDoc on exported domain types and functions, explaining why. No comments that
   restate the code.
 
