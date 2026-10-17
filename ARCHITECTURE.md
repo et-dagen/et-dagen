@@ -92,6 +92,12 @@ Every request produces one wide event: a single structured record carrying every
 it. Handlers add to it with `setResourceContext`, `addEventContext`, `setErrorContext` and the
 database timing helpers in `server/utils/wideEventHelpers.ts`. Successful requests are sampled.
 
+Errors are logged and answered in one place. Code throws `fail(code)` from `domain/errors`, whose
+catalogue gives each code its status and developer message. The Nitro error handler in
+`server/errors/` records the error, its causes and, for server errors, the stack on the wide event,
+and answers API requests with the code and the request id. Anything else that is thrown becomes
+`internal/unexpected`. The client translates the code for the user.
+
 ## Tests
 
 All tests live under `tests/`, mirroring the source path.
