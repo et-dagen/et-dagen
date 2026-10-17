@@ -139,5 +139,16 @@ export default defineNuxtConfig({
     host: '0.0.0.0', // default: localhost
   },
 
+  hooks: {
+    // Our error handler runs before Nuxt's: it logs every error and answers API requests, and
+    // leaves page requests to Nuxt's error page.
+    'nitro:config'(config) {
+      config.errorHandler = [
+        '~/server/errors/handler',
+        ...[config.errorHandler ?? []].flat(),
+      ]
+    },
+  },
+
   compatibilityDate: '2024-12-26',
 })
