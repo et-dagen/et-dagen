@@ -92,14 +92,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // only admins can get other users than their own
-  // TODO! Restrict company user access by adding custom endpoint for /api/v1/company/events/users
-  if (
-    !hasAccess(user, ['admin', 'basic', 'company']) ||
-    !scope ||
-    scope !== 'all'
-  ) {
-    // basic users need to be able to get attendant list! Is this a security risk?
+  if (!isListRequest) {
     addEventContext(event, 'returned_self', true)
     return user
   }
@@ -122,7 +115,33 @@ export default defineEventHandler(async (event) => {
     ...dbUsers[firebaseUser.uid],
   }))
 
-  addEventContext(event, 'result_count', users.length)
+  if (hasAccess(user, ['admin'])) {
+    addEventContext(event, 'result_count', users.length)
+    return users
+  }
 
-  return users
+  // everyone else sees only the users and fields their role needs
+  const eventsSnapshot = await withDbTiming(event, 'events', 'read', () =>
+    db.ref('events').once('value'),
+  )
+  const cvAccess = hasAccess(user, ['company'])
+    ? (
+        await withDbTiming(
+          event,
+          `companies/${user.companyUID}/cvAccess`,
+          'read',
+          () => db.ref(`companies/${user.companyUID}/cvAccess`).once('value'),
+        )
+      ).val() === true
+    : false
+
+  const visible = visibleUsers(
+    user,
+    users,
+    eventsSnapshot.val() ?? {},
+    cvAccess,
+  )
+  addEventContext(event, 'result_count', visible.length)
+
+  return visible
 })

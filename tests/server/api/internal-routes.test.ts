@@ -28,6 +28,7 @@ const API_DIR = join(import.meta.dirname, '../../../server/api/v1')
  */
 const PUBLISHED_ADMIN_ROUTES = new Set([
   // Users act on themselves; admins act on anyone.
+  'user/index.ts',
   'user/index.post.ts',
   'user/index.put.ts',
   'user/index.delete.ts',
