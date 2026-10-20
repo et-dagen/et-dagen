@@ -64,8 +64,8 @@ flowchart TB
 | Directory                               | Holds                                                            | May import                      |
 | --------------------------------------- | ---------------------------------------------------------------- | ------------------------------- |
 | `domain/`                               | Entities, value objects, rules, permission table                 | Only `domain/`                  |
-| `application/` (planned)                | Use cases, and the ports they need                               | `domain/`, `application/`       |
-| `server/adapters/` (planned)            | Port implementations for each store                              | `domain/`, `application/`, SDKs |
+| `application/`                          | Use cases, and the ports they need                               | `domain/`, `application/`       |
+| `server/adapters/`                      | Port implementations for each store                              | `domain/`, `application/`, SDKs |
 | `server/api/`                           | Route handlers: parse, call one use case, map the result to HTTP | Everything above                |
 | `server/plugins/container.ts` (planned) | Builds adapters once and puts them on the request                | Everything above                |
 
@@ -74,6 +74,10 @@ framework.
 
 `tests/architecture.spec.ts` fails the build if `domain/` or `application/` imports anything
 outside the directories allowed above.
+
+The first port is `EventRepository` in `application/events/`. Every adapter for a port must pass
+that port's contract suite (`tests/application/**/*.contract.ts`), which the adapter's own test
+file runs with a factory. The in-memory adapter is the reference implementation.
 
 A port method performs a whole operation, such as "register or waitlist this user", not a separate
 read and write. Each adapter then does it atomically in its own way, and a later PostgreSQL adapter

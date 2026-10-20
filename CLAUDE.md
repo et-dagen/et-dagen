@@ -35,6 +35,10 @@ server code.
 - `domain/`: the domain core. Entities, value objects, rules, authorization. It must not import Nuxt,
   Nitro, Firebase or anything under `server/`; `tests/architecture.spec.ts` enforces it. New
   business rules go here.
+- `application/`: use cases and the ports (interfaces) they need. Imports only `domain/` and
+  `application/`.
+- `server/adapters/`: port implementations, one directory per store (`memory/`, later `rtdb/`).
+  Each runs its port's contract suite from `tests/application/`.
 - `server/api/v1/`: the current API. Handlers still call Firebase directly; that is being replaced,
   not extended. Do not add new business logic to a v1 handler.
 - `server/middleware/`, `server/utils/`: request pipeline and shared server helpers.
