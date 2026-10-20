@@ -88,6 +88,17 @@ export default defineEventHandler(async (event) => {
   if (!hasAccess(user, ['admin', 'company']) || !scope || scope !== 'all')
     return user
 
+  // a company sees résumés only when the committee has given it résumé access
+  if (!hasAccess(user, ['admin'])) {
+    const cvAccess = await withDbTiming(
+      event,
+      `companies/${user.companyUID}/cvAccess`,
+      'read',
+      () => db.ref(`companies/${user.companyUID}/cvAccess`).once('value'),
+    )
+    if (cvAccess.val() !== true) return user
+  }
+
   // reference to users
   const usersRef = db.ref('users')
 

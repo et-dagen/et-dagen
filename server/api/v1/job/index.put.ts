@@ -148,6 +148,9 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  // a company may edit its jobs, not move them to another company
+  if (!isAdmin) delete newData.companyUID
+
   jobsRef.child(jobUID).update(newData)
   trackDbWrite(event, `jobs/${jobUID}`)
 

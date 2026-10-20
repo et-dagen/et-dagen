@@ -1,6 +1,8 @@
 // PUT /api/v1/company
 // endpoint for modifying companies in the db
 
+const COMPANY_EDITABLE_FIELDS = ['name', 'description', 'logo', 'webpage']
+
 defineRouteMeta({
   openAPI: {
     tags: ['Company'],
@@ -87,11 +89,17 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // only admins can change company types
-  if (!isAdmin) delete newData.type
+  // company users may change only their profile; type and résumé access are set by admins
+  const updates = isAdmin
+    ? newData
+    : Object.fromEntries(
+        Object.entries(newData).filter(([key]) =>
+          COMPANY_EDITABLE_FIELDS.includes(key),
+        ),
+      )
 
   // update company data
-  companiesRef.child(companyUID).update(newData)
+  companiesRef.child(companyUID).update(updates)
   trackDbWrite(event, `companies/${companyUID}`)
 
   // successfully modified companies
