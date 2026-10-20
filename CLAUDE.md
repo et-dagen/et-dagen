@@ -33,7 +33,8 @@ adapters). `ARCHITECTURE.md` describes the target and the dependency rules; foll
 server code.
 
 - `domain/`: the domain core. Entities, value objects, rules, authorization. It must not import Nuxt,
-  Nitro, Firebase or anything under `server/`. New business rules go here.
+  Nitro, Firebase or anything under `server/`; `tests/architecture.spec.ts` enforces it. New
+  business rules go here.
 - `server/api/v1/`: the current API. Handlers still call Firebase directly; that is being replaced,
   not extended. Do not add new business logic to a v1 handler.
 - `server/middleware/`, `server/utils/`: request pipeline and shared server helpers.
