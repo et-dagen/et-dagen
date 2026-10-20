@@ -178,6 +178,10 @@ export default defineEventHandler(async (event) => {
   //       "Eventtype has to be either 'presentation', 'dinner' or 'other'",
   //   })
 
+  if (hasAccess(user, ['company'])) {
+    await assertCompanyOwnsEvent(event, eventUID, user.companyUID)
+  }
+
   // Get database reference
   const eventRef = db.ref(`events/${eventUID}`)
 

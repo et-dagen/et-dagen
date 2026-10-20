@@ -84,6 +84,10 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  if (hasAccess(user, ['company'])) {
+    await assertCompanyOwnsEvent(event, eventUID, user.companyUID)
+  }
+
   // Reference to events
   const eventsRef = db.ref('events')
 
