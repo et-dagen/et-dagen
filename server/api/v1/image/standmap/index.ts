@@ -28,22 +28,21 @@ export default defineEventHandler(async (event) => {
     'List stand map images',
   )
   // get storage bucket
-  const maps = await storage
-    .bucket()
-    .getFiles({ prefix: 'standmaps/', delimiter: '/' })
+  const bucket = storage.bucket()
+  const maps = await bucket.getFiles({ prefix: 'standmaps/', delimiter: '/' })
 
+  // Stand maps are uploaded public (POST /api/v1/image), so this endpoint only
+  // reads. The plain public URL is cacheable, unlike the download link.
   const sortedMaps = maps[0]
     // omit root folder
     .filter((map) => map.name !== 'standmaps/')
-    // make all images public
-    .map((map) => {
-      map.makePublic()
-      return map // pass to next map
-    })
     // only return the date and url
     .map((map) => {
       const date = map.name.split('standmaps/')[1].split('.')[0]
-      return { date, url: map.metadata.mediaLink }
+      return {
+        date,
+        url: `https://storage.googleapis.com/${bucket.name}/${map.name}`,
+      }
     })
 
   return sortedMaps
