@@ -79,7 +79,7 @@ export default defineEventHandler(async (event) => {
     })
     throw createError({
       statusCode: 400,
-      statusMessage: 'Error (firebase/storage/missing-file-or-path',
+      statusMessage: 'Error (firebase/storage/missing-file-or-path).',
     })
   }
 
@@ -119,13 +119,10 @@ export default defineEventHandler(async (event) => {
       code: 'storage/cannot-upload-file',
       message: 'Failed to upload image to storage',
     })
-    sendError(
-      event,
-      createError({
-        statusCode: 500,
-        statusMessage: 'Error (storage/cannot-upload-file).',
-      }),
-    )
+    throw createError({
+      statusCode: 500,
+      statusMessage: 'Error (storage/cannot-upload-file).',
+    })
   })
 
   // return the public url of the image
