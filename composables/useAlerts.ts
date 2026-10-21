@@ -1,3 +1,5 @@
+import { errorFeedback, UNKNOWN } from '~/composables/errors/feedback'
+
 // get server response message
 // input format: 'ErrorType (subCatergory/subsubCatergory/error-message)'
 // categories followed by / are optional
@@ -40,26 +42,23 @@ export const getApiResponseAlertContext = (response: string) => {
   }
 }
 
-// Firebase Auth errors carry a `code`, not the server's `statusMessage`
-const firebaseAuthAlertKeys: Record<string, string> = {
-  'auth/email-already-in-use': 'alert.error.firebase.email_in_use',
-  'auth/invalid-email': 'alert.error.firebase.invalid_email',
-  'auth/user-not-found': 'alert.error.firebase.user_not_found',
-  'auth/wrong-password': 'alert.error.firebase.wrong_password',
-  'auth/invalid-credential': 'alert.error.firebase.wrong_password',
-}
-
-export const firebaseAuthAlertKey = (error: unknown): string | undefined => {
-  const code = (error as { code?: unknown } | null)?.code
-  return typeof code === 'string' ? firebaseAuthAlertKeys[code] : undefined
-}
-
-// alert for any error thrown by a form submit, from Firebase Auth or the API
+/**
+ * The message for any error a user action can end in: Firebase Auth, the API, or the network
+ *
+ * Unexpected errors carry the request id, so a user's report can be matched to the log.
+ */
 export const getErrorAlertContext = (error: unknown) => {
-  const key = firebaseAuthAlertKey(error)
-  if (key) return { type: 'error', message: useNuxtApp().$i18n.t(key) }
+  const { t, te } = useNuxtApp().$i18n
+  const { key, requestId } = errorFeedback(error, (k) => te(k))
+  const message =
+    key === UNKNOWN && requestId
+      ? `${t(key)} ${t('errors.reference', { requestId })}`
+      : t(key)
+  return { type: 'error' as const, message }
+}
 
-  return getApiResponseAlertContext(
-    (error as { statusMessage?: string } | null)?.statusMessage ?? '',
-  )
+/** Show the alert for an error, as every failed form submit should */
+export const alertError = (error: unknown) => {
+  const { type, message } = getErrorAlertContext(error)
+  useAlertStore().alert(message, type)
 }

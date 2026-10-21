@@ -183,7 +183,7 @@
   },
   "alert": {
     "close_alert": "Close",
-    "default_message": "Oi! Noe gikk galt.",
+    "default_message": "Oops! Something went wrong.",
     "api": {
       "error": {
         "general": {
@@ -245,13 +245,6 @@
       "form": {
         "missing_email": "Email input is missing",
         "invalid": "Invalid form"
-      },
-      "firebase": {
-        "email_in_use": "Email already in use",
-        "user_not_authorized": "User not authorised",
-        "invalid_email": "Invalid email address",
-        "user_not_found": "User not found",
-        "wrong_password": "Incorrect password"
       },
       "server": {
         "invalid_registration_code": "Invalid registration code"
@@ -674,7 +667,6 @@
   "forcompanies": {
     "about": {
       "heading": "About E&T-dagene",
-
       "p1": "The Electronics- and technology days is a yearly career fair hosted by students from Electronic Systems design and Innovation, NTNU. ELSYS is a study programme combining among other things physics, electronics, signal processing and circuit design, where students early on in their studies are faced with projects and real-world problem solving.",
       "p2": "As a participating company at the E&T days, you will get a unique opportunity to meet highly motivated and enthusiastic masters engineering students, with a wide variety of specialties within electronic engineering. ELSYS has specialties within signal processing, machine learning, acoustics, radiosystems, both analog and digital electronics- and systems design, space systems and quantum technology.",
       "p3": "The E&T days are promoted to students ahead of the fair, and the venue is Glassgården (in EL-bygget at NTNU Gløshaugen), which lies connected to one of the three largest auditoriums at Gløshaugen, as well as many other lecture- and reading halls. Glassgården is therefore one of the most well-fitting locations on Gløshaugen to attract students, and you will be able to meet students from among others; ELSYS, Cybernetics and Robotics, and Energy-studies.",
@@ -698,6 +690,31 @@
         "a5": "The closest point of arrival by car/taxi is on the south end of Frimerket; the field behind the main building.",
         "a6": "Outside of what is included in your package, extra stand equipment can be ordered. E.g. extra tables, coffee or displays. Contact bedriftansvarlig{'@'}et-dagen.no."
       }
+    }
+  },
+  "errors": {
+    "unknown": "Something went wrong. Please try again shortly.",
+    "reference": "If you contact us, quote the code {requestId}.",
+    "network": {
+      "offline": "We can't reach the server. Check your internet connection and try again."
+    },
+    "http": {
+      "unauthenticated": "Please sign in to do this.",
+      "forbidden": "You don't have access to this.",
+      "not-found": "We couldn't find what you were looking for.",
+      "too-many-requests": "Too many attempts in a short time. Please wait a moment and try again."
+    },
+    "auth": {
+      "invalid-credential": "Wrong email address or password.",
+      "invalid-email": "That email address isn't valid.",
+      "missing-password": "Please enter your password.",
+      "email-already-in-use": "An account with this email address already exists. Sign in, or reset your password.",
+      "weak-password": "That password is too weak. Use at least six characters.",
+      "too-many-requests": "Too many failed attempts. Please wait a while, or reset your password.",
+      "user-disabled": "This account has been disabled. Please contact us."
+    },
+    "internal": {
+      "unexpected": "Something went wrong on our side. Please try again shortly."
     }
   }
 }

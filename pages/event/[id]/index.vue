@@ -206,10 +206,7 @@
         ),
       )
       .catch((error: any) => {
-        const { type, message } = getApiResponseAlertContext(
-          error.statusMessage,
-        )
-        useAlert.alert(message, type as AlertType)
+        alertError(error)
       })
       .finally(() => (loading.value = false))
   }
@@ -230,10 +227,7 @@
         ),
       )
       .catch((error: any) => {
-        const { type, message } = getApiResponseAlertContext(
-          error.statusMessage,
-        )
-        useAlert.alert(message, type as AlertType)
+        alertError(error)
       })
       .finally(() => (loading.value = false))
   }
@@ -255,10 +249,7 @@
         ),
       )
       .catch((error) => {
-        const { type, message } = getApiResponseAlertContext(
-          error.statusMessage,
-        )
-        useAlert.alert(message, type as AlertType)
+        alertError(error)
       })
       .finally(() => {
         loading.value = false
@@ -283,10 +274,7 @@
         ),
       )
       .catch((error) => {
-        const { type, message } = getApiResponseAlertContext(
-          error.statusMessage,
-        )
-        useAlert.alert(message, type as AlertType)
+        alertError(error)
       })
       .finally(() => {
         loading.value = false

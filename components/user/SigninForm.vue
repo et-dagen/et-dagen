@@ -18,8 +18,7 @@
     isRegistering.value = true
     signinUser(state.email, state.password)
       .catch((error) => {
-        const { type, message } = getErrorAlertContext(error)
-        useAlerts.alert(message, type as AlertType)
+        alertError(error)
         console.error(error)
       })
       .finally(() => {
@@ -41,8 +40,7 @@
         ),
       )
       .catch((error) => {
-        const { type, message } = getErrorAlertContext(error)
-        useAlerts.alert(message, type as AlertType)
+        alertError(error)
         console.error(error)
       })
   }

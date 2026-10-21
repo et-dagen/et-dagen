@@ -112,10 +112,7 @@
         setTimeout(() => navigateTo(localePath('/admin/companies')), 2000)
       })
       .catch((error) => {
-        const { type, message } = getApiResponseAlertContext(
-          error.statusMessage,
-        )
-        useAlerts.alert(message, type as AlertType)
+        alertError(error)
         console.error(error)
       })
   }
@@ -158,10 +155,7 @@
         setTimeout(() => navigateTo(localePath('/admin/companies')), 2000)
       })
       .catch((error) => {
-        const { type, message } = getApiResponseAlertContext(
-          error.statusMessage,
-        )
-        useAlerts.alert(message, type as AlertType)
+        alertError(error)
         console.error(error)
       })
   }
