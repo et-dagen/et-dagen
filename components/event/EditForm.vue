@@ -265,7 +265,7 @@
       })
       .catch((error) => {
         // Handle errors, including HTTP errors
-        getApiResponseAlertContext(error.statusMessage)
+        alertError(error)
       })
   }
 
@@ -294,7 +294,7 @@
       })
       .catch((error) => {
         // Handle errors, including HTTP errors
-        getApiResponseAlertContext(error.statusMessage)
+        alertError(error)
       })
   }
 
@@ -309,7 +309,7 @@
         refreshAttendants()
         signUpForEventUid.value = ''
       })
-      .catch((error) => getApiResponseAlertContext(error.statusMessage))
+      .catch((error) => alertError(error))
   }
 </script>
 

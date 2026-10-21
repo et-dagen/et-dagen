@@ -246,13 +246,6 @@
         "missing_email": "Epost ikke oppgitt",
         "invalid": "Skjemaet er ikke gyldig"
       },
-      "firebase": {
-        "email_in_use": "Eposten er allerede i bruk",
-        "user_not_authorized": "Du har ikke tilgang til denne ressursen",
-        "invalid_email": "Ugyldig epost",
-        "user_not_found": "Brukeren ble ikke funnet",
-        "wrong_password": "Feil passord"
-      },
       "server": {
         "invalid_registration_code": "Ugyldig registreringskode"
       },
@@ -698,6 +691,31 @@
         "a5": "Nærmeste ankomst med bil er på sørsiden av frimerket; gressplenen rett bak Hovedbygget.",
         "a6": "Utover det som er inkludert i kontrakten kan det bestilles ekstrautstyr som for eksempel ekstra bord, ståbord, kaffe eller TV-skjermer. Kontakt oss på bedriftansvarlig{'@'}et-dagen.no."
       }
+    }
+  },
+  "errors": {
+    "unknown": "Noe gikk galt. Prøv igjen om litt.",
+    "reference": "Gi oss koden {requestId} hvis du tar kontakt.",
+    "network": {
+      "offline": "Vi får ikke kontakt med serveren. Sjekk internettforbindelsen og prøv igjen."
+    },
+    "http": {
+      "unauthenticated": "Du må logge inn for å gjøre dette.",
+      "forbidden": "Du har ikke tilgang til dette.",
+      "not-found": "Vi fant ikke det du lette etter.",
+      "too-many-requests": "For mange forsøk på kort tid. Vent litt og prøv igjen."
+    },
+    "auth": {
+      "invalid-credential": "Feil e-postadresse eller passord.",
+      "invalid-email": "E-postadressen er ikke gyldig.",
+      "missing-password": "Skriv inn passordet ditt.",
+      "email-already-in-use": "Det finnes allerede en konto med denne e-postadressen. Logg inn, eller tilbakestill passordet.",
+      "weak-password": "Passordet er for svakt. Bruk minst seks tegn.",
+      "too-many-requests": "For mange mislykkede forsøk. Vent litt, eller tilbakestill passordet.",
+      "user-disabled": "Denne kontoen er deaktivert. Ta kontakt med oss."
+    },
+    "internal": {
+      "unexpected": "Noe gikk galt hos oss. Prøv igjen om litt."
     }
   }
 }

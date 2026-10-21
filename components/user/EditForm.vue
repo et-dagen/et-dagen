@@ -180,7 +180,7 @@
       })
       .catch((error) => {
         console.error(error)
-        getApiResponseAlertContext(error.statusMessage)
+        alertError(error)
       })
   }
 </script>

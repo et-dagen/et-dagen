@@ -120,7 +120,7 @@
         )
         setTimeout(() => navigateTo(localePath('/admin/jobs')), 2000)
       })
-      .catch((error) => getApiResponseAlertContext(error.statusMessage))
+      .catch((error) => alertError(error))
   }
 
   const createCompany = async () => {
@@ -146,7 +146,7 @@
         )
         setTimeout(() => navigateTo(localePath('/admin/jobs')), 2000)
       })
-      .catch((error) => getApiResponseAlertContext(error.statusMessage))
+      .catch((error) => alertError(error))
   }
 </script>
 

@@ -114,8 +114,7 @@
       user.registrationCode ?? undefined, // Only send registration code if user is a company
     )
       .catch((error) => {
-        const { type, message } = getErrorAlertContext(error)
-        useAlerts.alert(message, type as AlertType)
+        alertError(error)
         console.error(error)
       })
       .finally(() => {
