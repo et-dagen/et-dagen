@@ -85,6 +85,9 @@ export interface WideEvent {
     message: string
     stack?: string
     retriable?: boolean
+    details?: Readonly<Record<string, unknown>>
+    // The errors that led to this one, outermost first (server/errors/describe.ts)
+    causes?: Array<{ type: string; message: string; code?: string }>
   }
 
   // Outcome
