@@ -111,7 +111,8 @@ export default defineNuxtConfig({
       },
     ],
     defaultLocale: 'no',
-    vueI18n: 'config/i18n.config.ts',
+    // relative to the i18n/ directory (@nuxtjs/i18n v9)
+    vueI18n: '../config/i18n.config.ts',
     detectBrowserLanguage: false,
   },
 
