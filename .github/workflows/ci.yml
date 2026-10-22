@@ -52,6 +52,36 @@ jobs:
       - uses: ./.github/actions/setup
       - run: bun run build
 
+  # Black-box tests of the v1 API: the production build against the Firebase
+  # emulators (README, Testing). Not a required check yet; add it to the dev
+  # ruleset once it has run reliably for a while.
+  test-api:
+    name: test (api)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup
+      # firebase-tools needs Java 21 or newer for the emulators.
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/firebase/emulators
+          key: firebase-emulators-${{ hashFiles('package.json') }}
+          restore-keys: firebase-emulators-
+      - run: bun run build
+      - run: bun run test:api
+      - name: Upload server and emulator logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-test-logs
+          path: |
+            .output/api-test-server.log
+            *-debug.log
+
   # --- Advisory jobs: reported, never merge-blocking -----------------------
 
   # Vue SFCs carry pre-existing type errors that predate any typechecking in
