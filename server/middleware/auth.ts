@@ -23,8 +23,12 @@ export default defineEventHandler(async (event) => {
   // set new token cookie on response
   if (idToken.includes('Bearer')) {
     idToken = idToken.split('Bearer ')[1]
+    // Strict: the browser never sends it with a request from another site
     setCookie(event, '_token', idToken, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      path: '/',
       maxAge: dayInSeconds * 1,
     })
   }
