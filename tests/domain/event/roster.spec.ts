@@ -51,33 +51,47 @@ describe('withdraw', () => {
       cy,
       at,
     )
-    const { roster, outcome } = withdraw(queued.roster, ada, at)
+    const { roster, outcome } = withdraw(queued.roster, oneSpot, ada, at)
     expect(outcome).toEqual({ kind: 'withdrawn', promoted: bo })
     expect([...roster.attendants.keys()]).toEqual([bo])
     expect(roster.queue).toEqual([cy])
   })
 
+  it('promotes nobody while the event is still full after a lowered limit', () => {
+    const two = { attendanceLimit: 2 }
+    let roster = emptyRoster()
+    for (const user of [ada, bo, cy])
+      roster = register(roster, two, user, at).roster
+    // the limit drops to one after all three asked: ada and bo attend, cy waits
+    const { roster: after, outcome } = withdraw(roster, oneSpot, ada, at)
+    expect(outcome).toEqual({ kind: 'withdrawn', promoted: null })
+    expect([...after.attendants.keys()]).toEqual([bo])
+    expect(after.queue).toEqual([cy])
+  })
+
   it('frees the spot when nobody is waiting', () => {
-    const { roster, outcome } = withdraw(full(), ada, at)
+    const { roster, outcome } = withdraw(full(), oneSpot, ada, at)
     expect(outcome).toEqual({ kind: 'withdrawn', promoted: null })
     expect(roster.attendants.size).toBe(0)
   })
 
   it('takes a queued user out of the queue only', () => {
     const queued = register(full(), oneSpot, bo, at).roster
-    const { roster, outcome } = withdraw(queued, bo, at)
+    const { roster, outcome } = withdraw(queued, oneSpot, bo, at)
     expect(outcome).toEqual({ kind: 'dequeued' })
     expect(roster.queue).toEqual([])
     expect(roster.attendants.has(ada)).toBe(true)
   })
 
   it('reports a user who was never on the roster', () => {
-    expect(withdraw(full(), bo, at).outcome).toEqual({ kind: 'not-registered' })
+    expect(withdraw(full(), oneSpot, bo, at).outcome).toEqual({
+      kind: 'not-registered',
+    })
   })
 
   it('leaves the original roster unchanged', () => {
     const before = full()
-    withdraw(before, ada, at)
+    withdraw(before, oneSpot, ada, at)
     expect(before.attendants.has(ada)).toBe(true)
   })
 })

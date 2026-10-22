@@ -72,9 +72,14 @@ export function register(
 
 /**
  * Take a user off the event, moving the first in the queue into the freed spot
+ *
+ * @remarks
+ * Nobody is promoted while the event is still full, which happens when the limit was lowered after
+ * people registered.
  */
 export function withdraw(
   roster: Roster,
+  registration: Pick<Registration, 'attendanceLimit'>,
   user: UserUid,
   at: ISO8601String,
 ): { roster: Roster; outcome: WithdrawOutcome } {
@@ -88,8 +93,14 @@ export function withdraw(
 
   const attendants = new Map(roster.attendants)
   attendants.delete(user)
-  const [promoted = null, ...queue] = roster.queue
-  if (promoted) attendants.set(promoted, attending(at))
+  if (roster.queue.length === 0 || !hasSpots(registration, attendants.size)) {
+    return {
+      roster: { ...roster, attendants },
+      outcome: { kind: 'withdrawn', promoted: null },
+    }
+  }
+  const [promoted, ...queue] = roster.queue
+  attendants.set(promoted, attending(at))
   return {
     roster: { attendants, queue },
     outcome: { kind: 'withdrawn', promoted },

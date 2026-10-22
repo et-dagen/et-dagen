@@ -36,11 +36,10 @@ export function memoryEventRepository(
     withdraw: (uid, user, at) => {
       const stored = events.get(uid)
       if (!stored) return Promise.resolve({ kind: 'event-not-found' })
-      if (!stored.event.registration) {
-        return Promise.resolve({ kind: 'no-registration' })
-      }
+      const { registration } = stored.event
+      if (!registration) return Promise.resolve({ kind: 'no-registration' })
 
-      const next = withdraw(stored.roster, user, at)
+      const next = withdraw(stored.roster, registration, user, at)
       events.set(uid, { ...stored, roster: next.roster })
       return Promise.resolve(next.outcome)
     },
