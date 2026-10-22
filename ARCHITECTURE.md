@@ -97,7 +97,8 @@ can replace the Realtime Database one without changing the use cases.
 
 Every request produces one wide event: a single structured record carrying everything known about
 it. Handlers add to it with `setResourceContext`, `addEventContext`, `setErrorContext` and the
-database timing helpers in `server/utils/wideEventHelpers.ts`. Successful requests are sampled.
+database timing helpers in `server/utils/wideEventHelpers.ts`. Routine reads are not logged; changes,
+listings of personal data, warnings, errors and slow requests always are (`server/utils/logger.ts`).
 
 Errors are logged and answered in one place. Code throws `fail(code)` from `domain/errors`, whose
 catalogue gives each code its status and developer message. The Nitro error handler in
