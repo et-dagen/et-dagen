@@ -1,12 +1,15 @@
 // DELETE /api/v1/user
 // endpoint for removing a user in the database
 
+import { eraseUsers } from '../../../user/erasure'
+
 defineRouteMeta({
   openAPI: {
     tags: ['User'],
     summary: 'Delete user(s)',
     description:
-      'Deletes the caller when no UIDs are supplied. Passing UIDs requires admin.',
+      'Deletes the caller when no UIDs are supplied. Passing UIDs requires admin. Removes ' +
+      'everything about each user: résumé files, places on events, the profile and the account.',
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],
     // TODO(api-docs): fill in the request/response schemas below.
     // Shapes are sketched from current handler behaviour - verify each
@@ -66,19 +69,9 @@ export default defineEventHandler(async (event) => {
 
   addEventContext(event, 'target_uid_count', (UIDs as string[]).length)
 
-  // reference to users
-  const usersRef = db.ref('users')
-
-  // remove users from db
-  usersRef.update(
-    // format UIDs array as object with the UIDs as keys and values null
-    Object.assign({}, ...(UIDs as string[]).map((uid) => ({ [uid]: null }))),
-  )
-  trackDbDelete(event, 'users')
-
-  // remove firebase auth users
-  await withDbTiming(event, 'auth/users', 'delete', () =>
-    auth.deleteUsers(UIDs),
+  // remove résumé files, event places, profiles and accounts
+  await withDbTiming(event, 'users', 'delete', () =>
+    eraseUsers({ db, files: storage.bucket(), auth }, UIDs as string[]),
   )
 
   // users successfully removed
