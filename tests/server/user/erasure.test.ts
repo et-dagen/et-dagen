@@ -105,6 +105,27 @@ describe('eraseUsers', () => {
     expect(upcoming.queue).toEqual({ 1700000000002: 'later' })
   })
 
+  it('promotes nobody while the event is still full after a lowered limit', async () => {
+    const { db, files, auth } = setup()
+    const events = db.tree.events as Record<string, Tree>
+    events.upcoming.attendants = {
+      gone: { attended: false, registeredAt: 1 },
+      kept: { attended: false, registeredAt: 1 },
+    }
+    events.upcoming.capacity = 1
+    await eraseUsers(
+      { db: db as never, files, auth: auth as never },
+      ['gone'],
+      now,
+    )
+
+    expect(Object.keys(events.upcoming.attendants as Tree)).toEqual(['kept'])
+    expect(events.upcoming.queue).toEqual({
+      1700000000001: 'first',
+      1700000000002: 'later',
+    })
+  })
+
   it('takes them out of queues, and off past events without promoting anyone', async () => {
     const { db, files, auth } = setup()
     await eraseUsers(

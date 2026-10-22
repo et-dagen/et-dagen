@@ -17,6 +17,7 @@ export interface Files {
 }
 
 interface StoredEvent {
+  capacity?: number | null
   date?: { start?: string }
   attendants?: Record<string, { attended?: boolean; registeredAt?: number }>
   queue?: Record<string, string>
@@ -80,11 +81,17 @@ function withoutUsers(
     .filter(([, uid]) => !uids.has(uid))
     .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
 
+  // Fill only the spots the erased users held, and only while the event is under its limit,
+  // which may have been lowered since people registered
   const freed =
     Object.keys(event.attendants ?? {}).length - Object.keys(attendants).length
+  const room = Math.max(
+    0,
+    (event.capacity ?? 0) - Object.keys(attendants).length,
+  )
   const upcoming = (event.date?.start ?? '') > today
   if (upcoming) {
-    for (const [, uid] of queue.splice(0, freed)) {
+    for (const [, uid] of queue.splice(0, Math.min(freed, room))) {
       attendants[uid] = {
         attended: false,
         registeredAt: Instant.toDate(now).getTime(),
