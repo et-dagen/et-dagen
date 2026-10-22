@@ -77,6 +77,8 @@ export function rtdbEventRepository(db: Database): EventRepository {
       ),
 
     withdraw: (uid, user, at) =>
-      change(uid, at, (roster) => withdraw(roster, user, at)),
+      change(uid, at, (roster, registration) =>
+        withdraw(roster, registration, user, at),
+      ),
   }
 }
