@@ -21,6 +21,9 @@ const sourceFiles = (dir: string): string[] =>
     .filter((file) => file.endsWith('.ts'))
     .map((file) => join(dir, file))
 
+/** `from 'x'`, `import 'x'` and `import('x')`, in single or double quotes */
+const IMPORT = /(?:\bfrom\s*|\bimport\s*\(?\s*)['"]([^'"]+)['"]/g
+
 /** The top-level directory an import resolves to, or the package name */
 function target(file: string, specifier: string): string {
   if (specifier.startsWith('@/') || specifier.startsWith('~/')) {
@@ -36,7 +39,7 @@ function target(file: string, specifier: string): string {
 describe.each(Object.entries(ALLOWED))('%s/', (layer, allowed) => {
   it(`imports only from ${allowed.join(' and ')}`, () => {
     const violations = sourceFiles(layer).flatMap((file) =>
-      [...readFileSync(join(ROOT, file), 'utf8').matchAll(/from '([^']+)'/g)]
+      [...readFileSync(join(ROOT, file), 'utf8').matchAll(IMPORT)]
         .map(([, specifier]) => specifier)
         .filter((specifier) => !allowed.includes(target(file, specifier)))
         .map((specifier) => `${file} imports ${specifier}`),
