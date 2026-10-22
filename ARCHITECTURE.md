@@ -72,6 +72,9 @@ flowchart TB
 Dependency injection is plain functions: a use case takes its ports as arguments. There is no DI
 framework.
 
+`tests/architecture.spec.ts` fails the build if `domain/` or `application/` imports anything
+outside the directories allowed above.
+
 A port method performs a whole operation, such as "register or waitlist this user", not a separate
 read and write. Each adapter then does it atomically in its own way, and a later PostgreSQL adapter
 can replace the Realtime Database one without changing the use cases.
