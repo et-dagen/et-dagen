@@ -44,6 +44,17 @@ defineRouteMeta({
 
 export default defineEventHandler(async (event) => {
   const { user } = event.context
+  const { eventUID } = getQuery(event)
+
+  setResourceContext(
+    event,
+    'event_attendants',
+    eventUID as string | undefined,
+    'list',
+    "List attendants' emails",
+  )
+  // other users' email addresses: always logged
+  setLogImportance(event, 'warn')
 
   if (!user || !hasAccess(user, ['admin'])) {
     throw createError({
@@ -51,8 +62,6 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Error (event/attendants/not-admin).',
     })
   }
-
-  const { eventUID } = getQuery(event)
 
   if (!eventUID) {
     throw createError({

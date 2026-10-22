@@ -30,7 +30,8 @@ export default defineEventHandler(async (event) => {
     'list',
     'List registration codes',
   )
-  setLogImportance(event, 'debug')
+  // registration codes turn an account into a company account: always logged
+  setLogImportance(event, 'warn')
 
   // only admins can create new registration codes
   if (!hasAccess(user, ['admin'])) {
