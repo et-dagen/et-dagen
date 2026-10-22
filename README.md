@@ -155,11 +155,14 @@ If you are contributing regularly and keep having to fork, ask an organisation o
 Tests run on [Vitest](https://vitest.dev/):
 
 ```bash
-bun run test        # single run, as CI does it
-bun run test:watch  # watch mode
+bun run test        # unit tests, as CI runs them
+bun run test:watch  # unit tests in watch mode
+bun run build && bun run test:api  # API tests against the Firebase emulators
 ```
 
-Coverage today is limited to pure server utilities (`server/**/*.{test,spec}.ts`) — see `vitest.config.mjs`. Component and composable tests need a Nuxt runtime environment via `@nuxt/test-utils`, which is not set up yet.
+Unit tests cover `domain/` and pure server and composable code. Component tests need a Nuxt runtime environment via `@nuxt/test-utils`, which is not set up yet.
+
+The API tests in `tests/api/` send real HTTP requests to the production build, running against the Firebase Auth, Realtime Database and Storage emulators. They pin down what the v1 API does today, so that moving a handler onto the new architecture cannot change its behaviour unnoticed. `test:api` starts the emulators with a pinned `firebase-tools` through `bunx`, which needs **Java 21 or newer** (`brew install --cask temurin@21` on macOS). The emulators use a `demo-` project, so they never reach a real Firebase project, and the server gets a throwaway key, never the one in your `.env`. Build first: the tests use whatever is in `.output/`.
 
 ### Type checking
 

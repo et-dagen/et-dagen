@@ -106,7 +106,7 @@ All tests live under `tests/`, mirroring the source path.
 | ---------- | ----------------------------------------------------------------------- | ---------------------- |
 | Unit       | Domain rules and use cases, using in-memory adapters                    | In place for `domain/` |
 | Contract   | One suite per port that every adapter must pass                         | Planned                |
-| API        | Every endpoint's status codes and bodies against the Firebase emulators | Planned, first in line |
+| API        | Every endpoint's status codes and bodies against the Firebase emulators | Started with events    |
 | End to end | A few user journeys in a browser                                        | Planned                |
 
 Replace a port with an in-memory adapter in tests; do not mock the domain.

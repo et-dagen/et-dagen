@@ -15,6 +15,29 @@ export default defineConfig({
   },
   test: {
     environment: 'node',
-    include: ['tests/**/*.{test,spec}.ts'],
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: 'unit',
+          include: ['tests/**/*.{test,spec}.ts'],
+          exclude: ['tests/api/**', 'tests/**/*.emulator.test.ts'],
+        },
+      },
+      // Tests that need the Firebase emulators: black-box tests of the HTTP API against a production
+      // build, and adapter tests against the emulated database.
+      // Run with `bun run test:api`, which also runs the files one at a time: they share one
+      // database, and `fileParallelism` has no effect inside a project.
+      {
+        extends: true,
+        test: {
+          name: 'api',
+          // `*.emulator.test.ts` files elsewhere run here too, such as an adapter's contract suite
+          include: ['tests/api/**/*.test.ts', 'tests/**/*.emulator.test.ts'],
+          globalSetup: ['tests/api/support/server.ts'],
+          testTimeout: 15_000,
+        },
+      },
+    ],
   },
 })

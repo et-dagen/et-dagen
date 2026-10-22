@@ -19,6 +19,7 @@ bun run lint           # eslint + prettier check; `bun run lintfix` fixes most o
 bun run typecheck      # tsc on .ts files; must pass
 bun run typecheck:full # includes Vue SFCs; CI compares its error count to a baseline
 bun run test           # vitest, tests/**/*.{test,spec}.ts
+bun run test:api       # API tests against the Firebase emulators; needs Java 21 and a build
 bun run build          # production build
 ```
 
