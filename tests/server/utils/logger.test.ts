@@ -86,7 +86,7 @@ describe('logWideEvent', () => {
     process.env.NODE_ENV = 'production'
     process.env.LOG_LEVEL = 'info'
     process.env.LOG_SAMPLE_RATE = '1.0'
-    const e = createWideEvent('r', 'GET', '/')
+    const e = createWideEvent('r', 'POST', '/')
     e.user = { uid: 'u1', email: 'alice@example.com' }
     const out = emit(e, 'info')
     expect(out.user.email).toBe('a***@example.com')
@@ -94,7 +94,7 @@ describe('logWideEvent', () => {
 
   it('keeps full email in development', () => {
     process.env.NODE_ENV = 'development'
-    const e = createWideEvent('r', 'GET', '/')
+    const e = createWideEvent('r', 'POST', '/')
     e.user = { uid: 'u1', email: 'alice@example.com' }
     const out = emit(e, 'info')
     expect(out.user.email).toBe('alice@example.com')
@@ -117,6 +117,7 @@ describe('logWideEvent', () => {
     process.env.LOG_LEVEL = 'info'
     process.env.LOG_SAMPLE_RATE = '0'
     const e = createWideEvent('r', 'GET', '/')
+    e._importance = 'info'
     e.status_code = 200
     e.outcome = 'success'
     const out = emit(e, 'info')
@@ -140,6 +141,7 @@ describe('logWideEvent', () => {
     process.env.LOG_LEVEL = 'info'
     delete process.env.LOG_SAMPLE_RATE
     const e = createWideEvent('r', 'GET', '/')
+    e._importance = 'info'
     e.status_code = 200
 
     vi.spyOn(Math, 'random').mockReturnValue(0.05)
@@ -154,6 +156,7 @@ describe('logWideEvent', () => {
     process.env.LOG_LEVEL = 'info'
     process.env.LOG_SAMPLE_RATE = '1'
     const e = createWideEvent('r', 'GET', '/')
+    e._importance = 'info'
     e.status_code = 200
     vi.spyOn(Math, 'random').mockReturnValue(0.99)
     const out = emit(e, 'info')
@@ -166,6 +169,7 @@ describe('logWideEvent', () => {
     process.env.LOG_LEVEL = 'info'
     process.env.LOG_SAMPLE_RATE = 'not-a-number'
     const e = createWideEvent('r', 'GET', '/')
+    e._importance = 'info'
     e.status_code = 200
     vi.spyOn(Math, 'random').mockReturnValue(0.05)
     expect(emit(e, 'info')?.sample_rate).toBe(0.1)
@@ -176,6 +180,7 @@ describe('logWideEvent', () => {
     process.env.LOG_LEVEL = 'info'
     delete process.env.LOG_SAMPLE_RATE
     const e = createWideEvent('r', 'GET', '/')
+    e._importance = 'info'
     e.status_code = 200
     vi.spyOn(Math, 'random').mockReturnValue(0.99)
     expect(emit(e, 'info')).not.toBeNull()
@@ -186,20 +191,52 @@ describe('logWideEvent', () => {
     process.env.LOG_LEVEL = 'info'
     process.env.LOG_SAMPLE_RATE = '0'
     const e = createWideEvent('r', 'GET', '/')
+    e._importance = 'info'
     e.status_code = 200
     e.duration_ms = 2500
     expect(emit(e, 'info')).not.toBeNull()
   })
 
-  it('always keeps admin requests for audit', () => {
+  it('keeps every change, whoever made it, for the audit trail', () => {
     process.env.NODE_ENV = 'production'
     process.env.LOG_LEVEL = 'info'
     process.env.LOG_SAMPLE_RATE = '0'
-    const e = createWideEvent('r', 'GET', '/')
+    const e = createWideEvent('r', 'POST', '/api/v1/event/register')
+    e.status_code = 201
+    expect(emit(e, 'info')).not.toBeNull()
+  })
+
+  it('drops routine successful reads in production, admins included', () => {
+    process.env.NODE_ENV = 'production'
+    delete process.env.LOG_LEVEL
+    const e = createWideEvent('r', 'GET', '/api/v1/company')
     e.status_code = 200
     e.user = { uid: 'admin1', access_level: 'admin' }
-    const out = emit(e, 'info')
-    expect(out).not.toBeNull()
+    expect(emit(e, 'info')).toBeNull()
+  })
+
+  it('still logs a routine read that fails or is slow', () => {
+    process.env.NODE_ENV = 'production'
+    process.env.LOG_LEVEL = 'info'
+    const failed = createWideEvent('r', 'GET', '/api/v1/company')
+    failed.status_code = 500
+    expect(emit(failed, 'error')).not.toBeNull()
+
+    const slow = createWideEvent('r', 'GET', '/api/v1/company')
+    slow.status_code = 200
+    slow.duration_ms = 2500
+    expect(emit(slow, 'info')).not.toBeNull()
+  })
+
+  it('logs only changes, errors and slow requests in development by default', () => {
+    process.env.NODE_ENV = 'development'
+    delete process.env.LOG_LEVEL
+    const read = createWideEvent('r', 'GET', '/')
+    read.status_code = 200
+    expect(emit(read, 'info')).toBeNull()
+
+    process.env.LOG_LEVEL = 'debug'
+    expect(emit(read, 'info')).not.toBeNull()
   })
 
   it('suppresses debug-importance events when LOG_LEVEL is info', () => {

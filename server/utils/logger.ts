@@ -11,9 +11,9 @@ export type LogLevel = 'debug' | 'info' | 'warn' | 'error'
 
 /**
  * Log importance determines the minimum log level for a request to be logged.
- * - 'debug': Low importance (image fetches, static data reads) - only logged when LOG_LEVEL=debug
- * - 'info': Normal importance (standard API calls) - logged at info level and above
- * - 'warn': High importance (mutations, auth events) - always logged at warn+ in production
+ * - 'debug': Routine reads, the default for GET and HEAD - only logged when LOG_LEVEL=debug
+ * - 'info': Reads worth sampling - logged at info and above, successful ones sampled
+ * - 'warn': Changes (the default for every other method) and reads of personal data - never sampled
  * - 'error': Critical - always logged
  *
  * Note: Errors and slow requests are ALWAYS logged regardless of importance setting.
@@ -151,7 +151,8 @@ function getLogLevel(): LogLevel {
   ) {
     return level
   }
-  return process.env.NODE_ENV === 'development' ? 'debug' : 'info'
+  // Development too: set LOG_LEVEL=debug to see every read
+  return 'info'
 }
 
 const LOG_LEVEL_PRIORITY: Record<LogLevel, number> = {
@@ -161,12 +162,32 @@ const LOG_LEVEL_PRIORITY: Record<LogLevel, number> = {
   error: 3,
 }
 
-function shouldLog(level: LogLevel, importance?: LogImportance): boolean {
-  const currentLevel = getLogLevel()
+/** Requests that only read; anything else changes data */
+const READ_METHODS = new Set(['GET', 'HEAD', 'OPTIONS'])
 
-  // If importance is set, check if current log level allows this importance
-  // e.g., if importance is 'debug' but LOG_LEVEL is 'info', skip it
+/** Above this, a request is worth a look however unimportant it is */
+const SLOW_MS = 2000
+
+/**
+ * How important a request is when its handler has not said: reads are routine, changes are kept
+ * for the audit trail
+ */
+export function defaultImportance(method: string): LogImportance {
+  return READ_METHODS.has(method.toUpperCase()) ? 'debug' : 'warn'
+}
+
+const isSlow = (event: WideEvent) =>
+  event.duration_ms !== undefined && event.duration_ms > SLOW_MS
+
+function shouldLog(event: WideEvent, level: LogLevel): boolean {
+  const currentLevel = getLogLevel()
+  const importance = event._importance
+
+  // Importance only thins out routine outcomes. Warnings, errors and slow requests always pass,
+  // whatever the handler thought of the request.
+  const routine = (level === 'debug' || level === 'info') && !isSlow(event)
   if (
+    routine &&
     importance &&
     LOG_LEVEL_PRIORITY[importance] < LOG_LEVEL_PRIORITY[currentLevel]
   ) {
@@ -211,11 +232,10 @@ function samplingRateFor(event: WideEvent, level: LogLevel): number {
   if (event.status_code && event.status_code >= 400) return 1
   if (event.error) return 1
 
-  // Always keep slow requests (above 2000ms threshold)
-  if (event.duration_ms && event.duration_ms > 2000) return 1
+  if (isSlow(event)) return 1
 
-  // Always keep admin users for audit purposes
-  if (event.user?.access_level === 'admin') return 1
+  // Changes and reads of personal data are kept whole, for the audit trail
+  if (event._importance === 'warn' || event._importance === 'error') return 1
 
   // In development, log everything
   if (process.env.NODE_ENV === 'development') return 1
@@ -294,7 +314,7 @@ function sanitizeEvent(event: WideEvent): WideEvent {
 
 // Main logging function
 export function logWideEvent(event: WideEvent, level: LogLevel = 'info'): void {
-  if (!shouldLog(level, event._importance)) return
+  if (!shouldLog(event, level)) return
 
   const sampleRate = samplingRateFor(event, level)
   if (sampleRate < 1 && Math.random() >= sampleRate) return
@@ -345,6 +365,7 @@ export function createWideEvent(
     method,
     path,
     outcome: 'success',
+    _importance: defaultImportance(method),
     db: {
       queries: 0,
       reads: 0,

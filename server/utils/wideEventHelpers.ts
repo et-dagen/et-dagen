@@ -55,9 +55,9 @@ function recordDbOp(
  * Use this to mark low-priority requests (like image fetches) as 'debug'
  * so they're only logged when LOG_LEVEL=debug
  *
- * - 'debug': Low importance - image fetches, static data reads
- * - 'info': Normal importance - standard API calls (default)
- * - 'warn': High importance - mutations, sensitive operations
+ * - 'debug': Routine reads (the default for GET and HEAD)
+ * - 'info': Reads worth sampling
+ * - 'warn': Changes (the default for other methods) and reads of personal data, never sampled
  * - 'error': Critical - should always be logged
  *
  * Note: Errors and slow requests are ALWAYS logged regardless of this setting.
