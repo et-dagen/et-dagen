@@ -105,9 +105,9 @@ export default defineEventHandler(async (event) => {
   // create new buffer
   const documentBuffer = Buffer.from(file.data)
 
+  // private: companies and the owner open it through GET /api/v1/resume/file
   const options = {
     resumable: false,
-    public: true,
   }
 
   // save pdf buffer to created reference

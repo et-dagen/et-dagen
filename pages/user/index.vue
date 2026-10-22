@@ -144,7 +144,7 @@
             <p v-if="auth.user?.resume" class="my-2">
               <strong>{{ $t('user.resume.your_resume') }}: </strong>
               <NuxtLink
-                :to="auth.user.resume"
+                :to="`/api/v1/resume/file?userUID=${auth.user.uid}`"
                 :external="true"
                 target="_blank"
                 class="text-blue"
