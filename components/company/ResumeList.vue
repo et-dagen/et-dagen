@@ -161,7 +161,7 @@
         <template #append>
           <v-list-item class="flex-column align-end">
             <a
-              :href="user.resume"
+              :href="`/api/v1/resume/file?userUID=${user.uid}`"
               target="_blank"
               class="flex-column align-center text-decoration-none justify-center"
             >

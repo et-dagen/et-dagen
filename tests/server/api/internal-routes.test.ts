@@ -43,6 +43,8 @@ const PUBLISHED_ADMIN_ROUTES = new Set([
   'event/index.delete.ts',
   // Users read their own résumé; admins and companies with résumé access read all.
   'resume/index.ts',
+  // Owners open their own resume; admins and companies with CV access open any.
+  'resume/file.get.ts',
   // Attendees register themselves; admins register others.
   'event/register/index.post.ts',
   'event/register/index.delete.ts',
