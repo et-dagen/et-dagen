@@ -43,7 +43,7 @@ export const isOpen = (
  * @param attending Registrations already accepted for the event
  */
 export const hasSpots = (
-  registration: Registration,
+  registration: Pick<Registration, 'attendanceLimit'>,
   attending: number,
 ): boolean =>
   registration.attendanceLimit === null ||
