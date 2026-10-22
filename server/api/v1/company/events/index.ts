@@ -40,6 +40,8 @@ export default defineEventHandler(async (event) => {
     'list',
     'List company events',
   )
+  // includes who is registered for each event: always logged
+  setLogImportance(event, 'warn')
 
   // check if user is authorized
   if (!hasAccess(user, ['admin', 'company'])) {

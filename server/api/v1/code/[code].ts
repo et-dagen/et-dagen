@@ -50,6 +50,8 @@ export default defineEventHandler(async (event) => {
   )
 
   addEventContext(event, 'is_valid', isValid)
+  // log every miss, so someone guessing codes shows up
+  if (!isValid) setLogImportance(event, 'warn')
 
   return {
     isValid,
