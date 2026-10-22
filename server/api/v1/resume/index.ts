@@ -99,6 +99,9 @@ export default defineEventHandler(async (event) => {
     if (cvAccess.val() !== true) return user
   }
 
+  // listing other users' personal data is kept for the audit trail
+  setLogImportance(event, 'warn')
+
   // reference to users
   const usersRef = db.ref('users')
 
