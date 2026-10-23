@@ -74,6 +74,9 @@ export default defineEventHandler(async (event) => {
     eraseUsers({ db, files: storage.bucket(), auth }, UIDs as string[]),
   )
 
+  // the caller's token cookie points at an account that no longer exists
+  if ((UIDs as string[]).includes(user.uid)) deleteCookie(event, '_token')
+
   // users successfully removed
   sendNoContent(event, 204)
 })

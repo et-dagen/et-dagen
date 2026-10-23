@@ -60,6 +60,15 @@
       "upload_resume": "Upload resume",
       "your_resume": "Your resume",
       "delete_resume": "Delete resume"
+    },
+    "delete": {
+      "title": "Delete my account",
+      "description": "Deletes your account and everything we store about you: your profile, résumé and event registrations. This cannot be undone.",
+      "dialog_title": "Delete your account?",
+      "dialog_text": "Your profile, résumé and event registrations are deleted right away, and you are signed out. This cannot be undone.",
+      "confirm_label": "Type your email address to confirm",
+      "confirm": "Delete account",
+      "abort": "Cancel"
     }
   },
   "error": {
@@ -277,7 +286,8 @@
         "reset_password": "Password reset email sent"
       },
       "user": {
-        "edit": "User updated"
+        "edit": "User updated",
+        "deleted": "Your account has been deleted"
       },
       "event": {
         "register": {
