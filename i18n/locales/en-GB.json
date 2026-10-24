@@ -383,6 +383,29 @@
         "text": "The company and its logo are deleted for good. Its events, jobs and registration codes stay. This cannot be undone. | The companies and their logos are deleted for good. Their events, jobs and registration codes stay. This cannot be undone.",
         "confirm": "Delete {n} company | Delete {n} companies",
         "done": "{n} company deleted | {n} companies deleted"
+      },
+      "form": {
+        "new_title": "New company",
+        "edit_title": "Edit company",
+        "name": "Name",
+        "type": "Type",
+        "choose_type": "Choose a type",
+        "webpage": "Website",
+        "logo": "Logo",
+        "logo_choose": "Choose a logo",
+        "logo_replace": "Replace the logo",
+        "logo_undo": "Undo",
+        "logo_hint": "PNG or JPEG. Uploaded when you save.",
+        "description": "Description",
+        "cv_access": "Access to CVs",
+        "cv_access_hint": "The company can see and open students' CVs.",
+        "create_code": "Create a registration code now",
+        "create_code_hint": "The company needs a code to create accounts. You see it in the list after saving.",
+        "create": "Create company",
+        "save": "Save changes",
+        "created": "The company is created",
+        "updated": "The changes are saved",
+        "missing": "No company found at this address."
       }
     },
     "events": {
