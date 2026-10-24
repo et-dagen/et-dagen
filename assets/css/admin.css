@@ -6,21 +6,22 @@
  * !important (bg-primary, border, rounded-lg). Pages on the new
  * components sit inside `.et-admin`, which gets the base styles preflight would have given; so do
  * shadcn-vue components (`[data-slot]`), because menus and dialogs render at the end of <body>.
- * The palette sits on <html class="et-admin-root"> for the same reason, set by the admin layout.
+ * The palette sits on :root for the same reason; only <html class="et-admin-root">, set by the admin
+ * layout, lets it turn dark.
  * Every colour comes from the palette below: change it here and every page follows.
  */
 @import 'tailwindcss/theme.css' prefix(tw);
 @import 'tailwindcss/utilities.css' prefix(tw);
 @import 'tw-animate-css';
 @import '@fontsource-variable/overpass';
+@import 'vue-sonner/style.css';
 
 /*
  * Palette. Each colour is light-dark(light, dark): the dark value is night signage, the same plates
  * lit on a dark ground. Change the values here and every page follows.
  */
-.et-admin-root {
-  color-scheme: light dark;
-
+/* On every page, so toasts on the public pages get it too; dark only where the admin layout allows it */
+:root {
   --brand: light-dark(#a03836, #b4403e);
   --brand-strong: light-dark(#7f2a29, #8c302e);
   --brand-foreground: #ffffff;
@@ -51,9 +52,10 @@
 }
 
 /*
- * The choice of light or dark. It is repeated on .et-admin because Vuetify's wrapper, which sits
+ * The choice of light or dark. Only the admin pages follow the device; the public pages stay light. It is repeated on .et-admin because Vuetify's wrapper, which sits
  * between <html> and the admin pages, resets color-scheme.
  */
+.et-admin-root,
 .et-admin {
   color-scheme: light dark;
 }
@@ -117,7 +119,7 @@
  * What preflight would give, inside the new pages only. The selectors carry no specificity, as in
  * preflight, so Vuetify components still on these pages keep their own borders and margins.
  */
-:where(.et-admin, [data-slot]) {
+:where(.et-admin, [data-slot], [data-sonner-toaster]) {
   font-family: var(--font-sans);
   font-feature-settings: 'tnum';
   -webkit-font-smoothing: antialiased;
@@ -184,4 +186,17 @@
 .et-admin ::selection {
   background: var(--brand);
   color: var(--brand-foreground);
+}
+
+/* Toasts: the close button takes the palette, as sonner's light theme hard-codes grey on white */
+[data-sonner-toaster]
+  [data-sonner-toast][data-styled='true']
+  [data-close-button] {
+  background: var(--popover);
+  border-color: var(--border);
+  color: var(--popover-foreground);
+
+  &:hover {
+    background: var(--accent);
+  }
 }

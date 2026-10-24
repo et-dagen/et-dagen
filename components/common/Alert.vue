@@ -1,14 +1,15 @@
 <script setup lang="ts">
-  const alertStore = useAlertStore()
-  const { show, type, message } = storeToRefs(alertStore)
+  import { Toaster } from '@/components/ui/sonner'
 </script>
+
 <template>
-  <VSnackbar v-model="show">
-    {{ message }}
-    <template #actions>
-      <VBtn :color="type" variant="text" @click="alertStore.clear()">
-        {{ $t('alert.close_alert') }}
-      </VBtn>
-    </template>
-  </VSnackbar>
+  <!-- in <body>, outside Vuetify's wrapper, so the admin theme's light or dark reaches it -->
+  <Teleport to="body">
+    <Toaster
+      position="bottom-right"
+      :close-button="true"
+      :mobile-offset="{ bottom: '96px' }"
+      :toast-options="{ duration: 5000 }"
+    />
+  </Teleport>
 </template>

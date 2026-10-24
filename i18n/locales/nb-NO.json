@@ -181,7 +181,6 @@
     }
   },
   "alert": {
-    "close_alert": "Lukk",
     "default_message": "Oi! Noe gikk galt.",
     "api": {
       "error": {

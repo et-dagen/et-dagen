@@ -1,3 +1,5 @@
+import { toast } from 'vue-sonner'
+
 export const alertTypes = [
   'error',
   'info',
@@ -11,6 +13,13 @@ export interface Alert {
   type: AlertType
   message: string
 }
+/**
+ * Short feedback after an action, shown as a toast
+ *
+ * @remarks
+ * The store keeps its old shape so existing callers do not change; the toasts themselves are
+ * rendered by vue-sonner in `components/common/Alert.vue`.
+ */
 export const useAlertStore = defineStore('alert', {
   state: (): Alert => {
     return {
@@ -21,15 +30,19 @@ export const useAlertStore = defineStore('alert', {
   },
   actions: {
     alert(message: string = 'Default message', type: AlertType = undefined) {
-      console.info('Alert:', type, message)
       this.type = type
       this.message = message
       this.show = true
+      // toasts only exist in the browser
+      if (import.meta.server) return
+      if (type) toast[type](message)
+      else toast(message)
     },
     clear() {
       this.type = undefined
       this.message = 'Default message'
       this.show = false
+      if (import.meta.client) toast.dismiss()
     },
   },
 })
