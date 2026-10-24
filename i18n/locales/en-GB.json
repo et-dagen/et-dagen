@@ -452,7 +452,6 @@
       },
       "form": {
         "new_title": "New event",
-        "edit_title": "Edit event",
         "title": "Title",
         "company": "Host",
         "choose_company": "Choose a company",
@@ -476,6 +475,11 @@
         "updated": "The changes are saved",
         "missing": "Event not found.",
         "programmes_search": "Search for a study programme"
+      },
+      "tabs": {
+        "label": "The event",
+        "details": "Details",
+        "attendees": "Signed up"
       }
     },
     "jobs": {
@@ -613,6 +617,31 @@
       "delete": "Delete",
       "more": "and {n} more",
       "cancel": "Cancel"
+    },
+    "attendees": {
+      "places": "Places",
+      "attended": "Attended",
+      "waiting": "Waiting",
+      "scan": "Scan attendance",
+      "add": "Sign someone up",
+      "add_search": "Search by name or email",
+      "add_hint": "If the event is full, the person joins the queue.",
+      "list": "Signed up",
+      "filter": "Search signed-up people",
+      "queue": "Queue",
+      "mark_attended": "{name} attended",
+      "remove": "Remove {name}",
+      "remove_title": "Remove from the event?",
+      "remove_description": "The person loses their place and is not told.",
+      "remove_moves_up": "The person loses their place and is not told. The first in the queue gets the place.",
+      "remove_confirm": "Remove",
+      "added": "{name} is signed up",
+      "queued": "The event is full, so {name} is in the queue",
+      "removed": "{name} is removed",
+      "failed": "Something went wrong. Try again.",
+      "empty": "Nobody has signed up yet.",
+      "no_match": "No signed-up people match the search.",
+      "no_signup": "This event has no sign-up. Turn on sign-up under Details to take sign-ups."
     }
   },
   "edit": {

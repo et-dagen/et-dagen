@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { ArrowLeft, Save } from '@lucide/vue'
+  import EventTabs from '@/components/admin/EventTabs.vue'
   import FieldError from '@/components/admin/form/FieldError.vue'
   import RichText from '@/components/admin/form/RichText.vue'
   import SearchPicker from '@/components/admin/form/SearchPicker.vue'
@@ -94,9 +95,10 @@
       class="tw:text-2xl tw:leading-8 tw:font-extrabold tw:tracking-tight tw:lg:text-[2rem] tw:lg:leading-10"
     >
       {{
-        $t(uid ? 'admin.events.form.edit_title' : 'admin.events.form.new_title')
+        uid ? String(initial.title ?? '') : $t('admin.events.form.new_title')
       }}
     </h1>
+    <EventTabs v-if="uid && initial.signup" :uid="uid" />
 
     <section
       class="tw:grid tw:gap-5 tw:rounded-lg tw:border tw:bg-card tw:p-4 tw:lg:grid-cols-2 tw:lg:p-6"
