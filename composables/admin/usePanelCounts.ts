@@ -1,9 +1,9 @@
-import { ADMIN_PANELS, type AdminPanel } from '@/lib/admin/panels'
+import type { Panel } from '@/lib/admin/panels'
 
 /** How many items each panel holds, for the navigation */
-export async function usePanelCounts() {
+export async function usePanelCounts(panels: readonly Panel[]) {
   const counts = await Promise.all(
-    ADMIN_PANELS.map(async ({ name, count }) => {
+    panels.map(async ({ name, count }) => {
       if (!count) return [name, null] as const
       const { data } = await useFetch(count, {
         key: `admin-count-${name}`,
@@ -13,7 +13,7 @@ export async function usePanelCounts() {
     }),
   )
   return Object.fromEntries(counts) as Record<
-    AdminPanel,
+    string,
     Ref<number | null | undefined> | null
   >
 }

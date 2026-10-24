@@ -31,6 +31,8 @@ module.exports = {
         'layouts/admin.vue',
         'pages/admin.vue',
         'pages/admin/**',
+        'components/company/EventPanel.vue',
+        'pages/company/admin/**',
       ],
       rules: {
         'vue/max-len': [

@@ -154,30 +154,29 @@
     "partners": "Partners 2026",
     "sponsors": "Sponsors 2026",
     "admin": {
-      "title": "Company Admin",
-      "dietaryrestrictions": "Allergies and Restrictions",
-      "attendants": "Attendants",
-      "copiedemail": "Email copied!",
-      "user": {
-        "attributes": {
-          "name": "Name",
-          "studyprogramme": "Programme",
-          "currentyear": "Year",
-          "email": "Email"
-        }
+      "title": "Company page",
+      "year": "Year {n}",
+      "events": {
+        "name": "Events",
+        "empty": "You have no events yet.",
+        "edit": "Edit",
+        "registration": "Sign-up {from} – {to}",
+        "diets": "Allergies and diets",
+        "no_diets": "No attendee has reported allergies or diets.",
+        "attendees": "Attendees ({n})",
+        "no_attendees": "No attendees yet.",
+        "copy_emails": "Copy the email addresses",
+        "copied": "{n} email address copied | {n} email addresses copied"
       },
-      "cvAccess_restriction": "CV access is restricted",
-      "year": "Year",
-      "event": "Events",
-      "resume": "Resumes",
-      "noResumes": "No resumes matches the search criteria",
-      "filterTypes": {
-        "name": "Year"
-      },
-      "filterOrder": {
-        "name": "Order",
-        "descending": "Descending",
-        "ascending": "Ascending"
+      "resumes": {
+        "name": "CVs",
+        "search": "Search by name or study programme",
+        "year": "Year",
+        "all": "All",
+        "open": "Open CV",
+        "empty": "No CVs match the search.",
+        "no_access_title": "No access to CVs",
+        "no_access": "Your company does not have access to students' CVs. Contact E&T-dagene if you think this is wrong."
       }
     }
   },
@@ -515,6 +514,10 @@
         "system": "Theme: follows the device. Switch to light",
         "light": "Theme: light. Switch to dark",
         "dark": "Theme: dark. Follow the device"
+      },
+      "tag": {
+        "admin": "ADMIN",
+        "company": "COMPANY"
       }
     },
     "list": {
