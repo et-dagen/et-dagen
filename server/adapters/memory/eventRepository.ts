@@ -3,7 +3,12 @@ import type {
   StoredEvent,
 } from '@/application/events/eventRepository'
 import type { EventUid } from '@/domain/event/event'
-import { promoteWaiting, register, withdraw } from '@/domain/event/roster'
+import {
+  promoteWaiting,
+  register,
+  removeUsers,
+  withdraw,
+} from '@/domain/event/roster'
 
 /**
  * Events held in a map, for tests and local work
@@ -53,6 +58,15 @@ export function memoryEventRepository(
       const next = promoteWaiting(stored.roster, registration, at)
       events.set(uid, { ...stored, roster: next.roster })
       return Promise.resolve(next.outcome)
+    },
+
+    removeUsers: (users, at) => {
+      const removed = new Set(users)
+      for (const [uid, stored] of events) {
+        const roster = removeUsers(stored.roster, stored.event, removed, at)
+        events.set(uid, { ...stored, roster })
+      }
+      return Promise.resolve()
     },
   }
 }

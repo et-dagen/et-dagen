@@ -3,13 +3,14 @@ import {
   emptyRoster,
   promoteWaiting,
   register,
+  removeUsers,
   withdraw,
 } from '@/domain/event/roster'
 import { Instant } from '@/domain/time/instant'
 import { UserUid } from '@/domain/user'
 
 const at = Instant.parse('2026-08-05T10:00:00.000Z')
-const [ada, bo, cy] = ['ada', 'bo', 'cy'].map(UserUid.parse)
+const [ada, bo, cy, di] = ['ada', 'bo', 'cy', 'di'].map(UserUid.parse)
 const oneSpot = { attendanceLimit: 1 }
 
 const full = () => register(emptyRoster(), oneSpot, ada, at).roster
@@ -136,5 +137,41 @@ describe('promoteWaiting', () => {
       outcome: { promoted: [] },
     })
     expect(promoteWaiting(roster, oneSpot, later).roster).toBe(roster)
+  })
+})
+
+describe('removeUsers', () => {
+  const start = Instant.parse('2026-09-01T16:00:00.000Z')
+  const after = Instant.parse('2026-09-02T10:00:00.000Z')
+  const workshop = { start, registration: { attendanceLimit: 1 } } as const
+  // ada attends, bo, cy and di wait in that order
+  const waiting = () =>
+    [bo, cy, di].reduce(
+      (roster, user) => register(roster, oneSpot, user, at).roster,
+      full(),
+    )
+
+  it('promotes the first in the queue who stays, before the event starts', () => {
+    const roster = removeUsers(waiting(), workshop, new Set([ada, bo]), at)
+    expect([...roster.attendants.keys()]).toEqual([cy])
+    expect(roster.queue).toEqual([di])
+  })
+
+  it('promotes nobody once the event has started', () => {
+    const roster = removeUsers(waiting(), workshop, new Set([ada, cy]), after)
+    expect(roster.attendants.size).toBe(0)
+    expect(roster.queue).toEqual([bo, di])
+  })
+
+  it('promotes nobody on an event without sign-up', () => {
+    const roster = removeUsers(waiting(), { start }, new Set([ada]), at)
+    expect(roster.attendants.size).toBe(0)
+    expect(roster.queue).toEqual([bo, cy, di])
+  })
+
+  it('leaves a roster without the users as it was', () => {
+    const roster = removeUsers(full(), workshop, new Set([bo]), at)
+    expect([...roster.attendants.keys()]).toEqual([ada])
+    expect(roster.queue).toEqual([])
   })
 })
