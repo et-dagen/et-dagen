@@ -18,14 +18,18 @@
 
   const route = useRoute()
   // route names look like `admin-users___no`
-  const panel = computed(() =>
-    String(route.name).split('___')[0].replace('admin-', ''),
+  const name = computed(() => String(route.name).split('___')[0])
+  const panel = computed(() => name.value.replace('admin-', ''))
+  // list pages get the panel's title here; create and edit pages carry their own
+  const isList = computed(() =>
+    /^admin-(companies|events|jobs|users)$/.test(name.value),
   )
 </script>
 
 <template>
   <div>
     <h1
+      v-if="isList"
       class="tw:mb-6 tw:text-2xl tw:leading-8 tw:font-extrabold tw:tracking-tight tw:lg:text-[2rem] tw:lg:leading-10"
     >
       {{ $t(`admin.${panel}.name`) }}

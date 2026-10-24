@@ -13,6 +13,13 @@ export function instantOf(value: string | undefined): ISO8601String | null {
   }
 }
 
+/**
+ * A deadline as a wall-clock time: v1 has stored deadlines both as dates and as date-times, and a
+ * date means the end of that day
+ */
+export const deadlineOf = (value: string | undefined) =>
+  value && /^\d{4}-\d{2}-\d{2}$/.test(value) ? `${value}T23:59` : value
+
 /** A stored wall-clock time as people read it in Oslo, such as "ons. 4. nov. 2026, 17:15" */
 export function formatWhen(
   value: string | undefined,

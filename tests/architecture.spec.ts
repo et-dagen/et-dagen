@@ -11,6 +11,8 @@ const ROOT = resolve(import.meta.dirname, '..')
 const ALLOWED: Record<string, readonly string[]> = {
   domain: ['domain'],
   application: ['domain', 'application'],
+  // request and form schemas, shared by the browser and the server
+  contracts: ['domain', 'contracts', 'zod'],
 }
 
 const sourceFiles = (dir: string): string[] =>
