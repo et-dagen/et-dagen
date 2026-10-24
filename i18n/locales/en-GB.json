@@ -450,6 +450,33 @@
         "text": "The event and its sign-ups are deleted for good. This cannot be undone. | The events and their sign-ups are deleted for good. This cannot be undone.",
         "confirm": "Delete {n} event | Delete {n} events",
         "done": "{n} event deleted | {n} events deleted"
+      },
+      "form": {
+        "new_title": "New event",
+        "edit_title": "Edit event",
+        "title": "Title",
+        "company": "Host",
+        "choose_company": "Choose a company",
+        "start": "Starts",
+        "end": "Ends",
+        "place": "Place",
+        "place_hint": "Start with the room code, for example “EL5, Elektrobygget”, to show it as a sign.",
+        "map": "Map link (optional)",
+        "description": "Description",
+        "signup": "Sign-up",
+        "signup_hint": "Students sign up within a window, and places are limited.",
+        "capacity": "Number of places",
+        "opens": "Sign-up opens",
+        "closes": "Sign-up closes",
+        "years": "Years",
+        "programmes": "Study programmes",
+        "requirements_hint": "Choose none to let everyone sign up.",
+        "create": "Create event",
+        "save": "Save changes",
+        "created": "The event is created",
+        "updated": "The changes are saved",
+        "missing": "Event not found.",
+        "programmes_search": "Search for a study programme"
       }
     },
     "jobs": {
@@ -818,7 +845,11 @@
       "required": "Fill in this field.",
       "too_long": "The text is too long.",
       "date": "Choose a date.",
-      "url": "Enter a full address starting with https://."
+      "url": "Enter a full address starting with https://.",
+      "datetime": "Choose a date and time.",
+      "end_before_start": "Must come after the start.",
+      "signup_after_start": "Sign-up must close before the event starts.",
+      "number": "Enter a whole number above zero."
     },
     "leave": "You have unsaved changes. Leave the page?",
     "richtext": {
@@ -828,6 +859,11 @@
       "italic": "Italic",
       "bullets": "Bulleted list",
       "numbers": "Numbered list"
+    },
+    "picker": {
+      "remove": "Remove {option}",
+      "matches": "Matches",
+      "none": "No matches"
     }
   }
 }

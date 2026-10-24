@@ -448,6 +448,33 @@
         "text": "Arrangementet og påmeldingene til det slettes for godt. Dette kan ikke angres. | Arrangementene og påmeldingene til dem slettes for godt. Dette kan ikke angres.",
         "confirm": "Slett {n} arrangement | Slett {n} arrangementer",
         "done": "{n} arrangement slettet | {n} arrangementer slettet"
+      },
+      "form": {
+        "new_title": "Nytt arrangement",
+        "edit_title": "Rediger arrangement",
+        "title": "Tittel",
+        "company": "Arrangør",
+        "choose_company": "Velg bedrift",
+        "start": "Starter",
+        "end": "Slutter",
+        "place": "Sted",
+        "place_hint": "Start med romkoden, for eksempel «EL5, Elektrobygget», så vises den som et skilt.",
+        "map": "Kartlenke (valgfritt)",
+        "description": "Beskrivelse",
+        "signup": "Påmelding",
+        "signup_hint": "Studentene melder seg på innen et tidsrom, og det er et begrenset antall plasser.",
+        "capacity": "Antall plasser",
+        "opens": "Påmeldingen åpner",
+        "closes": "Påmeldingen stenger",
+        "years": "Årstrinn",
+        "programmes": "Studieprogram",
+        "requirements_hint": "Velg ingen for å la alle melde seg på.",
+        "create": "Opprett arrangement",
+        "save": "Lagre endringer",
+        "created": "Arrangementet er opprettet",
+        "updated": "Endringene er lagret",
+        "missing": "Fant ikke arrangementet.",
+        "programmes_search": "Søk etter studieprogram"
       }
     },
     "jobs": {
@@ -819,7 +846,11 @@
       "required": "Fyll ut dette feltet.",
       "too_long": "Teksten er for lang.",
       "date": "Velg en dato.",
-      "url": "Skriv en hel adresse som begynner med https://."
+      "url": "Skriv en hel adresse som begynner med https://.",
+      "datetime": "Velg dato og klokkeslett.",
+      "end_before_start": "Må komme etter starttidspunktet.",
+      "signup_after_start": "Påmeldingen må stenge før arrangementet starter.",
+      "number": "Skriv et helt tall større enn null."
     },
     "leave": "Du har endringer som ikke er lagret. Vil du forlate siden?",
     "richtext": {
@@ -829,6 +860,11 @@
       "italic": "Kursiv",
       "bullets": "Punktliste",
       "numbers": "Nummerert liste"
+    },
+    "picker": {
+      "remove": "Fjern {option}",
+      "matches": "Treff",
+      "none": "Ingen treff"
     }
   }
 }
