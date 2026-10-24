@@ -14,8 +14,8 @@ import {
   logWideEvent,
   determineOutcome,
   type WideEvent,
-} from '../utils/logger'
-import { pickSafeQuery } from '../utils/wideEventHelpers'
+} from '@/server/utils/logger'
+import { pickSafeQuery } from '@/server/utils/wideEventHelpers'
 
 // Query parameters safe to record in logs. Everything else is dropped.
 const SAFE_QUERY_PARAMS = [
