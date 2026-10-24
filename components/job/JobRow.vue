@@ -52,18 +52,12 @@
         </span>
       </p>
       <p
-        v-if="!job.deadline || job.state.kind === 'open'"
         class="tw:flex tw:flex-wrap tw:items-center tw:gap-2 tw:text-sm tw:font-semibold tw:sm:hidden"
       >
-        {{
-          job.deadline
-            ? formatShortDeadline(job.deadline, locale)
-            : $t('jobs.list.rolling')
-        }}
-        <DeadlineNote
-          v-if="job.state.kind === 'open' && job.state.soon"
-          :state="job.state"
-        />
+        <template v-if="job.state.kind === 'open'">
+          {{ formatShortDeadline(job.deadline ?? undefined, locale) }}
+        </template>
+        <DeadlineNote :state="job.state" />
       </p>
       <p v-if="job.nextEvent" class="tw:text-sm tw:leading-relaxed">
         <span
@@ -86,16 +80,13 @@
       class="tw:hidden tw:flex-col tw:items-end tw:gap-1 tw:text-right tw:sm:flex"
     >
       <span
+        v-if="job.state.kind === 'open'"
         class="tw:text-sm tw:font-semibold tw:whitespace-nowrap tw:tabular-nums"
       >
-        {{
-          job.deadline
-            ? formatShortDeadline(job.deadline, locale)
-            : $t('jobs.list.rolling')
-        }}
+        {{ formatShortDeadline(job.deadline ?? undefined, locale) }}
       </span>
       <DeadlineNote
-        v-if="job.state.kind === 'open' && job.state.soon"
+        v-if="job.state.kind !== 'open' || job.state.soon"
         :state="job.state"
       />
     </div>

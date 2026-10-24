@@ -350,7 +350,9 @@
         "full": "Full, waiting list",
         "closed": "Sign-up is closed"
       },
-      "after_deadline": "After the deadline"
+      "after_deadline": "After the deadline",
+      "asap": "As soon as possible",
+      "rolling": "Rolling"
     },
     "list": {
       "title": "Jobs",
@@ -535,7 +537,9 @@
       "deadline": {
         "today": "Last day today",
         "left": "{n} day left | {n} days left",
-        "passed": "Expired"
+        "passed": "Expired",
+        "asap": "As soon as possible",
+        "rolling": "Rolling"
       },
       "actions": {
         "menu": "Options for {title}",
@@ -591,7 +595,14 @@
         "link_text": "Link to the application",
         "link_link": "Link to the listing",
         "summary": "Short summary (optional)",
-        "summary_hint": "One or two sentences, at most 300 characters. Shown above the button to the listing."
+        "summary_hint": "One or two sentences, at most 300 characters. Shown above the button to the listing.",
+        "deadline_date": "Date",
+        "deadline_type": {
+          "date": "On a date",
+          "asap": "As soon as possible",
+          "rolling": "Rolling"
+        },
+        "rolling_hint": "Applications are handled as they come in until the job is filled."
       }
     },
     "users": {
@@ -922,7 +933,8 @@
     },
     "job": {
       "invalid-listing": "A job is shown either as a description or as a link.",
-      "invalid-link": "The application link must be a web address starting with http:// or https://."
+      "invalid-link": "The application link must be a web address starting with http:// or https://.",
+      "invalid-deadline-type": "The deadline must be a date, \"As soon as possible\" or \"Rolling\"."
     },
     "file": {
       "unsupported-type": "This file format is not allowed here.",

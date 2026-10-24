@@ -18,6 +18,18 @@
     {{ $t('jobs.detail.days_left', state.days) }}
   </span>
   <span
+    v-else-if="state.kind === 'asap'"
+    class="tw:inline-flex tw:items-center tw:rounded-sm tw:bg-signal tw:px-2 tw:pt-0.5 tw:text-sm tw:font-bold tw:text-signal-foreground"
+  >
+    {{ $t('jobs.detail.asap') }}
+  </span>
+  <span
+    v-else-if="state.kind === 'rolling' || state.kind === 'none'"
+    class="tw:text-sm tw:font-semibold"
+  >
+    {{ $t('jobs.detail.rolling') }}
+  </span>
+  <span
     v-else-if="state.kind === 'passed'"
     class="tw:text-sm tw:font-semibold tw:text-destructive"
   >

@@ -19,7 +19,14 @@
     SelectValue,
   } from '@/components/ui/select'
   import { useResourceForm } from '@/composables/admin/useResourceForm'
-  import { JOB_LISTINGS, JOB_TYPES, JobInput } from '@/contracts/job'
+  import {
+    DEADLINE_TYPES,
+    JOB_LISTINGS,
+    JOB_TYPES,
+    checkedJobInput,
+    toV1Job,
+    type JobInput,
+  } from '@/contracts/job'
 
   const props = defineProps<{
     uid?: string
@@ -37,7 +44,7 @@
   )
 
   const { form, submit, saving } = useResourceForm({
-    schema: JobInput,
+    schema: checkedJobInput,
     initial: props.initial,
     back: '/admin/jobs',
     saved: () =>
@@ -46,11 +53,11 @@
       if (props.uid) {
         await $fetch('/api/v1/job', {
           method: 'PUT',
-          body: { ...values, jobUID: props.uid },
+          body: { ...toV1Job(values), jobUID: props.uid },
         })
         return props.uid
       }
-      await $fetch('/api/v1/job', { method: 'POST', body: values })
+      await $fetch('/api/v1/job', { method: 'POST', body: toV1Job(values) })
     },
   })
   const listing = computed(() => form.values.listing ?? 'text')
@@ -189,9 +196,41 @@
         </FormItem>
       </FormField>
 
-      <FormField v-slot="{ componentField }" name="deadline">
+      <FormField v-slot="{ componentField }" name="deadlineType">
         <FormItem>
           <FormLabel>{{ $t('admin.jobs.form.deadline') }}</FormLabel>
+          <Select v-bind="componentField">
+            <FormControl>
+              <SelectTrigger class="tw:w-full">
+                <SelectValue />
+              </SelectTrigger>
+            </FormControl>
+            <SelectContent>
+              <SelectItem
+                v-for="type in DEADLINE_TYPES"
+                :key="type"
+                :value="type"
+              >
+                {{ $t(`admin.jobs.form.deadline_type.${type}`) }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+          <p
+            v-if="form.values.deadlineType === 'rolling'"
+            class="tw:text-sm tw:text-muted-foreground"
+          >
+            {{ $t('admin.jobs.form.rolling_hint') }}
+          </p>
+        </FormItem>
+      </FormField>
+
+      <FormField
+        v-if="(form.values.deadlineType ?? 'date') === 'date'"
+        v-slot="{ componentField }"
+        name="deadline"
+      >
+        <FormItem>
+          <FormLabel>{{ $t('admin.jobs.form.deadline_date') }}</FormLabel>
           <FormControl>
             <Input type="date" v-bind="componentField" />
           </FormControl>

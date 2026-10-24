@@ -5,17 +5,26 @@ import { Instant, type ISO8601String } from '@/domain/time'
 /** Deadlines this many days away or closer are marked, so students apply in time */
 export const SOON_DAYS = 14
 
+/** How a job's deadline is given; jobs stored before the choice existed have a date */
+export type DeadlineType = 'date' | 'asap' | 'rolling'
+
 export type DeadlineState =
   | { kind: 'none' }
   | { kind: 'passed' }
   | { kind: 'open'; days: number; soon: boolean }
+  /** "Snarest": apply right away; counts as a close deadline */
+  | { kind: 'asap' }
+  /** "Løpende": open until the job is filled */
+  | { kind: 'rolling' }
 
 /** Where a job's application deadline stands at a moment, counted in Oslo calendar days */
 export function deadlineState(
-  deadline: string | undefined,
+  deadline: string | null | undefined,
   now: ISO8601String,
+  type: DeadlineType = 'date',
 ): DeadlineState {
-  const at = deadlineOf(deadline)
+  if (type === 'asap' || type === 'rolling') return { kind: type }
+  const at = deadlineOf(deadline ?? undefined)
   const instant = instantOf(at)
   const days = daysUntil(at, now)
   if (!instant || days === null) return { kind: 'none' }
@@ -72,9 +81,9 @@ export function fairEventsOf(
 /** Whether an event starts after the job's deadline, so meeting the company there is too late */
 export function afterDeadline(
   event: EventRow,
-  deadline: string | undefined,
+  deadline: string | null | undefined,
 ): boolean {
   const start = instantOf(event.date?.start)
-  const closes = instantOf(deadlineOf(deadline))
+  const closes = instantOf(deadlineOf(deadline ?? undefined))
   return !!start && !!closes && Instant.compare(start, closes) > 0
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { JobInput } from '@/contracts/job'
+import { checkedJobInput, JobInput, toV1Job } from '@/contracts/job'
 
 const valid = {
   listing: 'text',
@@ -58,5 +58,37 @@ describe('JobInput', () => {
     expect(
       errors({ ...valid, listing: 'link', description: 'x'.repeat(301) }),
     ).toEqual([['description', 'too_long']])
+  })
+})
+
+describe('deadline types', () => {
+  it('needs a date only for a deadline on a date', () => {
+    const undated = { ...valid, deadline: '' }
+    expect(
+      checkedJobInput.safeParse({ ...undated, deadlineType: 'asap' }).success,
+    ).toBe(true)
+    expect(
+      checkedJobInput.safeParse({ ...undated, deadlineType: 'rolling' })
+        .success,
+    ).toBe(true)
+    expect(
+      checkedJobInput.safeParse({ ...undated, deadlineType: 'date' }).error
+        ?.issues[0],
+    ).toMatchObject({ path: ['deadline'], message: 'required' })
+  })
+
+  it('treats a job stored before the choice as one with a date', () => {
+    expect(JobInput.parse(valid).deadlineType).toBe('date')
+  })
+
+  it('stores no date for "Snarest" or "Løpende"', () => {
+    const asap = checkedJobInput.parse({ ...valid, deadlineType: 'asap' })
+    expect(toV1Job(asap)).toMatchObject({
+      deadlineType: 'asap',
+      deadline: null,
+    })
+    expect(toV1Job(JobInput.parse(valid))).toMatchObject({
+      deadline: '2026-12-01',
+    })
   })
 })

@@ -348,7 +348,9 @@
         "full": "Fullt, venteliste",
         "closed": "Påmeldingen er stengt"
       },
-      "after_deadline": "Etter søknadsfristen"
+      "after_deadline": "Etter søknadsfristen",
+      "asap": "Snarest",
+      "rolling": "Løpende"
     },
     "list": {
       "title": "Jobber",
@@ -533,7 +535,9 @@
       "deadline": {
         "today": "Siste dag i dag",
         "left": "{n} dag igjen | {n} dager igjen",
-        "passed": "Utløpt"
+        "passed": "Utløpt",
+        "asap": "Snarest",
+        "rolling": "Løpende"
       },
       "actions": {
         "menu": "Valg for {title}",
@@ -590,7 +594,14 @@
         "link_text": "Lenke til søknaden",
         "link_link": "Lenke til annonsen",
         "summary": "Kort oppsummering (valgfritt)",
-        "summary_hint": "Én eller to setninger, høyst 300 tegn. Vises over knappen til annonsen."
+        "summary_hint": "Én eller to setninger, høyst 300 tegn. Vises over knappen til annonsen.",
+        "deadline_date": "Dato",
+        "deadline_type": {
+          "date": "På en dato",
+          "asap": "Snarest",
+          "rolling": "Løpende"
+        },
+        "rolling_hint": "Søknader behandles fortløpende til stillingen er besatt."
       }
     },
     "users": {
@@ -923,7 +934,8 @@
     },
     "job": {
       "invalid-listing": "En stilling vises enten som beskrivelse eller som lenke.",
-      "invalid-link": "Søknadslenken må være en nettadresse som starter med http:// eller https://."
+      "invalid-link": "Søknadslenken må være en nettadresse som starter med http:// eller https://.",
+      "invalid-deadline-type": "Fristen må være en dato, «Snarest» eller «Løpende»."
     },
     "file": {
       "unsupported-type": "Filen har et format som ikke er tillatt her.",
