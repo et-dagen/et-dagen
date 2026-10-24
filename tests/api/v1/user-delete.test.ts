@@ -2,14 +2,14 @@
  * Deleting an account from "My profile", and an admin deleting someone else's
  */
 import { beforeEach, describe, expect, it } from 'vitest'
-import { API_PORT } from '../support/api'
+import { API_PORT } from '@/tests/api/support/api'
 import {
   accountExists,
   createUser,
   read,
   resetEmulators,
   seed,
-} from '../support/emulators'
+} from '@/tests/api/support/emulators'
 
 const student = { userType: 'student', studyProgram: 'MTEL', currentYear: 3 }
 const admin = { userType: 'admin' }
