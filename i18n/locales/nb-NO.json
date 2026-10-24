@@ -331,7 +331,9 @@
     "details": "Stillingsdetaljer",
     "apply": "Søk her",
     "type": "Jobbtype",
-    "no_jobs": "Fant ingen stillingsannonser ⚠️"
+    "no_jobs": "Fant ingen stillingsannonser ⚠️",
+    "link_listing": "Hele annonsen ligger på nettsiden til {company}.",
+    "open_listing": "Les annonsen og søk"
   },
   "admin": {
     "companies": {
@@ -480,14 +482,28 @@
         "choose_type": "Velg type",
         "location": "Sted",
         "deadline": "Søknadsfrist",
-        "link": "Lenke til søknaden",
         "link_hint": "La feltet stå tomt hvis søknaden sendes på annen måte.",
         "description": "Beskrivelse",
         "create": "Opprett stilling",
         "save": "Lagre endringer",
         "created": "Stillingen er opprettet",
         "updated": "Endringene er lagret",
-        "missing": "Fant ingen stilling med denne adressen."
+        "missing": "Fant ingen stilling med denne adressen.",
+        "listing": "Visning",
+        "listings": {
+          "text": {
+            "name": "Beskrivelse på etdagen.no",
+            "hint": "Hele annonsen står her, med formatert tekst."
+          },
+          "link": {
+            "name": "Lenke til annonsen",
+            "hint": "Kort oppsummering her; studentene sendes videre til bedriftens annonse."
+          }
+        },
+        "link_text": "Lenke til søknaden",
+        "link_link": "Lenke til annonsen",
+        "summary": "Kort oppsummering (valgfritt)",
+        "summary_hint": "Én eller to setninger, høyst 300 tegn. Vises over knappen til annonsen."
       }
     },
     "users": {
@@ -770,6 +786,9 @@
     },
     "internal": {
       "unexpected": "Noe gikk galt hos oss. Prøv igjen om litt."
+    },
+    "job": {
+      "invalid-listing": "En stilling vises enten som beskrivelse eller som lenke."
     }
   },
   "form": {

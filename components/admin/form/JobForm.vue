@@ -10,6 +10,7 @@
     FormLabel,
   } from '@/components/ui/form'
   import { Input } from '@/components/ui/input'
+  import { Textarea } from '@/components/ui/textarea'
   import {
     Select,
     SelectContent,
@@ -18,7 +19,7 @@
     SelectValue,
   } from '@/components/ui/select'
   import { useResourceForm } from '@/composables/admin/useResourceForm'
-  import { JOB_TYPES, JobInput } from '@/contracts/job'
+  import { JOB_LISTINGS, JOB_TYPES, JobInput } from '@/contracts/job'
 
   const props = defineProps<{
     uid?: string
@@ -35,7 +36,7 @@
       .sort((a, b) => a.label.localeCompare(b.label, 'nb')),
   )
 
-  const { submit, saving } = useResourceForm({
+  const { form, submit, saving } = useResourceForm({
     schema: JobInput,
     initial: props.initial,
     back: '/admin/jobs',
@@ -52,6 +53,24 @@
       await $fetch('/api/v1/job', { method: 'POST', body: values })
     },
   })
+  const listing = computed(() => form.values.listing ?? 'text')
+
+  // keep what was written when switching: rich text becomes a plain summary, and back
+  const switchListing = (next: 'text' | 'link') => {
+    if (next === listing.value) return
+    const description = String(form.values.description ?? '')
+    form.setFieldValue('listing', next)
+    form.setFieldValue(
+      'description',
+      next === 'link'
+        ? description
+            .replace(/<[^>]*>/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .slice(0, 300)
+        : description && `<p>${description}</p>`,
+    )
+  }
 </script>
 
 <template>
@@ -76,6 +95,34 @@
     <div
       class="tw:grid tw:gap-5 tw:rounded-lg tw:border tw:bg-card tw:p-4 tw:lg:grid-cols-2 tw:lg:p-6"
     >
+      <FormField v-slot="{ value }" name="listing">
+        <FormItem class="tw:lg:col-span-2">
+          <FormLabel>{{ $t('admin.jobs.form.listing') }}</FormLabel>
+          <div
+            role="radiogroup"
+            :aria-label="$t('admin.jobs.form.listing')"
+            class="tw:grid tw:gap-2 tw:sm:grid-cols-2"
+          >
+            <button
+              v-for="option in JOB_LISTINGS"
+              :key="option"
+              type="button"
+              role="radio"
+              :aria-checked="value === option"
+              class="tw:rounded-md tw:border tw:p-3 tw:text-left tw:transition-colors tw:hover:bg-accent tw:aria-checked:border-plate tw:aria-checked:bg-plate tw:aria-checked:text-plate-foreground"
+              @click="switchListing(option)"
+            >
+              <span class="tw:block tw:font-semibold">
+                {{ $t(`admin.jobs.form.listings.${option}.name`) }}
+              </span>
+              <span class="tw:block tw:text-sm tw:opacity-80">
+                {{ $t(`admin.jobs.form.listings.${option}.hint`) }}
+              </span>
+            </button>
+          </div>
+        </FormItem>
+      </FormField>
+
       <FormField v-slot="{ componentField }" name="title">
         <FormItem class="tw:lg:col-span-2">
           <FormLabel>{{ $t('admin.jobs.form.title') }}</FormLabel>
@@ -154,11 +201,14 @@
 
       <FormField v-slot="{ componentField }" name="applicationLink">
         <FormItem class="tw:lg:col-span-2">
-          <FormLabel>{{ $t('admin.jobs.form.link') }}</FormLabel>
+          <FormLabel>{{ $t(`admin.jobs.form.link_${listing}`) }}</FormLabel>
           <FormControl>
             <Input type="url" placeholder="https://" v-bind="componentField" />
           </FormControl>
-          <p class="tw:text-sm tw:text-muted-foreground">
+          <p
+            v-if="listing === 'text'"
+            class="tw:text-sm tw:text-muted-foreground"
+          >
             {{ $t('admin.jobs.form.link_hint') }}
           </p>
           <FieldError />
@@ -166,6 +216,7 @@
       </FormField>
 
       <FormField
+        v-if="listing === 'text'"
         v-slot="{ value, handleChange, errorMessage }"
         name="description"
       >
@@ -178,6 +229,18 @@
               @update:model-value="handleChange"
             />
           </FormControl>
+          <FieldError />
+        </FormItem>
+      </FormField>
+      <FormField v-else v-slot="{ componentField }" name="description">
+        <FormItem class="tw:lg:col-span-2">
+          <FormLabel>{{ $t('admin.jobs.form.summary') }}</FormLabel>
+          <FormControl>
+            <Textarea v-bind="componentField" rows="3" maxlength="300" />
+          </FormControl>
+          <p class="tw:text-sm tw:text-muted-foreground">
+            {{ $t('admin.jobs.form.summary_hint') }}
+          </p>
           <FieldError />
         </FormItem>
       </FormField>

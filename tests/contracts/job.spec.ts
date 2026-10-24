@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { JobInput } from '@/contracts/job'
 
 const valid = {
+  listing: 'text',
   title: 'Embedded software engineer',
   companyUID: 'c1',
   jobType: 'full-time',
@@ -39,5 +40,23 @@ describe('JobInput', () => {
       ['applicationLink', 'url'],
       ['description', 'required'],
     ])
+  })
+
+  it('needs a link but no description for a link listing', () => {
+    expect(
+      JobInput.safeParse({ ...valid, listing: 'link', description: '' })
+        .success,
+    ).toBe(true)
+    expect(
+      errors({
+        ...valid,
+        listing: 'link',
+        applicationLink: '',
+        description: '',
+      }),
+    ).toEqual([['applicationLink', 'required']])
+    expect(
+      errors({ ...valid, listing: 'link', description: 'x'.repeat(301) }),
+    ).toEqual([['description', 'too_long']])
   })
 })

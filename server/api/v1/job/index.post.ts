@@ -2,6 +2,7 @@
 // endpoint for creating a new job in the database
 
 import { isValidDate } from '../../../../composables/useDate'
+import { fail } from '@/domain/errors'
 
 defineRouteMeta({
   openAPI: {
@@ -55,6 +56,7 @@ export default defineEventHandler(async (event) => {
     jobType,
     location,
     applicationLink,
+    listing = 'text',
   } = await readBody(event)
 
   // Set resource context for wide event logging
@@ -72,11 +74,12 @@ export default defineEventHandler(async (event) => {
   if (
     !companyUID ||
     !title ||
-    !description ||
     !deadline ||
     !jobType ||
     !location ||
-    typeof applicationLink !== 'string'
+    typeof applicationLink !== 'string' ||
+    // a listing on the site needs its description; a link needs the link
+    (listing === 'text' ? !description : !applicationLink)
   ) {
     setErrorContext(event, {
       code: 'general/missing-data',
@@ -87,6 +90,8 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Error (general/missing-data).',
     })
   }
+
+  if (!['text', 'link'].includes(listing)) throw fail('job/invalid-listing')
 
   if (!isValidDate(deadline)) {
     setErrorContext(event, {
@@ -155,6 +160,7 @@ export default defineEventHandler(async (event) => {
       jobType,
       location,
       applicationLink,
+      listing,
     })
     newJobKey = ref.key
     // Adopt the push promise so the write is actually awaited/timed and a
