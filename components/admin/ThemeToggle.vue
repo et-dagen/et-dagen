@@ -13,11 +13,11 @@
   <Button
     variant="ghost"
     size="icon"
-    class="text-current hover:bg-white/15 hover:text-current"
+    class="tw:text-current tw:hover:bg-white/15 tw:hover:text-current"
     :aria-label="$t(`admin.shell.theme.${theme}`)"
     :title="$t(`admin.shell.theme.${theme}`)"
     @click="next"
   >
-    <component :is="icon" class="size-5" />
+    <component :is="icon" class="tw:size-5" />
   </Button>
 </template>

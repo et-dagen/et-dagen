@@ -1,14 +1,16 @@
 /*
  * Styles for the pages built on shadcn-vue (the admin panel first)
  *
- * Tailwind's preflight is left out, so the Vuetify pages keep their look. Pages on the new
+ * Tailwind's preflight is left out, so the Vuetify pages keep their look, and every Tailwind class
+ * carries the tw: prefix (tw:bg-primary), because Vuetify defines classes with the same names and
+ * !important (bg-primary, border, rounded-lg). Pages on the new
  * components sit inside `.et-admin`, which gets the base styles preflight would have given; so do
  * shadcn-vue components (`[data-slot]`), because menus and dialogs render at the end of <body>.
  * The palette sits on <html class="et-admin-root"> for the same reason, set by the admin layout.
  * Every colour comes from the palette below: change it here and every page follows.
  */
-@import 'tailwindcss/theme.css';
-@import 'tailwindcss/utilities.css';
+@import 'tailwindcss/theme.css' prefix(tw);
+@import 'tailwindcss/utilities.css' prefix(tw);
 @import 'tw-animate-css';
 @import '@fontsource-variable/overpass';
 
@@ -119,18 +121,6 @@
   line-height: inherit;
 }
 
-/*
- * main.scss gives every heading Vuetify's .text-hN styles with !important. Inside the new pages a
- * heading inherits instead, and sets its own size with important utilities (text-2xl!).
- */
-:where(.et-admin, [data-slot]) :is(h1, h2, h3, h4, h5, h6) {
-  font-family: inherit !important;
-  font-size: inherit !important;
-  font-weight: inherit !important;
-  line-height: inherit !important;
-  letter-spacing: inherit !important;
-}
-
 :where(.et-admin, [data-slot]) :where(ul, ol) {
   list-style: none;
 }
@@ -140,9 +130,9 @@
   color: inherit;
 }
 
-/* main.scss forces a colour on every link; inside the new pages a link takes its parent's */
-:is(.et-admin, [data-slot]) a {
-  color: inherit !important;
+:where(.et-admin, [data-slot]) a {
+  color: inherit;
+  text-decoration: inherit;
 }
 
 :is(.et-admin, [data-slot]) :focus-visible {

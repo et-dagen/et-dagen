@@ -17,20 +17,24 @@
 </script>
 
 <template>
-  <div class="et-admin min-h-dvh lg:grid lg:grid-cols-[240px_minmax(0,1fr)]">
-    <Rail class="hidden lg:flex" />
+  <div
+    class="et-admin tw:min-h-dvh tw:lg:grid tw:lg:grid-cols-[240px_minmax(0,1fr)]"
+  >
+    <Rail class="tw:hidden tw:lg:flex" />
 
     <header
-      class="flex h-14 items-center justify-between bg-brand px-4 text-brand-foreground lg:hidden"
+      class="tw:flex tw:h-14 tw:items-center tw:justify-between tw:bg-brand tw:px-4 tw:text-brand-foreground tw:lg:hidden"
     >
-      <p class="text-lg font-extrabold tracking-tight">E&amp;T-dagene</p>
+      <p class="tw:text-lg tw:font-extrabold tw:tracking-tight">
+        E&amp;T-dagene
+      </p>
       <ThemeToggle />
     </header>
 
-    <main class="min-w-0 px-4 pt-6 pb-28 lg:px-8 lg:py-8">
+    <main class="tw:min-w-0 tw:px-4 tw:pt-6 tw:pb-28 tw:lg:px-8 tw:lg:py-8">
       <slot />
     </main>
 
-    <BottomBar class="lg:hidden" />
+    <BottomBar class="tw:lg:hidden" />
   </div>
 </template>

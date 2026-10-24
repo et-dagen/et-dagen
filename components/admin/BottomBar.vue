@@ -7,21 +7,21 @@
 <template>
   <nav
     :aria-label="$t('admin.shell.navigation')"
-    class="fixed inset-x-0 bottom-0 z-10 bg-brand px-2 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] text-brand-foreground"
+    class="tw:fixed tw:inset-x-0 tw:bottom-0 tw:z-10 tw:bg-brand tw:px-2 tw:pt-2 tw:pb-[max(0.5rem,env(safe-area-inset-bottom))] tw:text-brand-foreground"
   >
-    <ul class="grid grid-cols-4 gap-1">
+    <ul class="tw:grid tw:grid-cols-4 tw:gap-1">
       <li v-for="panel in ADMIN_PANELS" :key="panel.name">
         <NuxtLink
           :to="localePath(`/admin/${panel.name}`)"
-          class="group flex h-14 flex-col items-center justify-center gap-1 rounded-md text-xs font-semibold aria-[current=page]:bg-white"
+          class="tw:group tw:flex tw:h-14 tw:flex-col tw:items-center tw:justify-center tw:gap-1 tw:rounded-md tw:text-xs tw:font-semibold tw:aria-[current=page]:bg-white"
         >
           <component
             :is="panel.icon"
-            class="size-5 group-aria-[current=page]:text-brand"
+            class="tw:size-5 tw:group-aria-[current=page]:text-brand"
             stroke-width="1.5"
             aria-hidden="true"
           />
-          <span class="group-aria-[current=page]:text-brand">
+          <span class="tw:group-aria-[current=page]:text-brand">
             {{ $t(`admin.${panel.name}.name`) }}
           </span>
         </NuxtLink>
