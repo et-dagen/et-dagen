@@ -37,14 +37,28 @@ export const FILE_RULES = {
     types: ['application/pdf'],
     maxBytes: 10 * MB,
     single: true,
+    public: false,
   },
-  avatar: { owner: 'user', types: IMAGE, maxBytes: 2 * MB, single: true },
-  logo: { owner: 'company', types: IMAGE, maxBytes: 2 * MB, single: true },
+  avatar: {
+    owner: 'user',
+    types: IMAGE,
+    maxBytes: 2 * MB,
+    single: true,
+    public: false,
+  },
+  logo: {
+    owner: 'company',
+    types: IMAGE,
+    maxBytes: 2 * MB,
+    single: true,
+    public: true,
+  },
   standmap: {
     owner: 'fair',
     types: [...IMAGE, 'application/pdf'],
     maxBytes: 10 * MB,
     single: false,
+    public: true,
   },
 } as const satisfies Record<
   FileKind,
@@ -54,6 +68,8 @@ export const FILE_RULES = {
     maxBytes: number
     /** An owner keeps only the newest file of this kind */
     single: boolean
+    /** Anyone may open it by its lasting link; otherwise only through a temporary one */
+    public: boolean
   }
 >
 

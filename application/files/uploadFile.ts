@@ -64,10 +64,14 @@ export async function uploadFile(
     createdAt: now(),
   }
   const path = storagePathOf(file)
-  await storage.put(path, upload.bytes, upload.contentType, {
-    fileId: file.id,
-    owner: ownerTag(file.owner),
-    ...(file.uploader && { uploader: file.uploader }),
+  await storage.put(path, upload.bytes, {
+    contentType: upload.contentType,
+    public: FILE_RULES[upload.kind].public,
+    metadata: {
+      fileId: file.id,
+      owner: ownerTag(file.owner),
+      ...(file.uploader && { uploader: file.uploader }),
+    },
   })
   try {
     await files.save(file)

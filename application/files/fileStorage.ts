@@ -6,12 +6,15 @@
  * {@link FileRepository} record, so moving storage needs only a new adapter.
  */
 export interface FileStorage {
-  /** Store bytes at a path, replacing anything there */
+  /** Store bytes at a path, replacing anything there; a public file gets a lasting link */
   put(
     path: string,
     bytes: Uint8Array,
-    contentType: string,
-    metadata: Readonly<Record<string, string>>,
+    options: {
+      contentType: string
+      public: boolean
+      metadata: Readonly<Record<string, string>>
+    },
   ): Promise<void>
 
   /** Remove the file at a path; a path with nothing there is not an error */

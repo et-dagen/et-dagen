@@ -3,6 +3,7 @@ import type { FileStorage } from '@/application/files/fileStorage'
 export interface MemoryFile {
   bytes: Uint8Array
   contentType: string
+  public: boolean
   metadata: Readonly<Record<string, string>>
 }
 
@@ -13,8 +14,8 @@ export function memoryFileStorage(): FileStorage & {
   const files = new Map<string, MemoryFile>()
   return {
     files,
-    put: (path, bytes, contentType, metadata) => {
-      files.set(path, { bytes, contentType, metadata })
+    put: (path, bytes, options) => {
+      files.set(path, { bytes, ...options })
       return Promise.resolve()
     },
     remove: (path) => {

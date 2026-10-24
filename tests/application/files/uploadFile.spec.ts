@@ -43,6 +43,7 @@ describe('uploadFile', () => {
     expect(path).toBe(`users/ada/resumes/${file.id}.pdf`)
     expect(deps.storage.files.get(path)).toMatchObject({
       contentType: 'application/pdf',
+      public: false,
       metadata: { fileId: file.id, owner: 'user:ada', uploader: 'ada' },
     })
     expect(await deps.files.find(file.id)).toMatchObject({
