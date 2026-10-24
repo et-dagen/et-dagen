@@ -332,7 +332,24 @@
     "type": "Jobbtype",
     "no_jobs": "Fant ingen stillingsannonser ⚠️",
     "link_listing": "Hele annonsen ligger på nettsiden til {company}.",
-    "open_listing": "Les annonsen og søk"
+    "open_listing": "Les annonsen og søk",
+    "detail": {
+      "all": "Alle stillinger",
+      "apply": "Søk på stillingen",
+      "days_left": "Frist i dag | Frist i morgen | {n} dager igjen",
+      "passed": "Søknadsfristen har gått ut",
+      "meet": "Møt {company} på E&T‑dagene",
+      "missing": "Fant ikke stillingen",
+      "event_status": {
+        "past": "Ferdig",
+        "no-registration": "Åpent for alle",
+        "not-open": "Påmeldingen har ikke åpnet",
+        "open": "Påmeldingen er åpen",
+        "full": "Fullt, venteliste",
+        "closed": "Påmeldingen er stengt"
+      },
+      "after_deadline": "Etter søknadsfristen"
+    }
   },
   "admin": {
     "companies": {
