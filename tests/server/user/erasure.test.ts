@@ -46,7 +46,9 @@ function setup() {
     users: { gone: { name: 'Gone' }, kept: { name: 'Kept' } },
     events: {
       upcoming: {
+        companyUID: 'company',
         date: { start: '2026-11-01T18:00' },
+        registration: { start: '2026-10-01T12:00', end: '2026-10-31T12:00' },
         capacity: 1,
         attendants: { gone: { attended: false, registeredAt: 1 } },
         queue: { 1700000000002: 'later', 1700000000001: 'first' },
@@ -145,6 +147,23 @@ describe('eraseUsers', () => {
       date: { start: '2026-11-03T18:00' },
       attendants: { kept: {} },
     })
+  })
+
+  it('still takes them off an event it cannot read, promoting nobody', async () => {
+    const { db, files, auth } = setup()
+    const events = db.tree.events as Record<string, Tree>
+    delete events.upcoming.companyUID
+    await eraseUsers(
+      { db: db as never, files, auth: auth as never },
+      ['gone'],
+      now,
+    )
+
+    expect(events.upcoming.attendants).toEqual({})
+    expect(Object.values(events.upcoming.queue as Tree)).toEqual([
+      'first',
+      'later',
+    ])
   })
 
   it('deletes the account last, so a failed run can be repeated', async () => {

@@ -135,6 +135,38 @@ export function describeEventRepository(
       }
     })
 
+    it('removes users from every event, promoting only before an event starts', async () => {
+      const started = Instant.parse('2026-09-02T10:00:00.000Z')
+      const repository = await make([event('workshop'), event('panel')])
+      for (const user of [ada, bo, cy]) {
+        await repository.registerOrQueue(uid('workshop'), user, at)
+      }
+      await repository.registerOrQueue(uid('panel'), cy, at)
+      await repository.registerOrQueue(uid('panel'), ada, at)
+
+      await repository.removeUsers([ada], later)
+      const workshop = await repository.find(uid('workshop'))
+      expect([...(workshop?.roster.attendants.keys() ?? [])]).toEqual([bo])
+      expect(workshop?.roster.attendants.get(bo)?.registeredAt).toBe(later)
+      expect(workshop?.roster.queue).toEqual([cy])
+      expect((await repository.find(uid('panel')))?.roster.queue).toEqual([])
+
+      await repository.removeUsers([bo], started)
+      const after = await repository.find(uid('workshop'))
+      expect(after?.roster.attendants.size).toBe(0)
+      expect(after?.roster.queue).toEqual([cy])
+    })
+
+    it('can remove the same users again', async () => {
+      const repository = await make([event('workshop')])
+      await repository.registerOrQueue(uid('workshop'), ada, at)
+      await repository.removeUsers([ada], later)
+      await repository.removeUsers([ada], later)
+      expect((await repository.find(uid('workshop')))?.roster).toEqual(
+        emptyRoster(),
+      )
+    })
+
     it('reports withdrawing a user who never registered', async () => {
       const repository = await make([event('workshop')])
       expect(await repository.withdraw(uid('workshop'), ada, at)).toEqual({
