@@ -88,3 +88,18 @@ export async function createUser(
   if (record) await seed(`users/${account.localId}`, record)
   return { uid: account.localId, token: account.idToken }
 }
+
+/** Whether the Auth emulator still has an account with this uid */
+export async function accountExists(uid: string): Promise<boolean> {
+  const { users } = (await call(
+    authUrl(
+      `identitytoolkit.googleapis.com/v1/projects/${PROJECT_ID}/accounts:lookup`,
+    ),
+    {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ localId: [uid] }),
+    },
+  )) as { users?: unknown[] }
+  return (users?.length ?? 0) > 0
+}

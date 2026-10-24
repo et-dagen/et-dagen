@@ -1,7 +1,7 @@
 // DELETE /api/v1/user
 // endpoint for removing a user in the database
 
-import { eraseUsers } from '../../../user/erasure'
+import { eraseUsers } from '@/server/user/erasure'
 
 defineRouteMeta({
   openAPI: {
@@ -73,6 +73,9 @@ export default defineEventHandler(async (event) => {
   await withDbTiming(event, 'users', 'delete', () =>
     eraseUsers({ db, files: storage.bucket(), auth }, UIDs as string[]),
   )
+
+  // the caller's token cookie points at an account that no longer exists
+  if ((UIDs as string[]).includes(user.uid)) deleteCookie(event, '_token')
 
   // users successfully removed
   sendNoContent(event, 204)
