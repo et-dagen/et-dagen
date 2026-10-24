@@ -18,6 +18,7 @@ export function memoryFileStorage(): FileStorage & {
       files.set(path, { bytes, ...options })
       return Promise.resolve()
     },
+    exists: (path) => Promise.resolve(files.has(path)),
     remove: (path) => {
       files.delete(path)
       return Promise.resolve()
