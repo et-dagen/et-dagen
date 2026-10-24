@@ -181,7 +181,6 @@
     }
   },
   "alert": {
-    "close_alert": "Close",
     "default_message": "Oops! Something went wrong.",
     "api": {
       "error": {
