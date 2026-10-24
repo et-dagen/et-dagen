@@ -473,7 +473,8 @@
         "save": "Lagre endringer",
         "created": "Arrangementet er opprettet",
         "updated": "Endringene er lagret",
-        "missing": "Fant ikke arrangementet."
+        "missing": "Fant ikke arrangementet.",
+        "programmes_search": "Søk etter studieprogram"
       }
     },
     "jobs": {
@@ -859,6 +860,11 @@
       "italic": "Kursiv",
       "bullets": "Punktliste",
       "numbers": "Nummerert liste"
+    },
+    "picker": {
+      "remove": "Fjern {option}",
+      "matches": "Treff",
+      "none": "Ingen treff"
     }
   }
 }

@@ -475,7 +475,8 @@
         "save": "Save changes",
         "created": "The event is created",
         "updated": "The changes are saved",
-        "missing": "Event not found."
+        "missing": "Event not found.",
+        "programmes_search": "Search for a study programme"
       }
     },
     "jobs": {
@@ -858,6 +859,11 @@
       "italic": "Italic",
       "bullets": "Bulleted list",
       "numbers": "Numbered list"
+    },
+    "picker": {
+      "remove": "Remove {option}",
+      "matches": "Matches",
+      "none": "No matches"
     }
   }
 }

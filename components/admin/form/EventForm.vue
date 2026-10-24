@@ -2,6 +2,7 @@
   import { ArrowLeft, Save } from '@lucide/vue'
   import FieldError from '@/components/admin/form/FieldError.vue'
   import RichText from '@/components/admin/form/RichText.vue'
+  import SearchPicker from '@/components/admin/form/SearchPicker.vue'
   import { Button } from '@/components/ui/button'
   import { Checkbox } from '@/components/ui/checkbox'
   import {
@@ -275,19 +276,12 @@
         <FormField v-slot="{ value, handleChange }" name="programmes">
           <FormItem class="tw:lg:col-span-2">
             <FormLabel>{{ $t('admin.events.form.programmes') }}</FormLabel>
-            <div class="tw:grid tw:gap-2 tw:sm:grid-cols-2">
-              <label
-                v-for="programme in programmes"
-                :key="programme"
-                class="tw:flex tw:items-center tw:gap-2 tw:text-sm"
-              >
-                <Checkbox
-                  :model-value="(value ?? []).includes(programme)"
-                  @update:model-value="handleChange(toggle(value, programme))"
-                />
-                {{ programme }}
-              </label>
-            </div>
+            <SearchPicker
+              :model-value="value ?? []"
+              :options="programmes"
+              :placeholder="$t('admin.events.form.programmes_search')"
+              @update:model-value="handleChange"
+            />
           </FormItem>
         </FormField>
       </template>
