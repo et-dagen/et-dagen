@@ -1,5 +1,6 @@
 import type { Event, HasRegistration } from '@/domain/event/event'
 import type {
+  PromoteOutcome,
   RegisterOutcome,
   Roster,
   WithdrawOutcome,
@@ -44,4 +45,10 @@ export interface EventRepository {
     user: UserUid,
     at: ISO8601String,
   ): Promise<WithdrawOutcome | Missing>
+
+  /** Apply the domain's `promoteWaiting` to the stored roster, atomically */
+  promoteWaiting(
+    uid: Event['uid'],
+    at: ISO8601String,
+  ): Promise<PromoteOutcome | Missing>
 }

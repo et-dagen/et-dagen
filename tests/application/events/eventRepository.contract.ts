@@ -104,6 +104,31 @@ export function describeEventRepository(
       expect(found?.roster.queue).toEqual([cy])
     })
 
+    it('fills spots added after the event filled up', async () => {
+      const repository = await make([event('workshop')])
+      for (const user of [ada, bo, cy]) {
+        await repository.registerOrQueue(uid('workshop'), user, at)
+      }
+      // the event's limit was raised from 1 to 2 where it is stored
+      const raised = await make([
+        {
+          ...event('workshop', 2),
+          roster: (await repository.find(uid('workshop')))!.roster,
+        },
+      ])
+
+      expect(await raised.promoteWaiting(uid('workshop'), later)).toEqual({
+        promoted: [bo],
+      })
+      const found = await raised.find(uid('workshop'))
+      expect([...(found?.roster.attendants.keys() ?? [])]).toEqual([ada, bo])
+      expect(found?.roster.attendants.get(bo)?.registeredAt).toBe(later)
+      expect(found?.roster.queue).toEqual([cy])
+      expect(await raised.promoteWaiting(uid('workshop'), later)).toEqual({
+        promoted: [],
+      })
+    })
+
     it('admits exactly the limit when users register at once', async () => {
       const repository = await make([event('workshop', 3)])
       const outcomes = await Promise.all(
@@ -124,6 +149,14 @@ export function describeEventRepository(
     })
 
     it('reports a missing event or one without sign-up', async () => {
+      const promoting = await make([talk])
+      expect(await promoting.promoteWaiting(uid('missing'), at)).toEqual({
+        kind: 'event-not-found',
+      })
+      expect(await promoting.promoteWaiting(uid('talk'), at)).toEqual({
+        kind: 'no-registration',
+      })
+
       const repository = await make([talk])
       for (const operation of ['registerOrQueue', 'withdraw'] as const) {
         expect(await repository[operation](uid('missing'), ada, at)).toEqual({

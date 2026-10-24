@@ -16,14 +16,18 @@ import { Instant } from '@/domain/time/instant'
 import { endOf } from '@/domain/time/interval'
 import { TimeZone, Zone } from '@/domain/time/zone'
 import { UserUid } from '@/domain/user'
-import type { EventRecord } from '@/server/adapters/rtdb/eventRecord'
+import {
+  rosterRecord,
+  type EventRecord,
+} from '@/server/adapters/rtdb/eventRecord'
 import { rtdbEventRepository } from '@/server/adapters/rtdb/eventRepository'
 
 const host = process.env.FIREBASE_DATABASE_EMULATOR_HOST
 const OSLO = TimeZone.parse('Europe/Oslo')
 
-/** A stored event as v1 would have written it */
-const recordOf = ({ event }: StoredEvent): EventRecord => ({
+/** A stored event and its roster as v1 would have written them */
+const recordOf = ({ event, roster }: StoredEvent): EventRecord => ({
+  ...rosterRecord(roster, new Map(), event.start),
   companyUID: event.companyUid,
   capacity: event.registration?.attendanceLimit ?? null,
   date: { start: Zone.toInput(event.start, OSLO) },

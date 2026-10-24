@@ -1,6 +1,10 @@
 // PUT /api/v1/event
 // Endpoint for overwriting existing events
 
+import { EventUid } from '@/domain/event/event'
+import { Instant } from '@/domain/time'
+import { rtdbEventRepository } from '@/server/adapters/rtdb/eventRepository'
+
 defineRouteMeta({
   openAPI: {
     tags: ['Event'],
@@ -205,8 +209,17 @@ export default defineEventHandler(async (event) => {
   }
 
   // Update database information
-  eventRef.update(updates)
+  await eventRef.update(updates)
   trackDbWrite(event, `events/${eventUID}`)
+
+  // a raised capacity gives the new spots to the queue
+  const promotion = await rtdbEventRepository(db).promoteWaiting(
+    EventUid.parse(eventUID),
+    Instant.now(),
+  )
+  if ('promoted' in promotion) {
+    addEventContext(event, 'queue_promoted', promotion.promoted.length)
+  }
 
   addEventContext(event, 'company_uid', companyUID)
   addEventContext(event, 'has_capacity', capacity !== null)

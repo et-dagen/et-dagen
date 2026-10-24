@@ -3,7 +3,7 @@ import type {
   StoredEvent,
 } from '@/application/events/eventRepository'
 import type { EventUid } from '@/domain/event/event'
-import { register, withdraw } from '@/domain/event/roster'
+import { promoteWaiting, register, withdraw } from '@/domain/event/roster'
 
 /**
  * Events held in a map, for tests and local work
@@ -40,6 +40,17 @@ export function memoryEventRepository(
       if (!registration) return Promise.resolve({ kind: 'no-registration' })
 
       const next = withdraw(stored.roster, registration, user, at)
+      events.set(uid, { ...stored, roster: next.roster })
+      return Promise.resolve(next.outcome)
+    },
+
+    promoteWaiting: (uid, at) => {
+      const stored = events.get(uid)
+      if (!stored) return Promise.resolve({ kind: 'event-not-found' })
+      const { registration } = stored.event
+      if (!registration) return Promise.resolve({ kind: 'no-registration' })
+
+      const next = promoteWaiting(stored.roster, registration, at)
       events.set(uid, { ...stored, roster: next.roster })
       return Promise.resolve(next.outcome)
     },

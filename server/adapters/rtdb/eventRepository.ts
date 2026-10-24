@@ -10,7 +10,12 @@ import type {
   Missing,
 } from '@/application/events/eventRepository'
 import type { Registration } from '@/domain/event/registration'
-import { register, withdraw, type Roster } from '@/domain/event/roster'
+import {
+  promoteWaiting,
+  register,
+  withdraw,
+  type Roster,
+} from '@/domain/event/roster'
 import type { ISO8601String } from '@/domain/time'
 
 type Change<T> = (
@@ -79,6 +84,11 @@ export function rtdbEventRepository(db: Database): EventRepository {
     withdraw: (uid, user, at) =>
       change(uid, at, (roster, registration) =>
         withdraw(roster, registration, user, at),
+      ),
+
+    promoteWaiting: (uid, at) =>
+      change(uid, at, (roster, registration) =>
+        promoteWaiting(roster, registration, at),
       ),
   }
 }

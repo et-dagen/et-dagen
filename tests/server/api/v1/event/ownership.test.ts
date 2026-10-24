@@ -42,6 +42,8 @@ beforeEach(async () => {
       child: () => ({ remove }),
       remove,
       update,
+      // the queue check after an update; its outcome is the repository's business
+      transaction: () => Promise.resolve(),
     }),
   })
   vi.stubGlobal(
