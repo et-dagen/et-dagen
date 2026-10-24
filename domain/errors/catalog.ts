@@ -22,6 +22,10 @@ export interface ErrorSpec {
  */
 export const ERRORS = {
   'internal/unexpected': { status: 500, message: 'Unexpected error' },
+  'event/register/forbidden': {
+    status: 403,
+    message: 'This account type cannot sign up for events',
+  },
 } as const satisfies Record<string, ErrorSpec>
 
 export type ErrorCode = keyof typeof ERRORS
