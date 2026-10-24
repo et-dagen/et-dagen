@@ -5,6 +5,7 @@ import {
   deadlineState,
   fairEventsOf,
   formatDeadline,
+  formatShortDeadline,
 } from '@/lib/jobs'
 
 // 12:00 in Oslo on 1 November 2026
@@ -94,5 +95,16 @@ describe('afterDeadline', () => {
   it('marks nothing when a time is missing', () => {
     expect(afterDeadline(event, undefined)).toBe(false)
     expect(afterDeadline({}, '2026-11-08')).toBe(false)
+  })
+})
+
+describe('formatShortDeadline', () => {
+  const today = new Date('2026-11-01T11:00:00Z')
+
+  it('leaves out this year and shows any other', () => {
+    expect(formatShortDeadline('2026-11-03', 'nb-NO', today)).toBe('3. nov.')
+    expect(formatShortDeadline('2027-01-15T23:59', 'nb-NO', today)).toBe(
+      '15. jan. 2027',
+    )
   })
 })

@@ -17,7 +17,7 @@
   })
 
   const currentRouteName = computed(() => {
-    const routeNames = useRoute().fullPath.split('/')
+    const routeNames = useRoute().path.split('/')
     const index = locale.value === defaultLocale ? 1 : 2
     const name = routeNames[index]
     return name === '' ? 'index' : (name ?? 'index')

@@ -38,6 +38,21 @@ export function formatDeadline(
   })
 }
 
+/** A deadline as a list reads it, "3. nov.", with the year only when it is not this year's */
+export function formatShortDeadline(
+  deadline: string | undefined,
+  locale: string,
+  now: Date = new Date(),
+): string {
+  const at = deadlineOf(deadline)
+  const year = at?.slice(0, 4)
+  return formatWhen(at, locale, {
+    day: 'numeric',
+    month: 'short',
+    ...(year && year !== String(now.getFullYear()) ? { year: 'numeric' } : {}),
+  })
+}
+
 export type FairEvent = EventRow & { uid: string }
 
 /** A company's events at the fair that have not finished, soonest first */
