@@ -40,7 +40,7 @@
           </span>
           <span
             v-if="counts[panel.name]?.value != null"
-            class="ml-auto rounded-[3px] px-1.5 text-[13px] tabular-nums opacity-80 group-aria-[current=page]:bg-brand group-aria-[current=page]:opacity-100"
+            class="ml-auto inline-flex h-5 min-w-5 items-center justify-center rounded-[3px] px-1.5 pt-0.5 text-[13px] leading-none tabular-nums text-brand-foreground/80 group-aria-[current=page]:bg-brand group-aria-[current=page]:text-brand-foreground"
           >
             {{ counts[panel.name]?.value }}
           </span>

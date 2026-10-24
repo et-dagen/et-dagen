@@ -2,7 +2,9 @@
  * Styles for the pages built on shadcn-vue (the admin panel first)
  *
  * Tailwind's preflight is left out, so the Vuetify pages keep their look. Pages on the new
- * components sit inside `.et-admin`, which gets the base styles preflight would have given.
+ * components sit inside `.et-admin`, which gets the base styles preflight would have given; so do
+ * shadcn-vue components (`[data-slot]`), because menus and dialogs render at the end of <body>.
+ * The palette sits on <html class="et-admin-root"> for the same reason, set by the admin layout.
  * Every colour comes from the palette below: change it here and every page follows.
  */
 @import 'tailwindcss/theme.css';
@@ -14,7 +16,7 @@
  * Palette. Each colour is light-dark(light, dark): the dark value is night signage, the same plates
  * lit on a dark ground. Change the values here and every page follows.
  */
-.et-admin {
+.et-admin-root {
   color-scheme: light dark;
 
   --brand: light-dark(#a03836, #b4403e);
@@ -47,11 +49,11 @@
 }
 
 /* An explicit choice overrides the system setting */
-.et-admin[data-theme='light'] {
+.et-admin-root[data-admin-theme='light'] {
   color-scheme: light;
 }
 
-.et-admin[data-theme='dark'] {
+.et-admin-root[data-admin-theme='dark'] {
   color-scheme: dark;
 }
 
@@ -92,20 +94,24 @@
  * What preflight would give, inside the new pages only. The selectors carry no specificity, as in
  * preflight, so Vuetify components still on these pages keep their own borders and margins.
  */
-.et-admin {
+:where(.et-admin, [data-slot]) {
   font-family: var(--font-sans);
   font-feature-settings: 'tnum';
-  color: var(--foreground);
-  background: var(--background);
   -webkit-font-smoothing: antialiased;
 }
 
-:where(.et-admin) :where(*, ::before, ::after) {
+:where(.et-admin) {
+  color: var(--foreground);
+  background: var(--background);
+}
+
+:where(.et-admin, [data-slot]),
+:where(.et-admin, [data-slot]) :where(*, ::before, ::after) {
   box-sizing: border-box;
   border: 0 solid var(--border);
 }
 
-:where(.et-admin) :where(h1, h2, h3, h4, h5, h6, p, ul, ol) {
+:where(.et-admin, [data-slot]) :where(h1, h2, h3, h4, h5, h6, p, ul, ol) {
   margin: 0;
   padding: 0;
   font-size: inherit;
@@ -117,7 +123,7 @@
  * main.scss gives every heading Vuetify's .text-hN styles with !important. Inside the new pages a
  * heading inherits instead, and sets its own size with important utilities (text-2xl!).
  */
-:where(.et-admin) :is(h1, h2, h3, h4, h5, h6) {
+:where(.et-admin, [data-slot]) :is(h1, h2, h3, h4, h5, h6) {
   font-family: inherit !important;
   font-size: inherit !important;
   font-weight: inherit !important;
@@ -125,21 +131,21 @@
   letter-spacing: inherit !important;
 }
 
-:where(.et-admin) :where(ul, ol) {
+:where(.et-admin, [data-slot]) :where(ul, ol) {
   list-style: none;
 }
 
-:where(.et-admin) :where(button, input, select, textarea) {
+:where(.et-admin, [data-slot]) :where(button, input, select, textarea) {
   font: inherit;
   color: inherit;
 }
 
 /* main.scss forces a colour on every link; inside the new pages a link takes its parent's */
-.et-admin a {
+:is(.et-admin, [data-slot]) a {
   color: inherit !important;
 }
 
-.et-admin :focus-visible {
+:is(.et-admin, [data-slot]) :focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
 }

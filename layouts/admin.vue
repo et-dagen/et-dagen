@@ -5,13 +5,19 @@
   import { useAdminTheme } from '@/composables/useAdminTheme'
 
   const { theme } = useAdminTheme()
+
+  // on <html> so menus and dialogs, which render at the end of <body>, get the palette too
+  useHead({
+    htmlAttrs: {
+      class: 'et-admin-root',
+      'data-admin-theme': () =>
+        theme.value === 'system' ? undefined : theme.value,
+    },
+  })
 </script>
 
 <template>
-  <div
-    class="et-admin min-h-dvh lg:grid lg:grid-cols-[240px_minmax(0,1fr)]"
-    :data-theme="theme === 'system' ? undefined : theme"
-  >
+  <div class="et-admin min-h-dvh lg:grid lg:grid-cols-[240px_minmax(0,1fr)]">
     <Rail class="hidden lg:flex" />
 
     <header
