@@ -430,41 +430,48 @@
     },
     "jobs": {
       "name": "Jobs",
-      "edit": "Edit Jobs",
-      "pagesize": "Jobs per page",
-      "filtertypes": {
-        "name": "Filter type",
-        "updated": "Last modified",
-        "jobtitle": "Job Title"
+      "search": "Search by job, company or place",
+      "create": "New job",
+      "filter": {
+        "open": "Open",
+        "expired": "Expired",
+        "all": "All"
       },
-      "filterorder": {
-        "name": "Order",
-        "descending": "Descending",
-        "ascending": "Ascending"
+      "columns": {
+        "title": "Job",
+        "company": "Company",
+        "type": "Type",
+        "location": "Place",
+        "deadline": "Deadline"
       },
-      "selectall": "Select all",
+      "deadline": {
+        "today": "Last day today",
+        "left": "{n} day left | {n} days left",
+        "passed": "Expired"
+      },
+      "actions": {
+        "menu": "Options for {title}",
+        "edit": "Edit",
+        "view": "View the listing",
+        "delete": "Delete"
+      },
+      "select_page": "Select all jobs on this page",
+      "select_row": "Select {name}",
+      "empty": "No jobs match the search.",
       "delete": {
-        "selected": "Delete selected",
-        "confirmtext": "Are you sure you want to delete the selected jobs?",
-        "confirm": "Yes, delete them",
-        "abort": "No, abort"
+        "title": "Delete {n} job? | Delete {n} jobs?",
+        "text": "The job listing is deleted for good. This cannot be undone. | The job listings are deleted for good. This cannot be undone.",
+        "confirm": "Delete {n} job | Delete {n} jobs",
+        "done": "{n} job deleted | {n} jobs deleted"
       },
       "attributes": {
-        "select": "Velg",
-        "title": "Title",
-        "description": "Description",
-        "company": "Company",
-        "location": "Location",
-        "deadline": "Deadline",
         "jobtype": {
           "name": "Job Type",
           "full_time": "Full-time",
           "graduate": "Graduate",
           "summer_internship": "Summer internship"
-        },
-        "code": "Jobb Code"
-      },
-      "copied": "UID kopiert!"
+        }
+      }
     },
     "users": {
       "name": "Users",
