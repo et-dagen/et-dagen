@@ -340,38 +340,47 @@
     },
     "events": {
       "name": "Arrangementer",
-      "edit": "Rediger",
-      "attendant_emails": "Deltaker-e-poster",
-      "pagesize": "Arrangementer per side",
-      "dates": "Dato",
-      "filtertypes": {
-        "name": "Filtertype",
-        "updated": "Sist modifisert",
-        "company": "Bedrift"
+      "search": "Søk etter tittel, bedrift eller sted",
+      "create": "Nytt arrangement",
+      "filter": {
+        "upcoming": "Kommende",
+        "past": "Tidligere",
+        "all": "Alle"
       },
-      "filterorder": {
-        "name": "Rekkefølge",
-        "descending": "Synkende",
-        "ascending": "Stigende"
-      },
-      "selectall": "Velg alle",
-      "delete": {
-        "selected": "Slett valgte",
-        "confirmtext": "Er du sikker på at du vil slette de valgte brukerne?",
-        "confirm": "Ja, slett dem",
-        "abort": "Nei, avbryt"
-      },
-      "attributes": {
-        "select": "Velg",
+      "columns": {
         "title": "Tittel",
         "company": "Bedrift",
-        "location": "Sted",
         "date": "Dato",
-        "time": "Tid",
-        "capacity": "Kapasitet"
+        "place": "Sted",
+        "attendees": "Påmeldte",
+        "status": "Status"
       },
-      "copied": "UID kopiert!",
-      "overview": "Eventoversikt"
+      "status": {
+        "past": "Ferdig",
+        "no-registration": "Uten påmelding",
+        "not-open": "Ikke åpnet",
+        "open": "Åpen",
+        "full": "Full",
+        "queue": "Venteliste {n}",
+        "closed": "Stengt"
+      },
+      "actions": {
+        "menu": "Valg for {title}",
+        "edit": "Rediger",
+        "emails": "Kopier e-poster til påmeldte",
+        "delete": "Slett"
+      },
+      "emails_copied": "{n} e-postadresse kopiert | {n} e-postadresser kopiert",
+      "emails_none": "Ingen påmeldte å kopiere",
+      "select_page": "Velg alle arrangementene på siden",
+      "select_row": "Velg {name}",
+      "empty": "Ingen arrangementer passer søket.",
+      "delete": {
+        "title": "Slette {n} arrangement? | Slette {n} arrangementer?",
+        "text": "Arrangementet og påmeldingene til det slettes for godt. Dette kan ikke angres. | Arrangementene og påmeldingene til dem slettes for godt. Dette kan ikke angres.",
+        "confirm": "Slett {n} arrangement | Slett {n} arrangementer",
+        "done": "{n} arrangement slettet | {n} arrangementer slettet"
+      }
     },
     "company": {
       "name": "Bedrifter",
@@ -478,19 +487,11 @@
       },
       "select_page": "Velg alle brukerne på siden",
       "select_row": "Velg {name}",
-      "selected": "{n} valgt",
-      "clear": "Fjern valg",
-      "showing": "Viser {from}–{to} av {total}",
       "empty": "Ingen brukere passer søket.",
-      "previous": "Forrige side",
-      "next": "Neste side",
       "delete": {
-        "button": "Slett",
         "title": "Slette {n} bruker? | Slette {n} brukere?",
-        "text": "Kontoen, profilen, CV-en og påmeldingene slettes for godt. Plassene på kommende arrangementer går videre til de neste i køen. Dette kan ikke angres.",
-        "more": "og {n} til",
+        "text": "Kontoen, profilen, CV-en og påmeldingene slettes for godt. Plassene på kommende arrangementer går videre til de neste i køen. Dette kan ikke angres. | Kontoene, profilene, CV-ene og påmeldingene slettes for godt. Plassene på kommende arrangementer går videre til de neste i køen. Dette kan ikke angres.",
         "confirm": "Slett {n} bruker | Slett {n} brukere",
-        "cancel": "Avbryt",
         "done": "{n} bruker slettet | {n} brukere slettet"
       },
       "filterorder": {
@@ -507,6 +508,16 @@
         "light": "Tema: lyst. Bytt til mørkt",
         "dark": "Tema: mørkt. Følg enheten"
       }
+    },
+    "list": {
+      "showing": "Viser {from}–{to} av {total}",
+      "previous": "Forrige side",
+      "next": "Neste side",
+      "selected": "{n} valgt",
+      "clear": "Fjern valg",
+      "delete": "Slett",
+      "more": "og {n} til",
+      "cancel": "Avbryt"
     }
   },
   "edit": {

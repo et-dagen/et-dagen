@@ -1,441 +1,415 @@
 <script setup lang="ts">
-  import type { Event } from '~/models/Event'
+  import { Mail, MoreHorizontal, Pencil, Plus, Trash2 } from '@lucide/vue'
+  import DeleteDialog from '@/components/admin/DeleteDialog.vue'
+  import FilterChips from '@/components/admin/FilterChips.vue'
+  import Pager from '@/components/admin/Pager.vue'
+  import SearchField from '@/components/admin/SearchField.vue'
+  import SelectBox from '@/components/admin/SelectBox.vue'
+  import SelectionBar from '@/components/admin/SelectionBar.vue'
+  import SortButton from '@/components/admin/SortButton.vue'
+  import { Badge } from '@/components/ui/badge'
+  import { Button } from '@/components/ui/button'
+  import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+  } from '@/components/ui/dropdown-menu'
+  import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+  } from '@/components/ui/table'
+  import { useSelection } from '@/composables/admin/useSelection'
+  import { useSort } from '@/composables/admin/useSort'
+  import { alertError } from '@/composables/useAlerts'
+  import { Instant } from '@/domain/time'
+  import {
+    eventStatus,
+    formatStart,
+    instantOf,
+    isUpcoming,
+    placeOf,
+    type EventRow,
+    type EventStatus,
+  } from '@/lib/admin/events'
+  import { pageOf, search, sortBy } from '@/lib/admin/listView'
+
+  type Row = EventRow & { uid: string }
+  type When = 'upcoming' | 'past' | 'all'
+  const PAGE_SIZE = 25
+  const COLUMNS = [
+    'title',
+    'company',
+    'date',
+    'place',
+    'attendees',
+    'status',
+  ] as const
 
   const localePath = useLocalePath()
+  const { t, localeProperties } = useI18n()
+  const { copy } = useClipboard()
+  const now = Instant.now()
 
-  // Get events and companies from the API
-  const { data: events, refresh } = await useFetch('/api/v1/event')
-  const { data: companies } = await useFetch('/api/v1/company')
+  const { data: events, refresh } =
+    await useFetch<Record<string, EventRow>>('/api/v1/event')
+  const { data: companies } =
+    await useFetch<Record<string, { name: string }>>('/api/v1/company')
 
-  // Allow copying the event id to the clipboard
-  const { text, copy, copied } = useClipboard()
-
-  // Proces events and retrieve dates
-  const eventsWithID = computed(() => addEventIDAsProperty(events.value ?? []))
-  const eventDates = computed(() => getEventDates(events.value ?? []))
-
-  // State for filtering and selecting events
-  const selectedDates = ref<number[]>(eventDates.value.map((_, i) => i))
-  const filterOrder = ref('descending')
-  const filterType = ref('updated')
-
-  const selected = ref([])
-
-  // Pagination state
-  const currentPage = ref(1)
-  const pageSizes = [10, 25, 100]
-  const pageSize = ref(pageSizes[0])
-
-  // State for the delete modal
-  const loading = ref()
-  const dialog = ref(false)
-
-  // Reset selected events when changing the page or page size
-  watch(currentPage, () => (selected.value = []))
-  watch(pageSize, () => {
-    currentPage.value = 1
-  })
-
-  // Get the number of attendants for an event
-  const eventAttendants = computed(() => {
-    return (event: any) => {
-      // Object doesn't have attendants property if no attendants
-      if (!Object.hasOwn(event, 'attendants')) return 0
-
-      return Object.values(event.attendants).length
-    }
-  })
-
-  // Filter events by date and sort them
-  const filteredEvents = computed(() => {
-    // eslint-disable-next-line
-    const selectedEventDate = eventDates.value.filter((date, index) =>
-      selectedDates.value.includes(index),
-    )
-
-    const filteredByEventDate = Object.values(eventsWithID.value)?.filter(
-      (event: any) =>
-        selectedEventDate.includes(getDateFromDatetime(event.date.start)),
-    )
-
-    selected.value = []
-
-    return (
-      filteredByEventDate?.sort((a, b) => {
-        /* @ts-ignore */
-        const order = a[filterType.value] < b[filterType.value] ? -1 : 1
-        return filterOrder.value === 'ascending' ? order : order * -1
-      }) ?? []
-    )
-  })
-
-  // Split events into pages
-  const pages = computed(() =>
-    filteredEvents.value.reduce((resultArray, item, index) => {
-      const chunkIndex = Math.floor(index / pageSize.value)
-      if (!resultArray[chunkIndex]) {
-        resultArray[chunkIndex] = []
-      }
-      resultArray[chunkIndex].push(item)
-      return resultArray
-    }, [] as Event[][]),
+  const rows = computed<Row[]>(() =>
+    Object.entries(events.value ?? {}).map(([uid, event]) => ({
+      uid,
+      ...event,
+    })),
   )
-  // Delete seleceted events
-  const deleteEvents = async () => {
-    loading.value = true
-    const queries = []
+  const companyOf = (row: Row) =>
+    companies.value?.[row.companyUID ?? '']?.name ?? ''
+  const attendeesOf = (row: Row) => Object.keys(row.attendants ?? {}).length
+  const statusOf = (row: Row) => eventStatus(row, now)
 
-    const selectedEvents = pages.value[currentPage.value - 1].map(
-      (event, index) => (selected.value[index] ? event.id : undefined),
+  const query = ref('')
+  const when = ref<When>('upcoming')
+  const {
+    sort,
+    toggle: toggleSort,
+    directionOf,
+    ariaSort,
+  } = useSort<(typeof COLUMNS)[number]>('date')
+  const page = ref(1)
+
+  const inWhen = (row: Row, value: When) =>
+    value === 'all' || isUpcoming(row, now) === (value === 'upcoming')
+  const whenOptions = computed(() =>
+    (['upcoming', 'past', 'all'] as const).map((value) => ({
+      value,
+      label: t(`admin.events.filter.${value}`),
+      count: rows.value.filter((row) => inWhen(row, value)).length,
+    })),
+  )
+
+  const sortValue = {
+    title: (row: Row) => row.title,
+    company: companyOf,
+    date: (row: Row) => instantOf(row.date?.start),
+    place: (row: Row) => row.location?.name,
+    attendees: (row: Row) => String(attendeesOf(row)),
+    status: (row: Row) => statusLabel(statusOf(row)),
+  }
+
+  const visible = computed(() => {
+    const found = search(
+      rows.value.filter((row) => inWhen(row, when.value)),
+      query.value,
+      (row) => [row.title, companyOf(row), row.location?.name],
     )
+    return sortBy(found, sortValue[sort.value.column], sort.value.direction)
+  })
+  const shown = computed(() => pageOf(visible.value, page.value, PAGE_SIZE))
+  watch([query, when, sort], () => (page.value = 1))
 
-    for (const uid of selectedEvents)
-      !uid ||
-        queries.push(
-          $fetch('/api/v1/event', {
-            method: 'DELETE',
-            body: {
-              eventUID: uid,
-            },
-          }),
-        )
-    try {
-      await Promise.all(queries)
-    } catch (error) {
-      // TODO: #136 handle event deletion error with alerts
+  const selection = useSelection(
+    computed(() => shown.value.rows),
+    (row) => row.uid,
+  )
+
+  function statusLabel(status: EventStatus) {
+    if (status.kind === 'full' && status.queued > 0) {
+      return t('admin.events.status.queue', { n: status.queued })
     }
+    return t(`admin.events.status.${status.kind}`)
+  }
+  const statusBadge = (status: EventStatus) =>
+    ({
+      past: 'tw:border-transparent tw:bg-secondary tw:text-muted-foreground',
+      'no-registration': 'tw:text-muted-foreground',
+      'not-open': 'tw:text-foreground',
+      open: [
+        'tw:border-transparent tw:bg-plate/12 tw:text-plate',
+        'tw:dark:bg-plate tw:dark:text-plate-foreground',
+      ].join(' '),
+      full:
+        status.kind === 'full' && status.queued > 0
+          ? 'tw:border-transparent tw:bg-signal tw:text-signal-foreground'
+          : 'tw:border-transparent tw:bg-foreground tw:text-background',
+      closed: 'tw:text-muted-foreground',
+    })[status.kind]
 
-    dialog.value = false
-    loading.value = false
-    currentPage.value = 1
+  const copyEmails = async (row: Row) => {
+    try {
+      const { emails } = await $fetch<{ emails: string[] }>(
+        '/api/v1/event/attendants',
+        { query: { eventUID: row.uid } },
+      )
+      if (emails.length === 0) {
+        useAlertStore().alert(t('admin.events.emails_none'), 'info')
+        return
+      }
+      await copy(emails.join(', '))
+      useAlertStore().alert(
+        t('admin.events.emails_copied', emails.length),
+        'success',
+      )
+    } catch (error) {
+      alertError(error)
+    }
+  }
 
-    // refresh user data
-    refresh()
+  // what the delete dialog is about: one row from its menu, or the selection
+  const toDelete = ref<Row[]>([])
+  const confirming = ref(false)
+  const deleting = ref(false)
+  const askDelete = (targets: Row[]) => {
+    toDelete.value = targets
+    confirming.value = true
+  }
+  const deleteEvents = async () => {
+    deleting.value = true
+    const results = await Promise.allSettled(
+      toDelete.value.map((row) =>
+        $fetch('/api/v1/event', {
+          method: 'DELETE',
+          body: { eventUID: row.uid },
+        }),
+      ),
+    )
+    const failed = results.find((r) => r.status === 'rejected')
+    const done =
+      results.length - results.filter((r) => r.status === 'rejected').length
+    if (done > 0) {
+      useAlertStore().alert(t('admin.events.delete.done', done), 'success')
+    }
+    if (failed) alertError((failed as PromiseRejectedResult).reason)
+    selection.clear()
+    confirming.value = false
+    deleting.value = false
+    await refresh()
   }
 </script>
 
 <template>
-  <div>
-    <div class="d-flex flex-wrap filters align-end">
-      <!-- Dates -->
-      <div>
-        <p>{{ $t('admin.events.dates') }}</p>
-        <VChipGroup v-model="selectedDates" multiple mandatory>
-          <VChip
-            v-for="(date, index) in eventDates"
-            :key="index"
-            :class="`bg-neutral-lighten-4 ${
-              Object.values(selectedDates).includes(index)
-                ? 'v-chip--selected'
-                : ''
-            }`"
-          >
-            {{ getNumericDayAndMonthString(date) }}
-          </VChip>
-        </VChipGroup>
-      </div>
-
-      <!-- Filter type -->
-      <div>
-        <p>{{ $t('admin.events.filtertypes.name') }}</p>
-        <VChipGroup v-model="filterType" mandatory>
-          <VChip
-            :class="`bg-neutral-lighten-4 ${
-              filterType === 'updated' ? 'v-chip--selected' : ''
-            }`"
-            value="updated"
-          >
-            {{ $t('admin.events.filtertypes.updated') }}
-          </VChip>
-          <VChip
-            :class="`bg-neutral-lighten-4 ${
-              filterType === 'company' ? 'v-chip--selected' : ''
-            }`"
-            value="company"
-          >
-            {{ $t('admin.events.filtertypes.company') }}
-          </VChip>
-        </VChipGroup>
-      </div>
-
-      <!-- filer order -->
-      <div>
-        <p>{{ $t('admin.events.filterorder.name') }}</p>
-        <VChipGroup v-model="filterOrder" mandatory>
-          <VChip
-            :class="`bg-neutral-lighten-4 ${
-              filterOrder === 'descending' ? 'v-chip--selected' : ''
-            }`"
-            value="descending"
-          >
-            {{ $t('admin.events.filterorder.descending') }}
-          </VChip>
-          <VChip
-            :class="`bg-neutral-lighten-4 ${
-              filterOrder === 'ascending' ? 'v-chip--selected' : ''
-            }`"
-            value="ascending"
-          >
-            {{ $t('admin.events.filterorder.ascending') }}
-          </VChip>
-        </VChipGroup>
-      </div>
-
-      <VSpacer />
-
-      <div class="d-flex flex-wrap" style="gap: 0.5rem">
-        <!-- select all button -->
-        <VBtn
-          color="primary"
-          size="large"
-          rounded="lg"
-          flat
-          @click="
-            () => {
-              /* @ts-ignore */
-              filteredEvents.forEach((event, index) => (selected[index] = true))
-            }
-          "
-        >
-          {{ $t('admin.events.selectall') }}
-        </VBtn>
-        <!-- TODO: Add deselect all button which renders instead if all entries on page are selected -->
-
-        <!-- delete users modal -->
-        <VDialog v-model="dialog" width="500">
-          <template #activator="{ props }">
-            <VBtn
-              v-bind="props"
-              :disabled="!selected.find((val) => val)"
-              color="primary"
-              size="large"
-              rounded="lg"
-              flat
-            >
-              {{ $t('admin.events.delete.selected') }}
-            </VBtn>
-          </template>
-
-          <template #default="{ isActive }">
-            <VCard rounded="lg" class="text-center pa-6">
-              <h6>{{ $t('admin.events.delete.confirmtext') }}</h6>
-
-              <div
-                class="d-flex justify-center flex-wrap mt-6"
-                style="gap: 1.5rem"
-              >
-                <VBtn
-                  size="large"
-                  variant="outlined"
-                  color="primary"
-                  :loading="loading"
-                  @click="deleteEvents"
-                >
-                  {{ $t('admin.events.delete.confirm') }}
-                </VBtn>
-                <VBtn
-                  size="large"
-                  flat
-                  color="success"
-                  @click="isActive.value = false"
-                >
-                  {{ $t('admin.events.delete.abort') }}
-                </VBtn>
-              </div>
-            </VCard>
-          </template>
-        </VDialog>
-
-        <!-- Create new event -->
-        <VBtn
-          color="success"
-          size="large"
-          rounded="lg"
-          class="add_event"
-          flat
-          icon="mdi-plus"
-          @click="navigateTo(localePath('/event/edit'))"
-        >
-        </VBtn>
-
-        <!-- shortcut to see the company event overview page -->
-        <VBtn
-          color="info"
-          size="large"
-          rounded="lg"
-          flat
-          append-icon="mdi-open-in-new"
-          @click="navigateTo(localePath('/company/admin'))"
-        >
-          {{ $t('admin.events.overview') }}
-        </VBtn>
-      </div>
-    </div>
-
-    <VDivider class="mb-5 mt-2" />
-
-    <!-- Pagination -->
-    <div class="d-flex align-center justify-space-between flex-wrap">
-      <VPagination
-        v-model="currentPage"
-        :ripple="false"
-        :length="pages.length"
-        :total-visible="4"
-        density="comfortable"
+  <div class="tw:flex tw:flex-col tw:gap-4">
+    <div class="tw:flex tw:flex-col tw:gap-3 tw:lg:flex-row tw:lg:items-center">
+      <SearchField v-model="query" :label="$t('admin.events.search')" />
+      <FilterChips
+        v-model="when"
+        :label="$t('admin.events.columns.date')"
+        :options="whenOptions"
       />
-
-      <div class="d-flex align-center">
-        <p class="text-subtitle-1 mr-4 font-weight-medium">
-          {{ $t('admin.events.pagesize') }}
-        </p>
-        <VSelect
-          v-model="pageSize"
-          density="compact"
-          variant="outlined"
-          :items="pageSizes"
-          :hide-details="true"
-        />
-      </div>
+      <Button as-child class="tw:h-10 tw:lg:ml-auto">
+        <NuxtLink :to="localePath('/event/edit')">
+          <Plus aria-hidden="true" />
+          {{ $t('admin.events.create') }}
+        </NuxtLink>
+      </Button>
     </div>
 
-    <!-- Event table -->
-    <VTable hover style="overflow: hidden" class="mb-5">
-      <thead>
-        <tr>
-          <th>{{ $t('admin.events.attributes.select') }}</th>
-          <th>{{ $t('admin.events.attributes.title') }}</th>
-          <th>{{ $t('admin.events.attributes.company') }}</th>
-          <th>{{ $t('admin.events.attributes.capacity') }}</th>
-          <th>{{ $t('admin.events.attributes.date') }}</th>
-          <th>{{ $t('admin.events.attributes.location') }}</th>
-          <th class="text-center">UID</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(event, index) in pages[currentPage - 1]" :key="index">
-          <!-- select user -->
-          <td>
-            <VCheckbox v-model="selected[index]" :hide-details="true" />
-          </td>
+    <SelectionBar
+      :count="selection.selected.value.size"
+      @clear="selection.clear"
+      @delete="askDelete(rows.filter((row) => selection.has(row)))"
+    />
 
-          <td id="title" class="truncate">{{ event.title }}</td>
-          <td>{{ companies[event.companyUID]?.name ?? '-' }}</td>
-          <td v-if="event.capacity">
-            {{ eventAttendants(event) }}/{{ event.capacity }}
-          </td>
-          <td v-else>-</td>
-          <td>
-            {{ getNumericDayAndMonthString(event.date.start) }}
-          </td>
-          <td id="location" class="truncate">{{ event.location.name }}</td>
-
-          <!-- copy user id -->
-          <td>
-            <VTooltip location="top" color="primary">
-              <template #activator="{ props }">
-                <VBtn
-                  v-bind="props"
-                  size="small"
-                  variant="text"
-                  icon="mdi-content-copy"
-                  color="primary"
-                  @click="copy(event.id)"
-                />
+    <div class="tw:overflow-hidden tw:rounded-lg tw:border tw:bg-card">
+      <!-- table from lg and up -->
+      <Table class="tw:hidden tw:lg:table">
+        <TableHeader>
+          <TableRow class="tw:hover:bg-transparent">
+            <TableHead class="tw:w-12 tw:pl-4">
+              <SelectBox
+                :checked="selection.pageState.value"
+                :label="$t('admin.events.select_page')"
+                @change="selection.togglePage"
+              />
+            </TableHead>
+            <TableHead
+              v-for="column in COLUMNS"
+              :key="column"
+              :aria-sort="ariaSort(column)"
+            >
+              <SortButton
+                :label="$t(`admin.events.columns.${column}`)"
+                :direction="directionOf(column)"
+                @toggle="toggleSort(column)"
+              />
+            </TableHead>
+            <TableHead class="tw:w-12" />
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow
+            v-for="row in shown.rows"
+            :key="row.uid"
+            :data-state="selection.has(row) ? 'selected' : undefined"
+            class="tw:data-[state=selected]:bg-brand/8"
+          >
+            <TableCell class="tw:pl-4">
+              <SelectBox
+                :checked="selection.has(row)"
+                :label="$t('admin.events.select_row', { name: row.title })"
+                @change="(on) => selection.toggle(row, on)"
+              />
+            </TableCell>
+            <TableCell class="tw:max-w-80 tw:truncate tw:font-semibold">
+              <NuxtLink
+                :to="localePath(`/event/edit/${row.uid}`)"
+                class="tw:underline tw:decoration-border tw:decoration-1 tw:underline-offset-4 tw:hover:decoration-current"
+              >
+                {{ row.title }}
+              </NuxtLink>
+            </TableCell>
+            <TableCell class="tw:text-muted-foreground">
+              {{ companyOf(row) }}
+            </TableCell>
+            <TableCell class="tw:whitespace-nowrap">
+              {{ formatStart(row, localeProperties.language ?? 'nb-NO') }}
+            </TableCell>
+            <TableCell>
+              <span
+                v-if="placeOf(row.location?.name).code"
+                class="tw:mr-2 tw:inline-flex tw:h-6 tw:min-w-10 tw:items-center tw:justify-center tw:rounded-[3px] tw:bg-plate tw:px-2 tw:pt-0.5 tw:text-xs tw:font-extrabold tw:tracking-wider tw:text-plate-foreground tw:shadow-[inset_0_0_0_2px_var(--plate),inset_0_0_0_3px_rgb(255_255_255/0.45)]"
+              >
+                {{ placeOf(row.location?.name).code }}
+              </span>
+              <span class="tw:text-muted-foreground">
+                {{ placeOf(row.location?.name).name }}
+              </span>
+            </TableCell>
+            <TableCell>
+              <template v-if="row.capacity">
+                <span class="tw:font-semibold tw:tabular-nums">
+                  {{ attendeesOf(row) }}
+                </span>
+                <span class="tw:text-muted-foreground tw:tabular-nums">
+                  / {{ row.capacity }}
+                </span>
+                <span
+                  class="tw:mt-1 tw:block tw:h-1 tw:w-16 tw:overflow-hidden tw:rounded-full tw:bg-secondary"
+                >
+                  <span
+                    class="tw:block tw:h-full tw:bg-plate"
+                    :style="{
+                      width: `${Math.min(100, (attendeesOf(row) / row.capacity) * 100)}%`,
+                    }"
+                  />
+                </span>
               </template>
+              <span v-else class="tw:text-muted-foreground">–</span>
+            </TableCell>
+            <TableCell>
+              <Badge
+                variant="outline"
+                class="tw:rounded-[4px]"
+                :class="statusBadge(statusOf(row))"
+              >
+                {{ statusLabel(statusOf(row)) }}
+              </Badge>
+            </TableCell>
+            <TableCell class="tw:pr-4">
+              <DropdownMenu>
+                <DropdownMenuTrigger as-child>
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    :aria-label="
+                      $t('admin.events.actions.menu', { title: row.title })
+                    "
+                  >
+                    <MoreHorizontal aria-hidden="true" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem as-child>
+                    <NuxtLink :to="localePath(`/event/edit/${row.uid}`)">
+                      <Pencil aria-hidden="true" />
+                      {{ $t('admin.events.actions.edit') }}
+                    </NuxtLink>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    :disabled="!row.capacity"
+                    @select="copyEmails(row)"
+                  >
+                    <Mail aria-hidden="true" />
+                    {{ $t('admin.events.actions.emails') }}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    variant="destructive"
+                    @select="askDelete([row])"
+                  >
+                    <Trash2 aria-hidden="true" class="tw:text-destructive" />
+                    {{ $t('admin.events.actions.delete') }}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
 
-              {{
-                copied && text === event.id
-                  ? $t('admin.events.copied')
-                  : event.id
-              }}
-            </VTooltip>
-          </td>
+      <!-- list below lg -->
+      <ul class="tw:divide-y tw:lg:hidden">
+        <li
+          v-for="row in shown.rows"
+          :key="row.uid"
+          class="tw:flex tw:items-start tw:gap-3 tw:px-4 tw:py-3"
+        >
+          <SelectBox
+            :checked="selection.has(row)"
+            :label="$t('admin.events.select_row', { name: row.title })"
+            class="tw:mt-1 tw:size-5"
+            @change="(on) => selection.toggle(row, on)"
+          />
+          <div class="tw:min-w-0 tw:flex-1">
+            <NuxtLink
+              :to="localePath(`/event/edit/${row.uid}`)"
+              class="tw:block tw:truncate tw:font-semibold tw:underline tw:decoration-border tw:underline-offset-4"
+            >
+              {{ row.title }}
+            </NuxtLink>
+            <p class="tw:truncate tw:text-sm tw:text-muted-foreground">
+              {{ formatStart(row, localeProperties.language ?? 'nb-NO') }}
+              · {{ row.location?.name }}
+            </p>
+          </div>
+          <Badge
+            variant="outline"
+            class="tw:shrink-0 tw:rounded-[4px]"
+            :class="statusBadge(statusOf(row))"
+          >
+            {{ statusLabel(statusOf(row)) }}
+          </Badge>
+        </li>
+      </ul>
 
-          <!-- Attendant emails -->
-          <td>
-            <VTooltip location="top" color="primary">
-              <template #activator="{ props }">
-                <VBtn
-                  v-bind="props"
-                  size="small"
-                  variant="text"
-                  color="primary"
-                  icon="mdi-email-outline"
-                  @click="
-                    navigateTo(
-                      `/api/v1/event/attendants?eventUID=${event.id}`,
-                      {
-                        open: { target: '_blank' },
-                      },
-                    )
-                  "
-                />
-              </template>
+      <p
+        v-if="shown.rows.length === 0"
+        class="tw:px-4 tw:py-10 tw:text-center tw:text-muted-foreground"
+      >
+        {{ $t('admin.events.empty') }}
+      </p>
 
-              {{ $t('admin.events.attendant_emails') }}
-            </VTooltip>
-          </td>
+      <Pager v-model="page" :shown="shown" :total="visible.length" />
+    </div>
 
-          <!-- Edit event -->
-          <td>
-            <VTooltip location="top" color="primary">
-              <template #activator="{ props }">
-                <VBtn
-                  v-bind="props"
-                  size="small"
-                  variant="text"
-                  color="primary"
-                  icon="mdi-pencil"
-                  @click="navigateTo(localePath(`/event/edit/${event.id}`))"
-                />
-              </template>
-
-              {{ $t('admin.events.edit') }}
-            </VTooltip>
-          </td>
-        </tr>
-      </tbody>
-    </VTable>
+    <DeleteDialog
+      v-model:open="confirming"
+      :title="$t('admin.events.delete.title', toDelete.length)"
+      :description="$t('admin.events.delete.text', toDelete.length)"
+      :confirm="$t('admin.events.delete.confirm', toDelete.length)"
+      :items="
+        toDelete.map((row) => ({
+          key: row.uid,
+          label: row.title ?? row.uid,
+          detail: formatStart(row, localeProperties.language ?? 'nb-NO'),
+        }))
+      "
+      :loading="deleting"
+      @confirm="deleteEvents"
+    />
   </div>
 </template>
-
-<style scoped lang="scss">
-  .filters {
-    gap: 0.5rem;
-  }
-
-  .add_event {
-    max-height: 44px !important;
-  }
-
-  td,
-  th {
-    text-wrap: nowrap;
-    min-width: fit-content;
-  }
-
-  .v-chip {
-    transition: 0.25s;
-    user-select: none;
-  }
-  .v-chip--selected {
-    background-color: rgb(var(--v-theme-accent)) !important;
-    color: rgb(var(--v-theme-background)) !important;
-  }
-
-  .truncate {
-    // Add ellipsis to long location names
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-
-    &#title {
-      max-width: 225px;
-    }
-
-    &#location {
-      max-width: 150px;
-    }
-  }
-</style>
