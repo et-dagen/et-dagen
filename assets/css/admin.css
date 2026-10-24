@@ -50,12 +50,21 @@
   --radius: 0.375rem;
 }
 
-/* An explicit choice overrides the system setting */
-.et-admin-root[data-admin-theme='light'] {
+/*
+ * The choice of light or dark. It is repeated on .et-admin because Vuetify's wrapper, which sits
+ * between <html> and the admin pages, resets color-scheme.
+ */
+.et-admin {
+  color-scheme: light dark;
+}
+
+.et-admin-root[data-admin-theme='light'],
+.et-admin-root[data-admin-theme='light'] .et-admin {
   color-scheme: light;
 }
 
-.et-admin-root[data-admin-theme='dark'] {
+.et-admin-root[data-admin-theme='dark'],
+.et-admin-root[data-admin-theme='dark'] .et-admin {
   color-scheme: dark;
 }
 
