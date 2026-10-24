@@ -30,13 +30,19 @@ export interface RegistrationRequest {
 export type Denied =
   | { kind: 'not-own' }
   | { kind: 'closed' }
-  | { kind: 'not-eligible'; verdict: Exclude<Verdict, { ok: true }> }
   | { kind: 'forbidden' }
+
+/** The student does not meet the event's rule; `verdict` says which part */
+export interface NotEligible {
+  kind: 'not-eligible'
+  verdict: Exclude<Verdict, { ok: true }>
+}
 
 export type RegisterResult =
   | RegisterOutcome
   | Missing
   | Denied
+  | NotEligible
   /** An admin named a user who has no account */
   | { kind: 'user-not-found' }
 export type WithdrawResult = WithdrawOutcome | Missing | Denied
@@ -62,7 +68,10 @@ export async function registerForEvent(
       now: request.now,
     })
   ) {
-    return denial(request, registration, true)
+    return (
+      notOwnOrClosed(request, registration) ??
+      notEligible(request, registration) ?? { kind: 'forbidden' }
+    )
   }
   if (
     request.user !== request.subject.uid &&
@@ -89,7 +98,7 @@ export async function withdrawFromEvent(
       now: request.now,
     })
   ) {
-    return denial(request, registration, false)
+    return notOwnOrClosed(request, registration) ?? { kind: 'forbidden' }
   }
   return events.withdraw(request.event, request.user, request.now)
 }
@@ -103,16 +112,19 @@ async function registrationOf(
   return stored.event.registration ?? { kind: 'no-registration' }
 }
 
-function denial(
+function notOwnOrClosed(
   { subject, user, now }: RegistrationRequest,
   registration: Registration,
-  judgesEligibility: boolean,
-): Denied {
+): Denied | null {
   if (user !== subject.uid) return { kind: 'not-own' }
   if (!isOpen(registration, now)) return { kind: 'closed' }
-  if (judgesEligibility) {
-    const verdict = admits(registration, subject.applicant)
-    if (!verdict.ok) return { kind: 'not-eligible', verdict }
-  }
-  return { kind: 'forbidden' }
+  return null
+}
+
+function notEligible(
+  { subject }: RegistrationRequest,
+  registration: Registration,
+): NotEligible | null {
+  const verdict = admits(registration, subject.applicant)
+  return verdict.ok ? null : { kind: 'not-eligible', verdict }
 }
