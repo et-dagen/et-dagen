@@ -1,7 +1,7 @@
 //  POST /api/v1/job
 // endpoint for creating a new job in the database
 
-import { isValidDate } from '../../../../composables/useDate'
+import { isValidDate } from '@/composables/useDate'
 
 defineRouteMeta({
   openAPI: {

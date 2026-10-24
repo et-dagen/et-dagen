@@ -6,7 +6,7 @@
 import { initializeApp } from 'firebase-admin/app'
 import { getDatabase } from 'firebase-admin/database'
 import { describe, expect, it } from 'vitest'
-import { describeEventRepository } from '../../../application/events/eventRepository.contract'
+import { describeEventRepository } from '@/tests/application/events/eventRepository.contract'
 import type { StoredEvent } from '@/application/events/eventRepository'
 import { CompanyUid } from '@/domain/business/company'
 import { EventUid } from '@/domain/event/event'
