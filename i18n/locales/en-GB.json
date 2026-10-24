@@ -905,6 +905,12 @@
     },
     "job": {
       "invalid-listing": "A job is shown either as a description or as a link."
+    },
+    "file": {
+      "unsupported-type": "This file format is not allowed here.",
+      "too-large": "The file is too large.",
+      "empty": "The file is empty.",
+      "wrong-owner": "The file cannot be stored here."
     }
   },
   "form": {

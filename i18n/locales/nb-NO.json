@@ -906,6 +906,12 @@
     },
     "job": {
       "invalid-listing": "En stilling vises enten som beskrivelse eller som lenke."
+    },
+    "file": {
+      "unsupported-type": "Filen har et format som ikke er tillatt her.",
+      "too-large": "Filen er for stor.",
+      "empty": "Filen er tom.",
+      "wrong-owner": "Filen kan ikke lagres her."
     }
   },
   "form": {
