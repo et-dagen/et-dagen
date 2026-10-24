@@ -1,7 +1,7 @@
 // DELETE /api/v1/user
 // endpoint for removing a user in the database
 
-import { eraseUsers } from '../../../user/erasure'
+import { eraseUsers } from '@/server/user/erasure'
 
 defineRouteMeta({
   openAPI: {
