@@ -1,13 +1,16 @@
 <script setup lang="ts">
   import { ArrowUpLeft } from '@lucide/vue'
   import ThemeToggle from './ThemeToggle.vue'
-  import { panelsFor } from '@/lib/admin/panels'
+  import { isActivePanel, panelsFor } from '@/lib/admin/panels'
   import { usePanelCounts } from '@/composables/admin/usePanelCounts'
 
   const localePath = useLocalePath()
   const auth = useAuthStore()
   const panels = panelsFor(auth.user?.userType)
   const counts = await usePanelCounts(panels)
+  const route = useRoute()
+  const isActive = (panel: (typeof panels)[number]) =>
+    isActivePanel(panel, route.path, localePath(panel.route))
 </script>
 
 <template>
@@ -34,26 +37,28 @@
       <li v-for="panel in panels" :key="panel.name">
         <NuxtLink
           :to="localePath(panel.route)"
-          class="tw:group tw:relative tw:flex tw:h-12 tw:items-center tw:gap-3 tw:rounded-md tw:bg-brand-strong tw:px-4 tw:pt-0.5 tw:text-[15px] tw:font-semibold tw:shadow-[inset_0_0_0_1px_rgb(255_255_255/0.2)] tw:transition-colors tw:hover:bg-brand-strong/70 tw:aria-[current=page]:bg-white tw:aria-[current=page]:shadow-none"
+          :data-active="isActive(panel)"
+          :aria-current="isActive(panel) ? 'page' : undefined"
+          class="tw:group tw:relative tw:flex tw:h-12 tw:items-center tw:gap-3 tw:rounded-md tw:bg-brand-strong tw:px-4 tw:pt-0.5 tw:text-[15px] tw:font-semibold tw:shadow-[inset_0_0_0_1px_rgb(255_255_255/0.2)] tw:transition-colors tw:hover:bg-brand-strong/70 tw:data-[active=true]:bg-white tw:data-[active=true]:shadow-none"
         >
           <component
             :is="panel.icon"
-            class="tw:size-5 tw:shrink-0 tw:group-aria-[current=page]:text-brand"
+            class="tw:size-5 tw:shrink-0 tw:group-data-[active=true]:text-brand"
             stroke-width="1.5"
             aria-hidden="true"
           />
-          <span class="tw:group-aria-[current=page]:text-brand">
+          <span class="tw:group-data-[active=true]:text-brand">
             {{ $t(panel.label) }}
           </span>
           <span
             v-if="counts[panel.name]?.value != null"
-            class="tw:ml-auto tw:inline-flex tw:h-5 tw:min-w-5 tw:items-center tw:justify-center tw:rounded-[3px] tw:px-1.5 tw:pt-0.5 tw:text-[13px] tw:leading-none tw:tabular-nums tw:text-brand-foreground/80 tw:group-aria-[current=page]:bg-brand tw:group-aria-[current=page]:text-brand-foreground"
+            class="tw:ml-auto tw:inline-flex tw:h-5 tw:min-w-5 tw:items-center tw:justify-center tw:rounded-[3px] tw:px-1.5 tw:pt-0.5 tw:text-[13px] tw:leading-none tw:tabular-nums tw:text-brand-foreground/80 tw:group-data-[active=true]:bg-brand tw:group-data-[active=true]:text-brand-foreground"
           >
             {{ counts[panel.name]?.value }}
           </span>
           <span
             aria-hidden="true"
-            class="tw:absolute tw:top-4 tw:-right-2 tw:hidden tw:size-0 tw:border-y-8 tw:border-l-8 tw:border-y-transparent tw:border-l-white tw:group-aria-[current=page]:block"
+            class="tw:absolute tw:top-4 tw:-right-2 tw:hidden tw:size-0 tw:border-y-8 tw:border-l-8 tw:border-y-transparent tw:border-l-white tw:group-data-[active=true]:block"
           />
         </NuxtLink>
       </li>

@@ -66,7 +66,8 @@ The target layout, and how to place code while both shapes exist, is in `ARCHITE
   `hasPermission`) replaces it once it is wired in; do not add new `hasAccess` call sites to new code.
 - **New UI** (the admin pages first) uses shadcn-vue components from `components/ui`, Tailwind
   classes with the `tw:` prefix and Lucide icons, never Vuetify. After `bunx shadcn-vue add`, check
-  the result: the CLI leaves class lists in template strings unprefixed, imports `cn` from a `cn`
+  the result: the CLI leaves class lists in template strings unprefixed, sometimes prefixes plain
+  string values such as `'popper'`, imports `cn` from a `cn`
   package instead of `@/lib/utils`, and may bump dependencies such as `@vueuse/core`. Do not use
   `!important` (or Tailwind's `!` suffix); fix the conflicting rule instead.
 - **Translations**: user-facing text goes in both `i18n/locales/en-GB.json` and `nb-NO.json`.

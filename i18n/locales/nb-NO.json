@@ -469,6 +469,25 @@
           "graduate": "Graduate",
           "summer_internship": "Sommerjobb"
         }
+      },
+      "form": {
+        "new_title": "Ny stilling",
+        "edit_title": "Rediger stilling",
+        "title": "Stillingstittel",
+        "company": "Bedrift",
+        "choose_company": "Velg bedrift",
+        "type": "Type",
+        "choose_type": "Velg type",
+        "location": "Sted",
+        "deadline": "Søknadsfrist",
+        "link": "Lenke til søknaden",
+        "link_hint": "La feltet stå tomt hvis søknaden sendes på annen måte.",
+        "description": "Beskrivelse",
+        "create": "Opprett stilling",
+        "save": "Lagre endringer",
+        "created": "Stillingen er opprettet",
+        "updated": "Endringene er lagret",
+        "missing": "Fant ingen stilling med denne adressen."
       }
     },
     "users": {
@@ -751,6 +770,23 @@
     },
     "internal": {
       "unexpected": "Noe gikk galt hos oss. Prøv igjen om litt."
+    }
+  },
+  "form": {
+    "errors": {
+      "required": "Fyll ut dette feltet.",
+      "too_long": "Teksten er for lang.",
+      "date": "Velg en dato.",
+      "url": "Skriv en hel adresse som begynner med https://."
+    },
+    "leave": "Du har endringer som ikke er lagret. Vil du forlate siden?",
+    "richtext": {
+      "toolbar": "Formatering",
+      "heading": "Overskrift",
+      "bold": "Fet",
+      "italic": "Kursiv",
+      "bullets": "Punktliste",
+      "numbers": "Nummerert liste"
     }
   }
 }

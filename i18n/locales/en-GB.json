@@ -470,6 +470,25 @@
           "graduate": "Graduate",
           "summer_internship": "Summer internship"
         }
+      },
+      "form": {
+        "new_title": "New job",
+        "edit_title": "Edit job",
+        "title": "Job title",
+        "company": "Company",
+        "choose_company": "Choose a company",
+        "type": "Type",
+        "choose_type": "Choose a type",
+        "location": "Place",
+        "deadline": "Deadline",
+        "link": "Link to the application",
+        "link_hint": "Leave empty if applications are sent another way.",
+        "description": "Description",
+        "create": "Create job",
+        "save": "Save changes",
+        "created": "The job is created",
+        "updated": "The changes are saved",
+        "missing": "No job found at this address."
       }
     },
     "users": {
@@ -750,6 +769,23 @@
     },
     "internal": {
       "unexpected": "Something went wrong on our side. Please try again shortly."
+    }
+  },
+  "form": {
+    "errors": {
+      "required": "Fill in this field.",
+      "too_long": "The text is too long.",
+      "date": "Choose a date.",
+      "url": "Enter a full address starting with https://."
+    },
+    "leave": "You have unsaved changes. Leave the page?",
+    "richtext": {
+      "toolbar": "Formatting",
+      "heading": "Heading",
+      "bold": "Bold",
+      "italic": "Italic",
+      "bullets": "Bulleted list",
+      "numbers": "Numbered list"
     }
   }
 }

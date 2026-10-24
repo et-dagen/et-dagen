@@ -15,6 +15,8 @@ export interface Panel {
   icon: Component
   /** Endpoint whose entries the navigation counts, or null for no count */
   count: string | null
+  /** Active only on its own route, not on the pages below it */
+  exact?: boolean
 }
 
 /** The admin panels, in the order the navigation shows them */
@@ -58,6 +60,7 @@ export const COMPANY_PANELS: readonly Panel[] = [
     label: 'company.admin.events.name',
     icon: CalendarDays,
     count: null,
+    exact: true,
   },
   {
     name: 'resumes',
@@ -70,3 +73,7 @@ export const COMPANY_PANELS: readonly Panel[] = [
 
 export const panelsFor = (userType: string | null | undefined) =>
   userType === 'company' ? COMPANY_PANELS : ADMIN_PANELS
+
+/** Whether a panel is where the user is: its own page or, unless exact, a page below it */
+export const isActivePanel = (panel: Panel, path: string, route: string) =>
+  path === route || (!panel.exact && path.startsWith(`${route}/`))

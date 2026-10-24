@@ -33,6 +33,7 @@ module.exports = {
         'pages/admin/**',
         'components/company/EventPanel.vue',
         'pages/company/admin/**',
+        'components/admin/form/**',
       ],
       rules: {
         'vue/max-len': [

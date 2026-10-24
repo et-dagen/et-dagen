@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { Instant } from '@/domain/time'
-import { daysUntil, instantOf } from '@/lib/admin/time'
+import { daysUntil, deadlineOf, instantOf } from '@/lib/admin/time'
 
 // 23:30 in Oslo on 1 November 2026, so the date in UTC is a day behind Oslo's at midnight
 const now = Instant.parse('2026-11-01T22:30:00.000Z')
@@ -18,5 +18,13 @@ describe('daysUntil', () => {
     expect(daysUntil('2026-11-01T23:59', now)).toBe(0)
     expect(daysUntil('2026-11-02T00:01', now)).toBe(1)
     expect(daysUntil('2026-10-30T12:00', now)).toBe(-2)
+  })
+})
+
+describe('deadlineOf', () => {
+  it('reads a date as the end of that day and keeps date-times', () => {
+    expect(deadlineOf('2026-12-10')).toBe('2026-12-10T23:59')
+    expect(deadlineOf('2026-12-10T12:00')).toBe('2026-12-10T12:00')
+    expect(daysUntil(deadlineOf('2026-11-01'), now)).toBe(0)
   })
 })

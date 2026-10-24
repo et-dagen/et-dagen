@@ -35,7 +35,12 @@
   import { alertError } from '@/composables/useAlerts'
   import { Instant } from '@/domain/time'
   import { pageOf, search, sortBy } from '@/lib/admin/listView'
-  import { daysUntil, formatWhen, instantOf } from '@/lib/admin/time'
+  import {
+    daysUntil,
+    deadlineOf,
+    formatWhen,
+    instantOf,
+  } from '@/lib/admin/time'
 
   interface Row {
     uid: string
@@ -55,6 +60,8 @@
   }
 
   const localePath = useLocalePath()
+  // the row saved last stays lit until the admin moves on
+  const changed = computed(() => String(useRoute().query.changed ?? ''))
   const { t, localeProperties } = useI18n()
   const locale = computed(() => localeProperties.value.language ?? 'nb-NO')
   const now = Instant.now()
@@ -72,7 +79,7 @@
   const typeKey = (row: Row) => (row.jobType ?? '').replace('-', '_')
   const typeLabel = (row: Row) =>
     row.jobType ? t(`admin.jobs.attributes.jobtype.${typeKey(row)}`) : ''
-  const daysLeft = (row: Row) => daysUntil(row.deadline, now)
+  const daysLeft = (row: Row) => daysUntil(deadlineOf(row.deadline), now)
   // a job without a deadline stays open
   const isOpen = (row: Row) => (daysLeft(row) ?? 0) >= 0
 
@@ -101,7 +108,7 @@
     company: companyOf,
     type: typeLabel,
     location: (row: Row) => row.location,
-    deadline: (row: Row) => instantOf(row.deadline),
+    deadline: (row: Row) => instantOf(deadlineOf(row.deadline)),
   }
 
   const visible = computed(() => {
@@ -165,7 +172,7 @@
         :options="showOptions"
       />
       <Button as-child class="tw:h-10 tw:lg:ml-auto">
-        <NuxtLink :to="localePath('/jobs/edit')">
+        <NuxtLink :to="localePath('/admin/jobs/new')">
           <Plus aria-hidden="true" />
           {{ $t('admin.jobs.create') }}
         </NuxtLink>
@@ -209,7 +216,8 @@
             v-for="row in shown.rows"
             :key="row.uid"
             :data-state="selection.has(row) ? 'selected' : undefined"
-            class="tw:data-[state=selected]:bg-brand/8"
+            :data-changed="row.uid === changed || undefined"
+            class="tw:data-[state=selected]:bg-brand/8 tw:data-changed:bg-signal/15 tw:data-changed:shadow-[inset_4px_0_0_var(--signal)]"
           >
             <TableCell class="tw:pl-4">
               <SelectBox
@@ -220,7 +228,7 @@
             </TableCell>
             <TableCell class="tw:max-w-80 tw:truncate tw:font-semibold">
               <NuxtLink
-                :to="localePath(`/jobs/edit/${row.uid}`)"
+                :to="localePath(`/admin/jobs/${row.uid}`)"
                 class="tw:underline tw:decoration-border tw:decoration-1 tw:underline-offset-4 tw:hover:decoration-current"
               >
                 {{ row.title }}
@@ -241,7 +249,7 @@
               {{ row.location }}
             </TableCell>
             <TableCell class="tw:whitespace-nowrap">
-              {{ formatWhen(row.deadline, locale, DATE) }}
+              {{ formatWhen(deadlineOf(row.deadline), locale, DATE) }}
               <span
                 class="tw:block tw:text-xs"
                 :class="
@@ -270,7 +278,7 @@
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem as-child>
-                    <NuxtLink :to="localePath(`/jobs/edit/${row.uid}`)">
+                    <NuxtLink :to="localePath(`/admin/jobs/${row.uid}`)">
                       <Pencil aria-hidden="true" />
                       {{ $t('admin.jobs.actions.edit') }}
                     </NuxtLink>
@@ -311,7 +319,7 @@
           />
           <div class="tw:min-w-0 tw:flex-1">
             <NuxtLink
-              :to="localePath(`/jobs/edit/${row.uid}`)"
+              :to="localePath(`/admin/jobs/${row.uid}`)"
               class="tw:block tw:truncate tw:font-semibold tw:underline tw:decoration-border tw:underline-offset-4"
             >
               {{ row.title }}
