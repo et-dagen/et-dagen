@@ -12,7 +12,7 @@ import {
   DATABASE_NAMESPACE,
   PROJECT_ID,
   resetEmulators,
-} from '../../api/support/emulators'
+} from '@/tests/api/support/emulators'
 import { Instant } from '@/domain/time'
 import { eraseInactiveUsers } from '@/server/user/retention'
 

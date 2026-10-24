@@ -7,9 +7,9 @@
  * yet still uses the site.
  */
 import type { Auth, UserRecord } from 'firebase-admin/auth'
-import { isPastRetention } from '../../domain/retention'
-import { Instant } from '../../domain/time'
 import { eraseUsers } from './erasure'
+import { isPastRetention } from '@/domain/retention'
+import { Instant } from '@/domain/time'
 
 /** Keeps the parallel Storage and database calls of one erasure run small */
 const BATCH_SIZE = 100
