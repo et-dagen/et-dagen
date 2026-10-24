@@ -2,6 +2,7 @@
   import { defineProps } from 'vue'
 
   import { dietaryFlags } from '~/config/app.config'
+  import { attendantsOf, dietaryCounts } from '~/composables/useEventAttendants'
   import type { Event } from '~/models/Event'
   import type { User } from '~/models/User'
 
@@ -22,37 +23,12 @@
     }
   })
 
-  // get all attendants for an event
   const eventAttandantList = computed(() => {
-    return (event: any) => {
-      return props.users.filter((user) =>
-        Object.values(event?.attendants || {}).includes(user.uid),
-      )
-    }
+    return (event: any) => attendantsOf(event?.attendants, props.users)
   })
 
-  // get all dietary restrictions for an event
   const dietaryRestrictions = computed(() => {
-    return (event: any) => {
-      const restrictions: Record<string, number> = {}
-      const attendants = eventAttandantList.value(event)
-
-      if (!attendants) return {}
-
-      for (const attendant of attendants) {
-        if (!attendant.dietaryRestrictions) continue
-
-        attendant.dietaryRestrictions.forEach((restriction: string) => {
-          if (Object.hasOwn(restrictions, restriction)) {
-            restrictions[restriction] += 1
-          } else {
-            restrictions[restriction] = 1
-          }
-        })
-      }
-
-      return restrictions
-    }
+    return (event: any) => dietaryCounts(eventAttandantList.value(event))
   })
 
   // get i18n name of dietary restriction
@@ -180,7 +156,6 @@
                   <th>
                     {{ $t('company.admin.user.attributes.email') }}
                   </th>
-                  <th>{{ $t('company.admin.dietaryrestrictions') }}</th>
                 </tr>
               </thead>
               <tbody>
@@ -207,19 +182,6 @@
                           : user.email
                       }}
                     </VTooltip>
-                  </td>
-                  <td>
-                    <span
-                      v-if="user?.dietaryRestrictions"
-                      class="ml-2 text-error"
-                    >
-                      <i
-                        v-for="restriction in user?.dietaryRestrictions"
-                        :key="user.uid + restriction"
-                        class="restriction"
-                        >{{ getRestrictionName(restriction) }}</i
-                      >
-                    </span>
                   </td>
                 </tr>
               </tbody>
