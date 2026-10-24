@@ -458,40 +458,46 @@
     },
     "users": {
       "name": "Brukere",
-      "pagesize": "Brukere per side",
-      "usertypes": {
-        "name": "Brukertyper",
+      "search": "Søk etter navn, e-post eller bedrift",
+      "filter": {
+        "all": "Alle",
         "admin": "Administratorer",
         "company": "Bedrifter",
-        "basic": "Basis"
+        "basic": "Studenter"
       },
-      "filtertypes": {
-        "name": "Sorter etter",
-        "updated": "Sist modifisert",
-        "currentyear": "År"
+      "role": {
+        "admin": "Admin",
+        "company": "Bedrift",
+        "basic": "Student"
+      },
+      "columns": {
+        "name": "Navn",
+        "role": "Rolle",
+        "email": "E-post",
+        "company": "Bedrift"
+      },
+      "select_page": "Velg alle brukerne på siden",
+      "select_row": "Velg {name}",
+      "selected": "{n} valgt",
+      "clear": "Fjern valg",
+      "showing": "Viser {from}–{to} av {total}",
+      "empty": "Ingen brukere passer søket.",
+      "previous": "Forrige side",
+      "next": "Neste side",
+      "delete": {
+        "button": "Slett",
+        "title": "Slette {n} bruker? | Slette {n} brukere?",
+        "text": "Kontoen, profilen, CV-en og påmeldingene slettes for godt. Plassene på kommende arrangementer går videre til de neste i køen. Dette kan ikke angres.",
+        "more": "og {n} til",
+        "confirm": "Slett {n} bruker | Slett {n} brukere",
+        "cancel": "Avbryt",
+        "done": "{n} bruker slettet | {n} brukere slettet"
       },
       "filterorder": {
         "name": "Rekkefølge",
         "descending": "Synkende",
         "ascending": "Stigende"
-      },
-      "selectall": "Velg alle",
-      "delete": {
-        "selected": "Slett valgte",
-        "confirmtext": "Er du sikker på at du vil slette de valgte brukerne?",
-        "confirm": "Ja, slett dem",
-        "abort": "Nei, avbryt"
-      },
-      "attributes": {
-        "select": "Velg",
-        "name": "Navn",
-        "usertype": "Brukertype",
-        "email": "Epost",
-        "year": "År",
-        "program": "Studieprogram",
-        "company": "Bedrift"
-      },
-      "copied": "UID kopiert!"
+      }
     },
     "shell": {
       "navigation": "Adminpaneler",
