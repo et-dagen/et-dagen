@@ -593,6 +593,28 @@
         "name": "Order",
         "descending": "Descending",
         "ascending": "Ascending"
+      },
+      "form": {
+        "edit_title": "Edit user",
+        "name": "Name",
+        "email": "Email",
+        "email_hint": "The person signs in with this address.",
+        "role": "Role",
+        "role_hint": {
+          "admin": "Has access to the whole admin panel.",
+          "company": "Signs in on behalf of a company.",
+          "basic": "A student who can sign up for events."
+        },
+        "company": "Company",
+        "programme": "Study programme",
+        "optional": "(optional)",
+        "choose_programme": "Choose a study programme",
+        "year": "Year",
+        "diet_hint": "Used when events serve food.",
+        "diet_other": "Other (separate with commas)",
+        "save": "Save changes",
+        "updated": "The changes are saved",
+        "missing": "User not found."
       }
     },
     "shell": {
@@ -877,7 +899,8 @@
       "datetime": "Choose a date and time.",
       "end_before_start": "Must come after the start.",
       "signup_after_start": "Sign-up must close before the event starts.",
-      "number": "Enter a whole number above zero."
+      "number": "Enter a whole number above zero.",
+      "email": "Enter a valid email address."
     },
     "leave": "You have unsaved changes. Leave the page?",
     "richtext": {
