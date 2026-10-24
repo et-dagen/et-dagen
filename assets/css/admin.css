@@ -134,7 +134,17 @@
   border: 0 solid var(--border);
 }
 
-:where(.et-admin, [data-slot]) :where(h1, h2, h3, h4, h5, h6, p, ul, ol) {
+:where(.et-admin *, [data-slot], [data-slot] *):where(
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  p,
+  ul,
+  ol
+) {
   margin: 0;
   padding: 0;
   font-size: inherit;
@@ -142,21 +152,26 @@
   line-height: inherit;
 }
 
-:where(.et-admin, [data-slot]) :where(table) {
+:where(.et-admin *, [data-slot], [data-slot] *):where(table) {
   border-collapse: collapse;
   text-indent: 0;
 }
 
-:where(.et-admin, [data-slot]) :where(ul, ol) {
+:where(.et-admin *, [data-slot], [data-slot] *):where(ul, ol) {
   list-style: none;
 }
 
-:where(.et-admin, [data-slot]) :where(button, input, select, textarea) {
+:where(.et-admin *, [data-slot], [data-slot] *):where(
+  button,
+  input,
+  select,
+  textarea
+) {
   font: inherit;
   color: inherit;
 }
 
-:where(.et-admin, [data-slot]) a {
+:where(.et-admin *, [data-slot], [data-slot] *):where(a) {
   color: inherit;
   text-decoration: inherit;
 }

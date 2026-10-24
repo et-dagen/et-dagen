@@ -1,20 +1,12 @@
 <script setup lang="ts">
-  import {
-    ArrowDown,
-    ArrowUp,
-    ChevronLeft,
-    ChevronRight,
-    ChevronsUpDown,
-    Minus,
-    Search,
-    Trash2,
-    X,
-  } from '@lucide/vue'
-  import DeleteUsersDialog from '@/components/admin/DeleteUsersDialog.vue'
+  import DeleteDialog from '@/components/admin/DeleteDialog.vue'
+  import FilterChips from '@/components/admin/FilterChips.vue'
+  import Pager from '@/components/admin/Pager.vue'
+  import SearchField from '@/components/admin/SearchField.vue'
+  import SelectBox from '@/components/admin/SelectBox.vue'
+  import SelectionBar from '@/components/admin/SelectionBar.vue'
+  import SortButton from '@/components/admin/SortButton.vue'
   import { Badge } from '@/components/ui/badge'
-  import { Button } from '@/components/ui/button'
-  import { Checkbox } from '@/components/ui/checkbox'
-  import { Input } from '@/components/ui/input'
   import {
     Table,
     TableBody,
@@ -23,19 +15,16 @@
     TableHeader,
     TableRow,
   } from '@/components/ui/table'
+  import { useSelection } from '@/composables/admin/useSelection'
+  import { useSort } from '@/composables/admin/useSort'
   import { alertError } from '@/composables/useAlerts'
-  import {
-    pageOf,
-    search,
-    sortBy,
-    type SortDirection,
-  } from '@/lib/admin/listView'
+  import { pageOf, search, sortBy } from '@/lib/admin/listView'
   import type { User } from '~/models/User'
 
   const PAGE_SIZE = 25
   const ROLES = ['admin', 'company', 'basic'] as const
   type Role = (typeof ROLES)[number]
-  type Column = 'name' | 'role' | 'email' | 'company'
+  const COLUMNS = ['name', 'role', 'email', 'company'] as const
 
   const localePath = useLocalePath()
   const { t } = useI18n()
@@ -49,24 +38,27 @@
   const roleOf = (user: User): Role => (user.userType ?? 'basic') as Role
   const companyOf = (user: User) =>
     companies.value?.[user.companyUID ?? '']?.name ?? ''
+  const nameOf = (user: User) => user.name || user.email
 
   const query = ref('')
   const role = ref<Role | 'all'>('all')
-  const sort = ref<{ column: Column; direction: SortDirection }>({
-    column: 'name',
-    direction: 'asc',
-  })
+  const {
+    sort,
+    toggle: toggleSort,
+    directionOf,
+    ariaSort,
+  } = useSort<(typeof COLUMNS)[number]>('name')
   const page = ref(1)
 
-  const counts = computed(() => {
-    const all = users.value ?? []
-    return {
-      all: all.length,
-      ...Object.fromEntries(
-        ROLES.map((r) => [r, all.filter((u) => roleOf(u) === r).length]),
-      ),
-    } as Record<Role | 'all', number>
-  })
+  const roleOptions = computed(() =>
+    (['all', ...ROLES] as const).map((value) => ({
+      value,
+      label: t(`admin.users.filter.${value}`),
+      count: (users.value ?? []).filter(
+        (u) => value === 'all' || roleOf(u) === value,
+      ).length,
+    })),
+  )
 
   const sortValue = {
     name: (user: User) => user.name,
@@ -87,67 +79,28 @@
     return sortBy(found, sortValue[sort.value.column], sort.value.direction)
   })
   const shown = computed(() => pageOf(visible.value, page.value, PAGE_SIZE))
-  watch([query, role, sort], () => (page.value = 1), { deep: true })
+  watch([query, role, sort], () => (page.value = 1))
 
-  const toggleSort = (column: Column) => {
-    const same = sort.value.column === column
-    sort.value = {
-      column,
-      direction: same && sort.value.direction === 'asc' ? 'desc' : 'asc',
-    }
-  }
-  const ariaSort = (column: Column) =>
-    sort.value.column !== column
-      ? 'none'
-      : sort.value.direction === 'asc'
-        ? 'ascending'
-        : 'descending'
-  const sortIcon = (column: Column) =>
-    sort.value.column !== column
-      ? ChevronsUpDown
-      : sort.value.direction === 'asc'
-        ? ArrowUp
-        : ArrowDown
-
-  // selection is kept by uid, so it survives paging, searching and sorting
-  const selected = ref(new Set<string>())
-  const selectedUsers = computed(() =>
-    (users.value ?? []).filter((user) => selected.value.has(user.uid)),
+  const selection = useSelection(
+    computed(() => shown.value.rows),
+    (user) => user.uid,
   )
-  const toggle = (uid: string, on: boolean | 'indeterminate') => {
-    const next = new Set(selected.value)
-    if (on === true) next.add(uid)
-    else next.delete(uid)
-    selected.value = next
-  }
-  const pageSelection = computed<boolean | 'indeterminate'>(() => {
-    const count = shown.value.rows.filter((u) =>
-      selected.value.has(u.uid),
-    ).length
-    if (count === 0) return false
-    return count === shown.value.rows.length ? true : 'indeterminate'
-  })
-  const togglePage = (on: boolean | 'indeterminate') => {
-    const next = new Set(selected.value)
-    for (const user of shown.value.rows) {
-      if (on === true) next.add(user.uid)
-      else next.delete(user.uid)
-    }
-    selected.value = next
-  }
+  const selectedUsers = computed(() =>
+    (users.value ?? []).filter((user) => selection.has(user)),
+  )
 
   const confirming = ref(false)
   const deleting = ref(false)
   const deleteSelected = async () => {
     deleting.value = true
-    const count = selected.value.size
+    const count = selection.selected.value.size
     try {
       await $fetch('/api/v1/user', {
         method: 'DELETE',
-        body: { UIDs: [...selected.value] },
+        body: { UIDs: [...selection.selected.value] },
       })
       useAlertStore().alert(t('admin.users.delete.done', count), 'success')
-      selected.value = new Set()
+      selection.clear()
       confirming.value = false
       await refresh()
     } catch (error) {
@@ -167,65 +120,20 @@
 
 <template>
   <div class="tw:flex tw:flex-col tw:gap-4">
-    <!-- search and role filter -->
     <div class="tw:flex tw:flex-col tw:gap-3 tw:lg:flex-row tw:lg:items-center">
-      <label class="tw:relative tw:block tw:lg:w-96">
-        <span class="tw:sr-only">{{ $t('admin.users.search') }}</span>
-        <Search
-          class="tw:pointer-events-none tw:absolute tw:top-1/2 tw:left-3 tw:size-4 tw:-translate-y-1/2 tw:text-muted-foreground"
-          aria-hidden="true"
-        />
-        <Input
-          v-model="query"
-          type="search"
-          :placeholder="$t('admin.users.search')"
-          class="tw:h-10 tw:bg-card tw:pl-9"
-        />
-      </label>
-
-      <div
-        role="group"
-        :aria-label="$t('admin.users.columns.role')"
-        class="tw:flex tw:gap-2 tw:overflow-x-auto"
-      >
-        <button
-          v-for="option in ['all', ...ROLES] as const"
-          :key="option"
-          type="button"
-          :aria-pressed="role === option"
-          class="tw:inline-flex tw:h-9 tw:shrink-0 tw:items-center tw:gap-2 tw:rounded-md tw:border tw:bg-card tw:px-3 tw:pt-0.5 tw:text-sm tw:font-semibold tw:transition-colors tw:hover:bg-accent tw:aria-pressed:border-plate tw:aria-pressed:bg-plate tw:aria-pressed:text-plate-foreground"
-          @click="role = option"
-        >
-          {{ $t(`admin.users.filter.${option}`) }}
-          <span class="tw:text-xs tw:font-normal tw:opacity-70">
-            {{ counts[option] }}
-          </span>
-        </button>
-      </div>
+      <SearchField v-model="query" :label="$t('admin.users.search')" />
+      <FilterChips
+        v-model="role"
+        :label="$t('admin.users.columns.role')"
+        :options="roleOptions"
+      />
     </div>
 
-    <!-- bulk actions, only while something is selected -->
-    <div
-      v-if="selected.size > 0"
-      class="tw:flex tw:items-center tw:gap-3 tw:rounded-md tw:border tw:border-signal/60 tw:bg-signal/15 tw:px-3 tw:py-2 tw:text-sm"
-    >
-      <span class="tw:font-semibold">
-        {{ $t('admin.users.selected', { n: selected.size }) }}
-      </span>
-      <Button variant="ghost" size="sm" @click="selected = new Set()">
-        <X aria-hidden="true" />
-        {{ $t('admin.users.clear') }}
-      </Button>
-      <Button
-        variant="destructive"
-        size="sm"
-        class="tw:ml-auto"
-        @click="confirming = true"
-      >
-        <Trash2 aria-hidden="true" />
-        {{ $t('admin.users.delete.button') }}
-      </Button>
-    </div>
+    <SelectionBar
+      :count="selection.selected.value.size"
+      @clear="selection.clear"
+      @delete="confirming = true"
+    />
 
     <div class="tw:overflow-hidden tw:rounded-lg tw:border tw:bg-card">
       <!-- table from md and up -->
@@ -233,39 +141,22 @@
         <TableHeader>
           <TableRow class="tw:hover:bg-transparent">
             <TableHead class="tw:w-12 tw:pl-4">
-              <Checkbox
-                :model-value="pageSelection"
-                :aria-label="$t('admin.users.select_page')"
-                @update:model-value="togglePage"
-              >
-                <Minus
-                  v-if="pageSelection === 'indeterminate'"
-                  class="tw:size-3.5"
-                />
-              </Checkbox>
+              <SelectBox
+                :checked="selection.pageState.value"
+                :label="$t('admin.users.select_page')"
+                @change="selection.togglePage"
+              />
             </TableHead>
             <TableHead
-              v-for="column in ['name', 'role', 'email', 'company'] as const"
+              v-for="column in COLUMNS"
               :key="column"
               :aria-sort="ariaSort(column)"
             >
-              <button
-                type="button"
-                class="tw:inline-flex tw:items-center tw:gap-1 tw:text-xs tw:font-bold tw:tracking-[0.06em] tw:uppercase tw:hover:text-foreground"
-                :class="
-                  sort.column === column
-                    ? 'tw:text-foreground'
-                    : 'tw:text-muted-foreground'
-                "
-                @click="toggleSort(column)"
-              >
-                {{ $t(`admin.users.columns.${column}`) }}
-                <component
-                  :is="sortIcon(column)"
-                  class="tw:size-3.5"
-                  aria-hidden="true"
-                />
-              </button>
+              <SortButton
+                :label="$t(`admin.users.columns.${column}`)"
+                :direction="directionOf(column)"
+                @toggle="toggleSort(column)"
+              />
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -273,18 +164,14 @@
           <TableRow
             v-for="user in shown.rows"
             :key="user.uid"
-            :data-state="selected.has(user.uid) ? 'selected' : undefined"
+            :data-state="selection.has(user) ? 'selected' : undefined"
             class="tw:data-[state=selected]:bg-brand/8"
           >
             <TableCell class="tw:pl-4">
-              <Checkbox
-                :model-value="selected.has(user.uid)"
-                :aria-label="
-                  $t('admin.users.select_row', {
-                    name: user.name || user.email,
-                  })
-                "
-                @update:model-value="(on) => toggle(user.uid, on)"
+              <SelectBox
+                :checked="selection.has(user)"
+                :label="$t('admin.users.select_row', { name: nameOf(user) })"
+                @change="(on) => selection.toggle(user, on)"
               />
             </TableCell>
             <TableCell class="tw:font-semibold">
@@ -292,7 +179,7 @@
                 :to="localePath(`/user/edit/${user.uid}`)"
                 class="tw:underline tw:decoration-border tw:decoration-1 tw:underline-offset-4 tw:hover:decoration-current"
               >
-                {{ user.name || user.email }}
+                {{ nameOf(user) }}
               </NuxtLink>
             </TableCell>
             <TableCell>
@@ -300,9 +187,9 @@
                 {{ $t(`admin.users.role.${roleOf(user)}`) }}
               </Badge>
             </TableCell>
-            <TableCell class="tw:text-muted-foreground">{{
-              user.email
-            }}</TableCell>
+            <TableCell class="tw:text-muted-foreground">
+              {{ user.email }}
+            </TableCell>
             <TableCell class="tw:text-muted-foreground">
               {{ companyOf(user) }}
             </TableCell>
@@ -317,20 +204,18 @@
           :key="user.uid"
           class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3"
         >
-          <Checkbox
-            :model-value="selected.has(user.uid)"
-            :aria-label="
-              $t('admin.users.select_row', { name: user.name || user.email })
-            "
+          <SelectBox
+            :checked="selection.has(user)"
+            :label="$t('admin.users.select_row', { name: nameOf(user) })"
             class="tw:size-5"
-            @update:model-value="(on) => toggle(user.uid, on)"
+            @change="(on) => selection.toggle(user, on)"
           />
           <div class="tw:min-w-0 tw:flex-1">
             <NuxtLink
               :to="localePath(`/user/edit/${user.uid}`)"
               class="tw:block tw:truncate tw:font-semibold tw:underline tw:decoration-border tw:underline-offset-4"
             >
-              {{ user.name || user.email }}
+              {{ nameOf(user) }}
             </NuxtLink>
             <p class="tw:truncate tw:text-sm tw:text-muted-foreground">
               {{ user.email }}
@@ -349,48 +234,21 @@
         {{ $t('admin.users.empty') }}
       </p>
 
-      <!-- paging -->
-      <div
-        class="tw:flex tw:items-center tw:justify-between tw:gap-3 tw:border-t tw:px-4 tw:py-3 tw:text-sm tw:text-muted-foreground"
-      >
-        <span aria-live="polite">
-          {{
-            $t('admin.users.showing', {
-              from: shown.from,
-              to: shown.to,
-              total: visible.length,
-            })
-          }}
-        </span>
-        <div class="tw:flex tw:items-center tw:gap-2">
-          <Button
-            variant="outline"
-            size="icon-sm"
-            :disabled="shown.page <= 1"
-            :aria-label="$t('admin.users.previous')"
-            @click="page = shown.page - 1"
-          >
-            <ChevronLeft aria-hidden="true" />
-          </Button>
-          <span class="tw:text-foreground tw:tabular-nums">
-            {{ shown.page }} / {{ shown.pages }}
-          </span>
-          <Button
-            variant="outline"
-            size="icon-sm"
-            :disabled="shown.page >= shown.pages"
-            :aria-label="$t('admin.users.next')"
-            @click="page = shown.page + 1"
-          >
-            <ChevronRight aria-hidden="true" />
-          </Button>
-        </div>
-      </div>
+      <Pager v-model="page" :shown="shown" :total="visible.length" />
     </div>
 
-    <DeleteUsersDialog
+    <DeleteDialog
       v-model:open="confirming"
-      :users="selectedUsers"
+      :title="$t('admin.users.delete.title', selectedUsers.length)"
+      :description="$t('admin.users.delete.text', selectedUsers.length)"
+      :confirm="$t('admin.users.delete.confirm', selectedUsers.length)"
+      :items="
+        selectedUsers.map((user) => ({
+          key: user.uid,
+          label: nameOf(user),
+          detail: user.name ? user.email : undefined,
+        }))
+      "
       :loading="deleting"
       @confirm="deleteSelected"
     />
