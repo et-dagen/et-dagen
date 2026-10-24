@@ -5,8 +5,8 @@ body {
   min-height: 100vh !important;
 }
 
-// link underlines were showing on iOS. Pages built on shadcn-vue (.et-admin) style their own links.
-a:not(.et-admin *, [data-slot], [data-slot] *) {
+// link underlines were showing on iOS. Pages built on shadcn-vue (.et-admin, .et-ui) style their own links.
+a:not(.et-admin *, .et-ui *, [data-slot], [data-slot] *) {
   text-decoration: none !important;
   color: rgb(var(--v-theme-nautral)) !important;
 }
@@ -31,7 +31,7 @@ a:not(.et-admin *, [data-slot], [data-slot] *) {
 // give all header elements their corresponding Vuetify class
 // ie h1 will get class text-h1, except on pages built on shadcn-vue
 @for $i from 1 through 6 {
-  h#{$i}:not(.et-admin *, [data-slot], [data-slot] *) {
+  h#{$i}:not(.et-admin *, .et-ui *, [data-slot], [data-slot] *) {
     @extend .text-h#{$i};
   }
 }

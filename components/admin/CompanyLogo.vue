@@ -1,5 +1,10 @@
 <script setup lang="ts">
-  const props = defineProps<{ src?: string | null; name?: string }>()
+  const props = defineProps<{
+    src?: string | null
+    name?: string
+    /** sm in lists, lg beside a page heading */
+    size?: 'sm' | 'lg'
+  }>()
 
   // a missing or unreachable logo shows the company's initials instead of a broken image
   const failed = ref(false)
@@ -19,7 +24,12 @@
 
 <template>
   <span
-    class="tw:grid tw:size-7 tw:shrink-0 tw:place-items-center tw:overflow-hidden tw:rounded-sm tw:border tw:bg-white tw:text-[11px] tw:font-bold tw:text-plate"
+    :class="
+      size === 'lg'
+        ? 'tw:size-14 tw:rounded-md tw:p-1.5 tw:text-lg'
+        : 'tw:size-7 tw:rounded-sm tw:text-[11px]'
+    "
+    class="tw:grid tw:shrink-0 tw:place-items-center tw:overflow-hidden tw:border tw:bg-white tw:font-bold tw:text-plate"
     aria-hidden="true"
   >
     <img

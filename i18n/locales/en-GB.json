@@ -334,7 +334,24 @@
     "type": "Job Type",
     "no_jobs": "Could not find any job advertisements ⚠️",
     "link_listing": "The full listing is on {company}'s website.",
-    "open_listing": "Read the listing and apply"
+    "open_listing": "Read the listing and apply",
+    "detail": {
+      "all": "All jobs",
+      "apply": "Apply for the job",
+      "days_left": "Closes today | Closes tomorrow | {n} days left",
+      "passed": "The deadline has passed",
+      "meet": "Meet {company} at E&T‑dagene",
+      "missing": "Job not found",
+      "event_status": {
+        "past": "Finished",
+        "no-registration": "Open to everyone",
+        "not-open": "Sign-up has not opened",
+        "open": "Sign-up is open",
+        "full": "Full, waiting list",
+        "closed": "Sign-up is closed"
+      },
+      "after_deadline": "After the deadline"
+    }
   },
   "admin": {
     "companies": {

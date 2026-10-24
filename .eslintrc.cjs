@@ -34,6 +34,9 @@ module.exports = {
         'components/company/EventPanel.vue',
         'pages/company/admin/**',
         'components/admin/form/**',
+        'components/job/DeadlineNote.vue',
+        'components/job/FairEvents.vue',
+        'pages/jobs/**',
       ],
       rules: {
         'vue/max-len': [
