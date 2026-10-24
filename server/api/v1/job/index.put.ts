@@ -2,6 +2,7 @@
 // endpoint for editing jobs in the database
 
 import { isValidDate } from '../../../../composables/useDate'
+import { fail } from '@/domain/errors'
 
 defineRouteMeta({
   openAPI: {
@@ -104,7 +105,8 @@ export default defineEventHandler(async (event) => {
   addEventContext(event, 'company_uid', companyUID)
 
   const newKeys = Object.keys(newData)
-  const oldKeys = Object.keys(dbData)
+  // listing came later than the other fields, so jobs stored before it may lack it
+  const oldKeys = [...Object.keys(dbData), 'listing']
 
   // make sure all keys that are to be changed already exsists in the db
   if (!newKeys.every((key) => oldKeys.includes(key))) {
@@ -116,6 +118,10 @@ export default defineEventHandler(async (event) => {
       statusCode: 400,
       statusMessage: 'Error (job/cannot-remove-single-fields).',
     })
+  }
+
+  if ('listing' in newData && !['text', 'link'].includes(newData.listing)) {
+    throw fail('job/invalid-listing')
   }
 
   if (newData.deadline && !isValidDate(newData.deadline)) {

@@ -16,6 +16,7 @@
     v-if="job"
     :uid="uid"
     :initial="{
+      listing: job.listing ?? 'text',
       title: job.title,
       companyUID: job.companyUID,
       jobType: job.jobType,

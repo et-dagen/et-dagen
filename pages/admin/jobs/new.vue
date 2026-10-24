@@ -3,5 +3,7 @@
 </script>
 
 <template>
-  <JobForm :initial="{ applicationLink: '', description: '' }" />
+  <JobForm
+    :initial="{ listing: 'text', applicationLink: '', description: '' }"
+  />
 </template>

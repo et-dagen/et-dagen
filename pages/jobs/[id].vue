@@ -43,8 +43,13 @@
     <!-- job description -->
     <VCard class="description elevation-4" rounded="lg">
       <VCardTitle class="description__title">{{ job?.title }}</VCardTitle>
+      <!-- a link listing shows its plain summary; the full listing is on the company's site -->
+      <VCardText v-if="job?.listing === 'link'" class="description__text">
+        <p v-if="job?.description">{{ job.description }}</p>
+        <p>{{ $t('jobs.link_listing', { company: company?.name }) }}</p>
+      </VCardText>
       <!-- eslint-disable vue/no-v-text-v-html-on-component vue/no-v-html -->
-      <VCardText class="description__text" v-html="job?.description" />
+      <VCardText v-else class="description__text" v-html="job?.description" />
       <!-- eslint-enable -->
     </VCard>
 
@@ -111,7 +116,7 @@
             })
           "
         >
-          {{ $t('jobs.apply') }}!
+          {{ $t(job?.listing === 'link' ? 'jobs.open_listing' : 'jobs.apply') }}
         </VBtn>
       </div>
     </div>

@@ -333,7 +333,9 @@
     "details": "Job Details",
     "apply": "Apply here",
     "type": "Job Type",
-    "no_jobs": "Could not find any job advertisements ⚠️"
+    "no_jobs": "Could not find any job advertisements ⚠️",
+    "link_listing": "The full listing is on {company}'s website.",
+    "open_listing": "Read the listing and apply"
   },
   "admin": {
     "companies": {
@@ -481,14 +483,28 @@
         "choose_type": "Choose a type",
         "location": "Place",
         "deadline": "Deadline",
-        "link": "Link to the application",
         "link_hint": "Leave empty if applications are sent another way.",
         "description": "Description",
         "create": "Create job",
         "save": "Save changes",
         "created": "The job is created",
         "updated": "The changes are saved",
-        "missing": "No job found at this address."
+        "missing": "No job found at this address.",
+        "listing": "Shown as",
+        "listings": {
+          "text": {
+            "name": "Description on etdagen.no",
+            "hint": "The whole listing is here, as formatted text."
+          },
+          "link": {
+            "name": "Link to the listing",
+            "hint": "A short summary here; students go on to the company's listing."
+          }
+        },
+        "link_text": "Link to the application",
+        "link_link": "Link to the listing",
+        "summary": "Short summary (optional)",
+        "summary_hint": "One or two sentences, at most 300 characters. Shown above the button to the listing."
       }
     },
     "users": {
@@ -769,6 +785,9 @@
     },
     "internal": {
       "unexpected": "Something went wrong on our side. Please try again shortly."
+    },
+    "job": {
+      "invalid-listing": "A job is shown either as a description or as a link."
     }
   },
   "form": {

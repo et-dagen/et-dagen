@@ -22,6 +22,10 @@ export interface ErrorSpec {
  */
 export const ERRORS = {
   'internal/unexpected': { status: 500, message: 'Unexpected error' },
+  'job/invalid-listing': {
+    status: 400,
+    message: "A job's listing must be 'text' or 'link'",
+  },
 } as const satisfies Record<string, ErrorSpec>
 
 export type ErrorCode = keyof typeof ERRORS

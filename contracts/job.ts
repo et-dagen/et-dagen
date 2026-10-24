@@ -9,15 +9,28 @@ import { z } from 'zod'
  */
 export const JOB_TYPES = ['full-time', 'graduate', 'summer-internship'] as const
 
+/**
+ * How the site shows a job: its description as rich text, or a short summary and a link to the
+ * company's own listing
+ */
+export const JOB_LISTINGS = ['text', 'link'] as const
+export type JobListing = (typeof JOB_LISTINGS)[number]
+
 const required = z
   .string({ required_error: 'required' })
   .trim()
   .min(1, 'required')
 
 /** Rich text counts as empty when it holds no visible characters */
-const hasText = (html: string) => html.replace(/<[^>]*>/g, '').trim().length > 0
+export const hasText = (html: string) =>
+  html.replace(/<[^>]*>/g, '').trim().length > 0
 
-export const JobInput = z.object({
+const link = z
+  .string()
+  .trim()
+  .refine((value) => value === '' || /^https?:\/\/\S+$/.test(value), 'url')
+
+const common = {
   title: required.max(120, 'too_long'),
   companyUID: required,
   jobType: z.enum(JOB_TYPES, { errorMap: () => ({ message: 'required' }) }),
@@ -26,13 +39,26 @@ export const JobInput = z.object({
   deadline: z
     .string({ required_error: 'required' })
     .regex(/^\d{4}-\d{2}-\d{2}$/, 'date'),
-  applicationLink: z
-    .string()
-    .trim()
-    .refine((link) => link === '' || /^https?:\/\/\S+$/.test(link), 'url'),
-  description: z
-    .string({ required_error: 'required' })
-    .refine(hasText, 'required'),
-})
+}
+
+// one variant per listing, so every field's error shows at once whichever is chosen
+export const JobInput = z.discriminatedUnion('listing', [
+  z.object({
+    ...common,
+    listing: z.literal('text'),
+    applicationLink: link,
+    /** Rich text, shown on the site */
+    description: z
+      .string({ required_error: 'required' })
+      .refine(hasText, 'required'),
+  }),
+  z.object({
+    ...common,
+    listing: z.literal('link'),
+    applicationLink: link.refine((value) => value !== '', 'required'),
+    /** An optional plain-text summary above the link */
+    description: z.string().trim().max(300, 'too_long').default(''),
+  }),
+])
 
 export type JobInput = z.infer<typeof JobInput>
