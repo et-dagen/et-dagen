@@ -22,25 +22,6 @@ const routes = [
   },
 ]
 
-const adminCategories = [
-  {
-    name: 'companies',
-    icon: 'domain',
-  },
-  {
-    name: 'events',
-    icon: 'calendar',
-  },
-  {
-    name: 'jobs',
-    icon: 'briefcase-outline',
-  },
-  {
-    name: 'users',
-    icon: 'account-outline',
-  },
-]
-
 // allergens
 const dietaryFlags = [
   { name: 'gluten', icon: 'mdi-barley' },
@@ -69,11 +50,4 @@ const usertypes = ['basic', 'company', 'admin']
 const companyTypes = ['main-partner', 'partner', 'sponsor', 'old']
 const jobTypes = ['full-time', 'graduate', 'summer-internship']
 
-export {
-  routes,
-  adminCategories,
-  dietaryFlags,
-  usertypes,
-  companyTypes,
-  jobTypes,
-}
+export { routes, dietaryFlags, usertypes, companyTypes, jobTypes }

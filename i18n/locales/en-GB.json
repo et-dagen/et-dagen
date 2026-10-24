@@ -337,7 +337,6 @@
     "no_jobs": "Could not find any job advertisements ⚠️"
   },
   "admin": {
-    "categories": "Categories",
     "companies": {
       "name": "Companies"
     },
@@ -494,6 +493,15 @@
         "company": "Company"
       },
       "copied": "UID copied!"
+    },
+    "shell": {
+      "navigation": "Admin panels",
+      "back": "Back to etdagen.no",
+      "theme": {
+        "system": "Theme: follows the device. Switch to light",
+        "light": "Theme: light. Switch to dark",
+        "dark": "Theme: dark. Follow the device"
+      }
     }
   },
   "edit": {

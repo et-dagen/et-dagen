@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import tailwindcss from '@tailwindcss/vite'
+
 export default defineNuxtConfig({
   app: {
     head: {
@@ -62,7 +64,14 @@ export default defineNuxtConfig({
     dirs: ['stores'],
   },
 
-  css: ['@/assets/scss/main.scss'],
+  css: ['@/assets/scss/main.scss', '@/assets/css/admin.css'],
+
+  vite: {
+    plugins: [tailwindcss()],
+  },
+
+  // shadcn-vue components under components/ui are imported explicitly, not auto-imported (#583)
+  components: [{ path: '~/components', ignore: ['ui/**'] }],
 
   modules: [
     '@nuxtjs/i18n',

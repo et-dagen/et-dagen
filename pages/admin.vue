@@ -1,7 +1,6 @@
 <script setup lang="ts">
-  import { adminCategories as categories } from '~/config/app.config'
-
   definePageMeta({
+    layout: 'admin',
     // route and all sub routes are protected
     protected: true,
     // route is only accessible by admins
@@ -18,102 +17,19 @@
   })
 
   const route = useRoute()
-
-  const currentCategory = computed(() => {
-    const routeNames = route.fullPath.split('/')
-    return routeNames[routeNames.length - 1]
-  })
+  // route names look like `admin-users___no`
+  const panel = computed(() =>
+    String(route.name).split('___')[0].replace('admin-', ''),
+  )
 </script>
 
 <template>
-  <div class="d-flex flex-column align-center my-10">
-    <div class="w-100 d-flex justify-space-around align-center mb-8">
-      <!-- title -->
-      <h4 class="font-weight-bold text-center">
-        {{ $t('nav.admin') }}
-      </h4>
-
-      <!-- select category mobile -->
-      <VMenu transition="slide-y-transition" location="bottom right">
-        <!-- activator btn -->
-        <template #activator="{ props }">
-          <VBtn
-            size="45"
-            elevation="0"
-            variant="text"
-            class="d-flex d-lg-none ml-2 bg-primary"
-            v-bind="props"
-            icon="mdi-arrow-bottom-left"
-          />
-        </template>
-
-        <VCard
-          class="d-flex d-lg-none flex-column mt-2 px-3 pt-3 categories-mobile"
-          width="240"
-          rounded="lg"
-          :elevation="1"
-        >
-          <!-- select category buttons -->
-          <AdminCategoryButton
-            v-for="(category, index) in categories"
-            :key="index"
-            :active="currentCategory === category.name"
-            :category="category"
-          />
-        </VCard>
-      </VMenu>
-    </div>
-
-    <!-- select category wide screen -->
-    <div class="d-flex">
-      <VCard
-        class="categories pa-2 d-none d-lg-flex flex-column align-center"
-        rounded="0"
-        elevation="0"
-        width="240"
-      >
-        <h6 class="font-weight-bold">{{ $t('admin.categories') }}</h6>
-
-        <!-- select category buttons -->
-        <AdminCategoryButton
-          v-for="(category, index) in categories"
-          :key="index"
-          :active="currentCategory === category.name"
-          :category="category"
-        />
-      </VCard>
-
-      <!-- edit selected category -->
-      <VCard class="administration px-4 ma-0 ma-lg-4" rounded="0" elevation="0">
-        <!-- child route -->
-        <NuxtPage />
-      </VCard>
-    </div>
+  <div>
+    <h1
+      class="tw:mb-6 tw:text-2xl tw:leading-8 tw:font-extrabold tw:tracking-tight tw:lg:text-[2rem] tw:lg:leading-10"
+    >
+      {{ $t(`admin.${panel}.name`) }}
+    </h1>
+    <NuxtPage />
   </div>
 </template>
-
-<style lang="scss">
-  @use 'sass:map';
-  @use 'vuetify/settings';
-
-  .categories {
-    border-right: 2px solid rgba(0, 0, 0, 0.4) !important;
-    gap: 1rem;
-  }
-
-  .categories-mobile {
-    gap: 1rem;
-  }
-
-  .administration {
-    width: 80rem;
-
-    @media #{map.get(settings.$display-breakpoints, 'lg-and-down')} {
-      width: 60rem;
-    }
-
-    @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
-      width: 95vw;
-    }
-  }
-</style>

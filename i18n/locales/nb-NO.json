@@ -335,7 +335,6 @@
     "no_jobs": "Fant ingen stillingsannonser ⚠️"
   },
   "admin": {
-    "categories": "Kategorier",
     "companies": {
       "name": "Bedrifter"
     },
@@ -493,6 +492,15 @@
         "company": "Bedrift"
       },
       "copied": "UID kopiert!"
+    },
+    "shell": {
+      "navigation": "Adminpaneler",
+      "back": "Til etdagen.no",
+      "theme": {
+        "system": "Tema: følger enheten. Bytt til lyst",
+        "light": "Tema: lyst. Bytt til mørkt",
+        "dark": "Tema: mørkt. Følg enheten"
+      }
     }
   },
   "edit": {
