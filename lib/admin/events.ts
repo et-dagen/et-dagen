@@ -1,4 +1,5 @@
-import { Instant, TimeZone, Zone, type ISO8601String } from '@/domain/time'
+import { formatWhen, instantOf } from './time'
+import { Instant, type ISO8601String } from '@/domain/time'
 
 /** An `events/<uid>` record as the admin list reads it; every field may be missing */
 export interface EventRow {
@@ -10,19 +11,6 @@ export interface EventRow {
   location?: { name?: string; map?: string }
   attendants?: Record<string, unknown>
   queue?: Record<string, string>
-}
-
-/** v1 stores every time as Norwegian wall-clock time */
-const OSLO = TimeZone.parse('Europe/Oslo')
-
-/** The instant of a stored wall-clock time, or null when it is missing or malformed */
-export function instantOf(value: string | undefined): ISO8601String | null {
-  if (!value) return null
-  try {
-    return Zone.fromInput(value, OSLO)
-  } catch {
-    return null
-  }
 }
 
 /**
@@ -73,16 +61,5 @@ export const isUpcoming = (event: EventRow, now: ISO8601String) =>
   eventStatus(event, now).kind !== 'past'
 
 /** An event's start as people read it, such as "ons. 4. nov. 2026, 17:15", in Oslo time */
-export function formatStart(event: EventRow, locale: string): string {
-  const start = instantOf(event.date?.start)
-  if (!start) return ''
-  return new Intl.DateTimeFormat(locale, {
-    weekday: 'short',
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: 'Europe/Oslo',
-  }).format(Instant.toDate(start))
-}
+export const formatStart = (event: EventRow, locale: string): string =>
+  formatWhen(event.date?.start, locale)

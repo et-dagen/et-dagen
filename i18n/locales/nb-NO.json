@@ -428,42 +428,49 @@
     },
     "jobs": {
       "name": "Jobber",
-      "edit": "Rediger",
-      "pagesize": "Jobber per side",
-      "filtertypes": {
-        "name": "Filtertype",
-        "updated": "Sist modifisert",
-        "jobtitle": "Stillingstittel"
+      "search": "Søk etter stilling, bedrift eller sted",
+      "create": "Ny stilling",
+      "filter": {
+        "open": "Åpne",
+        "expired": "Utløpte",
+        "all": "Alle"
       },
-      "filterorder": {
-        "name": "Rekkefølge",
-        "descending": "Synkende",
-        "ascending": "Stigende"
+      "columns": {
+        "title": "Stilling",
+        "company": "Bedrift",
+        "type": "Type",
+        "location": "Sted",
+        "deadline": "Søknadsfrist"
       },
-      "selectall": "Velg alle",
+      "deadline": {
+        "today": "Siste dag i dag",
+        "left": "{n} dag igjen | {n} dager igjen",
+        "passed": "Utløpt"
+      },
+      "actions": {
+        "menu": "Valg for {title}",
+        "edit": "Rediger",
+        "view": "Se annonsen",
+        "delete": "Slett"
+      },
+      "select_page": "Velg alle stillingene på siden",
+      "select_row": "Velg {name}",
+      "empty": "Ingen stillinger passer søket.",
       "delete": {
-        "selected": "Slett valgte",
-        "confirmtext": "Er du sikker på at du vil slette de valgte jobbene?",
-        "confirm": "Ja, slett dem",
-        "abort": "Nei, avbryt"
+        "title": "Slette {n} stilling? | Slette {n} stillinger?",
+        "text": "Stillingsannonsen slettes for godt. Dette kan ikke angres. | Stillingsannonsene slettes for godt. Dette kan ikke angres.",
+        "confirm": "Slett {n} stilling | Slett {n} stillinger",
+        "done": "{n} stilling slettet | {n} stillinger slettet"
       },
       "attributes": {
-        "select": "Velg",
-        "title": "Tittel",
-        "description": "Beskrivelse",
-        "company": "Bedrift",
-        "location": "Sted",
-        "deadline": "Søkefrist",
         "jobtype": {
           "name": "Jobbtype",
           "full_time": "Fulltid",
           "part_time": "Deltid",
           "graduate": "Graduate",
           "summer_internship": "Sommerjobb"
-        },
-        "code": "Jobbkode"
-      },
-      "copied": "UID kopiert!"
+        }
+      }
     },
     "users": {
       "name": "Brukere",

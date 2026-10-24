@@ -31,13 +31,13 @@
   import {
     eventStatus,
     formatStart,
-    instantOf,
     isUpcoming,
     placeOf,
     type EventRow,
     type EventStatus,
   } from '@/lib/admin/events'
   import { pageOf, search, sortBy } from '@/lib/admin/listView'
+  import { instantOf } from '@/lib/admin/time'
 
   type Row = EventRow & { uid: string }
   type When = 'upcoming' | 'past' | 'all'
