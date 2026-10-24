@@ -381,6 +381,29 @@
         "text": "Bedriften og logoen slettes for godt. Arrangementer, stillinger og registreringskoder som hører til den, blir liggende. Dette kan ikke angres. | Bedriftene og logoene deres slettes for godt. Arrangementer, stillinger og registreringskoder som hører til dem, blir liggende. Dette kan ikke angres.",
         "confirm": "Slett {n} bedrift | Slett {n} bedrifter",
         "done": "{n} bedrift slettet | {n} bedrifter slettet"
+      },
+      "form": {
+        "new_title": "Ny bedrift",
+        "edit_title": "Rediger bedrift",
+        "name": "Navn",
+        "type": "Type",
+        "choose_type": "Velg type",
+        "webpage": "Nettside",
+        "logo": "Logo",
+        "logo_choose": "Velg logo",
+        "logo_replace": "Bytt logo",
+        "logo_undo": "Angre",
+        "logo_hint": "PNG eller JPEG. Lastes opp når du lagrer.",
+        "description": "Beskrivelse",
+        "cv_access": "Tilgang til CV-er",
+        "cv_access_hint": "Bedriften kan se og åpne studentenes CV-er.",
+        "create_code": "Lag registreringskode nå",
+        "create_code_hint": "Bedriften trenger en kode for å lage brukere. Du ser den i listen etter at du har lagret.",
+        "create": "Opprett bedrift",
+        "save": "Lagre endringer",
+        "created": "Bedriften er opprettet",
+        "updated": "Endringene er lagret",
+        "missing": "Fant ingen bedrift med denne adressen."
       }
     },
     "events": {

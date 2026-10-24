@@ -9,6 +9,7 @@
     Plus,
     Trash2,
   } from '@lucide/vue'
+  import CompanyLogo from '@/components/admin/CompanyLogo.vue'
   import DeleteDialog from '@/components/admin/DeleteDialog.vue'
   import FilterChips from '@/components/admin/FilterChips.vue'
   import Pager from '@/components/admin/Pager.vue'
@@ -59,6 +60,8 @@
   const COLUMNS = ['name', 'type', 'code', 'cvAccess', 'webpage'] as const
 
   const localePath = useLocalePath()
+  // the row saved last stays lit until the admin moves on
+  const changed = computed(() => String(useRoute().query.changed ?? ''))
   const { t } = useI18n()
   const { copy, copied, text: copiedText } = useClipboard()
 
@@ -196,7 +199,7 @@
         :options="showOptions"
       />
       <Button as-child class="tw:h-10 tw:lg:ml-auto">
-        <NuxtLink :to="localePath('/company/edit')">
+        <NuxtLink :to="localePath('/admin/companies/new')">
           <Plus aria-hidden="true" />
           {{ $t('admin.companies.create') }}
         </NuxtLink>
@@ -240,7 +243,8 @@
             v-for="row in shown.rows"
             :key="row.uid"
             :data-state="selection.has(row) ? 'selected' : undefined"
-            class="tw:data-[state=selected]:bg-brand/8"
+            :data-changed="row.uid === changed || undefined"
+            class="tw:data-[state=selected]:bg-brand/8 tw:data-changed:bg-signal/15 tw:data-changed:shadow-[inset_4px_0_0_var(--signal)]"
           >
             <TableCell class="tw:pl-4">
               <SelectBox
@@ -251,14 +255,9 @@
             </TableCell>
             <TableCell class="tw:font-semibold">
               <span class="tw:flex tw:items-center tw:gap-3">
-                <img
-                  v-if="row.logo"
-                  :src="row.logo"
-                  alt=""
-                  class="tw:size-7 tw:shrink-0 tw:rounded-sm tw:bg-white tw:object-contain"
-                />
+                <CompanyLogo :src="row.logo" :name="row.name" />
                 <NuxtLink
-                  :to="localePath(`/company/edit/${row.uid}`)"
+                  :to="localePath(`/admin/companies/${row.uid}`)"
                   class="tw:underline tw:decoration-border tw:decoration-1 tw:underline-offset-4 tw:hover:decoration-current"
                 >
                   {{ row.name }}
@@ -343,7 +342,7 @@
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem as-child>
-                    <NuxtLink :to="localePath(`/company/edit/${row.uid}`)">
+                    <NuxtLink :to="localePath(`/admin/companies/${row.uid}`)">
                       <Pencil aria-hidden="true" />
                       {{ $t('admin.companies.actions.edit') }}
                     </NuxtLink>
@@ -382,7 +381,7 @@
           />
           <div class="tw:min-w-0 tw:flex-1">
             <NuxtLink
-              :to="localePath(`/company/edit/${row.uid}`)"
+              :to="localePath(`/admin/companies/${row.uid}`)"
               class="tw:block tw:truncate tw:font-semibold tw:underline tw:decoration-border tw:underline-offset-4"
             >
               {{ row.name }}
