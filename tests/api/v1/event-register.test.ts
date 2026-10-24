@@ -3,8 +3,13 @@
  * bug. A change here is a change to the v1 contract and needs a reason.
  */
 import { beforeEach, describe, expect, it } from 'vitest'
-import { api } from '../support/api'
-import { createUser, read, resetEmulators, seed } from '../support/emulators'
+import { api } from '@/tests/api/support/api'
+import {
+  createUser,
+  read,
+  resetEmulators,
+  seed,
+} from '@/tests/api/support/emulators'
 
 const OPEN = { start: '2000-01-01T00:00', end: '2999-12-31T23:59' }
 const CLOSED = { start: '2000-01-01T00:00', end: '2000-01-02T00:00' }

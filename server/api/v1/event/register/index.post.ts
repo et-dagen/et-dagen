@@ -4,13 +4,13 @@
 import {
   registerForEvent,
   type RegisterResult,
-} from '../../../../../application/events/registration'
-import { EventUid } from '../../../../../domain/event/event'
-import { fail } from '../../../../../domain/errors'
-import { Instant } from '../../../../../domain/time'
-import { UserUid } from '../../../../../domain/user'
-import { subjectOf } from '../../../../adapters/rtdb/userRecord'
-import { events, users } from '../../../../composition'
+} from '@/application/events/registration'
+import { EventUid } from '@/domain/event/event'
+import { fail } from '@/domain/errors'
+import { Instant } from '@/domain/time'
+import { UserUid } from '@/domain/user'
+import { subjectOf } from '@/server/adapters/rtdb/userRecord'
+import { events, users } from '@/server/composition'
 
 defineRouteMeta({
   openAPI: {
