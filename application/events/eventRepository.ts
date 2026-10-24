@@ -44,4 +44,13 @@ export interface EventRepository {
     user: UserUid,
     at: ISO8601String,
   ): Promise<WithdrawOutcome | Missing>
+
+  /**
+   * Apply the domain's `removeUsers` to every event the users are on
+   *
+   * @remarks
+   * Each event changes atomically on its own, not all of them together. Running it again after a
+   * failure finishes the job, because events the users have left are skipped.
+   */
+  removeUsers(users: readonly UserUid[], at: ISO8601String): Promise<void>
 }

@@ -1,6 +1,7 @@
 import type { AttendantMetadata } from '@/domain/event/attendance'
+import type { Event } from '@/domain/event/event'
 import { hasSpots, type Registration } from '@/domain/event/registration'
-import type { ISO8601String } from '@/domain/time'
+import { Instant, type ISO8601String } from '@/domain/time'
 import type { UserUid } from '@/domain/user'
 
 /**
@@ -8,7 +9,7 @@ import type { UserUid } from '@/domain/user'
  *
  * @remarks
  * The queue is ordered: the first entry gets the next spot that frees up. Only
- * {@link register} and {@link withdraw} change a roster, so capacity and queue order hold
+ * {@link register}, {@link withdraw} and {@link removeUsers} change a roster, so capacity and queue order hold
  * whichever adapter stores it.
  */
 export interface Roster {
@@ -105,4 +106,38 @@ export function withdraw(
     roster: { attendants, queue },
     outcome: { kind: 'withdrawn', promoted },
   }
+}
+
+/**
+ * Take users off the roster for good, as when their accounts are deleted
+ *
+ * @remarks
+ * Before the event starts, each attendant withdraws as usual, so the queue moves up. Once it has
+ * started nobody is promoted: the spot was used, and only the record of it goes. Queued users are
+ * taken out first, so none of them is promoted only to be removed.
+ */
+export function removeUsers(
+  roster: Roster,
+  event: Pick<Event, 'start'> & {
+    registration?: Pick<Registration, 'attendanceLimit'>
+  },
+  users: ReadonlySet<UserUid>,
+  at: ISO8601String,
+): Roster {
+  const upcoming = Instant.compare(at, event.start) < 0
+  let next: Roster = {
+    ...roster,
+    queue: roster.queue.filter((user) => !users.has(user)),
+  }
+  for (const user of users) {
+    if (!next.attendants.has(user)) continue
+    if (upcoming && event.registration) {
+      next = withdraw(next, event.registration, user, at).roster
+    } else {
+      const attendants = new Map(next.attendants)
+      attendants.delete(user)
+      next = { ...next, attendants }
+    }
+  }
+  return next
 }
