@@ -23,6 +23,8 @@
 
   const props = defineProps<{
     uid: string
+    /** The sign-in address, shown but not edited */
+    email: string
     initial: Record<string, unknown>
   }>()
 
@@ -143,18 +145,13 @@
         </FormItem>
       </FormField>
 
-      <FormField v-slot="{ componentField }" name="email">
-        <FormItem>
-          <FormLabel>{{ $t('admin.users.form.email') }}</FormLabel>
-          <FormControl>
-            <Input type="email" autocomplete="off" v-bind="componentField" />
-          </FormControl>
-          <p class="tw:text-sm tw:text-muted-foreground">
-            {{ $t('admin.users.form.email_hint') }}
-          </p>
-          <FieldError />
-        </FormItem>
-      </FormField>
+      <div class="tw:grid tw:content-start tw:gap-2">
+        <Label as="p">{{ $t('admin.users.form.email') }}</Label>
+        <p class="tw:flex tw:h-9 tw:items-center tw:truncate">{{ email }}</p>
+        <p class="tw:text-sm tw:text-muted-foreground">
+          {{ $t('admin.users.form.email_hint') }}
+        </p>
+      </div>
 
       <FormField v-slot="{ componentField }" name="userType">
         <FormItem class="tw:lg:col-span-2">

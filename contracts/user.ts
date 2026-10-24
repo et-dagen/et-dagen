@@ -15,7 +15,6 @@ const year = z.coerce
 
 const common = {
   name: required.max(100, 'too_long'),
-  email: required.email('email'),
   dietaryRestrictions: z.array(z.string().trim().min(1)).default([]),
 }
 
@@ -23,7 +22,8 @@ const common = {
  * A user as the admin form sends it
  *
  * @remarks
- * Messages are keys under `form.errors`. A student needs a study programme and year; an admin
+ * Messages are keys under `form.errors`. The email address is the person's sign-in and is not
+ * edited here. A student needs a study programme and year; an admin
  * may have them; a company account belongs to a company instead. Whether the year fits the
  * programme depends on the programme list, so the form only offers years that fit.
  */
@@ -46,7 +46,7 @@ export const UserInput = z.discriminatedUnion('userType', [
 ])
 export type UserInput = z.infer<typeof UserInput>
 
-/** The two bodies v1 needs: the profile for `POST /user` and the account for `PUT /user` */
+/** The two bodies v1 needs: the profile for `POST /user` and the name for `PUT /user` */
 export function toV1User(uid: string, user: UserInput) {
   const student = user.userType === 'company' ? null : user
   return {
@@ -58,6 +58,7 @@ export function toV1User(uid: string, user: UserInput) {
       companyUID: user.userType === 'company' ? user.companyUID : null,
       dietaryRestrictions: [...new Set(user.dietaryRestrictions)],
     },
-    account: { uid, name: user.name, email: user.email },
+    // no email: v1 leaves the sign-in address as it is when none is sent
+    account: { uid, name: user.name },
   }
 }

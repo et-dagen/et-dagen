@@ -597,7 +597,7 @@
         "edit_title": "Rediger bruker",
         "name": "Navn",
         "email": "E-post",
-        "email_hint": "Personen logger inn med denne adressen.",
+        "email_hint": "Personen logger inn med denne adressen, og den kan ikke endres her.",
         "role": "Rolle",
         "role_hint": {
           "admin": "Har tilgang til hele adminpanelet.",
@@ -900,8 +900,7 @@
       "datetime": "Velg dato og klokkeslett.",
       "end_before_start": "Må komme etter starttidspunktet.",
       "signup_after_start": "Påmeldingen må stenge før arrangementet starter.",
-      "number": "Skriv et helt tall større enn null.",
-      "email": "Skriv en gyldig e-postadresse."
+      "number": "Skriv et helt tall større enn null."
     },
     "leave": "Du har endringer som ikke er lagret. Vil du forlate siden?",
     "richtext": {

@@ -16,7 +16,6 @@
     return {
       userType: role,
       name: u.name ?? '',
-      email: u.email ?? '',
       studyProgram: u.studyProgram ?? '',
       currentYear: u.currentYear ? Number(u.currentYear) : '',
       companyUID: u.companyUID ?? '',
@@ -28,7 +27,12 @@
 </script>
 
 <template>
-  <UserForm v-if="initial" :uid="uid" :initial="initial" />
+  <UserForm
+    v-if="initial"
+    :uid="uid"
+    :email="user?.email ?? ''"
+    :initial="initial"
+  />
   <p v-else class="tw:text-muted-foreground">
     {{ $t('admin.users.form.missing') }}
   </p>

@@ -598,7 +598,7 @@
         "edit_title": "Edit user",
         "name": "Name",
         "email": "Email",
-        "email_hint": "The person signs in with this address.",
+        "email_hint": "The person signs in with this address, and it cannot be changed here.",
         "role": "Role",
         "role_hint": {
           "admin": "Has access to the whole admin panel.",
@@ -899,8 +899,7 @@
       "datetime": "Choose a date and time.",
       "end_before_start": "Must come after the start.",
       "signup_after_start": "Sign-up must close before the event starts.",
-      "number": "Enter a whole number above zero.",
-      "email": "Enter a valid email address."
+      "number": "Enter a whole number above zero."
     },
     "leave": "You have unsaved changes. Leave the page?",
     "richtext": {

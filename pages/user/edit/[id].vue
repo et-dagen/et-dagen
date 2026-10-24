@@ -1,39 +1,13 @@
 <script setup lang="ts">
+  // users are edited in the admin panel, which checks access itself
   definePageMeta({
-    // route and all sub routes are protected
-    // meaning you have to be logged in
-    protected: true,
-
-    middleware: () => {
-      const authStore = useAuthStore()
-      const localePath = useLocalePath()
-
-      if (authStore.hasAccess(['admin'])) return
-
-      return navigateTo(localePath('/user/edit'))
-    },
+    middleware: (to) =>
+      navigateTo(useLocalePath()(`/admin/users/${String(to.params.id)}`), {
+        redirectCode: 301,
+      }),
   })
-
-  const { data } = await useFetch('/api/v1/user', { query: { scope: 'all' } })
-
-  const route = useRoute()
-  const user = computed(() =>
-    data.value.find((user) => user.uid === route.params.id),
-  )
-
-  // navigate to admin page if user doesn't exist
-  if (!user.value) navigateTo('/admin/users')
 </script>
 
 <template>
-  <VContainer>
-    <UserEditForm :user="user" />
-  </VContainer>
+  <div />
 </template>
-
-<style scoped lang="scss">
-  .v-container {
-    max-width: 26rem;
-    margin-block: 0.5rem;
-  }
-</style>
