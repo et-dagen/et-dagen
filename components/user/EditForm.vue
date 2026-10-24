@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import type { User } from '../../models/User'
+  import type { User } from '@/models/User'
 
   import { dietaryFlags } from '~/config/app.config'
 

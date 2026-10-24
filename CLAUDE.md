@@ -60,6 +60,8 @@ The target layout, and how to place code while both shapes exist, is in `ARCHITE
   builds the response from the catalogue. Pass the underlying error as `cause` instead of logging it.
 - **API design** follows the wiki's "API conventions" page. Open questions for v2 are on "API v2
   decisions"; do not settle them silently in code.
+- **Imports**: import from another directory through the `@/` alias for the project root
+  (`@/domain/time`), not with `../`. `./` is for files in the same directory. ESLint enforces it.
 - **Types**: use the branded types in `domain/` (`Instant`, `Term`, `EmailAddress`, `HttpUrl`,
   `MapLink`, ...) and their `parse`/`tryParse` functions at boundaries. Only the owning module casts to a brand.
 - **Authorization**: v1 uses `server/utils/hasAccess.ts`. The ABAC model (`domain/authorization`,

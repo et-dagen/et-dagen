@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import Infobox from '../components/faq/Infobox.vue'
+  import Infobox from '@/components/faq/Infobox.vue'
 </script>
 
 /* TODO: Add translation for the text*/

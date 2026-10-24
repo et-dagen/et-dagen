@@ -9,7 +9,7 @@
  */
 import type { Auth } from 'firebase-admin/auth'
 import type { Database } from 'firebase-admin/database'
-import { Instant, TimeZone, Zone } from '../../domain/time'
+import { Instant, TimeZone, Zone } from '@/domain/time'
 
 /** The parts of a Storage bucket erasure uses */
 export interface Files {

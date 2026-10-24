@@ -2,8 +2,8 @@
  * Pins what the public, read-only endpoints answer today. They need no sign-in.
  */
 import { beforeEach, describe, expect, it } from 'vitest'
-import { api } from '../support/api'
-import { resetEmulators, seed } from '../support/emulators'
+import { api } from '@/tests/api/support/api'
+import { resetEmulators, seed } from '@/tests/api/support/emulators'
 
 beforeEach(resetEmulators)
 
