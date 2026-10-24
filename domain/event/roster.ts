@@ -8,8 +8,8 @@ import type { UserUid } from '@/domain/user'
  *
  * @remarks
  * The queue is ordered: the first entry gets the next spot that frees up. Only
- * {@link register} and {@link withdraw} change a roster, so capacity and queue order hold
- * whichever adapter stores it.
+ * {@link register}, {@link withdraw} and {@link promoteWaiting} change a roster, so capacity and
+ * queue order hold whichever adapter stores it.
  */
 export interface Roster {
   readonly attendants: ReadonlyMap<UserUid, AttendantMetadata>
@@ -24,6 +24,11 @@ export type RegisterOutcome =
   | { kind: 'queued'; position: number }
   | { kind: 'already-registered' }
   | { kind: 'already-queued' }
+
+/** `promoted` lists who got a spot, in queue order; empty when nobody did */
+export interface PromoteOutcome {
+  promoted: UserUid[]
+}
 
 export type WithdrawOutcome =
   /** `promoted` is the user who took the freed spot, if anyone was waiting */
@@ -105,4 +110,28 @@ export function withdraw(
     roster: { attendants, queue },
     outcome: { kind: 'withdrawn', promoted },
   }
+}
+
+/**
+ * Give free spots to the queue, first in line first, until the event is full or nobody waits
+ *
+ * @remarks
+ * For a limit raised after the event filled up. Returns the same roster when nobody moves, so an
+ * adapter can tell that nothing needs writing.
+ */
+export function promoteWaiting(
+  roster: Roster,
+  registration: Pick<Registration, 'attendanceLimit'>,
+  at: ISO8601String,
+): { roster: Roster; outcome: PromoteOutcome } {
+  const attendants = new Map(roster.attendants)
+  const queue = [...roster.queue]
+  const promoted: UserUid[] = []
+  while (queue.length > 0 && hasSpots(registration, attendants.size)) {
+    const next = queue.shift()!
+    attendants.set(next, attending(at))
+    promoted.push(next)
+  }
+  if (promoted.length === 0) return { roster, outcome: { promoted } }
+  return { roster: { attendants, queue }, outcome: { promoted } }
 }

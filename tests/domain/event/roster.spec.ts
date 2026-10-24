@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { emptyRoster, register, withdraw } from '@/domain/event/roster'
+import {
+  emptyRoster,
+  promoteWaiting,
+  register,
+  withdraw,
+} from '@/domain/event/roster'
 import { Instant } from '@/domain/time/instant'
 import { UserUid } from '@/domain/user'
 
@@ -93,5 +98,43 @@ describe('withdraw', () => {
     const before = full()
     withdraw(before, oneSpot, ada, at)
     expect(before.attendants.has(ada)).toBe(true)
+  })
+})
+
+describe('promoteWaiting', () => {
+  const later = Instant.parse('2026-08-06T10:00:00.000Z')
+  // one spot taken, two waiting
+  const waiting = () =>
+    register(register(full(), oneSpot, bo, at).roster, oneSpot, cy, at).roster
+
+  it('fills spots added after the event filled up, first in line first', () => {
+    const { roster, outcome } = promoteWaiting(
+      waiting(),
+      { attendanceLimit: 2 },
+      later,
+    )
+    expect(outcome).toEqual({ promoted: [bo] })
+    expect([...roster.attendants.keys()]).toEqual([ada, bo])
+    expect(roster.attendants.get(bo)?.registeredAt).toBe(later)
+    expect(roster.queue).toEqual([cy])
+  })
+
+  it('empties the queue when there is room for everyone', () => {
+    const unlimited = promoteWaiting(
+      waiting(),
+      { attendanceLimit: null },
+      later,
+    )
+    expect(unlimited.outcome).toEqual({ promoted: [bo, cy] })
+    expect(unlimited.roster.queue).toEqual([])
+  })
+
+  it('returns the same roster when nobody can move up', () => {
+    const roster = waiting()
+    expect(promoteWaiting(roster, oneSpot, later)).toEqual({
+      roster,
+      outcome: { promoted: [] },
+    })
+    expect(promoteWaiting(roster, oneSpot, later).roster).toBe(roster)
   })
 })
