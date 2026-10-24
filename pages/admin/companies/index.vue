@@ -9,6 +9,7 @@
     Plus,
     Trash2,
   } from '@lucide/vue'
+  import CompanyLogo from '@/components/admin/CompanyLogo.vue'
   import DeleteDialog from '@/components/admin/DeleteDialog.vue'
   import FilterChips from '@/components/admin/FilterChips.vue'
   import Pager from '@/components/admin/Pager.vue'
@@ -254,12 +255,7 @@
             </TableCell>
             <TableCell class="tw:font-semibold">
               <span class="tw:flex tw:items-center tw:gap-3">
-                <img
-                  v-if="row.logo"
-                  :src="row.logo"
-                  alt=""
-                  class="tw:size-7 tw:shrink-0 tw:rounded-sm tw:bg-white tw:object-contain"
-                />
+                <CompanyLogo :src="row.logo" :name="row.name" />
                 <NuxtLink
                   :to="localePath(`/admin/companies/${row.uid}`)"
                   class="tw:underline tw:decoration-border tw:decoration-1 tw:underline-offset-4 tw:hover:decoration-current"
