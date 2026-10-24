@@ -1,10 +1,10 @@
-import { eraseInactiveUsers } from '../../user/retention'
-import { auth, db, storage } from '../../utils/firebase'
+import { eraseInactiveUsers } from '@/server/user/retention'
+import { auth, db, storage } from '@/server/utils/firebase'
 import {
   createWideEvent,
   generateRequestId,
   logWideEvent,
-} from '../../utils/logger'
+} from '@/server/utils/logger'
 
 /** Runs every night from `nitro.scheduledTasks`; logs one wide event with counts only */
 export default defineTask({
