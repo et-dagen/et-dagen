@@ -14,6 +14,7 @@ import { Term } from '@/domain/ntnu'
 import { Duration, Instant } from '@/domain/time'
 import { UserUid, type Role } from '@/domain/user'
 import { memoryEventRepository } from '@/server/adapters/memory/eventRepository'
+import { memoryUserDirectory } from '@/server/adapters/memory/userDirectory'
 
 const opens = Instant.parse('2026-08-01T10:00:00.000Z')
 const open = Instant.parse('2026-08-05T10:00:00.000Z')
@@ -71,6 +72,12 @@ const talk: StoredEvent = {
   roster: emptyRoster(),
 }
 
+/** The use cases' dependencies, with an account for every subject above */
+const deps = (seed: StoredEvent[]) => ({
+  events: memoryEventRepository(seed),
+  users: memoryUserDirectory([ada.uid, bo.uid, admin.uid, host.uid]),
+})
+
 const request = (
   who: Subject,
   overrides: Partial<RegistrationRequest> = {},
@@ -84,48 +91,59 @@ const request = (
 
 describe('registerForEvent', () => {
   it('registers while there is room, then queues', async () => {
-    const events = memoryEventRepository([stored({ limit: 1 })])
+    const ports = deps([stored({ limit: 1 })])
 
-    expect(await registerForEvent(events, request(ada))).toEqual({
+    expect(await registerForEvent(ports, request(ada))).toEqual({
       kind: 'registered',
     })
-    expect(await registerForEvent(events, request(bo))).toEqual({
+    expect(await registerForEvent(ports, request(bo))).toEqual({
       kind: 'queued',
       position: 1,
     })
   })
 
   it('reports a missing event, and one without sign-up', async () => {
-    const events = memoryEventRepository([talk])
+    const ports = deps([talk])
 
-    expect(await registerForEvent(events, request(ada))).toEqual({
+    expect(await registerForEvent(ports, request(ada))).toEqual({
       kind: 'event-not-found',
     })
     expect(
-      await registerForEvent(events, request(ada, { event: TALK })),
+      await registerForEvent(ports, request(ada, { event: TALK })),
     ).toEqual({ kind: 'no-registration' })
   })
 
   it('lets only an admin register someone else', async () => {
-    const events = memoryEventRepository([stored()])
+    const ports = deps([stored()])
 
     expect(
-      await registerForEvent(events, request(ada, { user: bo.uid })),
+      await registerForEvent(ports, request(ada, { user: bo.uid })),
     ).toEqual({ kind: 'not-own' })
     expect(
-      await registerForEvent(events, request(admin, { user: bo.uid })),
+      await registerForEvent(ports, request(admin, { user: bo.uid })),
     ).toEqual({ kind: 'registered' })
   })
 
-  it('refuses outside the registration window, except for an admin', async () => {
-    const events = memoryEventRepository([stored()])
+  it('refuses an admin naming a user who has no account', async () => {
+    const ports = deps([stored()])
 
     expect(
-      await registerForEvent(events, request(ada, { now: closed })),
+      await registerForEvent(
+        ports,
+        request(admin, { user: UserUid.parse('nobody') }),
+      ),
+    ).toEqual({ kind: 'user-not-found' })
+  })
+
+  it('refuses outside the registration window, except for an admin', async () => {
+    const ports = deps([stored()])
+
+    expect(
+      await registerForEvent(ports, request(ada, { now: closed })),
     ).toEqual({ kind: 'closed' })
     expect(
       await registerForEvent(
-        events,
+        ports,
         request(admin, { user: ada.uid, now: closed }),
       ),
     ).toEqual({ kind: 'registered' })
@@ -133,36 +151,36 @@ describe('registerForEvent', () => {
 
   it('says which part of the rule a student does not meet', async () => {
     const rule: EligibilityRule = { kind: 'programme', programmes: ['MTEL'] }
-    const events = memoryEventRepository([stored({ eligibility: rule })])
+    const ports = deps([stored({ eligibility: rule })])
 
-    expect(await registerForEvent(events, request(bo))).toEqual({
+    expect(await registerForEvent(ports, request(bo))).toEqual({
       kind: 'not-eligible',
       verdict: { ok: false, reason: 'unmet', unmet: rule },
     })
-    expect(await registerForEvent(events, request(ada))).toEqual({
+    expect(await registerForEvent(ports, request(ada))).toEqual({
       kind: 'registered',
     })
   })
 
   it('refuses a company user', async () => {
-    const events = memoryEventRepository([stored()])
+    const ports = deps([stored()])
 
-    expect(await registerForEvent(events, request(host))).toEqual({
+    expect(await registerForEvent(ports, request(host))).toEqual({
       kind: 'forbidden',
     })
   })
 
   it('leaves the roster unchanged when it refuses', async () => {
-    const events = memoryEventRepository([stored()])
-    await registerForEvent(events, request(ada, { now: closed }))
+    const ports = deps([stored()])
+    await registerForEvent(ports, request(ada, { now: closed }))
 
-    expect((await events.find(WORKSHOP))?.roster).toEqual(emptyRoster())
+    expect((await ports.events.find(WORKSHOP))?.roster).toEqual(emptyRoster())
   })
 })
 
 describe('withdrawFromEvent', () => {
   const full = () =>
-    memoryEventRepository([
+    deps([
       stored({
         limit: 1,
         roster: {
@@ -175,23 +193,23 @@ describe('withdrawFromEvent', () => {
     ])
 
   it('frees the spot for the first in the queue', async () => {
-    const events = full()
+    const ports = full()
 
-    expect(await withdrawFromEvent(events, request(ada))).toEqual({
+    expect(await withdrawFromEvent(ports, request(ada))).toEqual({
       kind: 'withdrawn',
       promoted: bo.uid,
     })
   })
 
   it('refuses outside the registration window, except for an admin', async () => {
-    const events = full()
+    const ports = full()
 
     expect(
-      await withdrawFromEvent(events, request(ada, { now: closed })),
+      await withdrawFromEvent(ports, request(ada, { now: closed })),
     ).toEqual({ kind: 'closed' })
     expect(
       await withdrawFromEvent(
-        events,
+        ports,
         request(admin, { user: ada.uid, now: closed }),
       ),
     ).toEqual({ kind: 'withdrawn', promoted: bo.uid })
@@ -204,9 +222,9 @@ describe('withdrawFromEvent', () => {
   })
 
   it('reports a user who holds no place', async () => {
-    const events = memoryEventRepository([stored()])
+    const ports = deps([stored()])
 
-    expect(await withdrawFromEvent(events, request(ada))).toEqual({
+    expect(await withdrawFromEvent(ports, request(ada))).toEqual({
       kind: 'not-registered',
     })
   })
