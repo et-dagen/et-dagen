@@ -2,6 +2,7 @@ import type {
   EventRepository,
   Missing,
 } from '@/application/events/eventRepository'
+import type { UserDirectory } from '@/application/users/userDirectory'
 import type { Verdict } from '@/domain/authorization/eligibility'
 import { hasPermission } from '@/domain/authorization/hasPermission'
 import type { Subject } from '@/domain/authorization/subject'
@@ -32,7 +33,12 @@ export type Denied =
   | { kind: 'not-eligible'; verdict: Exclude<Verdict, { ok: true }> }
   | { kind: 'forbidden' }
 
-export type RegisterResult = RegisterOutcome | Missing | Denied
+export type RegisterResult =
+  | RegisterOutcome
+  | Missing
+  | Denied
+  /** An admin named a user who has no account */
+  | { kind: 'user-not-found' }
 export type WithdrawResult = WithdrawOutcome | Missing | Denied
 
 /**
@@ -44,7 +50,7 @@ export type WithdrawResult = WithdrawOutcome | Missing | Denied
  * repository operation, so two people taking the last spot end with one attendant and one queued.
  */
 export async function registerForEvent(
-  events: EventRepository,
+  { events, users }: { events: EventRepository; users: UserDirectory },
   request: RegistrationRequest,
 ): Promise<RegisterResult> {
   const registration = await registrationOf(events, request.event)
@@ -58,6 +64,12 @@ export async function registerForEvent(
   ) {
     return denial(request, registration, true)
   }
+  if (
+    request.user !== request.subject.uid &&
+    !(await users.exists(request.user))
+  ) {
+    return { kind: 'user-not-found' }
+  }
   return events.registerOrQueue(request.event, request.user, request.now)
 }
 
@@ -65,7 +77,7 @@ export async function registerForEvent(
  * Take a user off an event or its queue, moving the first in the queue into a freed spot
  */
 export async function withdrawFromEvent(
-  events: EventRepository,
+  { events }: { events: EventRepository },
   request: RegistrationRequest,
 ): Promise<WithdrawResult> {
   const registration = await registrationOf(events, request.event)
