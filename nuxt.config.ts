@@ -75,6 +75,11 @@ export default defineNuxtConfig({
   nitro: {
     experimental: {
       openAPI: true,
+      tasks: true,
+    },
+    // Times are the server's, UTC in production
+    scheduledTasks: {
+      '0 3 * * *': ['users:retention'],
     },
     openAPI: {
       meta: {
