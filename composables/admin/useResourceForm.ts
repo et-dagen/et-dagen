@@ -28,6 +28,9 @@ export function useResourceForm<S extends ZodTypeAny>(options: Options<S>) {
     validationSchema: toTypedSchema(options.schema),
     // TypeScript cannot resolve vee-validate's deep-partial type for a generic schema
     initialValues: options.initial as never,
+    // a field hidden by a choice (role, sign-up) keeps its value if the choice is undone;
+    // the contract drops what the final choice does not use
+    keepValuesOnUnmount: true,
   })
   const saving = ref(false)
   let saved = false

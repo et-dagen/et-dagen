@@ -592,6 +592,28 @@
         "name": "Rekkefølge",
         "descending": "Synkende",
         "ascending": "Stigende"
+      },
+      "form": {
+        "edit_title": "Rediger bruker",
+        "name": "Navn",
+        "email": "E-post",
+        "email_hint": "Personen logger inn med denne adressen, og den kan ikke endres her.",
+        "role": "Rolle",
+        "role_hint": {
+          "admin": "Har tilgang til hele adminpanelet.",
+          "company": "Logger inn på vegne av en bedrift.",
+          "basic": "Student som kan melde seg på arrangementer."
+        },
+        "company": "Bedrift",
+        "programme": "Studieprogram",
+        "optional": "(valgfritt)",
+        "choose_programme": "Velg studieprogram",
+        "year": "Årstrinn",
+        "diet_hint": "Brukes når arrangementer har servering.",
+        "diet_other": "Annet (skill med komma)",
+        "save": "Lagre endringer",
+        "updated": "Endringene er lagret",
+        "missing": "Fant ikke brukeren."
       }
     },
     "shell": {

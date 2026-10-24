@@ -27,6 +27,8 @@
   const COLUMNS = ['name', 'role', 'email', 'company'] as const
 
   const localePath = useLocalePath()
+  // the row saved last stays lit until the admin moves on
+  const changed = computed(() => String(useRoute().query.changed ?? ''))
   const { t } = useI18n()
 
   const { data: users, refresh } = await useFetch<User[]>(
@@ -165,7 +167,8 @@
             v-for="user in shown.rows"
             :key="user.uid"
             :data-state="selection.has(user) ? 'selected' : undefined"
-            class="tw:data-[state=selected]:bg-brand/8"
+            :data-changed="user.uid === changed || undefined"
+            class="tw:data-[state=selected]:bg-brand/8 tw:data-changed:bg-signal/15 tw:data-changed:shadow-[inset_4px_0_0_var(--signal)]"
           >
             <TableCell class="tw:pl-4">
               <SelectBox
@@ -176,7 +179,7 @@
             </TableCell>
             <TableCell class="tw:font-semibold">
               <NuxtLink
-                :to="localePath(`/user/edit/${user.uid}`)"
+                :to="localePath(`/admin/users/${user.uid}`)"
                 class="tw:underline tw:decoration-border tw:decoration-1 tw:underline-offset-4 tw:hover:decoration-current"
               >
                 {{ nameOf(user) }}
@@ -202,7 +205,8 @@
         <li
           v-for="user in shown.rows"
           :key="user.uid"
-          class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3"
+          :data-changed="user.uid === changed || undefined"
+          class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3 tw:data-changed:bg-signal/15 tw:data-changed:shadow-[inset_4px_0_0_var(--signal)]"
         >
           <SelectBox
             :checked="selection.has(user)"
@@ -212,7 +216,7 @@
           />
           <div class="tw:min-w-0 tw:flex-1">
             <NuxtLink
-              :to="localePath(`/user/edit/${user.uid}`)"
+              :to="localePath(`/admin/users/${user.uid}`)"
               class="tw:block tw:truncate tw:font-semibold tw:underline tw:decoration-border tw:underline-offset-4"
             >
               {{ nameOf(user) }}
