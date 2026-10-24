@@ -8,6 +8,7 @@ import {
   createUser,
   read,
   resetEmulators,
+  seed,
 } from '../support/emulators'
 
 const student = { userType: 'student', studyProgram: 'MTEL', currentYear: 3 }
@@ -44,6 +45,27 @@ describe('DELETE /api/v1/user', () => {
     expect(await read(`users/${uid}`)).toBeNull()
     expect(await accountExists(uid)).toBe(false)
     expect(tokenCookie(response)).toMatch(/^_token=;.*Max-Age=0/i)
+  })
+
+  it('frees their event place for the first in the queue', async () => {
+    const { uid, token } = await createUser(student)
+    const other = await createUser(student)
+    await seed('events/workshop', {
+      title: 'Workshop',
+      capacity: 1,
+      date: { start: '2999-01-01T18:00' },
+      attendants: { [uid]: { attended: false, registeredAt: 1 } },
+      queue: { 1700000000000: other.uid },
+    })
+
+    await deleteUsers({}, token)
+
+    const event = (await read('events/workshop')) as {
+      attendants: Record<string, unknown>
+      queue?: unknown
+    }
+    expect(Object.keys(event.attendants)).toEqual([other.uid])
+    expect(event.queue).toBeUndefined()
   })
 
   it('ignores other uids from a non-admin and deletes only the caller', async () => {
