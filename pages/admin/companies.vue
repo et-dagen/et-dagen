@@ -1,500 +1,455 @@
 <script setup lang="ts">
-  import { companyTypes as companyTypeNames } from '~/config/app.config'
-  import type { Company } from '~/models/Company'
+  import {
+    Check,
+    Copy,
+    ExternalLink,
+    KeyRound,
+    MoreHorizontal,
+    Pencil,
+    Plus,
+    Trash2,
+  } from '@lucide/vue'
+  import DeleteDialog from '@/components/admin/DeleteDialog.vue'
+  import FilterChips from '@/components/admin/FilterChips.vue'
+  import Pager from '@/components/admin/Pager.vue'
+  import SearchField from '@/components/admin/SearchField.vue'
+  import SelectBox from '@/components/admin/SelectBox.vue'
+  import SelectionBar from '@/components/admin/SelectionBar.vue'
+  import SortButton from '@/components/admin/SortButton.vue'
+  import { Badge } from '@/components/ui/badge'
+  import { Button } from '@/components/ui/button'
+  import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+  } from '@/components/ui/dropdown-menu'
+  import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+  } from '@/components/ui/table'
+  import { useSelection } from '@/composables/admin/useSelection'
+  import { useSort } from '@/composables/admin/useSort'
+  import { alertError } from '@/composables/useAlerts'
+  import {
+    codesByCompany,
+    siteLabel,
+    type CodeRecord,
+  } from '@/lib/admin/companies'
+  import { pageOf, search, sortBy } from '@/lib/admin/listView'
+
+  const TYPES = ['main-partner', 'partner', 'sponsor', 'old'] as const
+  type Type = (typeof TYPES)[number]
+
+  interface Row {
+    uid: string
+    name?: string
+    type?: Type
+    logo?: string | null
+    webpage?: string | null
+    cvAccess?: boolean
+  }
+  type Show = 'active' | Type
+  const PAGE_SIZE = 25
+  const COLUMNS = ['name', 'type', 'code', 'cvAccess', 'webpage'] as const
 
   const localePath = useLocalePath()
+  const { t } = useI18n()
+  const { copy, copied, text: copiedText } = useClipboard()
 
-  // get companies and companies from the API
-  const { data: companies, refresh } = await useFetch('/api/v1/company')
-  const { data: codes, refresh: refreshCodes } = await useFetch('/api/v1/code')
+  const { data: companies, refresh } =
+    await useFetch<Record<string, Omit<Row, 'uid'>>>('/api/v1/company')
+  const { data: codes, refresh: refreshCodes } =
+    await useFetch<Record<string, CodeRecord>>('/api/v1/code')
 
-  // allow copying the company id to the clipboard
-  const { text, copy, copied } = useClipboard()
+  const rows = computed<Row[]>(() =>
+    Object.entries(companies.value ?? {}).map(([uid, company]) => ({
+      uid,
+      ...company,
+    })),
+  )
+  const codesOf = computed(() => codesByCompany(codes.value))
+  const firstCode = (row: Row) => codesOf.value.get(row.uid)?.[0]
+  // v1 treats a company without a type as a sponsor
+  const typeOf = (row: Row): Type => row.type ?? 'sponsor'
+  const typeKey = (type: Type) => type.replace('-', '_')
 
-  // process companies
-  const companiesWithId = computed(() =>
-    embedKeyIntoObjectValues(companies.value),
+  const query = ref('')
+  const show = ref<Show>('active')
+  const {
+    sort,
+    toggle: toggleSort,
+    directionOf,
+    ariaSort,
+  } = useSort<(typeof COLUMNS)[number]>('name')
+  const page = ref(1)
+
+  const inShow = (row: Row, value: Show) =>
+    value === 'active' ? typeOf(row) !== 'old' : typeOf(row) === value
+  const showOptions = computed(() =>
+    (['active', ...TYPES] as const).map((value) => ({
+      value,
+      label: t(`admin.companies.filter.${typeKey(value as Type)}`),
+      count: rows.value.filter((row) => inShow(row, value)).length,
+    })),
   )
 
-  // check if company has a code
-  const hadCompanyCodes = computed(() => {
-    return (companyUID: string) => {
-      if (!codes.value) return false
-      return Object.values(codes.value)?.some(
-        (code: any) => code?.companyUID === companyUID,
-      )
-    }
-  })
+  const sortValue = {
+    name: (row: Row) => row.name,
+    type: (row: Row) => String(TYPES.indexOf(typeOf(row))),
+    code: (row: Row) => firstCode(row),
+    cvAccess: (row: Row) => (row.cvAccess ? '0' : '1'),
+    webpage: (row: Row) => siteLabel(row.webpage),
+  }
 
-  // get first code of company
-  const companyCode = computed(() => {
-    return (companyUID: string) => {
-      if (!codes.value) return []
-      return Object.values(codes.value)
-
-        ?.filter((code: any) => code?.companyUID === companyUID)
-
-        .map((code: any) => code?.code)[0]
-    }
-  })
-
-  // filter and sorting options
-  const companyTypes = ref([0, 1, 2])
-  const filterOrder = ref('ascending')
-  const filterType = ref('name')
-
-  // selected companies
-  const selected = ref([])
-
-  // list pagination options
-  const currentPage = ref(1)
-  const pageSizes = [10, 25, 100]
-  const pageSize = ref(pageSizes[0])
-
-  // dialog and loading used when deleting companies
-  const loading = ref()
-  const dialog = ref(false)
-
-  // reset current page and company selection
-  watch(currentPage, () => (selected.value = []))
-  watch(pageSize, () => (currentPage.value = 1))
-
-  // filter and sort companies based on options selected by company
-  const filteredCompanies = computed(() => {
-    // map the selected company types to their names
-    // eslint-disable-next-line
-    const selectedCompanyTypes = companyTypeNames.filter((companyType, index) =>
-      companyTypes.value.includes(index),
+  const visible = computed(() => {
+    const found = search(
+      rows.value.filter((row) => inShow(row, show.value)),
+      query.value,
+      (row) => [
+        row.name,
+        siteLabel(row.webpage),
+        ...(codesOf.value.get(row.uid) ?? []),
+      ],
     )
-
-    // filter out companies with the selectd company types
-    const filterByCompanyType = companiesWithId.value?.filter((company) =>
-      selectedCompanyTypes.includes(company.type ?? 'sponsor'),
-    )
-
-    // reset company selection when filters change
-    selected.value = []
-
-    // sort the filtered companies
-    return (
-      filterByCompanyType?.sort((a, b) => {
-        /* @ts-ignore */
-        const order = a[filterType.value] < b[filterType.value] ? -1 : 1
-        return filterOrder.value === 'ascending' ? order : order * -1
-      }) ?? []
-    )
+    return sortBy(found, sortValue[sort.value.column], sort.value.direction)
   })
+  const shown = computed(() => pageOf(visible.value, page.value, PAGE_SIZE))
+  watch([query, show, sort], () => (page.value = 1))
 
-  // Split companies into pages
-  const pages = computed(() =>
-    filteredCompanies.value.reduce((resultArray, item, index) => {
-      const chunkIndex = Math.floor(index / pageSize.value)
-      if (!resultArray[chunkIndex]) {
-        resultArray[chunkIndex] = []
-      }
-      resultArray[chunkIndex].push(item)
-      return resultArray
-    }, [] as Company[][]),
+  const selection = useSelection(
+    computed(() => shown.value.rows),
+    (row) => row.uid,
   )
 
-  // Delete seleceted companies
-  const deleteCompanies = async () => {
-    loading.value = true
-    const queries = []
+  const typeBadge: Record<Type, string> = {
+    'main-partner':
+      'tw:border-transparent tw:bg-brand tw:text-brand-foreground',
+    partner: 'tw:border-transparent tw:bg-plate tw:text-plate-foreground',
+    sponsor:
+      'tw:border-transparent tw:bg-secondary tw:text-secondary-foreground',
+    old: 'tw:text-muted-foreground',
+  }
 
-    const selectedCompanies = pages.value[currentPage.value - 1].map(
-      (company, index) => (selected.value[index] ? company.uid : undefined),
-    )
-
-    for (const uid of selectedCompanies)
-      !uid ||
-        queries.push(
-          $fetch('/api/v1/company', {
-            method: 'DELETE',
-            body: {
-              companyUID: uid,
-            },
-          }),
-        )
+  const creating = ref<string | null>(null)
+  const createCode = async (row: Row) => {
+    creating.value = row.uid
     try {
-      await Promise.all(queries)
+      await $fetch('/api/v1/code', {
+        method: 'POST',
+        query: { companyUID: row.uid },
+      })
+      await refreshCodes()
+      useAlertStore().alert(
+        t('admin.companies.code_created', { name: row.name }),
+        'success',
+      )
     } catch (error) {
-      // TODO: handle company deletion error with alerts
+      alertError(error)
+    } finally {
+      creating.value = null
     }
-
-    dialog.value = false
-    loading.value = false
-    currentPage.value = 1
-
-    // refresh company data
-    refresh()
   }
 
-  const createNewCode = async (companyUID: string) => {
-    await $fetch('/api/v1/code', {
-      method: 'POST',
-      query: {
-        companyUID,
-      },
-    })
-    refreshCodes()
+  const toDelete = ref<Row[]>([])
+  const confirming = ref(false)
+  const deleting = ref(false)
+  const askDelete = (targets: Row[]) => {
+    toDelete.value = targets
+    confirming.value = true
   }
-
-  const formatCompanyType = (companyType: string) => {
-    return companyType.replace('-', '_')
+  const deleteCompanies = async () => {
+    deleting.value = true
+    const results = await Promise.allSettled(
+      toDelete.value.map((row) =>
+        $fetch('/api/v1/company', {
+          method: 'DELETE',
+          body: { companyUID: row.uid },
+        }),
+      ),
+    )
+    const failed = results.find((r) => r.status === 'rejected')
+    const done = results.filter((r) => r.status === 'fulfilled').length
+    if (done > 0) {
+      useAlertStore().alert(t('admin.companies.delete.done', done), 'success')
+    }
+    if (failed) alertError((failed as PromiseRejectedResult).reason)
+    selection.clear()
+    confirming.value = false
+    deleting.value = false
+    await refresh()
   }
 </script>
 
 <template>
-  <div>
-    <div class="d-flex flex-wrap filters align-end">
-      <!-- Company types -->
-      <div>
-        <p>{{ $t('admin.company.attributes.type.name') }}</p>
-        <VChipGroup v-model="companyTypes" multiple mandatory>
-          <VChip
-            v-for="(companyType, index) in companyTypeNames"
-            :key="index"
-            :class="`bg-neutral-lighten-4 ${
-              companyTypes.includes(index) ? 'v-chip--selected' : ''
-            }`"
-          >
-            {{
-              $t(
-                `admin.company.attributes.type.${formatCompanyType(
-                  companyType,
-                )}`,
-              )
-            }}
-          </VChip>
-        </VChipGroup>
-      </div>
-
-      <!-- Filter type -->
-      <div>
-        <p>{{ $t('admin.company.filtertypes.name') }}</p>
-        <VChipGroup v-model="filterType" mandatory>
-          <VChip
-            :class="`bg-neutral-lighten-4 ${
-              filterType === 'name' ? 'v-chip--selected' : ''
-            }`"
-            value="name"
-          >
-            {{ $t('admin.company.filtertypes.companyname') }}
-          </VChip>
-          <VChip
-            :class="`bg-neutral-lighten-4 ${
-              filterType === 'updated' ? 'v-chip--selected' : ''
-            }`"
-            value="updated"
-          >
-            {{ $t('admin.company.filtertypes.updated') }}
-          </VChip>
-        </VChipGroup>
-      </div>
-
-      <!-- filer order -->
-      <div>
-        <p>{{ $t('admin.company.filterorder.name') }}</p>
-        <VChipGroup v-model="filterOrder" mandatory>
-          <VChip
-            :class="`bg-neutral-lighten-4 ${
-              filterOrder === 'descending' ? 'v-chip--selected' : ''
-            }`"
-            value="descending"
-          >
-            {{ $t('admin.company.filterorder.descending') }}
-          </VChip>
-          <VChip
-            :class="`bg-neutral-lighten-4 ${
-              filterOrder === 'ascending' ? 'v-chip--selected' : ''
-            }`"
-            value="ascending"
-          >
-            {{ $t('admin.company.filterorder.ascending') }}
-          </VChip>
-        </VChipGroup>
-      </div>
-
-      <VSpacer />
-
-      <div class="d-flex flex-wrap" style="gap: 0.5rem">
-        <!-- select all button -->
-        <VBtn
-          color="primary"
-          size="large"
-          rounded="lg"
-          flat
-          @click="
-            () => {
-              /* @ts-ignore */
-              filteredCompanies.forEach(
-                (company, index) => (selected[index] = true),
-              )
-            }
-          "
-        >
-          {{ $t('admin.company.selectall') }}
-        </VBtn>
-        <!-- TODO: Add deselect all button which renders instead if all entries on page are selected -->
-
-        <!-- delete companies modal -->
-        <VDialog v-model="dialog" width="500">
-          <template #activator="{ props }">
-            <VBtn
-              v-bind="props"
-              :disabled="!selected.find((val) => val)"
-              color="primary"
-              size="large"
-              rounded="lg"
-              flat
-            >
-              {{ $t('admin.company.delete.selected') }}
-            </VBtn>
-          </template>
-
-          <template #default="{ isActive }">
-            <VCard rounded="lg" class="text-center pa-6">
-              <h6>{{ $t('admin.company.delete.confirmtext') }}</h6>
-
-              <div
-                class="d-flex justify-center flex-wrap mt-6"
-                style="gap: 1.5rem"
-              >
-                <VBtn
-                  size="large"
-                  variant="outlined"
-                  color="primary"
-                  :loading="loading"
-                  @click="deleteCompanies"
-                >
-                  {{ $t('admin.company.delete.confirm') }}
-                </VBtn>
-                <VBtn
-                  size="large"
-                  flat
-                  color="success"
-                  @click="isActive.value = false"
-                >
-                  {{ $t('admin.company.delete.abort') }}
-                </VBtn>
-              </div>
-            </VCard>
-          </template>
-        </VDialog>
-
-        <!-- Create new company -->
-        <VBtn
-          color="success"
-          size="large"
-          rounded="lg"
-          class="add_company"
-          flat
-          icon="mdi-plus"
-          @click="navigateTo(localePath('/company/edit'))"
-        >
-        </VBtn>
-      </div>
-    </div>
-
-    <VDivider class="mb-5 mt-2" />
-
-    <!-- Pagination -->
-    <div class="d-flex align-center justify-space-between flex-wrap">
-      <VPagination
-        v-model="currentPage"
-        :ripple="false"
-        :length="pages.length"
-        :total-visible="4"
-        density="comfortable"
+  <div class="tw:flex tw:flex-col tw:gap-4">
+    <div class="tw:flex tw:flex-col tw:gap-3 tw:lg:flex-row tw:lg:items-center">
+      <SearchField v-model="query" :label="$t('admin.companies.search')" />
+      <FilterChips
+        v-model="show"
+        :label="$t('admin.companies.columns.type')"
+        :options="showOptions"
       />
-
-      <div class="d-flex align-center">
-        <p class="text-subtitle-1 mr-4 font-weight-medium">
-          {{ $t('admin.company.pagesize') }}
-        </p>
-        <VSelect
-          v-model="pageSize"
-          density="compact"
-          variant="outlined"
-          :items="pageSizes"
-          :hide-details="true"
-        />
-      </div>
+      <Button as-child class="tw:h-10 tw:lg:ml-auto">
+        <NuxtLink :to="localePath('/company/edit')">
+          <Plus aria-hidden="true" />
+          {{ $t('admin.companies.create') }}
+        </NuxtLink>
+      </Button>
     </div>
 
-    <!-- company table -->
-    <VTable hover style="overflow: hidden" class="mb-5">
-      <thead>
-        <tr>
-          <th>{{ $t('admin.company.attributes.select') }}</th>
-          <th>{{ $t('admin.company.attributes.name') }}</th>
-          <th>{{ $t('admin.company.attributes.type.name') }}</th>
-          <th>{{ $t('admin.company.attributes.logo') }}</th>
-          <th>{{ $t('admin.company.attributes.webpage') }}</th>
-          <th>{{ $t('admin.company.attributes.cvAccess.name') }}</th>
-          <th>{{ $t('admin.company.attributes.code') }}</th>
-          <th class="text-center">UID</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(company, index) in pages[currentPage - 1]" :key="index">
-          <!-- select company -->
-          <td>
-            <VCheckbox v-model="selected[index]" :hide-details="true" />
-          </td>
+    <SelectionBar
+      :count="selection.selected.value.size"
+      @clear="selection.clear"
+      @delete="askDelete(rows.filter((row) => selection.has(row)))"
+    />
 
-          <td>{{ company.name }}</td>
-
-          <!-- company type -->
-          <td>
-            {{
-              $t(
-                `admin.company.attributes.type.${formatCompanyType(
-                  company.type,
-                )}`,
-              )
-            }}
-          </td>
-
-          <!-- company logo -->
-          <td v-if="company.logo" class="truncate">
-            {{ company.logo.split('/').pop() }}
-          </td>
-          <td v-else>-</td>
-
-          <!-- company webpage -->
-          <td class="truncate">
-            {{ company.webpage.replace('https://', '') }}
-          </td>
-
-          <!-- company cv access -->
-          <td class="truncate">
-            {{
-              $t(
-                `admin.company.attributes.cvAccess.${company.cvAccess ? 'yes' : 'no'}`,
-              )
-            }}
-          </td>
-
-          <!-- company code -->
-          <td v-if="hadCompanyCodes(company.uid)">
-            <!-- copy existing code -->
-            <VTooltip location="top" color="primary">
-              <template #activator="{ props }">
-                <VBtn
-                  v-bind="props"
-                  size="small"
-                  variant="text"
-                  icon="mdi-content-copy"
-                  color="primary"
-                  @click="copy(companyCode(company.uid))"
+    <div class="tw:overflow-hidden tw:rounded-lg tw:border tw:bg-card">
+      <!-- table from lg and up -->
+      <Table class="tw:hidden tw:lg:table">
+        <TableHeader>
+          <TableRow class="tw:hover:bg-transparent">
+            <TableHead class="tw:w-12 tw:pl-4">
+              <SelectBox
+                :checked="selection.pageState.value"
+                :label="$t('admin.companies.select_page')"
+                @change="selection.togglePage"
+              />
+            </TableHead>
+            <TableHead
+              v-for="column in COLUMNS"
+              :key="column"
+              :aria-sort="ariaSort(column)"
+            >
+              <SortButton
+                :label="$t(`admin.companies.columns.${column}`)"
+                :direction="directionOf(column)"
+                @toggle="toggleSort(column)"
+              />
+            </TableHead>
+            <TableHead class="tw:w-12" />
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow
+            v-for="row in shown.rows"
+            :key="row.uid"
+            :data-state="selection.has(row) ? 'selected' : undefined"
+            class="tw:data-[state=selected]:bg-brand/8"
+          >
+            <TableCell class="tw:pl-4">
+              <SelectBox
+                :checked="selection.has(row)"
+                :label="$t('admin.companies.select_row', { name: row.name })"
+                @change="(on) => selection.toggle(row, on)"
+              />
+            </TableCell>
+            <TableCell class="tw:font-semibold">
+              <span class="tw:flex tw:items-center tw:gap-3">
+                <img
+                  v-if="row.logo"
+                  :src="row.logo"
+                  alt=""
+                  class="tw:size-7 tw:shrink-0 tw:rounded-sm tw:bg-white tw:object-contain"
                 />
-              </template>
-
-              {{
-                copied && text === companyCode(company.uid)
-                  ? $t('admin.company.copiedcode')
-                  : companyCode(company.uid)
-              }}
-            </VTooltip>
-          </td>
-          <td v-else>
-            <!-- create new code -->
-            <VTooltip location="top" color="primary">
-              <template #activator="{ props }">
-                <VBtn
-                  v-bind="props"
-                  size="small"
-                  variant="text"
-                  icon="mdi-plus"
-                  color="primary"
-                  @click="createNewCode(company.uid)"
-                />
-              </template>
-
-              {{ $t('admin.company.createcode') }}
-            </VTooltip>
-          </td>
-
-          <!-- copy company UID -->
-          <td>
-            <VTooltip location="top" color="primary">
-              <template #activator="{ props }">
-                <VBtn
-                  v-bind="props"
-                  size="small"
-                  variant="text"
-                  icon="mdi-content-copy"
-                  color="primary"
-                  @click="copy(company.uid)"
-                />
-              </template>
-
-              {{
-                copied && text === company.uid
-                  ? $t('admin.company.copied')
-                  : company.uid
-              }}
-            </VTooltip>
-          </td>
-
-          <!-- Edit company -->
-          <td>
-            <VTooltip location="top" color="primary">
-              <template #activator="{ props }">
-                <VBtn
-                  v-bind="props"
-                  size="small"
-                  variant="text"
-                  color="primary"
-                  icon="mdi-pencil"
-                  @click="
-                    navigateTo(localePath(`/company/edit/${company.uid}`))
+                <NuxtLink
+                  :to="localePath(`/company/edit/${row.uid}`)"
+                  class="tw:underline tw:decoration-border tw:decoration-1 tw:underline-offset-4 tw:hover:decoration-current"
+                >
+                  {{ row.name }}
+                </NuxtLink>
+              </span>
+            </TableCell>
+            <TableCell>
+              <Badge class="tw:rounded-[4px]" :class="typeBadge[typeOf(row)]">
+                {{ $t(`admin.companies.type.${typeKey(typeOf(row))}`) }}
+              </Badge>
+            </TableCell>
+            <TableCell>
+              <span
+                v-if="firstCode(row)"
+                class="tw:inline-flex tw:items-center tw:gap-1"
+              >
+                <code
+                  class="tw:rounded-[3px] tw:bg-secondary tw:px-1.5 tw:py-0.5 tw:font-mono tw:text-sm"
+                >
+                  {{ firstCode(row) }}
+                </code>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  :aria-label="
+                    $t('admin.companies.copy_code', { code: firstCode(row) })
                   "
-                />
-              </template>
+                  @click="copy(firstCode(row)!)"
+                >
+                  <Check
+                    v-if="copied && copiedText === firstCode(row)"
+                    class="tw:text-plate"
+                    aria-hidden="true"
+                  />
+                  <Copy v-else aria-hidden="true" />
+                </Button>
+                <span
+                  v-if="(codesOf.get(row.uid)?.length ?? 0) > 1"
+                  class="tw:text-xs tw:text-muted-foreground"
+                >
+                  +{{ (codesOf.get(row.uid)?.length ?? 0) - 1 }}
+                </span>
+              </span>
+              <Button
+                v-else
+                variant="outline"
+                size="sm"
+                :disabled="creating === row.uid"
+                @click="createCode(row)"
+              >
+                <KeyRound aria-hidden="true" />
+                {{ $t('admin.companies.create_code') }}
+              </Button>
+            </TableCell>
+            <TableCell>
+              {{ $t(`admin.companies.cv.${row.cvAccess ? 'yes' : 'no'}`) }}
+            </TableCell>
+            <TableCell class="tw:text-muted-foreground">
+              <a
+                v-if="row.webpage"
+                :href="row.webpage"
+                target="_blank"
+                rel="noopener"
+                class="tw:inline-flex tw:items-center tw:gap-1 tw:hover:text-foreground"
+              >
+                {{ siteLabel(row.webpage) }}
+                <ExternalLink class="tw:size-3.5" aria-hidden="true" />
+              </a>
+            </TableCell>
+            <TableCell class="tw:pr-4">
+              <DropdownMenu>
+                <DropdownMenuTrigger as-child>
+                  <Button
+                    variant="ghost"
+                    size="icon-sm"
+                    :aria-label="
+                      $t('admin.companies.actions.menu', { name: row.name })
+                    "
+                  >
+                    <MoreHorizontal aria-hidden="true" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem as-child>
+                    <NuxtLink :to="localePath(`/company/edit/${row.uid}`)">
+                      <Pencil aria-hidden="true" />
+                      {{ $t('admin.companies.actions.edit') }}
+                    </NuxtLink>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem @select="createCode(row)">
+                    <KeyRound aria-hidden="true" />
+                    {{ $t('admin.companies.actions.new_code') }}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    variant="destructive"
+                    @select="askDelete([row])"
+                  >
+                    <Trash2 aria-hidden="true" class="tw:text-destructive" />
+                    {{ $t('admin.companies.actions.delete') }}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
 
-              {{ $t('admin.company.edit') }}
-            </VTooltip>
-          </td>
-        </tr>
-      </tbody>
-    </VTable>
+      <!-- list below lg -->
+      <ul class="tw:divide-y tw:lg:hidden">
+        <li
+          v-for="row in shown.rows"
+          :key="row.uid"
+          class="tw:flex tw:items-start tw:gap-3 tw:px-4 tw:py-3"
+        >
+          <SelectBox
+            :checked="selection.has(row)"
+            :label="$t('admin.companies.select_row', { name: row.name })"
+            class="tw:mt-1 tw:size-5"
+            @change="(on) => selection.toggle(row, on)"
+          />
+          <div class="tw:min-w-0 tw:flex-1">
+            <NuxtLink
+              :to="localePath(`/company/edit/${row.uid}`)"
+              class="tw:block tw:truncate tw:font-semibold tw:underline tw:decoration-border tw:underline-offset-4"
+            >
+              {{ row.name }}
+            </NuxtLink>
+            <p class="tw:mt-1 tw:flex tw:items-center tw:gap-2 tw:text-sm">
+              <template v-if="firstCode(row)">
+                <code
+                  class="tw:rounded-[3px] tw:bg-secondary tw:px-1.5 tw:py-0.5 tw:font-mono"
+                >
+                  {{ firstCode(row) }}
+                </code>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  :aria-label="
+                    $t('admin.companies.copy_code', { code: firstCode(row) })
+                  "
+                  @click="copy(firstCode(row)!)"
+                >
+                  <Copy aria-hidden="true" />
+                </Button>
+              </template>
+              <Button
+                v-else
+                variant="outline"
+                size="sm"
+                :disabled="creating === row.uid"
+                @click="createCode(row)"
+              >
+                <KeyRound aria-hidden="true" />
+                {{ $t('admin.companies.create_code') }}
+              </Button>
+            </p>
+          </div>
+          <Badge
+            class="tw:shrink-0 tw:rounded-[4px]"
+            :class="typeBadge[typeOf(row)]"
+          >
+            {{ $t(`admin.companies.type.${typeKey(typeOf(row))}`) }}
+          </Badge>
+        </li>
+      </ul>
+
+      <p
+        v-if="shown.rows.length === 0"
+        class="tw:px-4 tw:py-10 tw:text-center tw:text-muted-foreground"
+      >
+        {{ $t('admin.companies.empty') }}
+      </p>
+
+      <Pager v-model="page" :shown="shown" :total="visible.length" />
+    </div>
+
+    <DeleteDialog
+      v-model:open="confirming"
+      :title="$t('admin.companies.delete.title', toDelete.length)"
+      :description="$t('admin.companies.delete.text', toDelete.length)"
+      :confirm="$t('admin.companies.delete.confirm', toDelete.length)"
+      :items="
+        toDelete.map((row) => ({
+          key: row.uid,
+          label: row.name ?? row.uid,
+          detail: $t(`admin.companies.type.${typeKey(typeOf(row))}`),
+        }))
+      "
+      :loading="deleting"
+      @confirm="deleteCompanies"
+    />
   </div>
 </template>
-
-<style scoped lang="scss">
-  .filters {
-    gap: 0.5rem;
-  }
-
-  .add_company {
-    max-height: 44px !important;
-  }
-
-  td,
-  th {
-    text-wrap: nowrap;
-    min-width: fit-content;
-  }
-
-  .v-chip {
-    transition: 0.25s;
-    user-select: none;
-  }
-  .v-chip--selected {
-    background-color: rgb(var(--v-theme-accent)) !important;
-    color: rgb(var(--v-theme-background)) !important;
-  }
-
-  .truncate {
-    // Add ellipsis to long entries
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 190px;
-  }
-</style>
-models/RegistrationCode

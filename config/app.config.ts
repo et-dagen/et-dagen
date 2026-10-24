@@ -46,7 +46,6 @@ const dietaryFlags = [
   { name: 'lactose', icon: 'mdi-cow' },
 ]
 
-const companyTypes = ['main-partner', 'partner', 'sponsor', 'old']
 const jobTypes = ['full-time', 'graduate', 'summer-internship']
 
-export { routes, dietaryFlags, companyTypes, jobTypes }
+export { routes, dietaryFlags, jobTypes }

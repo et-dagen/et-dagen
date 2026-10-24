@@ -336,7 +336,51 @@
   },
   "admin": {
     "companies": {
-      "name": "Bedrifter"
+      "name": "Bedrifter",
+      "search": "Søk etter bedrift, nettside eller kode",
+      "create": "Ny bedrift",
+      "filter": {
+        "active": "Aktive",
+        "main_partner": "Hovedpartnere",
+        "partner": "Partnere",
+        "sponsor": "Sponsorer",
+        "old": "Tidligere"
+      },
+      "type": {
+        "main_partner": "Hovedpartner",
+        "partner": "Partner",
+        "sponsor": "Sponsor",
+        "old": "Tidligere"
+      },
+      "columns": {
+        "name": "Navn",
+        "type": "Type",
+        "code": "Registreringskode",
+        "cvAccess": "CV-tilgang",
+        "webpage": "Nettside"
+      },
+      "cv": {
+        "yes": "Ja",
+        "no": "Nei"
+      },
+      "copy_code": "Kopier koden {code}",
+      "create_code": "Lag kode",
+      "code_created": "Ny kode laget for {name}",
+      "actions": {
+        "menu": "Valg for {name}",
+        "edit": "Rediger",
+        "new_code": "Lag ny kode",
+        "delete": "Slett"
+      },
+      "select_page": "Velg alle bedriftene på siden",
+      "select_row": "Velg {name}",
+      "empty": "Ingen bedrifter passer søket.",
+      "delete": {
+        "title": "Slette {n} bedrift? | Slette {n} bedrifter?",
+        "text": "Bedriften og logoen slettes for godt. Arrangementer, stillinger og registreringskoder som hører til den, blir liggende. Dette kan ikke angres. | Bedriftene og logoene deres slettes for godt. Arrangementer, stillinger og registreringskoder som hører til dem, blir liggende. Dette kan ikke angres.",
+        "confirm": "Slett {n} bedrift | Slett {n} bedrifter",
+        "done": "{n} bedrift slettet | {n} bedrifter slettet"
+      }
     },
     "events": {
       "name": "Arrangementer",
@@ -381,50 +425,6 @@
         "confirm": "Slett {n} arrangement | Slett {n} arrangementer",
         "done": "{n} arrangement slettet | {n} arrangementer slettet"
       }
-    },
-    "company": {
-      "name": "Bedrifter",
-      "edit": "Rediger",
-      "pagesize": "Bedrifter per side",
-      "filtertypes": {
-        "name": "Filtertype",
-        "updated": "Sist modifisert",
-        "companyname": "Bedriftsnavn"
-      },
-      "filterorder": {
-        "name": "Rekkefølge",
-        "descending": "Synkende",
-        "ascending": "Stigende"
-      },
-      "selectall": "Velg alle",
-      "delete": {
-        "selected": "Slett valgte",
-        "confirmtext": "Er du sikker på at du vil slette de valgte bedriftene?",
-        "confirm": "Ja, slett dem",
-        "abort": "Nei, avbryt"
-      },
-      "attributes": {
-        "select": "Velg",
-        "name": "Navn",
-        "logo": "Logo",
-        "webpage": "Nettside",
-        "type": {
-          "name": "Type",
-          "main_partner": "Hovedpartner",
-          "partner": "Partner",
-          "sponsor": "Sponsor",
-          "old": "Gammel"
-        },
-        "code": "Kode",
-        "cvAccess": {
-          "name": "CV tilgang",
-          "yes": "Ja",
-          "no": "Nei"
-        }
-      },
-      "copied": "UID kopiert!",
-      "copiedcode": "Kode kopiert!",
-      "createcode": "Opprett kode"
     },
     "jobs": {
       "name": "Jobber",
