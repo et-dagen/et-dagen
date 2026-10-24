@@ -459,40 +459,46 @@
     },
     "users": {
       "name": "Users",
-      "pagesize": "Users per page",
-      "usertypes": {
-        "name": "User types",
+      "search": "Search by name, email or company",
+      "filter": {
+        "all": "All",
         "admin": "Admins",
         "company": "Companies",
-        "basic": "Basic"
+        "basic": "Students"
       },
-      "filtertypes": {
-        "name": "Sort by",
-        "updated": "Last modified",
-        "currentyear": "Year"
+      "role": {
+        "admin": "Admin",
+        "company": "Company",
+        "basic": "Student"
+      },
+      "columns": {
+        "name": "Name",
+        "role": "Role",
+        "email": "Email",
+        "company": "Company"
+      },
+      "select_page": "Select all users on this page",
+      "select_row": "Select {name}",
+      "selected": "{n} selected",
+      "clear": "Clear selection",
+      "showing": "Showing {from}–{to} of {total}",
+      "empty": "No users match the search.",
+      "previous": "Previous page",
+      "next": "Next page",
+      "delete": {
+        "button": "Delete",
+        "title": "Delete {n} user? | Delete {n} users?",
+        "text": "Their account, profile, CV and sign-ups are deleted for good. Their places on upcoming events pass to the next in the queue. This cannot be undone.",
+        "more": "and {n} more",
+        "confirm": "Delete {n} user | Delete {n} users",
+        "cancel": "Cancel",
+        "done": "{n} user deleted | {n} users deleted"
       },
       "filterorder": {
         "name": "Order",
         "descending": "Descending",
         "ascending": "Ascending"
-      },
-      "selectall": "Select all",
-      "delete": {
-        "selected": "Delete selected",
-        "confirmtext": "Are you sure you want to delete the selected users?",
-        "confirm": "Yes, delete them",
-        "abort": "No, abort"
-      },
-      "attributes": {
-        "select": "Select",
-        "name": "Name",
-        "usertype": "User type",
-        "email": "Email",
-        "year": "Year",
-        "program": "Study programme",
-        "company": "Company"
-      },
-      "copied": "UID copied!"
+      }
     },
     "shell": {
       "navigation": "Admin panels",

@@ -68,6 +68,18 @@
   color-scheme: dark;
 }
 
+/* dark: in components follows the same choice as the palette, not only the device setting */
+@custom-variant dark {
+  &:where(.et-admin-root[data-admin-theme='dark'] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(.et-admin-root:not([data-admin-theme='light']) *) {
+      @slot;
+    }
+  }
+}
+
 @theme inline {
   --font-sans: 'Overpass Variable', ui-sans-serif, system-ui, sans-serif;
   --color-brand: var(--brand);
@@ -128,6 +140,11 @@
   font-size: inherit;
   font-weight: inherit;
   line-height: inherit;
+}
+
+:where(.et-admin, [data-slot]) :where(table) {
+  border-collapse: collapse;
+  text-indent: 0;
 }
 
 :where(.et-admin, [data-slot]) :where(ul, ol) {
