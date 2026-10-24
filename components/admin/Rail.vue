@@ -1,12 +1,13 @@
 <script setup lang="ts">
   import { ArrowUpLeft } from '@lucide/vue'
   import ThemeToggle from './ThemeToggle.vue'
-  import { ADMIN_PANELS } from '@/lib/admin/panels'
+  import { panelsFor } from '@/lib/admin/panels'
   import { usePanelCounts } from '@/composables/admin/usePanelCounts'
 
   const localePath = useLocalePath()
   const auth = useAuthStore()
-  const counts = await usePanelCounts()
+  const panels = panelsFor(auth.user?.userType)
+  const counts = await usePanelCounts(panels)
 </script>
 
 <template>
@@ -21,14 +22,18 @@
       <span
         class="tw:rounded-[3px] tw:px-1.5 tw:pt-px tw:text-[11px] tw:font-bold tw:tracking-[0.08em] tw:shadow-[inset_0_0_0_1px_rgb(255_255_255/0.55)]"
       >
-        ADMIN
+        {{
+          $t(
+            `admin.shell.tag.${auth.user?.userType === 'company' ? 'company' : 'admin'}`,
+          )
+        }}
       </span>
     </p>
 
     <ul class="tw:flex tw:flex-col tw:gap-2">
-      <li v-for="panel in ADMIN_PANELS" :key="panel.name">
+      <li v-for="panel in panels" :key="panel.name">
         <NuxtLink
-          :to="localePath(`/admin/${panel.name}`)"
+          :to="localePath(panel.route)"
           class="tw:group tw:relative tw:flex tw:h-12 tw:items-center tw:gap-3 tw:rounded-md tw:bg-brand-strong tw:px-4 tw:pt-0.5 tw:text-[15px] tw:font-semibold tw:shadow-[inset_0_0_0_1px_rgb(255_255_255/0.2)] tw:transition-colors tw:hover:bg-brand-strong/70 tw:aria-[current=page]:bg-white tw:aria-[current=page]:shadow-none"
         >
           <component
@@ -38,7 +43,7 @@
             aria-hidden="true"
           />
           <span class="tw:group-aria-[current=page]:text-brand">
-            {{ $t(`admin.${panel.name}.name`) }}
+            {{ $t(panel.label) }}
           </span>
           <span
             v-if="counts[panel.name]?.value != null"

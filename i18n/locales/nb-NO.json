@@ -154,30 +154,29 @@
     "partners": "Partnere 2026",
     "sponsors": "Sponsorer 2026",
     "admin": {
-      "title": "Bedriftsadministrasjon",
-      "dietaryrestrictions": "Allergener og restriksjoner",
-      "attendants": "Påmeldte deltakere",
-      "copiedemail": "Epost kopiert!",
-      "user": {
-        "attributes": {
-          "name": "Navn",
-          "studyprogramme": "Studieprogram",
-          "currentyear": "År",
-          "email": "Epost"
-        }
+      "title": "Bedriftsside",
+      "year": "{n}. år",
+      "events": {
+        "name": "Arrangementer",
+        "empty": "Dere har ingen arrangementer ennå.",
+        "edit": "Rediger",
+        "registration": "Påmelding {from} – {to}",
+        "diets": "Allergier og kosthold",
+        "no_diets": "Ingen påmeldte har meldt inn allergier eller kosthold.",
+        "attendees": "Påmeldte ({n})",
+        "no_attendees": "Ingen påmeldte ennå.",
+        "copy_emails": "Kopier e-postadressene",
+        "copied": "{n} e-postadresse kopiert | {n} e-postadresser kopiert"
       },
-      "cvAccess_restriction": "CV tilgang er begrenset",
-      "year": "Årstrinn",
-      "event": "Arrangement",
-      "resume": "CV",
-      "noResumes": "Ingen CVer matcher søket",
-      "filterTypes": {
-        "name": "Årstrinn"
-      },
-      "filterOrder": {
-        "name": "Rekkefølge",
-        "descending": "Synkende",
-        "ascending": "Stigende"
+      "resumes": {
+        "name": "CV-er",
+        "search": "Søk etter navn eller studieprogram",
+        "year": "Årstrinn",
+        "all": "Alle",
+        "open": "Åpne CV",
+        "empty": "Ingen CV-er passer søket.",
+        "no_access_title": "Ingen tilgang til CV-er",
+        "no_access": "Bedriften deres har ikke tilgang til studentenes CV-er. Ta kontakt med E&T-dagene hvis dere mener dette er feil."
       }
     }
   },
@@ -514,6 +513,10 @@
         "system": "Tema: følger enheten. Bytt til lyst",
         "light": "Tema: lyst. Bytt til mørkt",
         "dark": "Tema: mørkt. Følg enheten"
+      },
+      "tag": {
+        "admin": "ADMIN",
+        "company": "BEDRIFT"
       }
     },
     "list": {
