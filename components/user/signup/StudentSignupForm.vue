@@ -37,8 +37,9 @@
   )
   // a year the new programme does not have would be refused; clear it
   watch(years, (offered) => {
-    if (!offered.includes(Number(form.values.currentYear))) {
-      form.setFieldValue('currentYear', undefined as never)
+    const year = form.values.currentYear
+    if (year && !offered.includes(Number(year))) {
+      form.setFieldValue('currentYear', undefined as never, false)
     }
   })
 
