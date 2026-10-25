@@ -47,9 +47,13 @@
     window.history.replaceState(window.history.state, '', url)
   }
 
+  // a picked day near the end cannot reach the top, so the scroll must not overrule the pick
+  let jumpingUntil = 0
+
   function select(date: string) {
     selected.value = date
     remember(date)
+    jumpingUntil = Date.now() + 1000
     document
       .getElementById(`day-${date}`)
       ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -69,7 +73,7 @@
           .sort(
             (a, b) => a.boundingClientRect.top - b.boundingClientRect.top,
           )[0]
-        if (!visible) return
+        if (!visible || Date.now() < jumpingUntil) return
         selected.value = visible.target.id.replace('day-', '')
         remember(selected.value)
       },
