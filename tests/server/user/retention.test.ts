@@ -74,7 +74,9 @@ describe('eraseInactiveUsers', () => {
   it('erases the inactive users and reports how many', async () => {
     const auth = {
       listUsers: listing([STALE, SIGNED_IN]),
-      deleteUsers: vi.fn(() => Promise.resolve()),
+      deleteUsers: vi.fn(() =>
+        Promise.resolve({ successCount: 1, failureCount: 0, errors: [] }),
+      ),
     }
     const update = vi.fn(() => Promise.resolve())
     const db = {

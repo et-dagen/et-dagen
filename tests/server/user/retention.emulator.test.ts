@@ -64,7 +64,10 @@ describe.skipIf(!host)('retention job on the emulators', () => {
     expect((await db.ref('users').once('value')).val()).toEqual({
       recent: { name: 'R' },
     })
-    const [files] = await bucket.getFiles({ prefix: 'users/' })
-    expect(files.map((file) => file.name)).toEqual(['users/recent/cv.pdf'])
+    // the storage emulator is shared with other tests, so look only at these two users
+    const namesUnder = async (prefix: string) =>
+      (await bucket.getFiles({ prefix }))[0].map((file) => file.name)
+    expect(await namesUnder('users/stale/')).toEqual([])
+    expect(await namesUnder('users/recent/')).toEqual(['users/recent/cv.pdf'])
   })
 })
