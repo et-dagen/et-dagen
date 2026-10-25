@@ -39,6 +39,19 @@ export const ERRORS = {
     status: 400,
     message: 'This kind of file belongs to a different kind of owner',
   },
+  'standmap/forbidden': {
+    status: 403,
+    message: 'Only admins manage stand maps',
+  },
+  'standmap/invalid-day': {
+    status: 400,
+    message: 'A stand map day must be a date written as YYYY-MM-DD',
+  },
+  'standmap/missing-file': {
+    status: 400,
+    message: 'Send the stand map as the multipart part named file',
+  },
+  'standmap/not-found': { status: 404, message: 'This day has no stand map' },
   'job/invalid-listing': {
     status: 400,
     message: "A job's listing must be 'text' or 'link'",

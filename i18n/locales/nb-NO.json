@@ -690,6 +690,30 @@
       "empty": "Ingen har meldt seg på ennå.",
       "no_match": "Ingen påmeldte passer søket.",
       "no_signup": "Arrangementet har ikke påmelding. Slå på påmelding under Detaljer for å ta imot påmeldte."
+    },
+    "standmaps": {
+      "name": "Standkart",
+      "intro": "Ett standkart per messedag. Det vises ved dagens overskrift i programmet, og besøkende kan åpne det i fullskjerm.",
+      "events": "Ingen arrangementer | 1 arrangement | {n} arrangementer",
+      "none": "Ikke lastet opp",
+      "unnamed": "Uten navn",
+      "legacy": "Gammel opplasting",
+      "upload": "Last opp",
+      "replace": "Erstatt",
+      "remove": "Fjern standkartet for {day}",
+      "open": "Åpne standkartet for {day}",
+      "other": "Annen dag",
+      "formats": "PNG, JPEG eller WebP, høyst 10 MB. Et gammelt standkart forsvinner når du erstatter det.",
+      "empty": "Ingen kommende messedager har arrangementer ennå. Velg en dag under for å laste opp et standkart.",
+      "done": {
+        "uploaded": "Standkartet for {day} er lastet opp.",
+        "removed": "Standkartet for {day} er fjernet."
+      },
+      "confirm": {
+        "title": "Fjerne standkartet?",
+        "text": "Programmet viser ikke lenger et standkart for denne dagen.",
+        "action": "Fjern"
+      }
     }
   },
   "edit": {
@@ -929,6 +953,12 @@
     },
     "company": {
       "invalid-webpage": "Nettsiden må være en adresse som starter med http:// eller https://."
+    },
+    "standmap": {
+      "forbidden": "Bare administratorer kan endre standkart.",
+      "invalid-day": "Velg en gyldig dato.",
+      "missing-file": "Velg et bilde å laste opp.",
+      "not-found": "Denne dagen har ikke noe standkart."
     }
   },
   "form": {

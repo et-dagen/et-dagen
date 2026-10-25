@@ -53,9 +53,10 @@ export const FILE_RULES = {
     single: true,
     public: true,
   },
+  // shown inline in the programme, where a PDF cannot be drawn
   standmap: {
     owner: 'fair',
-    types: [...IMAGE, 'application/pdf'],
+    types: IMAGE,
     maxBytes: 10 * MB,
     single: false,
     public: true,
