@@ -14,16 +14,15 @@ defineRouteMeta({
             type: 'http',
             scheme: 'bearer',
             description:
-              'Firebase ID token. server/middleware/auth.ts exchanges it for the _token cookie ' +
-              'on first use.',
+              'Firebase ID token, verified and checked for revocation on every request.',
           },
           cookieAuth: {
             type: 'apiKey',
             in: 'cookie',
-            name: '_token',
+            name: '__session',
             description:
-              'httpOnly cookie set from a bearer token, valid for one day. Interchangeable with ' +
-              'bearerAuth.',
+              'Session cookie from POST /api/v1/session: HttpOnly, SameSite=Strict, two weeks, ' +
+              'checked for revocation on every request.',
           },
         },
       },

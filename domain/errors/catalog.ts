@@ -83,6 +83,18 @@ export const ERRORS = {
     status: 415,
     message: 'The portrait could not be read as a picture',
   },
+  'session/missing-token': {
+    status: 400,
+    message: 'Send the ID token from the sign-in as idToken',
+  },
+  'session/invalid-token': {
+    status: 401,
+    message: 'The ID token is not valid, has expired or was revoked',
+  },
+  'session/stale-sign-in': {
+    status: 401,
+    message: 'A session starts only within five minutes of signing in',
+  },
   'job/invalid-listing': {
     status: 400,
     message: "A job's listing must be 'text' or 'link'",

@@ -1,12 +1,15 @@
 // POST /api/v1/user/signout
-// endpoint for removing the token cookie after the user signs out
+// endpoint for signing out; kept for older clients, DELETE /api/v1/session does the same
+import { clearSessionCookies } from '@/server/auth/cookies'
+import { endSessions } from '@/server/auth/session'
 
 defineRouteMeta({
   openAPI: {
     tags: ['User'],
     summary: 'Sign out user',
     description:
-      'Clears the _token cookie. The Firebase ID token itself remains valid until it expires.',
+      'Deprecated: use DELETE /api/v1/session. Clears the session cookie and revokes the ' +
+      "caller's sessions on every device.",
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],
     // TODO(api-docs): fill in the request/response schemas below.
     // Shapes are sketched from current handler behaviour - verify each
@@ -18,7 +21,7 @@ defineRouteMeta({
   },
 })
 
-export default defineEventHandler((event) => {
+export default defineEventHandler(async (event) => {
   const { user } = event.context
 
   // Set resource context for wide event logging
@@ -37,7 +40,8 @@ export default defineEventHandler((event) => {
     })
   }
 
-  deleteCookie(event, '_token')
+  await endSessions(auth, user.uid)
+  clearSessionCookies(event)
 
   // send response to remove cookie
   sendNoContent(event, 204)

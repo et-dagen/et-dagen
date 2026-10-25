@@ -99,10 +99,15 @@ export const registerUser = async (
   authStore.registeringUser = false
 }
 
+// starts the server session from a sign-in that just happened (#582)
+const startSession = async (idToken: string) =>
+  await $fetch('/api/v1/session', { method: 'POST', body: { idToken } })
+
 // sign in firebase auth user
 export const signinUser = async (email: string, password: string) => {
   const auth = getAuth()
-  await signInWithEmailAndPassword(auth, email, password)
+  const { user } = await signInWithEmailAndPassword(auth, email, password)
+  await startSession(await user.getIdToken())
 
   // navigate to home page
   const localePath = useLocalePath()
@@ -119,14 +124,12 @@ export const signoutUser = async () => {
   // close app drawer
   app.drawer = false
 
+  // end the session on the server first, while its cookie still says who is signing out
+  await $fetch('/api/v1/session', { method: 'DELETE' }).catch(() => {})
+
   // sign out user and navigate to home page
   await navigateTo(localePath('/'))
   await auth.signOut()
-
-  // remove token cookie
-  await $fetch('/api/v1/user/signout', {
-    method: 'POST',
-  })
 
   // set local auth state to null
   authStore.user = null
@@ -162,8 +165,16 @@ export const initUser = () => {
     // user data is already present after server side rendering
     if (authStore.isLoggedIn) return
 
-    // get idToken and fetch user data from database
+    // the browser remembers a sign-in the server has no session for (it ran out or was
+    // revoked); a session starts only right after signing in, so sign in again
     const idToken = await user.getIdToken()
+    try {
+      await startSession(idToken)
+    } catch {
+      await auth.signOut()
+      authStore.user = null
+      return
+    }
 
     try {
       authStore.user = await $fetch<User>('/api/v1/user', {
