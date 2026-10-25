@@ -3,7 +3,6 @@
 import { setPortrait } from '@/application/board/members'
 import { fail } from '@/domain/errors'
 import { Instant } from '@/domain/time'
-import { subjectOf } from '@/server/adapters/rtdb/userRecord'
 import { memberIdOf } from '@/server/board/memberId'
 import { board, fileStorage, files, images } from '@/server/composition'
 
@@ -20,10 +19,10 @@ defineRouteMeta({
 })
 
 export default defineEventHandler(async (event) => {
-  const { user } = event.context
+  const { subject } = event.context
   const id = memberIdOf(event)
   setResourceContext(event, 'board', id, 'upload', 'Upload a portrait')
-  if (!user) throw fail('board/forbidden')
+  if (!subject) throw fail('board/forbidden')
 
   const part = (await readMultipartFormData(event))?.find(
     (field) => field.name === 'file',
@@ -34,7 +33,7 @@ export default defineEventHandler(async (event) => {
   return setPortrait(
     { board, files, storage: fileStorage, images, now: Instant.now },
     {
-      subject: subjectOf(user.uid, user, Instant.now()),
+      subject,
       id,
       name: part.filename,
       contentType: part.type ?? '',

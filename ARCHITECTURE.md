@@ -15,7 +15,7 @@ Browser (Vue pages, Pinia stores, Firebase Auth client)
 Nitro server
    server/middleware/00.wideEvent.ts   one structured log record per request
    server/middleware/auth.ts           verifies the ID token
-   server/middleware/user.ts           loads users/<uid> into event.context.user
+   server/middleware/user.ts           builds event.context.subject, and keeps event.context.user for v1
    server/api/v1/**                    handlers: validate, authorize, read and write Firebase
    ▼
 Firebase Admin SDK: Realtime Database, Cloud Storage, Auth
@@ -90,8 +90,9 @@ can replace the Realtime Database one without changing the use cases.
   attributes eligibility may judge) is checked by `hasPermission` against the permission table in
   `domain/authorization`. Roles bundle permissions; companies hold entitlements; a coordinator gets the
   entitlements of each company they are associated with. Event eligibility rules live in
-  `domain/authorization/eligibility.ts` and explain refusals. The core is in review in #517 and is
-  wired in by #519–#521.
+  `domain/authorization/eligibility.ts` and explain refusals. The core is in review in #517. The
+  subject is built once per request in `server/middleware/user.ts` (#519); #520–#521 wire in the
+  checks.
 
 ## Logging
 
