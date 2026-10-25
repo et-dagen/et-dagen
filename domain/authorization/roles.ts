@@ -61,6 +61,7 @@ export const ROLES = {
     user: { read: true, create: true, update: true, delete: true },
     code: { read: true, create: true, delete: true },
     image: { upload: true },
+    board: { manage: true },
   },
 
   company: {

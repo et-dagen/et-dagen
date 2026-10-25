@@ -714,6 +714,44 @@
         "text": "Programmet viser ikke lenger et standkart for denne dagen.",
         "action": "Fjern"
       }
+    },
+    "board": {
+      "name": "Styret",
+      "intro": "Styret slik kontaktsiden viser det, i denne rekkefølgen.",
+      "create": "Nytt styremedlem",
+      "featured": "Kontakt for bedrifter",
+      "empty": "Ingen styremedlemmer ennå.",
+      "up": "Flytt {name} opp",
+      "down": "Flytt {name} ned",
+      "edit": "Rediger {name}",
+      "remove": "Fjern {name}",
+      "removed": "{name} er fjernet fra styret.",
+      "confirm": {
+        "title": "Fjerne styremedlemmet?",
+        "text": "Personen og bildet forsvinner fra kontaktsiden.",
+        "action": "Fjern"
+      },
+      "form": {
+        "new_title": "Nytt styremedlem",
+        "edit_title": "Rediger styremedlem",
+        "missing": "Fant ikke dette styremedlemmet.",
+        "photo": "Bilde",
+        "photo_choose": "Velg bilde",
+        "photo_replace": "Bytt bilde",
+        "photo_undo": "Angre",
+        "photo_hint": "PNG, JPEG eller WebP, høyst 10 MB. Bildet beskjæres rundt midten til 5:6 og lagres i 800 × 960.",
+        "name": "Navn",
+        "title_nb": "Rolle (norsk)",
+        "title_en": "Rolle (engelsk)",
+        "email": "E-post",
+        "phone": "Telefon",
+        "featured": "Kontakt for bedrifter",
+        "featured_hint": "Vises alene øverst på kontaktsiden. Bare én kan være det.",
+        "create": "Legg til",
+        "save": "Lagre",
+        "created": "Styremedlemmet er lagt til.",
+        "updated": "Endringene er lagret."
+      }
     }
   },
   "edit": {
@@ -959,6 +997,17 @@
       "invalid-day": "Velg en gyldig dato.",
       "missing-file": "Velg et bilde å laste opp.",
       "not-found": "Denne dagen har ikke noe standkart."
+    },
+    "board": {
+      "forbidden": "Bare administratorer kan endre styret.",
+      "not-found": "Fant ikke dette styremedlemmet.",
+      "invalid-name": "Fyll inn et navn.",
+      "invalid-title": "Fyll inn rollen på norsk og engelsk.",
+      "invalid-email": "Fyll inn en gyldig e-postadresse.",
+      "invalid-phone": "Telefonnummeret kan bare ha sifre, mellomrom og + først.",
+      "invalid-order": "Ugyldig plassering.",
+      "missing-file": "Velg et bilde å laste opp.",
+      "unreadable-image": "Bildet kunne ikke leses. Prøv et annet bilde."
     }
   },
   "form": {
@@ -970,7 +1019,9 @@
       "datetime": "Velg dato og klokkeslett.",
       "end_before_start": "Må komme etter starttidspunktet.",
       "signup_after_start": "Påmeldingen må stenge før arrangementet starter.",
-      "number": "Skriv et helt tall større enn null."
+      "number": "Skriv et helt tall større enn null.",
+      "email": "Fyll inn en gyldig e-postadresse.",
+      "phone": "Bare sifre, mellomrom og + først."
     },
     "leave": "Du har endringer som ikke er lagret. Vil du forlate siden?",
     "richtext": {
