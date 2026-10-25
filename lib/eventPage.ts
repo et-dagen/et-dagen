@@ -1,0 +1,173 @@
+import { eventStatus, type EventRow } from '@/lib/admin/events'
+import { instantOf } from '@/lib/admin/time'
+import { Instant, type ISO8601String } from '@/domain/time'
+
+/** What the event page reads from `events/<uid>`; every field may be missing */
+export interface PublicEvent extends EventRow {
+  description?: string
+  registration?:
+    | (EventRow['registration'] & {
+        requirements?: {
+          programmes?: string[] | null
+          years?: number[] | null
+        } | null
+      })
+    | null
+}
+
+/** The parts of the signed-in user the page needs */
+export interface Visitor {
+  uid: string
+  studyProgram?: string | null
+  currentYear?: string | number | null
+}
+
+export type SignupState =
+  /** The event takes no sign-up: everyone may come */
+  | { kind: 'none' }
+  | { kind: 'past' }
+  | { kind: 'not-open'; opensAt: ISO8601String | null }
+  | { kind: 'closed' }
+  | { kind: 'registered' }
+  /** `position` counts from 1 */
+  | { kind: 'queued'; position: number }
+  | { kind: 'sign-in' }
+  | { kind: 'not-eligible' }
+  | { kind: 'open' }
+  /** No places left; signing up joins the queue */
+  | { kind: 'full' }
+
+/** The order v1 moves people up in: the smallest queue key first */
+const queueOrder = (event: PublicEvent) =>
+  Object.entries(event.queue ?? {})
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([, uid]) => uid)
+
+/** Whether a visitor meets an event's programme and year requirements */
+export function meetsRequirements(
+  event: PublicEvent,
+  visitor: Visitor,
+): boolean {
+  const requirements = event.registration?.requirements
+  const programmes = requirements?.programmes ?? []
+  const years = requirements?.years ?? []
+  const programmeOk =
+    programmes.length === 0 || programmes.includes(visitor.studyProgram ?? '')
+  const yearOk =
+    years.length === 0 || years.includes(Number(visitor.currentYear))
+  return programmeOk && yearOk
+}
+
+/**
+ * Where sign-up stands for this visitor, which decides the action the page offers
+ *
+ * @remarks
+ * Having a place or a spot in the queue wins over the window, so someone can always see that they
+ * are signed up, even after sign-up closes.
+ */
+export function signupStateOf(
+  event: PublicEvent,
+  visitor: Visitor | null,
+  now: ISO8601String,
+): SignupState {
+  const status = eventStatus(event, now)
+  if (status.kind === 'past') return { kind: 'past' }
+  if (status.kind === 'no-registration') return { kind: 'none' }
+
+  if (visitor) {
+    if (Object.hasOwn(event.attendants ?? {}, visitor.uid)) {
+      return { kind: 'registered' }
+    }
+    const position = queueOrder(event).indexOf(visitor.uid)
+    if (position >= 0) return { kind: 'queued', position: position + 1 }
+  }
+
+  if (status.kind === 'not-open') {
+    return { kind: 'not-open', opensAt: instantOf(event.registration?.start) }
+  }
+  if (status.kind === 'closed') return { kind: 'closed' }
+  if (!visitor) return { kind: 'sign-in' }
+  if (!meetsRequirements(event, visitor)) return { kind: 'not-eligible' }
+  return status.kind === 'full' ? { kind: 'full' } : { kind: 'open' }
+}
+
+/** Places taken and waiting, the only attendance a visitor sees */
+export const placesOf = (event: PublicEvent) => ({
+  taken: Object.keys(event.attendants ?? {}).length,
+  limit: event.capacity ?? null,
+  waiting: Object.keys(event.queue ?? {}).length,
+})
+
+/** Whether the event happens on the same Oslo calendar day as now */
+export function isEventDay(event: PublicEvent, now: ISO8601String): boolean {
+  const start = instantOf(event.date?.start)
+  if (!start) return false
+  const day = (at: ISO8601String) =>
+    new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Oslo' }).format(
+      Instant.toDate(at),
+    )
+  return day(start) === day(now)
+}
+
+/**
+ * MazeMap's embeddable view of a MazeMap link, or null for any other map link
+ *
+ * @remarks
+ * Only full `use.mazemap.com` links carry the place in their hash; short links redirect, and
+ * Google and Apple maps need keys or offer no embed, so those stay plain links.
+ */
+export function mapEmbedOf(link: string | null | undefined): string | null {
+  if (!link) return null
+  let url: URL
+  try {
+    url = new URL(link)
+  } catch {
+    return null
+  }
+  if (url.protocol !== 'https:' || url.host !== 'use.mazemap.com') return null
+  if (!url.hash || (url.pathname !== '/' && url.pathname !== '')) return null
+  return `https://use.mazemap.com/embed.html${url.hash}`
+}
+
+const icsDate = (at: ISO8601String) =>
+  at.replace(/[-:]/g, '').replace(/\.\d{3}/, '')
+
+const icsText = (text: string) =>
+  text
+    .replace(/\\/g, '\\\\')
+    .replace(/[,;]/g, (c) => `\\${c}`)
+    .replace(/\r?\n/g, '\\n')
+
+/**
+ * The event as a calendar file (iCalendar), for "add to calendar"
+ *
+ * @returns null when the event has no readable start
+ */
+export function calendarFileOf(
+  uid: string,
+  event: PublicEvent,
+  pageUrl: string,
+  now: ISO8601String,
+): string | null {
+  const start = instantOf(event.date?.start)
+  if (!start) return null
+  const end = instantOf(event.date?.end) ?? start
+  const lines = [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//E&T-dagene//Arrangementer//NO',
+    'BEGIN:VEVENT',
+    `UID:${uid}@etdagen.no`,
+    `DTSTAMP:${icsDate(now)}`,
+    `DTSTART:${icsDate(start)}`,
+    `DTEND:${icsDate(end)}`,
+    `SUMMARY:${icsText(event.title ?? '')}`,
+    ...(event.location?.name
+      ? [`LOCATION:${icsText(event.location.name)}`]
+      : []),
+    `URL:${pageUrl}`,
+    'END:VEVENT',
+    'END:VCALENDAR',
+  ]
+  return `${lines.join('\r\n')}\r\n`
+}

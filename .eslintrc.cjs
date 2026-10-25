@@ -37,6 +37,8 @@ module.exports = {
         'components/job/DeadlineNote.vue',
         'components/job/FairEvents.vue',
         'pages/jobs/**',
+        'pages/event/**',
+        'components/event/page/**',
       ],
       rules: {
         'vue/max-len': [

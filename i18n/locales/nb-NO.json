@@ -946,5 +946,77 @@
       "matches": "Treff",
       "none": "Ingen treff"
     }
+  },
+  "events": {
+    "page": {
+      "back": "Program",
+      "when": "Når",
+      "where": "Hvor",
+      "signup": "Påmelding",
+      "places": "{taken} av {limit} plasser",
+      "map_title": "Kart over {place}",
+      "open_map": "Åpne kart",
+      "privacy": "Navnene på de påmeldte vises ikke her.",
+      "years": "Årstrinn",
+      "programmes": "Studieprogram",
+      "no_jobs": "Bedriften har ingen ledige stillinger hos oss akkurat nå.",
+      "website": "Nettsiden til {company}",
+      "missing": "Fant ikke arrangementet",
+      "not_eligible": "Du oppfyller ikke kravene til studieprogram eller årstrinn for dette arrangementet.",
+      "tabs": {
+        "label": "Om arrangementet",
+        "about": "Om arrangementet",
+        "signup": "Påmelding",
+        "company": "Bedriften",
+        "jobs_count": "{n} stilling | {n} stillinger"
+      },
+      "window": {
+        "opens": "Påmeldingen åpner",
+        "closes": "Påmeldingen stenger"
+      },
+      "state": {
+        "none": "Åpent for alle, ingen påmelding",
+        "past": "Arrangementet er over",
+        "not-open": "Påmeldingen har ikke åpnet",
+        "closed": "Påmeldingen er stengt",
+        "registered": "Du har plass",
+        "queued": "Du er nr. {n} i køen",
+        "sign-in": "Påmeldingen er åpen",
+        "not-eligible": "Påmeldingen er åpen",
+        "open": "Påmeldingen er åpen",
+        "full": "Fullt, venteliste"
+      },
+      "countdown": {
+        "days": "Åpner om {days} d {hours} t",
+        "hours": "Åpner om {hours} t {minutes} min"
+      },
+      "action": {
+        "register": "Meld meg på",
+        "queue": "Sett meg i kø",
+        "sign_in": "Logg inn for å melde deg på",
+        "cancel": "Meld meg av",
+        "leave_queue": "Gå ut av køen",
+        "calendar": "Legg i kalender"
+      },
+      "done": {
+        "registered": "Du er påmeldt",
+        "queued": "Du står i kø",
+        "cancelled": "Du er meldt av"
+      },
+      "confirm": {
+        "title": "Melde deg av?",
+        "text": "Plassen din går til den første i køen, og du må melde deg på igjen for å få en ny.",
+        "queue_title": "Gå ut av køen?",
+        "queue_text": "Du mister plassen din i køen.",
+        "keep": "Behold"
+      },
+      "ticket": {
+        "open": "Vis billett",
+        "hide": "Skjul billett",
+        "show": "Vis koden ved døren",
+        "qr_alt": "Billettkode for innsjekking"
+      },
+      "places_waiting": "{taken} av {limit} plasser, {n} i kø"
+    }
   }
 }
