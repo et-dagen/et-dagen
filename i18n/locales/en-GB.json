@@ -177,7 +177,9 @@
       "press": "Press, marketing and social media.",
       "website": "Problems with the website, signing in or your account.",
       "other": "Anything else goes to the head of the board."
-    }
+    },
+    "copy_short": "Copy",
+    "copied_short": "Copied"
   },
   "company": {
     "main_partner": "Main partner in 2026",

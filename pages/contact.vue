@@ -2,10 +2,14 @@
   import BoardGrid from '@/components/contact/BoardGrid.vue'
   import TopicPicker from '@/components/contact/TopicPicker.vue'
   import type { ListedMember } from '@/contracts/board'
-  import { ORGANISATION } from '@/lib/contact/topics'
+  import { answerFor, CONTACT_TOPICS, ORGANISATION } from '@/lib/contact/topics'
 
   const { t } = useI18n()
   const { data: board } = await useFetch<ListedMember[]>('/api/v1/board')
+  const topic = ref(0)
+  const answering = computed(
+    () => answerFor(CONTACT_TOPICS[topic.value]!, board.value)?.id ?? null,
+  )
   useHead({ title: () => t('contact.title') })
 </script>
 
@@ -19,8 +23,8 @@
       >
         {{ $t('contact.title') }}
       </h1>
-      <TopicPicker :board="board ?? []" />
-      <BoardGrid v-if="board?.length" :board="board" />
+      <TopicPicker v-model:selected="topic" :board="board ?? []" />
+      <BoardGrid v-if="board?.length" :board="board" :answering="answering" />
 
       <section
         :aria-label="$t('contact.organisation')"

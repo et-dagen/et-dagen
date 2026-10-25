@@ -177,7 +177,9 @@
       "press": "Presse, markedsføring og sosiale medier.",
       "website": "Problemer med nettsiden, innlogging eller brukerkontoen din.",
       "other": "Alt annet går til lederen."
-    }
+    },
+    "copy_short": "Kopier",
+    "copied_short": "Kopiert"
   },
   "company": {
     "main_partner": "Hovedpartner i 2026",

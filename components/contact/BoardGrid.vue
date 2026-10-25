@@ -3,7 +3,11 @@
   import Portrait from './Portrait.vue'
   import type { ListedMember } from '@/contracts/board'
 
-  defineProps<{ board: ListedMember[] }>()
+  defineProps<{
+    board: ListedMember[]
+    /** The member who answers the topic chosen above, marked in E&T red */
+    answering: string | null
+  }>()
   const { locale } = useI18n()
   const titleOf = (member: ListedMember) =>
     locale.value === 'en' ? member.title.en : member.title.nb
@@ -23,9 +27,14 @@
       <li
         v-for="member in board"
         :key="member.id"
-        class="tw:flex tw:min-w-0 tw:flex-col tw:gap-1"
+        :aria-current="member.id === answering ? 'true' : undefined"
+        class="tw:group tw:flex tw:min-w-0 tw:flex-col tw:gap-1"
       >
-        <Portrait :src="member.photoUrl" :name="member.name" class="tw:mb-2" />
+        <Portrait
+          :src="member.photoUrl"
+          :name="member.name"
+          class="tw:mb-2 tw:outline-3 tw:outline-offset-3 tw:outline-transparent tw:transition-[outline-color] tw:duration-200 tw:group-aria-[current=true]:outline-brand"
+        />
         <p class="tw:text-sm tw:font-bold tw:text-brand">
           {{ titleOf(member) }}
         </p>
