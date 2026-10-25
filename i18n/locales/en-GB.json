@@ -1036,5 +1036,28 @@
       "matches": "Matches",
       "none": "No matches"
     }
+  },
+  "site": {
+    "skip": "Skip to content",
+    "next": {
+      "now": "Now",
+      "next": "Next"
+    },
+    "language": {
+      "en": "English",
+      "no": "Norsk"
+    },
+    "menu": {
+      "open": "Open the menu",
+      "close": "Close the menu",
+      "label": "Menu",
+      "pages": "Pages"
+    },
+    "account": {
+      "open": "Account menu for {name}",
+      "profile": "My profile",
+      "company": "Company page",
+      "admin": "Admin"
+    }
   }
 }
