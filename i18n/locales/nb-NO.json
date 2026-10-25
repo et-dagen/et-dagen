@@ -1050,7 +1050,6 @@
     "password": "Passord",
     "show": "Vis",
     "hide": "Skjul",
-    "show_label": "Vis passordet",
     "submit": "Logg inn",
     "pending": "Logger inn …",
     "forgot": "Glemt passordet?",
@@ -1067,6 +1066,7 @@
         "text": "Har du fått en kode eller invitasjon fra oss?",
         "link": "Bli med i bedriften"
       }
-    }
+    },
+    "the_password": "passordet"
   }
 }

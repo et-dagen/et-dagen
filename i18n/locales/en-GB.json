@@ -1049,7 +1049,6 @@
     "password": "Password",
     "show": "Show",
     "hide": "Hide",
-    "show_label": "Show the password",
     "submit": "Sign in",
     "pending": "Signing in …",
     "forgot": "Forgot your password?",
@@ -1066,6 +1065,7 @@
         "text": "Have you received a code or an invitation from us?",
         "link": "Join your company"
       }
-    }
+    },
+    "the_password": "the password"
   }
 }

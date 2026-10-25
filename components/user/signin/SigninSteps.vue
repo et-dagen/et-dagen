@@ -198,13 +198,12 @@
               variant="ghost"
               size="sm"
               class="tw:absolute tw:inset-y-1 tw:right-1 tw:h-auto"
-              :aria-pressed="showPassword"
-              :aria-label="$t('signin.show_label')"
               @click="showPassword = !showPassword"
             >
               <EyeOff v-if="showPassword" aria-hidden="true" />
               <Eye v-else aria-hidden="true" />
               {{ $t(showPassword ? 'signin.hide' : 'signin.show') }}
+              <span class="tw:sr-only">{{ $t('signin.the_password') }}</span>
             </Button>
           </div>
           <p
