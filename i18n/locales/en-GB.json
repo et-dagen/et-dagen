@@ -1044,9 +1044,8 @@
       "next": "Next"
     },
     "language": {
-      "en": "English",
-      "no": "Norsk",
-      "label": "Language"
+      "label": "Language",
+      "current": "Language: {name}. Choose a language"
     },
     "menu": {
       "open": "Open the menu",

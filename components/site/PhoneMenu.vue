@@ -2,6 +2,7 @@
   import { LogIn, LogOut, Menu, X } from '@lucide/vue'
   import NextUpPill from './NextUpPill.vue'
   import { accountLinks, initialsOf } from '@/lib/site/account'
+  import { LANGUAGES as languages } from '@/lib/site/languages'
   import { Button } from '@/components/ui/button'
   import type { NextUp } from '@/lib/site/nextUp'
 
@@ -17,10 +18,6 @@
   const links = computed(() => accountLinks(auth.user?.userType))
   const { locale } = useI18n()
   const switchLocalePath = useSwitchLocalePath()
-  const languages = [
-    { code: 'no', lang: 'nb', name: 'Norsk' },
-    { code: 'en', lang: 'en', name: 'English' },
-  ] as const
 
   // a native modal: it traps focus, Escape closes it, and focus returns to the button
   const sheet = ref<HTMLDialogElement | null>(null)
@@ -128,16 +125,30 @@
                   v-if="language.code === locale"
                   :lang="language.lang"
                   aria-current="true"
-                  class="tw:font-bold"
+                  class="tw:flex tw:items-center tw:gap-2 tw:font-bold"
                 >
+                  <img
+                    :src="language.flag"
+                    alt=""
+                    width="20"
+                    height="15"
+                    class="tw:h-[15px] tw:w-5 tw:rounded-[2px] tw:object-cover"
+                  />
                   {{ language.name }}
                 </span>
                 <NuxtLink
                   v-else
                   :to="switchLocalePath(language.code)"
                   :lang="language.lang"
-                  class="tw:text-muted-foreground tw:underline tw:underline-offset-4 tw:hover:text-foreground"
+                  class="tw:flex tw:items-center tw:gap-2 tw:text-muted-foreground tw:underline tw:underline-offset-4 tw:hover:text-foreground"
                 >
+                  <img
+                    :src="language.flag"
+                    alt=""
+                    width="20"
+                    height="15"
+                    class="tw:h-[15px] tw:w-5 tw:rounded-[2px] tw:object-cover"
+                  />
                   {{ language.name }}
                 </NuxtLink>
               </li>

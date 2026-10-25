@@ -204,8 +204,9 @@
   }
 }
 
-/* the ground runs down to the footer's slant, which shows the app background through its clip */
-.v-application:has(.et-ui) {
+/* the ground runs down to the footer's slant, which shows the app background through its clip;
+   only a redesigned page body sets it, since the site header is redesigned on every page */
+.v-application:has(main .et-ui) {
   background: var(--background);
 }
 

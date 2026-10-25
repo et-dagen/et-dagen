@@ -1045,9 +1045,8 @@
       "next": "Neste"
     },
     "language": {
-      "en": "English",
-      "no": "Norsk",
-      "label": "Språk"
+      "label": "Språk",
+      "current": "Språk: {name}. Velg språk"
     },
     "menu": {
       "open": "Åpne menyen",
