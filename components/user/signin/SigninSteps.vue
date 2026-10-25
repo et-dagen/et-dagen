@@ -14,6 +14,7 @@
   const pending = ref(false)
   const error = ref('')
   const notice = ref('')
+  const resetting = ref(false)
 
   async function focus(id: string) {
     await nextTick()
@@ -49,6 +50,7 @@
     }
     pending.value = true
     error.value = ''
+    notice.value = ''
     try {
       await signinUser(email.value, password.value)
     } catch (cause) {
@@ -59,19 +61,25 @@
     }
   }
 
+  // only failures that say nothing about the account are shown; the rest get the same answer
+  const SHOWN_RESET_ERRORS = [
+    'errors.network.offline',
+    'errors.auth.too-many-requests',
+  ]
+
   async function forgot() {
     error.value = ''
+    resetting.value = true
     try {
       await requestPasswordReset(email.value)
     } catch (cause) {
-      // an unknown address gets the same answer as a known one
-      if (
-        errorFeedback(cause, () => true).key !==
-        'errors.auth.invalid-credential'
-      ) {
+      const { key } = errorFeedback(cause, () => true)
+      if (SHOWN_RESET_ERRORS.includes(key)) {
         error.value = getErrorAlertContext(cause).message
         return
       }
+    } finally {
+      resetting.value = false
     }
     notice.value = t('signin.reset_sent', { email: email.value })
   }
@@ -118,7 +126,7 @@
             autocomplete="username"
             inputmode="email"
             autofocus
-            class="tw:h-11 tw:focus-visible:border-plate tw:focus-visible:ring-plate/15"
+            class="tw:h-11 tw:focus-visible:border-plate tw:focus-visible:ring-plate/15 tw:aria-invalid:focus-visible:border-destructive"
             :aria-invalid="!!error || undefined"
             :aria-describedby="error ? 'signin-error' : undefined"
           />
@@ -181,7 +189,7 @@
               :type="showPassword ? 'text' : 'password'"
               name="password"
               autocomplete="current-password"
-              class="tw:h-11 tw:pr-20 tw:focus-visible:border-plate tw:focus-visible:ring-plate/15"
+              class="tw:h-11 tw:pr-20 tw:focus-visible:border-plate tw:focus-visible:ring-plate/15 tw:aria-invalid:focus-visible:border-destructive"
               :aria-invalid="!!error || undefined"
               :aria-describedby="error ? 'signin-error' : undefined"
             />
@@ -191,9 +199,7 @@
               size="sm"
               class="tw:absolute tw:inset-y-1 tw:right-1 tw:h-auto"
               :aria-pressed="showPassword"
-              :aria-label="
-                $t(showPassword ? 'signin.hide_label' : 'signin.show_label')
-              "
+              :aria-label="$t('signin.show_label')"
               @click="showPassword = !showPassword"
             >
               <EyeOff v-if="showPassword" aria-hidden="true" />
@@ -216,7 +222,8 @@
         <div class="tw:flex tw:flex-col tw:gap-2">
           <button
             type="button"
-            class="tw:w-fit tw:font-semibold tw:text-brand tw:underline-offset-4 tw:hover:underline"
+            class="tw:w-fit tw:font-semibold tw:text-brand tw:underline-offset-4 tw:hover:underline tw:disabled:opacity-60"
+            :disabled="resetting"
             @click="forgot"
           >
             {{ $t('signin.forgot') }}

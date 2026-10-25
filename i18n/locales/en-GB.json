@@ -1050,7 +1050,6 @@
     "show": "Show",
     "hide": "Hide",
     "show_label": "Show the password",
-    "hide_label": "Hide the password",
     "submit": "Sign in",
     "pending": "Signing in …",
     "forgot": "Forgot your password?",
