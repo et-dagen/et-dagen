@@ -50,10 +50,13 @@ describe('DELETE /api/v1/user', () => {
   it('frees their event place for the first in the queue', async () => {
     const { uid, token } = await createUser(student)
     const other = await createUser(student)
+    // a whole record, as v1 stores it: one the domain cannot read promotes nobody
     await seed('events/workshop', {
       title: 'Workshop',
+      companyUID: 'company',
       capacity: 1,
-      date: { start: '2999-01-01T18:00' },
+      date: { start: '2999-01-01T18:00', end: '2999-01-01T20:00' },
+      registration: { start: '2000-01-01T00:00', end: '2998-12-31T23:59' },
       attendants: { [uid]: { attended: false, registeredAt: 1 } },
       queue: { 1700000000000: other.uid },
     })
