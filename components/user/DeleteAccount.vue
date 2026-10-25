@@ -1,7 +1,22 @@
 <script setup lang="ts">
+  import { Trash2 } from '@lucide/vue'
+  import {
+    AlertDialog,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+  } from '@/components/ui/alert-dialog'
+  import { Button } from '@/components/ui/button'
+  import { Input } from '@/components/ui/input'
+  import { Label } from '@/components/ui/label'
+
   const auth = useAuthStore()
 
-  const dialog = ref(false)
+  const open = ref(false)
   const loading = ref(false)
   const confirmation = ref('')
 
@@ -12,7 +27,7 @@
       confirmation.value.trim().toLowerCase() === auth.user.email.toLowerCase(),
   )
 
-  watch(dialog, () => (confirmation.value = ''))
+  watch(open, () => (confirmation.value = ''))
 
   const deleteAccount = async () => {
     loading.value = true
@@ -33,52 +48,55 @@
 <template>
   <div>
     <h6>{{ $t('user.delete.title') }}</h6>
-    <VDivider class="my-2" />
     <p class="my-2">{{ $t('user.delete.description') }}</p>
 
-    <VDialog v-model="dialog" width="500">
-      <template #activator="{ props }">
-        <VBtn v-bind="props" color="error" variant="outlined">
+    <AlertDialog v-model:open="open">
+      <AlertDialogTrigger as-child>
+        <Button
+          variant="outline"
+          class="tw:border-destructive tw:text-destructive tw:hover:bg-destructive/10 tw:hover:text-destructive"
+        >
+          <Trash2 aria-hidden="true" />
           {{ $t('user.delete.title') }}
-        </VBtn>
-      </template>
+        </Button>
+      </AlertDialogTrigger>
 
-      <VCard rounded="lg" class="pa-6">
-        <h6>{{ $t('user.delete.dialog_title') }}</h6>
-        <p class="my-4">{{ $t('user.delete.dialog_text') }}</p>
+      <AlertDialogContent class="tw:rounded-md tw:bg-card">
+        <AlertDialogHeader>
+          <AlertDialogTitle class="tw:text-lg tw:font-bold">
+            {{ $t('user.delete.dialog_title') }}
+          </AlertDialogTitle>
+          <AlertDialogDescription>
+            {{ $t('user.delete.dialog_text') }}
+          </AlertDialogDescription>
+        </AlertDialogHeader>
 
-        <VTextField
-          v-model="confirmation"
-          type="email"
-          autocomplete="off"
-          :label="$t('user.delete.confirm_label')"
-          :placeholder="auth.user?.email"
-          base-color="standard"
-          color="standard"
-        />
+        <div class="tw:flex tw:flex-col tw:gap-2">
+          <Label for="delete-confirmation">
+            {{ $t('user.delete.confirm_label') }}
+          </Label>
+          <Input
+            id="delete-confirmation"
+            v-model="confirmation"
+            type="email"
+            autocomplete="off"
+            :placeholder="auth.user?.email"
+          />
+        </div>
 
-        <div class="d-flex justify-center flex-wrap mt-2" style="gap: 0.5rem">
-          <VBtn
-            size="large"
-            color="error"
-            class="flex-grow-1"
-            :disabled="!confirmed"
-            :loading="loading"
+        <AlertDialogFooter>
+          <AlertDialogCancel :disabled="loading">
+            {{ $t('user.delete.abort') }}
+          </AlertDialogCancel>
+          <Button
+            class="tw:bg-destructive tw:text-white tw:hover:bg-destructive/90"
+            :disabled="!confirmed || loading"
             @click="deleteAccount"
           >
             {{ $t('user.delete.confirm') }}
-          </VBtn>
-          <VBtn
-            size="large"
-            variant="outlined"
-            class="flex-grow-1"
-            :disabled="loading"
-            @click="dialog = false"
-          >
-            {{ $t('user.delete.abort') }}
-          </VBtn>
-        </div>
-      </VCard>
-    </VDialog>
+          </Button>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   </div>
 </template>
