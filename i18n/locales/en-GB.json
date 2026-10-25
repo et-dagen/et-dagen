@@ -715,6 +715,44 @@
         "text": "The programme will no longer show a stand map for this day.",
         "action": "Remove"
       }
+    },
+    "board": {
+      "name": "Board",
+      "intro": "The board as the contact page shows it, in this order.",
+      "create": "New board member",
+      "featured": "Contact for companies",
+      "empty": "No board members yet.",
+      "up": "Move {name} up",
+      "down": "Move {name} down",
+      "edit": "Edit {name}",
+      "remove": "Remove {name}",
+      "removed": "{name} is removed from the board.",
+      "confirm": {
+        "title": "Remove the board member?",
+        "text": "The person and their photo disappear from the contact page.",
+        "action": "Remove"
+      },
+      "form": {
+        "new_title": "New board member",
+        "edit_title": "Edit board member",
+        "missing": "This board member was not found.",
+        "photo": "Photo",
+        "photo_choose": "Choose a photo",
+        "photo_replace": "Replace photo",
+        "photo_undo": "Undo",
+        "photo_hint": "PNG, JPEG or WebP, at most 10 MB. The photo is cropped around the centre to 5:6 and stored at 800 × 960.",
+        "name": "Name",
+        "title_nb": "Role (Norwegian)",
+        "title_en": "Role (English)",
+        "email": "Email",
+        "phone": "Phone",
+        "featured": "Contact for companies",
+        "featured_hint": "Shown on its own at the top of the contact page. Only one member can be.",
+        "create": "Add",
+        "save": "Save",
+        "created": "The board member is added.",
+        "updated": "Your changes are saved."
+      }
     }
   },
   "edit": {
@@ -958,6 +996,17 @@
       "invalid-day": "Choose a valid date.",
       "missing-file": "Choose an image to upload.",
       "not-found": "This day has no stand map."
+    },
+    "board": {
+      "forbidden": "Only administrators can change the board.",
+      "not-found": "This board member was not found.",
+      "invalid-name": "Fill in a name.",
+      "invalid-title": "Fill in the role in Norwegian and English.",
+      "invalid-email": "Enter a valid email address.",
+      "invalid-phone": "The phone number can only have digits, spaces and a leading +.",
+      "invalid-order": "Invalid place.",
+      "missing-file": "Choose a photo to upload.",
+      "unreadable-image": "The photo could not be read. Try another one."
     }
   },
   "form": {
@@ -969,7 +1018,9 @@
       "datetime": "Choose a date and time.",
       "end_before_start": "Must come after the start.",
       "signup_after_start": "Sign-up must close before the event starts.",
-      "number": "Enter a whole number above zero."
+      "number": "Enter a whole number above zero.",
+      "email": "Enter a valid email address.",
+      "phone": "Only digits, spaces and a leading +."
     },
     "leave": "You have unsaved changes. Leave the page?",
     "richtext": {

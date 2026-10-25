@@ -74,6 +74,7 @@ export type Permissions = {
   }
   code: { dataType: undefined; action: 'read' | 'create' | 'delete' }
   image: { dataType: undefined; action: 'upload' }
+  board: { dataType: undefined; action: 'manage' }
 }
 
 /**

@@ -52,6 +52,37 @@ export const ERRORS = {
     message: 'Send the stand map as the multipart part named file',
   },
   'standmap/not-found': { status: 404, message: 'This day has no stand map' },
+  'board/forbidden': { status: 403, message: 'Only admins manage the board' },
+  'board/not-found': { status: 404, message: 'No board member has this id' },
+  'board/invalid-name': {
+    status: 400,
+    message: 'A board member needs a name of at most 120 characters',
+  },
+  'board/invalid-title': {
+    status: 400,
+    message: 'A board member needs a title in Norwegian and English',
+  },
+  'board/invalid-email': {
+    status: 400,
+    message: "A board member's email must be an email address",
+  },
+  'board/invalid-phone': {
+    status: 400,
+    message:
+      "A board member's phone number must be digits, spaces and a leading +",
+  },
+  'board/invalid-order': {
+    status: 400,
+    message: 'A place on the board must be a whole number from 0',
+  },
+  'board/missing-file': {
+    status: 400,
+    message: 'Send the portrait as the multipart part named file',
+  },
+  'board/unreadable-image': {
+    status: 415,
+    message: 'The portrait could not be read as a picture',
+  },
   'job/invalid-listing': {
     status: 400,
     message: "A job's listing must be 'text' or 'link'",

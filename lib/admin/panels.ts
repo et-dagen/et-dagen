@@ -3,6 +3,7 @@ import {
   Building2,
   CalendarDays,
   FileText,
+  IdCard,
   MapPinned,
   Users,
 } from '@lucide/vue'
@@ -56,6 +57,13 @@ export const ADMIN_PANELS: readonly Panel[] = [
     route: '/admin/standmaps',
     label: 'admin.standmaps.name',
     icon: MapPinned,
+    count: null,
+  },
+  {
+    name: 'board',
+    route: '/admin/board',
+    label: 'admin.board.name',
+    icon: IdCard,
     count: null,
   },
 ]

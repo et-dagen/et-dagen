@@ -91,6 +91,7 @@
     "reka-ui": "^2.11.0",
     "sanitize-html": "2.18.0",
     "sass-migrator": "^2.3.1",
+    "sharp": "^0.35.5",
     "tailwind-merge": "3.7.0",
     "vee-validate": "^4.15.1",
     "vue-sonner": "^2.0.9",
