@@ -691,6 +691,30 @@
       "empty": "Nobody has signed up yet.",
       "no_match": "No signed-up people match the search.",
       "no_signup": "This event has no sign-up. Turn on sign-up under Details to take sign-ups."
+    },
+    "standmaps": {
+      "name": "Stand maps",
+      "intro": "One stand map per fair day. It shows beside the day's heading in the programme, and visitors can open it full screen.",
+      "events": "No events | 1 event | {n} events",
+      "none": "Not uploaded",
+      "unnamed": "Unnamed",
+      "legacy": "Old upload",
+      "upload": "Upload",
+      "replace": "Replace",
+      "remove": "Remove the stand map for {day}",
+      "open": "Open the stand map for {day}",
+      "other": "Another day",
+      "formats": "PNG, JPEG or WebP, at most 10 MB. An old stand map goes away when you replace it.",
+      "empty": "No coming fair day has events yet. Pick a day below to upload a stand map.",
+      "done": {
+        "uploaded": "The stand map for {day} is uploaded.",
+        "removed": "The stand map for {day} is removed."
+      },
+      "confirm": {
+        "title": "Remove the stand map?",
+        "text": "The programme will no longer show a stand map for this day.",
+        "action": "Remove"
+      }
     }
   },
   "edit": {
@@ -928,6 +952,12 @@
     },
     "company": {
       "invalid-webpage": "The website must be an address starting with http:// or https://."
+    },
+    "standmap": {
+      "forbidden": "Only administrators can change stand maps.",
+      "invalid-day": "Choose a valid date.",
+      "missing-file": "Choose an image to upload.",
+      "not-found": "This day has no stand map."
     }
   },
   "form": {

@@ -3,6 +3,7 @@ import {
   Building2,
   CalendarDays,
   FileText,
+  MapPinned,
   Users,
 } from '@lucide/vue'
 import type { Component } from 'vue'
@@ -48,6 +49,13 @@ export const ADMIN_PANELS: readonly Panel[] = [
     route: '/admin/users',
     label: 'admin.users.name',
     icon: Users,
+    count: null,
+  },
+  {
+    name: 'standmaps',
+    route: '/admin/standmaps',
+    label: 'admin.standmaps.name',
+    icon: MapPinned,
     count: null,
   },
 ]
