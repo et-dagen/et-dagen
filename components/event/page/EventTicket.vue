@@ -5,8 +5,12 @@
     /** The signed-in user's uid, which the door scanner reads */
     uid: string
     name: string
+    /** The event, so a screenshot of the ticket says what it admits to */
+    title: string
     when: string
     room: string | null
+    /** At the top of the panel there is nothing above to tear off from */
+    lead?: boolean
   }>()
 
   // drawn in the browser only; the server has no reason to know who is looking
@@ -23,7 +27,8 @@
 
 <template>
   <figure
-    class="tw:flex tw:items-center tw:gap-4 tw:border-t-2 tw:border-dashed tw:pt-4"
+    class="tw:flex tw:items-center tw:gap-4"
+    :class="!lead && 'tw:border-t-2 tw:border-dashed tw:pt-4'"
   >
     <img
       v-if="qr"
@@ -33,8 +38,13 @@
     />
     <div v-else class="tw:size-28 tw:shrink-0 tw:rounded-sm tw:bg-muted" />
     <figcaption class="tw:flex tw:min-w-0 tw:flex-col tw:gap-1">
-      <span class="tw:font-bold">{{ name }}</span>
-      <span class="tw:text-sm tw:text-muted-foreground">{{ when }}</span>
+      <span class="tw:font-bold">{{ title }}</span>
+      <span class="tw:text-sm">{{ name }}</span>
+      <span
+        class="tw:text-sm tw:whitespace-nowrap tw:text-muted-foreground tw:tabular-nums"
+      >
+        {{ when }}
+      </span>
       <span
         v-if="room"
         class="tw:w-fit tw:rounded-sm tw:bg-plate tw:px-1.5 tw:pt-0.5 tw:text-sm tw:font-extrabold tw:text-plate-foreground"

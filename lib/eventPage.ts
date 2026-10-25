@@ -171,3 +171,35 @@ export function calendarFileOf(
   ]
   return `${lines.join('\r\n')}\r\n`
 }
+
+export type Urgency =
+  | { kind: 'closing'; hours: number }
+  | { kind: 'few'; left: number }
+
+/** Sign-up closing within this many hours counts as soon */
+const CLOSING_HOURS = 48
+
+/**
+ * Whether sign-up needs acting on soon: it closes within two days, or few places are left
+ *
+ * @remarks
+ * Few means three or a tenth of the places, whichever is more. Only an open sign-up has an
+ * urgency; a full event offers the queue instead.
+ */
+export function urgencyOf(
+  event: PublicEvent,
+  now: ISO8601String,
+): Urgency | null {
+  if (eventStatus(event, now).kind !== 'open') return null
+  const closes = instantOf(event.registration?.end)
+  if (closes) {
+    const hours = Math.ceil((Date.parse(closes) - Date.parse(now)) / 3_600_000)
+    if (hours <= CLOSING_HOURS) return { kind: 'closing', hours }
+  }
+  const { taken, limit } = placesOf(event)
+  if (limit) {
+    const left = limit - taken
+    if (left <= Math.max(3, Math.ceil(limit / 10))) return { kind: 'few', left }
+  }
+  return null
+}

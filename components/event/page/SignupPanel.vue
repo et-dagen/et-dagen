@@ -26,6 +26,7 @@
     ticket: {
       uid: string
       name: string
+      title: string
       when: string
       room: string | null
     } | null
@@ -114,36 +115,26 @@
     <EventTicket
       v-if="ticket && state.kind === 'registered' && eventDay"
       v-bind="ticket"
-      class="tw:order-first tw:border-t-0 tw:pt-0"
+      lead
     />
 
     <div>
-      <h2 id="signup-heading" class="tw:text-sm tw:text-muted-foreground">
-        {{ $t('events.page.signup') }}
-      </h2>
-      <p class="tw:text-xl tw:font-bold">
+      <h2 id="signup-heading" class="tw:text-xl tw:font-bold">
         {{
           $t(
             `events.page.state.${state.kind}`,
             state.kind === 'queued' ? { n: state.position } : {},
           )
         }}
-      </p>
+      </h2>
       <p
-        v-if="places.limit"
+        v-if="places.limit && (state.kind === 'open' || state.kind === 'full')"
         class="tw:text-sm tw:text-muted-foreground tw:tabular-nums"
       >
         {{
-          places.waiting
-            ? $t('events.page.places_waiting', {
-                taken: places.taken,
-                limit: places.limit,
-                n: places.waiting,
-              })
-            : $t('events.page.places', {
-                taken: places.taken,
-                limit: places.limit,
-              })
+          state.kind === 'full'
+            ? $t('events.page.waiting_count', places.waiting)
+            : $t('events.page.left', places.limit - places.taken)
         }}
       </p>
     </div>
@@ -208,7 +199,7 @@
       <EventTicket v-if="showTicket && ticket" v-bind="ticket" />
       <Button
         variant="ghost"
-        class="tw:w-full tw:text-destructive"
+        class="tw:w-full tw:text-destructive tw:hover:bg-destructive/10 tw:hover:text-destructive"
         :disabled="busy"
         @click="confirming = true"
       >
@@ -240,7 +231,7 @@
     </Button>
 
     <AlertDialog v-model:open="confirming">
-      <AlertDialogContent class="tw:rounded-md">
+      <AlertDialogContent class="tw:rounded-md tw:bg-card">
         <AlertDialogHeader>
           <AlertDialogTitle class="tw:text-lg tw:font-bold">
             {{

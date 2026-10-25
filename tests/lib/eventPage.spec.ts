@@ -8,6 +8,7 @@ import {
   placesOf,
   signupStateOf,
   type PublicEvent,
+  urgencyOf,
 } from '@/lib/eventPage'
 
 // 12:00 in Oslo on 1 November 2026
@@ -146,5 +147,37 @@ describe('calendarFileOf', () => {
 
   it('gives nothing for an event without a start', () => {
     expect(calendarFileOf('e', { title: 'x' }, 'u', now)).toBeNull()
+  })
+})
+
+describe('urgencyOf', () => {
+  it('marks sign-up closing within two days', () => {
+    const closing = workshop({
+      capacity: 40,
+      registration: { start: '2026-10-20T12:00', end: '2026-11-02T12:00' },
+    })
+    expect(urgencyOf(closing, now)).toEqual({ kind: 'closing', hours: 24 })
+  })
+
+  it('marks few places left, and nothing on a roomy event', () => {
+    expect(
+      urgencyOf(
+        workshop({
+          capacity: 40,
+          attendants: Object.fromEntries(
+            Array.from({ length: 37 }, (_, i) => [`u${i}`, {}]),
+          ),
+        }),
+        now,
+      ),
+    ).toEqual({ kind: 'few', left: 3 })
+    expect(urgencyOf(workshop({ capacity: 40 }), now)).toBeNull()
+  })
+
+  it('has none unless sign-up is open', () => {
+    expect(urgencyOf(workshop({ capacity: null }), now)).toBeNull()
+    expect(
+      urgencyOf(workshop({ attendants: { a: {}, b: {} } }), now),
+    ).toBeNull()
   })
 })

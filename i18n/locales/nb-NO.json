@@ -964,11 +964,14 @@
       "missing": "Fant ikke arrangementet",
       "not_eligible": "Du oppfyller ikke kravene til studieprogram eller årstrinn for dette arrangementet.",
       "tabs": {
-        "label": "Om arrangementet",
+        "label": "Arrangement",
         "about": "Om arrangementet",
         "signup": "Påmelding",
         "company": "Bedriften",
-        "jobs_count": "{n} stilling | {n} stillinger"
+        "jobs_count": "{n} stilling | {n} stillinger",
+        "about_short": "Om",
+        "signup_short": "Påmelding",
+        "company_short": "Bedriften"
       },
       "window": {
         "opens": "Påmeldingen åpner",
@@ -1016,7 +1019,12 @@
         "show": "Vis koden ved døren",
         "qr_alt": "Billettkode for innsjekking"
       },
-      "places_waiting": "{taken} av {limit} plasser, {n} i kø"
+      "left": "{n} plass igjen | {n} plasser igjen",
+      "waiting_count": "Ingen i kø | {n} i kø | {n} i kø",
+      "urgency": {
+        "closing": "Stenger om {n} time | Stenger om {n} timer",
+        "few": "{n} plass igjen | {n} plasser igjen"
+      }
     }
   }
 }

@@ -18,6 +18,7 @@
     mapEmbedOf,
     placesOf,
     signupStateOf,
+    urgencyOf,
     type PublicEvent,
   } from '@/lib/eventPage'
   import { deadlineState, formatDeadline } from '@/lib/jobs'
@@ -65,10 +66,28 @@
     event.value ? placesOf(event.value) : { taken: 0, limit: null, waiting: 0 },
   )
   const place = computed(() => placeOf(event.value?.location?.name))
+  const urgency = computed(() =>
+    event.value ? urgencyOf(event.value, now) : null,
+  )
   const mapEmbed = computed(() => mapEmbedOf(event.value?.location?.map))
 
   const when = computed(() => {
     const start = formatWhen(event.value?.date?.start, locale.value)
+    const end = formatWhen(event.value?.date?.end, locale.value, {
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+    return end ? `${start}–${end}` : start
+  })
+  // the ticket keeps its time on one line: day and hours only
+  const ticketWhen = computed(() => {
+    const start = formatWhen(event.value?.date?.start, locale.value, {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
     const end = formatWhen(event.value?.date?.end, locale.value, {
       hour: '2-digit',
       minute: '2-digit',
@@ -88,7 +107,8 @@
       ? {
           uid: auth.user.uid,
           name: auth.user.name ?? auth.user.email ?? '',
-          when: when.value,
+          title: event.value.title ?? '',
+          when: ticketWhen.value,
           room: place.value.code,
         }
       : null,
@@ -204,6 +224,16 @@
                 })
               }}
             </dd>
+            <dd
+              v-if="urgency"
+              class="tw:rounded-sm tw:bg-signal tw:px-2 tw:pt-0.5 tw:text-sm tw:font-bold tw:text-signal-foreground"
+            >
+              {{
+                urgency.kind === 'closing'
+                  ? $t('events.page.urgency.closing', urgency.hours)
+                  : $t('events.page.urgency.few', urgency.left)
+              }}
+            </dd>
           </div>
         </dl>
       </header>
@@ -235,7 +265,7 @@
         <div
           role="tablist"
           :aria-label="$t('events.page.tabs.label')"
-          class="tw:flex tw:gap-6 tw:overflow-x-auto tw:border-b"
+          class="tw:flex tw:gap-4 tw:overflow-x-auto tw:border-b tw:sm:gap-6"
           @keydown.right.prevent="moveTab(1)"
           @keydown.left.prevent="moveTab(-1)"
         >
@@ -251,7 +281,12 @@
             class="tw:-mb-px tw:inline-flex tw:h-11 tw:shrink-0 tw:items-center tw:border-b-2 tw:border-transparent tw:pt-0.5 tw:font-semibold tw:whitespace-nowrap tw:text-muted-foreground tw:hover:text-foreground tw:aria-selected:border-brand tw:aria-selected:text-foreground"
             @click="tab = name"
           >
-            {{ $t(`events.page.tabs.${name}`) }}
+            <span class="tw:sm:hidden">
+              {{ $t(`events.page.tabs.${name}_short`) }}
+            </span>
+            <span class="tw:hidden tw:sm:inline">
+              {{ $t(`events.page.tabs.${name}`) }}
+            </span>
             <span
               v-if="tabCount(name)"
               class="tw:ml-2 tw:rounded-sm tw:bg-muted tw:px-1.5 tw:pt-0.5 tw:text-xs tw:font-bold tw:text-foreground tw:tabular-nums"

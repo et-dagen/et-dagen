@@ -963,11 +963,14 @@
       "missing": "Event not found",
       "not_eligible": "You do not meet this event's study programme or year requirements.",
       "tabs": {
-        "label": "About the event",
+        "label": "Event",
         "about": "About",
         "signup": "Sign-up",
         "company": "The company",
-        "jobs_count": "{n} job | {n} jobs"
+        "jobs_count": "{n} job | {n} jobs",
+        "about_short": "About",
+        "signup_short": "Sign-up",
+        "company_short": "Company"
       },
       "window": {
         "opens": "Sign-up opens",
@@ -1015,7 +1018,12 @@
         "show": "Show the code at the door",
         "qr_alt": "Ticket code for check-in"
       },
-      "places_waiting": "{taken} of {limit} places, {n} waiting"
+      "left": "{n} place left | {n} places left",
+      "waiting_count": "Nobody waiting | {n} waiting | {n} waiting",
+      "urgency": {
+        "closing": "Closes in {n} hour | Closes in {n} hours",
+        "few": "{n} place left | {n} places left"
+      }
     }
   }
 }
