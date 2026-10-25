@@ -43,6 +43,18 @@ export const ERRORS = {
     status: 400,
     message: "A job's listing must be 'text' or 'link'",
   },
+  'job/invalid-link': {
+    status: 400,
+    message: "A job's application link must be an http(s) address",
+  },
+  'event/invalid-map-link': {
+    status: 400,
+    message: "An event's map link must be an http(s) address",
+  },
+  'company/invalid-webpage': {
+    status: 400,
+    message: "A company's website must be an http(s) address",
+  },
 } as const satisfies Record<string, ErrorSpec>
 
 export type ErrorCode = keyof typeof ERRORS

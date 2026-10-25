@@ -1,6 +1,9 @@
 // PUT /api/v1/company
 // endpoint for modifying companies in the db
 
+import { fail } from '@/domain/errors'
+import { safeLink } from '@/server/security/richText'
+
 const COMPANY_EDITABLE_FIELDS = ['name', 'description', 'logo', 'webpage']
 
 defineRouteMeta({
@@ -97,6 +100,11 @@ export default defineEventHandler(async (event) => {
           COMPANY_EDITABLE_FIELDS.includes(key),
         ),
       )
+
+  if ('webpage' in updates) {
+    if (!safeLink(updates.webpage)) throw fail('company/invalid-webpage')
+    updates.webpage = safeLink(updates.webpage)
+  }
 
   // update company data
   companiesRef.child(companyUID).update(updates)

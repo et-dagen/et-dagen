@@ -905,13 +905,20 @@
       "unexpected": "Noe gikk galt hos oss. Prøv igjen om litt."
     },
     "job": {
-      "invalid-listing": "En stilling vises enten som beskrivelse eller som lenke."
+      "invalid-listing": "En stilling vises enten som beskrivelse eller som lenke.",
+      "invalid-link": "Søknadslenken må være en nettadresse som starter med http:// eller https://."
     },
     "file": {
       "unsupported-type": "Filen har et format som ikke er tillatt her.",
       "too-large": "Filen er for stor.",
       "empty": "Filen er tom.",
       "wrong-owner": "Filen kan ikke lagres her."
+    },
+    "event": {
+      "invalid-map-link": "Kartlenken må være en nettadresse som starter med http:// eller https://."
+    },
+    "company": {
+      "invalid-webpage": "Nettsiden må være en adresse som starter med http:// eller https://."
     }
   },
   "form": {

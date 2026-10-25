@@ -1,6 +1,8 @@
 // GET /api/v1/job
 // endpoint for fetching jobs from db
 
+import { readableJobs } from '@/server/security/richText'
+
 defineRouteMeta({
   openAPI: {
     tags: ['Job'],
@@ -50,7 +52,7 @@ export default defineEventHandler(async (event) => {
     // Add result metadata to wide event
     addEventContext(event, 'result_count', data ? Object.keys(data).length : 0)
 
-    return data
+    return readableJobs(data)
   }
 
   // get specified event
@@ -66,5 +68,5 @@ export default defineEventHandler(async (event) => {
   // Track whether job was found
   addEventContext(event, 'job_found', !!data)
 
-  return data
+  return readableJobs(data)
 })

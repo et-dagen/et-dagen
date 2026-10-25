@@ -1,9 +1,11 @@
 // PUT /api/v1/event
 // Endpoint for overwriting existing events
 
+import { fail } from '@/domain/errors'
 import { EventUid } from '@/domain/event/event'
 import { Instant } from '@/domain/time'
 import { rtdbEventRepository } from '@/server/adapters/rtdb/eventRepository'
+import { cleanRichText, safeLink } from '@/server/security/richText'
 
 defineRouteMeta({
   openAPI: {
@@ -111,6 +113,10 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  if (location.map && !safeLink(location.map)) {
+    throw fail('event/invalid-map-link')
+  }
+
   // Check if capacity is legal
   if (typeof capacity !== 'number' && capacity !== null) {
     setErrorContext(event, {
@@ -198,9 +204,9 @@ export default defineEventHandler(async (event) => {
       end: date.end,
       start: date.start,
     },
-    description,
+    description: cleanRichText(description),
     location: {
-      map: location.map,
+      map: location.map ? safeLink(location.map) : location.map,
       name: location.name,
     },
     title,

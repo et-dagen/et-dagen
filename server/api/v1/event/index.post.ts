@@ -1,6 +1,9 @@
 // POST /api/v1/event
 // Endpoint for adding a new event to db
 
+import { fail } from '@/domain/errors'
+import { cleanRichText, safeLink } from '@/server/security/richText'
+
 defineRouteMeta({
   openAPI: {
     tags: ['Event'],
@@ -97,6 +100,10 @@ export default defineEventHandler(async (event) => {
       statusCode: 400,
       statusMessage: 'Error (general/missing-data).',
     })
+  }
+
+  if (location.map && !safeLink(location.map)) {
+    throw fail('event/invalid-map-link')
   }
 
   // Check if user is authorized
@@ -202,9 +209,9 @@ export default defineEventHandler(async (event) => {
       start: date.start,
       end: date.end,
     },
-    description,
+    description: cleanRichText(description),
     location: {
-      map: location.map,
+      map: location.map ? safeLink(location.map) : location.map,
       name: location.name,
     },
     title,

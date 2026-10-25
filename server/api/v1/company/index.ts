@@ -1,6 +1,8 @@
 // GET /api/v1/company
 // endpoint for fetching companies from db
 
+import { readableCompanies } from '@/server/security/richText'
+
 defineRouteMeta({
   openAPI: {
     tags: ['Company'],
@@ -52,7 +54,7 @@ export default defineEventHandler(async (event) => {
     // Add result metadata to wide event
     addEventContext(event, 'result_count', data ? Object.keys(data).length : 0)
 
-    return data
+    return readableCompanies(data)
   }
 
   // get specified company
@@ -72,5 +74,5 @@ export default defineEventHandler(async (event) => {
   // Track whether company was found
   addEventContext(event, 'company_found', !!data)
 
-  return data
+  return readableCompanies(data)
 })

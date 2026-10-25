@@ -2,6 +2,7 @@
 // endpoint for creating a new job in the database
 
 import { isValidDate } from '@/composables/useDate'
+import { cleanRichText, safeLink } from '@/server/security/richText'
 import { fail } from '@/domain/errors'
 
 defineRouteMeta({
@@ -92,6 +93,8 @@ export default defineEventHandler(async (event) => {
   }
 
   if (!['text', 'link'].includes(listing)) throw fail('job/invalid-listing')
+  if (applicationLink && !safeLink(applicationLink))
+    throw fail('job/invalid-link')
 
   if (!isValidDate(deadline)) {
     setErrorContext(event, {
@@ -155,11 +158,11 @@ export default defineEventHandler(async (event) => {
     const ref = jobsRef.push({
       companyUID,
       title,
-      description,
+      description: cleanRichText(description),
       deadline,
       jobType,
       location,
-      applicationLink,
+      applicationLink: safeLink(applicationLink) ?? '',
       listing,
     })
     newJobKey = ref.key

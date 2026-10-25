@@ -2,6 +2,7 @@
 // endpoint for editing jobs in the database
 
 import { isValidDate } from '@/composables/useDate'
+import { cleanRichText, safeLink } from '@/server/security/richText'
 import { fail } from '@/domain/errors'
 
 defineRouteMeta({
@@ -156,6 +157,16 @@ export default defineEventHandler(async (event) => {
 
   // a company may edit its jobs, not move them to another company
   if (!isAdmin) delete newData.companyUID
+
+  if ('applicationLink' in newData) {
+    if (newData.applicationLink && !safeLink(newData.applicationLink)) {
+      throw fail('job/invalid-link')
+    }
+    newData.applicationLink = safeLink(newData.applicationLink) ?? ''
+  }
+  if ('description' in newData) {
+    newData.description = cleanRichText(newData.description)
+  }
 
   jobsRef.child(jobUID).update(newData)
   trackDbWrite(event, `jobs/${jobUID}`)

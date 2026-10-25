@@ -1,6 +1,8 @@
 // GET /api/v1/event
 // endpoint for fetching events from db
 
+import { readableEvents } from '@/server/security/richText'
+
 defineRouteMeta({
   openAPI: {
     tags: ['Event'],
@@ -51,7 +53,7 @@ export default defineEventHandler(async (event) => {
     // Add result metadata to wide event
     addEventContext(event, 'result_count', data ? Object.keys(data).length : 0)
 
-    return data
+    return readableEvents(data)
   }
 
   // get specified event
@@ -67,5 +69,5 @@ export default defineEventHandler(async (event) => {
   // Track whether event was found
   addEventContext(event, 'event_found', !!data)
 
-  return data
+  return readableEvents(data)
 })

@@ -904,13 +904,20 @@
       "unexpected": "Something went wrong on our side. Please try again shortly."
     },
     "job": {
-      "invalid-listing": "A job is shown either as a description or as a link."
+      "invalid-listing": "A job is shown either as a description or as a link.",
+      "invalid-link": "The application link must be a web address starting with http:// or https://."
     },
     "file": {
       "unsupported-type": "This file format is not allowed here.",
       "too-large": "The file is too large.",
       "empty": "The file is empty.",
       "wrong-owner": "The file cannot be stored here."
+    },
+    "event": {
+      "invalid-map-link": "The map link must be a web address starting with http:// or https://."
+    },
+    "company": {
+      "invalid-webpage": "The website must be an address starting with http:// or https://."
     }
   },
   "form": {

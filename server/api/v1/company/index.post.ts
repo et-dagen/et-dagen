@@ -1,6 +1,9 @@
 // POST /api/v1/company
 // endpoint for creating companies in the db
 
+import { fail } from '@/domain/errors'
+import { safeLink } from '@/server/security/richText'
+
 defineRouteMeta({
   openAPI: {
     tags: ['Company', 'internal'],
@@ -78,12 +81,14 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  if (!safeLink(webpage)) throw fail('company/invalid-webpage')
+
   const companyRef = companiesRef.push({
     description: description ?? null,
     logo: logo ?? null,
     name,
     type,
-    webpage,
+    webpage: safeLink(webpage),
     cvAccess,
   })
 
