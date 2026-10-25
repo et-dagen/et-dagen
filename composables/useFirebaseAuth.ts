@@ -5,6 +5,7 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   updateProfile,
+  type User as FirebaseUser,
 } from 'firebase/auth'
 
 import type { User } from '@/models/User'
@@ -66,7 +67,6 @@ export const registerUser = async (
 
 async function createAccount(newUser: newUser, registrationCode?: string) {
   const auth = getAuth()
-  const authStore = useAuthStore()
 
   // register user in firebase auth
   const { user } = await createUserWithEmailAndPassword(
@@ -74,6 +74,22 @@ async function createAccount(newUser: newUser, registrationCode?: string) {
     newUser.email,
     newUser.password,
   )
+
+  try {
+    await saveProfile(user, newUser, registrationCode)
+  } catch (cause) {
+    // an account without a profile would block the next try with "email taken"
+    await user.delete().catch(() => {})
+    throw cause
+  }
+}
+
+async function saveProfile(
+  user: FirebaseUser,
+  newUser: newUser,
+  registrationCode?: string,
+) {
+  const authStore = useAuthStore()
 
   // set displayname in firebase auth
   await updateProfile(user, { displayName: newUser.name })

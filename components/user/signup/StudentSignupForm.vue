@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { ChevronRight } from '@lucide/vue'
   import { toTypedSchema } from '@vee-validate/zod'
   import { useForm } from 'vee-validate'
   import PasswordInput from './PasswordInput.vue'
@@ -7,6 +8,7 @@
   import { Checkbox } from '@/components/ui/checkbox'
   import {
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -49,6 +51,15 @@
         : [...diet.value, flag],
     )
 
+  // after a refused submit, the cursor goes to the first field to fix
+  const formEl = ref<HTMLFormElement | null>(null)
+  const focusInvalid = () =>
+    nextTick(() =>
+      formEl.value
+        ?.querySelector<HTMLElement>('[aria-invalid="true"]')
+        ?.focus(),
+    )
+
   const pending = ref(false)
   const error = ref('')
   const submit = form.handleSubmit(async (values) => {
@@ -59,13 +70,14 @@
     } catch (cause) {
       if ((cause as { code?: string }).code === 'auth/email-already-in-use') {
         form.setFieldError('email', 'email_taken')
+        await focusInvalid()
       } else {
         error.value = getErrorAlertContext(cause).message
       }
     } finally {
       pending.value = false
     }
-  })
+  }, focusInvalid)
 
   const selectClass = [
     'tw:h-11 tw:w-full tw:rounded-md tw:border tw:border-input tw:bg-card',
@@ -81,6 +93,7 @@
 
 <template>
   <form
+    ref="formEl"
     novalidate
     class="tw:flex tw:flex-col tw:gap-8 tw:rounded-lg tw:border tw:bg-card tw:p-6 tw:sm:p-8"
     @submit="submit"
@@ -130,9 +143,7 @@
           <FormControl>
             <PasswordInput v-bind="componentField" :class="inputClass" />
           </FormControl>
-          <p class="tw:text-sm tw:text-muted-foreground">
-            {{ $t('signup.password_hint') }}
-          </p>
+          <FormDescription>{{ $t('signup.password_hint') }}</FormDescription>
           <FieldError />
         </FormItem>
       </FormField>
@@ -186,7 +197,7 @@
                 </option>
               </select>
             </FormControl>
-            <FieldError />
+            <FieldError v-if="form.values.studyProgram" />
           </FormItem>
         </FormField>
       </div>
@@ -194,8 +205,12 @@
 
     <details class="tw:group tw:rounded-md tw:border tw:px-4 tw:py-3">
       <summary
-        class="tw:cursor-pointer tw:font-extrabold tw:marker:text-muted-foreground"
+        class="tw:flex tw:cursor-pointer tw:list-none tw:items-center tw:gap-2 tw:rounded-sm tw:font-extrabold tw:[&::-webkit-details-marker]:hidden"
       >
+        <ChevronRight
+          class="tw:size-4 tw:text-muted-foreground tw:transition-transform tw:group-open:rotate-90 tw:motion-reduce:transition-none"
+          aria-hidden="true"
+        />
         {{ $t('signup.diet.title') }}
         <span class="tw:font-normal tw:text-muted-foreground">
           {{ $t('signup.optional') }}

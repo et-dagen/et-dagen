@@ -1026,7 +1026,9 @@
       "password_letters": "Passordet må ha minst 3 bokstaver.",
       "password_digits": "Passordet må ha minst 3 tall.",
       "email_taken": "Det finnes allerede en konto med denne adressen. Logg inn i stedet.",
-      "code_invalid": "Koden stemmer ikke. Sjekk den, eller ta kontakt med oss."
+      "code_invalid": "Koden stemmer ikke. Sjekk den, eller ta kontakt med oss.",
+      "choose": "Velg et alternativ.",
+      "year_needs_programme": "Velg studieprogram først."
     },
     "leave": "Du har endringer som ikke er lagret. Vil du forlate siden?",
     "richtext": {
@@ -1052,7 +1054,6 @@
     "password_hint": "Minst 8 tegn, med minst 3 bokstaver og 3 tall.",
     "show": "Vis",
     "hide": "Skjul",
-    "show_password": "Vis passordet",
     "programme": "Studieprogram",
     "year": "Årstrinn",
     "year_n": "{n}. år",
@@ -1080,6 +1081,7 @@
       "submit": "Lag bedriftskonto",
       "no_code": "Har dere ikke fått en kode?",
       "contact": "Ta kontakt"
-    }
+    },
+    "the_password": "passordet"
   }
 }

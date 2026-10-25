@@ -23,13 +23,12 @@
       variant="ghost"
       size="sm"
       class="tw:absolute tw:inset-y-1 tw:right-1 tw:h-auto"
-      :aria-pressed="shown"
-      :aria-label="$t('signup.show_password')"
       @click="shown = !shown"
     >
       <EyeOff v-if="shown" aria-hidden="true" />
       <Eye v-else aria-hidden="true" />
       {{ $t(shown ? 'signup.hide' : 'signup.show') }}
+      <span class="tw:sr-only">{{ $t('signup.the_password') }}</span>
     </Button>
   </div>
 </template>

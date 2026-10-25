@@ -5,6 +5,7 @@
   import { Button } from '@/components/ui/button'
   import {
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -14,6 +15,15 @@
   import { CompanyJoin } from '@/contracts/user'
 
   const form = useForm({ validationSchema: toTypedSchema(CompanyJoin) })
+  // after a refused submit, the cursor goes to the first field to fix
+  const formEl = ref<HTMLFormElement | null>(null)
+  const focusInvalid = () =>
+    nextTick(() =>
+      formEl.value
+        ?.querySelector<HTMLElement>('[aria-invalid="true"]')
+        ?.focus(),
+    )
+
   const pending = ref(false)
   const error = ref('')
   const submit = form.handleSubmit(async ({ code, ...account }) => {
@@ -25,15 +35,17 @@
       const failed = cause as { code?: string; statusCode?: number }
       if (failed.code === 'auth/email-already-in-use') {
         form.setFieldError('email', 'email_taken')
+        await focusInvalid()
       } else if (failed.statusCode === 401) {
         form.setFieldError('code', 'code_invalid')
+        await focusInvalid()
       } else {
         error.value = getErrorAlertContext(cause).message
       }
     } finally {
       pending.value = false
     }
-  })
+  }, focusInvalid)
 
   const inputClass = [
     'tw:h-11 tw:focus-visible:border-plate tw:focus-visible:ring-plate/15',
@@ -43,6 +55,7 @@
 
 <template>
   <form
+    ref="formEl"
     novalidate
     class="tw:flex tw:flex-col tw:gap-8 tw:rounded-lg tw:border tw:bg-card tw:p-6 tw:sm:p-8"
     @submit="submit"
@@ -108,9 +121,7 @@
           <FormControl>
             <PasswordInput v-bind="componentField" :class="inputClass" />
           </FormControl>
-          <p class="tw:text-sm tw:text-muted-foreground">
-            {{ $t('signup.password_hint') }}
-          </p>
+          <FormDescription>{{ $t('signup.password_hint') }}</FormDescription>
           <FieldError />
         </FormItem>
       </FormField>

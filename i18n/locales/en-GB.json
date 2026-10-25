@@ -1025,7 +1025,9 @@
       "password_letters": "The password needs at least 3 letters.",
       "password_digits": "The password needs at least 3 digits.",
       "email_taken": "There is already an account with this address. Sign in instead.",
-      "code_invalid": "The code doesn't match. Check it, or contact us."
+      "code_invalid": "The code doesn't match. Check it, or contact us.",
+      "choose": "Choose one.",
+      "year_needs_programme": "Choose a programme first."
     },
     "leave": "You have unsaved changes. Leave the page?",
     "richtext": {
@@ -1051,7 +1053,6 @@
     "password_hint": "At least 8 characters, with at least 3 letters and 3 digits.",
     "show": "Show",
     "hide": "Hide",
-    "show_password": "Show the password",
     "programme": "Study programme",
     "year": "Year",
     "year_n": "Year {n}",
@@ -1079,6 +1080,7 @@
       "submit": "Create company account",
       "no_code": "Haven't received a code?",
       "contact": "Contact us"
-    }
+    },
+    "the_password": "the password"
   }
 }

@@ -81,13 +81,20 @@ const email = z
   .min(1, 'required')
   .refine(EmailAddress.is, 'email')
 
+/** A choice from a list, whose error asks to choose rather than to type */
+const chosen = z.string({ required_error: 'choose' }).trim().min(1, 'choose')
+
 /** What a student types to create an account */
 export const StudentSignup = z.object({
   name: common.name,
   email,
   password,
-  studyProgram: required,
-  currentYear: year,
+  studyProgram: chosen,
+  currentYear: z.coerce
+    .number({ invalid_type_error: 'choose' })
+    .int('choose')
+    .min(1, 'choose')
+    .max(5, 'choose'),
   dietaryRestrictions: common.dietaryRestrictions,
 })
 export type StudentSignup = z.infer<typeof StudentSignup>
