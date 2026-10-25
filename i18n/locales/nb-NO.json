@@ -60,6 +60,15 @@
       "upload_resume": "Last opp CV",
       "your_resume": "Din CV",
       "delete_resume": "Slett CV"
+    },
+    "delete": {
+      "title": "Slett brukeren min",
+      "description": "Sletter brukeren din og alt vi har lagret om deg: profilen, CV-en og påmeldingene dine til arrangementer. Dette kan ikke angres.",
+      "dialog_title": "Vil du slette brukeren din?",
+      "dialog_text": "Profilen, CV-en og påmeldingene dine slettes med en gang, og du blir logget ut. Dette kan ikke angres.",
+      "confirm_label": "Skriv inn e-postadressen din for å bekrefte",
+      "confirm": "Slett brukeren",
+      "abort": "Avbryt"
     }
   },
   "error": {
@@ -274,7 +283,8 @@
         "reset_password": "Epost for tilbakestilling av passord er sendt"
       },
       "user": {
-        "edit": "Brukeren ble oppdatert"
+        "edit": "Brukeren ble oppdatert",
+        "deleted": "Brukeren din er slettet"
       },
       "event": {
         "register": {

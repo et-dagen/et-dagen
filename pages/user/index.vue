@@ -175,6 +175,9 @@
             </VRow>
           </div>
         </VCol>
+        <VCol cols="12">
+          <UserDeleteAccount />
+        </VCol>
       </VRow>
     </VCard>
   </VContainer>
