@@ -47,7 +47,7 @@
 
 <template>
   <header
-    class="et-ui tw:sticky tw:top-0 tw:z-20 tw:border-b tw:bg-card tw:transition-transform tw:duration-300 tw:focus-within:translate-y-0 tw:motion-reduce:transition-none"
+    class="et-ui tw:sticky tw:top-0 tw:z-20 tw:border-b tw:bg-card tw:transition-transform tw:duration-300 tw:ease-[cubic-bezier(0.16,1,0.3,1)] tw:focus-within:translate-y-0 tw:motion-reduce:transition-none"
     :class="hidden && 'tw:-translate-y-full'"
   >
     <a
@@ -95,7 +95,7 @@
           <NextUpPill
             v-if="next"
             :next="next"
-            class="tw:hidden tw:max-w-sm tw:xl:flex"
+            class="tw:hidden tw:max-w-sm tw:lg:flex"
           />
         </ClientOnly>
         <div class="tw:hidden tw:items-center tw:gap-2 tw:lg:flex">

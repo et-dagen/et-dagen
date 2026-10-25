@@ -18,14 +18,28 @@
     return `${weekday} ${hhmm}`
   })
   const room = computed(() => placeOf(props.next.event.location?.name).code)
+  // the compact pill hides the title, so the link always says all of it
+  const { t } = useI18n()
+  const label = computed(() =>
+    [
+      `${t(`site.next.${props.next.kind}`)} ${time.value}`,
+      props.next.event.title,
+      room.value,
+    ]
+      .filter(Boolean)
+      .join(', '),
+  )
 </script>
 
 <template>
   <NuxtLink
     :to="localePath(`/event/${next.uid}`)"
-    class="tw:flex tw:min-w-0 tw:items-center tw:gap-2 tw:rounded-full tw:border tw:bg-background tw:text-sm tw:transition-colors tw:hover:border-plate/40"
+    :aria-label="label"
+    class="tw:flex tw:min-w-0 tw:gap-2 tw:border tw:bg-background tw:transition-colors tw:hover:border-plate/40"
     :class="
-      large ? 'tw:px-4 tw:py-3 tw:text-base' : 'tw:py-1.5 tw:pr-3 tw:pl-2.5'
+      large
+        ? 'tw:flex-wrap tw:items-center tw:rounded-xl tw:px-4 tw:py-3 tw:text-base'
+        : 'tw:items-center tw:rounded-full tw:py-1.5 tw:pr-3 tw:pl-2.5 tw:text-sm'
     "
   >
     <span
@@ -36,7 +50,16 @@
     <span class="tw:shrink-0 tw:font-bold tw:tabular-nums">
       {{ $t(`site.next.${next.kind}`) }} {{ time }}
     </span>
-    <span class="tw:min-w-0 tw:truncate">{{ next.event.title }}</span>
+    <!-- between lg and xl the bar has room for the time and the room, not the title -->
+    <span
+      :class="
+        large
+          ? 'tw:order-last tw:basis-full'
+          : 'tw:min-w-0 tw:truncate tw:max-xl:hidden'
+      "
+    >
+      {{ next.event.title }}
+    </span>
     <span
       v-if="room"
       class="tw:shrink-0 tw:rounded-sm tw:bg-plate tw:px-1.5 tw:pt-0.5 tw:text-xs tw:font-extrabold tw:text-plate-foreground"

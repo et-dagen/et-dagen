@@ -1046,7 +1046,8 @@
     },
     "language": {
       "en": "English",
-      "no": "Norsk"
+      "no": "Norsk",
+      "label": "Språk"
     },
     "menu": {
       "open": "Åpne menyen",

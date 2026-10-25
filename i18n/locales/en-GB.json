@@ -1045,7 +1045,8 @@
     },
     "language": {
       "en": "English",
-      "no": "Norsk"
+      "no": "Norsk",
+      "label": "Language"
     },
     "menu": {
       "open": "Open the menu",
