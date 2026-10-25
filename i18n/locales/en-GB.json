@@ -1036,5 +1036,37 @@
       "matches": "Matches",
       "none": "No matches"
     }
+  },
+  "signin": {
+    "title": "Sign in",
+    "step": "Step {n} of 2",
+    "email": "Email",
+    "continue": "Continue",
+    "invalid_email": "Enter a valid email address.",
+    "password_title": "Enter your password",
+    "change": "Change",
+    "change_label": "Change the email address",
+    "password": "Password",
+    "show": "Show",
+    "hide": "Hide",
+    "show_label": "Show the password",
+    "hide_label": "Hide the password",
+    "submit": "Sign in",
+    "pending": "Signing in …",
+    "forgot": "Forgot your password?",
+    "reset_sent": "If {email} has an account, we have sent a link to set a new password.",
+    "paths": {
+      "heading": "No account yet?",
+      "student": {
+        "name": "Student",
+        "text": "Sign up for events and share your CV with the companies.",
+        "link": "Create a student account"
+      },
+      "company": {
+        "name": "Company",
+        "text": "Have you received a code or an invitation from us?",
+        "link": "Join your company"
+      }
+    }
   }
 }
