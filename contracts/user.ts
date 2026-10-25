@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { EmailAddress } from '@/domain/email'
 
 /** The roles, from the one with the most access down */
 export const USER_TYPES = ['admin', 'company', 'basic'] as const
@@ -62,3 +63,40 @@ export function toV1User(uid: string, user: UserInput) {
     account: { uid, name: user.name },
   }
 }
+
+const count = (value: string, pattern: RegExp) =>
+  (value.match(pattern) ?? []).length
+
+/** The site's password rule: at least 8 characters, 3 of them letters and 3 digits */
+const password = z
+  .string({ required_error: 'required' })
+  .min(1, 'required')
+  .min(8, 'password_length')
+  .refine((value) => count(value, /[a-zA-Z]/g) >= 3, 'password_letters')
+  .refine((value) => count(value, /\d/g) >= 3, 'password_digits')
+
+const email = z
+  .string({ required_error: 'required' })
+  .trim()
+  .min(1, 'required')
+  .refine(EmailAddress.is, 'email')
+
+/** What a student types to create an account */
+export const StudentSignup = z.object({
+  name: common.name,
+  email,
+  password,
+  studyProgram: required,
+  currentYear: year,
+  dietaryRestrictions: common.dietaryRestrictions,
+})
+export type StudentSignup = z.infer<typeof StudentSignup>
+
+/** What a company contact types to join their company with its registration code */
+export const CompanyJoin = z.object({
+  code: required,
+  name: common.name,
+  email,
+  password,
+})
+export type CompanyJoin = z.infer<typeof CompanyJoin>

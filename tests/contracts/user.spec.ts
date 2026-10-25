@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { toV1User, UserInput } from '@/contracts/user'
+import {
+  CompanyJoin,
+  StudentSignup,
+  toV1User,
+  UserInput,
+} from '@/contracts/user'
 
 const issues = (input: unknown) =>
   UserInput.safeParse(input).error?.issues.map((i) => [
@@ -81,5 +86,69 @@ describe('toV1User', () => {
       currentYear: null,
       companyUID: 'c1',
     })
+  })
+})
+
+const signupIssues = (input: unknown) =>
+  StudentSignup.safeParse(input).error?.issues.map((i) => [
+    i.path.join('.'),
+    i.message,
+  ]) ?? []
+
+describe('StudentSignup', () => {
+  const valid = {
+    name: ' Ada ',
+    email: ' ada@stud.ntnu.no ',
+    password: 'abc12345',
+    studyProgram: 'Kybernetikk',
+    currentYear: '2',
+  }
+
+  it('trims the name and address and reads the year as a number', () => {
+    expect(StudentSignup.parse(valid)).toEqual({
+      name: 'Ada',
+      email: 'ada@stud.ntnu.no',
+      password: 'abc12345',
+      studyProgram: 'Kybernetikk',
+      currentYear: 2,
+      dietaryRestrictions: [],
+    })
+  })
+
+  it('names each missing field', () => {
+    expect(signupIssues({}).map(([path]) => path)).toEqual([
+      'name',
+      'email',
+      'password',
+      'studyProgram',
+      'currentYear',
+    ])
+  })
+
+  it('keeps the password rule: 8 characters, 3 letters, 3 digits', () => {
+    const passwordIssue = (password: string) =>
+      signupIssues({ ...valid, password }).map(([, message]) => message)
+    expect(passwordIssue('ab12')).toContain('password_length')
+    expect(passwordIssue('12345678a')).toEqual(['password_letters'])
+    expect(passwordIssue('abcdefgh12')).toEqual(['password_digits'])
+    expect(passwordIssue('abc123xy')).toEqual([])
+  })
+
+  it('refuses an address without a domain', () => {
+    expect(signupIssues({ ...valid, email: 'ada' })).toEqual([
+      ['email', 'email'],
+    ])
+  })
+})
+
+describe('CompanyJoin', () => {
+  it('needs the code', () => {
+    expect(
+      CompanyJoin.safeParse({
+        name: 'Bo',
+        email: 'bo@firma.no',
+        password: 'abc12345',
+      }).error?.issues.map((i) => i.path.join('.')),
+    ).toEqual(['code'])
   })
 })

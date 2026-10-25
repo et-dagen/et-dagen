@@ -50,12 +50,23 @@ export const registerUser = async (
       })
   }
 
-  const auth = getAuth()
   const authStore = useAuthStore()
+  const localePath = useLocalePath()
 
   // make sure onauthStateChanged does not try to fetch
   // the user data before it is created
   authStore.registeringUser = true
+  try {
+    await createAccount(newUser, registrationCode)
+  } finally {
+    authStore.registeringUser = false
+  }
+  await navigateTo(localePath('/'))
+}
+
+async function createAccount(newUser: newUser, registrationCode?: string) {
+  const auth = getAuth()
+  const authStore = useAuthStore()
 
   // register user in firebase auth
   const { user } = await createUserWithEmailAndPassword(
@@ -84,19 +95,11 @@ export const registerUser = async (
     },
   })
 
-  // sign out the new user
-  await signoutUser()
-
-  // navigate to sign in page
-  const localePath = useLocalePath()
-  await navigateTo({
-    path: localePath('/user/signin'),
-    query: {
-      registered: 'true',
-    },
+  // the new account stays signed in, as after signing in
+  await startSession(idToken)
+  authStore.user = await $fetch<User>('/api/v1/user', {
+    headers: { Authorization: `Bearer ${idToken}` },
   })
-
-  authStore.registeringUser = false
 }
 
 // starts the server session from a sign-in that just happened (#582)
