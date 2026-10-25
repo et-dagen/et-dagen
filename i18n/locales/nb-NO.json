@@ -156,6 +156,27 @@
       "marketing": "Markedsføringsansvarlig",
       "logistics": "Logistikkansvarlig",
       "travel": "Turansvarlig"
+    },
+    "question": "Hva gjelder det?",
+    "organisation": "Organisasjonen",
+    "org_number": "Org.nr.",
+    "follow": "Følg oss",
+    "copy": "Kopier {email}",
+    "copied": "{email} er kopiert",
+    "copy_failed": "Kunne ikke kopiere. Marker adressen og kopier den selv.",
+    "topics": {
+      "companies": "Bedrift og deltakelse",
+      "sponsorship": "Sponsing",
+      "press": "Presse",
+      "website": "Nettsiden og konto",
+      "other": "Alt annet"
+    },
+    "answers": {
+      "companies": "Vil bedriften delta på E&T-dagene, eller har dere spørsmål om stand, arrangementer eller CV-er?",
+      "sponsorship": "Spørsmål om sponsing og samarbeid.",
+      "press": "Presse, markedsføring og sosiale medier.",
+      "website": "Problemer med nettsiden, innlogging eller brukerkontoen din.",
+      "other": "Alt annet går til lederen."
     }
   },
   "company": {
