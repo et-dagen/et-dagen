@@ -1,6 +1,7 @@
 import type { Database } from 'firebase-admin/database'
 import {
   queueOf,
+  rosterOf,
   rosterRecord,
   toStoredEvent,
   type EventRecord,
@@ -13,6 +14,7 @@ import type { Registration } from '@/domain/event/registration'
 import {
   promoteWaiting,
   register,
+  removeUsers,
   withdraw,
   type Roster,
 } from '@/domain/event/roster'
@@ -31,7 +33,9 @@ type Change<T> = (
  * whenever the node moved underneath it, so two users taking the last spot cannot both get it,
  * whichever server instance they reach.
  */
-export function rtdbEventRepository(db: Database): EventRepository {
+export function rtdbEventRepository(
+  db: Pick<Database, 'ref'>,
+): EventRepository {
   const node = (uid: string) => db.ref(`events/${uid}`)
 
   async function change<T>(
@@ -90,5 +94,53 @@ export function rtdbEventRepository(db: Database): EventRepository {
       change(uid, at, (roster, registration) =>
         promoteWaiting(roster, registration, at),
       ),
+
+    removeUsers: async (users, at) => {
+      const removed = new Set(users)
+      const records = ((await db.ref('events').once('value')).val() ??
+        {}) as Record<string, EventRecord>
+      const affected = Object.keys(records).filter((uid) =>
+        holdsAny(records[uid], removed),
+      )
+
+      for (const uid of affected) {
+        await node(uid).transaction(
+          (current: EventRecord | null) => {
+            if (current === null) return null
+            const roster = removeUsers(
+              rosterOf(current),
+              removalTermsOf(uid, current, at),
+              removed,
+              at,
+            )
+            const keys = new Map(
+              queueOf(current).map(([key, user]) => [user, key]),
+            )
+            return { ...current, ...rosterRecord(roster, keys, at) }
+          },
+          undefined,
+          false,
+        )
+      }
+    },
+  }
+}
+
+const holdsAny = (record: EventRecord, users: ReadonlySet<string>) =>
+  Object.keys(record.attendants ?? {}).some((user) => users.has(user)) ||
+  Object.values(record.queue ?? {}).some((user) => users.has(user))
+
+/**
+ * The event as removal needs it
+ *
+ * @remarks
+ * A record the domain cannot read counts as already started: nobody is promoted, but the users
+ * still go, because a deletion must not fail on an old event.
+ */
+function removalTermsOf(uid: string, record: EventRecord, at: ISO8601String) {
+  try {
+    return toStoredEvent(uid, record).event
+  } catch {
+    return { start: at }
   }
 }
