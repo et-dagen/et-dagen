@@ -21,7 +21,7 @@
   <span class="tw:inline-flex tw:min-w-0 tw:items-center tw:gap-1">
     <a
       :href="`mailto:${email}`"
-      class="tw:min-w-0 tw:truncate tw:font-semibold tw:underline-offset-4 tw:hover:underline"
+      class="tw:min-w-0 tw:font-semibold tw:break-all tw:underline-offset-4 tw:hover:underline"
     >
       {{ email }}
     </a>
