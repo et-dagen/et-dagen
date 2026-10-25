@@ -6,5 +6,11 @@ export const memoryUserDirectory = (
   uids: Iterable<UserUid> = [],
 ): UserDirectory => {
   const accounts = new Set(uids)
-  return { exists: (uid) => Promise.resolve(accounts.has(uid)) }
+  return {
+    exists: (uid) => Promise.resolve(accounts.has(uid)),
+    remove: (removed) => {
+      for (const uid of removed) accounts.delete(uid)
+      return Promise.resolve()
+    },
+  }
 }

@@ -3,7 +3,7 @@ import type { UserDirectory } from '@/application/users/userDirectory'
 
 /** Accounts as Firebase Auth knows them */
 export const firebaseUserDirectory = (
-  auth: Pick<Auth, 'getUser'>,
+  auth: Pick<Auth, 'getUser' | 'deleteUsers'>,
 ): UserDirectory => ({
   exists: (uid) =>
     auth.getUser(uid).then(
@@ -13,4 +13,15 @@ export const firebaseUserDirectory = (
         throw error
       },
     ),
+
+  remove: async (users) => {
+    if (users.length === 0) return
+    // deleteUsers reports failures in its result instead of throwing
+    const { failureCount, errors } = await auth.deleteUsers([...users])
+    if (failureCount > 0) {
+      throw new Error(`Could not delete ${failureCount} accounts`, {
+        cause: errors,
+      })
+    }
+  },
 })
