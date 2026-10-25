@@ -17,6 +17,9 @@ export interface FileStorage {
     },
   ): Promise<void>
 
+  /** Whether anything is stored at a path */
+  exists(path: string): Promise<boolean>
+
   /** Remove the file at a path; a path with nothing there is not an error */
   remove(path: string): Promise<void>
 
