@@ -4,8 +4,8 @@
  * Runs before authentication, so a forged request is refused before the cookie is ever read.
  */
 import { createError, defineEventHandler, getHeader, getRequestHost } from 'h3'
-import { refuseCrossSite } from '../security/crossSite'
-import { setErrorContext } from '../utils/wideEventHelpers'
+import { refuseCrossSite } from '@/server/security/crossSite'
+import { setErrorContext } from '@/server/utils/wideEventHelpers'
 
 export default defineEventHandler((event) => {
   const refusal = refuseCrossSite({

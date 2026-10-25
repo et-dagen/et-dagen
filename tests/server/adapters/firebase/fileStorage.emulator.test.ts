@@ -6,7 +6,7 @@
 import { initializeApp } from 'firebase-admin/app'
 import { getStorage } from 'firebase-admin/storage'
 import { describe } from 'vitest'
-import { describeFileStorage } from '../../../application/files/fileStorage.contract'
+import { describeFileStorage } from '@/tests/application/files/fileStorage.contract'
 import { firebaseFileStorage } from '@/server/adapters/firebase/fileStorage'
 
 const host = process.env.FIREBASE_STORAGE_EMULATOR_HOST

@@ -3,8 +3,8 @@
  * a change to the v1 contract and needs a reason.
  */
 import { beforeEach, describe, expect, it } from 'vitest'
-import { api } from '../support/api'
-import { resetEmulators, seed } from '../support/emulators'
+import { api } from '@/tests/api/support/api'
+import { resetEmulators, seed } from '@/tests/api/support/emulators'
 
 const talk = { title: 'Talk', capacity: 0 }
 const workshop = { title: 'Workshop', capacity: 10 }

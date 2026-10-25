@@ -55,6 +55,19 @@ module.exports = {
   ],
   plugins: [],
   rules: {
+    // Code in another directory comes through the `@/` alias, so a moved file keeps its imports
+    'no-restricted-imports': [
+      'error',
+      {
+        patterns: [
+          {
+            group: ['../*'],
+            message:
+              "Import through the '@/' alias instead of a parent directory.",
+          },
+        ],
+      },
+    ],
     'prettier/prettier': [
       'warn',
       {

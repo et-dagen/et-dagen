@@ -6,7 +6,7 @@
 import { initializeApp } from 'firebase-admin/app'
 import { getDatabase } from 'firebase-admin/database'
 import { describe } from 'vitest'
-import { describeFileRepository } from '../../../application/files/fileRepository.contract'
+import { describeFileRepository } from '@/tests/application/files/fileRepository.contract'
 import { rtdbFileRepository } from '@/server/adapters/rtdb/fileRepository'
 
 const host = process.env.FIREBASE_DATABASE_EMULATOR_HOST

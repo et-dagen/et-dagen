@@ -1,7 +1,7 @@
 // PUT /api/v1/job
 // endpoint for editing jobs in the database
 
-import { isValidDate } from '../../../../composables/useDate'
+import { isValidDate } from '@/composables/useDate'
 import { fail } from '@/domain/errors'
 
 defineRouteMeta({
