@@ -1041,7 +1041,8 @@
     "skip": "Skip to content",
     "next": {
       "now": "Now",
-      "next": "Next"
+      "next": "Next",
+      "mine": "Your next"
     },
     "language": {
       "label": "Language",

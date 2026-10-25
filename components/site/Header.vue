@@ -24,12 +24,22 @@
   )
 
   // the pill depends on the clock, so it is worked out in the browser only
-  const { data: events } = useFetch<Record<string, EventRow>>('/api/v1/event', {
+  const auth = useAuthStore()
+  const { data: events, refresh: refreshEvents } = useFetch<
+    Record<string, EventRow>
+  >('/api/v1/event', {
     key: 'site-header-events',
     server: false,
     lazy: true,
   })
-  const next = computed(() => nextUp(events.value, Instant.now()))
+  // signing in or out changes whose events count as the visitor's own
+  watch(
+    () => auth.user?.uid,
+    () => refreshEvents(),
+  )
+  const next = computed(() =>
+    nextUp(events.value, Instant.now(), auth.user?.uid),
+  )
 
   // out of the way while reading down the page, back as soon as the reader scrolls up
   const hidden = ref(false)

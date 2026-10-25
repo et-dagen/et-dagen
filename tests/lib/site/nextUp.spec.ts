@@ -13,36 +13,64 @@ const events = {
   },
   later: {
     title: 'Bankett',
-    date: { start: '2026-11-20T19:00', end: '2026-11-20T23:00' },
+    date: { start: '2026-12-20T19:00', end: '2026-12-20T23:00' },
+    attendants: { ada: { attended: false } },
+  },
+  queued: {
+    title: 'Workshop',
+    date: { start: '2026-11-05T10:00', end: '2026-11-05T12:00' },
+    queue: { '-a': 'bo' },
   },
   undated: { title: 'Mangler tid' },
 }
 const at = (iso: ISO8601Literal) => Instant.parse(iso)
 
-describe('nextUp', () => {
+describe('nextUp for everyone', () => {
   it('names the event on now', () => {
     expect(nextUp(events, at('2026-11-04T11:30:00.000Z'))).toMatchObject({
       kind: 'now',
       uid: 'kick',
+      mine: false,
     })
   })
 
-  it('names the next event, and whether it is today in Oslo', () => {
+  it('names the next event, and how far away it is', () => {
     expect(nextUp(events, at('2026-11-04T14:30:00.000Z'))).toMatchObject({
       kind: 'next',
       uid: 'talk',
-      today: true,
+      when: 'today',
     })
     expect(nextUp(events, at('2026-11-01T10:00:00.000Z'))).toMatchObject({
-      kind: 'next',
       uid: 'kick',
-      today: false,
+      when: 'week',
     })
   })
 
-  it('has nothing when the next event is more than a week away, or none is left', () => {
-    expect(nextUp(events, at('2026-11-05T10:00:00.000Z'))).toBeNull()
-    expect(nextUp(events, at('2026-12-01T10:00:00.000Z'))).toBeNull()
+  it('has nothing when the next event is more than a week away', () => {
+    expect(nextUp(events, at('2026-11-06T10:00:00.000Z'))).toBeNull()
     expect(nextUp(null, at('2026-12-01T10:00:00.000Z'))).toBeNull()
+  })
+})
+
+describe('nextUp for a signed-in visitor', () => {
+  it('names their own next event first, however far ahead', () => {
+    expect(nextUp(events, at('2026-11-04T11:30:00.000Z'), 'ada')).toMatchObject(
+      { kind: 'next', uid: 'later', mine: true, when: 'later' },
+    )
+  })
+
+  it('counts a place in the queue as theirs', () => {
+    expect(nextUp(events, at('2026-11-04T15:00:00.000Z'), 'bo')).toMatchObject({
+      uid: 'queued',
+      mine: true,
+      when: 'week',
+    })
+  })
+
+  it('falls back to the fair’s next event without a sign-up', () => {
+    expect(nextUp(events, at('2026-11-04T14:30:00.000Z'), 'cy')).toMatchObject({
+      uid: 'talk',
+      mine: false,
+    })
   })
 })

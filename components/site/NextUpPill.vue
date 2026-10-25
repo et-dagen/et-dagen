@@ -4,28 +4,30 @@
 
   const props = defineProps<{ next: NextUp; large?: boolean }>()
 
-  const { locale } = useI18n()
+  const { locale, t } = useI18n()
   const localePath = useLocalePath()
 
   const time = computed(() => {
     const start = props.next.event.date?.start ?? ''
     const hhmm = start.split('T')[1]?.slice(0, 5) ?? ''
-    if (props.next.kind === 'now' || props.next.today) return hhmm
-    const weekday = new Intl.DateTimeFormat(locale.value, {
-      weekday: 'short',
-      timeZone: 'UTC',
-    }).format(new Date(`${start.slice(0, 10)}T12:00:00Z`))
-    return `${weekday} ${hhmm}`
+    if (props.next.when === 'today') return hhmm
+    const day = new Intl.DateTimeFormat(
+      locale.value,
+      props.next.when === 'week'
+        ? { weekday: 'short', timeZone: 'UTC' }
+        : { day: 'numeric', month: 'short', timeZone: 'UTC' },
+    ).format(new Date(`${start.slice(0, 10)}T12:00:00Z`))
+    return `${day} ${hhmm}`
   })
+  const heading = computed(() =>
+    t(
+      `site.next.${props.next.kind === 'next' && props.next.mine ? 'mine' : props.next.kind}`,
+    ),
+  )
   const room = computed(() => placeOf(props.next.event.location?.name).code)
   // the compact pill hides the title, so the link always says all of it
-  const { t } = useI18n()
   const label = computed(() =>
-    [
-      `${t(`site.next.${props.next.kind}`)} ${time.value}`,
-      props.next.event.title,
-      room.value,
-    ]
+    [`${heading.value} ${time.value}`, props.next.event.title, room.value]
       .filter(Boolean)
       .join(', '),
   )
@@ -48,7 +50,7 @@
       aria-hidden="true"
     />
     <span class="tw:shrink-0 tw:font-bold tw:tabular-nums">
-      {{ $t(`site.next.${next.kind}`) }} {{ time }}
+      {{ heading }} {{ time }}
     </span>
     <!-- between lg and xl the bar has room for the time and the room, not the title -->
     <span
