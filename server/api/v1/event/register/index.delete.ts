@@ -1,6 +1,17 @@
 // DELETE /api/v1/event/register/:eventUID
 
 // endpoint for opting out of an event
+import {
+  withdrawFromEvent,
+  type WithdrawResult,
+} from '@/application/events/registration'
+import { EventUid } from '@/domain/event/event'
+import { fail } from '@/domain/errors'
+import { Instant } from '@/domain/time'
+import { UserUid } from '@/domain/user'
+import { subjectOf } from '@/server/adapters/rtdb/userRecord'
+import { events } from '@/server/composition'
+
 defineRouteMeta({
   openAPI: {
     tags: ['Event'],
@@ -75,122 +86,71 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // Track if this is an admin action on behalf of another user
-  const isAdminAction = userUID && userUID !== user.uid
-  addEventContext(event, 'is_admin_action', isAdminAction)
-
-  // Only admins can modify event attendants
-  if (userUID && userUID !== user.uid && !hasAccess(user, ['admin'])) {
-    setErrorContext(event, {
-      code: 'event/register/not-owner',
-      message: 'Non-admin user attempted to opt out another user',
-    })
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Error (event/register/not-owner).',
-    })
-  }
-
-  // Get event from database
-  const eventRef = db.ref(`events/${eventUID}`)
-  const snapshot = await withDbTiming(event, `events/${eventUID}`, 'read', () =>
-    eventRef.once('value'),
+  addEventContext(
+    event,
+    'is_admin_action',
+    Boolean(userUID && userUID !== user.uid),
   )
-  const data = snapshot.val()
 
-  // Event does not exist
-  if (!data) {
-    setErrorContext(event, {
-      code: 'event/not-found',
-      message: 'Event not found',
-    })
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Error (event/not-found).',
-    })
-  }
+  const now = Instant.now()
+  const result = await withDbTiming(event, `events/${eventUID}`, 'write', () =>
+    withdrawFromEvent(
+      { events },
+      {
+        subject: subjectOf(user.uid, user, now),
+        event: EventUid.parse(eventUID),
+        user: UserUid.parse(userUID || user.uid),
+        now,
+      },
+    ),
+  )
+  addEventContext(event, 'optout_outcome', result.kind)
 
-  // check if sign up start and opt out deadline is before event start
-  if (
-    !hasAccess(user, ['admin']) &&
-    !presentWithinTimeWindow(data.registration.start, data.registration.end)
-  ) {
-    setErrorContext(event, {
-      code: 'event/register/registration-closed',
-      message: 'Registration window is closed',
-    })
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Error (event/register/registration-closed).',
-    })
-  }
-
-  const attendants = data.attendants ?? {}
-  const targetUID = userUID ?? user.uid
-  const queue = data.queue ?? {}
-
-  const queuedEntry = Object.entries(queue).find(([, uid]) => uid === targetUID)
-
-  if (queuedEntry) {
-    const [queueKey] = queuedEntry
-    await withDbTiming(
-      event,
-      `events/${eventUID}/queue/${queueKey}`,
-      'delete',
-      () => eventRef.child('queue').child(queueKey).remove(),
-    )
-    addEventContext(event, 'optout_outcome', 'dequeued')
+  if (result.kind === 'withdrawn' || result.kind === 'dequeued') {
+    if (result.kind === 'withdrawn') {
+      addEventContext(event, 'queue_promoted', result.promoted !== null)
+    }
+    // User successfully opted out of event
     sendNoContent(event, 201)
     return
   }
+  if (result.kind === 'forbidden') throw fail('event/register/forbidden')
 
-  if (!Object.hasOwn(attendants, targetUID)) {
-    setErrorContext(event, {
-      code: 'event/register/user-not-registered-or-queued',
-      message: 'User is not registered or queued for this event',
-    })
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Error (event/register/user-not-registered-or-queued).',
-    })
-  }
-
-  await withDbTiming(
-    event,
-    `events/${eventUID}/attendants/${targetUID}`,
-    'delete',
-    () => eventRef.child('attendants').child(targetUID).remove(),
-  )
-
-  addEventContext(event, 'optout_outcome', 'unregistered')
-
-  // Move the next user from the queue to attendants
-  const nextQueueKey = Object.keys(queue).sort()[0]
-
-  if (nextQueueKey) {
-    const nextUID = queue[nextQueueKey]
-
-    await withDbTiming(
-      event,
-      `events/${eventUID}/queue/${nextQueueKey}`,
-      'delete',
-      () => eventRef.child('queue').child(nextQueueKey).remove(),
-    )
-
-    await withDbTiming(
-      event,
-      `events/${eventUID}/attendants/${nextUID}`,
-      'write',
-      () =>
-        eventRef.child('attendants').child(nextUID).set({
-          attended: false,
-          registeredAt: Date.now(),
-        }),
-    )
-
-    addEventContext(event, 'queue_promoted', true)
-  }
-
-  // User successfully opted out of event
-  sendNoContent(event, 201)
+  const refusal = REFUSALS[result.kind]
+  setErrorContext(event, { code: refusal.code, message: refusal.message })
+  throw createError({
+    statusCode: refusal.status,
+    statusMessage: `Error (${refusal.code}).`,
+  })
 })
+
+const NOT_ON_EVENT = {
+  status: 404,
+  code: 'event/register/user-not-registered-or-queued',
+  message: 'User is not registered or queued for this event',
+}
+
+/** How v1 answers each refusal; the statuses and messages are its contract */
+const REFUSALS: Record<
+  Exclude<WithdrawResult['kind'], 'withdrawn' | 'dequeued' | 'forbidden'>,
+  { status: number; code: string; message: string }
+> = {
+  'event-not-found': {
+    status: 404,
+    code: 'event/not-found',
+    message: 'Event not found',
+  },
+  // v1 had no sign-up check here, so an event without one held nobody to remove
+  'no-registration': NOT_ON_EVENT,
+  'not-own': {
+    status: 401,
+    code: 'event/register/not-owner',
+    message: 'Non-admin user attempted to opt out another user',
+  },
+  closed: {
+    status: 404,
+    code: 'event/register/registration-closed',
+    message: 'Registration window is closed',
+  },
+  'not-registered': NOT_ON_EVENT,
+}

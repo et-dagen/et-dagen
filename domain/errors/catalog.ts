@@ -22,6 +22,10 @@ export interface ErrorSpec {
  */
 export const ERRORS = {
   'internal/unexpected': { status: 500, message: 'Unexpected error' },
+  'event/register/forbidden': {
+    status: 403,
+    message: 'This account type cannot sign up for events',
+  },
   'file/unsupported-type': {
     status: 415,
     message: 'This kind of file does not accept that format',

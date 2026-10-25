@@ -3,8 +3,13 @@
  * bug. A change here is a change to the v1 contract and needs a reason.
  */
 import { beforeEach, describe, expect, it } from 'vitest'
-import { api } from '../support/api'
-import { createUser, read, resetEmulators, seed } from '../support/emulators'
+import { api } from '@/tests/api/support/api'
+import {
+  createUser,
+  read,
+  resetEmulators,
+  seed,
+} from '@/tests/api/support/emulators'
 
 const OPEN = { start: '2000-01-01T00:00', end: '2999-12-31T23:59' }
 const CLOSED = { start: '2000-01-01T00:00', end: '2000-01-02T00:00' }
@@ -14,6 +19,8 @@ const admin = { userType: 'admin' }
 
 const event = (extra: Record<string, unknown> = {}) => ({
   title: 'Workshop',
+  companyUID: 'company',
+  date: { start: '2999-01-01T18:00' },
   capacity: 2,
   registration: OPEN,
   ...extra,
@@ -154,6 +161,39 @@ describe('POST /api/v1/event/register', () => {
     expect(await register({ eventUID: 'workshop' }, token)).toEqual(
       rejected(404, 'Error (event/register/already-queued).'),
     )
+  })
+
+  it('admits exactly the capacity when many register at once', async () => {
+    const students = await Promise.all(
+      Array.from({ length: 8 }, () => createUser(student)),
+    )
+    await seed('events/workshop', event({ capacity: 3 }))
+
+    const answers = await Promise.all(
+      students.map(({ token }) => register({ eventUID: 'workshop' }, token)),
+    )
+
+    expect(answers.every(({ status }) => status === 201)).toBe(true)
+    const attendants = (await read('events/workshop/attendants')) as object
+    const queue = Object.values((await read('events/workshop/queue')) as object)
+    expect(Object.keys(attendants)).toHaveLength(3)
+    expect(queue).toHaveLength(5)
+    expect(new Set([...Object.keys(attendants), ...queue])).toEqual(
+      new Set(students.map(({ uid }) => uid)),
+    )
+  })
+
+  it('refuses a company user', async () => {
+    const { token } = await createUser({ userType: 'company' })
+    await seed('events/workshop', event())
+
+    expect(await register({ eventUID: 'workshop' }, token)).toEqual({
+      status: 403,
+      body: expect.objectContaining({
+        statusCode: 403,
+        code: 'event/register/forbidden',
+      }),
+    })
   })
 
   it('lets only an admin register someone else', async () => {
