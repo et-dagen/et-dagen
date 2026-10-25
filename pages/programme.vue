@@ -16,7 +16,6 @@
 
   const { t } = useI18n()
   const route = useRoute()
-  const router = useRouter()
 
   const [{ data: events }, { data: companies }, { data: maps }] =
     await Promise.all([
@@ -41,15 +40,22 @@
       : initialDay(days.value, Instant.now()),
   )
 
+  // replaceState instead of the router, so following the scroll does not count as navigation
+  function remember(date: string) {
+    const url = new URL(window.location.href)
+    url.searchParams.set('dag', date)
+    window.history.replaceState(window.history.state, '', url)
+  }
+
   function select(date: string) {
     selected.value = date
-    router.replace({ query: { ...route.query, dag: date } })
+    remember(date)
     document
       .getElementById(`day-${date}`)
       ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
-  // the ribbon follows the scroll: the day whose heading passes the top is the current one
+  // the ribbon and the address follow the scroll: the day whose heading passes the top is current
   let observer: IntersectionObserver | undefined
   onMounted(() => {
     // only a shared link jumps; otherwise the band and the day cards stay in view
@@ -63,7 +69,9 @@
           .sort(
             (a, b) => a.boundingClientRect.top - b.boundingClientRect.top,
           )[0]
-        if (visible) selected.value = visible.target.id.replace('day-', '')
+        if (!visible) return
+        selected.value = visible.target.id.replace('day-', '')
+        remember(selected.value)
       },
       { rootMargin: '0px 0px -70% 0px' },
     )

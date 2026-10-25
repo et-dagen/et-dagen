@@ -17,7 +17,7 @@
 <template>
   <nav :aria-label="$t('programme.days')">
     <ul
-      class="tw:-mx-4 tw:flex tw:snap-x tw:gap-3 tw:overflow-x-auto tw:px-4 tw:pb-1 tw:lg:mx-0 tw:lg:grid tw:lg:grid-cols-[repeat(auto-fill,minmax(11rem,1fr))] tw:lg:overflow-visible tw:lg:px-0"
+      class="tw:-mx-4 tw:flex tw:snap-x tw:scroll-px-4 tw:gap-3 tw:overflow-x-auto tw:px-4 tw:pb-1 tw:lg:mx-0 tw:lg:grid tw:lg:grid-cols-[repeat(auto-fit,minmax(11rem,1fr))] tw:lg:overflow-visible tw:lg:px-0"
     >
       <li v-for="day in days" :key="day.date" class="tw:shrink-0 tw:snap-start">
         <button

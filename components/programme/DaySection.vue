@@ -30,13 +30,10 @@
 </script>
 
 <template>
-  <section
-    :id="`day-${day.date}`"
-    class="tw:scroll-mt-24"
-    :aria-labelledby="`heading-${day.date}`"
-  >
+  <section :id="`day-${day.date}`" :aria-labelledby="`heading-${day.date}`">
+    <!-- the stuck heading takes the exact page ground, so it shows only once content passes under it -->
     <div
-      class="tw:sticky tw:top-0 tw:z-[1] tw:-mx-4 tw:flex tw:items-center tw:justify-between tw:gap-4 tw:bg-background/95 tw:px-4 tw:py-3 tw:backdrop-blur-sm tw:lg:mx-0 tw:lg:px-0"
+      class="tw:sticky tw:top-0 tw:z-[1] tw:-mx-4 tw:flex tw:items-center tw:justify-between tw:gap-4 tw:bg-background tw:px-4 tw:py-3 tw:lg:mx-0 tw:lg:px-0"
     >
       <div>
         <h2
@@ -49,8 +46,20 @@
           {{ $t('programme.count', day.events.length) }}
         </p>
       </div>
-      <StandMap v-if="map" :url="map" :day="heading" />
+      <StandMap
+        v-if="map"
+        :url="map"
+        :day="heading"
+        class="tw:hidden tw:sm:block"
+      />
     </div>
+    <!-- on a phone the map sits under the heading, so the stuck heading stays one line -->
+    <StandMap
+      v-if="map"
+      :url="map"
+      :day="heading"
+      class="tw:mt-1 tw:sm:hidden"
+    />
 
     <ol
       class="tw:mt-2 tw:grid tw:grid-cols-[4.5rem_minmax(0,1fr)] tw:sm:grid-cols-[6rem_minmax(0,1fr)]"
@@ -68,15 +77,15 @@
           {{ hhmm(event.date?.start) }}
         </time>
         <div
-          class="tw:relative tw:border-l-[3px] tw:border-border tw:py-3 tw:pl-5"
+          class="tw:relative tw:border-l-[3px] tw:border-plate/25 tw:py-2 tw:pl-4"
         >
           <span
-            class="tw:absolute tw:top-5 tw:-left-[9px] tw:size-[15px] tw:rounded-full tw:border-[3px] tw:border-background tw:bg-plate tw:[[data-over]_&]:bg-muted-foreground"
+            class="tw:absolute tw:top-[1.375rem] tw:-left-[9px] tw:size-[15px] tw:rounded-full tw:border-[3px] tw:border-background tw:bg-plate tw:[[data-over]_&]:bg-muted-foreground"
             aria-hidden="true"
           />
           <NuxtLink
             :to="localePath(`/event/${event.uid}`)"
-            class="tw:group tw:flex tw:items-start tw:gap-3 tw:rounded-lg tw:border tw:bg-card tw:p-3.5 tw:transition-colors tw:hover:border-plate/40 tw:[[data-over]_&]:opacity-60"
+            class="tw:group tw:flex tw:items-start tw:gap-3 tw:rounded-md tw:p-2 tw:transition-colors tw:hover:bg-plate/5 tw:[[data-over]_&]:opacity-60"
           >
             <CompanyLogo
               v-if="event.companyUID && companies[event.companyUID]"

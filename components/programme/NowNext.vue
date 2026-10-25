@@ -59,8 +59,21 @@
       >
         {{ event.title }}
       </NuxtLink>
-      <p class="tw:text-sm tw:opacity-90">
-        {{ $t('programme.band.until', { time: hhmm(now[0]?.date?.end) }) }}
+      <p
+        class="tw:flex tw:flex-wrap tw:items-center tw:gap-x-2 tw:text-sm tw:opacity-95"
+      >
+        <span>{{
+          $t('programme.band.until', { time: hhmm(now[0]?.date?.end) })
+        }}</span>
+        <span
+          v-if="placeOf(now[0]?.location?.name).code"
+          class="tw:rounded-sm tw:bg-white tw:px-1.5 tw:pt-0.5 tw:text-xs tw:font-extrabold tw:text-plate"
+        >
+          {{ placeOf(now[0]?.location?.name).code }}
+        </span>
+        <span v-else-if="now[0]?.location?.name">{{
+          now[0].location.name
+        }}</span>
       </p>
     </div>
     <div

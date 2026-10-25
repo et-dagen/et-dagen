@@ -36,7 +36,7 @@
     <!-- a native modal: Escape closes it and focus returns to the button -->
     <dialog
       ref="dialog"
-      class="tw:m-0 tw:h-dvh tw:max-h-none tw:w-dvw tw:max-w-none tw:bg-foreground/90 tw:p-0 tw:backdrop:bg-transparent"
+      class="tw:m-0 tw:h-dvh tw:max-h-none tw:w-dvw tw:max-w-none tw:bg-foreground tw:p-0 tw:backdrop:bg-transparent"
       :aria-label="$t('programme.map.title', { day })"
     >
       <div class="tw:flex tw:h-full tw:flex-col">
