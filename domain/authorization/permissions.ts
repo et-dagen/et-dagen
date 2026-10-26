@@ -80,7 +80,8 @@ export type Permissions = {
   }
   user: {
     dataType: { uid?: UserUid; scope: 'own' | 'all' }
-    action: 'read' | 'create' | 'update' | 'delete'
+    /** `list` is every user in full; `assign` sets a user's account type and company */
+    action: 'read' | 'list' | 'create' | 'update' | 'delete' | 'assign'
   }
   code: { dataType: undefined; action: 'read' | 'create' | 'delete' }
   image: { dataType: undefined; action: 'upload' }
