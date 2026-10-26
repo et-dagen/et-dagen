@@ -5,7 +5,7 @@ import {
   uploadFile,
   type FileDependencies,
 } from '@/application/files/uploadFile'
-import { hasPermission } from '@/domain/authorization/hasPermission'
+import { authorize } from '@/domain/authorization/authorize'
 import type { Subject } from '@/domain/authorization/subject'
 import {
   BoardMemberId,
@@ -15,6 +15,7 @@ import {
 } from '@/domain/board/member'
 import { fail } from '@/domain/errors'
 import { storagePathOf } from '@/domain/files/file'
+import type { ISO8601String } from '@/domain/time'
 
 export interface BoardDependencies extends FileDependencies {
   board: BoardRepository
@@ -46,10 +47,6 @@ export async function listBoard(deps: Reading): Promise<ShownMember[]> {
   return Promise.all(members.map((member) => shown(member, deps)))
 }
 
-function authorize(subject: Subject) {
-  if (!hasPermission(subject, 'board', 'manage')) throw fail('board/forbidden')
-}
-
 async function existing(deps: Reading, id: BoardMemberId) {
   const member = await deps.board.find(id)
   if (!member) throw fail('board/not-found')
@@ -65,13 +62,17 @@ const unfeatured = (members: readonly BoardMember[], keep: BoardMemberId) =>
 /**
  * Add a member at the end of the board
  *
- * @throws AppError `board/forbidden`
+ * @throws AppError `auth/signed-out`, `auth/forbidden`
  */
 export async function addMember(
   deps: Reading,
-  request: { subject: Subject; input: BoardMemberInput },
+  request: {
+    subject: Subject | undefined
+    now: ISO8601String
+    input: BoardMemberInput
+  },
 ): Promise<ShownMember> {
-  authorize(request.subject)
+  authorize(request.subject, 'board', 'manage', undefined, { now: request.now })
   const members = await deps.board.all()
   const member: BoardMember = {
     id: BoardMemberId.random(),
@@ -89,13 +90,18 @@ export async function addMember(
 /**
  * Change a member's details
  *
- * @throws AppError `board/forbidden` or `board/not-found`
+ * @throws AppError `auth/signed-out`, `auth/forbidden` or `board/not-found`
  */
 export async function updateMember(
   deps: Reading,
-  request: { subject: Subject; id: BoardMemberId; input: BoardMemberInput },
+  request: {
+    subject: Subject | undefined
+    now: ISO8601String
+    id: BoardMemberId
+    input: BoardMemberInput
+  },
 ): Promise<ShownMember> {
-  authorize(request.subject)
+  authorize(request.subject, 'board', 'manage', undefined, { now: request.now })
   const member = { ...(await existing(deps, request.id)), ...request.input }
   await deps.board.save([
     member,
@@ -107,13 +113,17 @@ export async function updateMember(
 /**
  * Remove a member and their portrait, closing the gap in the order
  *
- * @throws AppError `board/forbidden` or `board/not-found`
+ * @throws AppError `auth/signed-out`, `auth/forbidden` or `board/not-found`
  */
 export async function removeMember(
   deps: Reading,
-  request: { subject: Subject; id: BoardMemberId },
+  request: {
+    subject: Subject | undefined
+    now: ISO8601String
+    id: BoardMemberId
+  },
 ): Promise<void> {
-  authorize(request.subject)
+  authorize(request.subject, 'board', 'manage', undefined, { now: request.now })
   const member = await existing(deps, request.id)
   await deps.board.remove(member.id)
   await deps.board.save(
@@ -126,13 +136,18 @@ export async function removeMember(
 /**
  * Move a member to a place on the board; the others keep their order around them
  *
- * @throws AppError `board/forbidden` or `board/not-found`
+ * @throws AppError `auth/signed-out`, `auth/forbidden` or `board/not-found`
  */
 export async function moveMember(
   deps: Reading,
-  request: { subject: Subject; id: BoardMemberId; to: number },
+  request: {
+    subject: Subject | undefined
+    now: ISO8601String
+    id: BoardMemberId
+    to: number
+  },
 ): Promise<void> {
-  authorize(request.subject)
+  authorize(request.subject, 'board', 'manage', undefined, { now: request.now })
   const member = await existing(deps, request.id)
   const others = (await deps.board.all()).filter((m) => m.id !== member.id)
   const to = Math.max(0, Math.min(others.length, Math.trunc(request.to)))
@@ -146,20 +161,21 @@ export async function moveMember(
  * @remarks
  * The old portrait is removed only once the member points at the new one.
  *
- * @throws AppError `board/forbidden`, `board/not-found`, `file/unsupported-type`,
+ * @throws AppError `auth/signed-out`, `auth/forbidden`, `board/not-found`, `file/unsupported-type`,
  * `file/too-large`, `file/empty` or `board/unreadable-image`
  */
 export async function setPortrait(
   deps: BoardDependencies,
   request: {
-    subject: Subject
+    subject: Subject | undefined
+    now: ISO8601String
     id: BoardMemberId
     name: string
     contentType: string
     bytes: Uint8Array
   },
 ): Promise<ShownMember> {
-  authorize(request.subject)
+  authorize(request.subject, 'board', 'manage', undefined, { now: request.now })
   const member = await existing(deps, request.id)
 
   if (!(PORTRAIT.types as readonly string[]).includes(request.contentType)) {

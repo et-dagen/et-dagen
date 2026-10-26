@@ -91,8 +91,10 @@ can replace the Realtime Database one without changing the use cases.
   `domain/authorization`. Roles bundle permissions; companies hold entitlements; a coordinator gets the
   entitlements of each company they are associated with. Event eligibility rules live in
   `domain/authorization/eligibility.ts` and explain refusals. The core is in review in #517. The
-  subject is built once per request in `server/middleware/user.ts` (#519); #520–#521 wire in the
-  checks.
+  subject is built once per request in `server/middleware/user.ts` (#519). Use cases check it with
+  `authorize` in `domain/authorization/authorize.ts`, the one place a denial is raised: status 401
+  with `auth/signed-out` when nobody is signed in, 403 with `auth/forbidden` when the table says
+  no. The caller passes the clock. #521 moves the remaining v1 handlers off `hasAccess`.
 
 ## Logging
 
