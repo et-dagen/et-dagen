@@ -8,10 +8,7 @@ export const COMPANY_TYPES = [
   'old',
 ] as const
 
-const required = z
-  .string({ required_error: 'required' })
-  .trim()
-  .min(1, 'required')
+const required = z.string({ error: 'required' }).trim().min(1, 'required')
 
 /**
  * A company as the admin form sends it, without the logo, which is uploaded on its own
@@ -22,7 +19,7 @@ const required = z
  */
 export const CompanyInput = z.object({
   name: required.max(100, 'too_long'),
-  type: z.enum(COMPANY_TYPES, { errorMap: () => ({ message: 'required' }) }),
+  type: z.enum(COMPANY_TYPES, { error: 'required' }),
   webpage: required.refine((url) => /^https?:\/\/\S+$/.test(url), 'url'),
   description: z.string().trim().max(2000, 'too_long').default(''),
   cvAccess: z.boolean().default(false),
