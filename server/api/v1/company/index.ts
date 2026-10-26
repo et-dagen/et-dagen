@@ -1,6 +1,15 @@
 // GET /api/v1/company
 // endpoint for fetching companies from db
 
+import type { H3Event } from 'h3'
+import {
+  entitlementsFor,
+  type EntitledCompany,
+} from '@/domain/authorization/entitlements'
+import { hasPermission } from '@/domain/authorization/hasPermission'
+import { CompanyUid } from '@/domain/business/company'
+import { Instant } from '@/domain/time'
+import { companies } from '@/server/composition'
 import { readableCompanies } from '@/server/security/richText'
 
 defineRouteMeta({
@@ -9,7 +18,8 @@ defineRouteMeta({
     summary: 'List companies or fetch one',
     description:
       'Public. Without companyUID returns every company keyed by UID; with it returns a ' +
-      'single-entry map. Returns null when empty.',
+      'single-entry map. Returns null when empty. Each company has its `tier`; admins also get ' +
+      'the `entitlements` the tier and its overrides grant.',
     security: [],
     parameters: [
       {
@@ -54,7 +64,7 @@ export default defineEventHandler(async (event) => {
     // Add result metadata to wide event
     addEventContext(event, 'result_count', data ? Object.keys(data).length : 0)
 
-    return readableCompanies(data)
+    return readableCompanies(withTiers(event, data, await companies.all()))
   }
 
   // get specified company
@@ -74,5 +84,43 @@ export default defineEventHandler(async (event) => {
   // Track whether company was found
   addEventContext(event, 'company_found', !!data)
 
-  return readableCompanies(data)
+  return readableCompanies(
+    withTiers(
+      event,
+      data,
+      await companies.entitled([CompanyUid.parse(companyUID as string)]),
+    ),
+  )
 })
+
+/** Add each company's tier from its affiliation, and for admins what it is entitled to */
+function withTiers<T>(
+  event: H3Event,
+  records: T,
+  entitled: EntitledCompany[],
+): T {
+  if (!records) return records
+  const showEntitlements = hasPermission(
+    event.context.subject,
+    'company',
+    'entitle',
+    undefined,
+    { now: Instant.now() },
+  )
+  const byUid = new Map(entitled.map((company) => [company.uid, company]))
+  return Object.fromEntries(
+    Object.entries(records as Record<string, object>).map(([uid, record]) => {
+      const company = byUid.get(CompanyUid.parse(uid))
+      return [
+        uid,
+        {
+          ...record,
+          tier: company?.relationship ?? 'prior',
+          ...(showEntitlements && {
+            entitlements: company ? [...entitlementsFor(company)] : [],
+          }),
+        },
+      ]
+    }),
+  ) as T
+}

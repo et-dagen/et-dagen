@@ -13,4 +13,6 @@ export interface AccessRepository {
    * erased.
    */
   replace(user: UserUid, access: Access, stamp: Stamp): Promise<void>
+  /** The user's stored roles and active memberships, or null when no roles are stored */
+  find(user: UserUid): Promise<Access | null>
 }

@@ -38,6 +38,13 @@ export function describeCompanyRepository(
       expect(found).toEqual(expect.arrayContaining(SEED))
     })
 
+    it('reads every stored company', async () => {
+      const companies = await make(SEED)
+      const found = await companies.all()
+      expect(found).toHaveLength(2)
+      expect(found).toEqual(expect.arrayContaining(SEED))
+    })
+
     it('skips companies that are not stored', async () => {
       const companies = await make(SEED)
       expect(await companies.entitled([gone, acme])).toEqual([SEED[0]])

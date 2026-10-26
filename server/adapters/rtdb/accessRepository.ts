@@ -1,8 +1,11 @@
 import type { Database } from 'firebase-admin/database'
 import type { AccessRepository } from '@/application/users/accessRepository'
-import type {
-  MembershipRecord,
-  RolesRecord,
+import { isMembershipKind } from '@/domain/authorization/access'
+import { CompanyUid } from '@/domain/business/company'
+import {
+  rolesFrom,
+  type MembershipRecord,
+  type RolesRecord,
 } from '@/server/adapters/rtdb/accessRecords'
 
 /** Roles under `roles/<uid>` and memberships under `memberships/<uid>` in the Realtime Database */
@@ -40,5 +43,22 @@ export const rtdbAccessRepository = (
     }
 
     if (Object.keys(update).length > 0) await db.ref().update(update)
+  },
+  find: async (user) => {
+    const [roles, memberships] = (await Promise.all(
+      [`roles/${user}`, `memberships/${user}`].map(async (path) =>
+        (await db.ref(path).once('value')).val(),
+      ),
+    )) as [RolesRecord | null, Record<string, MembershipRecord> | null]
+    if (!roles) return null
+    return {
+      roles: rolesFrom(roles),
+      memberships: Object.entries(memberships ?? {}).flatMap(
+        ([company, { kind, endedAt }]) =>
+          !endedAt && isMembershipKind(kind)
+            ? [{ company: CompanyUid.parse(company), kind }]
+            : [],
+      ),
+    }
   },
 })

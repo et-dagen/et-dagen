@@ -88,3 +88,25 @@ export function checkedAccess(
   }
   return { roles: [...new Set(roles)], memberships: checked }
 }
+
+/**
+ * The access a user's v1 fields become in the migration (#640)
+ *
+ * @remarks
+ * Every v1 company account is run by E&T-dagene, so it becomes a coordinator of its company; the
+ * `company` role is left for contacts from the companies themselves.
+ */
+export const migratedAccess = (v1: {
+  roles: readonly Role[]
+  companies: readonly CompanyUid[]
+}): Access => ({
+  roles: [
+    ...new Set(
+      v1.roles.map((role) => (role === 'company' ? 'coordinator' : role)),
+    ),
+  ],
+  memberships: v1.companies.map((company) => ({
+    company,
+    kind: 'coordinator',
+  })),
+})

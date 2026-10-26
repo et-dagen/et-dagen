@@ -3,6 +3,7 @@ import {
   accessOnSignUp,
   accessProblem,
   checkedAccess,
+  migratedAccess,
 } from '@/domain/authorization/access'
 import { CompanyUid } from '@/domain/business/company'
 
@@ -56,6 +57,19 @@ describe('accessProblem', () => {
         ],
       }),
     ).toBe('duplicate-membership')
+  })
+})
+
+describe('migratedAccess', () => {
+  it('makes a v1 company user a coordinator and leaves other roles alone', () => {
+    expect(migratedAccess({ roles: ['company'], companies: [acme] })).toEqual({
+      roles: ['coordinator'],
+      memberships: [{ company: acme, kind: 'coordinator' }],
+    })
+    expect(migratedAccess({ roles: ['admin'], companies: [] })).toEqual({
+      roles: ['admin'],
+      memberships: [],
+    })
   })
 })
 

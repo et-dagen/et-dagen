@@ -62,6 +62,24 @@ export function describeAccessRepository(
       })
     })
 
+    it('finds what was stored, without memberships taken away', async () => {
+      const { store } = await make()
+      expect(await store.find(ada)).toBeNull()
+
+      await store.replace(ada, coordinator, stamp)
+      await store.replace(
+        ada,
+        { ...coordinator, memberships: coordinator.memberships.slice(1) },
+        stamp,
+      )
+
+      const found = await store.find(ada)
+      expect(found?.roles.sort()).toEqual(['coordinator', 'user'])
+      expect(found?.memberships).toEqual([
+        { company: globex, kind: 'coordinator' },
+      ])
+    })
+
     it('lets a user act for a company again after leaving it', async () => {
       const { store, held } = await make()
       await store.replace(ada, coordinator, stamp)

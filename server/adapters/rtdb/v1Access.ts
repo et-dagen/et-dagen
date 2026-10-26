@@ -11,6 +11,7 @@ import type {
   MembershipRecord,
   RolesRecord,
 } from '@/server/adapters/rtdb/accessRecords'
+import { migratedAccess } from '@/domain/authorization/access'
 import type { ISO8601String } from '@/domain/time'
 
 /** The nodes #640 adds, as one multi-path update */
@@ -43,16 +44,10 @@ export function v1AccessUpdate(
 
   for (const [uid, record] of Object.entries(stored.users)) {
     if (stored.roles[uid]) continue
-    const user = storedUserOf(record, now)
-    for (const role of user.roles) {
-      update[`roles/${uid}/${role === 'company' ? 'coordinator' : role}`] =
-        stamp
-    }
-    for (const company of user.companies) {
-      update[`memberships/${uid}/${company}`] = {
-        kind: 'coordinator',
-        ...stamp,
-      }
+    const access = migratedAccess(storedUserOf(record, now))
+    for (const role of access.roles) update[`roles/${uid}/${role}`] = stamp
+    for (const { company, kind } of access.memberships) {
+      update[`memberships/${uid}/${company}`] = { kind, ...stamp }
     }
   }
 

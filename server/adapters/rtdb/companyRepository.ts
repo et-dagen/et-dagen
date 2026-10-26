@@ -39,6 +39,15 @@ export const entitledCompanyOf = (
   entitlementOverrides: { 'ent:resume:view': record.cvAccess === true },
 })
 
+const entitledOf = (
+  uid: string,
+  record: CompanyRecord,
+  affiliation: AffiliationRecord | null,
+): EntitledCompany =>
+  affiliation
+    ? entitledFromAffiliation(uid, record.name ?? '', affiliation)
+    : entitledCompanyOf(uid, record)
+
 /**
  * Companies under `companies/<uid>` in the Realtime Database
  *
@@ -56,20 +65,21 @@ export const rtdbCompanyRepository = (
           db.ref(`companies/${uid}`).once('value'),
           db.ref(`affiliations/${uid}`).once('value'),
         ])
-        return [
-          uid,
-          company.val() as CompanyRecord | null,
-          affiliation.val() as AffiliationRecord | null,
-        ] as const
+        return [uid, company.val(), affiliation.val()] as const
       }),
     )
-    return records.flatMap(([uid, record, affiliation]) => {
-      if (!record) return []
-      return [
-        affiliation
-          ? entitledFromAffiliation(uid, record.name ?? '', affiliation)
-          : entitledCompanyOf(uid, record),
-      ]
-    })
+    return records.flatMap(([uid, record, affiliation]) =>
+      record ? [entitledOf(uid, record, affiliation)] : [],
+    )
+  },
+  all: async () => {
+    const [companies, affiliations] = await Promise.all(
+      ['companies', 'affiliations'].map(
+        async (node) => (await db.ref(node).once('value')).val() ?? {},
+      ),
+    )
+    return Object.entries(companies as Record<string, CompanyRecord>).map(
+      ([uid, record]) => entitledOf(uid, record, affiliations[uid] ?? null),
+    )
   },
 })

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { assignAccess, startAccess } from '@/application/users/access'
+import { accessOf, assignAccess, startAccess } from '@/application/users/access'
 import type { Access } from '@/domain/authorization/access'
 import type { Subject } from '@/domain/authorization/subject'
 import { CompanyUid } from '@/domain/business/company'
@@ -114,5 +114,55 @@ describe('startAccess', () => {
       roles: ['company'],
       memberships: [{ company: acme, kind: 'employee' }],
     })
+  })
+})
+
+describe('accessOf', () => {
+  const profiles = memoryUserStore(
+    [ada],
+    new Map([
+      [
+        ada,
+        { roles: ['company'], applicant: null, companies: [acme], record: {} },
+      ],
+    ]),
+  )
+
+  it('shows an admin what is stored', async () => {
+    const access = memoryAccessRepository()
+    await access.replace(ada, coordinator, { at: now, by: ada })
+
+    expect(
+      await accessOf(
+        { access, profiles },
+        { subject: subject('admin'), user: ada, now },
+      ),
+    ).toEqual(coordinator)
+  })
+
+  it('shows a user not migrated yet with the access the migration gives them', async () => {
+    expect(
+      await accessOf(
+        { access: memoryAccessRepository(), profiles },
+        { subject: subject('admin'), user: ada, now },
+      ),
+    ).toEqual({
+      roles: ['coordinator'],
+      memberships: [{ company: acme, kind: 'coordinator' }],
+    })
+  })
+
+  it('refuses everyone but admins, and an unknown user', async () => {
+    const deps = { access: memoryAccessRepository(), profiles }
+    await expect(
+      accessOf(deps, { subject: subject('coordinator'), user: ada, now }),
+    ).rejects.toMatchObject({ code: 'auth/forbidden' })
+    await expect(
+      accessOf(deps, {
+        subject: subject('admin'),
+        user: UserUid.parse('nobody'),
+        now,
+      }),
+    ).rejects.toMatchObject({ code: 'user/not-found' })
   })
 })

@@ -87,6 +87,32 @@ describe('PUT /api/v1/user/access', () => {
   })
 })
 
+describe('GET /api/v1/user/access', () => {
+  it('shows an admin the access a user has, or will have after the migration', async () => {
+    const admin = await createUser({ userType: 'admin' })
+    const rep = await createUser({ userType: 'company', companyUID: 'acme' })
+
+    const response = await api(`/api/v1/user/access?uid=${rep.uid}`, {
+      token: admin.token,
+    })
+
+    expect(response.body).toEqual({
+      roles: ['coordinator'],
+      memberships: [{ companyUID: 'acme', kind: 'coordinator' }],
+    })
+  })
+
+  it('leaves it to admins', async () => {
+    const rep = await createUser({ userType: 'company', companyUID: 'acme' })
+
+    const response = await api(`/api/v1/user/access?uid=${rep.uid}`, {
+      token: rep.token,
+    })
+
+    expect(response.status).toBe(403)
+  })
+})
+
 describe('signing up', () => {
   it('makes a new account a student', async () => {
     const { uid, token } = await createUser()
