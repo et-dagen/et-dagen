@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { CompanyUid } from '@/domain/business/company'
 import { authorize } from '@/domain/authorization/authorize'
 import type { Subject } from '@/domain/authorization/subject'
 import { Term } from '@/domain/ntnu'
@@ -21,6 +22,7 @@ const opens = Instant.parse('2026-08-01T10:00:00.000Z')
 const target = {
   targetUserUid: UserUid.parse('self'),
   event: {
+    companyUid: CompanyUid.parse('host'),
     registration: {
       period: { start: opens, duration: Duration.fromDays(14) },
       attendanceLimit: null,

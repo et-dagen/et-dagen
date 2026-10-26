@@ -29,7 +29,7 @@ export const ERRORS = {
   },
   'event/register/forbidden': {
     status: 403,
-    message: 'This account type cannot sign up for events',
+    message: 'This account cannot sign up for this event',
   },
   'file/unsupported-type': {
     status: 415,

@@ -92,7 +92,7 @@ function accessOf(user: UserInput): {
       return { roles: ['admin'], memberships: [] }
     case 'coordinator':
       return {
-        roles: ['user', 'coordinator'],
+        roles: ['coordinator'],
         memberships: user.companyUIDs.map((companyUID) => ({
           companyUID,
           kind: 'coordinator',

@@ -33,6 +33,17 @@ export type CompanyUid = Brand<string, 'CompanyUid'>
 export const CompanyUid = opaqueUid<CompanyUid>('Company uid')
 
 /**
+ * E&T-dagene itself, as the host of its own events
+ *
+ * @remarks
+ * Not a stored company: events name it by this fixed uid, which the event forms offer next to the
+ * stored companies.
+ */
+export const ORGANISER = CompanyUid.parse('etdagene')
+
+export const isOrganiser = (uid: CompanyUid): boolean => uid === ORGANISER
+
+/**
  * A company connected to E&T-dagene
  */
 export interface Company {

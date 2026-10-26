@@ -228,7 +228,8 @@
             "already-registered": "Brukeren er allerede påmeldt dette arrangementet",
             "registration-closed": "Påmelding er stengt",
             "event-is-full": "Arrangementet er fullt",
-            "not-owner": "Kan ikke endre på andre brukere"
+            "not-owner": "Kan ikke endre på andre brukere",
+            "forbidden": "Du kan ikke melde deg på dette arrangementet."
           }
         },
         "job": {

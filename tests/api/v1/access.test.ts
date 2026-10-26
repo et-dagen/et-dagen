@@ -47,7 +47,8 @@ describe('PUT /api/v1/user/access', () => {
 
     expect(response.status).toBe(204)
     const subject = await subjectFor(volunteer.token)
-    expect(subject.roles.sort()).toEqual(['coordinator', 'user'])
+    // a coordinator already has what a student has, so `user` is not stored beside it
+    expect(subject.roles).toEqual(['coordinator'])
     expect(Object.keys(subject.companies).sort()).toEqual(['acme', 'globex'])
   })
 
@@ -119,7 +120,7 @@ describe('GET /api/v1/user/access', () => {
       .body as { uid: string; access?: unknown }[]
 
     expect(listed.find((u) => u.uid === volunteer.uid)?.access).toEqual({
-      roles: ['coordinator', 'user'],
+      roles: ['coordinator'],
       memberships: [{ companyUID: 'acme', kind: 'coordinator' }],
     })
     expect(listed.find((u) => u.uid === admin.uid)).not.toHaveProperty('access')

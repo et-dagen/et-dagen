@@ -6,6 +6,7 @@ import {
   accessOnSignUp,
   accessProblem,
   migratedAccess,
+  withoutRedundantRoles,
   type Access,
 } from '@/domain/authorization/access'
 import { authorize } from '@/domain/authorization/authorize'
@@ -46,7 +47,10 @@ export async function assignAccess(
   const found = await deps.companies.entitled(companies)
   if (found.length < companies.length) throw fail('company/not-found')
 
-  await deps.access.replace(user, access, { at: now, by: subject.uid })
+  await deps.access.replace(user, withoutRedundantRoles(access), {
+    at: now,
+    by: subject.uid,
+  })
 }
 
 /**

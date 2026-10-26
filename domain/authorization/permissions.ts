@@ -71,7 +71,11 @@ export type Permissions = {
       | 'markAttended'
   }
   registration: {
-    dataType: { targetUserUid: UserUid; event: HasRegistration }
+    /** The event's host decides whether a coordinator may sign up for it */
+    dataType: {
+      targetUserUid: UserUid
+      event: HasRegistration & Pick<Event, 'companyUid'>
+    }
     action: 'create' | 'delete'
   }
   resume: {

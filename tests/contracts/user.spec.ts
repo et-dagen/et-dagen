@@ -108,7 +108,7 @@ describe('toV1User access', () => {
     expect(profile.userType).toBe('basic')
     expect(access).toEqual({
       uid: 'u3',
-      roles: ['user', 'coordinator'],
+      roles: ['coordinator'],
       memberships: [
         { companyUID: 'c1', kind: 'coordinator' },
         { companyUID: 'c2', kind: 'coordinator' },
