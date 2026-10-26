@@ -42,7 +42,7 @@ export type EntitledCompany = Company & HasEntitlementOverrides
  * @remarks
  * `ent:resume:view` is inert until the company data is migrated: the repository mapper emits an
  * explicit override in both directions from `cvAccess`, so no company's resume access changes on
- * deploy.
+ * deploy. Sponsors edit their own profile and nothing else; prior companies get nothing.
  */
 const defaults: Record<Relationship, readonly Entitlement[]> = {
   mainPartner: [
@@ -57,7 +57,7 @@ const defaults: Record<Relationship, readonly Entitlement[]> = {
     'ent:event:manage',
     'ent:profile:manage',
   ],
-  sponsor: [],
+  sponsor: ['ent:profile:manage'],
   prior: [],
 }
 

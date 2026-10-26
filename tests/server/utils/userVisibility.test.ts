@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
+import { Instant } from '@/domain/time'
 import { visibleUsers } from '@/server/utils/userVisibility'
+import { subjectOf } from '@/tests/server/api/support/subject'
 
 const person = (uid: string, extra: Record<string, unknown> = {}) => ({
   uid,
@@ -30,14 +32,19 @@ const events = {
   theirs: { companyUID: 'theirs', attendants: { elsewhere: {} } },
 }
 
+const env = { now: Instant.parse('2026-10-26T12:00:00.000Z') }
+const partner = (cvAccess: boolean) => ({
+  ours: { name: 'Ours', type: 'partner', cvAccess },
+})
+
 const uids = (list: Record<string, unknown>[]) => list.map((u) => u.uid)
 
 describe('visibleUsers for a student', () => {
   const visible = visibleUsers(
-    { uid: 'me', userType: 'basic' },
+    subjectOf({ uid: 'me', userType: 'basic' }),
     users,
     events,
-    false,
+    env,
   )
 
   it('lists themselves and event attendants only', () => {
@@ -58,10 +65,11 @@ describe('visibleUsers for a student', () => {
 })
 
 describe('visibleUsers for a company', () => {
-  const viewer = { uid: 'rep', userType: 'company', companyUID: 'ours' }
+  const rep = { uid: 'rep', userType: 'company', companyUID: 'ours' }
+  const viewer = subjectOf(rep, partner(false))
 
   it('lists the attendants and queue of its own events only', () => {
-    expect(uids(visibleUsers(viewer, users, events, false))).toEqual([
+    expect(uids(visibleUsers(viewer, users, events, env))).toEqual([
       'attending',
       'queued',
     ])
@@ -71,15 +79,35 @@ describe('visibleUsers for a company', () => {
     const withAttendingResume = users.map((u) =>
       u.uid === 'attending' ? { ...u, resume: 'link' } : u,
     )
-    for (const u of visibleUsers(viewer, withAttendingResume, events, false)) {
+    for (const u of visibleUsers(viewer, withAttendingResume, events, env)) {
       expect(u).not.toHaveProperty('resume')
       expect(u).not.toHaveProperty('userType')
     }
   })
 
   it('adds everyone with a résumé when it has résumé access', () => {
-    const visible = visibleUsers(viewer, users, events, true)
+    const visible = visibleUsers(
+      subjectOf(rep, partner(true)),
+      users,
+      events,
+      env,
+    )
     expect(uids(visible)).toEqual(['attending', 'queued', 'with-resume'])
     expect(visible[2]).toHaveProperty('resume')
+  })
+})
+
+describe('visibleUsers for others', () => {
+  it('shows everyone in full to an admin', () => {
+    const admin = subjectOf({ uid: 'boss', userType: 'admin' })
+    expect(visibleUsers(admin, users, events, env)).toEqual(users)
+  })
+
+  it("hides a sponsor's event attendants, since sponsors manage no events", () => {
+    const rep = { uid: 'rep', userType: 'company', companyUID: 'ours' }
+    const sponsor = subjectOf(rep, {
+      ours: { name: 'Ours', type: 'sponsor', cvAccess: false },
+    })
+    expect(visibleUsers(sponsor, users, events, env)).toEqual([])
   })
 })

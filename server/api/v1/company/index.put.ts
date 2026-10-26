@@ -1,7 +1,11 @@
 // PUT /api/v1/company
 // endpoint for modifying companies in the db
 
+import { authorize } from '@/domain/authorization/authorize'
+import { hasPermission } from '@/domain/authorization/hasPermission'
+import { CompanyUid } from '@/domain/business/company'
 import { fail } from '@/domain/errors'
+import { Instant } from '@/domain/time'
 import { safeLink } from '@/server/security/richText'
 
 const COMPANY_EDITABLE_FIELDS = ['name', 'description', 'logo', 'webpage']
@@ -32,14 +36,15 @@ defineRouteMeta({
     // },
     // responses: {
     //   204: { description: 'Updated' },
-    //   401: { description: 'Error (firebase/user-not-authorized).' },
+    //   401: { description: 'auth/signed-out' },
+    //   403: { description: 'auth/forbidden' },
     //   404: { description: 'Error (company/not-found).' },
     // },
   },
 })
 
 export default defineEventHandler(async (event) => {
-  const { user } = event.context
+  const { subject } = event.context
 
   // get request body
   const { companyUID, ...newData } = await readBody(event)
@@ -48,24 +53,14 @@ export default defineEventHandler(async (event) => {
   setResourceContext(event, 'company', companyUID, 'update', 'Modify company')
   setLogImportance(event, 'warn')
 
-  const isAdmin = hasAccess(user, ['admin'])
-  const isCompanyAdmin =
-    hasAccess(user, ['company']) && user.companyUID === companyUID
-
-  addEventContext(event, 'is_admin', isAdmin)
-  addEventContext(event, 'is_company_admin', isCompanyAdmin)
-
-  // only admins and company admins can modify companies
-  if (!isAdmin && !isCompanyAdmin) {
-    setErrorContext(event, {
-      code: 'firebase/user-not-authorized',
-      message: 'User not authorized to modify companies',
-    })
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Error (firebase/user-not-authorized).',
-    })
-  }
+  const company =
+    typeof companyUID === 'string' && companyUID !== ''
+      ? { uid: CompanyUid.parse(companyUID) }
+      : undefined
+  const env = { now: Instant.now() }
+  authorize(subject, 'company', 'update', company, env)
+  const mayEntitle = hasPermission(subject, 'company', 'entitle', company, env)
+  addEventContext(event, 'is_admin', mayEntitle)
 
   // reference to companies
   const companiesRef = db.ref('companies')
@@ -93,7 +88,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // company users may change only their profile; type and résumé access are set by admins
-  const updates = isAdmin
+  const updates = mayEntitle
     ? newData
     : Object.fromEntries(
         Object.entries(newData).filter(([key]) =>

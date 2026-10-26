@@ -6,7 +6,7 @@
   definePageMeta({
     layout: 'admin',
     protected: true,
-    accessLevels: ['admin', 'company'],
+    area: 'company',
   })
 
   const auth = useAuthStore()

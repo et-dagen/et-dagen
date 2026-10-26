@@ -1,6 +1,8 @@
 // GET /api/v1/user
 // endpoint for fetching user data from database
 
+import { Instant } from '@/domain/time'
+
 defineRouteMeta({
   openAPI: {
     // The $global block is merged into the root of the generated document by
@@ -53,7 +55,7 @@ defineRouteMeta({
 })
 
 export default defineEventHandler(async (event) => {
-  const { decodedToken, user } = event.context
+  const { decodedToken, subject, user } = event.context
 
   // get scope from query params
   const { scope } = getQuery(event)
@@ -80,7 +82,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  if (!user) {
+  if (!user || !subject) {
     setErrorContext(event, {
       code: 'user/not-found',
       message: 'User not found in database',
@@ -117,31 +119,15 @@ export default defineEventHandler(async (event) => {
     ...dbUsers[firebaseUser.uid],
   }))
 
-  if (hasAccess(user, ['admin'])) {
-    addEventContext(event, 'result_count', users.length)
-    return users
-  }
-
-  // everyone else sees only the users and fields their role needs
-  const eventsSnapshot = await withDbTiming(event, 'events', 'read', () =>
-    db.ref('events').once('value'),
-  )
-  const cvAccess = hasAccess(user, ['company'])
-    ? (
-        await withDbTiming(
-          event,
-          `companies/${user.companyUID}/cvAccess`,
-          'read',
-          () => db.ref(`companies/${user.companyUID}/cvAccess`).once('value'),
-        )
-      ).val() === true
-    : false
-
   const visible = visibleUsers(
-    user,
+    subject,
     users,
-    eventsSnapshot.val() ?? {},
-    cvAccess,
+    (
+      await withDbTiming(event, 'events', 'read', () =>
+        db.ref('events').once('value'),
+      )
+    ).val() ?? {},
+    { now: Instant.now() },
   )
   addEventContext(event, 'result_count', visible.length)
 

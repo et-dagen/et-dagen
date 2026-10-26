@@ -3,12 +3,9 @@ import { z } from 'zod'
 /** The roles, from the one with the most access down */
 export const USER_TYPES = ['admin', 'company', 'basic'] as const
 
-const required = z
-  .string({ required_error: 'required' })
-  .trim()
-  .min(1, 'required')
+const required = z.string({ error: 'required' }).trim().min(1, 'required')
 const year = z.coerce
-  .number({ invalid_type_error: 'required' })
+  .number({ error: 'required' })
   .int('required')
   .min(1, 'required')
   .max(5, 'required')

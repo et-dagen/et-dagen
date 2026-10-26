@@ -7,7 +7,7 @@
   const useAuth = useAuthStore()
   const useAlert = useAlertStore()
 
-  const isAdmin = useAuth.hasAccess(['admin'])
+  const isAdmin = useAuth.allows('admin')
 
   // get event id from route
   const route = useRoute()

@@ -1,6 +1,9 @@
 // POST /api/v1/user
 // endpoint for creating or updating a user in the database
 
+import { hasPermission } from '@/domain/authorization/hasPermission'
+import { Instant } from '@/domain/time'
+
 defineRouteMeta({
   openAPI: {
     tags: ['User'],
@@ -46,7 +49,7 @@ defineRouteMeta({
 })
 
 export default defineEventHandler(async (event) => {
-  const { decodedToken, user } = event.context
+  const { decodedToken, subject, user } = event.context
 
   // Set resource context for wide event logging
   setResourceContext(
@@ -86,7 +89,7 @@ export default defineEventHandler(async (event) => {
   if (
     !registrationCode &&
     (!studyProgram || !currentYear) &&
-    !hasAccess(user, ['admin', 'company'])
+    !subject?.roles.some((role) => role === 'admin' || role === 'company')
   ) {
     setErrorContext(event, {
       code: 'user/missing-programme',
@@ -98,8 +101,12 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // only admins can modify usertypes and other users than their own
-  if (!hasAccess(user, ['admin']) || !uid) {
+  // only admins set account types and act on other users
+  const env = { now: Instant.now() }
+  if (
+    !uid ||
+    !hasPermission(subject, 'user', 'assign', { scope: 'all' }, env)
+  ) {
     // prevent users from creating multiple instances in the db
     uid = user?.uid ?? decodedToken.uid
     userType = user?.userType ?? 'basic'

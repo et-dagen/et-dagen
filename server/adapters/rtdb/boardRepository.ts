@@ -34,11 +34,12 @@ const toMember = (id: string, record: MemberRecord): BoardMember => ({
 
 /** Board members in the Realtime Database under `board/` */
 export function rtdbBoardRepository(db: Database): BoardRepository {
-  const board = db.ref('board')
+  // a reference per call: building the adapter must not open a connection
+  const board = () => db.ref('board')
 
   return {
     all: async () => {
-      const value = ((await board.once('value')).val() ?? {}) as Record<
+      const value = ((await board().once('value')).val() ?? {}) as Record<
         string,
         MemberRecord
       >
@@ -48,18 +49,18 @@ export function rtdbBoardRepository(db: Database): BoardRepository {
     },
     find: async (id) => {
       const record = (
-        await board.child(id).once('value')
+        await board().child(id).once('value')
       ).val() as MemberRecord | null
       return record ? toMember(id, record) : null
     },
     save: async (members) => {
       if (members.length === 0) return
-      await board.update(
+      await board().update(
         Object.fromEntries(members.map((m) => [m.id, toRecord(m)])),
       )
     },
     remove: async (id) => {
-      await board.child(id).remove()
+      await board().child(id).remove()
     },
   }
 }

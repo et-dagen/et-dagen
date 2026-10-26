@@ -3,6 +3,9 @@
 
 import { clearSessionCookies } from '@/server/auth/cookies'
 import { eraseUsers } from '@/server/user/erasure'
+import { authorize } from '@/domain/authorization/authorize'
+import { hasPermission } from '@/domain/authorization/hasPermission'
+import { Instant } from '@/domain/time'
 
 defineRouteMeta({
   openAPI: {
@@ -39,30 +42,24 @@ defineRouteMeta({
 })
 
 export default defineEventHandler(async (event) => {
-  const { user } = event.context
+  const { subject } = event.context
 
   // Set resource context for wide event logging
-  setResourceContext(event, 'user', user?.uid, 'delete', 'Delete user(s)')
+  setResourceContext(event, 'user', subject?.uid, 'delete', 'Delete user(s)')
   setLogImportance(event, 'warn')
 
-  // user is not authenticated
-  if (!user) {
-    setErrorContext(event, {
-      code: 'firebase/user-not-authorized',
-      message: 'User not authenticated',
-    })
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Error (firebase/user-not-authorized).',
-    })
-  }
+  const env = { now: Instant.now() }
+  authorize(subject, 'user', 'delete', { uid: subject?.uid, scope: 'own' }, env)
 
   // get request body
   let { UIDs } = await readBody(event)
 
   // only admins can remove other users than their own
-  if (!hasAccess(user, ['admin']) || !UIDs) {
-    UIDs = user.uid
+  if (
+    !UIDs ||
+    !hasPermission(subject, 'user', 'delete', { scope: 'all' }, env)
+  ) {
+    UIDs = subject.uid
   }
 
   // UIDs can be passed both as an array or a single UID string
@@ -76,7 +73,7 @@ export default defineEventHandler(async (event) => {
   )
 
   // the caller's token cookie points at an account that no longer exists
-  if ((UIDs as string[]).includes(user.uid)) clearSessionCookies(event)
+  if ((UIDs as string[]).includes(subject.uid)) clearSessionCookies(event)
 
   // users successfully removed
   sendNoContent(event, 204)

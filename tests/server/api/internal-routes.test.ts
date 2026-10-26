@@ -18,6 +18,7 @@
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
+import { ROLES } from '@/domain/authorization/roles'
 
 const API_DIR = join(import.meta.dirname, '../../../server/api/v1')
 
@@ -67,10 +68,31 @@ const handlers = walk(API_DIR).map((rel) => ({
 const isTaggedInternal = (source: string) =>
   /tags:\s*\[[^\]]*'internal'[^\]]*\]/.test(source)
 
-// hasAccess(user, ['admin']) - admin and nobody else. A check listing other
-// roles alongside admin is not an admin-only gate.
+// Roles a stored user can hold today. Coordinators are in the permission table but no user is one
+// yet; once they are, routes they share with admins show up here as a decision to make.
+const STORED_ROLES = ['admin', 'company', 'user'] as const
+
+// Granted by the permission table to admins and no other stored role
+const onlyAdminsMay = (resource: string, action: string) =>
+  STORED_ROLES.every(
+    (role) =>
+      (role === 'admin') ===
+      Object.hasOwn(
+        (ROLES[role] as Record<string, object>)[resource] ?? {},
+        action,
+      ),
+  )
+
+// hasAccess(user, ['admin']), or an authorize() or authorizeStoredEvent() call for an action only
+// admins have. A check listing other roles alongside admin is not an admin-only gate.
 const gatesOnAdmin = (source: string) =>
-  /hasAccess\(\s*\w+,\s*\[\s*'admin'\s*\]\s*\)/.test(source)
+  /hasAccess\(\s*\w+,\s*\[\s*'admin'\s*\]\s*\)/.test(source) ||
+  [...source.matchAll(/authorize\(\s*\w+,\s*'(\w+)',\s*'(\w+)'/g)].some(
+    ([, resource, action]) => onlyAdminsMay(resource, action),
+  ) ||
+  [...source.matchAll(/authorizeStoredEvent\(\s*\w+,\s*\w+,\s*'(\w+)'/g)].some(
+    ([, action]) => onlyAdminsMay('event', action),
+  )
 
 describe('internal route tagging', () => {
   it('finds handlers to check', () => {
