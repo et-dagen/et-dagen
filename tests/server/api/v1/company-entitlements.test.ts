@@ -2,9 +2,12 @@ import { createError } from 'h3'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import formatFirebaseUser from '@/server/utils/formatFirebaseUser'
 import hasAccess from '@/server/utils/hasAccess'
+import { subjectOf } from '@/tests/server/api/support/subject'
 
 // The handlers rely on Nitro's auto-imports; stub them so they run as plain functions.
 let stored: Record<string, unknown> = {}
+// what the middleware reads to build the subject
+let companies: Record<string, { name: string; type: string; cvAccess: boolean }>
 const update = vi.fn()
 
 const snapshot = (path: string) => {
@@ -29,9 +32,10 @@ const reference = (path: string) => {
   return ref
 }
 
-beforeEach(() => {
+beforeEach(async () => {
   vi.resetModules()
   update.mockClear()
+  companies = { ours: { name: 'Ours', type: 'partner', cvAccess: false } }
   stored = {
     'companies/ours': { name: 'Ours', type: 'standard', cvAccess: false },
     'companies/ours/cvAccess': false,
@@ -60,6 +64,10 @@ beforeEach(() => {
     (_e: unknown, _p: unknown, _o: unknown, fn: () => unknown) => fn(),
   )
   vi.stubGlobal('db', { ref: reference })
+  vi.stubGlobal(
+    'companyOf',
+    (await import('@/server/utils/companyOf')).companyOf,
+  )
   vi.stubGlobal('auth', {
     listUsers: () =>
       Promise.resolve({
@@ -70,19 +78,6 @@ beforeEach(() => {
 
 const company = { uid: 'rep', userType: 'company', companyUID: 'ours' }
 
-// the subject the middleware builds for these users, with the tier's profile right
-const subjectOf = (user: {
-  uid: string
-  userType: string
-  companyUID?: string
-}) => ({
-  uid: user.uid,
-  roles: [user.userType],
-  companies: new Map(
-    user.companyUID ? [[user.companyUID, new Set(['ent:profile:manage'])]] : [],
-  ),
-  applicant: null,
-})
 const admin = { uid: 'boss', userType: 'admin' }
 
 const handlers = {
@@ -101,7 +96,11 @@ async function call(
     default: (event: unknown) => Promise<unknown>
   }
   return run({
-    context: { user, subject: subjectOf(user), decodedToken: { uid: 'x' } },
+    context: {
+      user,
+      subject: subjectOf(user, companies),
+      decodedToken: { uid: 'x' },
+    },
   })
 }
 
@@ -128,7 +127,7 @@ describe('GET /api/v1/resume?scope=all', () => {
   })
 
   it('lists résumés for a company with résumé access', async () => {
-    stored['companies/ours/cvAccess'] = true
+    companies.ours.cvAccess = true
     expect(await call('resume', company)).toEqual([
       expect.objectContaining({ uid: 'student' }),
     ])

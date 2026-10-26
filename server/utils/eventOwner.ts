@@ -44,9 +44,3 @@ export async function authorizeStoredEvent(
     statusMessage: 'Error (event/not-found).',
   })
 }
-
-/** The company a request body names as an event's host, if it names one */
-export const hostedBy = (companyUID: unknown) =>
-  typeof companyUID === 'string' && companyUID !== ''
-    ? { companyUid: CompanyUid.parse(companyUID) }
-    : undefined

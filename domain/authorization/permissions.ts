@@ -55,7 +55,8 @@ export type Permissions = {
     action: 'create' | 'update' | 'delete' | 'entitle'
   }
   job: {
-    dataType: Pick<Job, 'companyUid'>
+    /** `undefined` for a stored job that names no company */
+    dataType: Pick<Job, 'companyUid'> | undefined
     action: 'create' | 'update' | 'delete'
   }
   event: {

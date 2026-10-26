@@ -49,7 +49,10 @@ beforeEach(async () => {
   })
   const owner = await import('@/server/utils/eventOwner')
   vi.stubGlobal('authorizeStoredEvent', owner.authorizeStoredEvent)
-  vi.stubGlobal('hostedBy', owner.hostedBy)
+  vi.stubGlobal(
+    'companyOf',
+    (await import('@/server/utils/companyOf')).companyOf,
+  )
 })
 
 const company: Subject = {

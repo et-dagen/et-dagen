@@ -69,7 +69,7 @@ export default defineEventHandler(async (event) => {
   setLogImportance(event, 'warn')
 
   const env = { now: Instant.now() }
-  authorize(subject, 'event', 'update', hostedBy(companyUID), env)
+  authorize(subject, 'event', 'update', companyOf(companyUID), env)
 
   // check if data is defined.
   if (
