@@ -47,12 +47,13 @@ const student = {
  */
 export const ROLES = {
   admin: {
-    company: { create: true, update: true, delete: true },
+    company: { create: true, update: true, delete: true, entitle: true },
     job: { create: true, update: true, delete: true },
     event: {
       create: true,
       update: true,
       delete: true,
+      list: true,
       listAttendants: true,
       markAttended: true,
     },
@@ -80,6 +81,8 @@ export const ROLES = {
       update: (subject, hosted) =>
         can(subject, hosted.companyUid, 'ent:event:manage'),
       delete: (subject, hosted) =>
+        can(subject, hosted.companyUid, 'ent:event:manage'),
+      list: (subject, hosted) =>
         can(subject, hosted.companyUid, 'ent:event:manage'),
     },
     resume: {
@@ -109,6 +112,8 @@ export const ROLES = {
       create: (subject, hosted) =>
         can(subject, hosted.companyUid, 'ent:event:manage'),
       update: (subject, hosted) =>
+        can(subject, hosted.companyUid, 'ent:event:manage'),
+      list: (subject, hosted) =>
         can(subject, hosted.companyUid, 'ent:event:manage'),
       listAttendants: (subject, hosted) =>
         can(subject, hosted.companyUid, 'ent:event:manage'),

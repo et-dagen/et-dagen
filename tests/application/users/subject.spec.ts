@@ -60,7 +60,7 @@ describe('whoIsAsking', () => {
           acme,
           new Set(['ent:job:manage', 'ent:event:manage', 'ent:profile:manage']),
         ],
-        [bolt, new Set(['ent:resume:view'])],
+        [bolt, new Set(['ent:profile:manage', 'ent:resume:view'])],
       ]),
     )
     expect(asking?.record).toEqual({ name: 'Co' })

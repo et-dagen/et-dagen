@@ -212,7 +212,6 @@
         },
         "company": {
           "not-found": "Company not found",
-          "require-company-uid": "Company users must spesify companyUID",
           "missing-name-webpage-type": "Missing name, webpage or type"
         },
         "event": {

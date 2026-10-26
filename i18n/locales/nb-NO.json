@@ -212,7 +212,6 @@
         },
         "company": {
           "not-found": "Bedriften ble ikke funnet",
-          "require-company-uid": "Bedriftsbrukere må oppgi companyUID",
           "missing-name-webpage-type": "Mangler navn, nettside eller type"
         },
         "event": {
