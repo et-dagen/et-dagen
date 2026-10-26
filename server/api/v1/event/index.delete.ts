@@ -54,7 +54,7 @@ export default defineEventHandler(async (event) => {
   setLogImportance(event, 'warn')
 
   const env = { now: Instant.now() }
-  authorize(subject, 'event', 'delete', hostedBy(companyUID), env)
+  authorize(subject, 'event', 'delete', companyOf(companyUID), env)
 
   // Check if input is valid
   if (!eventUID) {

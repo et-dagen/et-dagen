@@ -1,6 +1,10 @@
 // POST /api/v1/resume
 // endpoint for inserting pdf into storage bucket
 
+import { authorize } from '@/domain/authorization/authorize'
+import { Instant } from '@/domain/time'
+import { UserUid } from '@/domain/user'
+
 defineRouteMeta({
   openAPI: {
     tags: ['Resume'],
@@ -29,15 +33,16 @@ defineRouteMeta({
     // },
     // responses: {
     //   200: { description: 'Storage URL as a bare string', content: { 'application/json': { schema: { type: 'string' } } } },
-    //   400: { description: 'User not authorized, or unsupported file type' },
-    //   401: { description: 'Cannot upload resume to other users' },
+    //   400: { description: 'Unsupported file type' },
+    //   401: { description: 'auth/signed-out' },
+    //   403: { description: 'auth/forbidden' },
     //   500: { description: 'Firebase: Error (storage/cannot-upload-file).' },
     // },
   },
 })
 
 export default defineEventHandler(async (event) => {
-  const { user } = event.context
+  const { subject } = event.context
 
   // Set resource context for wide event logging
   setResourceContext(event, 'resume', undefined, 'create', 'Upload user resume')
@@ -50,31 +55,16 @@ export default defineEventHandler(async (event) => {
 
   addEventContext(event, 'user_uid', userUID)
 
-  // check if user is authorized
-  if (!hasAccess(user, ['basic', 'admin'])) {
-    setErrorContext(event, {
-      code: 'firebase/user-not-authorized',
-      message: 'User not authorized',
-    })
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'User not authorized',
-    })
-  }
-
-  if (userUID !== user.uid) {
-    setErrorContext(event, {
-      code: 'storage/cannot-upload-to-other-users',
-      message: 'Cannot upload resume to other users',
-    })
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Cannot upload resume to other users',
-    })
-  }
+  authorize(
+    subject,
+    'resume',
+    'write',
+    { ownerUid: userUID ? UserUid.parse(userUID) : undefined, scope: 'own' },
+    { now: Instant.now() },
+  )
 
   // check if body content is defined
-  if (!file || !user || !userUID) {
+  if (!file || !userUID) {
     setErrorContext(event, {
       code: 'storage/data-not-defined',
       message: 'Required resume data is missing',

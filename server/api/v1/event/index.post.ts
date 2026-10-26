@@ -109,7 +109,7 @@ export default defineEventHandler(async (event) => {
     throw fail('event/invalid-map-link')
   }
 
-  authorize(subject, 'event', 'create', hostedBy(companyUID), {
+  authorize(subject, 'event', 'create', companyOf(companyUID), {
     now: Instant.now(),
   })
 
