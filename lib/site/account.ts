@@ -1,11 +1,13 @@
-/** The pages an account reaches from the header, by role */
-export function accountLinks(userType: string | null | undefined) {
+import type { Area } from '@/lib/auth/areas'
+
+/** The pages an account reaches from the header, by the areas it may enter */
+export function accountLinks(allows: (area: Area) => boolean) {
   return [
     { label: 'site.account.profile', route: '/user' },
-    ...(userType === 'company'
+    ...(allows('company') && !allows('admin')
       ? [{ label: 'site.account.company', route: '/company/admin' }]
       : []),
-    ...(userType === 'admin'
+    ...(allows('admin')
       ? [{ label: 'site.account.admin', route: '/admin' }]
       : []),
   ]

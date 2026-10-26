@@ -15,7 +15,7 @@
 
   const auth = useAuthStore()
   const localePath = useLocalePath()
-  const links = computed(() => accountLinks(auth.user?.userType))
+  const links = computed(() => accountLinks(auth.allows))
   const { locale } = useI18n()
   const switchLocalePath = useSwitchLocalePath()
 
