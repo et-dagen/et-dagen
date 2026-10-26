@@ -17,6 +17,8 @@ export function memoryAccessRepository(): AccessRepository & {
       stored.set(user, structuredClone(access))
       return Promise.resolve()
     },
+    find: (user) => Promise.resolve(stored.get(user) ?? null),
+    all: () => Promise.resolve(new Map(stored)),
     read: (user) => stored.get(user),
   }
 }

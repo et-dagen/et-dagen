@@ -87,6 +87,55 @@ describe('PUT /api/v1/user/access', () => {
   })
 })
 
+describe('GET /api/v1/user/access', () => {
+  it('shows an admin the access a user has, or will have after the migration', async () => {
+    const admin = await createUser({ userType: 'admin' })
+    const rep = await createUser({ userType: 'company', companyUID: 'acme' })
+
+    const response = await api(`/api/v1/user/access?uid=${rep.uid}`, {
+      token: admin.token,
+    })
+
+    expect(response.body).toEqual({
+      roles: ['coordinator'],
+      memberships: [{ companyUID: 'acme', kind: 'coordinator' }],
+    })
+  })
+
+  it('lists stored access with each user for admins', async () => {
+    const admin = await createUser({ userType: 'admin' })
+    const volunteer = await createUser(student)
+    await api('/api/v1/user/access', {
+      method: 'PUT',
+      body: {
+        uid: volunteer.uid,
+        roles: ['user', 'coordinator'],
+        memberships: [{ companyUID: 'acme', kind: 'coordinator' }],
+      },
+      token: admin.token,
+    })
+
+    const listed = (await api('/api/v1/user?scope=all', { token: admin.token }))
+      .body as { uid: string; access?: unknown }[]
+
+    expect(listed.find((u) => u.uid === volunteer.uid)?.access).toEqual({
+      roles: ['coordinator', 'user'],
+      memberships: [{ companyUID: 'acme', kind: 'coordinator' }],
+    })
+    expect(listed.find((u) => u.uid === admin.uid)).not.toHaveProperty('access')
+  })
+
+  it('leaves it to admins', async () => {
+    const rep = await createUser({ userType: 'company', companyUID: 'acme' })
+
+    const response = await api(`/api/v1/user/access?uid=${rep.uid}`, {
+      token: rep.token,
+    })
+
+    expect(response.status).toBe(403)
+  })
+})
+
 describe('signing up', () => {
   it('makes a new account a student', async () => {
     const { uid, token } = await createUser()

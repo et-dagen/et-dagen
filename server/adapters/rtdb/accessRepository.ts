@@ -1,9 +1,26 @@
 import type { Database } from 'firebase-admin/database'
 import type { AccessRepository } from '@/application/users/accessRepository'
-import type {
-  MembershipRecord,
-  RolesRecord,
+import { isMembershipKind, type Access } from '@/domain/authorization/access'
+import { CompanyUid } from '@/domain/business/company'
+import { UserUid } from '@/domain/user'
+import {
+  rolesFrom,
+  type MembershipRecord,
+  type RolesRecord,
 } from '@/server/adapters/rtdb/accessRecords'
+
+const accessOf = (
+  roles: RolesRecord,
+  memberships: Record<string, MembershipRecord> | null,
+): Access => ({
+  roles: rolesFrom(roles),
+  memberships: Object.entries(memberships ?? {}).flatMap(
+    ([company, { kind, endedAt }]) =>
+      !endedAt && isMembershipKind(kind)
+        ? [{ company: CompanyUid.parse(company), kind }]
+        : [],
+  ),
+})
 
 /** Roles under `roles/<uid>` and memberships under `memberships/<uid>` in the Realtime Database */
 export const rtdbAccessRepository = (
@@ -40,5 +57,29 @@ export const rtdbAccessRepository = (
     }
 
     if (Object.keys(update).length > 0) await db.ref().update(update)
+  },
+  find: async (user) => {
+    const [roles, memberships] = (await Promise.all(
+      [`roles/${user}`, `memberships/${user}`].map(async (path) =>
+        (await db.ref(path).once('value')).val(),
+      ),
+    )) as [RolesRecord | null, Record<string, MembershipRecord> | null]
+    return roles ? accessOf(roles, memberships) : null
+  },
+  all: async () => {
+    const [roles, memberships] = (await Promise.all(
+      ['roles', 'memberships'].map(
+        async (path) => (await db.ref(path).once('value')).val() ?? {},
+      ),
+    )) as [
+      Record<string, RolesRecord>,
+      Record<string, Record<string, MembershipRecord>>,
+    ]
+    return new Map(
+      Object.entries(roles).map(([uid, held]) => [
+        UserUid.parse(uid),
+        accessOf(held, memberships[uid] ?? null),
+      ]),
+    )
   },
 })

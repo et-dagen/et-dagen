@@ -1,9 +1,11 @@
 import type { CompanyRepository } from '@/application/companies/companyRepository'
 import type { AccessRepository } from '@/application/users/accessRepository'
 import type { UserDirectory } from '@/application/users/userDirectory'
+import type { UserRepository } from '@/application/users/userRepository'
 import {
   accessOnSignUp,
   accessProblem,
+  migratedAccess,
   type Access,
 } from '@/domain/authorization/access'
 import { authorize } from '@/domain/authorization/authorize'
@@ -62,3 +64,26 @@ export const startAccess = (
     at: request.now,
     by: request.user,
   })
+
+/**
+ * A user's roles and memberships, as the admin form shows them
+ *
+ * @remarks
+ * A user without stored roles is shown with the access the migration will give them (#640), so
+ * saving the form stores the same thing the migration would.
+ *
+ * @throws AppError `auth/signed-out`, `auth/forbidden` or `user/not-found`
+ */
+export async function accessOf(
+  deps: { access: AccessRepository; profiles: UserRepository },
+  request: { subject: Subject | undefined; user: UserUid; now: ISO8601String },
+): Promise<Access> {
+  const { subject, user, now } = request
+  authorize(subject, 'user', 'assign', { scope: 'all' }, { now })
+
+  const stored = await deps.access.find(user)
+  if (stored) return stored
+  const profile = await deps.profiles.find(user, now)
+  if (!profile) throw fail('user/not-found')
+  return migratedAccess(profile)
+}
