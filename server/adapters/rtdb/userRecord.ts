@@ -4,6 +4,12 @@ import { CompanyUid } from '@/domain/business/company'
 import { Term, type StudyYear } from '@/domain/ntnu'
 import type { ISO8601String } from '@/domain/time'
 import type { Role } from '@/domain/user'
+import {
+  companiesFrom,
+  rolesFrom,
+  type MembershipRecord,
+  type RolesRecord,
+} from '@/server/adapters/rtdb/accessRecords'
 
 /** The fields of a `users/<uid>` node that decide what its owner may do */
 export interface UserRecord {
@@ -52,13 +58,32 @@ const companiesOf = (record: UserRecord): CompanyUid[] => {
   return company ? [CompanyUid.parse(company)] : []
 }
 
-/** Read a v1 user record */
+/** What a migrated user has stored besides the profile (#640) */
+export interface AccessRecords {
+  roles: RolesRecord | null
+  memberships: Record<string, MembershipRecord> | null
+}
+
+/**
+ * Read a user record
+ *
+ * @remarks
+ * A user with stored roles has been migrated, and their memberships decide their companies. Until
+ * the migration in #640 has run, a user without them is read from the v1 `userType` and
+ * `companyUID`.
+ */
 export const storedUserOf = (
   record: UserRecord & Record<string, unknown>,
   now: ISO8601String,
-): StoredUser => ({
-  roles: rolesOf(record.userType),
-  applicant: applicantOf(record, now),
-  companies: companiesOf(record),
-  record,
-})
+  access: AccessRecords = { roles: null, memberships: null },
+): StoredUser => {
+  const migrated = access.roles && Object.keys(access.roles).length > 0
+  return {
+    roles: migrated ? rolesFrom(access.roles!) : rolesOf(record.userType),
+    applicant: applicantOf(record, now),
+    companies: migrated
+      ? companiesFrom(access.memberships)
+      : companiesOf(record),
+    record,
+  }
+}

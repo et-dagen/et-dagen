@@ -30,7 +30,8 @@
       when: string
       room: string | null
     } | null
-    isAdmin: boolean
+    /** Whether the viewer takes attendance at this event */
+    mayScan: boolean
   }>()
   const emit = defineEmits<{ changed: [] }>()
 
@@ -223,7 +224,7 @@
       {{ $t('events.page.action.calendar') }}
     </Button>
 
-    <Button v-if="isAdmin" as-child variant="ghost" class="tw:w-full">
+    <Button v-if="mayScan" as-child variant="ghost" class="tw:w-full">
       <NuxtLink :to="localePath(`/event/${eventUid}/scan_attendants`)">
         <ScanLine aria-hidden="true" />
         {{ $t('event.page.attendants.scan') }}

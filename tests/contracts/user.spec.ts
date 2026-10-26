@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { toV1User, UserInput } from '@/contracts/user'
+import { toV1User, UserInput, userTypeOf } from '@/contracts/user'
 
 const issues = (input: unknown) =>
   UserInput.safeParse(input).error?.issues.map((i) => [
@@ -39,6 +39,16 @@ describe('UserInput', () => {
     ])
   })
 
+  it('needs a programme, a year and at least one company for a coordinator', () => {
+    expect(
+      issues({ userType: 'coordinator', name: 'Ada', companyUIDs: [] }),
+    ).toEqual([
+      ['studyProgram', 'required'],
+      ['currentYear', 'required'],
+      ['companyUIDs', 'required'],
+    ])
+  })
+
   it('needs a name', () => {
     expect(
       issues({
@@ -69,6 +79,7 @@ describe('toV1User', () => {
         dietaryRestrictions: ['milk', 'halal'],
       },
       account: { uid: 'u1', name: 'Ada' },
+      access: { uid: 'u1', roles: ['user'], memberships: [] },
     })
     const company = toV1User('u2', {
       userType: 'company',
@@ -81,5 +92,60 @@ describe('toV1User', () => {
       currentYear: null,
       companyUID: 'c1',
     })
+  })
+})
+
+describe('toV1User access', () => {
+  it('makes a coordinator a student with coordinator memberships', () => {
+    const { profile, access } = toV1User('u3', {
+      userType: 'coordinator',
+      name: 'Cy',
+      studyProgram: 'Kybernetikk',
+      currentYear: 2,
+      companyUIDs: ['c1', 'c2'],
+      dietaryRestrictions: [],
+    })
+    expect(profile.userType).toBe('basic')
+    expect(access).toEqual({
+      uid: 'u3',
+      roles: ['coordinator'],
+      memberships: [
+        { companyUID: 'c1', kind: 'coordinator' },
+        { companyUID: 'c2', kind: 'coordinator' },
+      ],
+    })
+  })
+
+  it('makes a company account an employee of its company', () => {
+    const { access } = toV1User('u2', {
+      userType: 'company',
+      name: 'Bo',
+      companyUID: 'c1',
+      dietaryRestrictions: [],
+    })
+    expect(access).toEqual({
+      uid: 'u2',
+      roles: ['company'],
+      memberships: [{ companyUID: 'c1', kind: 'employee' }],
+    })
+  })
+})
+
+describe('userTypeOf', () => {
+  it('shows the role with the most access, with its companies', () => {
+    const coordinator = {
+      roles: ['coordinator', 'user'],
+      memberships: [{ companyUID: 'c1', kind: 'coordinator' as const }],
+    }
+    expect(userTypeOf(coordinator)).toEqual({
+      userType: 'coordinator',
+      companyUIDs: ['c1'],
+    })
+    expect(userTypeOf({ roles: ['user'], memberships: [] }).userType).toBe(
+      'basic',
+    )
+    expect(
+      userTypeOf({ ...coordinator, roles: ['admin', 'coordinator'] }).userType,
+    ).toBe('admin')
   })
 })

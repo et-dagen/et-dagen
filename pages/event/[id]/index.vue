@@ -6,6 +6,7 @@
     MapPin,
     Users,
   } from '@lucide/vue'
+  import { companyOf } from '@/lib/auth/companyOf'
   import CompanyLogo from '@/components/admin/CompanyLogo.vue'
   import DeadlineNote from '@/components/job/DeadlineNote.vue'
   import SignupPanel from '@/components/event/page/SignupPanel.vue'
@@ -46,6 +47,10 @@
     ])
 
   const event = computed(() => events.value?.[uid])
+  // admins, and coordinators of the hosting company or of E&T-dagene, take attendance at the door
+  const mayScan = computed(() =>
+    auth.can('event', 'markAttended', companyOf(event.value?.companyUID)),
+  )
   const company = computed(
     () => companies.value?.[event.value?.companyUID ?? ''] ?? null,
   )
@@ -250,7 +255,7 @@
             :event-day="isEventDay(event, now)"
             :calendar="calendar"
             :ticket="ticket"
-            :is-admin="auth.allows('admin')"
+            :may-scan="mayScan"
             @changed="refresh"
           />
           <template #fallback>

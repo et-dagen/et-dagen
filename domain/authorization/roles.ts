@@ -1,5 +1,7 @@
 import type { RolesWithPermissions } from '@/domain/authorization/permissions'
-import { can, canAny } from '@/domain/authorization/predicates'
+import { actsFor, can, canAny } from '@/domain/authorization/predicates'
+import type { Subject } from '@/domain/authorization/subject'
+import { isOrganiser, type CompanyUid } from '@/domain/business/company'
 import { admits, isOpen } from '@/domain/event/registration'
 
 /**
@@ -33,6 +35,14 @@ const student = {
     delete: (subject, account) => account.uid === subject.uid,
   },
 } satisfies RolesWithPermissions['user']
+
+/**
+ * Coordinators take attendance at the door: at E&T-dagene's own events, and at the events of the
+ * companies they are responsible for whatever their tier, since it is E&T-dagene's work and not
+ * something a company buys
+ */
+const takesAttendance = (subject: Subject, company: CompanyUid) =>
+  isOrganiser(company) || actsFor(subject, company)
 
 /**
  * Every authorization rule in the application, in one place
@@ -108,6 +118,13 @@ export const ROLES = {
   // student entries — a coordinator is a student volunteer, not an employee.
   coordinator: {
     ...student,
+    // a coordinator signs up as a student, except where they take attendance
+    registration: {
+      create: (subject, target, env) =>
+        student.registration.create(subject, target, env) &&
+        !takesAttendance(subject, target.event.companyUid),
+      delete: student.registration.delete,
+    },
     company: {
       update: (subject, company) =>
         can(subject, company.uid, 'ent:profile:manage'),
@@ -125,9 +142,9 @@ export const ROLES = {
       list: (subject, hosted) =>
         can(subject, hosted.companyUid, 'ent:event:manage'),
       listAttendants: (subject, hosted) =>
-        can(subject, hosted.companyUid, 'ent:event:manage'),
+        takesAttendance(subject, hosted.companyUid),
       markAttended: (subject, hosted) =>
-        can(subject, hosted.companyUid, 'ent:event:manage'),
+        takesAttendance(subject, hosted.companyUid),
     },
   },
 

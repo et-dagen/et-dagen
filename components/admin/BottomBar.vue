@@ -2,7 +2,7 @@
   import { isActivePanel, panelsFor } from '@/lib/admin/panels'
 
   const localePath = useLocalePath()
-  const panels = panelsFor(useAuthStore().user?.userType)
+  const panels = panelsFor(useAuthStore().allows('admin'))
   const route = useRoute()
   const isActive = (panel: (typeof panels)[number]) =>
     isActivePanel(panel, route.path, localePath(panel.route))

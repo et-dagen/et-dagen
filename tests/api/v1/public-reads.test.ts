@@ -49,9 +49,13 @@ describe('GET /api/v1/company', () => {
 
   it('lists every company keyed by uid', async () => {
     await seed('companies', companies)
+    // types v1 doesn't know read as a former company
     expect(await api('/api/v1/company')).toEqual({
       status: 200,
-      body: companies,
+      body: {
+        acme: { ...companies.acme, tier: 'prior' },
+        globex: { ...companies.globex, tier: 'prior' },
+      },
     })
   })
 
@@ -59,7 +63,7 @@ describe('GET /api/v1/company', () => {
     await seed('companies', companies)
     expect(await api('/api/v1/company?companyUID=acme')).toEqual({
       status: 200,
-      body: { acme: companies.acme },
+      body: { acme: { ...companies.acme, tier: 'prior' } },
     })
   })
 
