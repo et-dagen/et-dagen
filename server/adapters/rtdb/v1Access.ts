@@ -23,9 +23,11 @@ export type AccessUpdate = Record<
  * Write what the v1 fields say as roles, memberships and affiliations
  *
  * @remarks
- * Reads exactly what the adapters read today, so a migrated user or company gets the same subject
- * as before. Skips users and companies that already have the new nodes, so it can run again, and
- * never touches the v1 fields themselves.
+ * Reads what the adapters read today. Companies keep their tier and résumé access. A v1 company
+ * user becomes a coordinator of their company: every account of that kind today is run by
+ * E&T-dagene, and the `company` role is kept for contacts from the companies themselves. Skips
+ * users and companies that already have the new nodes, so it can run again, and never touches the
+ * v1 fields themselves.
  */
 export function v1AccessUpdate(
   stored: {
@@ -42,9 +44,15 @@ export function v1AccessUpdate(
   for (const [uid, record] of Object.entries(stored.users)) {
     if (stored.roles[uid]) continue
     const user = storedUserOf(record, now)
-    for (const role of user.roles) update[`roles/${uid}/${role}`] = stamp
+    for (const role of user.roles) {
+      update[`roles/${uid}/${role === 'company' ? 'coordinator' : role}`] =
+        stamp
+    }
     for (const company of user.companies) {
-      update[`memberships/${uid}/${company}`] = { kind: 'employee', ...stamp }
+      update[`memberships/${uid}/${company}`] = {
+        kind: 'coordinator',
+        ...stamp,
+      }
     }
   }
 

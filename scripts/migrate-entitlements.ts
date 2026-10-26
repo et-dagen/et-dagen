@@ -2,8 +2,9 @@
  * Store roles, company memberships and affiliations from the v1 fields (#640)
  *
  * Writes `roles/`, `memberships/` and `affiliations/` from each user's `userType` and `companyUID`
- * and each company's `type` and `cvAccess`, so every user keeps the access they have. It leaves the
- * v1 fields as they are and skips anyone already migrated, so it is safe to run again.
+ * and each company's `type` and `cvAccess`. Companies keep their tier and résumé access; a v1
+ * company user becomes a coordinator of their company. It leaves the v1 fields as they are and skips
+ * anyone already migrated, so it is safe to run again.
  *
  *   bun --env-file=.env.development scripts/migrate-entitlements.ts           # dry run
  *   bun --env-file=.env.development scripts/migrate-entitlements.ts --apply   # write it
@@ -11,9 +12,10 @@
  * Reads the same NUXT_FIREBASE_ADMIN_* variables as the server, or runs against the emulators when
  * FIREBASE_DATABASE_EMULATOR_HOST is set.
  *
- * Do not run it against dev or production before the endpoints and the admin panel write these nodes
- * too (#640, step 2). A migrated user or company is read only from them, so a change an admin made
- * to the v1 fields alone would silently stop counting.
+ * Run it against dev or production only as part of the cutover (#640), straight before deploying
+ * the endpoints and admin panel that write these nodes, with admin changes paused. A migrated user or
+ * company is read only from the new nodes, so a change written to the v1 fields alone would
+ * silently stop counting.
  */
 import { cert, initializeApp, type ServiceAccount } from 'firebase-admin/app'
 import { getDatabase } from 'firebase-admin/database'

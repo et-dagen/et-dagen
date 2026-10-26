@@ -29,13 +29,19 @@ describe('v1AccessUpdate', () => {
   it('gives every user the role and company the v1 fields gave them', () => {
     expect(update).toMatchObject({
       'roles/boss/admin': stamp,
-      'roles/rep/company': stamp,
       'roles/student/user': stamp,
-      'memberships/rep/acme': { kind: 'employee', ...stamp },
     })
     expect(
       Object.keys(update).filter((p) => p.startsWith('memberships/')),
     ).toEqual(['memberships/rep/acme'])
+  })
+
+  it('makes a v1 company user a coordinator of their company', () => {
+    expect(update).toMatchObject({
+      'roles/rep/coordinator': stamp,
+      'memberships/rep/acme': { kind: 'coordinator', ...stamp },
+    })
+    expect(update).not.toHaveProperty('roles/rep/company')
   })
 
   it('keeps each company on its tier with résumé access as it was', () => {
@@ -50,7 +56,7 @@ describe('v1AccessUpdate', () => {
     expect(update['affiliations/hooli']).toMatchObject({ tier: 'prior' })
   })
 
-  it('reads the same access after the migration as before it', () => {
+  it('reads the same companies and entitlements after the migration as before it', () => {
     for (const [uid, record] of Object.entries(companies)) {
       const after = entitledFromAffiliation(
         uid,
@@ -74,10 +80,10 @@ describe('v1AccessUpdate', () => {
       )
       const after = storedUserOf(record, now, { roles, memberships })
       const before = storedUserOf(record, now)
-      expect([after.roles, after.companies]).toEqual([
-        before.roles,
-        before.companies,
-      ])
+      expect(after.companies).toEqual(before.companies)
+      expect(after.roles).toEqual(
+        before.roles.map((role) => (role === 'company' ? 'coordinator' : role)),
+      )
     }
   })
 
