@@ -84,10 +84,13 @@ describe('changing users', () => {
       token,
     })
 
-    // the database drops a null, so a user without a company has no companyUID
+    // the profile no longer says who the user is, and the roles are untouched
     await expect.poll(() => read(`users/${uid}/updated`)).toBeTruthy()
-    expect(await read(`users/${uid}/userType`)).toBe('basic')
+    expect(await read(`users/${uid}/userType`)).toBeNull()
     expect(await read(`users/${uid}/companyUID`)).toBeNull()
+    expect(Object.keys((await read(`roles/${uid}`)) as object)).toEqual([
+      'user',
+    ])
   })
 })
 

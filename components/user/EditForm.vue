@@ -41,9 +41,12 @@
   const auth = useAuthStore()
   // only an admin changes the study programme here; roles are set in the admin panel
   const isAdmin = computed(() => auth.can('user', 'assign', { scope: 'all' }))
+  // a company contact has no study programme or year
+  const isContact = computed(
+    () => auth.currentSubject?.roles.includes('company') ?? false,
+  )
 
-  // Set state to user data plus companyUID
-  const state = reactive({ companyUID: null, ...props.user })
+  const state = reactive({ ...props.user })
 
   const hasDietaryRestrictions = ref(state.dietaryRestrictions)
   const otherRestrictions = ref<null | string>(null)
@@ -97,7 +100,7 @@
     ) {
       return true
     } else {
-      return !compareObjects(state, { companyUID: null, ...props.user })
+      return !compareObjects(state, { ...props.user })
     }
   })
 
@@ -112,10 +115,6 @@
     } catch (error) {
       useAlerts.alert(getI18nString('alert.error.form.invalid'), 'error')
       return
-    }
-
-    if (state.userType !== 'company') {
-      state.companyUID = null
     }
 
     // check for other dietary restrictions
@@ -204,7 +203,7 @@
       </VRow>
 
       <!-- study programme -->
-      <VRow v-if="isAdmin && state.userType !== 'company'">
+      <VRow v-if="isAdmin && !isContact">
         <FormSelectInput
           v-model="state.studyProgram"
           :content="{
@@ -216,7 +215,7 @@
       </VRow>
 
       <!-- current year -->
-      <VRow v-if="state.userType !== 'company'">
+      <VRow v-if="!isContact">
         <FormSelectInput
           v-model="state.currentYear"
           :content="{
