@@ -19,7 +19,7 @@ const now = Instant.parse('2026-10-26T12:00:00.000Z')
 const ada = UserUid.parse('ada')
 const acme = CompanyUid.parse('acme')
 const coordinator: Access = {
-  roles: ['user', 'coordinator'],
+  roles: ['coordinator'],
   memberships: [{ company: acme, kind: 'coordinator' }],
 }
 
@@ -50,6 +50,17 @@ describe('assignAccess', () => {
       now,
     })
     expect(access.read(ada)).toEqual(coordinator)
+  })
+
+  it('drops a student role given next to coordinator', async () => {
+    const { access, deps } = setup()
+    await assignAccess(deps, {
+      subject: subject('admin'),
+      user: ada,
+      access: { ...coordinator, roles: ['user', 'coordinator'] },
+      now,
+    })
+    expect(access.read(ada)?.roles).toEqual(['coordinator'])
   })
 
   it('refuses everyone else', async () => {

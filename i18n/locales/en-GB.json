@@ -228,7 +228,8 @@
             "already-registered": "User already registered for this event",
             "registration-closed": "Registration window is closed",
             "event-is-full": "Event is full",
-            "not-owner": "Cannot register other users"
+            "not-owner": "Cannot register other users",
+            "forbidden": "You can't sign up for this event."
           }
         },
         "job": {

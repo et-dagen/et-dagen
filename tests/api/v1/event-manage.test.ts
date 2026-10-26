@@ -157,7 +157,7 @@ describe('attendants and attendance', () => {
     }
     const coordinator = await student()
     const given = { createdBy: 'test' }
-    await seed(`roles/${coordinator.uid}`, { user: given, coordinator: given })
+    await seed(`roles/${coordinator.uid}`, { coordinator: given })
     await seed(`memberships/${coordinator.uid}/acme`, { kind: 'coordinator' })
 
     expect((await attendants(coordinator.token)).status).toBe(200)
@@ -181,7 +181,7 @@ describe('attendants and attendance', () => {
     })
     const coordinator = await student()
     const given = { createdBy: 'test' }
-    await seed(`roles/${coordinator.uid}`, { user: given, coordinator: given })
+    await seed(`roles/${coordinator.uid}`, { coordinator: given })
     const bystander = await student()
 
     const markAt = (token: string) =>
@@ -196,5 +196,29 @@ describe('attendants and attendance', () => {
     expect(await read(`events/fair/attendants/${attendant.uid}/attended`)).toBe(
       true,
     )
+  })
+  it("lets a coordinator sign up for another company's event but not their own", async () => {
+    const open = {
+      start: '2000-01-01T10:00',
+      end: '2999-01-01T10:00',
+    }
+    await seed('events/talk/registration', open)
+    await seed('events/dinner/registration', open)
+    const coordinator = await student()
+    const given = { createdBy: 'test' }
+    await seed(`roles/${coordinator.uid}`, { coordinator: given })
+    await seed(`memberships/${coordinator.uid}/acme`, { kind: 'coordinator' })
+
+    const signUp = (eventUID: string) =>
+      api('/api/v1/event/register', {
+        method: 'POST',
+        body: { eventUID },
+        token: coordinator.token,
+      })
+
+    expect((await signUp('dinner')).status).toBe(201)
+    const own = await signUp('talk')
+    expect(own.status).toBe(403)
+    expect(own.body).toMatchObject({ code: 'event/register/forbidden' })
   })
 })

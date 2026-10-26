@@ -118,6 +118,13 @@ export const ROLES = {
   // student entries — a coordinator is a student volunteer, not an employee.
   coordinator: {
     ...student,
+    // a coordinator signs up as a student, except where they take attendance
+    registration: {
+      create: (subject, target, env) =>
+        student.registration.create(subject, target, env) &&
+        !takesAttendance(subject, target.event.companyUid),
+      delete: student.registration.delete,
+    },
     company: {
       update: (subject, company) =>
         can(subject, company.uid, 'ent:profile:manage'),

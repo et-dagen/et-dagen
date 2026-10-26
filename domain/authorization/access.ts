@@ -110,3 +110,15 @@ export const migratedAccess = (v1: {
     kind: 'coordinator',
   })),
 })
+
+/**
+ * The access to store, without a `user` role next to `coordinator`
+ *
+ * @remarks
+ * A coordinator already has every student grant. Permissions are the union of a user's roles, so
+ * a `user` role beside it would let a coordinator sign up for the events they take attendance at.
+ */
+export const withoutRedundantRoles = (access: Access): Access =>
+  access.roles.includes('coordinator')
+    ? { ...access, roles: access.roles.filter((role) => role !== 'user') }
+    : access
