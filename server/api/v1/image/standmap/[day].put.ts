@@ -31,7 +31,6 @@ export default defineEventHandler(async (event) => {
 
   const day = FairDay.tryParse(param)
   if (!day) throw fail('standmap/invalid-day')
-  if (!subject) throw fail('standmap/forbidden')
   addEventContext(event, 'stand_map_day', day)
 
   const part = (await readMultipartFormData(event))?.find(
@@ -44,6 +43,7 @@ export default defineEventHandler(async (event) => {
     { files, storage: fileStorage, standMaps, now: Instant.now },
     {
       subject,
+      now: Instant.now(),
       day,
       name: part.filename,
       contentType: part.type ?? '',

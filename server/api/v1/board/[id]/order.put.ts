@@ -2,6 +2,7 @@
 // endpoint for moving a board member on the contact page
 import { moveMember } from '@/application/board/members'
 import { fail } from '@/domain/errors'
+import { Instant } from '@/domain/time'
 import { memberIdOf } from '@/server/board/memberId'
 import { board, fileStorage, files } from '@/server/composition'
 
@@ -20,14 +21,13 @@ export default defineEventHandler(async (event) => {
   const { subject } = event.context
   const id = memberIdOf(event)
   setResourceContext(event, 'board', id, 'update', 'Move a board member')
-  if (!subject) throw fail('board/forbidden')
 
   const { order } = (await readBody(event)) ?? {}
   if (!Number.isInteger(order) || order < 0) throw fail('board/invalid-order')
 
   await moveMember(
     { board, files, storage: fileStorage },
-    { subject, id, to: order },
+    { subject, now: Instant.now(), id, to: order },
   )
   sendNoContent(event, 204)
 })

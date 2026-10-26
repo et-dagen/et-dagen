@@ -2,6 +2,7 @@
 // endpoint for removing a fair day's stand map
 import { removeStandMap } from '@/application/fair/standMaps'
 import { fail } from '@/domain/errors'
+import { Instant } from '@/domain/time'
 import { FairDay } from '@/domain/fair/day'
 import { fileStorage, files, standMaps } from '@/server/composition'
 
@@ -28,12 +29,11 @@ export default defineEventHandler(async (event) => {
 
   const day = FairDay.tryParse(getRouterParam(event, 'day') ?? '')
   if (!day) throw fail('standmap/invalid-day')
-  if (!subject) throw fail('standmap/forbidden')
   addEventContext(event, 'stand_map_day', day)
 
   await removeStandMap(
     { files, storage: fileStorage, standMaps },
-    { subject, day },
+    { subject, now: Instant.now(), day },
   )
   sendNoContent(event, 204)
 })

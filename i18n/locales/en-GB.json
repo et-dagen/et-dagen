@@ -992,13 +992,11 @@
       "invalid-webpage": "The website must be an address starting with http:// or https://."
     },
     "standmap": {
-      "forbidden": "Only administrators can change stand maps.",
       "invalid-day": "Choose a valid date.",
       "missing-file": "Choose an image to upload.",
       "not-found": "This day has no stand map."
     },
     "board": {
-      "forbidden": "Only administrators can change the board.",
       "not-found": "This board member was not found.",
       "invalid-name": "Fill in a name.",
       "invalid-title": "Fill in the role in Norwegian and English.",

@@ -22,6 +22,11 @@ export interface ErrorSpec {
  */
 export const ERRORS = {
   'internal/unexpected': { status: 500, message: 'Unexpected error' },
+  'auth/signed-out': { status: 401, message: 'Sign in to do this' },
+  'auth/forbidden': {
+    status: 403,
+    message: 'This account is not allowed to do this',
+  },
   'event/register/forbidden': {
     status: 403,
     message: 'This account type cannot sign up for events',
@@ -39,10 +44,6 @@ export const ERRORS = {
     status: 400,
     message: 'This kind of file belongs to a different kind of owner',
   },
-  'standmap/forbidden': {
-    status: 403,
-    message: 'Only admins manage stand maps',
-  },
   'standmap/invalid-day': {
     status: 400,
     message: 'A stand map day must be a date written as YYYY-MM-DD',
@@ -52,7 +53,6 @@ export const ERRORS = {
     message: 'Send the stand map as the multipart part named file',
   },
   'standmap/not-found': { status: 404, message: 'This day has no stand map' },
-  'board/forbidden': { status: 403, message: 'Only admins manage the board' },
   'board/not-found': { status: 404, message: 'No board member has this id' },
   'board/invalid-name': {
     status: 400,

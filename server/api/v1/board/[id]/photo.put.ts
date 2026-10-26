@@ -22,7 +22,6 @@ export default defineEventHandler(async (event) => {
   const { subject } = event.context
   const id = memberIdOf(event)
   setResourceContext(event, 'board', id, 'upload', 'Upload a portrait')
-  if (!subject) throw fail('board/forbidden')
 
   const part = (await readMultipartFormData(event))?.find(
     (field) => field.name === 'file',
@@ -34,6 +33,7 @@ export default defineEventHandler(async (event) => {
     { board, files, storage: fileStorage, images, now: Instant.now },
     {
       subject,
+      now: Instant.now(),
       id,
       name: part.filename,
       contentType: part.type ?? '',

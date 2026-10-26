@@ -3,6 +3,7 @@
 import { addMember } from '@/application/board/members'
 import { checkedMemberInput } from '@/domain/board/member'
 import { fail } from '@/domain/errors'
+import { Instant } from '@/domain/time'
 import { board, fileStorage, files } from '@/server/composition'
 
 defineRouteMeta({
@@ -19,14 +20,13 @@ defineRouteMeta({
 export default defineEventHandler(async (event) => {
   const { subject } = event.context
   setResourceContext(event, 'board', undefined, 'create', 'Add a board member')
-  if (!subject) throw fail('board/forbidden')
 
   const input = checkedMemberInput(await readBody(event))
   if ('problem' in input) throw fail(input.problem)
 
   const member = await addMember(
     { board, files, storage: fileStorage },
-    { subject, input },
+    { subject, now: Instant.now(), input },
   )
   addEventContext(event, 'board_member', member.id)
   setResponseStatus(event, 201)

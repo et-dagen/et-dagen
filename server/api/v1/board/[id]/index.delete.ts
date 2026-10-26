@@ -1,7 +1,7 @@
 // DELETE /api/v1/board/:id
 // endpoint for removing a board member
 import { removeMember } from '@/application/board/members'
-import { fail } from '@/domain/errors'
+import { Instant } from '@/domain/time'
 import { memberIdOf } from '@/server/board/memberId'
 import { board, fileStorage, files } from '@/server/composition'
 
@@ -19,8 +19,10 @@ export default defineEventHandler(async (event) => {
   const { subject } = event.context
   const id = memberIdOf(event)
   setResourceContext(event, 'board', id, 'delete', 'Remove a board member')
-  if (!subject) throw fail('board/forbidden')
 
-  await removeMember({ board, files, storage: fileStorage }, { subject, id })
+  await removeMember(
+    { board, files, storage: fileStorage },
+    { subject, now: Instant.now(), id },
+  )
   sendNoContent(event, 204)
 })

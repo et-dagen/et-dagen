@@ -993,13 +993,11 @@
       "invalid-webpage": "Nettsiden må være en adresse som starter med http:// eller https://."
     },
     "standmap": {
-      "forbidden": "Bare administratorer kan endre standkart.",
       "invalid-day": "Velg en gyldig dato.",
       "missing-file": "Velg et bilde å laste opp.",
       "not-found": "Denne dagen har ikke noe standkart."
     },
     "board": {
-      "forbidden": "Bare administratorer kan endre styret.",
       "not-found": "Fant ikke dette styremedlemmet.",
       "invalid-name": "Fyll inn et navn.",
       "invalid-title": "Fyll inn rollen på norsk og engelsk.",
