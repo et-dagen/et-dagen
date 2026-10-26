@@ -7,13 +7,12 @@
 
   const SECTIONS = ['audience', 'practical', 'tips'] as const
   const FIELDS = [
-    'signal',
-    'ml',
     'acoustics',
-    'radio',
-    'systems',
-    'space',
+    'analog',
+    'digital',
     'quantum',
+    'signal',
+    'space',
   ] as const
   const QUESTIONS = ['help', 'equipment'] as const
   const TIPS = ['talk', 'jobs', 'space', 'remembered', 'follow'] as const
@@ -105,7 +104,7 @@
             <li
               v-for="field in FIELDS"
               :key="field"
-              class="tw:py-2 tw:text-lg tw:font-extrabold"
+              class="tw:py-2 tw:text-lg tw:leading-snug tw:font-extrabold"
             >
               {{ $t(`forcompanies.audience.field.${field}`) }}
             </li>

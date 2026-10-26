@@ -977,15 +977,14 @@
     "audience": {
       "heading": "Who you meet",
       "intro": "ELSYS combines electronics, circuit design, physics and signal processing, with hands-on projects from the first year.",
-      "fields": "Students specialise in",
+      "fields": "Students choose a main profile",
       "field": {
-        "signal": "Signal processing",
-        "ml": "Machine learning",
-        "acoustics": "Acoustics",
-        "radio": "Radio systems",
-        "systems": "Analogue and digital system design",
-        "space": "Space systems",
-        "quantum": "Quantum technology"
+        "acoustics": "Acoustics for communication, environment and remote sensing",
+        "analog": "Analogue circuit design and radio engineering",
+        "digital": "Design of digital and embedded systems",
+        "quantum": "Quantum technology and photonics",
+        "signal": "Signal processing and machine learning",
+        "space": "Space systems"
       },
       "venue": "The fair is held in Glassgården in the EL building, next to one of the three largest lecture halls at Gløshaugen and several reading and lecture rooms, so many students pass through. You also meet students from cybernetics and energy and environmental engineering, among others.",
       "promoted": "We promote the fair to students beforehand."

@@ -978,15 +978,14 @@
     "audience": {
       "heading": "Hvem dere møter",
       "intro": "ELSYS kombinerer elektronikk, kretsdesign, fysikk og signalbehandling, med praktiske prosjekter fra første år.",
-      "fields": "Studentene velger retninger innen",
+      "fields": "Studentene velger en hovedprofil",
       "field": {
-        "signal": "Signalbehandling",
-        "ml": "Maskinlæring",
-        "acoustics": "Akustikk",
-        "radio": "Radiosystemer",
-        "systems": "Analog og digital systemdesign",
-        "space": "Romsystemer",
-        "quantum": "Kvanteteknologi"
+        "acoustics": "Akustikk for kommunikasjon, miljø og fjernmåling",
+        "analog": "Analog kretsdesign og radioteknikk",
+        "digital": "Design av digitale og innvevde systemer",
+        "quantum": "Kvanteteknologi og fotonikk",
+        "signal": "Signalbehandling og maskinlæring",
+        "space": "Romsystemer"
       },
       "venue": "Messen holdes i Glassgården i EL-bygget. Glassgården ligger ved et av de tre største auditoriene på Gløshaugen og flere lese- og forelesningssaler, så mange studenter går forbi. Dere møter også studenter fra blant annet kybernetikk og energi og miljø.",
       "promoted": "Vi promoterer dagene til studentene i forkant."
