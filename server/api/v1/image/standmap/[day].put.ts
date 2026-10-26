@@ -4,7 +4,6 @@ import { putStandMap } from '@/application/fair/standMaps'
 import { fail } from '@/domain/errors'
 import { FairDay } from '@/domain/fair/day'
 import { Instant } from '@/domain/time'
-import { subjectOf } from '@/server/adapters/rtdb/userRecord'
 import { fileStorage, files, standMaps } from '@/server/composition'
 
 defineRouteMeta({
@@ -20,7 +19,7 @@ defineRouteMeta({
 })
 
 export default defineEventHandler(async (event) => {
-  const { user } = event.context
+  const { subject } = event.context
   const param = getRouterParam(event, 'day') ?? ''
   setResourceContext(
     event,
@@ -32,7 +31,7 @@ export default defineEventHandler(async (event) => {
 
   const day = FairDay.tryParse(param)
   if (!day) throw fail('standmap/invalid-day')
-  if (!user) throw fail('standmap/forbidden')
+  if (!subject) throw fail('standmap/forbidden')
   addEventContext(event, 'stand_map_day', day)
 
   const part = (await readMultipartFormData(event))?.find(
@@ -41,11 +40,10 @@ export default defineEventHandler(async (event) => {
   if (!part?.filename) throw fail('standmap/missing-file')
   addEventContext(event, 'file_size', part.data.byteLength)
 
-  const now = Instant.now()
   return putStandMap(
     { files, storage: fileStorage, standMaps, now: Instant.now },
     {
-      subject: subjectOf(user.uid, user, now),
+      subject,
       day,
       name: part.filename,
       contentType: part.type ?? '',
