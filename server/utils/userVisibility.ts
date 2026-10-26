@@ -36,7 +36,8 @@ const pick = (user: StoredUser, fields: readonly string[]) =>
  * - A company user sees the attendants and queue of the events they may manage, and, with
  *   résumé access, every user with a résumé, résumé link included.
  * - Anyone else sees themselves in full, and the name and study programme of users registered
- *   for an event, which the event page lists.
+ *   for an event, which the event page lists. A coordinator also sees the people on the events
+ *   they manage as a company user does, but no résumés.
  */
 export function visibleUsers(
   subject: Subject,
@@ -48,17 +49,18 @@ export function visibleUsers(
     return users
   }
 
+  const related = new Set(
+    Object.values(events)
+      .filter((e) =>
+        hasPermission(subject, 'event', 'list', companyOf(e.companyUID), env),
+      )
+      .flatMap((e) => [
+        ...Object.keys(e.attendants ?? {}),
+        ...Object.values(e.queue ?? {}),
+      ]),
+  )
+
   if (subject.roles.includes('company')) {
-    const related = new Set(
-      Object.values(events)
-        .filter((e) =>
-          hasPermission(subject, 'event', 'list', companyOf(e.companyUID), env),
-        )
-        .flatMap((e) => [
-          ...Object.keys(e.attendants ?? {}),
-          ...Object.values(e.queue ?? {}),
-        ]),
-    )
     const resumes = hasPermission(
       subject,
       'resume',
@@ -76,6 +78,12 @@ export function visibleUsers(
     Object.values(events).flatMap((e) => Object.keys(e.attendants ?? {})),
   )
   return users
-    .filter((u) => u.uid === subject.uid || attendants.has(u.uid))
-    .map((u) => (u.uid === subject.uid ? u : pick(u, ATTENDANT_FIELDS)))
+    .filter(
+      (u) =>
+        u.uid === subject.uid || attendants.has(u.uid) || related.has(u.uid),
+    )
+    .map((u) => {
+      if (u.uid === subject.uid) return u
+      return pick(u, related.has(u.uid) ? COMPANY_FIELDS : ATTENDANT_FIELDS)
+    })
 }
