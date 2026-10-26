@@ -128,7 +128,7 @@ describe('attendants and attendance', () => {
       token,
     })
 
-  it('leaves them to admins', async () => {
+  it('refuses company contacts and lets admins see and mark them', async () => {
     const attendant = await student()
     await seed(`events/talk/attendants/${attendant.uid}`, {
       attended: false,
@@ -146,5 +146,31 @@ describe('attendants and attendance', () => {
     expect(await read(`events/talk/attendants/${attendant.uid}/attended`)).toBe(
       true,
     )
+  })
+  it("lets a coordinator scan attendance at their companies' events only", async () => {
+    const attendant = await student()
+    for (const event of ['talk', 'dinner']) {
+      await seed(`events/${event}/attendants/${attendant.uid}`, {
+        attended: false,
+        registeredAt: 1,
+      })
+    }
+    const coordinator = await student()
+    const given = { createdBy: 'test' }
+    await seed(`roles/${coordinator.uid}`, { user: given, coordinator: given })
+    await seed(`memberships/${coordinator.uid}/acme`, { kind: 'coordinator' })
+
+    expect((await attendants(coordinator.token)).status).toBe(200)
+    expect((await mark(attendant.uid, coordinator.token)).status).toBe(204)
+    expect(await read(`events/talk/attendants/${attendant.uid}/attended`)).toBe(
+      true,
+    )
+
+    const other = await api('/api/v1/event/attended', {
+      method: 'PATCH',
+      body: { eventUID: 'dinner', userUID: attendant.uid, attended: true },
+      token: coordinator.token,
+    })
+    expect(other.status).toBe(403)
   })
 })
