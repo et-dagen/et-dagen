@@ -16,10 +16,7 @@ export const JOB_TYPES = ['full-time', 'graduate', 'summer-internship'] as const
 export const JOB_LISTINGS = ['text', 'link'] as const
 export type JobListing = (typeof JOB_LISTINGS)[number]
 
-const required = z
-  .string({ required_error: 'required' })
-  .trim()
-  .min(1, 'required')
+const required = z.string({ error: 'required' }).trim().min(1, 'required')
 
 /** Rich text counts as empty when it holds no visible characters */
 export const hasText = (html: string) =>
@@ -33,11 +30,11 @@ const link = z
 const common = {
   title: required.max(120, 'too_long'),
   companyUID: required,
-  jobType: z.enum(JOB_TYPES, { errorMap: () => ({ message: 'required' }) }),
+  jobType: z.enum(JOB_TYPES, { error: 'required' }),
   location: required.max(120, 'too_long'),
   /** A date, `YYYY-MM-DD`, as v1 stores it */
   deadline: z
-    .string({ required_error: 'required' })
+    .string({ error: 'required' })
     .regex(/^\d{4}-\d{2}-\d{2}$/, 'date'),
 }
 
@@ -48,9 +45,7 @@ export const JobInput = z.discriminatedUnion('listing', [
     listing: z.literal('text'),
     applicationLink: link,
     /** Rich text, shown on the site */
-    description: z
-      .string({ required_error: 'required' })
-      .refine(hasText, 'required'),
+    description: z.string({ error: 'required' }).refine(hasText, 'required'),
   }),
   z.object({
     ...common,

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { CompanyUid } from '@/domain/business/company'
   const props = defineProps({
     companyUid: {
       type: String,
@@ -8,7 +9,6 @@
   })
   // Fetch company data if props are provided
   const auth = useAuthStore()
-  const { hasAccess, user } = storeToRefs(auth)
   const useAlerts = useAlertStore()
 
   // fetch company data
@@ -23,9 +23,10 @@
   // redirect on non existing company or lacking access
   if (
     (props.companyUid && !company.value) ||
-    (hasAccess.value(['company']) &&
-      props.companyUid &&
-      props.companyUid !== user.value?.companyUID)
+    (props.companyUid &&
+      !auth.can('company', 'update', {
+        uid: CompanyUid.parse(props.companyUid),
+      }))
   )
     navigateTo(localePath('/company/edit'))
 
@@ -273,7 +274,7 @@
               @change="setLogo"
             />
           </VCol>
-          <VCol v-if="state.logo && user?.userType === 'admin'" cols="3">
+          <VCol v-if="state.logo && auth.allows('admin')" cols="3">
             <VBtn
               variant="outlined"
               block

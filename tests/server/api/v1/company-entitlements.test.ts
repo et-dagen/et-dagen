@@ -1,10 +1,12 @@
 import { createError } from 'h3'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import formatFirebaseUser from '@/server/utils/formatFirebaseUser'
-import hasAccess from '@/server/utils/hasAccess'
+import { subjectOf } from '@/tests/server/api/support/subject'
 
 // The handlers rely on Nitro's auto-imports; stub them so they run as plain functions.
 let stored: Record<string, unknown> = {}
+// what the middleware reads to build the subject
+let companies: Record<string, { name: string; type: string; cvAccess: boolean }>
 const update = vi.fn()
 
 const snapshot = (path: string) => {
@@ -29,9 +31,10 @@ const reference = (path: string) => {
   return ref
 }
 
-beforeEach(() => {
+beforeEach(async () => {
   vi.resetModules()
   update.mockClear()
+  companies = { ours: { name: 'Ours', type: 'partner', cvAccess: false } }
   stored = {
     'companies/ours': { name: 'Ours', type: 'standard', cvAccess: false },
     'companies/ours/cvAccess': false,
@@ -42,7 +45,6 @@ beforeEach(() => {
   vi.stubGlobal('defineRouteMeta', () => {})
   vi.stubGlobal('defineEventHandler', (handler: unknown) => handler)
   vi.stubGlobal('createError', createError)
-  vi.stubGlobal('hasAccess', hasAccess)
   vi.stubGlobal('formatFirebaseUser', formatFirebaseUser)
   vi.stubGlobal('getQuery', () => ({ scope: 'all' }))
   for (const name of [
@@ -60,6 +62,10 @@ beforeEach(() => {
     (_e: unknown, _p: unknown, _o: unknown, fn: () => unknown) => fn(),
   )
   vi.stubGlobal('db', { ref: reference })
+  vi.stubGlobal(
+    'companyOf',
+    (await import('@/server/utils/companyOf')).companyOf,
+  )
   vi.stubGlobal('auth', {
     listUsers: () =>
       Promise.resolve({
@@ -69,6 +75,7 @@ beforeEach(() => {
 })
 
 const company = { uid: 'rep', userType: 'company', companyUID: 'ours' }
+
 const admin = { uid: 'boss', userType: 'admin' }
 
 const handlers = {
@@ -77,12 +84,22 @@ const handlers = {
   resume: () => import('@/server/api/v1/resume/index'),
 }
 
-async function call(name: keyof typeof handlers, user: object, body = {}) {
+async function call(
+  name: keyof typeof handlers,
+  user: { uid: string; userType: string; companyUID?: string },
+  body = {},
+) {
   vi.stubGlobal('readBody', () => Promise.resolve(body))
   const { default: run } = (await handlers[name]()) as unknown as {
     default: (event: unknown) => Promise<unknown>
   }
-  return run({ context: { user, decodedToken: { uid: 'x' } } })
+  return run({
+    context: {
+      user,
+      subject: subjectOf(user, companies),
+      decodedToken: { uid: 'x' },
+    },
+  })
 }
 
 describe('PUT /api/v1/company', () => {
@@ -108,7 +125,7 @@ describe('GET /api/v1/resume?scope=all', () => {
   })
 
   it('lists résumés for a company with résumé access', async () => {
-    stored['companies/ours/cvAccess'] = true
+    companies.ours.cvAccess = true
     expect(await call('resume', company)).toEqual([
       expect.objectContaining({ uid: 'student' }),
     ])

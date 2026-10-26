@@ -1,21 +1,16 @@
-export default defineNuxtRouteMiddleware((to) => {
+export default defineNuxtRouteMiddleware(async (to) => {
   // check if route is protected
   if (!to.meta.protected) return
 
-  // get auth state from store
   const auth = useAuthStore()
-  const isLoggedIn = auth.isLoggedIn
+  // signed in on this page, so the server has not sent the subject yet
+  if (auth.isLoggedIn && auth.subject?.uid !== auth.user?.uid) {
+    await auth.loadSubject()
+  }
 
-  // check if user has access
-  const accessLevels = to.meta.accessLevels
-  const hasAccess = auth.hasAccess(accessLevels)
+  const allowed = !to.meta.area || auth.allows(to.meta.area)
+  if (auth.isLoggedIn && allowed) return
 
-  // user is authenticated and has the required access level
-  if (isLoggedIn && hasAccess) return
-
-  // user does not have access
   const localePath = useLocalePath()
-  const redirectPath = hasAccess ? '/user/signin' : '/user'
-
-  return navigateTo(localePath(redirectPath))
+  return navigateTo(localePath(auth.isLoggedIn ? '/user' : '/user/signin'))
 })

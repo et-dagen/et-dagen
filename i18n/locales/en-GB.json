@@ -60,6 +60,15 @@
       "upload_resume": "Upload resume",
       "your_resume": "Your resume",
       "delete_resume": "Delete resume"
+    },
+    "delete": {
+      "title": "Delete my account",
+      "description": "Deletes your account and everything we store about you: your profile, résumé and event registrations. This cannot be undone.",
+      "dialog_title": "Delete your account?",
+      "dialog_text": "Your profile, résumé and event registrations are deleted right away, and you are signed out. This cannot be undone.",
+      "confirm_label": "Type your email address to confirm",
+      "confirm": "Delete account",
+      "abort": "Cancel"
     }
   },
   "error": {
@@ -203,12 +212,10 @@
         },
         "company": {
           "not-found": "Company not found",
-          "require-company-uid": "Company users must spesify companyUID",
           "missing-name-webpage-type": "Missing name, webpage or type"
         },
         "event": {
           "not-found": "Event doesn't exist",
-          "not-owner": "Cannot modify other companies' events",
           "missing-event-uid": "eventUID missing",
           "incorrect-capacity": "Capacity must be a number or null",
           "wrong-format-capacity": "Capacity must be a number larger than zero",
@@ -275,7 +282,8 @@
         "reset_password": "Password reset email sent"
       },
       "user": {
-        "edit": "User updated"
+        "edit": "User updated",
+        "deleted": "Your account has been deleted"
       },
       "event": {
         "register": {
@@ -681,6 +689,68 @@
       "empty": "Nobody has signed up yet.",
       "no_match": "No signed-up people match the search.",
       "no_signup": "This event has no sign-up. Turn on sign-up under Details to take sign-ups."
+    },
+    "standmaps": {
+      "name": "Stand maps",
+      "intro": "One stand map per fair day. It shows beside the day's heading in the programme, and visitors can open it full screen.",
+      "events": "No events | 1 event | {n} events",
+      "none": "Not uploaded",
+      "unnamed": "Unnamed",
+      "legacy": "Old upload",
+      "upload": "Upload",
+      "replace": "Replace",
+      "remove": "Remove the stand map for {day}",
+      "open": "Open the stand map for {day}",
+      "other": "Another day",
+      "formats": "PNG, JPEG or WebP, at most 10 MB. An old stand map goes away when you replace it.",
+      "empty": "No coming fair day has events yet. Pick a day below to upload a stand map.",
+      "done": {
+        "uploaded": "The stand map for {day} is uploaded.",
+        "removed": "The stand map for {day} is removed."
+      },
+      "confirm": {
+        "title": "Remove the stand map?",
+        "text": "The programme will no longer show a stand map for this day.",
+        "action": "Remove"
+      }
+    },
+    "board": {
+      "name": "Board",
+      "intro": "The board as the contact page shows it, in this order.",
+      "create": "New board member",
+      "featured": "Contact for companies",
+      "empty": "No board members yet.",
+      "up": "Move {name} up",
+      "down": "Move {name} down",
+      "edit": "Edit {name}",
+      "remove": "Remove {name}",
+      "removed": "{name} is removed from the board.",
+      "confirm": {
+        "title": "Remove the board member?",
+        "text": "The person and their photo disappear from the contact page.",
+        "action": "Remove"
+      },
+      "form": {
+        "new_title": "New board member",
+        "edit_title": "Edit board member",
+        "missing": "This board member was not found.",
+        "photo": "Photo",
+        "photo_choose": "Choose a photo",
+        "photo_replace": "Replace photo",
+        "photo_undo": "Undo",
+        "photo_hint": "PNG, JPEG or WebP, at most 10 MB. The photo is cropped around the centre to 5:6 and stored at 800 × 960.",
+        "name": "Name",
+        "title_nb": "Role (Norwegian)",
+        "title_en": "Role (English)",
+        "email": "Email",
+        "phone": "Phone",
+        "featured": "Contact for companies",
+        "featured_hint": "Shown on its own at the top of the contact page. Only one member can be.",
+        "create": "Add",
+        "save": "Save",
+        "created": "The board member is added.",
+        "updated": "Your changes are saved."
+      }
     }
   },
   "edit": {
@@ -918,6 +988,21 @@
     },
     "company": {
       "invalid-webpage": "The website must be an address starting with http:// or https://."
+    },
+    "standmap": {
+      "invalid-day": "Choose a valid date.",
+      "missing-file": "Choose an image to upload.",
+      "not-found": "This day has no stand map."
+    },
+    "board": {
+      "not-found": "This board member was not found.",
+      "invalid-name": "Fill in a name.",
+      "invalid-title": "Fill in the role in Norwegian and English.",
+      "invalid-email": "Enter a valid email address.",
+      "invalid-phone": "The phone number can only have digits, spaces and a leading +.",
+      "invalid-order": "Invalid place.",
+      "missing-file": "Choose a photo to upload.",
+      "unreadable-image": "The photo could not be read. Try another one."
     }
   },
   "form": {
@@ -929,7 +1014,9 @@
       "datetime": "Choose a date and time.",
       "end_before_start": "Must come after the start.",
       "signup_after_start": "Sign-up must close before the event starts.",
-      "number": "Enter a whole number above zero."
+      "number": "Enter a whole number above zero.",
+      "email": "Enter a valid email address.",
+      "phone": "Only digits, spaces and a leading +."
     },
     "leave": "You have unsaved changes. Leave the page?",
     "richtext": {

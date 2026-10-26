@@ -34,6 +34,7 @@ module.exports = {
         'components/company/EventPanel.vue',
         'pages/company/admin/**',
         'components/admin/form/**',
+        'components/user/DeleteAccount.vue',
         'components/job/DeadlineNote.vue',
         'components/job/FairEvents.vue',
         'pages/jobs/**',

@@ -1,6 +1,9 @@
 // GET /api/v1/resume
 // endpoint for fetching user data with resumes from database
 
+import { hasPermission } from '@/domain/authorization/hasPermission'
+import { Instant } from '@/domain/time'
+
 const isValidFirebaseStorageLink = async (link: string): Promise<boolean> => {
   // check if link is a string
   if (typeof link !== 'string') return false
@@ -52,7 +55,7 @@ defineRouteMeta({
 })
 
 export default defineEventHandler(async (event) => {
-  const { decodedToken, user } = event.context
+  const { decodedToken, subject, user } = event.context
 
   // Set resource context for wide event logging
   setResourceContext(event, 'resume', undefined, 'list', 'List user resumes')
@@ -83,21 +86,13 @@ export default defineEventHandler(async (event) => {
   // get scope from query params
   const { scope } = getQuery(event)
 
-  // only admins can get other users than their own
-  // TODO! Restrict company user access by adding custom endpoint for /api/v1/company/events/users
-  if (!hasAccess(user, ['admin', 'company']) || !scope || scope !== 'all')
+  // without the right to read every résumé, the caller gets their own record
+  const all = { scope: 'all' } as const
+  if (
+    scope !== 'all' ||
+    !hasPermission(subject, 'resume', 'read', all, { now: Instant.now() })
+  )
     return user
-
-  // a company sees résumés only when the committee has given it résumé access
-  if (!hasAccess(user, ['admin'])) {
-    const cvAccess = await withDbTiming(
-      event,
-      `companies/${user.companyUID}/cvAccess`,
-      'read',
-      () => db.ref(`companies/${user.companyUID}/cvAccess`).once('value'),
-    )
-    if (cvAccess.val() !== true) return user
-  }
 
   // listing other users' personal data is kept for the audit trail
   setLogImportance(event, 'warn')

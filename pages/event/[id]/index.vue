@@ -250,7 +250,7 @@
             :event-day="isEventDay(event, now)"
             :calendar="calendar"
             :ticket="ticket"
-            :is-admin="auth.hasAccess(['admin'])"
+            :is-admin="auth.allows('admin')"
             @changed="refresh"
           />
           <template #fallback>

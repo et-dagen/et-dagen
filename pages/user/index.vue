@@ -98,7 +98,7 @@
             </VIcon>
           </NuxtLink>
         </VCol>
-        <VCol v-if="!auth.hasAccess(['company'])" cols="12" lg="8">
+        <VCol v-if="auth.user?.studyProgram" cols="12" lg="8">
           <h6>Information</h6>
           <VDivider class="my-2" />
           <p class="my-2">
@@ -174,6 +174,9 @@
               </VCol>
             </VRow>
           </div>
+        </VCol>
+        <VCol cols="12">
+          <UserDeleteAccount />
         </VCol>
       </VRow>
     </VCard>

@@ -28,8 +28,9 @@ const student = {
       isOpen(target.event.registration, env.now),
   },
   user: {
-    read: true, // preserved verbatim — see "the hole left open" in the plan document
+    read: true, // what each role sees is narrowed by server/utils/userVisibility.ts
     update: (subject, account) => account.uid === subject.uid,
+    delete: (subject, account) => account.uid === subject.uid,
   },
 } satisfies RolesWithPermissions['user']
 
@@ -47,20 +48,29 @@ const student = {
  */
 export const ROLES = {
   admin: {
-    company: { create: true, update: true, delete: true },
+    company: { create: true, update: true, delete: true, entitle: true },
     job: { create: true, update: true, delete: true },
     event: {
       create: true,
       update: true,
       delete: true,
+      list: true,
       listAttendants: true,
       markAttended: true,
     },
     registration: { create: true, delete: true },
     resume: { read: true, write: true },
-    user: { read: true, create: true, update: true, delete: true },
+    user: {
+      read: true,
+      list: true,
+      create: true,
+      update: true,
+      delete: true,
+      assign: true,
+    },
     code: { read: true, create: true, delete: true },
     image: { upload: true },
+    board: { manage: true },
   },
 
   company: {
@@ -80,6 +90,8 @@ export const ROLES = {
         can(subject, hosted.companyUid, 'ent:event:manage'),
       delete: (subject, hosted) =>
         can(subject, hosted.companyUid, 'ent:event:manage'),
+      list: (subject, hosted) =>
+        can(subject, hosted.companyUid, 'ent:event:manage'),
     },
     resume: {
       read: (subject, resume) =>
@@ -88,6 +100,7 @@ export const ROLES = {
     user: {
       read: true,
       update: (subject, account) => account.uid === subject.uid,
+      delete: (subject, account) => account.uid === subject.uid,
     },
   },
 
@@ -108,6 +121,8 @@ export const ROLES = {
       create: (subject, hosted) =>
         can(subject, hosted.companyUid, 'ent:event:manage'),
       update: (subject, hosted) =>
+        can(subject, hosted.companyUid, 'ent:event:manage'),
+      list: (subject, hosted) =>
         can(subject, hosted.companyUid, 'ent:event:manage'),
       listAttendants: (subject, hosted) =>
         can(subject, hosted.companyUid, 'ent:event:manage'),

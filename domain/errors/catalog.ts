@@ -22,6 +22,11 @@ export interface ErrorSpec {
  */
 export const ERRORS = {
   'internal/unexpected': { status: 500, message: 'Unexpected error' },
+  'auth/signed-out': { status: 401, message: 'Sign in to do this' },
+  'auth/forbidden': {
+    status: 403,
+    message: 'This account is not allowed to do this',
+  },
   'event/register/forbidden': {
     status: 403,
     message: 'This account type cannot sign up for events',
@@ -38,6 +43,45 @@ export const ERRORS = {
   'file/wrong-owner': {
     status: 400,
     message: 'This kind of file belongs to a different kind of owner',
+  },
+  'standmap/invalid-day': {
+    status: 400,
+    message: 'A stand map day must be a date written as YYYY-MM-DD',
+  },
+  'standmap/missing-file': {
+    status: 400,
+    message: 'Send the stand map as the multipart part named file',
+  },
+  'standmap/not-found': { status: 404, message: 'This day has no stand map' },
+  'board/not-found': { status: 404, message: 'No board member has this id' },
+  'board/invalid-name': {
+    status: 400,
+    message: 'A board member needs a name of at most 120 characters',
+  },
+  'board/invalid-title': {
+    status: 400,
+    message: 'A board member needs a title in Norwegian and English',
+  },
+  'board/invalid-email': {
+    status: 400,
+    message: "A board member's email must be an email address",
+  },
+  'board/invalid-phone': {
+    status: 400,
+    message:
+      "A board member's phone number must be digits, spaces and a leading +",
+  },
+  'board/invalid-order': {
+    status: 400,
+    message: 'A place on the board must be a whole number from 0',
+  },
+  'board/missing-file': {
+    status: 400,
+    message: 'Send the portrait as the multipart part named file',
+  },
+  'board/unreadable-image': {
+    status: 415,
+    message: 'The portrait could not be read as a picture',
   },
   'job/invalid-listing': {
     status: 400,
