@@ -9,7 +9,7 @@
   definePageMeta({
     layout: 'admin',
     protected: true,
-    accessLevels: ['admin', 'company'],
+    area: 'company',
   })
 
   interface Person {
@@ -28,14 +28,7 @@
   const { data: people } = await useFetch<Person[]>('/api/v1/user', {
     query: { scope: 'all' },
   })
-  const { data: companies } =
-    await useFetch<Record<string, { cvAccess?: boolean }>>('/api/v1/company')
-
-  const hasAccess = computed(
-    () =>
-      auth.user?.userType === 'admin' ||
-      companies.value?.[auth.user?.companyUID ?? '']?.cvAccess === true,
-  )
+  const hasAccess = computed(() => auth.can('resume', 'read', { scope: 'all' }))
 
   const withResume = computed(() =>
     (people.value ?? []).filter((person) => person.resume),

@@ -52,8 +52,8 @@
 
   // handle user privileges
   const auth = useAuthStore()
-  const { hasAccess } = storeToRefs(auth)
-  const isAdmin = computed(() => hasAccess.value(['admin']))
+  // the account type and company are set by whoever may assign them
+  const isAdmin = computed(() => auth.can('user', 'assign', { scope: 'all' }))
 
   // Set state to user data plus companyUID
   const state = reactive({ companyUID: null, ...props.user })
