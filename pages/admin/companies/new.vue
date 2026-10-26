@@ -3,5 +3,5 @@
 </script>
 
 <template>
-  <CompanyForm :initial="{ description: '', cvAccess: false }" />
+  <CompanyForm :initial="{ description: '', resumeAccess: false }" />
 </template>

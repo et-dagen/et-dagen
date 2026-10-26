@@ -591,12 +591,14 @@
       "filter": {
         "all": "All",
         "admin": "Admins",
-        "company": "Companies",
+        "coordinator": "Coordinators",
+        "company": "Company contacts",
         "basic": "Students"
       },
       "role": {
         "admin": "Admin",
-        "company": "Company",
+        "coordinator": "Coordinator",
+        "company": "Company contact",
         "basic": "Student"
       },
       "columns": {
@@ -627,10 +629,13 @@
         "role": "Role",
         "role_hint": {
           "admin": "Has access to the whole admin panel.",
-          "company": "Signs in on behalf of a company.",
+          "coordinator": "A student at E&T-dagene responsible for one or more companies.",
+          "company": "A contact person from a company.",
           "basic": "A student who can sign up for events."
         },
         "company": "Company",
+        "companies": "Companies",
+        "companies_hint": "The companies the coordinator is responsible for. Coordinators do not see résumés.",
         "programme": "Study programme",
         "optional": "(optional)",
         "choose_programme": "Choose a study programme",

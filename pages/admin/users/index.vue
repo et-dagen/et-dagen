@@ -18,12 +18,21 @@
   import { useSelection } from '@/composables/admin/useSelection'
   import { useSort } from '@/composables/admin/useSort'
   import { alertError } from '@/composables/useAlerts'
+  import {
+    USER_TYPES as ROLES,
+    userTypeOf,
+    type MembershipBody,
+    type UserType as Role,
+  } from '@/contracts/user'
   import { pageOf, search, sortBy } from '@/lib/admin/listView'
   import type { User } from '~/models/User'
 
+  /** A listed user; admins get stored roles and memberships with each one */
+  type Listed = User & {
+    access?: { roles: string[]; memberships: MembershipBody[] }
+  }
+
   const PAGE_SIZE = 25
-  const ROLES = ['admin', 'company', 'basic'] as const
-  type Role = (typeof ROLES)[number]
   const COLUMNS = ['name', 'role', 'email', 'company'] as const
 
   const localePath = useLocalePath()
@@ -31,15 +40,25 @@
   const changed = computed(() => String(useRoute().query.changed ?? ''))
   const { t } = useI18n()
 
-  const { data: users, refresh } = await useFetch<User[]>(
+  const { data: users, refresh } = await useFetch<Listed[]>(
     '/api/v1/user?scope=all',
   )
   const { data: companies } =
     await useFetch<Record<string, { name: string }>>('/api/v1/company')
 
-  const roleOf = (user: User): Role => (user.userType ?? 'basic') as Role
-  const companyOf = (user: User) =>
-    companies.value?.[user.companyUID ?? '']?.name ?? ''
+  // a user not migrated yet is shown as the migration will store them (#640)
+  const accessOf = (user: Listed) =>
+    user.access
+      ? userTypeOf(user.access)
+      : user.userType === 'company'
+        ? { userType: 'coordinator' as const, companyUIDs: [user.companyUID] }
+        : { userType: (user.userType ?? 'basic') as Role, companyUIDs: [] }
+  const roleOf = (user: Listed): Role => accessOf(user).userType
+  const companyOf = (user: Listed) =>
+    accessOf(user)
+      .companyUIDs.map((uid) => companies.value?.[uid ?? '']?.name)
+      .filter(Boolean)
+      .join(', ')
   const nameOf = (user: User) => user.name || user.email
 
   const query = ref('')
@@ -114,8 +133,9 @@
 
   const roleBadge: Record<Role, string> = {
     admin: 'tw:border-transparent tw:bg-plate tw:text-plate-foreground',
-    company:
+    coordinator:
       'tw:border-transparent tw:bg-brand/10 tw:text-brand tw:dark:bg-brand/25',
+    company: 'tw:border-border tw:bg-card tw:text-foreground',
     basic: 'tw:border-transparent tw:bg-secondary tw:text-secondary-foreground',
   }
 </script>

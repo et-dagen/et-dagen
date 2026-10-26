@@ -22,7 +22,12 @@
   import { Textarea } from '@/components/ui/textarea'
   import { useResourceForm } from '@/composables/admin/useResourceForm'
   import { alertError } from '@/composables/useAlerts'
-  import { COMPANY_TYPES, CompanyInput } from '@/contracts/company'
+  import {
+    COMPANY_TIERS,
+    CompanyInput,
+    TYPE_OF_TIER,
+    toV1Company,
+  } from '@/contracts/company'
 
   const props = defineProps<{
     uid?: string
@@ -59,21 +64,30 @@
           : 'admin.companies.form.created',
       ),
     save: async (values) => {
+      const { profile, affiliation } = toV1Company(values)
+      const entitle = (companyUID: string) =>
+        $fetch('/api/v1/company/affiliation', {
+          method: 'PUT',
+          body: { companyUID, ...affiliation },
+        })
+
       if (props.uid) {
         const logo = logoFile.value
           ? await uploadLogo(props.uid, logoFile.value)
           : undefined
         await $fetch('/api/v1/company', {
           method: 'PUT',
-          body: { ...values, ...(logo && { logo }), companyUID: props.uid },
+          body: { ...profile, ...(logo && { logo }), companyUID: props.uid },
         })
+        await entitle(props.uid)
         return props.uid
       }
 
       const { companyUID } = await $fetch<{ companyUID: string }>(
         '/api/v1/company',
-        { method: 'POST', body: values },
+        { method: 'POST', body: profile },
       )
+      await entitle(companyUID)
       // the company exists now: report a failed logo or code, but do not save it twice
       try {
         if (logoFile.value) {
@@ -135,7 +149,7 @@
         </FormItem>
       </FormField>
 
-      <FormField v-slot="{ componentField }" name="type">
+      <FormField v-slot="{ componentField }" name="tier">
         <FormItem>
           <FormLabel>{{ $t('admin.companies.form.type') }}</FormLabel>
           <Select v-bind="componentField">
@@ -148,11 +162,15 @@
             </FormControl>
             <SelectContent>
               <SelectItem
-                v-for="type in COMPANY_TYPES"
-                :key="type"
-                :value="type"
+                v-for="tier in COMPANY_TIERS"
+                :key="tier"
+                :value="tier"
               >
-                {{ $t(`admin.companies.type.${type.replace('-', '_')}`) }}
+                {{
+                  $t(
+                    `admin.companies.type.${TYPE_OF_TIER[tier].replace('-', '_')}`,
+                  )
+                }}
               </SelectItem>
             </SelectContent>
           </Select>
@@ -187,7 +205,7 @@
 
       <FormField
         v-slot="{ value, handleChange }"
-        name="cvAccess"
+        name="resumeAccess"
         type="checkbox"
       >
         <FormItem class="tw:flex tw:items-start tw:gap-3 tw:lg:col-span-2">
