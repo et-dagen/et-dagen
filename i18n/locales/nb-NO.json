@@ -590,12 +590,14 @@
       "filter": {
         "all": "Alle",
         "admin": "Administratorer",
-        "company": "Bedrifter",
+        "coordinator": "Koordinatorer",
+        "company": "Bedriftskontakter",
         "basic": "Studenter"
       },
       "role": {
         "admin": "Admin",
-        "company": "Bedrift",
+        "coordinator": "Koordinator",
+        "company": "Bedriftskontakt",
         "basic": "Student"
       },
       "columns": {
@@ -626,10 +628,13 @@
         "role": "Rolle",
         "role_hint": {
           "admin": "Har tilgang til hele adminpanelet.",
-          "company": "Logger inn på vegne av en bedrift.",
+          "coordinator": "Student i E&T-dagene som har ansvar for én eller flere bedrifter.",
+          "company": "Kontaktperson fra en bedrift.",
           "basic": "Student som kan melde seg på arrangementer."
         },
         "company": "Bedrift",
+        "companies": "Bedrifter",
+        "companies_hint": "Bedriftene koordinatoren har ansvar for. Koordinatorer ser ikke CV-er.",
         "programme": "Studieprogram",
         "optional": "(valgfritt)",
         "choose_programme": "Velg studieprogram",

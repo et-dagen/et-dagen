@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { CompanyInput } from '@/contracts/company'
+import { CompanyInput, toV1Company } from '@/contracts/company'
 
 const valid = {
   name: 'Polarbit AS',
-  type: 'main-partner',
+  tier: 'mainPartner',
   webpage: 'https://example.com/polarbit',
   description: 'Embedded systems for harsh climates.',
-  cvAccess: true,
+  resumeAccess: true,
 }
 
 const errors = (input: unknown) =>
@@ -16,22 +16,40 @@ describe('CompanyInput', () => {
   it('accepts a complete company and fills in the optional fields', () => {
     expect(CompanyInput.safeParse(valid).success).toBe(true)
     expect(
-      CompanyInput.parse({ name: 'X', type: 'old', webpage: 'http://x.no' }),
-    ).toMatchObject({ description: '', cvAccess: false })
+      CompanyInput.parse({ name: 'X', tier: 'prior', webpage: 'http://x.no' }),
+    ).toMatchObject({ description: '', resumeAccess: false })
   })
 
-  it('refuses a missing name or type and any address that is not http(s)', () => {
+  it('refuses a missing name or tier and any address that is not http(s)', () => {
     expect(
       errors({
         ...valid,
         name: ' ',
-        type: 'gold',
+        tier: 'main-partner',
         webpage: 'javascript:alert(1)',
       }),
     ).toEqual([
       ['name', 'required'],
-      ['type', 'required'],
+      ['tier', 'required'],
       ['webpage', 'url'],
     ])
+  })
+})
+
+describe('toV1Company', () => {
+  it('sends the profile with its v1 type, and the tier with résumé access', () => {
+    expect(toV1Company(CompanyInput.parse(valid))).toEqual({
+      profile: {
+        name: 'Polarbit AS',
+        webpage: 'https://example.com/polarbit',
+        description: 'Embedded systems for harsh climates.',
+        type: 'main-partner',
+        cvAccess: true,
+      },
+      affiliation: {
+        tier: 'mainPartner',
+        overrides: { 'ent:resume:view': true },
+      },
+    })
   })
 })

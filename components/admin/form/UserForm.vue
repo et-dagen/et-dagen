@@ -2,6 +2,7 @@
   import { ArrowLeft, Save } from '@lucide/vue'
   import FieldError from '@/components/admin/form/FieldError.vue'
   import { Button } from '@/components/ui/button'
+  import { Checkbox } from '@/components/ui/checkbox'
   import {
     FormControl,
     FormField,
@@ -61,9 +62,10 @@
     back: '/admin/users',
     saved: () => t('admin.users.form.updated'),
     save: async (values) => {
-      const { profile, account } = toV1User(props.uid, values)
+      const { profile, account, access } = toV1User(props.uid, values)
       await $fetch('/api/v1/user', { method: 'POST', body: profile })
       await $fetch('/api/v1/user', { method: 'PUT', body: account })
+      await $fetch('/api/v1/user/access', { method: 'PUT', body: access })
       return props.uid
     },
   })
@@ -262,6 +264,46 @@
           </FormItem>
         </FormField>
       </template>
+
+      <FormField
+        v-if="role === 'coordinator'"
+        v-slot="{ value, handleChange }"
+        name="companyUIDs"
+      >
+        <FormItem class="tw:lg:col-span-2">
+          <FormLabel>{{ $t('admin.users.form.companies') }}</FormLabel>
+          <p class="tw:text-sm tw:text-muted-foreground">
+            {{ $t('admin.users.form.companies_hint') }}
+          </p>
+          <div
+            class="tw:grid tw:max-h-64 tw:gap-2 tw:overflow-y-auto tw:rounded-md tw:border tw:p-3 tw:sm:grid-cols-2"
+          >
+            <label
+              v-for="option in companyOptions"
+              :key="option.value"
+              class="tw:flex tw:items-center tw:gap-2 tw:text-sm"
+            >
+              <Checkbox
+                :model-value="
+                  ((value as string[]) ?? []).includes(option.value)
+                "
+                @update:model-value="
+                  (on) =>
+                    handleChange(
+                      on
+                        ? [...((value as string[]) ?? []), option.value]
+                        : ((value as string[]) ?? []).filter(
+                            (uid) => uid !== option.value,
+                          ),
+                    )
+                "
+              />
+              {{ option.label }}
+            </label>
+          </div>
+          <FieldError />
+        </FormItem>
+      </FormField>
     </section>
 
     <section

@@ -87,8 +87,9 @@ export const COMPANY_PANELS: readonly Panel[] = [
   },
 ]
 
-export const panelsFor = (userType: string | null | undefined) =>
-  userType === 'company' ? COMPANY_PANELS : ADMIN_PANELS
+/** Admins get the whole panel; company users and coordinators their companies' part of it */
+export const panelsFor = (isAdmin: boolean) =>
+  isAdmin ? ADMIN_PANELS : COMPANY_PANELS
 
 /** Whether a panel is where the user is: its own page or, unless exact, a page below it */
 export const isActivePanel = (panel: Panel, path: string, route: string) =>
