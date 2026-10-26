@@ -1,6 +1,9 @@
 // DELETE /api/v1/company
 // endpoint for removing a company from db
 
+import { authorize } from '@/domain/authorization/authorize'
+import { Instant } from '@/domain/time'
+
 defineRouteMeta({
   openAPI: {
     tags: ['Company', 'internal'],
@@ -25,29 +28,20 @@ defineRouteMeta({
     // },
     // responses: {
     //   204: { description: 'Removed' },
-    //   401: { description: 'Error (firebase/user-not-authorized).' },
+    //   401: { description: 'auth/signed-out' },
+    //   403: { description: 'auth/forbidden' },
     // },
   },
 })
 
 export default defineEventHandler(async (event) => {
-  const { user } = event.context
+  const { subject } = event.context
 
   // Set resource context for wide event logging
   setResourceContext(event, 'company', undefined, 'delete', 'Remove company')
   setLogImportance(event, 'warn')
 
-  // only admins can remove companies
-  if (!hasAccess(user, ['admin'])) {
-    setErrorContext(event, {
-      code: 'firebase/user-not-authorized',
-      message: 'User not authorized to remove companies',
-    })
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Error (firebase/user-not-authorized).',
-    })
-  }
+  authorize(subject, 'company', 'delete', undefined, { now: Instant.now() })
 
   // get request body
   const { companyUID } = await readBody(event)

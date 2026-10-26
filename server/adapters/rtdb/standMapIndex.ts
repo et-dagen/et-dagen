@@ -5,11 +5,12 @@ import { FileId } from '@/domain/files/file'
 
 /** Stand maps by day in the Realtime Database, as `fair/standmaps/<YYYY-MM-DD>: <file id>` */
 export function rtdbStandMapIndex(db: Database): StandMapIndex {
-  const days = db.ref('fair/standmaps')
+  // a reference per call: building the adapter must not open a connection
+  const days = () => db.ref('fair/standmaps')
 
   return {
     all: async () => {
-      const value = ((await days.once('value')).val() ?? {}) as Record<
+      const value = ((await days().once('value')).val() ?? {}) as Record<
         string,
         string
       >
@@ -21,10 +22,10 @@ export function rtdbStandMapIndex(db: Database): StandMapIndex {
       )
     },
     set: async (day, file) => {
-      await days.child(day).set(file)
+      await days().child(day).set(file)
     },
     remove: async (day) => {
-      await days.child(day).remove()
+      await days().child(day).remove()
     },
   }
 }

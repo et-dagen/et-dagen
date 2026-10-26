@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { companyOf } from '@/lib/auth/companyOf'
   import { type AttendantMetadata } from '~/models/Attendant'
 
   const localePath = useLocalePath()
@@ -27,14 +28,17 @@
     return data
   })
 
-  const { hasAccess, user } = useAuthStore()
+  const auth = useAuthStore()
   // Reroute to /event/edit if event does not exist
   // or if user does not have access to edit event
   if (
     (props.eventUid && !event.value) ||
-    (hasAccess(['company']) &&
-      props.eventUid &&
-      event.value[props.eventUid]?.companyUID !== user?.companyUID)
+    (props.eventUid &&
+      !auth.can(
+        'event',
+        'update',
+        companyOf(event.value[props.eventUid]?.companyUID),
+      ))
   )
     navigateTo(localePath('/event/edit'))
 
@@ -74,9 +78,10 @@
   const { data: companies } = await useFetch('/api/v1/company')
   // Format companies for select input
   const companyList = computed(() => {
-    if (!hasAccess(['admin', 'company']) || !event) return null
+    if (!event) return null
 
-    if (hasAccess(['admin'])) {
+    // every company, and E&T-dagene, for whoever may create events for any of them
+    if (auth.can('event', 'create', undefined)) {
       const list = embedKeyIntoObjectValues(companies.value).map((company) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { uid, name, ...remains } = company
@@ -95,20 +100,19 @@
       return list
     }
 
-    if (hasAccess(['company'])) {
-      return Object?.values(
-        embedKeyIntoObjectValues(companies.value)
-          .filter(({ uid }) => uid === user?.companyUID)
-          .map((company) => {
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            const { uid, name, ...remains } = company
-            return {
-              value: uid,
-              title: name,
-            }
-          }),
-      )
-    }
+    // only the companies the caller may create them for
+    return Object?.values(
+      embedKeyIntoObjectValues(companies.value)
+        .filter(({ uid }) => auth.can('event', 'create', companyOf(uid)))
+        .map((company) => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { uid, name, ...remains } = company
+          return {
+            value: uid,
+            title: name,
+          }
+        }),
+    )
   })
 
   const validDescription = computed(
@@ -236,7 +240,7 @@
   }
 
   const routeOnSuccess = () => {
-    const route = hasAccess(['admin']) ? '/admin/events' : '/company/admin'
+    const route = auth.allows('admin') ? '/admin/events' : '/company/admin'
     return navigateTo(localePath(route))
   }
 

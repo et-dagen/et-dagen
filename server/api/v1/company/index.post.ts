@@ -1,6 +1,8 @@
 // POST /api/v1/company
 // endpoint for creating companies in the db
 
+import { authorize } from '@/domain/authorization/authorize'
+import { Instant } from '@/domain/time'
 import { fail } from '@/domain/errors'
 import { safeLink } from '@/server/security/richText'
 
@@ -40,29 +42,20 @@ defineRouteMeta({
     // responses: {
     //   200: { description: 'Created. Returns { companyUID }' },
     //   400: { description: 'Error (company/missing-name-webpage-type).' },
-    //   401: { description: 'Error (firebase/user-not-authorized).' },
+    //   401: { description: 'auth/signed-out' },
+    //   403: { description: 'auth/forbidden' },
     // },
   },
 })
 
 export default defineEventHandler(async (event) => {
-  const { user } = event.context
+  const { subject } = event.context
 
   // Set resource context for wide event logging
   setResourceContext(event, 'company', undefined, 'create', 'Create company')
   setLogImportance(event, 'warn')
 
-  // only admins can create new companies
-  if (!hasAccess(user, ['admin'])) {
-    setErrorContext(event, {
-      code: 'firebase/user-not-authorized',
-      message: 'User not authorized to create companies',
-    })
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Error (firebase/user-not-authorized).',
-    })
-  }
+  authorize(subject, 'company', 'create', undefined, { now: Instant.now() })
 
   const { description, logo, name, type, webpage, cvAccess } =
     await readBody(event)

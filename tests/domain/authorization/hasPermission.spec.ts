@@ -298,3 +298,43 @@ describe('resume access', () => {
     ).toBe(false)
   })
 })
+
+describe('company profiles and hosted events', () => {
+  const companyUser = subjectOf({
+    roles: ['company'],
+    companies: { a: ['ent:event:manage', 'ent:profile:manage'] },
+  })
+
+  it("lists a company's events only for a user who manages them", () => {
+    expect(
+      hasPermission(companyUser, 'event', 'list', { companyUid: co('a') }),
+    ).toBe(true)
+    expect(
+      hasPermission(companyUser, 'event', 'list', { companyUid: co('b') }),
+    ).toBe(false)
+  })
+
+  it('lists every company only for an admin', () => {
+    expect(hasPermission(admin, 'event', 'list', undefined)).toBe(true)
+    expect(hasPermission(companyUser, 'event', 'list', undefined)).toBe(false)
+  })
+
+  it('leaves the contract to admins', () => {
+    expect(
+      hasPermission(companyUser, 'company', 'update', { uid: co('a') }),
+    ).toBe(true)
+    expect(
+      hasPermission(companyUser, 'company', 'entitle', { uid: co('a') }),
+    ).toBe(false)
+    expect(hasPermission(admin, 'company', 'entitle', { uid: co('a') })).toBe(
+      true,
+    )
+  })
+
+  it('creates a company only as an admin', () => {
+    expect(hasPermission(admin, 'company', 'create', undefined)).toBe(true)
+    expect(hasPermission(companyUser, 'company', 'create', undefined)).toBe(
+      false,
+    )
+  })
+})

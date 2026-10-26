@@ -212,12 +212,10 @@
         },
         "company": {
           "not-found": "Bedriften ble ikke funnet",
-          "require-company-uid": "Bedriftsbrukere må oppgi companyUID",
           "missing-name-webpage-type": "Mangler navn, nettside eller type"
         },
         "event": {
           "not-found": "Arrangementer eksisterer ikke",
-          "not-owner": "Kan ikke endre på andre bedrifters arrangementer",
           "missing-event-uid": "eventUID mangler",
           "incorrect-capacity": "Kapasitet må være number eller null",
           "wrong-format-capacity": "Kapasitet må være et tall større enn null",
@@ -993,13 +991,11 @@
       "invalid-webpage": "Nettsiden må være en adresse som starter med http:// eller https://."
     },
     "standmap": {
-      "forbidden": "Bare administratorer kan endre standkart.",
       "invalid-day": "Velg en gyldig dato.",
       "missing-file": "Velg et bilde å laste opp.",
       "not-found": "Denne dagen har ikke noe standkart."
     },
     "board": {
-      "forbidden": "Bare administratorer kan endre styret.",
       "not-found": "Fant ikke dette styremedlemmet.",
       "invalid-name": "Fyll inn et navn.",
       "invalid-title": "Fyll inn rollen på norsk og engelsk.",

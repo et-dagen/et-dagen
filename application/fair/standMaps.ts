@@ -4,11 +4,12 @@ import {
   uploadFile,
   type FileDependencies,
 } from '@/application/files/uploadFile'
-import { hasPermission } from '@/domain/authorization/hasPermission'
+import { authorize } from '@/domain/authorization/authorize'
 import type { Subject } from '@/domain/authorization/subject'
 import { fail } from '@/domain/errors'
 import type { FairDay } from '@/domain/fair/day'
 import { storagePathOf, type StoredFile } from '@/domain/files/file'
+import type { ISO8601String } from '@/domain/time'
 
 export interface StandMapDependencies extends FileDependencies {
   standMaps: StandMapIndex
@@ -48,9 +49,6 @@ export async function listStandMaps(
   return maps.filter((map) => map !== null)
 }
 
-const mayManage = (subject: Subject) =>
-  hasPermission(subject, 'image', 'upload')
-
 /**
  * Store a day's stand map, replacing the one it had
  *
@@ -58,19 +56,20 @@ const mayManage = (subject: Subject) =>
  * The old map is removed only after the day points at the new one, so a failed upload leaves the
  * day with the map it had.
  *
- * @throws AppError `standmap/forbidden`, or the `file/*` codes of {@link uploadFile}
+ * @throws AppError `auth/signed-out`, `auth/forbidden`, or the `file/*` codes of {@link uploadFile}
  */
 export async function putStandMap(
   deps: StandMapDependencies,
   request: {
-    subject: Subject
+    subject: Subject | undefined
+    now: ISO8601String
     day: FairDay
     name: string
     contentType: string
     bytes: Uint8Array
   },
 ): Promise<StandMap> {
-  if (!mayManage(request.subject)) throw fail('standmap/forbidden')
+  authorize(request.subject, 'image', 'upload', undefined, { now: request.now })
 
   const previous = (await deps.standMaps.all()).get(request.day)
   const file = await uploadFile(
@@ -93,13 +92,13 @@ export async function putStandMap(
 /**
  * Remove a day's stand map
  *
- * @throws AppError `standmap/forbidden` or `standmap/not-found`
+ * @throws AppError `auth/signed-out`, `auth/forbidden` or `standmap/not-found`
  */
 export async function removeStandMap(
   deps: Pick<StandMapDependencies, 'files' | 'storage' | 'standMaps'>,
-  request: { subject: Subject; day: FairDay },
+  request: { subject: Subject | undefined; now: ISO8601String; day: FairDay },
 ): Promise<void> {
-  if (!mayManage(request.subject)) throw fail('standmap/forbidden')
+  authorize(request.subject, 'image', 'upload', undefined, { now: request.now })
 
   const id = (await deps.standMaps.all()).get(request.day)
   if (!id) throw fail('standmap/not-found')

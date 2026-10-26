@@ -24,6 +24,7 @@ const subject = (role: Role): Subject => ({
   applicant: null,
 })
 const admin = subject('admin')
+const now = Instant.parse('2026-10-25T10:00:00.000Z')
 
 /** Stands in for sharp: anything starting with "IMG" is a picture */
 const images: ImageProcessor = {
@@ -63,14 +64,14 @@ describe('board members', () => {
   it('adds members last and moves one, keeping the others in order', async () => {
     const deps = setup()
     for (const name of ['Ada', 'Bo', 'Cy']) {
-      await addMember(deps, { subject: admin, input: input(name) })
+      await addMember(deps, { subject: admin, now, input: input(name) })
     }
     const cy = (await listBoard(deps))[2]!
 
-    await moveMember(deps, { subject: admin, id: cy.id, to: 0 })
+    await moveMember(deps, { subject: admin, now, id: cy.id, to: 0 })
     expect(await names(deps)).toEqual(['0:Cy', '1:Ada', '2:Bo'])
 
-    await moveMember(deps, { subject: admin, id: cy.id, to: 99 })
+    await moveMember(deps, { subject: admin, now, id: cy.id, to: 99 })
     expect(await names(deps)).toEqual(['0:Ada', '1:Bo', '2:Cy'])
   })
 
@@ -78,12 +79,18 @@ describe('board members', () => {
     const deps = setup()
     const ada = await addMember(deps, {
       subject: admin,
+      now,
       input: input('Ada', true),
     })
-    const bo = await addMember(deps, { subject: admin, input: input('Bo') })
+    const bo = await addMember(deps, {
+      subject: admin,
+      now,
+      input: input('Bo'),
+    })
 
     await updateMember(deps, {
       subject: admin,
+      now,
       id: bo.id,
       input: input('Bo', true),
     })
@@ -94,9 +101,14 @@ describe('board members', () => {
 
   it('stores the fitted portrait and replaces the old one', async () => {
     const deps = setup()
-    const ada = await addMember(deps, { subject: admin, input: input('Ada') })
+    const ada = await addMember(deps, {
+      subject: admin,
+      now,
+      input: input('Ada'),
+    })
     const photo = {
       subject: admin,
+      now,
       id: ada.id,
       name: 'ada.jpg',
       contentType: 'image/jpeg',
@@ -118,9 +130,14 @@ describe('board members', () => {
 
   it('refuses portraits it cannot use', async () => {
     const deps = setup()
-    const ada = await addMember(deps, { subject: admin, input: input('Ada') })
+    const ada = await addMember(deps, {
+      subject: admin,
+      now,
+      input: input('Ada'),
+    })
     const photo = (contentType: string, text: string) => ({
       subject: admin,
+      now,
       id: ada.id,
       name: 'x',
       contentType,
@@ -142,17 +159,22 @@ describe('board members', () => {
 
   it('removes a member with their portrait and closes the gap', async () => {
     const deps = setup()
-    const ada = await addMember(deps, { subject: admin, input: input('Ada') })
-    await addMember(deps, { subject: admin, input: input('Bo') })
+    const ada = await addMember(deps, {
+      subject: admin,
+      now,
+      input: input('Ada'),
+    })
+    await addMember(deps, { subject: admin, now, input: input('Bo') })
     await setPortrait(deps, {
       subject: admin,
+      now,
       id: ada.id,
       name: 'ada.png',
       contentType: 'image/png',
       bytes: new TextEncoder().encode('IMG'),
     })
 
-    await removeMember(deps, { subject: admin, id: ada.id })
+    await removeMember(deps, { subject: admin, now, id: ada.id })
     expect(await names(deps)).toEqual(['0:Bo'])
     expect(deps.storage.files.size).toBe(0)
   })
@@ -161,11 +183,14 @@ describe('board members', () => {
     const deps = setup()
     for (const role of ['user', 'company', 'coordinator'] as const) {
       await expect(
-        addMember(deps, { subject: subject(role), input: input('Ada') }),
-      ).rejects.toMatchObject({ code: 'board/forbidden' })
+        addMember(deps, { subject: subject(role), now, input: input('Ada') }),
+      ).rejects.toMatchObject({ code: 'auth/forbidden' })
     }
     await expect(
-      removeMember(deps, { subject: admin, id: BoardMemberId.random() }),
+      addMember(deps, { subject: undefined, now, input: input('Ada') }),
+    ).rejects.toMatchObject({ code: 'auth/signed-out' })
+    await expect(
+      removeMember(deps, { subject: admin, now, id: BoardMemberId.random() }),
     ).rejects.toMatchObject({ code: 'board/not-found' })
   })
 })

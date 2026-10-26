@@ -3,8 +3,7 @@
     layout: 'admin',
     // route and all sub routes are protected
     protected: true,
-    // route is only accessible by admins
-    accessLevels: ['admin'],
+    area: 'admin',
 
     // there exists no /admin page, so redirect to /admin/companies
     middleware: (to) => {

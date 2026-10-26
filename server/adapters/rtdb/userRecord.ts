@@ -1,14 +1,16 @@
+import type { StoredUser } from '@/application/users/userRepository'
 import type { Applicant } from '@/domain/authorization/eligibility'
-import type { Subject } from '@/domain/authorization/subject'
+import { CompanyUid } from '@/domain/business/company'
 import { Term, type StudyYear } from '@/domain/ntnu'
 import type { ISO8601String } from '@/domain/time'
-import { UserUid, type Role } from '@/domain/user'
+import type { Role } from '@/domain/user'
 
 /** The fields of a `users/<uid>` node that decide what its owner may do */
 export interface UserRecord {
   userType?: string | null
   studyProgram?: string | null
   currentYear?: number | string | null
+  companyUID?: string | null
 }
 
 const STUDY_YEARS: readonly number[] = [1, 2, 3, 4, 5]
@@ -44,20 +46,19 @@ function applicantOf(record: UserRecord, now: ISO8601String): Applicant | null {
   }
 }
 
-/**
- * Who is asking, read from a v1 user record
- *
- * @remarks
- * Only what registration needs: company entitlements are left empty. Replaced by the request
- * subject from middleware (#519).
- */
-export const subjectOf = (
-  uid: string,
-  record: UserRecord,
+/** A v1 company user acts for the one company its registration code named */
+const companiesOf = (record: UserRecord): CompanyUid[] => {
+  const company = record.userType === 'company' && record.companyUID
+  return company ? [CompanyUid.parse(company)] : []
+}
+
+/** Read a v1 user record */
+export const storedUserOf = (
+  record: UserRecord & Record<string, unknown>,
   now: ISO8601String,
-): Subject => ({
-  uid: UserUid.parse(uid),
+): StoredUser => ({
   roles: rolesOf(record.userType),
-  companies: new Map(),
   applicant: applicantOf(record, now),
+  companies: companiesOf(record),
+  record,
 })

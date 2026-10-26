@@ -1,6 +1,10 @@
 // DELETE /api/v1/resume
 // endpoint for deleting existing resumes
 
+import { authorize } from '@/domain/authorization/authorize'
+import { Instant } from '@/domain/time'
+import { UserUid } from '@/domain/user'
+
 defineRouteMeta({
   openAPI: {
     tags: ['Resume'],
@@ -25,8 +29,8 @@ defineRouteMeta({
     // },
     // responses: {
     //   204: { description: 'Deleted' },
-    //   400: { description: 'User not authorized' },
-    //   401: { description: 'User can only delete their own resume' },
+    //   401: { description: 'auth/signed-out' },
+    //   403: { description: 'auth/forbidden' },
     //   404: { description: 'User does not have a resume' },
     //   500: { description: 'Firebase: Error (storage/cannot-delete-file).' },
     // },
@@ -34,39 +38,37 @@ defineRouteMeta({
 })
 
 export default defineEventHandler(async (event) => {
-  const { user } = event.context
+  const { subject } = event.context
 
   // Set resource context for wide event logging
   setResourceContext(event, 'resume', undefined, 'delete', 'Delete user resume')
   setLogImportance(event, 'warn')
 
-  if (!hasAccess(user, ['basic', 'admin'])) {
-    setErrorContext(event, {
-      code: 'firebase/user-not-authorized',
-      message: 'User not authorized',
-    })
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'User not authorized',
-    })
-  }
-
   const { userUID } = await readBody(event)
 
   addEventContext(event, 'user_uid', userUID)
 
-  if (userUID !== user.uid) {
-    setErrorContext(event, {
-      code: 'storage/cannot-delete-other-users',
-      message: 'User can only delete their own resume',
-    })
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'User can only delete their own resume',
-    })
-  }
+  authorize(
+    subject,
+    'resume',
+    'write',
+    {
+      ownerUid:
+        typeof userUID === 'string' && userUID
+          ? UserUid.parse(userUID)
+          : undefined,
+      scope: 'own',
+    },
+    { now: Instant.now() },
+  )
 
-  const file = user.resume.split('/')
+  const stored = await withDbTiming(
+    event,
+    `users/${userUID}/resume`,
+    'read',
+    () => db.ref(`users/${userUID}/resume`).once('value'),
+  )
+  const file = typeof stored.val() === 'string' ? stored.val().split('/') : null
 
   if (!file) {
     setErrorContext(event, {
