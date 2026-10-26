@@ -7,6 +7,7 @@
  */
 import { firebaseFileStorage } from './adapters/firebase/fileStorage'
 import { rtdbAccessRepository } from './adapters/rtdb/accessRepository'
+import { rtdbAffiliationRepository } from './adapters/rtdb/affiliationRepository'
 import { rtdbBoardRepository } from './adapters/rtdb/boardRepository'
 import { rtdbCompanyRepository } from './adapters/rtdb/companyRepository'
 import { sharpImageProcessor } from './adapters/sharp/imageProcessor'
@@ -22,6 +23,7 @@ export const users = firebaseUserDirectory(auth)
 export const profiles = rtdbUserRepository(db)
 export const access = rtdbAccessRepository(db)
 export const companies = rtdbCompanyRepository(db)
+export const affiliations = rtdbAffiliationRepository(db)
 export const files = rtdbFileRepository(db)
 export const fileStorage = firebaseFileStorage(storage.bucket())
 export const standMaps = rtdbStandMapIndex(db)
