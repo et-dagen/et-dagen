@@ -37,9 +37,8 @@ const ROLE_OF: Record<MembershipKind, Role> = {
  * Why this access cannot be stored, or null when it can
  *
  * @remarks
- * A user needs at least one role, because a user without stored roles is read from the v1 fields
- * until the cutover (#640). A membership needs the role its kind comes with, so a company is
- * never reached through a role that grants nothing for it.
+ * A user needs at least one role, or they could do nothing at all. A membership needs the role
+ * its kind comes with, so a company is never reached through a role that grants nothing for it.
  */
 export function accessProblem(access: Access): AccessProblem | null {
   if (access.roles.length === 0) return 'no-roles'
@@ -88,28 +87,6 @@ export function checkedAccess(
   }
   return { roles: [...new Set(roles)], memberships: checked }
 }
-
-/**
- * The access a user's v1 fields become in the migration (#640)
- *
- * @remarks
- * Every v1 company account is run by E&T-dagene, so it becomes a coordinator of its company; the
- * `company` role is left for contacts from the companies themselves.
- */
-export const migratedAccess = (v1: {
-  roles: readonly Role[]
-  companies: readonly CompanyUid[]
-}): Access => ({
-  roles: [
-    ...new Set(
-      v1.roles.map((role) => (role === 'company' ? 'coordinator' : role)),
-    ),
-  ],
-  memberships: v1.companies.map((company) => ({
-    company,
-    kind: 'coordinator',
-  })),
-})
 
 /**
  * The access to store, without a `user` role next to `coordinator`

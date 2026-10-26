@@ -71,6 +71,10 @@ export const ERRORS = {
     message: 'A user can be a member of each company once',
   },
   'company/not-found': { status: 404, message: 'No company has this uid' },
+  'company/missing-name-or-webpage': {
+    status: 400,
+    message: 'A company needs a name and a webpage',
+  },
   'company/invalid-affiliation': {
     status: 400,
     message:

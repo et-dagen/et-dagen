@@ -212,7 +212,7 @@
         },
         "company": {
           "not-found": "Bedriften ble ikke funnet",
-          "missing-name-webpage-type": "Mangler navn, nettside eller type"
+          "missing-name-or-webpage": "Mangler navn eller nettside"
         },
         "event": {
           "not-found": "Arrangementer eksisterer ikke",

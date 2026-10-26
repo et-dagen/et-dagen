@@ -10,20 +10,37 @@ const FIVE_YEARS: ProgrammeType = {
   years: [1, 2, 3, 4, 5],
 }
 
+const none = { roles: null, memberships: null }
+
 describe('storedUserOf', () => {
-  it('reads admins, company users and everyone else as students', () => {
-    expect(storedUserOf({ userType: 'admin' }, now).roles).toEqual(['admin'])
-    expect(storedUserOf({ userType: 'company' }, now).roles).toEqual([
-      'company',
-    ])
-    expect(storedUserOf({ userType: 'basic' }, now).roles).toEqual(['user'])
-    expect(storedUserOf({ userType: null }, now).roles).toEqual(['user'])
+  it('goes by stored roles and active memberships, not the v1 fields', () => {
+    const user = storedUserOf(
+      { userType: 'company', companyUID: 'acme' },
+      now,
+      {
+        roles: { coordinator: {}, nonsense: {} },
+        memberships: {
+          globex: { kind: 'coordinator' },
+          gone: { kind: 'coordinator', endedAt: now },
+        },
+      },
+    )
+
+    expect(user.roles).toEqual(['coordinator'])
+    expect(user.companies).toEqual(['globex'])
+  })
+
+  it('gives a user without stored roles no roles and no companies', () => {
+    expect(
+      storedUserOf({ userType: 'admin', companyUID: 'acme' }, now, none),
+    ).toMatchObject({ roles: [], companies: [] })
   })
 
   it('makes a student with a programme and year an applicant', () => {
     const { applicant } = storedUserOf(
       { studyProgram: 'MTEL', currentYear: '3' },
       now,
+      none,
     )
 
     expect(applicant).toMatchObject({ programme: 'MTEL', year: 3 })
@@ -31,9 +48,10 @@ describe('storedUserOf', () => {
   })
 
   it('gives no applicant without a programme or a valid year', () => {
-    expect(storedUserOf({ currentYear: 3 }, now).applicant).toBeNull()
+    expect(storedUserOf({ currentYear: 3 }, now, none).applicant).toBeNull()
     expect(
-      storedUserOf({ studyProgram: 'MTEL', currentYear: 6 }, now).applicant,
+      storedUserOf({ studyProgram: 'MTEL', currentYear: 6 }, now, none)
+        .applicant,
     ).toBeNull()
   })
 
@@ -42,17 +60,10 @@ describe('storedUserOf', () => {
     const { applicant } = storedUserOf(
       { studyProgram: 'MTEL', currentYear: 5 },
       spring,
+      none,
     )
 
     expect(applicant?.graduation).toBe('2027-spring')
     expect(yearAt(FIVE_YEARS, applicant!.graduation, spring)).toBe(5)
-  })
-
-  it('ties a company user to the company of its code, and nobody else', () => {
-    expect(
-      storedUserOf({ userType: 'company', companyUID: 'acme' }, now).companies,
-    ).toEqual(['acme'])
-    expect(storedUserOf({ companyUID: 'acme' }, now).companies).toEqual([])
-    expect(storedUserOf({ userType: 'company' }, now).companies).toEqual([])
   })
 })

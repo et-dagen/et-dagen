@@ -94,8 +94,8 @@ can replace the Realtime Database one without changing the use cases.
   `authorize` in `domain/authorization/authorize.ts`, the one place a denial is raised: status 401
   with `auth/signed-out` when nobody is signed in, 403 with `auth/forbidden` when the table says
   no. The caller passes the clock. Every v1 handler decides this way (#521); roles, company memberships and
-  affiliations are stored under `roles/`, `memberships/` and `affiliations/` (#640); the RTDB adapters
-  fall back to the v1 fields for users and companies not migrated yet.
+  affiliations are stored under `roles/`, `memberships/` and `affiliations/` (#640), and only those
+  decide access; the v1 `userType`, `companyUID`, `type` and `cvAccess` fields no longer do.
 
 ## Logging
 

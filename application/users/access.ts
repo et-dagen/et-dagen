@@ -5,7 +5,6 @@ import type { UserRepository } from '@/application/users/userRepository'
 import {
   accessOnSignUp,
   accessProblem,
-  migratedAccess,
   withoutRedundantRoles,
   type Access,
 } from '@/domain/authorization/access'
@@ -72,10 +71,6 @@ export const startAccess = (
 /**
  * A user's roles and memberships, as the admin form shows them
  *
- * @remarks
- * A user without stored roles is shown with the access the migration will give them (#640), so
- * saving the form stores the same thing the migration would.
- *
  * @throws AppError `auth/signed-out`, `auth/forbidden` or `user/not-found`
  */
 export async function accessOf(
@@ -87,7 +82,6 @@ export async function accessOf(
 
   const stored = await deps.access.find(user)
   if (stored) return stored
-  const profile = await deps.profiles.find(user, now)
-  if (!profile) throw fail('user/not-found')
-  return migratedAccess(profile)
+  if (!(await deps.profiles.find(user, now))) throw fail('user/not-found')
+  return { roles: [], memberships: [] }
 }

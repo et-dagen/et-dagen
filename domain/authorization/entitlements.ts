@@ -14,7 +14,7 @@ import type { Company, Relationship } from '@/domain/business/company'
  * TypeScript object literals, which camelCase names did not.
  */
 export type Entitlement =
-  | 'ent:resume:view' // today's cvAccess
+  | 'ent:resume:view' // sold apart from the tier
   | 'ent:job:manage'
   | 'ent:event:manage'
   | 'ent:profile:manage' // only own profile
@@ -51,9 +51,9 @@ export type EntitledCompany = Company & HasEntitlementOverrides
  * What each contract tier grants before any override is applied
  *
  * @remarks
- * `ent:resume:view` is inert until the company data is migrated: the repository mapper emits an
- * explicit override in both directions from `cvAccess`, so no company's resume access changes on
- * deploy. Sponsors edit their own profile and nothing else; prior companies get nothing.
+ * Résumé access is sold apart from the tier, so an affiliation usually sets `ent:resume:view` as an
+ * override; the migration (#640) stored one for every company. Sponsors edit their own profile and
+ * nothing else; prior companies get nothing.
  */
 const defaults: Record<Relationship, readonly Entitlement[]> = {
   mainPartner: [

@@ -212,7 +212,7 @@
         },
         "company": {
           "not-found": "Company not found",
-          "missing-name-webpage-type": "Missing name, webpage or type"
+          "missing-name-or-webpage": "Missing name or webpage"
         },
         "event": {
           "not-found": "Event doesn't exist",
