@@ -1,8 +1,12 @@
 // POST /api/v1/user
 // endpoint for creating or updating a user in the database
 
+import { startAccess } from '@/application/users/access'
 import { hasPermission } from '@/domain/authorization/hasPermission'
+import { CompanyUid } from '@/domain/business/company'
 import { Instant } from '@/domain/time'
+import { UserUid } from '@/domain/user'
+import { access } from '@/server/composition'
 
 defineRouteMeta({
   openAPI: {
@@ -156,6 +160,19 @@ export default defineEventHandler(async (event) => {
     updated: Date.now(),
   })
   trackDbWrite(event, `users/${uid}`)
+
+  // a new account, or one using a registration code, starts with its roles (#640)
+  if (registrationCode || (!user && uid === decodedToken.uid)) {
+    await startAccess(
+      { access },
+      {
+        user: UserUid.parse(uid),
+        company: registrationCode ? CompanyUid.parse(companyUID) : null,
+        now: env.now,
+      },
+    )
+    trackDbWrite(event, `roles/${uid}`)
+  }
 
   // user successfully modified
   sendNoContent(event, 201)
