@@ -173,4 +173,28 @@ describe('attendants and attendance', () => {
     })
     expect(other.status).toBe(403)
   })
+  it("lets any coordinator scan attendance at E&T-dagene's own events", async () => {
+    const attendant = await student()
+    await seed('events/fair', {
+      ...fields('etdagene'),
+      attendants: { [attendant.uid]: { attended: false, registeredAt: 1 } },
+    })
+    const coordinator = await student()
+    const given = { createdBy: 'test' }
+    await seed(`roles/${coordinator.uid}`, { user: given, coordinator: given })
+    const bystander = await student()
+
+    const markAt = (token: string) =>
+      api('/api/v1/event/attended', {
+        method: 'PATCH',
+        body: { eventUID: 'fair', userUID: attendant.uid, attended: true },
+        token,
+      })
+
+    expect((await markAt(bystander.token)).status).toBe(403)
+    expect((await markAt(coordinator.token)).status).toBe(204)
+    expect(await read(`events/fair/attendants/${attendant.uid}/attended`)).toBe(
+      true,
+    )
+  })
 })

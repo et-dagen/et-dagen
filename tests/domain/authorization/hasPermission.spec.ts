@@ -130,6 +130,42 @@ describe('per-company entitlements', () => {
   })
 })
 
+describe('taking attendance', () => {
+  const attendance = (subject: Subject, company: string) =>
+    ['listAttendants', 'markAttended'].map((action) =>
+      hasPermission(subject, 'event', action as 'markAttended', {
+        companyUid: co(company),
+      }),
+    )
+
+  it("lets every coordinator take attendance at E&T-dagene's own events", () => {
+    const coordinator = subjectOf({ roles: ['coordinator'] })
+
+    expect(attendance(coordinator, 'etdagene')).toEqual([true, true])
+    expect(attendance(coordinator, 'a')).toEqual([false, false])
+    expect(attendance(subjectOf({ roles: ['user'] }), 'etdagene')).toEqual([
+      false,
+      false,
+    ])
+    expect(attendance(subjectOf({ roles: ['company'] }), 'etdagene')).toEqual([
+      false,
+      false,
+    ])
+  })
+
+  it("lets a coordinator take attendance at a sponsor's events, which it cannot manage", () => {
+    const coordinator = subjectOf({
+      roles: ['coordinator'],
+      companies: { a: ['ent:profile:manage'] as Entitlement[] },
+    })
+
+    expect(attendance(coordinator, 'a')).toEqual([true, true])
+    expect(
+      hasPermission(coordinator, 'event', 'update', { companyUid: co('a') }),
+    ).toBe(false)
+  })
+})
+
 describe('coordinator and company are not the same role', () => {
   const companies = { a: ['ent:event:manage'] as Entitlement[] }
   const coordinator = subjectOf({ roles: ['coordinator'], companies })
