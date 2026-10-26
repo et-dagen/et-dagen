@@ -37,22 +37,9 @@
     }
   })
 
-  // get companies
-  const { data: companies } = await useFetch('/api/v1/company')
-  const companyList = computed(() => {
-    return embedKeyIntoObjectValues(companies.value).map((company) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { uid, name, ...remains } = company
-      return {
-        value: uid,
-        title: name,
-      }
-    })
-  })
-
   // handle user privileges
   const auth = useAuthStore()
-  // the account type and company are set by whoever may assign them
+  // only an admin changes the study programme here; roles are set in the admin panel
   const isAdmin = computed(() => auth.can('user', 'assign', { scope: 'all' }))
 
   // Set state to user data plus companyUID
@@ -213,37 +200,6 @@
             label: $t('edit.user.attributes.email'),
           }"
           :rules="[useRequiredInput, useValidateEmail]"
-        />
-      </VRow>
-
-      <!-- user type -->
-      <VRow v-if="isAdmin">
-        <FormSelectInput
-          v-model="state.userType"
-          :content="{
-            label: $t('edit.user.attributes.type.name'),
-            options: [
-              { title: $t('edit.user.attributes.type.admin'), value: 'admin' },
-              {
-                title: $t('edit.user.attributes.type.company'),
-                value: 'company',
-              },
-              { title: $t('edit.user.attributes.type.basic'), value: 'basic' },
-            ],
-          }"
-          :rules="[useRequiredInput]"
-        />
-      </VRow>
-
-      <!-- company affiliation -->
-      <VRow v-if="isAdmin && state.userType === 'company'">
-        <FormSelectInput
-          v-model="state.companyUID"
-          :content="{
-            label: $t('edit.user.attributes.company'),
-            options: companyList,
-          }"
-          :rules="[useRequiredInput]"
         />
       </VRow>
 

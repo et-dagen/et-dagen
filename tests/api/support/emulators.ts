@@ -4,6 +4,8 @@
  * `firebase emulators:exec` exports the hosts below; the `demo-` project id makes the emulators
  * refuse to reach any real Firebase project.
  */
+import { accessOf, affiliationOf } from '@/tests/support/legacyFixtures'
+
 export const PROJECT_ID = 'demo-et-dagen'
 
 /** The emulator's default database for the project; other namespaces work but log a warning */
@@ -56,8 +58,29 @@ export async function resetEmulators(): Promise<void> {
   })
 }
 
-export const seed = (path: string, value: unknown): Promise<unknown> =>
+const put = (path: string, value: unknown): Promise<unknown> =>
   call(dbUrl(path), { method: 'PUT', body: JSON.stringify(value) })
+
+/**
+ * Store a value at a path
+ *
+ * @remarks
+ * Companies given in the v1 shape get the affiliation their `type` and `cvAccess` describe, so a
+ * test that seeds a partner with résumé access still has one.
+ */
+export async function seed(path: string, value: unknown): Promise<unknown> {
+  const written = await put(path, value)
+  const companies =
+    path === 'companies'
+      ? (value as Record<string, Record<string, unknown>>)
+      : /^companies\/[^/]+$/.test(path)
+        ? { [path.split('/')[1]!]: value as Record<string, unknown> }
+        : {}
+  for (const [uid, company] of Object.entries(companies)) {
+    await put(`affiliations/${uid}`, affiliationOf(company))
+  }
+  return written
+}
 
 export const read = (path: string): Promise<unknown> => call(dbUrl(path))
 
@@ -85,7 +108,13 @@ export async function createUser(
     false,
   )) as { localId: string; idToken: string }
 
-  if (record) await seed(`users/${account.localId}`, record)
+  if (record) {
+    // the v1 fields say who the user is; the roles and memberships are what the server reads
+    const { roles, memberships } = accessOf(record)
+    await seed(`users/${account.localId}`, record)
+    await seed(`roles/${account.localId}`, roles)
+    if (memberships) await seed(`memberships/${account.localId}`, memberships)
+  }
   return { uid: account.localId, token: account.idToken }
 }
 

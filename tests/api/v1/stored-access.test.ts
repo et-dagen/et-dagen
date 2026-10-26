@@ -1,5 +1,5 @@
 /**
- * Stored roles, memberships and affiliations (#640) decide the subject, ahead of the v1 fields
+ * Stored roles, memberships and affiliations (#640) decide the subject; the v1 fields do not
  */
 import { beforeEach, describe, expect, it } from 'vitest'
 import { api } from '@/tests/api/support/api'
@@ -59,14 +59,13 @@ describe('stored access', () => {
     ])
   })
 
-  it('falls back to the v1 fields for a user not migrated yet', async () => {
-    const { token } = await createUser({
-      userType: 'company',
-      companyUID: 'globex',
-    })
+  it('ignores the v1 fields of a user without stored roles', async () => {
+    const { uid, token } = await createUser()
+    // straight to the database, so the test helper adds no roles
+    await seed(`users/${uid}`, { userType: 'company', companyUID: 'globex' })
 
-    expect((await subjectFor(token)).companies.globex).toContain(
-      'ent:event:manage',
-    )
+    const response = await api('/api/v1/user/subject', { token })
+
+    expect(response.status).toBe(403)
   })
 })

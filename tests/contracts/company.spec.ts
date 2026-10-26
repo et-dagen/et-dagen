@@ -37,14 +37,12 @@ describe('CompanyInput', () => {
 })
 
 describe('toV1Company', () => {
-  it('sends the profile with its v1 type, and the tier with résumé access', () => {
+  it('sends the profile, and the tier with résumé access', () => {
     expect(toV1Company(CompanyInput.parse(valid))).toEqual({
       profile: {
         name: 'Polarbit AS',
         webpage: 'https://example.com/polarbit',
         description: 'Embedded systems for harsh climates.',
-        type: 'main-partner',
-        cvAccess: true,
       },
       affiliation: {
         tier: 'mainPartner',

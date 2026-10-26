@@ -151,16 +151,13 @@ describe('accessOf', () => {
     ).toEqual(coordinator)
   })
 
-  it('shows a user not migrated yet with the access the migration gives them', async () => {
+  it('shows a user without stored roles as holding none', async () => {
     expect(
       await accessOf(
         { access: memoryAccessRepository(), profiles },
         { subject: subject('admin'), user: ada, now },
       ),
-    ).toEqual({
-      roles: ['coordinator'],
-      memberships: [{ company: acme, kind: 'coordinator' }],
-    })
+    ).toEqual({ roles: [], memberships: [] })
   })
 
   it('refuses everyone but admins, and an unknown user', async () => {

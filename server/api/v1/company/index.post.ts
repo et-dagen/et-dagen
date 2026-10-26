@@ -11,8 +11,8 @@ defineRouteMeta({
     tags: ['Company', 'internal'],
     summary: 'Create company',
     description:
-      'Admin only. Note the request field is named `type`, while models/Company.ts calls it ' +
-      '`companyType`.',
+      'Admin only. Body: `{ name, webpage, description?, logo? }`. The tier and résumé ' +
+      'access are set with `PUT /api/v1/company/affiliation`.',
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],
     // TODO(api-docs): fill in the request/response schemas below.
     // Shapes are sketched from current handler behaviour - verify each
@@ -23,17 +23,12 @@ defineRouteMeta({
     //     'application/json': {
     //       schema: {
     //         type: 'object',
-    //         required: ['name', 'webpage', 'type'],
+    //         required: ['name', 'webpage'],
     //         properties: {
     //           name: { type: 'string' },
     //           webpage: { type: 'string' },
-    //           type: {
-    //             type: 'string',
-    //             enum: ['main-partner', 'partner', 'sponsor', 'old'],
-    //           },
     //           description: { type: 'string', nullable: true },
     //           logo: { type: 'string', nullable: true },
-    //           cvAccess: { type: 'boolean' },
     //         },
     //       },
     //     },
@@ -41,7 +36,7 @@ defineRouteMeta({
     // },
     // responses: {
     //   200: { description: 'Created. Returns { companyUID }' },
-    //   400: { description: 'Error (company/missing-name-webpage-type).' },
+    //   400: { description: 'company/missing-name-or-webpage' },
     //   401: { description: 'auth/signed-out' },
     //   403: { description: 'auth/forbidden' },
     // },
@@ -57,22 +52,12 @@ export default defineEventHandler(async (event) => {
 
   authorize(subject, 'company', 'create', undefined, { now: Instant.now() })
 
-  const { description, logo, name, type, webpage, cvAccess } =
-    await readBody(event)
+  const { description, logo, name, webpage } = await readBody(event)
 
   const companiesRef = db.ref('companies')
 
   // description and logo are not required, but should be set by a company admin
-  if (!name || !webpage || !type) {
-    setErrorContext(event, {
-      code: 'company/missing-name-webpage-type',
-      message: 'Name, webpage, or type not provided',
-    })
-    throw createError({
-      statusCode: 400,
-      statusMessage: 'Error (company/missing-name-webpage-type).',
-    })
-  }
+  if (!name || !webpage) throw fail('company/missing-name-or-webpage')
 
   if (!safeLink(webpage)) throw fail('company/invalid-webpage')
 
@@ -80,9 +65,7 @@ export default defineEventHandler(async (event) => {
     description: description ?? null,
     logo: logo ?? null,
     name,
-    type,
     webpage: safeLink(webpage),
-    cvAccess,
   })
 
   // Preserve the original await-on-commit while recording timing.

@@ -113,9 +113,13 @@ describe('PUT /api/v1/company', () => {
     expect(update).toHaveBeenCalledWith('ours', { name: 'Renamed' })
   })
 
-  it('lets an admin set résumé access', async () => {
-    await call('company', admin, { companyUID: 'ours', cvAccess: true })
-    expect(update).toHaveBeenCalledWith('ours', { cvAccess: true })
+  it('keeps résumé access out of an admin update too; it is set with /affiliation', async () => {
+    await call('company', admin, {
+      companyUID: 'ours',
+      name: 'Renamed',
+      cvAccess: true,
+    })
+    expect(update).toHaveBeenCalledWith('ours', { name: 'Renamed' })
   })
 })
 

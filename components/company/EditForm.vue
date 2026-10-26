@@ -33,9 +33,7 @@
   const initialState = {
     name: null,
     description: null,
-    type: null,
     webpage: null,
-    cvAccess: false,
     logo: null,
     uid: null,
   }
@@ -196,35 +194,6 @@
           />
         </VRow>
 
-        <!-- Company Type -->
-        <VRow>
-          <FormSelectInput
-            v-model="state.type"
-            :content="{
-              label: $t('edit.company.attributes.type.name'),
-              options: [
-                {
-                  title: $t('edit.company.attributes.type.main_partner'),
-                  value: 'main-partner',
-                },
-                {
-                  title: $t('edit.company.attributes.type.partner'),
-                  value: 'partner',
-                },
-                {
-                  title: $t('edit.company.attributes.type.sponsor'),
-                  value: 'sponsor',
-                },
-                {
-                  title: $t('edit.company.attributes.type.old'),
-                  value: 'old',
-                },
-              ],
-            }"
-            :rules="[useRequiredInput]"
-          />
-        </VRow>
-
         <!-- Webpage -->
         <VRow>
           <FormTextInput
@@ -233,27 +202,6 @@
               label: $t('edit.company.attributes.webpage'),
             }"
             :rules="[useRequiredInput]"
-          />
-        </VRow>
-
-        <!-- CV Access -->
-        <VRow>
-          <FormSelectInput
-            v-model="state.cvAccess"
-            :content="{
-              label: $t('edit.company.attributes.cvAccess.name'),
-              options: [
-                {
-                  title: $t('edit.company.attributes.cvAccess.yes'),
-                  value: true,
-                },
-                {
-                  title: $t('edit.company.attributes.cvAccess.no'),
-                  value: false,
-                },
-              ],
-            }"
-            :rules="[]"
           />
         </VRow>
 

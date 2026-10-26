@@ -46,13 +46,9 @@
   const { data: companies } =
     await useFetch<Record<string, { name: string }>>('/api/v1/company')
 
-  // a user not migrated yet is shown as the migration will store them (#640)
+  // a user without stored roles is listed as a student, which is what the form offers them
   const accessOf = (user: Listed) =>
-    user.access
-      ? userTypeOf(user.access)
-      : user.userType === 'company'
-        ? { userType: 'coordinator' as const, companyUIDs: [user.companyUID] }
-        : { userType: (user.userType ?? 'basic') as Role, companyUIDs: [] }
+    userTypeOf(user.access ?? { roles: [], memberships: [] })
   const roleOf = (user: Listed): Role => accessOf(user).userType
   const companyOf = (user: Listed) =>
     accessOf(user)
