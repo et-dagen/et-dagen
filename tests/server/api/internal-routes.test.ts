@@ -18,6 +18,7 @@
 import { readFileSync, readdirSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
+import { ROLES } from '@/domain/authorization/roles'
 
 const API_DIR = join(import.meta.dirname, '../../../server/api/v1')
 
@@ -67,10 +68,21 @@ const handlers = walk(API_DIR).map((rel) => ({
 const isTaggedInternal = (source: string) =>
   /tags:\s*\[[^\]]*'internal'[^\]]*\]/.test(source)
 
-// hasAccess(user, ['admin']) - admin and nobody else. A check listing other
-// roles alongside admin is not an admin-only gate.
+// Granted by the permission table to admins and no other role
+const onlyAdminsMay = (resource: string, action: string) =>
+  Object.entries(ROLES).every(
+    ([role, grants]) =>
+      (role === 'admin') ===
+      Object.hasOwn((grants as Record<string, object>)[resource] ?? {}, action),
+  )
+
+// hasAccess(user, ['admin']) or authorize(subject, '<resource>', '<action>', ...) - admin and
+// nobody else. A check listing other roles alongside admin is not an admin-only gate.
 const gatesOnAdmin = (source: string) =>
-  /hasAccess\(\s*\w+,\s*\[\s*'admin'\s*\]\s*\)/.test(source)
+  /hasAccess\(\s*\w+,\s*\[\s*'admin'\s*\]\s*\)/.test(source) ||
+  [...source.matchAll(/authorize\(\s*\w+,\s*'(\w+)',\s*'(\w+)'/g)].some(
+    ([, resource, action]) => onlyAdminsMay(resource, action),
+  )
 
 describe('internal route tagging', () => {
   it('finds handlers to check', () => {

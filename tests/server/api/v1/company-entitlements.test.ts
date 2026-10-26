@@ -69,6 +69,20 @@ beforeEach(() => {
 })
 
 const company = { uid: 'rep', userType: 'company', companyUID: 'ours' }
+
+// the subject the middleware builds for these users, with the tier's profile right
+const subjectOf = (user: {
+  uid: string
+  userType: string
+  companyUID?: string
+}) => ({
+  uid: user.uid,
+  roles: [user.userType],
+  companies: new Map(
+    user.companyUID ? [[user.companyUID, new Set(['ent:profile:manage'])]] : [],
+  ),
+  applicant: null,
+})
 const admin = { uid: 'boss', userType: 'admin' }
 
 const handlers = {
@@ -77,12 +91,18 @@ const handlers = {
   resume: () => import('@/server/api/v1/resume/index'),
 }
 
-async function call(name: keyof typeof handlers, user: object, body = {}) {
+async function call(
+  name: keyof typeof handlers,
+  user: { uid: string; userType: string; companyUID?: string },
+  body = {},
+) {
   vi.stubGlobal('readBody', () => Promise.resolve(body))
   const { default: run } = (await handlers[name]()) as unknown as {
     default: (event: unknown) => Promise<unknown>
   }
-  return run({ context: { user, decodedToken: { uid: 'x' } } })
+  return run({
+    context: { user, subject: subjectOf(user), decodedToken: { uid: 'x' } },
+  })
 }
 
 describe('PUT /api/v1/company', () => {
