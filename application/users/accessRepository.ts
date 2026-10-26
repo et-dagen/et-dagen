@@ -15,4 +15,6 @@ export interface AccessRepository {
   replace(user: UserUid, access: Access, stamp: Stamp): Promise<void>
   /** The user's stored roles and active memberships, or null when no roles are stored */
   find(user: UserUid): Promise<Access | null>
+  /** Every user with stored roles, with their roles and active memberships */
+  all(): Promise<Map<UserUid, Access>>
 }

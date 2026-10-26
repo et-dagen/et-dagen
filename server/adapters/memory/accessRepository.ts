@@ -18,6 +18,7 @@ export function memoryAccessRepository(): AccessRepository & {
       return Promise.resolve()
     },
     find: (user) => Promise.resolve(stored.get(user) ?? null),
+    all: () => Promise.resolve(new Map(stored)),
     read: (user) => stored.get(user),
   }
 }

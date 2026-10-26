@@ -102,6 +102,29 @@ describe('GET /api/v1/user/access', () => {
     })
   })
 
+  it('lists stored access with each user for admins', async () => {
+    const admin = await createUser({ userType: 'admin' })
+    const volunteer = await createUser(student)
+    await api('/api/v1/user/access', {
+      method: 'PUT',
+      body: {
+        uid: volunteer.uid,
+        roles: ['user', 'coordinator'],
+        memberships: [{ companyUID: 'acme', kind: 'coordinator' }],
+      },
+      token: admin.token,
+    })
+
+    const listed = (await api('/api/v1/user?scope=all', { token: admin.token }))
+      .body as { uid: string; access?: unknown }[]
+
+    expect(listed.find((u) => u.uid === volunteer.uid)?.access).toEqual({
+      roles: ['coordinator', 'user'],
+      memberships: [{ companyUID: 'acme', kind: 'coordinator' }],
+    })
+    expect(listed.find((u) => u.uid === admin.uid)).not.toHaveProperty('access')
+  })
+
   it('leaves it to admins', async () => {
     const rep = await createUser({ userType: 'company', companyUID: 'acme' })
 

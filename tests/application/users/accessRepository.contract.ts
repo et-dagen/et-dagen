@@ -80,6 +80,15 @@ export function describeAccessRepository(
       ])
     })
 
+    it('lists every user with stored roles', async () => {
+      const { store } = await make()
+      await store.replace(ada, coordinator, stamp)
+
+      const all = await store.all()
+      expect([...all.keys()]).toEqual([ada])
+      expect(all.get(ada)?.memberships).toHaveLength(2)
+    })
+
     it('lets a user act for a company again after leaving it', async () => {
       const { store, held } = await make()
       await store.replace(ada, coordinator, stamp)

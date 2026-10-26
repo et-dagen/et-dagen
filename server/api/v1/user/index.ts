@@ -1,7 +1,10 @@
 // GET /api/v1/user
 // endpoint for fetching user data from database
 
+import { hasPermission } from '@/domain/authorization/hasPermission'
 import { Instant } from '@/domain/time'
+import { UserUid } from '@/domain/user'
+import { access } from '@/server/composition'
 
 defineRouteMeta({
   openAPI: {
@@ -120,6 +123,7 @@ export default defineEventHandler(async (event) => {
     ...dbUsers[firebaseUser.uid],
   }))
 
+  const env = { now: Instant.now() }
   const visible = visibleUsers(
     subject,
     users,
@@ -128,9 +132,27 @@ export default defineEventHandler(async (event) => {
         db.ref('events').once('value'),
       )
     ).val() ?? {},
-    { now: Instant.now() },
+    env,
   )
   addEventContext(event, 'result_count', visible.length)
 
-  return visible
+  // admins see stored roles and memberships; users not migrated yet have none (#640)
+  if (!hasPermission(subject, 'user', 'assign', { scope: 'all' }, env))
+    return visible
+  const stored = await access.all()
+  return visible.map((user) => {
+    const held = stored.get(UserUid.parse(user.uid as string))
+    return held
+      ? {
+          ...user,
+          access: {
+            roles: held.roles,
+            memberships: held.memberships.map(({ company, kind }) => ({
+              companyUID: company,
+              kind,
+            })),
+          },
+        }
+      : user
+  })
 })
