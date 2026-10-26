@@ -216,7 +216,6 @@
         },
         "event": {
           "not-found": "Arrangementer eksisterer ikke",
-          "not-owner": "Kan ikke endre på andre bedrifters arrangementer",
           "missing-event-uid": "eventUID mangler",
           "incorrect-capacity": "Kapasitet må være number eller null",
           "wrong-format-capacity": "Kapasitet må være et tall større enn null",
