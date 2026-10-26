@@ -1,8 +1,18 @@
 import type { HasDescription, HasLogo, HasWebpage } from '@/domain/traits'
 import { opaqueUid, type Brand } from '@/domain/brand'
 
-/** Different company tiers */
-export type Relationship = 'mainPartner' | 'partner' | 'sponsor' | 'prior'
+/** Every company tier, so a stored one can be checked */
+export const RELATIONSHIPS = [
+  'mainPartner',
+  'partner',
+  'sponsor',
+  'prior',
+] as const
+
+export type Relationship = (typeof RELATIONSHIPS)[number]
+
+export const isRelationship = (value: unknown): value is Relationship =>
+  (RELATIONSHIPS as readonly unknown[]).includes(value)
 
 /**
  * Identifies a company

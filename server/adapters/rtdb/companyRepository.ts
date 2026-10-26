@@ -2,6 +2,10 @@ import type { Database } from 'firebase-admin/database'
 import type { CompanyRepository } from '@/application/companies/companyRepository'
 import type { EntitledCompany } from '@/domain/authorization/entitlements'
 import { CompanyUid, type Relationship } from '@/domain/business/company'
+import {
+  entitledFromAffiliation,
+  type AffiliationRecord,
+} from '@/server/adapters/rtdb/accessRecords'
 
 /** The fields of a `companies/<uid>` node that decide what its users may do */
 export interface CompanyRecord {
@@ -10,7 +14,7 @@ export interface CompanyRecord {
   cvAccess?: boolean | null
 }
 
-const RELATIONSHIPS: Record<string, Relationship> = {
+const V1_TIERS: Record<string, Relationship> = {
   'main-partner': 'mainPartner',
   partner: 'partner',
   sponsor: 'sponsor',
@@ -31,23 +35,41 @@ export const entitledCompanyOf = (
 ): EntitledCompany => ({
   uid: CompanyUid.parse(uid),
   name: record.name ?? '',
-  relationship: RELATIONSHIPS[record.type ?? ''] ?? 'prior',
+  relationship: V1_TIERS[record.type ?? ''] ?? 'prior',
   entitlementOverrides: { 'ent:resume:view': record.cvAccess === true },
 })
 
-/** Companies under `companies/<uid>` in the Realtime Database */
+/**
+ * Companies under `companies/<uid>` in the Realtime Database
+ *
+ * @remarks
+ * A company's tier and entitlements come from `affiliations/<uid>`. Until the migration in #640
+ * has run, a company without one is read from its v1 `type` and `cvAccess`.
+ */
 export const rtdbCompanyRepository = (
   db: Pick<Database, 'ref'>,
 ): CompanyRepository => ({
   entitled: async (uids) => {
     const records = await Promise.all(
       uids.map(async (uid) => {
-        const snapshot = await db.ref(`companies/${uid}`).once('value')
-        return [uid, snapshot.val() as CompanyRecord | null] as const
+        const [company, affiliation] = await Promise.all([
+          db.ref(`companies/${uid}`).once('value'),
+          db.ref(`affiliations/${uid}`).once('value'),
+        ])
+        return [
+          uid,
+          company.val() as CompanyRecord | null,
+          affiliation.val() as AffiliationRecord | null,
+        ] as const
       }),
     )
-    return records.flatMap(([uid, record]) =>
-      record ? [entitledCompanyOf(uid, record)] : [],
-    )
+    return records.flatMap(([uid, record, affiliation]) => {
+      if (!record) return []
+      return [
+        affiliation
+          ? entitledFromAffiliation(uid, record.name ?? '', affiliation)
+          : entitledCompanyOf(uid, record),
+      ]
+    })
   },
 })
