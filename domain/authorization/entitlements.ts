@@ -19,6 +19,17 @@ export type Entitlement =
   | 'ent:event:manage'
   | 'ent:profile:manage' // only own profile
 
+/** Every entitlement, so stored overrides can be checked */
+export const ENTITLEMENTS: readonly Entitlement[] = [
+  'ent:resume:view',
+  'ent:job:manage',
+  'ent:event:manage',
+  'ent:profile:manage',
+]
+
+export const isEntitlement = (value: unknown): value is Entitlement =>
+  (ENTITLEMENTS as readonly unknown[]).includes(value)
+
 /**
  * Capability of overriding the entitlements a relationship implies
  *
