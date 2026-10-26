@@ -1,12 +1,6 @@
+import type { Stamp } from '@/application/stamp'
 import type { Access } from '@/domain/authorization/access'
-import type { ISO8601String } from '@/domain/time'
 import type { UserUid } from '@/domain/user'
-
-/** When a change was made, and by whom */
-export interface Stamp {
-  at: ISO8601String
-  by: UserUid
-}
 
 /** Where users' roles and company memberships are stored */
 export interface AccessRepository {

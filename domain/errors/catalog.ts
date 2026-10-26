@@ -71,6 +71,11 @@ export const ERRORS = {
     message: 'A user can be a member of each company once',
   },
   'company/not-found': { status: 404, message: 'No company has this uid' },
+  'company/invalid-affiliation': {
+    status: 400,
+    message:
+      'Send a known tier and overrides as known entitlements set to true or false',
+  },
   'board/invalid-name': {
     status: 400,
     message: 'A board member needs a name of at most 120 characters',
