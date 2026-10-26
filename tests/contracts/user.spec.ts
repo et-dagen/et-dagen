@@ -61,7 +61,7 @@ describe('UserInput', () => {
 })
 
 describe('toV1User', () => {
-  it('keeps company fields off a student and the other way round', () => {
+  it('sends only the profile, and no study programme for a company contact', () => {
     const student = toV1User('u1', {
       userType: 'basic',
       name: 'Ada',
@@ -72,10 +72,8 @@ describe('toV1User', () => {
     expect(student).toEqual({
       profile: {
         uid: 'u1',
-        userType: 'basic',
         studyProgram: 'Kybernetikk',
         currentYear: '4',
-        companyUID: null,
         dietaryRestrictions: ['milk', 'halal'],
       },
       account: { uid: 'u1', name: 'Ada' },
@@ -87,10 +85,11 @@ describe('toV1User', () => {
       companyUID: 'c1',
       dietaryRestrictions: [],
     })
-    expect(company.profile).toMatchObject({
+    expect(company.profile).toEqual({
+      uid: 'u2',
       studyProgram: null,
       currentYear: null,
-      companyUID: 'c1',
+      dietaryRestrictions: [],
     })
   })
 })
@@ -105,7 +104,7 @@ describe('toV1User access', () => {
       companyUIDs: ['c1', 'c2'],
       dietaryRestrictions: [],
     })
-    expect(profile.userType).toBe('basic')
+    expect(profile).not.toHaveProperty('userType')
     expect(access).toEqual({
       uid: 'u3',
       roles: ['coordinator'],
