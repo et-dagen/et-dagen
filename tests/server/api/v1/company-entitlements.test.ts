@@ -1,7 +1,6 @@
 import { createError } from 'h3'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import formatFirebaseUser from '@/server/utils/formatFirebaseUser'
-import hasAccess from '@/server/utils/hasAccess'
 import { subjectOf } from '@/tests/server/api/support/subject'
 
 // The handlers rely on Nitro's auto-imports; stub them so they run as plain functions.
@@ -46,7 +45,6 @@ beforeEach(async () => {
   vi.stubGlobal('defineRouteMeta', () => {})
   vi.stubGlobal('defineEventHandler', (handler: unknown) => handler)
   vi.stubGlobal('createError', createError)
-  vi.stubGlobal('hasAccess', hasAccess)
   vi.stubGlobal('formatFirebaseUser', formatFirebaseUser)
   vi.stubGlobal('getQuery', () => ({ scope: 'all' }))
   for (const name of [

@@ -1,6 +1,9 @@
 // POST /api/v1/image
 // endpoint for posting an image to storage bucket
 
+import { authorize } from '@/domain/authorization/authorize'
+import { Instant } from '@/domain/time'
+
 defineRouteMeta({
   openAPI: {
     tags: ['Image', 'internal'],
@@ -43,7 +46,7 @@ defineRouteMeta({
 })
 
 export default defineEventHandler(async (event) => {
-  const { user } = event.context
+  const { subject } = event.context
 
   // Set resource context for wide event logging
   setResourceContext(
@@ -54,17 +57,7 @@ export default defineEventHandler(async (event) => {
     'Upload image to storage',
   )
 
-  // only admins can post to storage bucket
-  if (!hasAccess(user, ['admin'])) {
-    setErrorContext(event, {
-      code: 'firebase/user-not-authorized',
-      message: 'User is not authorized to upload images',
-    })
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Error (firebase/user-not-authorized).',
-    })
-  }
+  authorize(subject, 'image', 'upload', undefined, { now: Instant.now() })
 
   // get request body
   const formData = await readMultipartFormData(event)

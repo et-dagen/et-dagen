@@ -64,8 +64,10 @@ The target layout, and how to place code while both shapes exist, is in `ARCHITE
   (`@/domain/time`), not with `../`. `./` is for files in the same directory. ESLint enforces it.
 - **Types**: use the branded types in `domain/` (`Instant`, `Term`, `EmailAddress`, `HttpUrl`,
   `MapLink`, ...) and their `parse`/`tryParse` functions at boundaries. Only the owning module casts to a brand.
-- **Authorization**: v1 uses `server/utils/hasAccess.ts`. The ABAC model (`domain/authorization`,
-  `hasPermission`) replaces it once it is wired in; do not add new `hasAccess` call sites to new code.
+- **Authorization**: decide with `authorize()` from `domain/authorization/authorize.ts`, which asks the
+  permission table and raises the only refusals (401 `auth/signed-out`, 403 `auth/forbidden`). Use
+  `hasPermission` only where a denial narrows a result instead of refusing. Never check `userType`,
+  `companyUID` or `cvAccess` in a handler; the subject carries roles and entitlements.
 - **New UI** (the admin pages first) uses shadcn-vue components from `components/ui`, Tailwind
   classes with the `tw:` prefix and Lucide icons, never Vuetify. After `bunx shadcn-vue add`, check
   the result: the CLI leaves class lists in template strings unprefixed, sometimes prefixes plain

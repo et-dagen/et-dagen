@@ -23,7 +23,7 @@ Firebase Admin SDK: Realtime Database, Cloud Storage, Auth
 
 - The browser uses Firebase only to sign in. Every database and storage call happens on the server,
   so the data store can change without touching the front end.
-- Handlers mix request parsing, rules, authorization (`hasAccess`) and storage calls in one function.
+- Handlers mix request parsing, rules, authorization and storage calls in one function.
   That is what the migration removes.
 - Realtime Database nodes: `users`, `companies`, `events` (with `attendants` and `queue`), `jobs`,
   `registrationCodes`, `studyProgrammes`, `generalInfo`. The stored data has drifted from the types
@@ -85,8 +85,7 @@ can replace the Realtime Database one without changing the use cases.
 
 ## Authorization
 
-- **v1:** `server/utils/hasAccess.ts` compares the user's single `userType` with a list.
-- **Target (ABAC):** a per-request `Subject` (uid, roles, per-company entitlements, and the student
+- **ABAC:** a per-request `Subject` (uid, roles, per-company entitlements, and the student
   attributes eligibility may judge) is checked by `hasPermission` against the permission table in
   `domain/authorization`. Roles bundle permissions; companies hold entitlements; a coordinator gets the
   entitlements of each company they are associated with. Event eligibility rules live in
@@ -94,7 +93,8 @@ can replace the Realtime Database one without changing the use cases.
   subject is built once per request in `server/middleware/user.ts` (#519). Use cases check it with
   `authorize` in `domain/authorization/authorize.ts`, the one place a denial is raised: status 401
   with `auth/signed-out` when nobody is signed in, 403 with `auth/forbidden` when the table says
-  no. The caller passes the clock. #521 moves the remaining v1 handlers off `hasAccess`.
+  no. The caller passes the clock. Every v1 handler decides this way (#521); the stored data is still
+  shaped for v1 and translated by the RTDB adapters until #640.
 
 ## Logging
 

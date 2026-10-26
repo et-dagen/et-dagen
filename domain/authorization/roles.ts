@@ -28,8 +28,9 @@ const student = {
       isOpen(target.event.registration, env.now),
   },
   user: {
-    read: true, // preserved verbatim — see "the hole left open" in the plan document
+    read: true, // what each role sees is narrowed by server/utils/userVisibility.ts
     update: (subject, account) => account.uid === subject.uid,
+    delete: (subject, account) => account.uid === subject.uid,
   },
 } satisfies RolesWithPermissions['user']
 
@@ -59,7 +60,14 @@ export const ROLES = {
     },
     registration: { create: true, delete: true },
     resume: { read: true, write: true },
-    user: { read: true, create: true, update: true, delete: true },
+    user: {
+      read: true,
+      list: true,
+      create: true,
+      update: true,
+      delete: true,
+      assign: true,
+    },
     code: { read: true, create: true, delete: true },
     image: { upload: true },
     board: { manage: true },
@@ -92,6 +100,7 @@ export const ROLES = {
     user: {
       read: true,
       update: (subject, account) => account.uid === subject.uid,
+      delete: (subject, account) => account.uid === subject.uid,
     },
   },
 
