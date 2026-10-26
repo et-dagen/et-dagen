@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { companyOf } from '@/lib/auth/companyOf'
   const props = defineProps({
     jobUid: {
       type: String,
@@ -10,7 +11,6 @@
   const useAlerts = useAlertStore()
   // Fetch job data if props are provided
   const auth = useAuthStore()
-  const { hasAccess, user } = storeToRefs(auth)
 
   // fetch job data
   const { data: job } = await useFetch('/api/v1/job', {
@@ -30,9 +30,12 @@
   // redirect on non existing job or lacking access
   if (
     (props.jobUid && !job.value) ||
-    (hasAccess.value(['company']) &&
-      props.jobUid &&
-      Object.values(job.value)[0].companyUID !== user.value?.companyUID)
+    (props.jobUid &&
+      !auth.can(
+        'job',
+        'update',
+        companyOf(Object.values(job.value)[0]?.companyUID),
+      ))
   )
     navigateTo(localePath('/jobs/edit'))
 
@@ -61,9 +64,10 @@
 
   // get company select options
   const companyList = computed(() => {
-    if (!hasAccess.value(['admin', 'company']) || !job) return null
+    if (!job) return null
 
-    if (hasAccess.value(['admin'])) {
+    // every company, for whoever may create jobs for any of them
+    if (auth.can('job', 'create', undefined)) {
       return embedKeyIntoObjectValues(companies.value).map((company) => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { uid, name, ...remains } = company
@@ -74,18 +78,17 @@
       })
     }
 
-    if (hasAccess.value(['company'])) {
-      return embedKeyIntoObjectValues(companies.value)
-        .filter((company) => company.uid === user.value?.companyUID)
-        .map((company) => {
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { uid, name, ...remains } = company
-          return {
-            value: uid,
-            title: name,
-          }
-        })
-    }
+    // only the companies the caller may create them for
+    return embedKeyIntoObjectValues(companies.value)
+      .filter((company) => auth.can('job', 'create', companyOf(company.uid)))
+      .map((company) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { uid, name, ...remains } = company
+        return {
+          value: uid,
+          title: name,
+        }
+      })
   })
 
   const validDescription = computed(

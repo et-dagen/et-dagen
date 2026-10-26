@@ -68,6 +68,8 @@ The target layout, and how to place code while both shapes exist, is in `ARCHITE
   permission table and raises the only refusals (401 `auth/signed-out`, 403 `auth/forbidden`). Use
   `hasPermission` only where a denial narrows a result instead of refusing. Never check `userType`,
   `companyUID` or `cvAccess` in a handler; the subject carries roles and entitlements.
+  The client asks the same table through the auth store (`can`, `canForSome`), and a protected
+  page names its area in `definePageMeta({ area })` (`lib/auth/areas.ts`).
 - **New UI** (the admin pages first) uses shadcn-vue components from `components/ui`, Tailwind
   classes with the `tw:` prefix and Lucide icons, never Vuetify. After `bunx shadcn-vue add`, check
   the result: the CLI leaves class lists in template strings unprefixed, sometimes prefixes plain
