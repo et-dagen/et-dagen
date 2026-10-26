@@ -1,6 +1,8 @@
 // PATCH /api/v1/event/attended
 // Admin-only: set attended = true/false for an attendant
 
+import { Instant } from '@/domain/time'
+
 defineRouteMeta({
   openAPI: {
     tags: ['Event', 'internal'],
@@ -30,14 +32,15 @@ defineRouteMeta({
     // responses: {
     //   204: { description: 'Updated' },
     //   400: { description: 'Error (event/attended/invalid-payload).' },
-    //   401: { description: 'Error (event/attended/not-admin).' },
+    //   401: { description: 'auth/signed-out' },
+    //   403: { description: 'auth/forbidden' },
     //   404: { description: 'Error (event/not-found). or Error (event/attended/user-not-attendant).' },
     // },
   },
 })
 
 export default defineEventHandler(async (event) => {
-  const { user } = event.context
+  const { subject } = event.context
   const { eventUID, userUID, attended } = await readBody(event)
 
   // Set resource context for wide event logging
@@ -50,17 +53,6 @@ export default defineEventHandler(async (event) => {
   )
   setLogImportance(event, 'warn')
 
-  if (!user || !hasAccess(user, ['admin'])) {
-    setErrorContext(event, {
-      code: 'event/attended/not-admin',
-      message: 'Non-admin user attempted to set attendance',
-    })
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Error (event/attended/not-admin).',
-    })
-  }
-
   if (!eventUID || !userUID || typeof attended !== 'boolean') {
     setErrorContext(event, {
       code: 'event/attended/invalid-payload',
@@ -71,6 +63,10 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Error (event/attended/invalid-payload).',
     })
   }
+
+  await authorizeStoredEvent(event, subject, 'markAttended', eventUID, {
+    now: Instant.now(),
+  })
 
   const eventRef = db.ref(`events/${eventUID}`)
   const snapshot = await withDbTiming(event, `events/${eventUID}`, 'read', () =>

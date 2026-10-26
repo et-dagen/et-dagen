@@ -216,7 +216,6 @@
         },
         "event": {
           "not-found": "Event doesn't exist",
-          "not-owner": "Cannot modify other companies' events",
           "missing-event-uid": "eventUID missing",
           "incorrect-capacity": "Capacity must be a number or null",
           "wrong-format-capacity": "Capacity must be a number larger than zero",
