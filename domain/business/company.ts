@@ -85,11 +85,12 @@ export type ListedCompany = Company & HasDescription & HasWebpage & HasLogo
  *
  * @remarks
  * Any common picture up to 10 MB is accepted. Its plain margin is cut away and it is scaled down
- * to fit 1200 × 1200, then stored as WebP with its transparency. Without the margin, the landing
- * page can give every logo the same visual weight, whatever whitespace the file came with.
+ * to fit 800 × 800, twice the largest tile the landing page shows it in, then stored as WebP
+ * with its transparency. Without the margin, the landing page can give every logo the same
+ * visual weight, whatever whitespace the file came with.
  */
 export const LOGO = {
-  maxSide: 1200,
+  maxSide: 800,
   types: ['image/png', 'image/jpeg', 'image/webp'],
   maxBytes: 10 * 1024 * 1024,
 } as const

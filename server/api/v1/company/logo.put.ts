@@ -13,7 +13,7 @@ defineRouteMeta({
     description:
       'Admin, or a company user for their own company. Multipart with the company in the part ' +
       'named `companyUID` and the picture in the part named `file`: PNG, JPEG or WebP, at most ' +
-      '10 MB. Its plain margin is cut away, it is scaled to fit 1200 x 1200 and stored as WebP, ' +
+      '10 MB. Its plain margin is cut away, it is scaled to fit 800 x 800 and stored as WebP, ' +
       'and it replaces the old logo. Answers with `{ logo }`, the new link.',
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],
   },
