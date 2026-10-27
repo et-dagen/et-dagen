@@ -6,11 +6,16 @@
 
   const localePath = useLocalePath()
   const auth = useAuthStore()
-  const panels = panelsFor(auth.allows('admin'))
+  const panels = panelsFor(auth.allows('admin'), auth.allows)
   const counts = await usePanelCounts(panels)
   const route = useRoute()
   const isActive = (panel: (typeof panels)[number]) =>
-    isActivePanel(panel, route.path, localePath(panel.route))
+    isActivePanel(
+      panel,
+      route.path,
+      localePath(panel.route),
+      panel.below && localePath(panel.below),
+    )
 </script>
 
 <template>

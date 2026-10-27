@@ -93,7 +93,7 @@
           }}
         </Badge>
         <Button as-child variant="outline" size="sm">
-          <NuxtLink :to="localePath(`/event/edit/${uid}`)">
+          <NuxtLink :to="localePath(`/company/admin/events/${uid}`)">
             <Pencil aria-hidden="true" />
             {{ $t('company.admin.events.edit') }}
           </NuxtLink>

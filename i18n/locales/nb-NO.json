@@ -168,6 +168,7 @@
       "events": {
         "name": "Arrangementer",
         "empty": "Dere har ingen arrangementer ennå.",
+        "new": "Nytt arrangement",
         "edit": "Rediger",
         "registration": "Påmelding {from} – {to}",
         "diets": "Allergier og kosthold",
@@ -176,6 +177,13 @@
         "no_attendees": "Ingen påmeldte ennå.",
         "copy_emails": "Kopier e-postadressene",
         "copied": "{n} e-postadresse kopiert | {n} e-postadresser kopiert"
+      },
+      "jobs": {
+        "name": "Stillinger",
+        "new": "Ny stilling",
+        "edit": "Rediger",
+        "deadline": "Frist {date}",
+        "empty": "Dere har ingen stillinger ennå."
       },
       "resumes": {
         "name": "CV-er",

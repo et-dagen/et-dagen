@@ -168,6 +168,7 @@
       "events": {
         "name": "Events",
         "empty": "You have no events yet.",
+        "new": "New event",
         "edit": "Edit",
         "registration": "Sign-up {from} – {to}",
         "diets": "Allergies and diets",
@@ -176,6 +177,13 @@
         "no_attendees": "No attendees yet.",
         "copy_emails": "Copy the email addresses",
         "copied": "{n} email address copied | {n} email addresses copied"
+      },
+      "jobs": {
+        "name": "Jobs",
+        "new": "New job",
+        "edit": "Edit",
+        "deadline": "Deadline {date}",
+        "empty": "You have no jobs yet."
       },
       "resumes": {
         "name": "CVs",
