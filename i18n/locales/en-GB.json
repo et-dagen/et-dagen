@@ -69,6 +69,21 @@
       "confirm_label": "Type your email address to confirm",
       "confirm": "Delete account",
       "abort": "Cancel"
+    },
+    "profile": {
+      "title": "Edit your profile",
+      "back": "My page",
+      "name": "Name",
+      "email": "Email",
+      "email_hint": "You sign in with this address, and it cannot be changed here.",
+      "programme": "Study programme",
+      "programme_hint": "Changed study programme? Contact E&T-dagene, and we will change it.",
+      "year": "Year",
+      "diet_hint": "Used when events serve food.",
+      "diet_other": "Other (separate with commas)",
+      "save": "Save",
+      "cancel": "Cancel",
+      "saved": "Your profile is saved"
     }
   },
   "error": {

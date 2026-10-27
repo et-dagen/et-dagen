@@ -69,6 +69,21 @@
       "confirm_label": "Skriv inn e-postadressen din for å bekrefte",
       "confirm": "Slett brukeren",
       "abort": "Avbryt"
+    },
+    "profile": {
+      "title": "Rediger profilen",
+      "back": "Min side",
+      "name": "Navn",
+      "email": "E-post",
+      "email_hint": "Du logger inn med denne adressen, og den kan ikke endres her.",
+      "programme": "Studieprogram",
+      "programme_hint": "Har du byttet studieprogram? Ta kontakt med E&T-dagene, så endrer vi det.",
+      "year": "Årstrinn",
+      "diet_hint": "Brukes når arrangementer har servering.",
+      "diet_other": "Annet (skill med komma)",
+      "save": "Lagre",
+      "cancel": "Avbryt",
+      "saved": "Profilen er lagret"
     }
   },
   "error": {
