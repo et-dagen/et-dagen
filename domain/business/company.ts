@@ -1,8 +1,18 @@
 import type { HasDescription, HasLogo, HasWebpage } from '@/domain/traits'
 import { opaqueUid, type Brand } from '@/domain/brand'
 
-/** Different company tiers */
-export type Relationship = 'mainPartner' | 'partner' | 'sponsor' | 'prior'
+/** Every company tier, so a stored one can be checked */
+export const RELATIONSHIPS = [
+  'mainPartner',
+  'partner',
+  'sponsor',
+  'prior',
+] as const
+
+export type Relationship = (typeof RELATIONSHIPS)[number]
+
+export const isRelationship = (value: unknown): value is Relationship =>
+  (RELATIONSHIPS as readonly unknown[]).includes(value)
 
 /**
  * Identifies a company
@@ -21,6 +31,17 @@ export type Relationship = 'mainPartner' | 'partner' | 'sponsor' | 'prior'
 export type CompanyUid = Brand<string, 'CompanyUid'>
 
 export const CompanyUid = opaqueUid<CompanyUid>('Company uid')
+
+/**
+ * E&T-dagene itself, as the host of its own events
+ *
+ * @remarks
+ * Not a stored company: events name it by this fixed uid, which the event forms offer next to the
+ * stored companies.
+ */
+export const ORGANISER = CompanyUid.parse('etdagene')
+
+export const isOrganiser = (uid: CompanyUid): boolean => uid === ORGANISER
 
 /**
  * A company connected to E&T-dagene

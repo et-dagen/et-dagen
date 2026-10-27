@@ -41,7 +41,11 @@ const closes = Instant.parse('2026-08-15T10:00:00.000Z') // exactly endOf(period
 
 const at = (now: typeof opens): Environment => ({ now })
 
-const eventWith = (eligibility?: EligibilityRule): HasRegistration => ({
+const eventWith = (
+  eligibility?: EligibilityRule,
+  host = 'host',
+): HasRegistration & { companyUid: CompanyUid } => ({
+  companyUid: CompanyUid.parse(host),
   registration: {
     period: { start: opens, duration: Duration.fromDays(14) },
     attendanceLimit: null,
@@ -126,6 +130,42 @@ describe('per-company entitlements', () => {
     ).toBe(false)
     expect(
       hasPermission(coordinator, 'job', 'create', { companyUid: co('c') }),
+    ).toBe(false)
+  })
+})
+
+describe('taking attendance', () => {
+  const attendance = (subject: Subject, company: string) =>
+    ['listAttendants', 'markAttended'].map((action) =>
+      hasPermission(subject, 'event', action as 'markAttended', {
+        companyUid: co(company),
+      }),
+    )
+
+  it("lets every coordinator take attendance at E&T-dagene's own events", () => {
+    const coordinator = subjectOf({ roles: ['coordinator'] })
+
+    expect(attendance(coordinator, 'etdagene')).toEqual([true, true])
+    expect(attendance(coordinator, 'a')).toEqual([false, false])
+    expect(attendance(subjectOf({ roles: ['user'] }), 'etdagene')).toEqual([
+      false,
+      false,
+    ])
+    expect(attendance(subjectOf({ roles: ['company'] }), 'etdagene')).toEqual([
+      false,
+      false,
+    ])
+  })
+
+  it("lets a coordinator take attendance at a sponsor's events, which it cannot manage", () => {
+    const coordinator = subjectOf({
+      roles: ['coordinator'],
+      companies: { a: ['ent:profile:manage'] as Entitlement[] },
+    })
+
+    expect(attendance(coordinator, 'a')).toEqual([true, true])
+    expect(
+      hasPermission(coordinator, 'event', 'update', { companyUid: co('a') }),
     ).toBe(false)
   })
 })
@@ -233,6 +273,34 @@ describe('registration eligibility', () => {
   it('fails closed on a subject that is not an enrolled student', () => {
     expect(create(subjectOf({ roles: ['user'] }))).toBe(false)
     expect(create(subjectOf({ roles: ['company'] }))).toBe(false)
+  })
+})
+
+describe('a coordinator signing up', () => {
+  const coordinator = subjectOf({
+    roles: ['coordinator'],
+    companies: { mine: ['ent:profile:manage'] },
+    applicant: { programme: 'mtel', year: 3 },
+  })
+  const signUp = (host: string) =>
+    hasPermission(
+      coordinator,
+      'registration',
+      'create',
+      {
+        targetUserUid: UserUid.parse('self'),
+        event: eventWith(undefined, host),
+      },
+      at(during),
+    )
+
+  it("signs up like a student for another company's event", () => {
+    expect(signUp('host')).toBe(true)
+  })
+
+  it("is kept off the events they take attendance at, E&T-dagene's included", () => {
+    expect(signUp('mine')).toBe(false)
+    expect(signUp('etdagene')).toBe(false)
   })
 })
 

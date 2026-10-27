@@ -5,4 +5,6 @@ import type { CompanyUid } from '@/domain/business/company'
 export interface CompanyRepository {
   /** The companies with these uids, with what they are entitled to. Unknown uids are skipped. */
   entitled(uids: readonly CompanyUid[]): Promise<EntitledCompany[]>
+  /** Every stored company, with what it is entitled to */
+  all(): Promise<EntitledCompany[]>
 }

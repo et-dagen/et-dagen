@@ -29,7 +29,7 @@ export const ERRORS = {
   },
   'event/register/forbidden': {
     status: 403,
-    message: 'This account type cannot sign up for events',
+    message: 'This account cannot sign up for this event',
   },
   'file/unsupported-type': {
     status: 415,
@@ -54,6 +54,32 @@ export const ERRORS = {
   },
   'standmap/not-found': { status: 404, message: 'This day has no stand map' },
   'board/not-found': { status: 404, message: 'No board member has this id' },
+  'user/not-found': { status: 404, message: 'No user has this uid' },
+  'user/invalid-access': {
+    status: 400,
+    message:
+      'Send roles as known role names and memberships as a companyUID and a known kind',
+  },
+  'user/no-roles': { status: 400, message: 'A user needs at least one role' },
+  'user/membership-without-role': {
+    status: 400,
+    message:
+      'A membership needs its role: company for an employee, coordinator for a coordinator',
+  },
+  'user/duplicate-membership': {
+    status: 400,
+    message: 'A user can be a member of each company once',
+  },
+  'company/not-found': { status: 404, message: 'No company has this uid' },
+  'company/missing-name-or-webpage': {
+    status: 400,
+    message: 'A company needs a name and a webpage',
+  },
+  'company/invalid-affiliation': {
+    status: 400,
+    message:
+      'Send a known tier and overrides as known entitlements set to true or false',
+  },
   'board/invalid-name': {
     status: 400,
     message: 'A board member needs a name of at most 120 characters',

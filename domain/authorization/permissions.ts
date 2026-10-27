@@ -71,7 +71,11 @@ export type Permissions = {
       | 'markAttended'
   }
   registration: {
-    dataType: { targetUserUid: UserUid; event: HasRegistration }
+    /** The event's host decides whether a coordinator may sign up for it */
+    dataType: {
+      targetUserUid: UserUid
+      event: HasRegistration & Pick<Event, 'companyUid'>
+    }
     action: 'create' | 'delete'
   }
   resume: {
@@ -80,7 +84,7 @@ export type Permissions = {
   }
   user: {
     dataType: { uid?: UserUid; scope: 'own' | 'all' }
-    /** `list` is every user in full; `assign` sets a user's account type and company */
+    /** `list` is every user in full; `assign` sets a user's roles and company memberships */
     action: 'read' | 'list' | 'create' | 'update' | 'delete' | 'assign'
   }
   code: { dataType: undefined; action: 'read' | 'create' | 'delete' }

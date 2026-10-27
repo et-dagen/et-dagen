@@ -37,26 +37,16 @@
     }
   })
 
-  // get companies
-  const { data: companies } = await useFetch('/api/v1/company')
-  const companyList = computed(() => {
-    return embedKeyIntoObjectValues(companies.value).map((company) => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { uid, name, ...remains } = company
-      return {
-        value: uid,
-        title: name,
-      }
-    })
-  })
-
   // handle user privileges
   const auth = useAuthStore()
-  // the account type and company are set by whoever may assign them
+  // only an admin changes the study programme here; roles are set in the admin panel
   const isAdmin = computed(() => auth.can('user', 'assign', { scope: 'all' }))
+  // a company contact has no study programme or year
+  const isContact = computed(
+    () => auth.currentSubject?.roles.includes('company') ?? false,
+  )
 
-  // Set state to user data plus companyUID
-  const state = reactive({ companyUID: null, ...props.user })
+  const state = reactive({ ...props.user })
 
   const hasDietaryRestrictions = ref(state.dietaryRestrictions)
   const otherRestrictions = ref<null | string>(null)
@@ -110,7 +100,7 @@
     ) {
       return true
     } else {
-      return !compareObjects(state, { companyUID: null, ...props.user })
+      return !compareObjects(state, { ...props.user })
     }
   })
 
@@ -125,10 +115,6 @@
     } catch (error) {
       useAlerts.alert(getI18nString('alert.error.form.invalid'), 'error')
       return
-    }
-
-    if (state.userType !== 'company') {
-      state.companyUID = null
     }
 
     // check for other dietary restrictions
@@ -216,39 +202,8 @@
         />
       </VRow>
 
-      <!-- user type -->
-      <VRow v-if="isAdmin">
-        <FormSelectInput
-          v-model="state.userType"
-          :content="{
-            label: $t('edit.user.attributes.type.name'),
-            options: [
-              { title: $t('edit.user.attributes.type.admin'), value: 'admin' },
-              {
-                title: $t('edit.user.attributes.type.company'),
-                value: 'company',
-              },
-              { title: $t('edit.user.attributes.type.basic'), value: 'basic' },
-            ],
-          }"
-          :rules="[useRequiredInput]"
-        />
-      </VRow>
-
-      <!-- company affiliation -->
-      <VRow v-if="isAdmin && state.userType === 'company'">
-        <FormSelectInput
-          v-model="state.companyUID"
-          :content="{
-            label: $t('edit.user.attributes.company'),
-            options: companyList,
-          }"
-          :rules="[useRequiredInput]"
-        />
-      </VRow>
-
       <!-- study programme -->
-      <VRow v-if="isAdmin && state.userType !== 'company'">
+      <VRow v-if="isAdmin && !isContact">
         <FormSelectInput
           v-model="state.studyProgram"
           :content="{
@@ -260,7 +215,7 @@
       </VRow>
 
       <!-- current year -->
-      <VRow v-if="state.userType !== 'company'">
+      <VRow v-if="!isContact">
         <FormSelectInput
           v-model="state.currentYear"
           :content="{

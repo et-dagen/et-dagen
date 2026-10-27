@@ -109,7 +109,7 @@ export default defineEventHandler(async (event) => {
   // get the first 1000 users from firebase auth
   const firebaseUsers = await auth.listUsers()
 
-  // combine users from db and firebase auth, only include users with cvAccess field
+  // combine users from db and firebase auth
   const users = firebaseUsers.users
     .map((firebaseUser) => ({
       ...formatFirebaseUser(firebaseUser),

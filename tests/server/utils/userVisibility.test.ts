@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest'
+import type { Subject } from '@/domain/authorization/subject'
+import { CompanyUid } from '@/domain/business/company'
 import { Instant } from '@/domain/time'
 import { visibleUsers } from '@/server/utils/userVisibility'
 import { subjectOf } from '@/tests/server/api/support/subject'
@@ -94,6 +96,27 @@ describe('visibleUsers for a company', () => {
     )
     expect(uids(visible)).toEqual(['attending', 'queued', 'with-resume'])
     expect(visible[2]).toHaveProperty('resume')
+  })
+})
+
+describe('visibleUsers for a coordinator', () => {
+  const viewer = {
+    ...subjectOf(person('me')),
+    roles: ['user', 'coordinator'] as const,
+    companies: new Map([
+      [CompanyUid.parse('ours'), new Set(['ent:event:manage'] as const)],
+    ]),
+  } as unknown as Subject
+
+  it('sees the people on the events they manage as a company does, and themselves', () => {
+    const visible = visibleUsers(viewer, users, events, env)
+
+    expect(uids(visible)).toEqual(['me', 'attending', 'queued', 'elsewhere'])
+    expect(visible.find((u) => u.uid === 'queued')).toHaveProperty('email')
+    expect(visible.find((u) => u.uid === 'elsewhere')).not.toHaveProperty(
+      'email',
+    )
+    expect(visible.some((u) => 'resume' in u)).toBe(false)
   })
 })
 

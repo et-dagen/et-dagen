@@ -6,7 +6,7 @@
 
   const localePath = useLocalePath()
   const auth = useAuthStore()
-  const panels = panelsFor(auth.user?.userType)
+  const panels = panelsFor(auth.allows('admin'))
   const counts = await usePanelCounts(panels)
   const route = useRoute()
   const isActive = (panel: (typeof panels)[number]) =>
@@ -26,9 +26,7 @@
         class="tw:rounded-[3px] tw:px-1.5 tw:pt-px tw:text-[11px] tw:font-bold tw:tracking-[0.08em] tw:shadow-[inset_0_0_0_1px_rgb(255_255_255/0.55)]"
       >
         {{
-          $t(
-            `admin.shell.tag.${auth.user?.userType === 'company' ? 'company' : 'admin'}`,
-          )
+          $t(`admin.shell.tag.${auth.allows('admin') ? 'admin' : 'company'}`)
         }}
       </span>
     </p>

@@ -1,53 +1,55 @@
 import type { Database } from 'firebase-admin/database'
 import type { CompanyRepository } from '@/application/companies/companyRepository'
 import type { EntitledCompany } from '@/domain/authorization/entitlements'
-import { CompanyUid, type Relationship } from '@/domain/business/company'
+import {
+  entitledFromAffiliation,
+  type AffiliationRecord,
+} from '@/server/adapters/rtdb/accessRecords'
 
-/** The fields of a `companies/<uid>` node that decide what its users may do */
+/** The fields of a `companies/<uid>` node the repository reads */
 export interface CompanyRecord {
   name?: string | null
-  type?: string | null
-  cvAccess?: boolean | null
 }
 
-const RELATIONSHIPS: Record<string, Relationship> = {
-  'main-partner': 'mainPartner',
-  partner: 'partner',
-  sponsor: 'sponsor',
-  old: 'prior',
-}
-
-/**
- * Read a v1 company record
- *
- * @remarks
- * An unknown type reads as a former company, which grants nothing by default. Résumé access is
- * an explicit override in both directions, so it stays exactly what `cvAccess` says whatever the
- * tier would grant.
- */
-export const entitledCompanyOf = (
+const entitledOf = (
   uid: string,
   record: CompanyRecord,
-): EntitledCompany => ({
-  uid: CompanyUid.parse(uid),
-  name: record.name ?? '',
-  relationship: RELATIONSHIPS[record.type ?? ''] ?? 'prior',
-  entitlementOverrides: { 'ent:resume:view': record.cvAccess === true },
-})
+  affiliation: AffiliationRecord | null,
+): EntitledCompany =>
+  entitledFromAffiliation(uid, record.name ?? '', affiliation ?? {})
 
-/** Companies under `companies/<uid>` in the Realtime Database */
+/**
+ * Companies under `companies/<uid>` in the Realtime Database
+ *
+ * @remarks
+ * A company's tier and entitlements come from `affiliations/<uid>`. A company without one reads
+ * as a former company, which grants nothing.
+ */
 export const rtdbCompanyRepository = (
   db: Pick<Database, 'ref'>,
 ): CompanyRepository => ({
   entitled: async (uids) => {
     const records = await Promise.all(
       uids.map(async (uid) => {
-        const snapshot = await db.ref(`companies/${uid}`).once('value')
-        return [uid, snapshot.val() as CompanyRecord | null] as const
+        const [company, affiliation] = await Promise.all([
+          db.ref(`companies/${uid}`).once('value'),
+          db.ref(`affiliations/${uid}`).once('value'),
+        ])
+        return [uid, company.val(), affiliation.val()] as const
       }),
     )
-    return records.flatMap(([uid, record]) =>
-      record ? [entitledCompanyOf(uid, record)] : [],
+    return records.flatMap(([uid, record, affiliation]) =>
+      record ? [entitledOf(uid, record, affiliation)] : [],
+    )
+  },
+  all: async () => {
+    const [companies, affiliations] = await Promise.all(
+      ['companies', 'affiliations'].map(
+        async (node) => (await db.ref(node).once('value')).val() ?? {},
+      ),
+    )
+    return Object.entries(companies as Record<string, CompanyRecord>).map(
+      ([uid, record]) => entitledOf(uid, record, affiliations[uid] ?? null),
     )
   },
 })

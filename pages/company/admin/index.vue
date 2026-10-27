@@ -10,9 +10,31 @@
   })
 
   const auth = useAuthStore()
-  const { data: events } = await useFetch<Record<string, EventRow>>(
-    '/api/v1/company/events',
-    { query: { companyUID: auth.user?.companyUID } },
+  // a coordinator can act for several companies; list the events of every one they may manage
+  const managed = computed(() =>
+    [...(auth.currentSubject?.companies.keys() ?? [])].filter((companyUid) =>
+      auth.can('event', 'list', { companyUid }),
+    ),
+  )
+  // forwards the sign-in when the page renders on the server
+  const requestFetch = useRequestFetch()
+  const { data: events } = await useAsyncData(
+    'company-events',
+    async () =>
+      Object.assign(
+        {},
+        ...(await Promise.all(
+          managed.value.map((companyUID) =>
+            requestFetch<Record<string, EventRow> | null>(
+              '/api/v1/company/events',
+              {
+                query: { companyUID },
+              },
+            ),
+          ),
+        )),
+      ) as Record<string, EventRow>,
+    { watch: [managed] },
   )
   // the server only returns the attendants of this company's events
   const { data: people } = await useFetch<

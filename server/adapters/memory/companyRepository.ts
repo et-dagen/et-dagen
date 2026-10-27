@@ -14,5 +14,6 @@ export function memoryCompanyRepository(
           return company ? [company] : []
         }),
       ),
+    all: () => Promise.resolve([...byUid.values()]),
   }
 }

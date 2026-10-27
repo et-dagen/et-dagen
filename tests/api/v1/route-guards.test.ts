@@ -39,6 +39,36 @@ describe('route guards', () => {
     expect((await page('/jobs/edit', token)).status).toBe(200)
   })
 
+  it('list the events of every company a coordinator manages', async () => {
+    const { uid, token } = await createUser({
+      userType: 'basic',
+      studyProgram: 'MTEL',
+      currentYear: 3,
+    })
+    const given = { createdBy: 'test' }
+    await seed(`roles/${uid}`, { coordinator: given })
+    await seed(`memberships/${uid}`, {
+      acme: { kind: 'coordinator' },
+      globex: { kind: 'coordinator' },
+    })
+    await seed('companies/globex', { name: 'Globex', type: 'partner' })
+    await seed('events', {
+      talk: { title: 'Acme talk', companyUID: 'acme' },
+      dinner: { title: 'Globex dinner', companyUID: 'globex' },
+      fair: { title: 'Initech fair', companyUID: 'initech' },
+    })
+
+    const html = await (
+      await fetch(`http://127.0.0.1:${API_PORT}/company/admin`, {
+        headers: { accept: 'text/html', authorization: `Bearer ${token}` },
+      })
+    ).text()
+
+    expect(html).toContain('Acme talk')
+    expect(html).toContain('Globex dinner')
+    expect(html).not.toContain('Initech fair')
+  })
+
   it('send a sponsor and a student to their profile', async () => {
     const sponsor = await contactFor('initech')
     const student = await createUser({

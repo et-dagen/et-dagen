@@ -2,7 +2,9 @@
 // endpoint for removing a company from db
 
 import { authorize } from '@/domain/authorization/authorize'
+import { CompanyUid } from '@/domain/business/company'
 import { Instant } from '@/domain/time'
+import { affiliations } from '@/server/composition'
 
 defineRouteMeta({
   openAPI: {
@@ -54,6 +56,9 @@ export default defineEventHandler(async (event) => {
   // remove company
   companiesRef.child(companyUID).remove()
   trackDbDelete(event, `companies/${companyUID}`)
+
+  await affiliations.remove([CompanyUid.parse(companyUID)])
+  trackDbDelete(event, `affiliations/${companyUID}`)
 
   // fetch storage bucket
   const bucket = storage.bucket()

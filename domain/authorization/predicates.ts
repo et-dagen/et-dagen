@@ -16,6 +16,16 @@ export const can = (
 ): boolean => subject.companies.get(companyUid)?.has(entitlement) ?? false
 
 /**
+ * Attached to this company, whatever it is entitled to
+ *
+ * @remarks
+ * For work E&T-dagene does for a company rather than something the company buys, such as taking
+ * attendance at its events.
+ */
+export const actsFor = (subject: Subject, companyUid: CompanyUid): boolean =>
+  subject.companies.has(companyUid)
+
+/**
  * Any associated company carries the entitlement
  *
  * @remarks
