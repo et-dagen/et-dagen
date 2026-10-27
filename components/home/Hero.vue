@@ -5,24 +5,27 @@
   defineProps<{
     fair: FairDays | null
     mainPartner: { name?: string; logo?: string } | null
+    hasCompanies: boolean
   }>()
 
   const localePath = useLocalePath()
 </script>
 
 <template>
-  <section class="tw:relative tw:isolate tw:overflow-hidden">
+  <section
+    class="tw:relative tw:isolate tw:overflow-hidden tw:lg:min-h-[calc(100svh-4.25rem)]"
+  >
     <!-- the logo's red shard, at the size of a direction sign -->
     <svg
       viewBox="0 0 1162 1441"
-      class="tw:absolute tw:top-6 tw:-right-16 tw:-z-10 tw:h-56 tw:w-auto tw:sm:h-80 tw:lg:top-[6%] tw:lg:-right-[6%] tw:lg:h-[88%]"
+      class="tw:absolute tw:top-4 tw:-right-20 tw:-z-10 tw:h-64 tw:w-auto tw:sm:h-80 tw:lg:top-[6%] tw:lg:-right-[6%] tw:lg:h-[88%]"
       aria-hidden="true"
     >
       <path d="M0 0 1046 431 1162 895 904 1441Z" fill="var(--brand)" />
     </svg>
 
     <div
-      class="tw:mx-auto tw:flex tw:h-full tw:max-w-screen-2xl tw:flex-col tw:px-4 tw:pt-64 tw:pb-12 tw:sm:pt-80 tw:lg:px-8 tw:lg:pt-[clamp(3rem,9vh,6rem)] tw:lg:pb-14"
+      class="tw:mx-auto tw:flex tw:max-w-screen-2xl tw:flex-col tw:px-4 tw:pt-44 tw:lg:min-h-[inherit] tw:pb-12 tw:sm:pt-80 tw:lg:px-8 tw:lg:pt-[clamp(3rem,9vh,6rem)] tw:lg:pb-14"
     >
       <h1 class="tw:font-black tw:tracking-[-0.04em]">
         <span class="tw:sr-only">E&amp;T-dagene: </span>
@@ -52,8 +55,8 @@
         <strong class="tw:font-bold tw:text-foreground">
           {{ $t('home.place') }}
         </strong>
-        <span aria-hidden="true" class="tw:mx-3">·</span>
-        {{ $t('home.slogan') }}
+        <span aria-hidden="true" class="tw:mx-3 tw:hidden tw:sm:inline">·</span>
+        <span class="tw:block tw:sm:inline">{{ $t('home.slogan') }}</span>
       </p>
 
       <div
@@ -68,6 +71,7 @@
           </NuxtLink>
         </Button>
         <a
+          v-if="hasCompanies"
           href="#bedrifter"
           class="tw:text-lg tw:font-bold tw:underline tw:decoration-border tw:decoration-2 tw:underline-offset-[6px] tw:hover:decoration-brand"
         >
@@ -77,7 +81,7 @@
 
       <p
         v-if="mainPartner?.logo"
-        class="tw:mt-16 tw:flex tw:items-center tw:gap-5 tw:text-muted-foreground tw:lg:mt-20"
+        class="tw:mt-12 tw:flex tw:items-center tw:gap-5 tw:text-muted-foreground tw:lg:mt-auto tw:lg:pt-20"
       >
         <span>{{ $t('home.main_partner') }}</span>
         <span aria-hidden="true" class="tw:h-px tw:w-12 tw:bg-border" />

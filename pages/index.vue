@@ -17,17 +17,22 @@
   const lineup = computed(() => lineupOf(companies.value))
   const fair = computed(() => fairDays(info.value, locale.value, now))
   const next = computed(() => upcoming(events.value, now, 5))
+  const hasCompanies = computed(
+    () =>
+      !!lineup.value.mainPartner ||
+      lineup.value.partners.length > 0 ||
+      lineup.value.sponsors.length > 0,
+  )
 </script>
 
 <template>
   <div class="et-ui tw:bg-background tw:text-foreground">
-    <HomeHero :fair="fair" :main-partner="lineup.mainPartner" />
-    <HomeUpcoming v-if="next.length" :events="next" :now="now" />
-    <HomeCompanies
-      v-if="
-        lineup.mainPartner || lineup.partners.length || lineup.sponsors.length
-      "
-      v-bind="lineup"
+    <HomeHero
+      :fair="fair"
+      :main-partner="lineup.mainPartner"
+      :has-companies="hasCompanies"
     />
+    <HomeUpcoming v-if="next.length" :events="next" :now="now" />
+    <HomeCompanies v-if="hasCompanies" v-bind="lineup" />
   </div>
 </template>
