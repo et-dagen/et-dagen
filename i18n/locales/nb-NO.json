@@ -865,19 +865,6 @@
       }
     }
   },
-  "footer": {
-    "header": {
-      "resources": "Ressurser",
-      "organisation": "Organisasjon",
-      "some": "Følg oss",
-      "join": "Vil dere delta?"
-    },
-    "link": {
-      "contact": "Kontakt oss",
-      "program": "Program",
-      "jobs": "Jobber"
-    }
-  },
   "dietary_restrictions": {
     "name": "Allergener og restriksjoner",
     "gluten": "Gluten",
@@ -1056,6 +1043,22 @@
       "profile": "Min profil",
       "company": "Bedriftsside",
       "admin": "Admin"
+    },
+    "footer": {
+      "place": "Elbygget, Gløshaugen",
+      "fair": "Messa holdes i Glassgården i Elbygget.",
+      "map": "Kart over Glassgården i Elbygget (MazeMap)",
+      "directions": "Veibeskrivelse",
+      "links": "Bunntekst",
+      "resources": "Ressurser",
+      "organisation": "Organisasjon",
+      "follow": "Følg oss",
+      "contact": "Kontakt oss",
+      "external": "(åpnes i ny fane)",
+      "join": "Vil dere delta?",
+      "copy": "Kopier {email}",
+      "copied": "{email} er kopiert",
+      "org": "Org.nr."
     }
   }
 }
