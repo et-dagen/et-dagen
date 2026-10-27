@@ -79,3 +79,17 @@ export type CompanyWithLogo = Company & HasLogo
  * previous shape this needed a fourth interface, and every further combination needed another.
  */
 export type ListedCompany = Company & HasDescription & HasWebpage & HasLogo
+
+/**
+ * How logos are taken in and stored
+ *
+ * @remarks
+ * Any common picture up to 10 MB is accepted. Its plain margin is cut away and it is scaled down
+ * to fit 1200 × 1200, then stored as WebP with its transparency. Without the margin, the landing
+ * page can give every logo the same visual weight, whatever whitespace the file came with.
+ */
+export const LOGO = {
+  maxSide: 1200,
+  types: ['image/png', 'image/jpeg', 'image/webp'],
+  maxBytes: 10 * 1024 * 1024,
+} as const

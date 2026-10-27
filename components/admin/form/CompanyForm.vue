@@ -41,16 +41,12 @@
   // new companies get a registration code straight away, unless the admin opts out
   const createCode = ref(true)
 
-  /** Upload a logo and return its address; the image endpoint stores it under the company */
+  /** Upload a logo; the server trims it and makes it the company's logo */
   const uploadLogo = async (companyUID: string, file: File) => {
     const body = new FormData()
+    body.append('companyUID', companyUID)
     body.append('file', file)
-    body.append('storagePath', `companies/${companyUID}`)
-    const { URL } = await $fetch<{ URL: string }>('/api/v1/image', {
-      method: 'POST',
-      body,
-    })
-    return URL
+    await $fetch('/api/v1/company/logo', { method: 'PUT', body })
   }
 
   const { submit, saving } = useResourceForm({
@@ -72,13 +68,11 @@
         })
 
       if (props.uid) {
-        const logo = logoFile.value
-          ? await uploadLogo(props.uid, logoFile.value)
-          : undefined
         await $fetch('/api/v1/company', {
           method: 'PUT',
-          body: { ...profile, ...(logo && { logo }), companyUID: props.uid },
+          body: { ...profile, companyUID: props.uid },
         })
+        if (logoFile.value) await uploadLogo(props.uid, logoFile.value)
         await entitle(props.uid)
         return props.uid
       }
@@ -90,13 +84,7 @@
       await entitle(companyUID)
       // the company exists now: report a failed logo or code, but do not save it twice
       try {
-        if (logoFile.value) {
-          const logo = await uploadLogo(companyUID, logoFile.value)
-          await $fetch('/api/v1/company', {
-            method: 'PUT',
-            body: { companyUID, logo },
-          })
-        }
+        if (logoFile.value) await uploadLogo(companyUID, logoFile.value)
         if (createCode.value) {
           await $fetch('/api/v1/code', {
             method: 'POST',

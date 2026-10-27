@@ -62,16 +62,16 @@
 
     // creating multipart form data
     const formData = new FormData()
+    formData.append('companyUID', state.uid)
     formData.append('file', file.value)
-    formData.append('storagePath', `companies/${state.uid}`)
 
-    // posting image to storage bucket
-    await $fetch('/api/v1/image', {
-      method: 'POST',
+    // the server trims the logo and makes it the company's logo
+    await $fetch('/api/v1/company/logo', {
+      method: 'PUT',
       body: formData,
     })
-      .then(({ URL }) => {
-        state.logo = URL
+      .then(({ logo }) => {
+        state.logo = logo
       })
       .catch(() =>
         useAlerts.alert(
