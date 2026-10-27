@@ -1,13 +1,20 @@
 <script setup lang="ts">
-  import { ArrowUpRight, Check, Copy, Navigation } from '@lucide/vue'
+  import { ArrowUpRight, Check, Copy, MapPin, Navigation } from '@lucide/vue'
   import { Button } from '@/components/ui/button'
 
   const localePath = useLocalePath()
+  const { locale } = useI18n()
 
-  // Glassgården in Elektro A on MazeMap, NTNU's campus map
-  const glassgarden =
-    'v=1&campusid=1&sharepoitype=poi&sharepoi=41755&zlevel=1&center=10.401764,63.417953'
-  const directions = `https://use.mazemap.com/#${glassgarden}&zoom=18`
+  // Glassgården in Elektro A on MazeMap, NTNU's campus map; the site's `no` is MazeMap's `nb`
+  const place = 'v=1&campusid=1&zlevel=1&center=10.401764,63.417953&zoom=18'
+  const lang = computed(() => (locale.value === 'no' ? 'nb' : 'en'))
+  const embed = computed(
+    () => `https://use.mazemap.com/embed.html#${place}&lang=${lang.value}`,
+  )
+  const directions = computed(
+    () =>
+      `https://use.mazemap.com/#${place}&sharepoitype=poi&sharepoi=41755&lang=${lang.value}`,
+  )
 
   const groups = [
     {
@@ -82,13 +89,38 @@
             {{ $t('site.footer.fair') }}
           </p>
         </div>
-        <iframe
-          :src="`https://use.mazemap.com/embed.html#${glassgarden}&zoom=17.5`"
-          :title="$t('site.footer.map')"
-          loading="lazy"
-          referrerpolicy="no-referrer"
-          class="tw:mt-4 tw:block tw:h-96 tw:w-full tw:sm:h-72 tw:border-y tw:bg-muted"
-        />
+        <!-- the map is a picture of the place; a tap opens MazeMap, so the footer never traps a scroll -->
+        <a
+          :href="directions"
+          target="_blank"
+          rel="noopener"
+          :aria-label="$t('site.footer.map_open')"
+          class="tw:relative tw:mt-4 tw:block tw:h-72 tw:overflow-hidden tw:border-y tw:bg-muted"
+        >
+          <iframe
+            :src="embed"
+            title=""
+            loading="lazy"
+            referrerpolicy="no-referrer"
+            tabindex="-1"
+            aria-hidden="true"
+            class="tw:pointer-events-none tw:block tw:size-full"
+          />
+          <span
+            class="tw:pointer-events-none tw:absolute tw:top-1/2 tw:left-1/2 tw:flex tw:-translate-x-1/2 tw:-translate-y-full tw:flex-col tw:items-center"
+            aria-hidden="true"
+          >
+            <span
+              class="tw:mb-1 tw:rounded tw:bg-plate tw:px-2 tw:pt-1 tw:pb-0.5 tw:text-sm tw:font-extrabold tw:text-plate-foreground"
+            >
+              Glassgården
+            </span>
+            <MapPin
+              class="tw:size-9 tw:fill-brand tw:text-card"
+              stroke-width="1.5"
+            />
+          </span>
+        </a>
         <div
           class="tw:flex tw:flex-wrap tw:items-center tw:gap-4 tw:bg-card tw:px-6 tw:py-4"
         >
@@ -158,7 +190,7 @@
           >
             {{ $t('site.footer.join') }}
           </h3>
-          <ul class="tw:mt-4 tw:grid tw:gap-3 tw:xl:grid-cols-2">
+          <ul class="tw:mt-4 tw:grid tw:gap-3">
             <li
               v-for="box in mailboxes"
               :key="box.email"

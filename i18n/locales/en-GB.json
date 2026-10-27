@@ -1046,7 +1046,7 @@
     "footer": {
       "place": "Elbygget, Gløshaugen",
       "fair": "The fair is held in Glassgården in Elbygget.",
-      "map": "Map of Glassgården in Elbygget (MazeMap)",
+      "map_open": "Open the map of Glassgården in MazeMap",
       "directions": "Directions",
       "links": "Footer",
       "resources": "Resources",

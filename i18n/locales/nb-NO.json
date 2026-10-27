@@ -1047,7 +1047,7 @@
     "footer": {
       "place": "Elbygget, Gløshaugen",
       "fair": "Messa holdes i Glassgården i Elbygget.",
-      "map": "Kart over Glassgården i Elbygget (MazeMap)",
+      "map_open": "Åpne kartet over Glassgården i MazeMap",
       "directions": "Veibeskrivelse",
       "links": "Bunntekst",
       "resources": "Ressurser",
