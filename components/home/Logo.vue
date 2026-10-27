@@ -6,7 +6,6 @@
     defineProps<{
       src?: string
       name?: string
-      fill?: boolean
       area?: number
     }>(),
     { src: undefined, name: undefined, area: 0.22 },
@@ -46,11 +45,7 @@
 </script>
 
 <template>
-  <span
-    v-if="fill"
-    ref="box"
-    class="tw:absolute tw:inset-0 tw:grid tw:place-items-center"
-  >
+  <span ref="box" class="tw:absolute tw:inset-0 tw:grid tw:place-items-center">
     <img
       v-if="src && !failed"
       ref="img"
@@ -66,18 +61,5 @@
     <span v-else class="tw:text-center tw:font-bold tw:text-balance">
       {{ name }}
     </span>
-  </span>
-  <img
-    v-else-if="src && !failed"
-    ref="img"
-    :src="src"
-    :alt="name ?? ''"
-    loading="lazy"
-    class="tw:object-contain"
-    @load="measure"
-    @error="failed = true"
-  />
-  <span v-else class="tw:text-center tw:font-bold tw:text-balance">
-    {{ name }}
   </span>
 </template>

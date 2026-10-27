@@ -96,7 +96,6 @@
               <HomeLogo
                 :src="mainPartner.logo"
                 :name="mainPartner.name"
-                fill
                 class="tw:p-4 tw:text-2xl tw:sm:p-10"
               />
             </span>
@@ -111,7 +110,6 @@
             <HomeLogo
               :src="company.logo"
               :name="company.name"
-              fill
               class="tw:p-5 tw:text-sm tw:sm:p-7 tw:sm:text-base"
             />
           </component>
@@ -154,7 +152,6 @@
               <HomeLogo
                 :src="company.logo"
                 :name="company.name"
-                fill
                 class="tw:p-3 tw:text-sm"
               />
             </component>

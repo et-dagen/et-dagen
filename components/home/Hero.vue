@@ -4,7 +4,6 @@
 
   defineProps<{
     fair: FairDays | null
-    mainPartner: { name?: string; logo?: string } | null
     hasCompanies: boolean
   }>()
 
@@ -78,23 +77,6 @@
           {{ $t('home.who') }}
         </a>
       </div>
-
-      <p
-        v-if="mainPartner?.logo"
-        class="tw:mt-12 tw:flex tw:items-center tw:gap-5 tw:text-muted-foreground tw:lg:mt-auto tw:lg:pt-20"
-      >
-        <span>{{ $t('home.main_partner') }}</span>
-        <span aria-hidden="true" class="tw:h-px tw:w-12 tw:bg-border" />
-        <span
-          class="tw:inline-flex tw:h-14 tw:items-center tw:rounded-md tw:border tw:bg-card tw:px-5"
-        >
-          <HomeLogo
-            :src="mainPartner.logo"
-            :name="mainPartner.name"
-            class="tw:h-8 tw:w-auto tw:max-w-40 tw:object-contain"
-          />
-        </span>
-      </p>
     </div>
   </section>
 </template>

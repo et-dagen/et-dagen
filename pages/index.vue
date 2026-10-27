@@ -27,11 +27,7 @@
 
 <template>
   <div class="et-ui tw:bg-background tw:text-foreground">
-    <HomeHero
-      :fair="fair"
-      :main-partner="lineup.mainPartner"
-      :has-companies="hasCompanies"
-    />
+    <HomeHero :fair="fair" :has-companies="hasCompanies" />
     <HomeUpcoming v-if="next.length" :events="next" :now="now" />
     <HomeCompanies v-if="hasCompanies" v-bind="lineup" />
   </div>
