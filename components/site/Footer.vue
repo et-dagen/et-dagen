@@ -87,7 +87,7 @@
           :title="$t('site.footer.map')"
           loading="lazy"
           referrerpolicy="no-referrer"
-          class="tw:mt-4 tw:block tw:h-72 tw:w-full tw:border-y tw:bg-muted"
+          class="tw:mt-4 tw:block tw:h-96 tw:w-full tw:sm:h-72 tw:border-y tw:bg-muted"
         />
         <div
           class="tw:flex tw:flex-wrap tw:items-center tw:gap-4 tw:bg-card tw:px-6 tw:py-4"
