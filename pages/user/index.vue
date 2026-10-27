@@ -1,5 +1,6 @@
 <script setup lang="ts">
-  import { CalendarDays } from '@lucide/vue'
+  import { CalendarDays, RotateCw } from '@lucide/vue'
+  import { Instant } from '@/domain/time'
   import type { EventRow } from '@/lib/admin/events'
   import {
     firstNameOf,
@@ -17,7 +18,10 @@
   const auth = useAuthStore()
   const localePath = useLocalePath()
 
-  const [{ data: signUps, refresh }, { data: events }] = await Promise.all([
+  const [
+    { data: signUps, error: signUpsError, refresh: refreshSignUps },
+    { data: events, error: eventsError, refresh: refreshEvents },
+  ] = await Promise.all([
     useFetch<SignUp[]>('/api/v1/user/events', {
       key: 'user-sign-ups',
       headers: useRequestHeaders(['cookie']),
@@ -25,8 +29,18 @@
     useFetch<Record<string, EventRow>>('/api/v1/event'),
   ])
 
-  const rows = computed(() => signUpRows(signUps.value, events.value))
+  const now = Instant.now()
+  const rows = computed(() => signUpRows(signUps.value, events.value, now))
   const ticket = computed(() => ticketOf(rows.value))
+
+  // a failed load must not tell someone at the door that they have no ticket
+  const failed = computed(() => !!signUpsError.value || !!eventsError.value)
+  const retrying = ref(false)
+  const refresh = async () => {
+    retrying.value = true
+    await Promise.all([refreshSignUps(), refreshEvents()])
+    retrying.value = false
+  }
 </script>
 
 <template>
@@ -84,47 +98,65 @@
             </Button>
           </div>
 
-          <div id="billett" class="tw:mt-5 tw:scroll-mt-24">
-            <UserTicket
-              v-if="ticket && auth.user"
-              :row="ticket"
-              :holder="auth.user.name ?? ''"
-              :uid="auth.user.uid"
-            />
-            <div
-              v-else
-              class="tw:rounded-lg tw:border tw:border-dashed tw:bg-card tw:px-6 tw:py-10 tw:text-center"
-            >
-              <p class="tw:text-lg tw:font-bold">
-                {{ $t('user.page.no_ticket') }}
-              </p>
-              <p class="tw:mt-1 tw:text-muted-foreground">
-                {{ $t('user.page.no_ticket_hint') }}
+          <div
+            v-if="failed"
+            role="alert"
+            class="tw:mt-5 tw:flex tw:flex-wrap tw:items-center tw:justify-between tw:gap-4 tw:rounded-lg tw:border tw:bg-card tw:p-5"
+          >
+            <div>
+              <p class="tw:font-bold">{{ $t('user.page.load_failed') }}</p>
+              <p class="tw:mt-1 tw:text-sm tw:text-muted-foreground">
+                {{ $t('user.page.load_failed_hint') }}
               </p>
             </div>
+            <Button variant="outline" :disabled="retrying" @click="refresh()">
+              <RotateCw aria-hidden="true" />
+              {{ $t('user.page.retry') }}
+            </Button>
           </div>
-
-          <div id="pameldinger" class="tw:mt-8 tw:scroll-mt-24">
-            <h3
-              class="tw:flex tw:items-center tw:gap-2 tw:text-lg tw:font-bold"
-            >
-              {{ $t('user.page.sign_ups') }}
-              <span
-                class="tw:grid tw:min-w-6 tw:place-items-center tw:rounded-full tw:bg-plate tw:px-2 tw:pt-0.5 tw:text-sm tw:text-plate-foreground"
+          <template v-else>
+            <div id="billett" class="tw:mt-5 tw:scroll-mt-24">
+              <UserTicket
+                v-if="ticket && auth.user"
+                :row="ticket"
+                :holder="auth.user.name ?? ''"
+                :uid="auth.user.uid"
+              />
+              <div
+                v-else
+                class="tw:rounded-lg tw:border tw:border-dashed tw:bg-card tw:px-6 tw:py-10 tw:text-center"
               >
-                {{ rows.length }}
-              </span>
-            </h3>
-            <UserSignUps
-              v-if="rows.length"
-              :rows="rows"
-              class="tw:mt-3"
-              @withdrawn="refresh()"
-            />
-            <p v-else class="tw:mt-2 tw:text-muted-foreground">
-              {{ $t('user.page.no_sign_ups') }}
-            </p>
-          </div>
+                <p class="tw:text-lg tw:font-bold">
+                  {{ $t('user.page.no_ticket') }}
+                </p>
+                <p class="tw:mt-1 tw:text-muted-foreground">
+                  {{ $t('user.page.no_ticket_hint') }}
+                </p>
+              </div>
+            </div>
+
+            <div id="pameldinger" class="tw:mt-8 tw:scroll-mt-24">
+              <h3
+                class="tw:flex tw:items-center tw:gap-2 tw:text-lg tw:font-bold"
+              >
+                {{ $t('user.page.sign_ups') }}
+                <span
+                  class="tw:grid tw:min-w-6 tw:place-items-center tw:rounded-full tw:bg-plate tw:px-2 tw:pt-0.5 tw:text-sm tw:text-plate-foreground"
+                >
+                  {{ rows.length }}
+                </span>
+              </h3>
+              <UserSignUps
+                v-if="rows.length"
+                :rows="rows"
+                class="tw:mt-3"
+                @withdrawn="refresh()"
+              />
+              <p v-else class="tw:mt-2 tw:text-muted-foreground">
+                {{ $t('user.page.no_sign_ups') }}
+              </p>
+            </div>
+          </template>
         </section>
 
         <section

@@ -51,8 +51,19 @@
     </div>
 
     <div
-      class="tw:flex tw:flex-col tw:border-dashed tw:p-6 tw:max-sm:border-t-2 tw:sm:border-l-2 tw:lg:p-8"
+      class="tw:relative tw:flex tw:flex-col tw:border-dashed tw:border-foreground/30 tw:p-6 tw:max-sm:border-t-2 tw:sm:border-l-2 tw:lg:p-8"
     >
+      <!-- the tear line's notches, cut out of the ticket's edge -->
+      <span
+        v-for="side in [
+          'tw:max-sm:-left-3 tw:sm:-top-3',
+          'tw:max-sm:-right-3 tw:sm:-bottom-3',
+        ]"
+        :key="side"
+        aria-hidden="true"
+        class="tw:absolute tw:size-6 tw:rounded-full tw:border tw:bg-background tw:max-sm:-top-3 tw:sm:-left-3"
+        :class="side"
+      />
       <h3 class="tw:text-xl tw:leading-snug tw:font-extrabold tw:lg:text-2xl">
         <NuxtLink
           :to="localePath(`/event/${row.eventUID}`)"

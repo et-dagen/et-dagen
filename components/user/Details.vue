@@ -1,5 +1,16 @@
 <script setup lang="ts">
   import { FileText, Pencil, Trash2, Upload } from '@lucide/vue'
+  import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+  } from '@/components/ui/alert-dialog'
   import { Button } from '@/components/ui/button'
   import { dietaryFlags } from '~/config/app.config'
 
@@ -24,34 +35,42 @@
   const busy = ref(false)
   const picker = useTemplateRef<HTMLInputElement>('picker')
 
-  // the auth store holds the résumé link, so a reload shows the change
   const upload = async (event: Event) => {
-    const file = (event.target as HTMLInputElement).files?.[0]
-    if (!file || !user.value) return
+    const input = event.target as HTMLInputElement
+    const file = input.files?.[0]
+    if (!file || !auth.user) return
     const body = new FormData()
     body.append('file', file)
-    body.append('userUID', user.value.uid)
+    body.append('userUID', auth.user.uid)
     busy.value = true
     try {
-      await $fetch('/api/v1/resume', { method: 'POST', body })
-      location.reload()
+      const link = await $fetch<string>('/api/v1/resume', {
+        method: 'POST',
+        body,
+      })
+      auth.user = { ...auth.user, resume: link }
+      useAlertStore().alert(t('user.page.resume_uploaded'), 'success')
     } catch (error) {
       alertError(error)
+    } finally {
       busy.value = false
+      input.value = ''
     }
   }
 
   const remove = async () => {
-    if (!user.value) return
+    if (!auth.user) return
     busy.value = true
     try {
       await $fetch('/api/v1/resume', {
         method: 'DELETE',
-        body: { userUID: user.value.uid },
+        body: { userUID: auth.user.uid },
       })
-      location.reload()
+      auth.user = { ...auth.user, resume: '' }
+      useAlertStore().alert(t('user.page.resume_deleted'), 'success')
     } catch (error) {
       alertError(error)
+    } finally {
       busy.value = false
     }
   }
@@ -111,16 +130,36 @@
               user?.resume ? $t('user.page.replace') : $t('user.page.upload')
             }}
           </Button>
-          <Button
-            v-if="user?.resume"
-            variant="outline"
-            size="sm"
-            :disabled="busy"
-            :aria-label="$t('user.resume.delete_resume')"
-            @click="remove"
-          >
-            <Trash2 aria-hidden="true" />
-          </Button>
+          <AlertDialog v-if="user?.resume">
+            <AlertDialogTrigger as-child>
+              <Button
+                variant="outline"
+                size="sm"
+                :disabled="busy"
+                :aria-label="$t('user.resume.delete_resume')"
+              >
+                <Trash2 aria-hidden="true" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent class="tw:rounded-md tw:bg-card">
+              <AlertDialogHeader>
+                <AlertDialogTitle class="tw:text-lg tw:font-bold">
+                  {{ $t('user.page.resume_delete_title') }}
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  {{ $t('user.page.resume_delete_text') }}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>{{
+                  $t('user.page.cancel')
+                }}</AlertDialogCancel>
+                <AlertDialogAction @click="remove">
+                  {{ $t('user.page.resume_delete') }}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
         <input
           ref="picker"

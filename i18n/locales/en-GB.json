@@ -99,7 +99,17 @@
       "upload": "Upload",
       "replace": "Replace",
       "no_resume": "No CV uploaded. Companies see your CV once you upload it.",
-      "no_allergies": "No allergies registered."
+      "no_allergies": "No allergies registered.",
+      "load_failed": "We could not load your sign-ups",
+      "load_failed_hint": "Your ticket and sign-ups show up once they are loaded.",
+      "retry": "Try again",
+      "resume_delete_title": "Delete your CV?",
+      "resume_delete_text": "Companies can no longer see your CV. You can upload a new one at any time.",
+      "resume_delete": "Delete CV",
+      "resume_uploading": "Uploading …",
+      "resume_uploaded": "Your CV is uploaded",
+      "resume_deleted": "Your CV is deleted",
+      "cancel": "Cancel"
     }
   },
   "error": {

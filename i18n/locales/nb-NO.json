@@ -99,7 +99,17 @@
       "upload": "Last opp",
       "replace": "Bytt",
       "no_resume": "Ingen CV lastet opp. Bedriftene ser CV-en din når du laster den opp.",
-      "no_allergies": "Ingen allergier registrert."
+      "no_allergies": "Ingen allergier registrert.",
+      "load_failed": "Vi fikk ikke hentet påmeldingene dine",
+      "load_failed_hint": "Billetten og påmeldingene vises når de er hentet.",
+      "retry": "Prøv igjen",
+      "resume_delete_title": "Slette CV-en?",
+      "resume_delete_text": "Bedriftene kan ikke lenger se CV-en din. Du kan laste opp en ny når som helst.",
+      "resume_delete": "Slett CV",
+      "resume_uploading": "Laster opp …",
+      "resume_uploaded": "CV-en er lastet opp",
+      "resume_deleted": "CV-en er slettet",
+      "cancel": "Avbryt"
     }
   },
   "error": {

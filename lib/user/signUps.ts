@@ -1,4 +1,5 @@
-import type { EventRow } from '@/lib/admin/events'
+import { isUpcoming, type EventRow } from '@/lib/admin/events'
+import type { ISO8601String } from '@/domain/time'
 
 /** One entry of `GET /api/v1/user/events` */
 export type SignUp =
@@ -13,15 +14,17 @@ export type SignUpRow = SignUp & { event: EventRow }
  *
  * @remarks
  * The sign-ups arrive soonest first and keep that order. One whose event is gone from the list
- * (deleted since) is dropped: there is nothing left to show or withdraw from.
+ * (deleted since) or has finished is dropped: there is nothing left to show at the door or to
+ * withdraw from.
  */
 export function signUpRows(
   signUps: SignUp[] | null | undefined,
   events: Record<string, EventRow> | null | undefined,
+  now: ISO8601String,
 ): SignUpRow[] {
   return (signUps ?? []).flatMap((signUp) => {
     const event = events?.[signUp.eventUID]
-    return event ? [{ ...signUp, event }] : []
+    return event && isUpcoming(event, now) ? [{ ...signUp, event }] : []
   })
 }
 
