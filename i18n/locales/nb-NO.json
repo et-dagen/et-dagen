@@ -418,7 +418,7 @@
         "logo_choose": "Velg logo",
         "logo_replace": "Bytt logo",
         "logo_undo": "Angre",
-        "logo_hint": "PNG eller JPEG. Lastes opp når du lagrer.",
+        "logo_hint": "PNG, JPEG eller WebP. Tom kant rundt logoen kuttes bort når du lagrer.",
         "description": "Beskrivelse",
         "cv_access": "Tilgang til CV-er",
         "cv_access_hint": "Bedriften kan se og åpne studentenes CV-er.",
