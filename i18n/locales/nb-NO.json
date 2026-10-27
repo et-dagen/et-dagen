@@ -11,9 +11,27 @@
     "company": "Bedrift"
   },
   "home": {
-    "banner": {
-      "slogan": "Få et innblikk i din fremtidige arbeidsplass"
-    }
+    "date_coming": "Datoen kommer snart",
+    "place": "Glassgården, Elbygget, Gløshaugen",
+    "slogan": "Få et innblikk i din fremtidige arbeidsplass",
+    "sign_up": "Meld deg på arrangementer",
+    "who": "Se hvem som kommer",
+    "main_partner": "Hovedpartner",
+    "upcoming": "Neste arrangementer",
+    "programme": "Se hele programmet",
+    "places": "Én ledig plass | {n} ledige plasser",
+    "status": {
+      "past": "Ferdig",
+      "no-registration": "Åpent for alle",
+      "not-open": "Påmeldingen åpner snart",
+      "open": "Åpen påmelding",
+      "full": "Fullt, venteliste",
+      "closed": "Påmeldingen er stengt"
+    },
+    "companies": "Hvem kommer",
+    "partners": "Partnere",
+    "sponsors": "Sponsorer",
+    "visit": "Besøk {name}"
   },
   "user": {
     "sign_in": "Logg inn",
@@ -159,9 +177,6 @@
     }
   },
   "company": {
-    "main_partner": "Hovedpartner i 2026",
-    "partners": "Partnere 2026",
-    "sponsors": "Sponsorer 2026",
     "admin": {
       "title": "Bedriftsside",
       "year": "{n}. år",

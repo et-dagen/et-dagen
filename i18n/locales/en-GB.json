@@ -11,9 +11,27 @@
     "company": "Company"
   },
   "home": {
-    "banner": {
-      "slogan": "Explore your future workplace"
-    }
+    "date_coming": "The date is coming soon",
+    "place": "Glassgården, Elbygget, Gløshaugen",
+    "slogan": "Explore your future workplace",
+    "sign_up": "Sign up for events",
+    "who": "See who is coming",
+    "main_partner": "Main partner",
+    "upcoming": "Next events",
+    "programme": "See the whole programme",
+    "places": "One place left | {n} places left",
+    "status": {
+      "past": "Over",
+      "no-registration": "Open to all",
+      "not-open": "Sign-up opens soon",
+      "open": "Sign-up open",
+      "full": "Full, waiting list",
+      "closed": "Sign-up closed"
+    },
+    "companies": "Who is coming",
+    "partners": "Partners",
+    "sponsors": "Sponsors",
+    "visit": "Visit {name}"
   },
   "user": {
     "sign_in": "Sign in",
@@ -159,9 +177,6 @@
     }
   },
   "company": {
-    "main_partner": "Main partner in 2026",
-    "partners": "Partners 2026",
-    "sponsors": "Sponsors 2026",
     "admin": {
       "title": "Company page",
       "year": "Year {n}",
