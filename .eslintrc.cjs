@@ -36,7 +36,6 @@ module.exports = {
         'components/admin/form/**',
         'components/user/DeleteAccount.vue',
         'components/user/Details.vue',
-        'components/user/Rail.vue',
         'components/user/SignUps.vue',
         'components/user/Ticket.vue',
         'pages/user/index.vue',

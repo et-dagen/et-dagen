@@ -101,11 +101,11 @@
         </span>
       </div>
       <div
-        class="tw:mt-6 tw:flex tw:flex-wrap tw:items-center tw:gap-3 tw:border-t tw:pt-4"
+        class="tw:mt-6 tw:flex tw:flex-wrap tw:items-center tw:gap-3 tw:pt-2 tw:sm:mt-auto"
       >
         <span class="tw:font-bold">{{ holder }}</span>
         <span
-          class="tw:inline-flex tw:items-center tw:gap-2 tw:rounded tw:bg-muted tw:px-2.5 tw:pt-1 tw:pb-0.5 tw:text-sm tw:font-bold tw:text-plate"
+          class="tw:inline-flex tw:items-center tw:gap-2 tw:rounded-full tw:bg-muted tw:px-3 tw:pt-1 tw:pb-0.5 tw:text-sm tw:font-bold tw:text-plate"
         >
           <span
             class="tw:size-2 tw:rounded-full tw:bg-plate"

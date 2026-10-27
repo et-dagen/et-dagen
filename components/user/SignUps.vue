@@ -52,13 +52,13 @@
 </script>
 
 <template>
-  <ul class="tw:rounded-lg tw:border tw:bg-card">
+  <ul>
     <li
       v-for="row in rows"
       :key="row.eventUID"
-      class="tw:flex tw:flex-wrap tw:items-center tw:gap-x-6 tw:gap-y-3 tw:border-t tw:px-5 tw:py-4 tw:first:border-t-0"
+      class="tw:grid tw:grid-cols-[minmax(0,1fr)_auto] tw:items-center tw:gap-x-4 tw:gap-y-3 tw:border-t tw:px-5 tw:py-4 tw:first:border-t-0 tw:sm:grid-cols-[minmax(0,1fr)_12rem_auto] tw:sm:gap-x-6 tw:sm:px-6"
     >
-      <div class="tw:min-w-0 tw:basis-full tw:sm:basis-0 tw:sm:flex-1">
+      <div class="tw:col-span-2 tw:min-w-0 tw:sm:col-span-1">
         <NuxtLink
           :to="localePath(`/event/${row.eventUID}`)"
           class="tw:font-bold tw:hover:underline tw:hover:decoration-brand tw:hover:decoration-2 tw:hover:underline-offset-4"
@@ -80,7 +80,7 @@
 
       <span
         v-if="row.status === 'attending'"
-        class="tw:inline-flex tw:items-center tw:gap-2 tw:rounded tw:bg-muted tw:px-2.5 tw:pt-1 tw:pb-0.5 tw:text-sm tw:font-bold tw:text-plate"
+        class="tw:inline-flex tw:items-center tw:gap-2 tw:justify-self-start tw:rounded-full tw:bg-muted tw:px-3 tw:pt-1 tw:pb-0.5 tw:text-sm tw:font-bold tw:text-plate"
       >
         <span
           class="tw:size-2 tw:rounded-full tw:bg-plate"
@@ -90,7 +90,7 @@
       </span>
       <span
         v-else
-        class="tw:rounded tw:bg-signal tw:px-2.5 tw:pt-1 tw:pb-0.5 tw:text-sm tw:font-bold tw:text-signal-foreground"
+        class="tw:justify-self-start tw:rounded-full tw:bg-signal tw:px-3 tw:pt-1 tw:pb-0.5 tw:text-sm tw:font-bold tw:text-signal-foreground"
       >
         {{ $t('user.page.queued', { n: row.position }) }}
       </span>

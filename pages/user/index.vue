@@ -46,43 +46,19 @@
 <template>
   <div class="et-ui tw:bg-background tw:text-foreground">
     <div
-      class="tw:mx-auto tw:grid tw:max-w-screen-xl tw:gap-10 tw:px-4 tw:py-10 tw:lg:grid-cols-[14rem_minmax(0,1fr)] tw:lg:px-8 tw:lg:py-14"
+      class="tw:mx-auto tw:max-w-screen-xl tw:px-4 tw:py-10 tw:lg:px-8 tw:lg:py-14"
     >
-      <aside class="tw:hidden tw:lg:block">
-        <UserRail class="tw:sticky tw:top-24" />
-      </aside>
+      <h1 class="tw:text-4xl tw:font-black tw:tracking-tight tw:lg:text-5xl">
+        {{ $t('user.page.hello', { name: firstNameOf(auth.user?.name) }) }}
+      </h1>
 
-      <div class="tw:min-w-0">
-        <h1 class="tw:text-4xl tw:font-black tw:tracking-tight tw:lg:text-5xl">
-          {{ $t('user.page.hello', { name: firstNameOf(auth.user?.name) }) }}
-        </h1>
-
-        <!-- on a phone the two parts of the page are one tap away -->
-        <nav
-          :aria-label="$t('user.page.sections')"
-          class="tw:mt-6 tw:grid tw:grid-cols-2 tw:rounded-lg tw:border tw:bg-card tw:p-1 tw:lg:hidden"
-        >
-          <a
-            href="#arrangementer"
-            class="tw:rounded-md tw:px-3 tw:py-2 tw:text-center tw:text-sm tw:font-bold tw:hover:bg-muted"
-          >
-            {{ $t('user.page.events') }}
-          </a>
-          <a
-            href="#informasjon"
-            class="tw:rounded-md tw:px-3 tw:py-2 tw:text-center tw:text-sm tw:font-bold tw:hover:bg-muted"
-          >
-            {{ $t('user.page.information') }}
-          </a>
-        </nav>
-
-        <section
-          id="arrangementer"
-          aria-labelledby="arrangementer-title"
-          class="tw:mt-10 tw:scroll-mt-24"
-        >
+      <!-- events on the left, the user's own information on the right; a phone stacks them ticket first -->
+      <div
+        class="tw:mt-8 tw:grid tw:items-start tw:gap-x-10 tw:gap-y-14 tw:lg:grid-cols-[minmax(0,1fr)_24rem]"
+      >
+        <section aria-labelledby="arrangementer-title" class="tw:min-w-0">
           <div
-            class="tw:flex tw:flex-wrap tw:items-center tw:justify-between tw:gap-3"
+            class="tw:flex tw:min-h-10 tw:flex-wrap tw:items-center tw:justify-between tw:gap-3"
           >
             <h2
               id="arrangementer-title"
@@ -101,7 +77,7 @@
           <div
             v-if="failed"
             role="alert"
-            class="tw:mt-5 tw:flex tw:flex-wrap tw:items-center tw:justify-between tw:gap-4 tw:rounded-lg tw:border tw:bg-card tw:p-5"
+            class="tw:mt-4 tw:flex tw:flex-wrap tw:items-center tw:justify-between tw:gap-4 tw:rounded-lg tw:border tw:bg-card tw:p-5"
           >
             <div>
               <p class="tw:font-bold">{{ $t('user.page.load_failed') }}</p>
@@ -115,33 +91,32 @@
             </Button>
           </div>
           <template v-else>
-            <div id="billett" class="tw:mt-5 tw:scroll-mt-24">
-              <UserTicket
-                v-if="ticket && auth.user"
-                :row="ticket"
-                :holder="auth.user.name ?? ''"
-                :uid="auth.user.uid"
-              />
-              <div
-                v-else
-                class="tw:rounded-lg tw:border tw:border-dashed tw:bg-card tw:px-6 tw:py-10 tw:text-center"
-              >
-                <p class="tw:text-lg tw:font-bold">
-                  {{ $t('user.page.no_ticket') }}
-                </p>
-                <p class="tw:mt-1 tw:text-muted-foreground">
-                  {{ $t('user.page.no_ticket_hint') }}
-                </p>
-              </div>
+            <UserTicket
+              v-if="ticket && auth.user"
+              :row="ticket"
+              :holder="auth.user.name ?? ''"
+              :uid="auth.user.uid"
+              class="tw:mt-4"
+            />
+            <div
+              v-else
+              class="tw:mt-4 tw:rounded-lg tw:border tw:border-dashed tw:bg-card tw:px-6 tw:py-10 tw:text-center"
+            >
+              <p class="tw:text-lg tw:font-bold">
+                {{ $t('user.page.no_ticket') }}
+              </p>
+              <p class="tw:mt-1 tw:text-muted-foreground">
+                {{ $t('user.page.no_ticket_hint') }}
+              </p>
             </div>
 
-            <div id="pameldinger" class="tw:mt-8 tw:scroll-mt-24">
+            <div class="tw:mt-5 tw:rounded-lg tw:border tw:bg-card">
               <h3
-                class="tw:flex tw:items-center tw:gap-2 tw:text-lg tw:font-bold"
+                class="tw:flex tw:items-center tw:gap-3 tw:border-b tw:px-5 tw:py-4 tw:text-lg tw:font-extrabold tw:sm:px-6"
               >
                 {{ $t('user.page.sign_ups') }}
                 <span
-                  class="tw:grid tw:min-w-6 tw:place-items-center tw:rounded-full tw:bg-plate tw:px-2 tw:pt-0.5 tw:text-sm tw:text-plate-foreground"
+                  class="tw:grid tw:min-w-7 tw:place-items-center tw:rounded-full tw:bg-plate tw:px-2 tw:pt-0.5 tw:text-sm tw:text-plate-foreground"
                 >
                   {{ rows.length }}
                 </span>
@@ -149,42 +124,28 @@
               <UserSignUps
                 v-if="rows.length"
                 :rows="rows"
-                class="tw:mt-3"
                 @withdrawn="refresh()"
               />
-              <p v-else class="tw:mt-2 tw:text-muted-foreground">
+              <p
+                v-else
+                class="tw:px-5 tw:py-4 tw:text-muted-foreground tw:sm:px-6"
+              >
                 {{ $t('user.page.no_sign_ups') }}
               </p>
             </div>
           </template>
         </section>
 
-        <section
-          id="informasjon"
-          aria-labelledby="informasjon-title"
-          class="tw:mt-16 tw:scroll-mt-24 tw:border-t tw:pt-10"
-        >
-          <h2
-            id="informasjon-title"
-            class="tw:text-2xl tw:font-extrabold tw:tracking-tight"
-          >
-            {{ $t('user.page.information') }}
-          </h2>
-          <UserDetails class="tw:mt-5" />
-        </section>
-
-        <section
-          id="konto"
-          aria-labelledby="konto-title"
-          class="tw:mt-16 tw:scroll-mt-24 tw:border-t tw:pt-10"
-        >
-          <h2
-            id="konto-title"
-            class="tw:text-2xl tw:font-extrabold tw:tracking-tight"
-          >
-            {{ $t('user.page.account') }}
-          </h2>
-          <UserDeleteAccount class="tw:mt-5" />
+        <section aria-labelledby="informasjon-title" class="tw:min-w-0">
+          <div class="tw:flex tw:min-h-10 tw:items-center">
+            <h2
+              id="informasjon-title"
+              class="tw:text-2xl tw:font-extrabold tw:tracking-tight"
+            >
+              {{ $t('user.page.information') }}
+            </h2>
+          </div>
+          <UserDetails class="tw:mt-4" />
         </section>
       </div>
     </div>

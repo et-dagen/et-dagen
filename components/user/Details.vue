@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { FileText, Pencil, Trash2, Upload } from '@lucide/vue'
+  import { FileText, Pencil, Upload } from '@lucide/vue'
   import {
     AlertDialog,
     AlertDialogAction,
@@ -27,6 +27,16 @@
     known.has(value) && te(`dietary_restrictions.${value}`)
       ? t(`dietary_restrictions.${value}`)
       : value
+
+  const studies = computed(() =>
+    [
+      user.value?.studyProgram,
+      user.value?.currentYear &&
+        t('user.page.year', { n: user.value.currentYear }),
+    ]
+      .filter(Boolean)
+      .join(' · '),
+  )
 
   const fileName = computed(
     () => user.value?.resume?.split('/').pop()?.split('?')[0] ?? '',
@@ -77,14 +87,10 @@
 </script>
 
 <template>
-  <div class="tw:grid tw:gap-4 tw:md:grid-cols-3">
-    <section
-      id="profil"
-      aria-labelledby="profil-title"
-      class="tw:flex tw:scroll-mt-24 tw:flex-col tw:rounded-lg tw:border tw:bg-card tw:p-5"
-    >
+  <div class="tw:rounded-lg tw:border tw:bg-card">
+    <section aria-labelledby="profil-title" class="tw:p-5 tw:sm:px-6">
       <div class="tw:flex tw:items-center tw:justify-between tw:gap-3">
-        <h3 id="profil-title" class="tw:font-bold">
+        <h3 id="profil-title" class="tw:font-extrabold">
           {{ $t('user.page.profile') }}
         </h3>
         <Button as-child variant="outline" size="sm">
@@ -94,28 +100,50 @@
           </NuxtLink>
         </Button>
       </div>
-      <p class="tw:mt-4 tw:text-lg tw:font-extrabold">{{ user?.name }}</p>
+      <p class="tw:mt-2 tw:text-lg tw:font-bold">{{ user?.name }}</p>
       <p class="tw:text-sm tw:break-all tw:text-muted-foreground">
         {{ user?.email }}
       </p>
-      <p
-        v-if="user?.studyProgram"
-        class="tw:mt-2 tw:text-sm tw:text-muted-foreground"
-      >
-        {{ user.studyProgram }}
-        <template v-if="user.currentYear">
-          · {{ $t('user.page.year', { n: user.currentYear }) }}
-        </template>
+      <p v-if="studies" class="tw:mt-1 tw:text-sm tw:text-muted-foreground">
+        {{ studies }}
       </p>
     </section>
 
     <section
-      id="cv"
-      aria-labelledby="cv-title"
-      class="tw:flex tw:scroll-mt-24 tw:flex-col tw:rounded-lg tw:border tw:bg-card tw:p-5"
+      aria-labelledby="allergier-title"
+      class="tw:border-t tw:p-5 tw:sm:px-6"
     >
       <div class="tw:flex tw:items-center tw:justify-between tw:gap-3">
-        <h3 id="cv-title" class="tw:font-bold">
+        <h3 id="allergier-title" class="tw:font-extrabold">
+          {{ $t('user.page.allergies') }}
+        </h3>
+        <Button as-child variant="outline" size="sm">
+          <NuxtLink :to="localePath('/user/edit')">
+            <Pencil aria-hidden="true" />
+            {{ $t('user.page.edit') }}
+          </NuxtLink>
+        </Button>
+      </div>
+      <ul
+        v-if="restrictions.length"
+        class="tw:mt-3 tw:flex tw:flex-wrap tw:gap-2"
+      >
+        <li
+          v-for="restriction in restrictions"
+          :key="restriction"
+          class="tw:rounded-full tw:border tw:px-3 tw:pt-1 tw:pb-0.5 tw:text-sm tw:font-bold"
+        >
+          {{ restrictionName(restriction) }}
+        </li>
+      </ul>
+      <p v-else class="tw:mt-2 tw:text-sm tw:text-muted-foreground">
+        {{ $t('user.page.no_allergies') }}
+      </p>
+    </section>
+
+    <section aria-labelledby="cv-title" class="tw:border-t tw:p-5 tw:sm:px-6">
+      <div class="tw:flex tw:items-center tw:justify-between tw:gap-3">
+        <h3 id="cv-title" class="tw:font-extrabold">
           {{ $t('user.resume.resume') }}
         </h3>
         <div class="tw:flex tw:gap-2">
@@ -132,13 +160,8 @@
           </Button>
           <AlertDialog v-if="user?.resume">
             <AlertDialogTrigger as-child>
-              <Button
-                variant="outline"
-                size="sm"
-                :disabled="busy"
-                :aria-label="$t('user.resume.delete_resume')"
-              >
-                <Trash2 aria-hidden="true" />
+              <Button variant="outline" size="sm" :disabled="busy">
+                {{ $t('user.page.remove') }}
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent class="tw:rounded-md tw:bg-card">
@@ -176,7 +199,7 @@
         :href="`/api/v1/resume/file?userUID=${user.uid}`"
         target="_blank"
         rel="noopener"
-        class="tw:mt-4 tw:flex tw:min-w-0 tw:items-center tw:gap-2 tw:font-bold tw:underline tw:decoration-border tw:decoration-2 tw:underline-offset-4 tw:hover:decoration-brand"
+        class="tw:mt-3 tw:flex tw:min-w-0 tw:items-center tw:gap-2 tw:font-bold tw:underline tw:decoration-border tw:decoration-2 tw:underline-offset-4 tw:hover:decoration-brand"
       >
         <FileText
           class="tw:size-5 tw:shrink-0 tw:text-brand"
@@ -184,42 +207,11 @@
         />
         <span class="tw:truncate">{{ fileName }}</span>
       </a>
-      <p v-else class="tw:mt-4 tw:text-sm tw:text-muted-foreground">
+      <p v-else class="tw:mt-2 tw:text-sm tw:text-muted-foreground">
         {{ $t('user.page.no_resume') }}
       </p>
     </section>
 
-    <section
-      id="allergier"
-      aria-labelledby="allergier-title"
-      class="tw:flex tw:scroll-mt-24 tw:flex-col tw:rounded-lg tw:border tw:bg-card tw:p-5"
-    >
-      <div class="tw:flex tw:items-center tw:justify-between tw:gap-3">
-        <h3 id="allergier-title" class="tw:font-bold">
-          {{ $t('user.page.allergies') }}
-        </h3>
-        <Button as-child variant="outline" size="sm">
-          <NuxtLink :to="localePath('/user/edit')">
-            <Pencil aria-hidden="true" />
-            {{ $t('user.page.edit') }}
-          </NuxtLink>
-        </Button>
-      </div>
-      <ul
-        v-if="restrictions.length"
-        class="tw:mt-4 tw:flex tw:flex-wrap tw:gap-2"
-      >
-        <li
-          v-for="restriction in restrictions"
-          :key="restriction"
-          class="tw:rounded-full tw:border tw:px-3 tw:pt-1 tw:pb-0.5 tw:text-sm tw:font-bold"
-        >
-          {{ restrictionName(restriction) }}
-        </li>
-      </ul>
-      <p v-else class="tw:mt-4 tw:text-sm tw:text-muted-foreground">
-        {{ $t('user.page.no_allergies') }}
-      </p>
-    </section>
+    <UserDeleteAccount class="tw:border-t tw:p-5 tw:sm:px-6" />
   </div>
 </template>
