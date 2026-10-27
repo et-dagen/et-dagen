@@ -143,7 +143,8 @@ module.exports = {
         ignoreStrings: false,
         ignoreTemplateLiterals: false,
         ignoreRegExpLiterals: true,
-        ignoreHTMLAttributeValues: false,
+        // Tailwind class lists are long by nature; breaking them helps no one
+        ignoreHTMLAttributeValues: true,
         ignoreHTMLTextContents: false,
       },
     ],
