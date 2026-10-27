@@ -1,12 +1,52 @@
 <script setup lang="ts">
-  import { ArrowUpRight } from '@lucide/vue'
-  import type { Company } from '@/lib/site/companies'
+  import { ArrowRight, ArrowUpRight } from '@lucide/vue'
+  import { fillerCount, type Company } from '@/lib/site/companies'
 
-  defineProps<{
+  const props = defineProps<{
     mainPartner: Company | null
     partners: Company[]
     sponsors: Company[]
   }>()
+
+  // the main partner's tile takes a full row on a phone and two by two from `sm` up
+  const mainCells = (columns: number) =>
+    props.mainPartner ? Math.min(columns, 4) : 0
+  const localePath = useLocalePath()
+
+  // the cells left in the wall's last row become one invitation, so the row never ends in holes
+  const rest = computed(() => {
+    const taken = (columns: number) =>
+      mainCells(columns) + props.partners.length
+    return {
+      base: fillerCount(taken(2), 2),
+      sm: fillerCount(taken(4), 4),
+      lg: fillerCount(taken(6), 6),
+    }
+  })
+  const restClass = computed(() =>
+    [
+      rest.value.base ? 'tw:block' : 'tw:hidden',
+      [
+        'tw:sm:hidden',
+        'tw:sm:block',
+        'tw:sm:block tw:sm:col-span-2',
+        'tw:sm:block tw:sm:col-span-3',
+      ][rest.value.sm],
+      [
+        'tw:lg:hidden',
+        'tw:lg:block tw:lg:col-span-1',
+        'tw:lg:block tw:lg:col-span-2',
+        'tw:lg:block tw:lg:col-span-3',
+        'tw:lg:block tw:lg:col-span-4',
+        'tw:lg:block tw:lg:col-span-5',
+      ][rest.value.lg],
+    ].join(' '),
+  )
+
+  const linkOf = (company: Company) =>
+    company.webpage
+      ? { is: 'a', href: company.webpage, target: '_blank', rel: 'noopener' }
+      : { is: 'div' }
 </script>
 
 <template>
@@ -25,95 +65,97 @@
         {{ $t('home.companies') }}
       </h2>
 
-      <div v-if="mainPartner" class="tw:mt-14">
-        <h3 class="tw:text-xl tw:font-extrabold tw:tracking-tight">
-          {{ $t('home.main_partner') }}
-        </h3>
-        <div
-          class="tw:mt-6 tw:grid tw:gap-8 tw:md:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] tw:md:items-center tw:md:gap-14"
+      <!-- one wall of logo cells; the grid lines are the gaps over the border colour -->
+      <ul
+        v-if="mainPartner || partners.length"
+        :aria-label="$t('home.partners')"
+        class="tw:mt-10 tw:grid tw:grid-cols-2 tw:gap-px tw:overflow-hidden tw:rounded-lg tw:border tw:bg-border tw:sm:grid-cols-4 tw:lg:grid-cols-6"
+      >
+        <li
+          v-if="mainPartner"
+          class="tw:col-span-2 tw:bg-card tw:sm:row-span-2"
         >
-          <div
-            class="tw:relative tw:grid tw:aspect-[3/2] tw:place-items-center tw:rounded-md tw:bg-card"
+          <component
+            :is="linkOf(mainPartner).is"
+            v-bind="linkOf(mainPartner)"
+            class="tw:group tw:relative tw:flex tw:size-full tw:flex-col tw:p-5 tw:transition-colors tw:hover:bg-muted/40 tw:lg:p-6"
+          >
+            <span
+              class="tw:flex tw:items-center tw:justify-between tw:gap-3 tw:text-sm tw:font-bold"
+            >
+              {{ $t('home.main_partner') }}
+              <ArrowUpRight
+                v-if="mainPartner.webpage"
+                class="tw:size-4 tw:text-muted-foreground tw:transition-colors tw:group-hover:text-brand"
+                aria-hidden="true"
+              />
+            </span>
+            <span
+              class="tw:relative tw:grid tw:min-h-32 tw:flex-1 tw:place-items-center tw:sm:min-h-0"
+            >
+              <HomeLogo
+                :src="mainPartner.logo"
+                :name="mainPartner.name"
+                fill
+                class="tw:p-4 tw:text-2xl tw:sm:p-10"
+              />
+            </span>
+          </component>
+        </li>
+        <li v-for="company in partners" :key="company.name" class="tw:bg-card">
+          <component
+            :is="linkOf(company).is"
+            v-bind="linkOf(company)"
+            class="tw:relative tw:grid tw:aspect-[3/2] tw:place-items-center tw:transition-colors tw:hover:bg-muted/40"
           >
             <HomeLogo
-              :src="mainPartner.logo"
-              :name="mainPartner.name"
+              :src="company.logo"
+              :name="company.name"
               fill
-              class="tw:p-8"
+              class="tw:p-5 tw:text-sm tw:sm:p-7 tw:sm:text-base"
             />
-          </div>
-          <div>
-            <p
-              class="tw:text-2xl tw:font-black tw:tracking-tight tw:lg:text-3xl"
+          </component>
+        </li>
+        <li class="tw:bg-card" :class="restClass">
+          <NuxtLink
+            :to="localePath('/faq')"
+            class="tw:group tw:flex tw:size-full tw:min-h-24 tw:flex-col tw:justify-end tw:gap-1 tw:p-5 tw:transition-colors tw:hover:bg-muted/40"
+          >
+            <span class="tw:text-sm tw:text-muted-foreground">
+              {{ $t('home.join') }}
+            </span>
+            <span
+              class="tw:inline-flex tw:items-center tw:gap-1 tw:font-bold tw:underline tw:decoration-border tw:decoration-2 tw:underline-offset-4 tw:group-hover:decoration-brand"
             >
-              {{ mainPartner.name }}
-            </p>
-            <p
-              v-if="mainPartner.description"
-              class="tw:mt-4 tw:max-w-[65ch] tw:leading-relaxed tw:text-muted-foreground"
-            >
-              {{ mainPartner.description }}
-            </p>
-            <a
-              v-if="mainPartner.webpage"
-              :href="mainPartner.webpage"
-              target="_blank"
-              rel="noopener"
-              class="tw:mt-6 tw:inline-flex tw:items-center tw:gap-1 tw:font-bold tw:underline tw:decoration-border tw:decoration-2 tw:underline-offset-[6px] tw:hover:decoration-brand"
-            >
-              {{ $t('home.visit', { name: mainPartner.name }) }}
-              <ArrowUpRight class="tw:size-4" aria-hidden="true" />
-            </a>
-          </div>
-        </div>
-      </div>
+              {{ $t('nav.faq') }}
+              <ArrowRight class="tw:size-4" aria-hidden="true" />
+            </span>
+          </NuxtLink>
+        </li>
+      </ul>
 
-      <div v-if="partners.length" class="tw:mt-20">
+      <div v-if="sponsors.length" class="tw:mt-16">
         <h3 class="tw:text-xl tw:font-extrabold tw:tracking-tight">
-          {{ $t('home.partners') }}
+          {{ $t('home.sponsors') }}
         </h3>
         <ul
-          class="tw:mt-6 tw:grid tw:grid-cols-3 tw:gap-x-4 tw:gap-y-4 tw:sm:grid-cols-4 tw:lg:grid-cols-5 tw:lg:gap-x-10 tw:lg:gap-y-8"
+          class="tw:mt-5 tw:grid tw:grid-cols-2 tw:gap-3 tw:sm:flex tw:sm:flex-wrap"
         >
-          <li v-for="company in partners" :key="company.name">
+          <li
+            v-for="company in sponsors"
+            :key="company.name"
+            class="tw:sm:w-44"
+          >
             <component
-              :is="company.webpage ? 'a' : 'div'"
-              :href="company.webpage"
-              :target="company.webpage ? '_blank' : undefined"
-              :rel="company.webpage ? 'noopener' : undefined"
-              class="tw:relative tw:grid tw:aspect-[3/2] tw:place-items-center tw:rounded-md tw:bg-card tw:outline-offset-2 tw:transition-shadow tw:hover:shadow-[0_0_0_1px_var(--border)]"
+              :is="linkOf(company).is"
+              v-bind="linkOf(company)"
+              class="tw:relative tw:grid tw:aspect-[2/1] tw:place-items-center tw:rounded-md tw:border tw:bg-card tw:transition-colors tw:hover:bg-muted/40"
             >
               <HomeLogo
                 :src="company.logo"
                 :name="company.name"
                 fill
-                class="tw:p-3 tw:text-sm tw:sm:p-6 tw:sm:text-base"
-              />
-            </component>
-          </li>
-        </ul>
-      </div>
-
-      <!-- sponsors sit on the ground without plates, so the tiers read apart by treatment -->
-      <div v-if="sponsors.length" class="tw:mt-20">
-        <h3 class="tw:text-xl tw:font-extrabold tw:tracking-tight">
-          {{ $t('home.sponsors') }}
-        </h3>
-        <ul
-          class="tw:mt-8 tw:flex tw:flex-wrap tw:items-center tw:gap-x-12 tw:gap-y-8"
-        >
-          <li v-for="company in sponsors" :key="company.name">
-            <component
-              :is="company.webpage ? 'a' : 'span'"
-              :href="company.webpage"
-              :target="company.webpage ? '_blank' : undefined"
-              :rel="company.webpage ? 'noopener' : undefined"
-              class="tw:flex tw:h-10 tw:items-center"
-            >
-              <HomeLogo
-                :src="company.logo"
-                :name="company.name"
-                class="tw:h-10 tw:w-auto tw:max-w-40 tw:mix-blend-multiply"
+                class="tw:p-3 tw:text-sm"
               />
             </component>
           </li>

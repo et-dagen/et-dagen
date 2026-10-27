@@ -3,7 +3,6 @@ export interface Company {
   name?: string
   logo?: string
   webpage?: string
-  description?: string
   tier?: 'mainPartner' | 'partner' | 'sponsor' | 'prior'
 }
 
@@ -34,4 +33,15 @@ export function lineupOf(
     partners: tier('partner'),
     sponsors: tier('sponsor'),
   }
+}
+
+/**
+ * Empty cells that close a logo wall's last row
+ *
+ * @remarks
+ * The wall draws its grid lines through the gaps between cells, so a short last row would leave
+ * a hole of bare line colour. `taken` counts cells, with the main partner's tile as several.
+ */
+export function fillerCount(taken: number, columns: number): number {
+  return (columns - (taken % columns)) % columns
 }
