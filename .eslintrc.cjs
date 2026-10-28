@@ -34,15 +34,14 @@ module.exports = {
         'components/company/EventPanel.vue',
         'pages/company/admin/**',
         'components/admin/form/**',
+        'components/site/**',
         'components/user/DeleteAccount.vue',
         'components/user/ProfileForm.vue',
         'components/job/DeadlineNote.vue',
         'components/job/FairEvents.vue',
         'pages/jobs/**',
-        'components/user/signup/**',
-        'components/company/JoinForm.vue',
-        'pages/user/signup.vue',
-        'pages/company/join.vue',
+        'pages/for-companies.vue',
+        'components/forcompanies/**',
       ],
       rules: {
         'vue/max-len': [

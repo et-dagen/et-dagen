@@ -1,15 +1,13 @@
 // the app store will hold state connected to application layout
-// this includes navigation drawer state and global error modal
+// this includes the page-loading state
 
 interface State {
-  drawer: boolean
   loading: boolean
 }
 
 export const useAppStore = defineStore('app', {
   state: (): State => {
     return {
-      drawer: false,
       loading: false,
     }
   },

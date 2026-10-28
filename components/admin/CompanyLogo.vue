@@ -2,8 +2,8 @@
   const props = defineProps<{
     src?: string | null
     name?: string
-    /** sm in lists, lg beside a page heading */
-    size?: 'sm' | 'lg'
+    /** sm in admin tables, md in the public job list, lg beside a page heading */
+    size?: 'sm' | 'md' | 'lg'
   }>()
 
   // a missing or unreachable logo shows the company's initials instead of a broken image
@@ -25,9 +25,11 @@
 <template>
   <span
     :class="
-      size === 'lg'
-        ? 'tw:size-14 tw:rounded-md tw:p-1.5 tw:text-lg'
-        : 'tw:size-7 tw:rounded-sm tw:text-[11px]'
+      {
+        sm: 'tw:size-7 tw:rounded-sm tw:text-[11px]',
+        md: 'tw:size-11 tw:rounded-md tw:p-1 tw:text-sm',
+        lg: 'tw:size-14 tw:rounded-md tw:p-1.5 tw:text-lg',
+      }[size ?? 'sm']
     "
     class="tw:grid tw:shrink-0 tw:place-items-center tw:overflow-hidden tw:border tw:bg-white tw:font-bold tw:text-plate"
     aria-hidden="true"

@@ -136,12 +136,11 @@ export const signinUser = async (email: string, password: string) => {
 // signs out firebase user and removes token cookie
 export const signoutUser = async () => {
   const auth = getAuth()
-  const app = useAppStore()
   const authStore = useAuthStore()
   const localePath = useLocalePath()
 
-  // close app drawer
-  app.drawer = false
+  // end the session on the server first, while its cookie still says who is signing out
+  await $fetch('/api/v1/session', { method: 'DELETE' }).catch(() => {})
 
   // end the session on the server first, while its cookie still says who is signing out
   await $fetch('/api/v1/session', { method: 'DELETE' }).catch(() => {})
