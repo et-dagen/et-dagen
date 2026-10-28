@@ -198,8 +198,8 @@
     }
   },
   "contact": {
-    "title": "Contact Us",
-    "board": "Board Members",
+    "title": "Contact us",
+    "board": "The board",
     "positions": {
       "head": "Manager",
       "deputyHead": "Deputy manager",
@@ -210,7 +210,30 @@
       "marketing": "Marketing manager",
       "logistics": "Logistics manager",
       "travel": "Travel manager"
-    }
+    },
+    "question": "What is it about?",
+    "organisation": "The organisation",
+    "org_number": "Org. no.",
+    "follow": "Follow us",
+    "copy": "Copy {email}",
+    "copied": "{email} is copied",
+    "copy_failed": "Could not copy. Select the address and copy it yourself.",
+    "topics": {
+      "companies": "Companies taking part",
+      "sponsorship": "Sponsorship",
+      "press": "Press",
+      "website": "Website and account",
+      "other": "Anything else"
+    },
+    "answers": {
+      "companies": "Would your company like to take part, or do you have questions about stands, events or résumés?",
+      "sponsorship": "Questions about sponsorship and partnerships.",
+      "press": "Press, marketing and social media.",
+      "website": "Problems with the website, signing in or your account.",
+      "other": "Anything else goes to the head of the board."
+    },
+    "copy_short": "Copy",
+    "copied_short": "Copied"
   },
   "company": {
     "main_partner": "Main partner in 2026",
@@ -1194,6 +1217,86 @@
       "none": "No matches"
     }
   },
+  "events": {
+    "page": {
+      "back": "Programme",
+      "when": "When",
+      "where": "Where",
+      "signup": "Sign-up",
+      "places": "{taken} of {limit} places",
+      "map_title": "Map of {place}",
+      "open_map": "Open map",
+      "privacy": "The names of those signed up are not shown here.",
+      "years": "Years",
+      "programmes": "Study programmes",
+      "no_jobs": "The company has no open jobs with us right now.",
+      "website": "{company}'s website",
+      "missing": "Event not found",
+      "not_eligible": "You do not meet this event's study programme or year requirements.",
+      "tabs": {
+        "label": "Event",
+        "about": "About",
+        "signup": "Sign-up",
+        "company": "The company",
+        "jobs_count": "{n} job | {n} jobs",
+        "about_short": "About",
+        "signup_short": "Sign-up",
+        "company_short": "Company"
+      },
+      "window": {
+        "opens": "Sign-up opens",
+        "closes": "Sign-up closes"
+      },
+      "state": {
+        "none": "Open to everyone, no sign-up",
+        "past": "The event is over",
+        "not-open": "Sign-up has not opened",
+        "closed": "Sign-up is closed",
+        "registered": "You have a place",
+        "queued": "You are number {n} in the queue",
+        "sign-in": "Sign-up is open",
+        "not-eligible": "Sign-up is open",
+        "open": "Sign-up is open",
+        "full": "Full, waiting list"
+      },
+      "countdown": {
+        "days": "Opens in {days} d {hours} h",
+        "hours": "Opens in {hours} h {minutes} min"
+      },
+      "action": {
+        "register": "Sign me up",
+        "queue": "Join the queue",
+        "sign_in": "Sign in to sign up",
+        "cancel": "Cancel my place",
+        "leave_queue": "Leave the queue",
+        "calendar": "Add to calendar"
+      },
+      "done": {
+        "registered": "You are signed up",
+        "queued": "You are in the queue",
+        "cancelled": "Your place is cancelled"
+      },
+      "confirm": {
+        "title": "Cancel your place?",
+        "text": "Your place goes to the first in the queue, and you would have to sign up again to get one.",
+        "queue_title": "Leave the queue?",
+        "queue_text": "You lose your place in the queue.",
+        "keep": "Keep it"
+      },
+      "ticket": {
+        "open": "Show ticket",
+        "hide": "Hide ticket",
+        "show": "Show the code at the door",
+        "qr_alt": "Ticket code for check-in"
+      },
+      "left": "{n} place left | {n} places left",
+      "waiting_count": "Nobody waiting | {n} waiting | {n} waiting",
+      "urgency": {
+        "closing": "Closes in {n} hour | Closes in {n} hours",
+        "few": "{n} place left | {n} places left"
+      }
+    }
+  },
   "site": {
     "skip": "Skip to content",
     "next": {
@@ -1233,6 +1336,37 @@
       "copied": "{email} copied",
       "org": "Org. no."
     }
+  },
+  "signin": {
+    "title": "Sign in",
+    "step": "Step {n} of 2",
+    "email": "Email",
+    "continue": "Continue",
+    "invalid_email": "Enter a valid email address.",
+    "password_title": "Enter your password",
+    "change": "Change",
+    "change_label": "Change the email address",
+    "password": "Password",
+    "show": "Show",
+    "hide": "Hide",
+    "submit": "Sign in",
+    "pending": "Signing in …",
+    "forgot": "Forgot your password?",
+    "reset_sent": "If {email} has an account, we have sent a link to set a new password.",
+    "paths": {
+      "heading": "No account yet?",
+      "student": {
+        "name": "Student",
+        "text": "Sign up for events and share your CV with the companies.",
+        "link": "Create a student account"
+      },
+      "company": {
+        "name": "Company",
+        "text": "Have you received a code or an invitation from us?",
+        "link": "Join your company"
+      }
+    },
+    "the_password": "the password"
   },
   "programme": {
     "title": "Programme",

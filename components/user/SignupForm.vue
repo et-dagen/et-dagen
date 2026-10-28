@@ -8,6 +8,8 @@
   import { dietaryFlags } from '~/config/app.config'
 
   const useAlerts = useAlertStore()
+  // the sign-in page links here with the kind of account chosen
+  const chosenType = useRoute().query.type
 
   const { data: studyProgrammes } = await useFetch('/api/v1/programme')
 
@@ -58,7 +60,9 @@
     passwordConfirmation: null,
     studyProgram: '',
     currentYear: '',
-    userType: null,
+    userType: ['student', 'company'].includes(chosenType as string)
+      ? (chosenType as 'student' | 'company')
+      : null,
     registrationCode: null,
     dietaryRestrictions: null as string[] | null,
   }

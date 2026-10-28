@@ -210,7 +210,30 @@
       "marketing": "Markedsføringsansvarlig",
       "logistics": "Logistikkansvarlig",
       "travel": "Turansvarlig"
-    }
+    },
+    "question": "Hva gjelder det?",
+    "organisation": "Organisasjonen",
+    "org_number": "Org.nr.",
+    "follow": "Følg oss",
+    "copy": "Kopier {email}",
+    "copied": "{email} er kopiert",
+    "copy_failed": "Kunne ikke kopiere. Marker adressen og kopier den selv.",
+    "topics": {
+      "companies": "Bedrift og deltakelse",
+      "sponsorship": "Sponsing",
+      "press": "Presse",
+      "website": "Nettsiden og konto",
+      "other": "Alt annet"
+    },
+    "answers": {
+      "companies": "Vil bedriften delta på E&T-dagene, eller har dere spørsmål om stand, arrangementer eller CV-er?",
+      "sponsorship": "Spørsmål om sponsing og samarbeid.",
+      "press": "Presse, markedsføring og sosiale medier.",
+      "website": "Problemer med nettsiden, innlogging eller brukerkontoen din.",
+      "other": "Alt annet går til lederen."
+    },
+    "copy_short": "Kopier",
+    "copied_short": "Kopiert"
   },
   "company": {
     "main_partner": "Hovedpartner i 2026",
@@ -1195,6 +1218,86 @@
       "none": "Ingen treff"
     }
   },
+  "events": {
+    "page": {
+      "back": "Program",
+      "when": "Når",
+      "where": "Hvor",
+      "signup": "Påmelding",
+      "places": "{taken} av {limit} plasser",
+      "map_title": "Kart over {place}",
+      "open_map": "Åpne kart",
+      "privacy": "Navnene på de påmeldte vises ikke her.",
+      "years": "Årstrinn",
+      "programmes": "Studieprogram",
+      "no_jobs": "Bedriften har ingen ledige stillinger hos oss akkurat nå.",
+      "website": "Nettsiden til {company}",
+      "missing": "Fant ikke arrangementet",
+      "not_eligible": "Du oppfyller ikke kravene til studieprogram eller årstrinn for dette arrangementet.",
+      "tabs": {
+        "label": "Arrangement",
+        "about": "Om arrangementet",
+        "signup": "Påmelding",
+        "company": "Bedriften",
+        "jobs_count": "{n} stilling | {n} stillinger",
+        "about_short": "Om",
+        "signup_short": "Påmelding",
+        "company_short": "Bedriften"
+      },
+      "window": {
+        "opens": "Påmeldingen åpner",
+        "closes": "Påmeldingen stenger"
+      },
+      "state": {
+        "none": "Åpent for alle, ingen påmelding",
+        "past": "Arrangementet er over",
+        "not-open": "Påmeldingen har ikke åpnet",
+        "closed": "Påmeldingen er stengt",
+        "registered": "Du har plass",
+        "queued": "Du er nr. {n} i køen",
+        "sign-in": "Påmeldingen er åpen",
+        "not-eligible": "Påmeldingen er åpen",
+        "open": "Påmeldingen er åpen",
+        "full": "Fullt, venteliste"
+      },
+      "countdown": {
+        "days": "Åpner om {days} d {hours} t",
+        "hours": "Åpner om {hours} t {minutes} min"
+      },
+      "action": {
+        "register": "Meld meg på",
+        "queue": "Sett meg i kø",
+        "sign_in": "Logg inn for å melde deg på",
+        "cancel": "Meld meg av",
+        "leave_queue": "Gå ut av køen",
+        "calendar": "Legg i kalender"
+      },
+      "done": {
+        "registered": "Du er påmeldt",
+        "queued": "Du står i kø",
+        "cancelled": "Du er meldt av"
+      },
+      "confirm": {
+        "title": "Melde deg av?",
+        "text": "Plassen din går til den første i køen, og du må melde deg på igjen for å få en ny.",
+        "queue_title": "Gå ut av køen?",
+        "queue_text": "Du mister plassen din i køen.",
+        "keep": "Behold"
+      },
+      "ticket": {
+        "open": "Vis billett",
+        "hide": "Skjul billett",
+        "show": "Vis koden ved døren",
+        "qr_alt": "Billettkode for innsjekking"
+      },
+      "left": "{n} plass igjen | {n} plasser igjen",
+      "waiting_count": "Ingen i kø | {n} i kø | {n} i kø",
+      "urgency": {
+        "closing": "Stenger om {n} time | Stenger om {n} timer",
+        "few": "{n} plass igjen | {n} plasser igjen"
+      }
+    }
+  },
   "site": {
     "skip": "Hopp til innholdet",
     "next": {
@@ -1234,6 +1337,37 @@
       "copied": "{email} er kopiert",
       "org": "Org.nr."
     }
+  },
+  "signin": {
+    "title": "Logg inn",
+    "step": "Steg {n} av 2",
+    "email": "E-post",
+    "continue": "Fortsett",
+    "invalid_email": "Skriv inn en gyldig e-postadresse.",
+    "password_title": "Skriv passordet",
+    "change": "Endre",
+    "change_label": "Endre e-postadressen",
+    "password": "Passord",
+    "show": "Vis",
+    "hide": "Skjul",
+    "submit": "Logg inn",
+    "pending": "Logger inn …",
+    "forgot": "Glemt passordet?",
+    "reset_sent": "Hvis {email} har en konto, har vi sendt en lenke for å lage nytt passord.",
+    "paths": {
+      "heading": "Ingen konto ennå?",
+      "student": {
+        "name": "Student",
+        "text": "Meld deg på arrangementer og del CV-en din med bedriftene.",
+        "link": "Lag studentkonto"
+      },
+      "company": {
+        "name": "Bedrift",
+        "text": "Har du fått en kode eller invitasjon fra oss?",
+        "link": "Bli med i bedriften"
+      }
+    },
+    "the_password": "passordet"
   },
   "programme": {
     "title": "Program",
