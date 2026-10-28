@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   emptyRoster,
+  placeOf,
   promoteWaiting,
   register,
   removeUsers,
@@ -173,5 +174,27 @@ describe('removeUsers', () => {
     const roster = removeUsers(full(), workshop, new Set([bo]), at)
     expect([...roster.attendants.keys()]).toEqual([ada])
     expect(roster.queue).toEqual([])
+  })
+})
+
+describe('placeOf', () => {
+  it('says whether a user is coming, waiting at which position, or neither', () => {
+    const [ada, bo, cy] = ['ada', 'bo', 'cy'].map(UserUid.parse)
+    const roster = {
+      attendants: new Map([
+        [
+          ada,
+          {
+            attended: true,
+            registeredAt: Instant.parse('2026-10-27T12:00:00.000Z'),
+          },
+        ],
+      ]),
+      queue: [cy, bo],
+    }
+
+    expect(placeOf(roster, ada)).toEqual({ kind: 'attending', attended: true })
+    expect(placeOf(roster, bo)).toEqual({ kind: 'queued', position: 2 })
+    expect(placeOf(roster, UserUid.parse('dan'))).toBeNull()
   })
 })

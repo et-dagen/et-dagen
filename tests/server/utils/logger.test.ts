@@ -211,7 +211,7 @@ describe('logWideEvent', () => {
     delete process.env.LOG_LEVEL
     const e = createWideEvent('r', 'GET', '/api/v1/company')
     e.status_code = 200
-    e.user = { uid: 'admin1', access_level: 'admin' }
+    e.user = { uid: 'admin1', roles: 'admin' }
     expect(emit(e, 'info')).toBeNull()
   })
 

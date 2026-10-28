@@ -32,6 +32,9 @@ export interface EventRepository {
   /** null when no event has this uid */
   find(uid: Event['uid']): Promise<StoredEvent | null>
 
+  /** Every event the user is coming to or waiting for */
+  withUser(user: UserUid): Promise<StoredEvent[]>
+
   /** Apply the domain's `register` to the stored roster, atomically */
   registerOrQueue(
     uid: Event['uid'],

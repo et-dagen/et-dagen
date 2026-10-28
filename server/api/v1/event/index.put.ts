@@ -6,6 +6,7 @@ import { EventUid } from '@/domain/event/event'
 import { Instant } from '@/domain/time'
 import { rtdbEventRepository } from '@/server/adapters/rtdb/eventRepository'
 import { cleanRichText, safeLink } from '@/server/security/richText'
+import { authorize } from '@/domain/authorization/authorize'
 
 defineRouteMeta({
   openAPI: {
@@ -37,13 +38,14 @@ defineRouteMeta({
     // responses: {
     //   204: { description: 'Updated' },
     //   400: { description: 'Error (general/missing-data). and capacity/date validation errors' },
-    //   401: { description: 'Error (event/not-owner). or Error (firebase/user-not-authorized).' },
+    //   401: { description: 'auth/signed-out' },
+    //   403: { description: 'auth/forbidden' },
     // },
   },
 })
 
 export default defineEventHandler(async (event) => {
-  const { user } = event.context
+  const { subject } = event.context
 
   const {
     companyUID,
@@ -66,28 +68,8 @@ export default defineEventHandler(async (event) => {
   )
   setLogImportance(event, 'warn')
 
-  // Check if user is authorized
-  if (hasAccess(user, ['company'])) {
-    if (user.companyUID !== companyUID) {
-      setErrorContext(event, {
-        code: 'event/not-owner',
-        message: 'Company user does not own this event',
-      })
-      throw createError({
-        statusCode: 401,
-        statusMessage: 'Error (event/not-owner).',
-      })
-    }
-  } else if (!hasAccess(user, ['admin'])) {
-    setErrorContext(event, {
-      code: 'firebase/user-not-authorized',
-      message: 'User not authorized to update event',
-    })
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Error (firebase/user-not-authorized).',
-    })
-  }
+  const env = { now: Instant.now() }
+  authorize(subject, 'event', 'update', companyOf(companyUID), env)
 
   // check if data is defined.
   if (
@@ -188,9 +170,7 @@ export default defineEventHandler(async (event) => {
   //       "Eventtype has to be either 'presentation', 'dinner' or 'other'",
   //   })
 
-  if (hasAccess(user, ['company'])) {
-    await assertCompanyOwnsEvent(event, eventUID, user.companyUID)
-  }
+  await authorizeStoredEvent(event, subject, 'update', eventUID, env)
 
   // Get database reference
   const eventRef = db.ref(`events/${eventUID}`)

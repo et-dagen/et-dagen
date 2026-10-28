@@ -1,19 +1,18 @@
 // GET /api/v1/image/standmap
-// endpoint for fetching stand maps from storage
+// endpoint for fetching stand maps
+import { listStandMaps } from '@/application/fair/standMaps'
+import { fileStorage, files, standMaps } from '@/server/composition'
 
 defineRouteMeta({
   openAPI: {
     tags: ['Image'],
-    summary: 'List stand map images',
+    summary: 'List stand maps by fair day',
     description:
-      'Public. Returns stand map image URLs from the storage bucket, sorted by filename.',
+      'Public. One stand map per fair day, as `{ date, url, name?, legacy? }` sorted by ' +
+      'date. Maps uploaded per day in the admin come first; a map stored the old way, as ' +
+      '`standmaps/<date>.<ext>` in the bucket, is listed with `legacy: true` for a day ' +
+      'that has no new one.',
     security: [],
-    // TODO(api-docs): fill in the request/response schemas below.
-    // Shapes are sketched from current handler behaviour - verify each
-    // against the handler before uncommenting.
-    // responses: {
-    //   200: { description: 'Sorted list of stand map image URLs' },
-    // },
   },
 })
 
@@ -27,23 +26,26 @@ export default defineEventHandler(async (event) => {
     'list',
     'List stand map images',
   )
-  // get storage bucket
+
+  const recorded = (
+    await listStandMaps({ files, storage: fileStorage, standMaps })
+  ).map(({ day, name, url }) => ({ date: day as string, url, name }))
+  const days = new Set(recorded.map((map) => map.date))
+
+  // maps from before the admin upload, named by their date; they go once migrated
   const bucket = storage.bucket()
-  const maps = await bucket.getFiles({ prefix: 'standmaps/', delimiter: '/' })
-
-  // Stand maps are uploaded public (POST /api/v1/image), so this endpoint only
-  // reads. The plain public URL is cacheable, unlike the download link.
-  const sortedMaps = maps[0]
-    // omit root folder
+  const [legacy] = await bucket.getFiles({
+    prefix: 'standmaps/',
+    delimiter: '/',
+  })
+  const old = legacy
     .filter((map) => map.name !== 'standmaps/')
-    // only return the date and url
-    .map((map) => {
-      const date = map.name.split('standmaps/')[1].split('.')[0]
-      return {
-        date,
-        url: `https://storage.googleapis.com/${bucket.name}/${map.name}`,
-      }
-    })
+    .map((map) => ({
+      date: map.name.split('standmaps/')[1]!.split('.')[0]!,
+      url: `https://storage.googleapis.com/${bucket.name}/${map.name}`,
+      legacy: true,
+    }))
+    .filter((map) => !days.has(map.date))
 
-  return sortedMaps
+  return [...recorded, ...old].sort((a, b) => a.date.localeCompare(b.date))
 })

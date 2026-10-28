@@ -14,10 +14,21 @@ import type { Company, Relationship } from '@/domain/business/company'
  * TypeScript object literals, which camelCase names did not.
  */
 export type Entitlement =
-  | 'ent:resume:view' // today's cvAccess
+  | 'ent:resume:view' // sold apart from the tier
   | 'ent:job:manage'
   | 'ent:event:manage'
   | 'ent:profile:manage' // only own profile
+
+/** Every entitlement, so stored overrides can be checked */
+export const ENTITLEMENTS: readonly Entitlement[] = [
+  'ent:resume:view',
+  'ent:job:manage',
+  'ent:event:manage',
+  'ent:profile:manage',
+]
+
+export const isEntitlement = (value: unknown): value is Entitlement =>
+  (ENTITLEMENTS as readonly unknown[]).includes(value)
 
 /**
  * Capability of overriding the entitlements a relationship implies
@@ -40,9 +51,9 @@ export type EntitledCompany = Company & HasEntitlementOverrides
  * What each contract tier grants before any override is applied
  *
  * @remarks
- * `ent:resume:view` is inert until the company data is migrated: the repository mapper emits an
- * explicit override in both directions from `cvAccess`, so no company's resume access changes on
- * deploy.
+ * Résumé access is sold apart from the tier, so an affiliation usually sets `ent:resume:view` as an
+ * override; the migration (#640) stored one for every company. Sponsors edit their own profile and
+ * nothing else; prior companies get nothing.
  */
 const defaults: Record<Relationship, readonly Entitlement[]> = {
   mainPartner: [
@@ -57,7 +68,7 @@ const defaults: Record<Relationship, readonly Entitlement[]> = {
     'ent:event:manage',
     'ent:profile:manage',
   ],
-  sponsor: [],
+  sponsor: ['ent:profile:manage'],
   prior: [],
 }
 

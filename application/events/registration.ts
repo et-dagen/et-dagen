@@ -6,6 +6,7 @@ import type { UserDirectory } from '@/application/users/userDirectory'
 import type { Verdict } from '@/domain/authorization/eligibility'
 import { hasPermission } from '@/domain/authorization/hasPermission'
 import type { Subject } from '@/domain/authorization/subject'
+import type { CompanyUid } from '@/domain/business/company'
 import type { EventUid } from '@/domain/event/event'
 import { admits, isOpen, type Registration } from '@/domain/event/registration'
 import type { RegisterOutcome, WithdrawOutcome } from '@/domain/event/roster'
@@ -59,10 +60,11 @@ export async function registerForEvent(
   { events, users }: { events: EventRepository; users: UserDirectory },
   request: RegistrationRequest,
 ): Promise<RegisterResult> {
-  const registration = await registrationOf(events, request.event)
-  if ('kind' in registration) return registration
+  const found = await registrationOf(events, request.event)
+  if ('kind' in found) return found
+  const { registration } = found
 
-  const target = { targetUserUid: request.user, event: { registration } }
+  const target = { targetUserUid: request.user, event: found }
   if (
     !hasPermission(request.subject, 'registration', 'create', target, {
       now: request.now,
@@ -89,10 +91,11 @@ export async function withdrawFromEvent(
   { events }: { events: EventRepository },
   request: RegistrationRequest,
 ): Promise<WithdrawResult> {
-  const registration = await registrationOf(events, request.event)
-  if ('kind' in registration) return registration
+  const found = await registrationOf(events, request.event)
+  if ('kind' in found) return found
+  const { registration } = found
 
-  const target = { targetUserUid: request.user, event: { registration } }
+  const target = { targetUserUid: request.user, event: found }
   if (
     !hasPermission(request.subject, 'registration', 'delete', target, {
       now: request.now,
@@ -106,10 +109,13 @@ export async function withdrawFromEvent(
 async function registrationOf(
   events: EventRepository,
   uid: EventUid,
-): Promise<Registration | Missing> {
+): Promise<{ registration: Registration; companyUid: CompanyUid } | Missing> {
   const stored = await events.find(uid)
   if (!stored) return { kind: 'event-not-found' }
-  return stored.event.registration ?? { kind: 'no-registration' }
+  const { registration, companyUid } = stored.event
+  return registration
+    ? { registration, companyUid }
+    : { kind: 'no-registration' }
 }
 
 function notOwnOrClosed(

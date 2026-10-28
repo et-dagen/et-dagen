@@ -3,9 +3,12 @@ import {
   Building2,
   CalendarDays,
   FileText,
+  IdCard,
+  MapPinned,
   Users,
 } from '@lucide/vue'
 import type { Component } from 'vue'
+import type { Area } from '@/lib/auth/areas'
 
 export interface Panel {
   name: string
@@ -17,6 +20,10 @@ export interface Panel {
   count: string | null
   /** Active only on its own route, not on the pages below it */
   exact?: boolean
+  /** Also active on the pages below this route */
+  below?: string
+  /** Shown only to users in this area */
+  area?: Area
 }
 
 /** The admin panels, in the order the navigation shows them */
@@ -50,9 +57,23 @@ export const ADMIN_PANELS: readonly Panel[] = [
     icon: Users,
     count: null,
   },
+  {
+    name: 'standmaps',
+    route: '/admin/standmaps',
+    label: 'admin.standmaps.name',
+    icon: MapPinned,
+    count: null,
+  },
+  {
+    name: 'board',
+    route: '/admin/board',
+    label: 'admin.board.name',
+    icon: IdCard,
+    count: null,
+  },
 ]
 
-/** What a company user manages: its events and, with access, students' résumés */
+/** What a company user manages: its events, its jobs when it may, and students' résumés */
 export const COMPANY_PANELS: readonly Panel[] = [
   {
     name: 'company-events',
@@ -61,6 +82,15 @@ export const COMPANY_PANELS: readonly Panel[] = [
     icon: CalendarDays,
     count: null,
     exact: true,
+    below: '/company/admin/events',
+  },
+  {
+    name: 'company-jobs',
+    route: '/company/admin/jobs',
+    label: 'company.admin.jobs.name',
+    icon: BriefcaseBusiness,
+    count: null,
+    area: 'jobs',
   },
   {
     name: 'resumes',
@@ -71,9 +101,22 @@ export const COMPANY_PANELS: readonly Panel[] = [
   },
 ]
 
-export const panelsFor = (userType: string | null | undefined) =>
-  userType === 'company' ? COMPANY_PANELS : ADMIN_PANELS
+/** Admins get the whole panel; company users and coordinators their companies' part of it */
+export const panelsFor = (
+  isAdmin: boolean,
+  allows: (area: Area) => boolean = () => true,
+) =>
+  (isAdmin ? ADMIN_PANELS : COMPANY_PANELS).filter(
+    (panel) => !panel.area || allows(panel.area),
+  )
 
 /** Whether a panel is where the user is: its own page or, unless exact, a page below it */
-export const isActivePanel = (panel: Panel, path: string, route: string) =>
-  path === route || (!panel.exact && path.startsWith(`${route}/`))
+export const isActivePanel = (
+  panel: Panel,
+  path: string,
+  route: string,
+  below?: string,
+) =>
+  path === route ||
+  (!panel.exact && path.startsWith(`${route}/`)) ||
+  (!!below && path.startsWith(`${below}/`))

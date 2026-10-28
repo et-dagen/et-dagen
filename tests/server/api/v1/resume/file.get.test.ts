@@ -1,6 +1,6 @@
 import { createError } from 'h3'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import hasAccess from '@/server/utils/hasAccess'
+import { subjectOf } from '@/tests/server/api/support/subject'
 
 // The handler relies on Nitro's auto-imports; stub them so it runs as a plain function.
 const BUCKET = 'demo-bucket'
@@ -21,7 +21,6 @@ beforeEach(() => {
   vi.stubGlobal('defineRouteMeta', () => {})
   vi.stubGlobal('defineEventHandler', (handler: unknown) => handler)
   vi.stubGlobal('createError', createError)
-  vi.stubGlobal('hasAccess', hasAccess)
   vi.stubGlobal('sendRedirect', sendRedirect)
   for (const name of [
     'setResourceContext',
@@ -50,13 +49,23 @@ beforeEach(() => {
   })
 })
 
-async function open(user: object | undefined, userUID?: string) {
+const COMPANIES = {
+  paying: { name: 'Paying', type: 'partner', cvAccess: true },
+  free: { name: 'Free', type: 'partner', cvAccess: false },
+}
+
+async function open(
+  user: ({ uid: string } & Record<string, unknown>) | undefined,
+  userUID?: string,
+) {
   vi.stubGlobal('getQuery', () => ({ userUID }))
   const { default: run } =
     (await import('@/server/api/v1/resume/file.get')) as unknown as {
       default: (event: unknown) => Promise<unknown>
     }
-  return run({ context: { user } })
+  return run({
+    context: { subject: user && subjectOf(user, COMPANIES) },
+  })
 }
 
 const student = { uid: 'student', userType: 'basic' }
@@ -94,8 +103,7 @@ describe('GET /api/v1/resume/file', () => {
   it('refuses other students and companies without CV access', async () => {
     for (const user of [otherStudent, free]) {
       await expect(open(user, 'student')).rejects.toMatchObject({
-        statusCode: 403,
-        statusMessage: 'Error (resume/not-allowed).',
+        code: 'auth/forbidden',
       })
     }
     expect(getSignedUrl).not.toHaveBeenCalled()
@@ -103,7 +111,7 @@ describe('GET /api/v1/resume/file', () => {
 
   it('refuses signed-out requests', async () => {
     await expect(open(undefined, 'student')).rejects.toMatchObject({
-      statusCode: 401,
+      code: 'auth/signed-out',
     })
   })
 

@@ -1,6 +1,9 @@
 // DELETE /api/v1/code
 // endpoint for removing a registration code from db
 
+import { authorize } from '@/domain/authorization/authorize'
+import { Instant } from '@/domain/time'
+
 defineRouteMeta({
   openAPI: {
     tags: ['Code', 'internal'],
@@ -30,7 +33,7 @@ defineRouteMeta({
 })
 
 export default defineEventHandler(async (event) => {
-  const { user } = event.context
+  const { subject } = event.context
 
   // Set resource context for wide event logging
   setResourceContext(
@@ -42,17 +45,7 @@ export default defineEventHandler(async (event) => {
   )
   setLogImportance(event, 'warn')
 
-  // only admins can remove registration codes
-  if (!hasAccess(user, ['admin'])) {
-    setErrorContext(event, {
-      code: 'firebase/user-not-authorized',
-      message: 'User not authorized to delete registration codes',
-    })
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Error (firebase/user-not-authorized).',
-    })
-  }
+  authorize(subject, 'code', 'delete', undefined, { now: Instant.now() })
 
   // get request body
   const { code } = await readBody(event)

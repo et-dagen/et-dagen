@@ -1,13 +1,21 @@
 // POST /api/v1/user
 // endpoint for creating or updating a user in the database
 
+import { startAccess } from '@/application/users/access'
+import { hasPermission } from '@/domain/authorization/hasPermission'
+import { CompanyUid } from '@/domain/business/company'
+import { Instant } from '@/domain/time'
+import { UserUid } from '@/domain/user'
+import { access } from '@/server/composition'
+
 defineRouteMeta({
   openAPI: {
     tags: ['User'],
     summary: 'Create or update user',
     description:
-      'Called after Firebase sign-up. A registration code upgrades the account to a company ' +
-      'user. Requires a valid token but no database record yet.',
+      'Called after Firebase sign-up, and to update the profile. A new account starts as a ' +
+      "student; a registration code makes it a contact for the code's company. Requires a valid " +
+      'token but no database record yet.',
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],
     parameters: [
       {
@@ -46,7 +54,7 @@ defineRouteMeta({
 })
 
 export default defineEventHandler(async (event) => {
-  const { decodedToken, user } = event.context
+  const { decodedToken, subject, user } = event.context
 
   // Set resource context for wide event logging
   setResourceContext(
@@ -72,21 +80,15 @@ export default defineEventHandler(async (event) => {
 
   // get request body and query param
   /* eslint-disable */
-  let {
-    uid,
-    userType,
-    studyProgram,
-    currentYear,
-    companyUID,
-    dietaryRestrictions,
-  } = await readBody(event)
+  let { uid, studyProgram, currentYear, dietaryRestrictions } =
+    await readBody(event)
   const { code: registrationCode } = getQuery(event)
 
   // studyprogram is required when creating, or modifying your own, normal user
   if (
     !registrationCode &&
     (!studyProgram || !currentYear) &&
-    !hasAccess(user, ['admin', 'company'])
+    !subject?.roles.some((role) => role === 'admin' || role === 'company')
   ) {
     setErrorContext(event, {
       code: 'user/missing-programme',
@@ -98,16 +100,19 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // only admins can modify usertypes and other users than their own
-  if (!hasAccess(user, ['admin']) || !uid) {
+  // only admins act on other users; roles and companies are set with PUT /user/access
+  const env = { now: Instant.now() }
+  if (
+    !uid ||
+    !hasPermission(subject, 'user', 'assign', { scope: 'all' }, env)
+  ) {
     // prevent users from creating multiple instances in the db
     uid = user?.uid ?? decodedToken.uid
-    userType = user?.userType ?? 'basic'
-    companyUID = user?.companyUID
   }
 
   // check validity of registration code
   // only applicable when creating a new company user
+  let codeCompany: string | null = null
   if (registrationCode) {
     const { isValid, companyUID: codeCompanyUID } = await validateCode(
       registrationCode as string,
@@ -125,30 +130,42 @@ export default defineEventHandler(async (event) => {
       })
     }
 
-    userType = 'company'
-    companyUID = codeCompanyUID
+    codeCompany = codeCompanyUID
 
     // remove registration code from db
     deleteCode(registrationCode as string)
   }
 
   addEventContext(event, 'target_uid', uid)
-  addEventContext(event, 'target_user_type', userType ?? null)
   addEventContext(event, 'used_registration_code', Boolean(registrationCode))
 
   // reference to users
   const usersRef = db.ref('users')
 
-  // add or update user in database
+  // add or update user in database; a company contact has no study programme, and the v1
+  // userType and companyUID are cleared, since roles and memberships say who the user is (#640)
   usersRef.child(uid).update({
-    userType: userType ?? null,
-    studyProgram: userType === 'company' ? null : studyProgram,
-    currentYear: userType === 'company' ? null : currentYear,
-    companyUID: userType === 'company' ? companyUID : null,
+    studyProgram: codeCompany ? null : (studyProgram ?? null),
+    currentYear: codeCompany ? null : (currentYear ?? null),
     dietaryRestrictions: dietaryRestrictions ?? null,
+    userType: null,
+    companyUID: null,
     updated: Date.now(),
   })
   trackDbWrite(event, `users/${uid}`)
+
+  // a new account, or one using a registration code, starts with its roles (#640)
+  if (registrationCode || (!user && uid === decodedToken.uid)) {
+    await startAccess(
+      { access },
+      {
+        user: UserUid.parse(uid),
+        company: codeCompany ? CompanyUid.parse(codeCompany) : null,
+        now: env.now,
+      },
+    )
+    trackDbWrite(event, `roles/${uid}`)
+  }
 
   // user successfully modified
   sendNoContent(event, 201)

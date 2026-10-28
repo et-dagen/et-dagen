@@ -1,9 +1,9 @@
-import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
-import type { z, ZodTypeAny } from 'zod'
+import type { z } from 'zod'
 import { alertError } from '@/composables/useAlerts'
+import { typedSchemaOf } from '@/lib/forms/zodSchema'
 
-interface Options<S extends ZodTypeAny> {
+interface Options<S extends z.ZodType> {
   schema: S
   initial: Partial<z.infer<S>>
   /** Store the values; returns the saved item's uid when the list should light it up */
@@ -21,11 +21,11 @@ interface Options<S extends ZodTypeAny> {
  * After saving, the list opens with `?changed=<uid>` so the row stays lit. Leaving with unsaved
  * changes asks first. A rejected save keeps everything typed and reports the error.
  */
-export function useResourceForm<S extends ZodTypeAny>(options: Options<S>) {
+export function useResourceForm<S extends z.ZodType>(options: Options<S>) {
   const { t } = useI18n()
   const localePath = useLocalePath()
   const form = useForm({
-    validationSchema: toTypedSchema(options.schema),
+    validationSchema: typedSchemaOf(options.schema),
     // TypeScript cannot resolve vee-validate's deep-partial type for a generic schema
     initialValues: options.initial as never,
     // a field hidden by a choice (role, sign-up) keeps its value if the choice is undone;

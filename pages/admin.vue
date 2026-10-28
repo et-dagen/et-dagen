@@ -3,8 +3,7 @@
     layout: 'admin',
     // route and all sub routes are protected
     protected: true,
-    // route is only accessible by admins
-    accessLevels: ['admin'],
+    area: 'admin',
 
     // there exists no /admin page, so redirect to /admin/companies
     middleware: (to) => {
@@ -22,7 +21,7 @@
   const panel = computed(() => name.value.replace('admin-', ''))
   // list pages get the panel's title here; create and edit pages carry their own
   const isList = computed(() =>
-    /^admin-(companies|events|jobs|users)$/.test(name.value),
+    /^admin-(companies|events|jobs|users|standmaps|board)$/.test(name.value),
   )
 </script>
 
