@@ -1,20 +1,11 @@
 <template>
-  <div class="main">
+  <div class="tw:flex tw:flex-col">
     <SiteHeader />
 
-    <!-- main content -->
-    <VMain id="main" style="min-height: 100vh">
+    <main id="main" class="tw:min-h-screen">
       <slot />
-    </VMain>
+    </main>
 
     <SiteFooter />
   </div>
 </template>
-
-<style scoped lang="scss">
-  .main {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-</style>

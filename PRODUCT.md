@@ -38,11 +38,11 @@ mistakes, including people who joined the IT group this year.
 
 ## Capabilities and Constraints
 
-- Nuxt 3 and Vuetify 3, with the theme in `config/vuetify/`. The front end talks only to the
-  site's own API (`/api/v1`, later v2).
+- Nuxt 3 with Tailwind CSS and shadcn-vue components, with the palette in
+  `assets/css/admin.css`. The front end talks only to the site's own API (`/api/v1`, later v2).
 - Components and composables will be reshaped later (#557, #533). Admin work now should fix
-  structure and flows and keep styling inside the existing theme and Vuetify, without rewriting
-  component internals.
+  structure and flows and keep styling inside the existing palette, without rewriting component
+  internals.
 - All user-facing text exists in Norwegian (`nb-NO`) and British English (`en-GB`).
 - The panels show personal data: names, emails, study programme, dietary needs and résumés.
   E&T-dagene is the data controller and erases users after three years of inactivity.

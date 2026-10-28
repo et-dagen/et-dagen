@@ -5,10 +5,10 @@
 </script>
 
 <template>
-  <VApp>
+  <div>
     <CommonAlert />
     <NuxtLayout>
       <NuxtPage :keepalive="{ include: 'Programme' }" />
     </NuxtLayout>
-  </VApp>
+  </div>
 </template>

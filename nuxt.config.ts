@@ -64,7 +64,7 @@ export default defineNuxtConfig({
     dirs: ['stores'],
   },
 
-  css: ['@/assets/scss/main.scss', '@/assets/css/admin.css'],
+  css: ['@/assets/css/base.css', '@/assets/css/admin.css'],
 
   vite: {
     plugins: [tailwindcss()],
@@ -73,13 +73,7 @@ export default defineNuxtConfig({
   // shadcn-vue components under components/ui are imported explicitly, not auto-imported (#583)
   components: [{ path: '~/components', ignore: ['ui/**'] }],
 
-  modules: [
-    '@nuxtjs/i18n',
-    '@pinia/nuxt',
-    'vuetify-nuxt-module',
-    '@vueuse/nuxt',
-    '@nuxt/image',
-  ],
+  modules: ['@nuxtjs/i18n', '@pinia/nuxt', '@vueuse/nuxt', '@nuxt/image'],
 
   // The page for companies was served at /faq before it got its own name
   routeRules: {
@@ -145,10 +139,6 @@ export default defineNuxtConfig({
       lg: 1919,
       xl: 2559,
     },
-  },
-
-  vuetify: {
-    vuetifyOptions: './config/vuetify/vuetify.config.ts',
   },
 
   // enable nuxt devtools

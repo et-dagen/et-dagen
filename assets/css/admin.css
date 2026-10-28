@@ -1,9 +1,9 @@
 /*
  * Styles for the pages built on shadcn-vue (the admin panel first)
  *
- * Tailwind's preflight is left out, so the Vuetify pages keep their look, and every Tailwind class
- * carries the tw: prefix (tw:bg-primary), because Vuetify defines classes with the same names and
- * !important (bg-primary, border, rounded-lg). Pages on the new
+ * Tailwind's preflight is left out; base.css holds the reset the pages were built on. Every
+ * Tailwind class carries the tw: prefix (tw:bg-primary), from when Vuetify was on the same pages
+ * and defined classes with the same names. Pages on the new
  * components sit inside `.et-admin` (admin, may turn dark) or `.et-ui` (public, always light),
  * which get the base styles preflight would have given; so do shadcn-vue components (`[data-slot]`), because menus and dialogs render at the end of <body>.
  * The palette sits on :root for the same reason; only <html class="et-admin-root">, set by the admin
@@ -53,8 +53,7 @@
 }
 
 /*
- * The choice of light or dark. Only the admin pages follow the device; the public pages stay light. It is repeated on .et-admin because Vuetify's wrapper, which sits
- * between <html> and the admin pages, resets color-scheme.
+ * The choice of light or dark. Only the admin pages follow the device; the public pages stay light.
  */
 .et-admin-root,
 .et-admin {
