@@ -46,10 +46,7 @@
 </script>
 
 <template>
-  <div>
-    <h6>{{ $t('user.delete.title') }}</h6>
-    <p class="my-2">{{ $t('user.delete.description') }}</p>
-
+  <div class="tw:flex tw:flex-wrap tw:items-center tw:gap-x-4 tw:gap-y-3">
     <AlertDialog v-model:open="open">
       <AlertDialogTrigger as-child>
         <Button
@@ -98,5 +95,8 @@
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
+    <p class="tw:min-w-48 tw:flex-1 tw:text-sm tw:text-muted-foreground">
+      {{ $t('user.delete.description') }}
+    </p>
   </div>
 </template>

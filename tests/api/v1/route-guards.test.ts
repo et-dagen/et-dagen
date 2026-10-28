@@ -36,7 +36,7 @@ describe('route guards', () => {
     const { token } = await contactFor('acme')
 
     expect((await page('/company/admin', token)).status).toBe(200)
-    expect((await page('/jobs/edit', token)).status).toBe(200)
+    expect((await page('/company/admin/jobs', token)).status).toBe(200)
   })
 
   it('list the events of every company a coordinator manages', async () => {

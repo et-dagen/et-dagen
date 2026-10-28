@@ -110,8 +110,8 @@ export default defineEventHandler(async (event) => {
   addEventContext(event, 'company_uid', companyUID)
 
   const newKeys = Object.keys(newData)
-  // listing came later than the other fields, so jobs stored before it may lack it
-  const oldKeys = [...Object.keys(dbData), 'listing']
+  // listing and deadlineType came later than the other fields, so older jobs may lack them
+  const oldKeys = [...Object.keys(dbData), 'listing', 'deadlineType']
 
   // make sure all keys that are to be changed already exsists in the db
   if (!newKeys.every((key) => oldKeys.includes(key))) {
@@ -127,6 +127,17 @@ export default defineEventHandler(async (event) => {
 
   if ('listing' in newData && !['text', 'link'].includes(newData.listing)) {
     throw fail('job/invalid-listing')
+  }
+
+  if (
+    'deadlineType' in newData &&
+    !['date', 'asap', 'rolling'].includes(newData.deadlineType)
+  ) {
+    throw fail('job/invalid-deadline-type')
+  }
+  // "Snarest" and "Løpende" keep no date
+  if (newData.deadlineType && newData.deadlineType !== 'date') {
+    newData.deadline = null
   }
 
   if (newData.deadline && !isValidDate(newData.deadline)) {

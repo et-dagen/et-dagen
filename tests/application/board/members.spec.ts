@@ -39,6 +39,7 @@ const images: ImageProcessor = {
           }
         : null,
     ),
+  trim: () => Promise.resolve(null),
 }
 
 const setup = () => ({

@@ -36,11 +36,12 @@ module.exports = {
         'components/admin/form/**',
         'components/site/**',
         'components/user/DeleteAccount.vue',
+        'components/user/ProfileForm.vue',
         'components/job/DeadlineNote.vue',
         'components/job/FairEvents.vue',
         'pages/jobs/**',
-        'components/home/**',
-        'pages/index.vue',
+        'pages/for-companies.vue',
+        'components/forcompanies/**',
       ],
       rules: {
         'vue/max-len': [
@@ -146,7 +147,8 @@ module.exports = {
         ignoreStrings: false,
         ignoreTemplateLiterals: false,
         ignoreRegExpLiterals: true,
-        ignoreHTMLAttributeValues: false,
+        // Tailwind class lists are long by nature; breaking them helps no one
+        ignoreHTMLAttributeValues: true,
         ignoreHTMLTextContents: false,
       },
     ],

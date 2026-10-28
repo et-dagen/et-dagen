@@ -116,7 +116,7 @@
         </li>
         <li class="tw:bg-card" :class="restClass">
           <NuxtLink
-            :to="localePath('/faq')"
+            :to="localePath('/for-companies')"
             class="tw:group tw:flex tw:size-full tw:min-h-24 tw:flex-col tw:justify-end tw:gap-1 tw:p-5 tw:transition-colors tw:hover:bg-muted/40"
           >
             <span class="tw:text-sm tw:text-muted-foreground">
@@ -125,7 +125,7 @@
             <span
               class="tw:inline-flex tw:items-center tw:gap-1 tw:font-bold tw:underline tw:decoration-border tw:decoration-2 tw:underline-offset-4 tw:group-hover:decoration-brand"
             >
-              {{ $t('nav.faq') }}
+              {{ $t('nav.for-companies') }}
               <ArrowRight class="tw:size-4" aria-hidden="true" />
             </span>
           </NuxtLink>

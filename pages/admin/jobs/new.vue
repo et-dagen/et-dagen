@@ -4,6 +4,11 @@
 
 <template>
   <JobForm
-    :initial="{ listing: 'text', applicationLink: '', description: '' }"
+    :initial="{
+      listing: 'text',
+      deadlineType: 'date',
+      applicationLink: '',
+      description: '',
+    }"
   />
 </template>

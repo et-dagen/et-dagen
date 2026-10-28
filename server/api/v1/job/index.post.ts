@@ -61,7 +61,10 @@ export default defineEventHandler(async (event) => {
     location,
     applicationLink,
     listing = 'text',
+    deadlineType = 'date',
   } = await readBody(event)
+  // "Snarest" and "Løpende" have no date to check
+  const onDate = deadlineType === 'date'
 
   // Set resource context for wide event logging
   setResourceContext(
@@ -78,7 +81,7 @@ export default defineEventHandler(async (event) => {
   if (
     !companyUID ||
     !title ||
-    !deadline ||
+    (onDate && !deadline) ||
     !jobType ||
     !location ||
     typeof applicationLink !== 'string' ||
@@ -98,8 +101,11 @@ export default defineEventHandler(async (event) => {
   if (!['text', 'link'].includes(listing)) throw fail('job/invalid-listing')
   if (applicationLink && !safeLink(applicationLink))
     throw fail('job/invalid-link')
+  if (!['date', 'asap', 'rolling'].includes(deadlineType)) {
+    throw fail('job/invalid-deadline-type')
+  }
 
-  if (!isValidDate(deadline)) {
+  if (onDate && !isValidDate(deadline)) {
     setErrorContext(event, {
       code: 'job/invalid-date',
       message: 'Invalid deadline date format',
@@ -146,7 +152,8 @@ export default defineEventHandler(async (event) => {
       companyUID,
       title,
       description: cleanRichText(description),
-      deadline,
+      deadline: onDate ? deadline : null,
+      deadlineType,
       jobType,
       location,
       applicationLink: safeLink(applicationLink) ?? '',

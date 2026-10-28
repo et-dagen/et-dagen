@@ -7,7 +7,7 @@
   const props = defineProps<{
     company: string
     events: FairEvent[]
-    deadline?: string
+    deadline?: string | null
   }>()
 
   const { locale } = useI18n()
