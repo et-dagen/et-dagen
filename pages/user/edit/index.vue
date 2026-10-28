@@ -1,18 +1,16 @@
 <script setup lang="ts">
   definePageMeta({
-    // route and all sub routes are protected
-    // meaning you hae to be logged in
+    // you edit your own profile, so you have to be signed in
     protected: true,
   })
-
-  const authStore = useAuthStore()
-  const { user } = storeToRefs(authStore)
 </script>
 
 <template>
-  <VContainer>
-    <UserEditForm :user="user" />
-  </VContainer>
+  <div class="et-ui tw:bg-background tw:text-foreground">
+    <div
+      class="tw:mx-auto tw:max-w-screen-xl tw:px-4 tw:py-10 tw:lg:px-8 tw:lg:py-14"
+    >
+      <UserProfileForm />
+    </div>
+  </div>
 </template>
-
-<style lang="scss"></style>

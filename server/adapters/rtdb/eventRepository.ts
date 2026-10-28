@@ -80,6 +80,16 @@ export function rtdbEventRepository(
       return record === null ? null : toStoredEvent(uid, record)
     },
 
+    // only the events that hold the user are parsed, so a malformed event elsewhere cannot fail it
+    withUser: async (user) => {
+      const records = ((await db.ref('events').once('value')).val() ??
+        {}) as Record<string, EventRecord>
+      const mine = new Set([user as string])
+      return Object.entries(records)
+        .filter(([, record]) => holdsAny(record, mine))
+        .map(([uid, record]) => toStoredEvent(uid, record))
+    },
+
     registerOrQueue: (uid, user, at) =>
       change(uid, at, (roster, registration) =>
         register(roster, registration, user, at),

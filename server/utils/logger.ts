@@ -46,7 +46,8 @@ export interface WideEvent {
     uid: string
     email?: string
     name?: string
-    access_level?: string
+    /** The user's roles, comma separated */
+    roles?: string
     study_program?: string
     current_year?: number
   }
