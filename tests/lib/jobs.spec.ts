@@ -35,6 +35,11 @@ describe('deadlineState', () => {
     expect(deadlineState('2026-10-31', now)).toEqual({ kind: 'passed' })
   })
 
+  it('knows "Snarest" and "Løpende" without a date', () => {
+    expect(deadlineState(null, now, 'asap')).toEqual({ kind: 'asap' })
+    expect(deadlineState(null, now, 'rolling')).toEqual({ kind: 'rolling' })
+  })
+
   it('reports a missing or malformed deadline', () => {
     expect(deadlineState(undefined, now)).toEqual({ kind: 'none' })
     expect(deadlineState('soon', now)).toEqual({ kind: 'none' })

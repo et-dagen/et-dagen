@@ -16,6 +16,13 @@ export const JOB_TYPES = ['full-time', 'graduate', 'summer-internship'] as const
 export const JOB_LISTINGS = ['text', 'link'] as const
 export type JobListing = (typeof JOB_LISTINGS)[number]
 
+/**
+ * When applications close: on a date, as soon as possible ("Snarest"), or when the job is filled
+ * ("Løpende")
+ */
+export const DEADLINE_TYPES = ['date', 'asap', 'rolling'] as const
+export type DeadlineType = (typeof DEADLINE_TYPES)[number]
+
 const required = z.string({ error: 'required' }).trim().min(1, 'required')
 
 /** Rich text counts as empty when it holds no visible characters */
@@ -32,10 +39,16 @@ const common = {
   companyUID: required,
   jobType: z.enum(JOB_TYPES, { error: 'required' }),
   location: required.max(120, 'too_long'),
-  /** A date, `YYYY-MM-DD`, as v1 stores it */
+  deadlineType: z.enum(DEADLINE_TYPES).default('date'),
+  /** A date, `YYYY-MM-DD`, as v1 stores it; only for a deadline on a date */
   deadline: z
-    .string({ error: 'required' })
-    .regex(/^\d{4}-\d{2}-\d{2}$/, 'date'),
+    .string()
+    .trim()
+    .refine(
+      (value) => value === '' || /^\d{4}-\d{2}-\d{2}$/.test(value),
+      'date',
+    )
+    .default(''),
 }
 
 // one variant per listing, so every field's error shows at once whichever is chosen
@@ -57,3 +70,16 @@ export const JobInput = z.discriminatedUnion('listing', [
 ])
 
 export type JobInput = z.infer<typeof JobInput>
+
+/** The form's schema: a deadline on a date needs the date */
+export const checkedJobInput = JobInput.superRefine((job, ctx) => {
+  if (job.deadlineType === 'date' && job.deadline === '') {
+    ctx.addIssue({ code: 'custom', path: ['deadline'], message: 'required' })
+  }
+})
+
+/** The body v1 stores: no date unless the deadline is on one */
+export const toV1Job = (job: JobInput) => ({
+  ...job,
+  deadline: job.deadlineType === 'date' ? job.deadline : null,
+})

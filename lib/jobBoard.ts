@@ -6,6 +6,7 @@ import {
   deadlineState,
   fairEventsOf,
   type DeadlineState,
+  type DeadlineType,
   type FairEvent,
 } from '@/lib/jobs'
 import type { ISO8601String } from '@/domain/time'
@@ -16,7 +17,8 @@ export interface StoredJob {
   companyUID?: string
   jobType?: string
   location?: string
-  deadline?: string
+  deadline?: string | null
+  deadlineType?: DeadlineType
 }
 
 export interface JobRow {
@@ -28,7 +30,7 @@ export interface JobRow {
   jobType: string | null
   location: string
   places: string[]
-  deadline: string | undefined
+  deadline: string | null | undefined
   state: DeadlineState
   /** The company's next event at the fair before the deadline, where a student can meet them */
   nextEvent: FairEvent | null
@@ -46,7 +48,10 @@ export function placesOf(location: string | undefined): string[] {
     .filter(Boolean)
 }
 
-/** The jobs still open for applications, nearest deadline first and those without one last */
+/**
+ * The jobs still open for applications: "Snarest" first, then by date, then those open until
+ * filled
+ */
 export function jobRows(
   jobs: Record<string, StoredJob> | null | undefined,
   companies:
@@ -56,7 +61,10 @@ export function jobRows(
   events: Record<string, EventRow> | null | undefined,
   now: ISO8601String,
 ): JobRow[] {
-  const closes = (row: JobRow) => instantOf(deadlineOf(row.deadline)) ?? '9999'
+  const closes = (row: JobRow) =>
+    row.state.kind === 'asap'
+      ? '0000'
+      : (instantOf(deadlineOf(row.deadline ?? undefined)) ?? '9999')
   return Object.entries(jobs ?? {})
     .map(([uid, job]): JobRow => {
       const company = companies?.[job.companyUID ?? '']
@@ -70,7 +78,7 @@ export function jobRows(
         location: job.location ?? '',
         places: placesOf(job.location),
         deadline: job.deadline,
-        state: deadlineState(job.deadline, now),
+        state: deadlineState(job.deadline, now, job.deadlineType),
         // a meeting after the deadline is no stop on the way to applying
         nextEvent:
           fairEventsOf(job.companyUID, events, now).find(
@@ -93,7 +101,8 @@ export interface JobFilters {
 
 type Group = 'types' | 'companies' | 'places' | 'soon'
 
-const isSoon = (row: JobRow) => row.state.kind === 'open' && row.state.soon
+const isSoon = (row: JobRow) =>
+  row.state.kind === 'asap' || (row.state.kind === 'open' && row.state.soon)
 
 function matches(row: JobRow, filters: JobFilters, skip?: Group): boolean {
   const any = (chosen: string[], values: (string | null)[]) =>
