@@ -420,6 +420,23 @@
         "closed": "Påmeldingen er stengt"
       },
       "after_deadline": "Etter søknadsfristen"
+    },
+    "list": {
+      "title": "Jobber",
+      "search": "Søk etter stilling, bedrift eller sted",
+      "filters": "Filtre",
+      "type": "Type",
+      "company": "Bedrift",
+      "place": "Sted",
+      "deadline": "Frist",
+      "soon": "Innen {n} dager",
+      "reset": "Nullstill filtre",
+      "count": "Ingen stillinger | 1 stilling, nærmeste frist først | {n} stillinger, nærmeste frist først",
+      "no_match": "Ingen stillinger passer filtrene.",
+      "empty": "Det er ingen ledige stillinger akkurat nå.",
+      "rolling": "Løpende",
+      "meet": "Møt dem {day}",
+      "show": "Vis ingen stillinger | Vis 1 stilling | Vis {n} stillinger"
     }
   },
   "admin": {

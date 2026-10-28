@@ -422,6 +422,23 @@
         "closed": "Sign-up is closed"
       },
       "after_deadline": "After the deadline"
+    },
+    "list": {
+      "title": "Jobs",
+      "search": "Search by job, company or place",
+      "filters": "Filters",
+      "type": "Type",
+      "company": "Company",
+      "place": "Place",
+      "deadline": "Deadline",
+      "soon": "Within {n} days",
+      "reset": "Clear filters",
+      "count": "No jobs | 1 job, nearest deadline first | {n} jobs, nearest deadline first",
+      "no_match": "No jobs match the filters.",
+      "empty": "There are no open jobs right now.",
+      "rolling": "Rolling",
+      "meet": "Meet them {day}",
+      "show": "Show no jobs | Show 1 job | Show {n} jobs"
     }
   },
   "admin": {

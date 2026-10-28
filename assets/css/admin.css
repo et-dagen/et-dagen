@@ -132,10 +132,13 @@
   background: var(--background);
 }
 
-:where(.et-admin, .et-ui, [data-slot]),
-:where(.et-admin, .et-ui, [data-slot]) :where(*, ::before, ::after) {
-  box-sizing: border-box;
-  border: 0 solid var(--border);
+/* in a layer, so it loses to every utility; at equal specificity it hid divide-y's lines */
+@layer et-base {
+  :where(.et-admin, .et-ui, [data-slot]),
+  :where(.et-admin, .et-ui, [data-slot]) :where(*, ::before, ::after) {
+    box-sizing: border-box;
+    border: 0 solid var(--border);
+  }
 }
 
 :where(.et-admin *, .et-ui *, [data-slot], [data-slot] *):where(
