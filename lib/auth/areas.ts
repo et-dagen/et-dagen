@@ -7,9 +7,9 @@ export interface Asker {
     action: Permissions[R]['action'],
     data?: Permissions[R]['dataType'],
   ) => boolean
-  canForSome: (
-    resource: 'event' | 'job',
-    action: Permissions['event' | 'job']['action'],
+  canForSome: <R extends 'event' | 'job' | 'company'>(
+    resource: R,
+    action: Permissions[R]['action'],
   ) => boolean
 }
 
@@ -24,10 +24,14 @@ export const AREAS = {
   admin: (auth: Asker) => auth.can('user', 'list'),
   events: (auth: Asker) => auth.canForSome('event', 'update'),
   jobs: (auth: Asker) => auth.canForSome('job', 'update'),
+  profile: (auth: Asker) => auth.canForSome('company', 'update'),
+  resumes: (auth: Asker) => auth.can('resume', 'read', { scope: 'all' }),
   company: (auth: Asker) =>
     AREAS.events(auth) ||
     AREAS.jobs(auth) ||
-    auth.can('resume', 'read', { scope: 'all' }),
+    AREAS.profile(auth) ||
+    auth.canForSome('event', 'list') ||
+    AREAS.resumes(auth),
 }
 
 export type Area = keyof typeof AREAS

@@ -142,7 +142,11 @@ describe('GET /api/v1/company/events', () => {
     expect(Object.keys(response.body as object)).toEqual(['talk'])
   })
 
-  it('lists only companies the caller manages events for', async () => {
+  it("lists a sponsor's events to its contact, and no other company's", async () => {
+    // allowed; the sponsor hosts no events yet
+    const sponsor = await contactFor('initech')
+    expect((await list(sponsor.token, 'initech')).status).toBe(204)
+
     const { token } = await contactFor('acme')
 
     for (const response of [await list(token, 'globex'), await list(token)]) {

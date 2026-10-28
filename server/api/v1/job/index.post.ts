@@ -12,7 +12,7 @@ defineRouteMeta({
     tags: ['Job'],
     summary: 'Create new job listing',
     description:
-      'Admin, or a company user creating a listing for their own company.',
+      'Admin, any coordinator, or a company user creating a listing for their own company.',
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],
     // TODO(api-docs): fill in the request/response schemas below.
     // Shapes are sketched from current handler behaviour - verify each

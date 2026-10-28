@@ -73,7 +73,7 @@ export const ADMIN_PANELS: readonly Panel[] = [
   },
 ]
 
-/** What a company user manages: its events, its jobs when it may, and students' résumés */
+/** What a company user or coordinator manages: events, jobs, the profile and résumés, as allowed */
 export const COMPANY_PANELS: readonly Panel[] = [
   {
     name: 'company-events',
@@ -98,6 +98,7 @@ export const COMPANY_PANELS: readonly Panel[] = [
     label: 'company.admin.resumes.name',
     icon: FileText,
     count: null,
+    area: 'resumes',
   },
 ]
 

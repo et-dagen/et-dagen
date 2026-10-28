@@ -24,6 +24,17 @@ const contactFor = (companyUID: string) =>
 const admin = () => createUser({ userType: 'admin' })
 const student = () =>
   createUser({ userType: 'student', studyProgram: 'MTEL', currentYear: 3 })
+// a student who volunteers for E&T-dagene with a company
+const coordinatorFor = async (companyUID: string) => {
+  const user = await student()
+  const given = { createdBy: 'test' }
+  await seed(`roles/${user.uid}`, { coordinator: given })
+  await seed(`memberships/${user.uid}/${companyUID}`, {
+    kind: 'coordinator',
+    ...given,
+  })
+  return user
+}
 
 beforeEach(async () => {
   await resetEmulators()
@@ -42,16 +53,19 @@ describe('POST /api/v1/event', () => {
   const create = (companyUID: string, token?: string) =>
     api('/api/v1/event', { method: 'POST', body: fields(companyUID), token })
 
-  it("creates an event for the contact's own company", async () => {
-    const { token } = await contactFor('acme')
-
-    expect((await create('acme', token)).status).toBe(201)
+  it("creates an event for a coordinator's company, whatever its tier", async () => {
+    expect(
+      (await create('acme', (await coordinatorFor('acme')).token)).status,
+    ).toBe(201)
+    expect(
+      (await create('initech', (await coordinatorFor('initech')).token)).status,
+    ).toBe(201)
   })
 
-  it('refuses another company, a sponsor and a student', async () => {
+  it("refuses a company's own contact, another company and a student", async () => {
     const refusals = [
-      await create('globex', (await contactFor('acme')).token),
-      await create('initech', (await contactFor('initech')).token),
+      await create('acme', (await contactFor('acme')).token),
+      await create('globex', (await coordinatorFor('acme')).token),
       await create('acme', (await student()).token),
     ]
 
@@ -83,16 +97,28 @@ describe('PUT and DELETE /api/v1/event', () => {
       token,
     })
 
-  it("changes and removes the contact's own company's event", async () => {
-    const { token } = await contactFor('acme')
+  it("changes and removes a coordinator's company's event", async () => {
+    const { token } = await coordinatorFor('acme')
 
     expect((await update('talk', 'acme', token)).status).toBe(204)
     expect(await read('events/talk/title')).toBe('Changed')
     expect((await remove('talk', 'acme', token)).status).toBe(204)
   })
 
-  it('goes by the stored owner, not the company the body names', async () => {
+  it("leaves a company's events to E&T-dagene", async () => {
     const { token } = await contactFor('acme')
+
+    for (const response of [
+      await update('talk', 'acme', token),
+      await remove('talk', 'acme', token),
+    ]) {
+      expect(response.status).toBe(403)
+    }
+    expect(await read('events/talk/title')).toBe('Talk')
+  })
+
+  it('goes by the stored owner, not the company the body names', async () => {
+    const { token } = await coordinatorFor('acme')
 
     for (const response of [
       await update('dinner', 'acme', token),
@@ -104,8 +130,8 @@ describe('PUT and DELETE /api/v1/event', () => {
     expect(await read('events/dinner/title')).toBe('Talk')
   })
 
-  it('answers 404 to a contact for an event that does not exist', async () => {
-    const { token } = await contactFor('acme')
+  it('answers 404 to a coordinator for an event that does not exist', async () => {
+    const { token } = await coordinatorFor('acme')
 
     expect((await update('missing', 'acme', token)).status).toBe(404)
     expect(await read('events/missing')).toBeNull()

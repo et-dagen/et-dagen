@@ -32,11 +32,14 @@ beforeEach(async () => {
 })
 
 describe('route guards', () => {
-  it("open the company pages to a partner's contact", async () => {
+  it("open the company pages to a partner's contact, but not event editing", async () => {
     const { token } = await contactFor('acme')
 
     expect((await page('/company/admin', token)).status).toBe(200)
     expect((await page('/company/admin/jobs', token)).status).toBe(200)
+    expect((await page('/company/admin/events/new', token)).location).toBe(
+      '/user',
+    )
   })
 
   it('list the events of every company a coordinator manages', async () => {
@@ -69,19 +72,23 @@ describe('route guards', () => {
     expect(html).not.toContain('Initech fair')
   })
 
-  it('send a sponsor and a student to their profile', async () => {
-    const sponsor = await contactFor('initech')
+  it("open a sponsor's contact its events, but not the jobs", async () => {
+    const { token } = await contactFor('initech')
+
+    expect((await page('/company/admin', token)).status).toBe(200)
+    expect((await page('/company/admin/jobs', token)).location).toBe('/user')
+  })
+
+  it('send a student to their profile', async () => {
     const student = await createUser({
       userType: 'basic',
       studyProgram: 'MTEL',
       currentYear: 3,
     })
 
-    for (const token of [sponsor.token, student.token]) {
-      const response = await page('/company/admin', token)
-      expect(response.status).toBe(302)
-      expect(response.location).toBe('/user')
-    }
+    const response = await page('/company/admin', student.token)
+    expect(response.status).toBe(302)
+    expect(response.location).toBe('/user')
   })
 
   it('keep the admin panel to admins', async () => {
