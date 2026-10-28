@@ -286,6 +286,14 @@
         "empty": "Ingen CV-er passer søket.",
         "no_access_title": "Ingen tilgang til CV-er",
         "no_access": "Bedriften deres har ikke tilgang til studentenes CV-er. Ta kontakt med E&T-dagene hvis dere mener dette er feil."
+      },
+      "profile": {
+        "name": "Bedriftsprofil",
+        "lead": "Slik vises bedriften for studentene på nettsiden.",
+        "company": "Bedrift",
+        "save": "Lagre profilen",
+        "saved": "Profilen er lagret",
+        "none": "Du har ingen bedrift å redigere."
       }
     }
   },

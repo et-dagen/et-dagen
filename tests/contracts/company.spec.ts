@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { CompanyInput, toV1Company } from '@/contracts/company'
+import { CompanyInput, CompanyProfile, toV1Company } from '@/contracts/company'
 
 const valid = {
   name: 'Polarbit AS',
@@ -48,6 +48,23 @@ describe('toV1Company', () => {
         tier: 'mainPartner',
         overrides: { 'ent:resume:view': true },
       },
+    })
+  })
+})
+
+describe('CompanyProfile', () => {
+  it('keeps only what a company may change itself, never its contract', () => {
+    expect(
+      CompanyProfile.parse({
+        name: ' Acme ',
+        webpage: 'https://acme.example',
+        tier: 'mainPartner',
+        resumeAccess: true,
+      }),
+    ).toEqual({
+      name: 'Acme',
+      webpage: 'https://acme.example',
+      description: '',
     })
   })
 })
