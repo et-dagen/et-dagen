@@ -1,15 +1,13 @@
 <template>
   <div class="main">
-    <!-- navigation menu -->
-    <NavVertical />
-    <NavHorizontal />
+    <SiteHeader />
 
     <!-- main content -->
-    <VMain style="min-height: 100vh">
+    <VMain id="main" style="min-height: 100vh">
       <slot />
     </VMain>
 
-    <Footer />
+    <SiteFooter />
   </div>
 </template>
 

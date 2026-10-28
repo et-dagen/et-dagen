@@ -4,7 +4,7 @@
     "programme": "Program",
     "jobs": "Jobber",
     "contact": "Kontakt",
-    "faq": "For bedrifter",
+    "for-companies": "For bedrifter",
     "admin": "Admin",
     "user": "Min profil",
     "program_nav": "SE PROGRAM",
@@ -63,12 +63,51 @@
     },
     "delete": {
       "title": "Slett brukeren min",
-      "description": "Sletter brukeren din og alt vi har lagret om deg: profilen, CV-en og påmeldingene dine til arrangementer. Dette kan ikke angres.",
+      "description": "Sletter brukeren, CV-en og påmeldingene dine. Dette kan ikke angres.",
       "dialog_title": "Vil du slette brukeren din?",
       "dialog_text": "Profilen, CV-en og påmeldingene dine slettes med en gang, og du blir logget ut. Dette kan ikke angres.",
       "confirm_label": "Skriv inn e-postadressen din for å bekrefte",
       "confirm": "Slett brukeren",
       "abort": "Avbryt"
+    },
+    "page": {
+      "hello": "Hei, {name}",
+      "events": "Mine arrangementer",
+      "information": "Min informasjon",
+      "sign_ups": "Påmeldinger",
+      "profile": "Profil og studie",
+      "allergies": "Allergier og kosthold",
+      "programme": "Se programmet",
+      "qr": "QR-kode for innsjekking",
+      "show_code": "Vis koden ved døren",
+      "attending": "Du har plass",
+      "queued": "Venteliste, plass {n}",
+      "withdraw": "Meld meg av",
+      "withdraw_title": "Melde deg av {title}?",
+      "withdraw_place": "Plassen din går til den første på ventelisten.",
+      "withdraw_queue": "Du mister plassen din på ventelisten.",
+      "keep": "Behold",
+      "withdrawn": "Du er meldt av {title}",
+      "no_ticket": "Du har ingen billett ennå",
+      "no_ticket_hint": "Når du får plass på et arrangement, ligger billetten her.",
+      "no_sign_ups": "Du er ikke påmeldt noe ennå.",
+      "edit": "Rediger",
+      "year": "{n}. år",
+      "upload": "Last opp",
+      "replace": "Bytt",
+      "remove": "Slett",
+      "no_resume": "Ingen CV lastet opp. Bedriftene ser CV-en din når du laster den opp.",
+      "no_allergies": "Ingen allergier registrert.",
+      "load_failed": "Vi fikk ikke hentet påmeldingene dine",
+      "load_failed_hint": "Billetten og påmeldingene vises når de er hentet.",
+      "retry": "Prøv igjen",
+      "resume_delete_title": "Slette CV-en?",
+      "resume_delete_text": "Bedriftene kan ikke lenger se CV-en din. Du kan laste opp en ny når som helst.",
+      "resume_delete": "Slett CV",
+      "resume_uploading": "Laster opp …",
+      "resume_uploaded": "CV-en er lastet opp",
+      "resume_deleted": "CV-en er slettet",
+      "cancel": "Avbryt"
     },
     "profile": {
       "title": "Rediger profilen",
@@ -380,7 +419,26 @@
         "full": "Fullt, venteliste",
         "closed": "Påmeldingen er stengt"
       },
-      "after_deadline": "Etter søknadsfristen"
+      "after_deadline": "Etter søknadsfristen",
+      "asap": "Snarest",
+      "rolling": "Løpende"
+    },
+    "list": {
+      "title": "Jobber",
+      "search": "Søk etter stilling, bedrift eller sted",
+      "filters": "Filtre",
+      "type": "Type",
+      "company": "Bedrift",
+      "place": "Sted",
+      "deadline": "Frist",
+      "soon": "Innen {n} dager",
+      "reset": "Nullstill filtre",
+      "count": "Ingen stillinger | 1 stilling, nærmeste frist først | {n} stillinger, nærmeste frist først",
+      "no_match": "Ingen stillinger passer filtrene.",
+      "empty": "Det er ingen ledige stillinger akkurat nå.",
+      "rolling": "Løpende",
+      "meet": "Møt dem {day}",
+      "show": "Vis ingen stillinger | Vis 1 stilling | Vis {n} stillinger"
     }
   },
   "admin": {
@@ -548,7 +606,9 @@
       "deadline": {
         "today": "Siste dag i dag",
         "left": "{n} dag igjen | {n} dager igjen",
-        "passed": "Utløpt"
+        "passed": "Utløpt",
+        "asap": "Snarest",
+        "rolling": "Løpende"
       },
       "actions": {
         "menu": "Valg for {title}",
@@ -605,7 +665,14 @@
         "link_text": "Lenke til søknaden",
         "link_link": "Lenke til annonsen",
         "summary": "Kort oppsummering (valgfritt)",
-        "summary_hint": "Én eller to setninger, høyst 300 tegn. Vises over knappen til annonsen."
+        "summary_hint": "Én eller to setninger, høyst 300 tegn. Vises over knappen til annonsen.",
+        "deadline_date": "Dato",
+        "deadline_type": {
+          "date": "På en dato",
+          "asap": "Snarest",
+          "rolling": "Løpende"
+        },
+        "rolling_hint": "Søknader behandles fortløpende til stillingen er besatt."
       }
     },
     "users": {
@@ -894,19 +961,6 @@
       }
     }
   },
-  "footer": {
-    "header": {
-      "resources": "Ressurser",
-      "organisation": "Organisasjon",
-      "some": "Følg oss",
-      "join": "Vil dere delta?"
-    },
-    "link": {
-      "contact": "Kontakt oss",
-      "program": "Program",
-      "jobs": "Jobber"
-    }
-  },
   "dietary_restrictions": {
     "name": "Allergener og restriksjoner",
     "gluten": "Gluten",
@@ -952,31 +1006,108 @@
     "redo": "Redo"
   },
   "forcompanies": {
-    "about": {
-      "heading": "Om E&T-dagene",
-      "p1": "Elektronikk- og Teknologi-dagene er en bedriftsdag som arrangeres årlig av studenter på Elektronisk Systemdesign og Innivasjon ved NTNU. ELSYS er et studie som kombinerer bl.a. elektronikk, kretsdesign, fysikk og signalbehandling gjennom praktisk og prosjektrettet arbeid allerede tidlig i studiet.",
-      "p2": "Som bedrift på E&T-dagene vil du få en unik mulighet til å møte motiverte og ivrige sivilingeniørstudenter med et bredt spekter av kompetanse. ELSYS har retninger innen signalbehandling, maskinlæring, akustikk, radiosystemer, både analogt og digitalt systemdesign, romsystemer og kvanteteknologi.",
-      "p3": "E&T-dagene promoteres godt i forkant, og lokalet er glassgården (EL-bygget på NTNU Gløshaugen), som ligger tilknyttet et av de tre største auditoriene på Gløshaugen, samt flere forelesnings- og lesesaler. Glassgården er derfor et av områdene på campus med størst gjennomfart, og her vil dere møte studenter fra bl.a. ELSYS, Kybernetikk, og Energi og miljø. ",
-      "contactus": "Har du spørsmål, eller ønsker å delta, kontakt oss på:"
+    "title": "For bedrifter",
+    "heading": "Møt studentene på Elektronisk systemdesign og innovasjon",
+    "lead": "E&T-dagene er en årlig karrieredag på NTNU Gløshaugen, arrangert av studenter på Elektronisk systemdesign og innovasjon (ELSYS).",
+    "signup": {
+      "title": "Påmelding og priser",
+      "text": "Send en e-post, så får dere informasjon om påmelding og priser.",
+      "button": "Meld på bedriften",
+      "copy": "Kopier adressen",
+      "copied": "Adressen er kopiert"
     },
-    "faq": {
-      "heading": "Ofte stilte spørsmål",
-      "questions": {
-        "q1": "Hva vi tilbyr",
-        "q2": "Hvordan kan jeg melde på min bedrift?",
-        "q3": "Hva hjelper E&T-dagene meg med å arrangere?",
-        "q4": "Standtips",
-        "q5": "Hvordan kommer vi oss til lokalene?",
-        "q6": "Bestilling av ekstra utstyr"
+    "index": {
+      "label": "På denne siden",
+      "day": "Dagen",
+      "audience": "Hvem dere møter",
+      "practical": "Praktisk",
+      "tips": "Tips til standen"
+    },
+    "day": {
+      "heading": "Dagen deres på E&T-dagene",
+      "arrival": {
+        "title": "Ankomst",
+        "text": "Nærmeste sted å stoppe med bil er sørsiden av Frimerket, gressplenen rett bak Hovedbygget."
       },
-      "answers": {
-        "a1": "-CV-database: En nettbasert tjeneste som hjelper sivilingeniør-studenter og bedrifter med å komme i kontakt med hverandre. Studenter kan enkelt registrere CV og søknad hos dere, og dere kan lyse ut ledige stillinger. Alle bedrifter som deltar på E&T-dagene har ett års tilgang til CV-databasen. -Intervjurom: Vi stiller med egne rom til intervjuer under E&T-dagene, og dagen etterpå. -Bedriftspresentasjon: En mulighet til å informere og vekke interesse hos studentene. Vi stiller med auditorium og promotering i forkant. -Speedbedpress: En rekke korte bedriftspresentasjoner der de deltagende bedriftene informerer om seg selv og sommerjobbene de utlyser. -Kontaktperson: Vi stiller med en egen kontaktperson til hver bedrift, som er tilgjengelig under hele programmet. -Mat og Drikke: Vi stiller med mat og drikke til bedriftene, samt et oppholdsrom. ",
-        "a2": "Kontakt oss direkte på bedriftansvarlig{'@'}et-dagen.no for informasjon om påmelding og priser!",
-        "a3": "Vi hjelper dere med å ordne stand, og med å arrangere bedriftspresentasjon og intervjuer/speedintervjuer.",
-        "a4": "1 Vær engasjert og kontaktsøkende. Et åpent kroppsspråk og ekte interesse gjør det lettere for studenter å ta kontakt. Still spørsmål, lytt aktivt og inviter til dialog. Det skaper gode samtaler og et positivt førsteinntrykk. 2 Stillingsannonser/Rekruttering. Mange av studentene er på jakt etter sommerjobb, internship eller fast stilling. Karrieredager gir en unik mulighet til å møte potensielle søkere ansikt til ansikt og vise hva dere ser etter i kandidater. Har dere stillingsannonser ute? Gjør dem enkle å finne! Tydelige QR-koder på stand senker friksjonen og gjør det lettere å søke i etterkant. En synlig og ryddig søknadsvei gjør også standen mer attraktiv å besøke. 3 Ta plass! Studenter tiltrekkes av stands som synes og høres. Sørg for at standen ikke føles lukket! Åpne flater inviterer til samtale. Jo mer tilgjengelig og levende standen oppleves, desto flere stopper opp. 4 Gjør standen minneverdig. En liten giveaway, en god samtale eller en morsom aktivitet kan være det som gjør at studentene husker nettopp dere etter at dagene er over. 5 Følg opp i etterkant. Om dere møter spesielt interesserte studenter, oppmuntre til videre kontakt. Det lille ekstra steget kan gi store rekrutteringsgevinster.",
-        "a5": "Nærmeste ankomst med bil er på sørsiden av frimerket; gressplenen rett bak Hovedbygget.",
-        "a6": "Utover det som er inkludert i kontrakten kan det bestilles ekstrautstyr som for eksempel ekstra bord, ståbord, kaffe eller TV-skjermer. Kontakt oss på bedriftansvarlig{'@'}et-dagen.no."
+      "stand": {
+        "title": "Standen",
+        "text": "I Glassgården i EL-bygget. Vi hjelper dere med å ordne den."
+      },
+      "presentation": {
+        "title": "Bedrifts­presentasjon",
+        "text": "Vi skaffer auditorium og promoterer presentasjonen i forkant."
+      },
+      "speed": {
+        "title": "Speedbedpress",
+        "text": "Korte presentasjoner etter hverandre, om dere og sommerjobbene dere lyser ut."
+      },
+      "interviews": {
+        "title": "Intervjuer",
+        "text": "Egne rom til intervjuer under dagene og dagen etter."
+      },
+      "after": {
+        "title": "Etterpå",
+        "text": "Ett års tilgang til CV-ene studentene legger ut."
+      },
+      "allday": {
+        "label": "Hele dagen",
+        "contact": "Egen kontaktperson",
+        "food": "Mat og drikke til alle fra bedriften",
+        "room": "Eget oppholdsrom"
       }
+    },
+    "audience": {
+      "heading": "Hvem dere møter",
+      "intro": "ELSYS kombinerer elektronikk, kretsdesign, fysikk og signalbehandling, med praktiske prosjekter fra første år.",
+      "fields": "Studentene velger en hovedprofil",
+      "field": {
+        "acoustics": "Akustikk for kommunikasjon, miljø og fjernmåling",
+        "analog": "Analog kretsdesign og radioteknikk",
+        "digital": "Design av digitale og innvevde systemer",
+        "quantum": "Kvanteteknologi og fotonikk",
+        "signal": "Signalbehandling og maskinlæring",
+        "space": "Romsystemer"
+      },
+      "venue": "Messen holdes i Glassgården i EL-bygget. Glassgården ligger ved et av de tre største auditoriene på Gløshaugen og flere lese- og forelesningssaler, så mange studenter går forbi. Dere møter også studenter fra blant annet kybernetikk og energi og miljø.",
+      "promoted": "Vi promoterer dagene til studentene i forkant."
+    },
+    "practical": {
+      "heading": "Praktisk",
+      "help": {
+        "q": "Hva hjelper dere oss med?",
+        "a": "Vi hjelper dere med standen, bedriftspresentasjonen og intervjuer eller speedintervjuer."
+      },
+      "equipment": {
+        "q": "Ekstra utstyr",
+        "a": "Ut over det som står i kontrakten, kan dere bestille ekstra utstyr, for eksempel bord, ståbord, kaffe eller TV-skjermer. Send en e-post til bedriftansvarlig{'@'}et-dagen.no."
+      }
+    },
+    "tips": {
+      "heading": "Tips til standen",
+      "talk": {
+        "title": "Vær lett å snakke med",
+        "text": "Åpent kroppsspråk og ekte interesse gjør det lettere for studentene å ta kontakt. Still spørsmål og lytt."
+      },
+      "jobs": {
+        "title": "Gjør stillingene lette å finne",
+        "text": "Mange studenter leter etter sommerjobb, internship eller fast jobb. En tydelig QR-kode til stillingsannonsene gjør det lett å søke etterpå."
+      },
+      "space": {
+        "title": "Ta plass",
+        "text": "Studentene stopper ved stands som synes og høres. Hold standen åpen, så den inviterer til samtale."
+      },
+      "remembered": {
+        "title": "Bli husket",
+        "text": "En liten giveaway, en god samtale eller en morsom aktivitet gjør at studentene husker dere etter dagene."
+      },
+      "follow": {
+        "title": "Følg opp",
+        "text": "Møter dere studenter som er spesielt interessert, be dem ta kontakt igjen."
+      }
+    },
+    "closing": {
+      "heading": "Spørsmål, eller klare til å være med?",
+      "text": "Bedriftansvarlig svarer på alt om påmelding, priser og utstyr."
     }
   },
   "errors": {
@@ -1005,7 +1136,8 @@
     },
     "job": {
       "invalid-listing": "En stilling vises enten som beskrivelse eller som lenke.",
-      "invalid-link": "Søknadslenken må være en nettadresse som starter med http:// eller https://."
+      "invalid-link": "Søknadslenken må være en nettadresse som starter med http:// eller https://.",
+      "invalid-deadline-type": "Fristen må være en dato, «Snarest» eller «Løpende»."
     },
     "file": {
       "unsupported-type": "Filen har et format som ikke er tillatt her.",
@@ -1061,6 +1193,46 @@
       "remove": "Fjern {option}",
       "matches": "Treff",
       "none": "Ingen treff"
+    }
+  },
+  "site": {
+    "skip": "Hopp til innholdet",
+    "next": {
+      "now": "Nå",
+      "next": "Neste",
+      "mine": "Ditt neste"
+    },
+    "language": {
+      "label": "Språk",
+      "current": "Språk: {name}. Velg språk"
+    },
+    "menu": {
+      "open": "Åpne menyen",
+      "close": "Lukk menyen",
+      "label": "Meny",
+      "pages": "Sider"
+    },
+    "account": {
+      "open": "Kontomeny for {name}",
+      "profile": "Min profil",
+      "company": "Bedriftsside",
+      "admin": "Admin"
+    },
+    "footer": {
+      "place": "Elbygget, Gløshaugen",
+      "fair": "Messa holdes i Glassgården i Elbygget.",
+      "map_open": "Åpne kartet over Glassgården i MazeMap",
+      "directions": "Veibeskrivelse",
+      "links": "Bunntekst",
+      "resources": "Ressurser",
+      "organisation": "Organisasjon",
+      "follow": "Følg oss",
+      "contact": "Kontakt oss",
+      "external": "(åpnes i ny fane)",
+      "join": "Vil dere delta?",
+      "copy": "Kopier {email}",
+      "copied": "{email} er kopiert",
+      "org": "Org.nr."
     }
   },
   "programme": {
