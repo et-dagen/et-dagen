@@ -163,6 +163,10 @@
     "page_not_found": {
       "page_doesnt_exist": "Denne siden finnes ikke",
       "navigate_front_page": "Tilbake til forsiden"
+    },
+    "page_error": {
+      "title": "Noe gikk galt",
+      "status": "Feil {code}"
     }
   },
   "datetime": {

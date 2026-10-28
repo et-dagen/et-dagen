@@ -163,6 +163,10 @@
     "page_not_found": {
       "page_doesnt_exist": "This page doesn't exist",
       "navigate_front_page": "Back to front page"
+    },
+    "page_error": {
+      "title": "Something went wrong",
+      "status": "Error {code}"
     }
   },
   "datetime": {

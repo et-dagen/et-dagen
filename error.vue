@@ -1,9 +1,12 @@
 <script setup lang="ts">
-  const props = defineProps({
-    error: Object(),
-  })
+  import type { NuxtError } from '#app'
+  import { Button } from '@/components/ui/button'
+
+  const props = defineProps<{ error: NuxtError }>()
 
   const localePath = useLocalePath()
+  const { t } = useI18n()
+  useHead({ title: () => t('error.page_error.title') })
 
   const handleError = () =>
     clearError({
@@ -12,21 +15,25 @@
 </script>
 
 <template>
-  <div class="d-flex h-screen justify-center">
-    <VSheet class="text-center mt-10">
-      <h1 class="text-orange text-h1 font-weight-bold pb-3">Oh no!</h1>
-      <h4 class="text-h4 pb-1">Error {{ props.error.statusCode }}</h4>
-      <h5 class="text-h5 pb-2 break-text">
+  <div class="et-ui tw:min-h-screen">
+    <div
+      class="tw:mx-auto tw:flex tw:max-w-6xl tw:flex-col tw:items-start tw:gap-4 tw:px-4 tw:py-16 tw:lg:px-8"
+    >
+      <p class="tw:text-sm tw:font-bold tw:text-brand tw:tabular-nums">
+        {{ $t('error.page_error.status', { code: props.error.statusCode }) }}
+      </p>
+      <h1 class="tw:text-2xl tw:font-bold">
+        {{ $t('error.page_error.title') }}
+      </h1>
+      <p
+        v-if="props.error.message"
+        class="tw:break-words tw:text-muted-foreground"
+      >
         {{ props.error.message }}
-      </h5>
-      <VBtn @click="handleError">Return to frontpage</VBtn>
-    </VSheet>
+      </p>
+      <Button variant="outline" @click="handleError">
+        {{ $t('error.page_not_found.navigate_front_page') }}
+      </Button>
+    </div>
   </div>
 </template>
-
-<style scoped>
-  .break-text {
-    max-width: 90vw;
-    word-wrap: break-word;
-  }
-</style>
