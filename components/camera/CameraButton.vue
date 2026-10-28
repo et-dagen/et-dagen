@@ -1,7 +1,15 @@
 <template>
   <button
+    type="button"
     class="camera-btn"
     :class="{ 'camera-btn--on': props.isStarting || props.isRunning }"
+    :aria-label="
+      $t(
+        props.isStarting || props.isRunning
+          ? 'admin.attendees.scanner.stop'
+          : 'admin.attendees.scanner.start',
+      )
+    "
     @click="$emit('toggle')"
   >
     <span class="camera-inner"></span>
@@ -36,14 +44,14 @@
     position: absolute;
     inset: -4px;
     border-radius: 50%;
-    border: 3px solid #e53935;
+    border: 3px solid var(--brand);
   }
 
   .camera-inner {
     position: absolute;
     inset: 0;
     border-radius: 50%;
-    background: #e53935;
+    background: var(--brand);
     transition:
       border-radius 0.5s ease,
       scale 0.5s ease;

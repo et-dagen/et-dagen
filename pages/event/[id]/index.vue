@@ -10,6 +10,7 @@
   import CompanyLogo from '@/components/admin/CompanyLogo.vue'
   import DeadlineNote from '@/components/job/DeadlineNote.vue'
   import SignupPanel from '@/components/event/page/SignupPanel.vue'
+  import { Button } from '@/components/ui/button'
   import { Instant } from '@/domain/time'
   import { placeOf } from '@/lib/admin/events'
   import { formatWhen } from '@/lib/admin/time'
@@ -456,12 +457,11 @@
       class="tw:mx-auto tw:flex tw:max-w-6xl tw:flex-col tw:items-start tw:gap-4 tw:px-4 tw:py-16 tw:lg:px-8"
     >
       <h1 class="tw:text-2xl tw:font-bold">{{ $t('events.page.missing') }}</h1>
-      <NuxtLink
-        :to="localePath('/programme')"
-        class="tw:font-semibold tw:underline"
-      >
-        {{ $t('events.page.back') }}
-      </NuxtLink>
+      <Button as-child variant="outline">
+        <NuxtLink :to="localePath('/programme')">{{
+          $t('events.page.back')
+        }}</NuxtLink>
+      </Button>
     </div>
   </div>
 </template>

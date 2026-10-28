@@ -7,9 +7,7 @@
 
 <template>
   <div class="et-ui tw:bg-background tw:text-foreground">
-    <div
-      class="tw:mx-auto tw:max-w-screen-xl tw:px-4 tw:py-10 tw:lg:px-8 tw:lg:py-14"
-    >
+    <div class="tw:mx-auto tw:max-w-6xl tw:px-4 tw:py-8 tw:lg:px-8 tw:lg:py-12">
       <UserProfileForm />
     </div>
   </div>

@@ -807,6 +807,14 @@
       "attended": "Møtt",
       "waiting": "I kø",
       "scan": "Skann oppmøte",
+      "scanner": {
+        "start": "Start kameraet",
+        "stop": "Stopp kameraet",
+        "registered": "Oppmøte registrert",
+        "not_attendant": "Personen er ikke påmeldt arrangementet",
+        "failed": "Kunne ikke registrere oppmøtet",
+        "camera_error": "Kunne ikke starte kameraet: {error}"
+      },
       "add": "Meld på en person",
       "add_search": "Søk etter navn eller e-post",
       "add_hint": "Er arrangementet fullt, havner personen i køen.",

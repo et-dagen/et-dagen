@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import PageTitle from '@/components/common/PageTitle.vue'
   import BoardGrid from '@/components/contact/BoardGrid.vue'
   import TopicPicker from '@/components/contact/TopicPicker.vue'
   import type { ListedMember } from '@/contracts/board'
@@ -18,11 +19,7 @@
     <div
       class="tw:mx-auto tw:flex tw:max-w-6xl tw:flex-col tw:gap-10 tw:px-4 tw:py-8 tw:lg:px-8 tw:lg:py-12"
     >
-      <h1
-        class="tw:text-3xl tw:font-extrabold tw:tracking-tight tw:lg:text-[2.5rem]"
-      >
-        {{ $t('contact.title') }}
-      </h1>
+      <PageTitle>{{ $t('contact.title') }}</PageTitle>
       <TopicPicker v-model:selected="topic" :board="board ?? []" />
       <BoardGrid v-if="board?.length" :board="board" :answering="answering" />
 

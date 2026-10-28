@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { ArrowLeft, Save } from '@lucide/vue'
   import FieldError from '@/components/admin/form/FieldError.vue'
+  import PageTitle from '@/components/common/PageTitle.vue'
   import { Button } from '@/components/ui/button'
   import {
     FormControl,
@@ -107,9 +108,7 @@
       <ArrowLeft class="tw:size-4" aria-hidden="true" />
       {{ $t('user.profile.back') }}
     </NuxtLink>
-    <h1 class="tw:text-4xl tw:font-black tw:tracking-tight">
-      {{ $t('user.profile.title') }}
-    </h1>
+    <PageTitle>{{ $t('user.profile.title') }}</PageTitle>
 
     <section
       class="tw:grid tw:gap-5 tw:rounded-lg tw:border tw:bg-card tw:p-5 tw:lg:grid-cols-2 tw:lg:p-6"

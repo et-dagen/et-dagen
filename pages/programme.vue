@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import PageTitle from '@/components/common/PageTitle.vue'
   import DayRibbon from '@/components/programme/DayRibbon.vue'
   import DaySection from '@/components/programme/DaySection.vue'
   import NowNext from '@/components/programme/NowNext.vue'
@@ -92,13 +93,9 @@
 <template>
   <div class="et-ui">
     <div
-      class="tw:mx-auto tw:flex tw:max-w-5xl tw:flex-col tw:gap-6 tw:px-4 tw:py-8 tw:lg:px-8 tw:lg:py-12"
+      class="tw:mx-auto tw:flex tw:max-w-6xl tw:flex-col tw:gap-6 tw:px-4 tw:py-8 tw:lg:px-8 tw:lg:py-12"
     >
-      <h1
-        class="tw:text-3xl tw:font-extrabold tw:tracking-tight tw:lg:text-[2.5rem]"
-      >
-        {{ $t('programme.title') }}
-      </h1>
+      <PageTitle>{{ $t('programme.title') }}</PageTitle>
       <!-- now and next depend on the clock, so the band draws in the browser -->
       <ClientOnly>
         <NowNext :now="band.now" :next="band.next" />

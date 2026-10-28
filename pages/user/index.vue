@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { CalendarDays, RotateCw } from '@lucide/vue'
+  import PageTitle from '@/components/common/PageTitle.vue'
   import { Instant } from '@/domain/time'
   import type { EventRow } from '@/lib/admin/events'
   import {
@@ -45,12 +46,10 @@
 
 <template>
   <div class="et-ui tw:bg-background tw:text-foreground">
-    <div
-      class="tw:mx-auto tw:max-w-screen-xl tw:px-4 tw:py-10 tw:lg:px-8 tw:lg:py-14"
-    >
-      <h1 class="tw:text-4xl tw:font-black tw:tracking-tight tw:lg:text-5xl">
+    <div class="tw:mx-auto tw:max-w-6xl tw:px-4 tw:py-8 tw:lg:px-8 tw:lg:py-12">
+      <PageTitle>
         {{ $t('user.page.hello', { name: firstNameOf(auth.user?.name) }) }}
-      </h1>
+      </PageTitle>
 
       <!-- events on the left, the user's own information on the right; a phone stacks them ticket first -->
       <div

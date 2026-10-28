@@ -808,6 +808,14 @@
       "attended": "Attended",
       "waiting": "Waiting",
       "scan": "Scan attendance",
+      "scanner": {
+        "start": "Start camera",
+        "stop": "Stop camera",
+        "registered": "Attendance registered",
+        "not_attendant": "This person is not signed up for the event",
+        "failed": "Could not register attendance",
+        "camera_error": "Could not start the camera: {error}"
+      },
       "add": "Sign someone up",
       "add_search": "Search by name or email",
       "add_hint": "If the event is full, the person joins the queue.",

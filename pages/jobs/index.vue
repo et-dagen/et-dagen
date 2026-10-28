@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { ChevronDown, SlidersHorizontal, X } from '@lucide/vue'
   import SearchField from '@/components/admin/SearchField.vue'
+  import PageTitle from '@/components/common/PageTitle.vue'
   import FilterGroup from '@/components/job/FilterGroup.vue'
   import JobRowItem from '@/components/job/JobRow.vue'
   import { Button } from '@/components/ui/button'
@@ -122,11 +123,7 @@
       <aside
         class="tw:flex tw:flex-col tw:gap-5 tw:lg:sticky tw:lg:top-24 tw:lg:self-start"
       >
-        <h1
-          class="tw:text-3xl tw:leading-tight tw:font-extrabold tw:tracking-tight tw:lg:text-[2.5rem]"
-        >
-          {{ $t('jobs.list.title') }}
-        </h1>
+        <PageTitle>{{ $t('jobs.list.title') }}</PageTitle>
         <SearchField
           v-model="filters.query"
           :label="$t('jobs.list.search')"
