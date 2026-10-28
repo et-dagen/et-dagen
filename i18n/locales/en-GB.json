@@ -1078,5 +1078,29 @@
       "matches": "Matches",
       "none": "No matches"
     }
+  },
+  "site": {
+    "skip": "Skip to content",
+    "next": {
+      "now": "Now",
+      "next": "Next",
+      "mine": "Your next"
+    },
+    "language": {
+      "label": "Language",
+      "current": "Language: {name}. Choose a language"
+    },
+    "menu": {
+      "open": "Open the menu",
+      "close": "Close the menu",
+      "label": "Menu",
+      "pages": "Pages"
+    },
+    "account": {
+      "open": "Account menu for {name}",
+      "profile": "My profile",
+      "company": "Company page",
+      "admin": "Admin"
+    }
   }
 }
