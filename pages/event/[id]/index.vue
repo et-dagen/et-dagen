@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import * as qrcode from 'qrcode'
+  import { companyOf } from '@/lib/auth/companyOf'
   import AttendantsList from '~/components/event/AttendantsList.vue'
   import { type AttendantMetadata, type Attendant } from '~/models/Attendant'
 
@@ -7,7 +8,7 @@
   const useAuth = useAuthStore()
   const useAlert = useAlertStore()
 
-  const isAdmin = useAuth.hasAccess(['admin'])
+  const isAdmin = useAuth.allows('admin')
 
   // get event id from route
   const route = useRoute()
@@ -30,6 +31,11 @@
 
   // embed uid into object
   const event = computed(() => embedKeyIntoObjectValues(data.value)[0])
+
+  // admins, and the coordinators of the hosting company, take attendance at the door
+  const mayScan = computed(() =>
+    useAuth.can('event', 'markAttended', companyOf(event.value?.companyUID)),
+  )
   console.log(event.value)
 
   // get company information
@@ -501,7 +507,7 @@
       </span>
 
       <v-btn
-        v-if="isAdmin"
+        v-if="mayScan"
         variant="tonal"
         append-icon="mdi-camera"
         :to="`${route.path}/scan_attendants`"

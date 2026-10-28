@@ -1,6 +1,9 @@
 // GET /api/v1/code
 // endpoint for retrieving codes in the db
 
+import { authorize } from '@/domain/authorization/authorize'
+import { Instant } from '@/domain/time'
+
 defineRouteMeta({
   openAPI: {
     tags: ['Code', 'internal'],
@@ -20,7 +23,7 @@ defineRouteMeta({
 })
 
 export default defineEventHandler(async (event) => {
-  const { user } = event.context
+  const { subject } = event.context
 
   // Set resource context for wide event logging
   setResourceContext(
@@ -33,17 +36,7 @@ export default defineEventHandler(async (event) => {
   // registration codes turn an account into a company account: always logged
   setLogImportance(event, 'warn')
 
-  // only admins can create new registration codes
-  if (!hasAccess(user, ['admin'])) {
-    setErrorContext(event, {
-      code: 'firebase/user-not-authorized',
-      message: 'User not authorized to list registration codes',
-    })
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Error (firebase/user-not-authorized).',
-    })
-  }
+  authorize(subject, 'code', 'read', undefined, { now: Instant.now() })
 
   // reference to companies
   const registrationCodesRef = db.ref('registrationCodes')

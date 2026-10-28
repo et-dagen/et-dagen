@@ -2,10 +2,23 @@
   import { isActivePanel, panelsFor } from '@/lib/admin/panels'
 
   const localePath = useLocalePath()
-  const panels = panelsFor(useAuthStore().user?.userType)
+  const auth = useAuthStore()
+  const panels = panelsFor(auth.allows('admin'), auth.allows)
   const route = useRoute()
   const isActive = (panel: (typeof panels)[number]) =>
-    isActivePanel(panel, route.path, localePath(panel.route))
+    isActivePanel(
+      panel,
+      route.path,
+      localePath(panel.route),
+      panel.below && localePath(panel.below),
+    )
+
+  const list = ref<HTMLUListElement | null>(null)
+  onMounted(() =>
+    list.value
+      ?.querySelector('[aria-current="page"]')
+      ?.scrollIntoView({ block: 'nearest', inline: 'nearest' }),
+  )
 </script>
 
 <template>
@@ -13,11 +26,10 @@
     :aria-label="$t('admin.shell.navigation')"
     class="tw:fixed tw:inset-x-0 tw:bottom-0 tw:z-10 tw:bg-brand tw:px-2 tw:pt-2 tw:pb-[max(0.5rem,env(safe-area-inset-bottom))] tw:text-brand-foreground"
   >
+    <!-- the panels share the width while their names fit, and scroll sideways once they do not -->
     <ul
-      class="tw:grid tw:gap-1"
-      :style="{
-        gridTemplateColumns: `repeat(${panels.length}, minmax(0, 1fr))`,
-      }"
+      ref="list"
+      class="tw:grid tw:auto-cols-[minmax(4.75rem,1fr)] tw:grid-flow-col tw:gap-1 tw:overflow-x-auto tw:[scrollbar-width:none]"
     >
       <li v-for="panel in panels" :key="panel.name">
         <NuxtLink

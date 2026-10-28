@@ -1,6 +1,10 @@
 // GET /api/v1/resume/file
 // endpoint for opening one user's resume through a short-lived signed link
 
+import { authorize } from '@/domain/authorization/authorize'
+import { Instant } from '@/domain/time'
+import { UserUid } from '@/domain/user'
+
 defineRouteMeta({
   openAPI: {
     tags: ['Resume'],
@@ -25,7 +29,7 @@ defineRouteMeta({
 const LINK_LIFETIME_MS = 5 * 60 * 1000
 
 export default defineEventHandler(async (event) => {
-  const { user } = event.context
+  const { subject } = event.context
   const { userUID } = getQuery(event)
 
   setResourceContext(
@@ -35,17 +39,6 @@ export default defineEventHandler(async (event) => {
     'get',
     'Open a resume',
   )
-
-  if (!user) {
-    setErrorContext(event, {
-      code: 'firebase/not-signed-in',
-      message: 'User not signed in',
-    })
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Error (firebase/not-signed-in).',
-    })
-  }
 
   if (typeof userUID !== 'string' || !userUID) {
     setErrorContext(event, {
@@ -58,30 +51,15 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const isOwner = user.uid === userUID
-  const isAdmin = hasAccess(user, ['admin'])
-  const companyHasCvAccess =
-    hasAccess(user, ['company']) &&
-    (
-      await withDbTiming(
-        event,
-        `companies/${user.companyUID}/cvAccess`,
-        'read',
-        () => db.ref(`companies/${user.companyUID}/cvAccess`).once('value'),
-      )
-    ).val() === true
+  const isOwner = subject?.uid === userUID
   addEventContext(event, 'is_owner', isOwner)
-
-  if (!isOwner && !isAdmin && !companyHasCvAccess) {
-    setErrorContext(event, {
-      code: 'resume/not-allowed',
-      message: 'User may not open this resume',
-    })
-    throw createError({
-      statusCode: 403,
-      statusMessage: 'Error (resume/not-allowed).',
-    })
-  }
+  authorize(
+    subject,
+    'resume',
+    'read',
+    { ownerUid: UserUid.parse(userUID), scope: isOwner ? 'own' : 'all' },
+    { now: Instant.now() },
+  )
 
   const snapshot = await withDbTiming(
     event,

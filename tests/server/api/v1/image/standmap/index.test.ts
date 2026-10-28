@@ -9,8 +9,19 @@ const file = (name: string) => ({
   },
 })
 
+let recorded: { day: string; name: string; url: string }[] = []
+
 beforeEach(() => {
   vi.resetModules()
+  recorded = []
+  vi.doMock('@/server/composition', () => ({
+    files: {},
+    fileStorage: {},
+    standMaps: {},
+  }))
+  vi.doMock('@/application/fair/standMaps', () => ({
+    listStandMaps: () => Promise.resolve(recorded),
+  }))
   makePublic.mockClear()
   vi.stubGlobal('defineRouteMeta', () => {})
   vi.stubGlobal('defineEventHandler', (handler: unknown) => handler)
@@ -34,19 +45,34 @@ beforeEach(() => {
 const handler = async () =>
   (await import('@/server/api/v1/image/standmap/index')).default as (
     event: unknown,
-  ) => Promise<{ date: string; url: string }[]>
+  ) => Promise<{ date: string; url: string; legacy?: boolean }[]>
 
 describe('GET /api/v1/image/standmap', () => {
-  it('lists each stand map by date with its public URL', async () => {
+  it('lists each old stand map by date with its public URL', async () => {
     await expect((await handler())({})).resolves.toEqual([
       {
         date: '2026-02-11',
         url: 'https://storage.googleapis.com/bucket/standmaps/2026-02-11.jpg',
+        legacy: true,
       },
       {
         date: '2026-02-12',
         url: 'https://storage.googleapis.com/bucket/standmaps/2026-02-12.png',
+        legacy: true,
       },
+    ])
+  })
+
+  it('prefers a map uploaded for the day over an old one', async () => {
+    recorded = [{ day: '2026-02-12', name: 'ny.png', url: 'https://new' }]
+
+    await expect((await handler())({})).resolves.toEqual([
+      {
+        date: '2026-02-11',
+        url: 'https://storage.googleapis.com/bucket/standmaps/2026-02-11.jpg',
+        legacy: true,
+      },
+      { date: '2026-02-12', url: 'https://new', name: 'ny.png' },
     ])
   })
 

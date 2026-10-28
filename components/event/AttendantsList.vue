@@ -8,7 +8,7 @@
 
   const auth = useAuthStore()
 
-  const isAdmin = computed(() => auth.user?.userType === 'admin')
+  const isAdmin = computed(() => auth.allows('admin'))
 
   const currentPage = ref(1)
   const itemsPerPage = 8

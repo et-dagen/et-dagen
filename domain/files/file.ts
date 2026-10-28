@@ -24,7 +24,13 @@ export type FileOwner =
   | { kind: 'company'; uid: CompanyUid }
   | { kind: 'fair' }
 
-export const FILE_KINDS = ['resume', 'avatar', 'logo', 'standmap'] as const
+export const FILE_KINDS = [
+  'resume',
+  'avatar',
+  'logo',
+  'standmap',
+  'portrait',
+] as const
 export type FileKind = (typeof FILE_KINDS)[number]
 
 const MB = 1024 * 1024
@@ -53,10 +59,19 @@ export const FILE_RULES = {
     single: true,
     public: true,
   },
+  // shown inline in the programme, where a PDF cannot be drawn
   standmap: {
     owner: 'fair',
-    types: [...IMAGE, 'application/pdf'],
+    types: IMAGE,
     maxBytes: 10 * MB,
+    single: false,
+    public: true,
+  },
+  // a board member's photo, always stored as the WebP the image processor made of the upload
+  portrait: {
+    owner: 'fair',
+    types: ['image/webp'],
+    maxBytes: 2 * MB,
     single: false,
     public: true,
   },

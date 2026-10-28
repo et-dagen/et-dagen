@@ -54,7 +54,7 @@
         />
 
         <NavButton
-          v-if="auth.hasAccess(['company'])"
+          v-if="auth.allows('company') && !auth.allows('admin')"
           size="large"
           :route="{
             name: 'company',
@@ -64,7 +64,7 @@
 
         <!-- navigate to admin page -->
         <NavButton
-          v-if="auth.hasAccess(['admin'])"
+          v-if="auth.allows('admin')"
           size="large"
           :route="{
             name: 'admin',

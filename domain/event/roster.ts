@@ -19,6 +19,19 @@ export interface Roster {
 
 export const emptyRoster = (): Roster => ({ attendants: new Map(), queue: [] })
 
+/** Where a user stands on an event: coming, or waiting at a position counted from 1 */
+export type Place =
+  | { kind: 'attending'; attended: boolean }
+  | { kind: 'queued'; position: number }
+
+/** The user's place on the roster, or null when they are neither coming nor waiting */
+export function placeOf(roster: Roster, user: UserUid): Place | null {
+  const attendant = roster.attendants.get(user)
+  if (attendant) return { kind: 'attending', attended: attendant.attended }
+  const index = roster.queue.indexOf(user)
+  return index === -1 ? null : { kind: 'queued', position: index + 1 }
+}
+
 export type RegisterOutcome =
   | { kind: 'registered' }
   /** `position` counts from 1 */

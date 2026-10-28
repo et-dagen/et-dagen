@@ -60,6 +60,30 @@
       "upload_resume": "Last opp CV",
       "your_resume": "Din CV",
       "delete_resume": "Slett CV"
+    },
+    "delete": {
+      "title": "Slett brukeren min",
+      "description": "Sletter brukeren din og alt vi har lagret om deg: profilen, CV-en og påmeldingene dine til arrangementer. Dette kan ikke angres.",
+      "dialog_title": "Vil du slette brukeren din?",
+      "dialog_text": "Profilen, CV-en og påmeldingene dine slettes med en gang, og du blir logget ut. Dette kan ikke angres.",
+      "confirm_label": "Skriv inn e-postadressen din for å bekrefte",
+      "confirm": "Slett brukeren",
+      "abort": "Avbryt"
+    },
+    "profile": {
+      "title": "Rediger profilen",
+      "back": "Min side",
+      "name": "Navn",
+      "email": "E-post",
+      "email_hint": "Du logger inn med denne adressen, og den kan ikke endres her.",
+      "programme": "Studieprogram",
+      "programme_hint": "Har du byttet studieprogram? Ta kontakt med E&T-dagene, så endrer vi det.",
+      "year": "Årstrinn",
+      "diet_hint": "Brukes når arrangementer har servering.",
+      "diet_other": "Annet (skill med komma)",
+      "save": "Lagre",
+      "cancel": "Avbryt",
+      "saved": "Profilen er lagret"
     }
   },
   "error": {
@@ -159,6 +183,7 @@
       "events": {
         "name": "Arrangementer",
         "empty": "Dere har ingen arrangementer ennå.",
+        "new": "Nytt arrangement",
         "edit": "Rediger",
         "registration": "Påmelding {from} – {to}",
         "diets": "Allergier og kosthold",
@@ -167,6 +192,13 @@
         "no_attendees": "Ingen påmeldte ennå.",
         "copy_emails": "Kopier e-postadressene",
         "copied": "{n} e-postadresse kopiert | {n} e-postadresser kopiert"
+      },
+      "jobs": {
+        "name": "Stillinger",
+        "new": "Ny stilling",
+        "edit": "Rediger",
+        "deadline": "Frist {date}",
+        "empty": "Dere har ingen stillinger ennå."
       },
       "resumes": {
         "name": "CV-er",
@@ -203,12 +235,10 @@
         },
         "company": {
           "not-found": "Bedriften ble ikke funnet",
-          "require-company-uid": "Bedriftsbrukere må oppgi companyUID",
-          "missing-name-webpage-type": "Mangler navn, nettside eller type"
+          "missing-name-or-webpage": "Mangler navn eller nettside"
         },
         "event": {
           "not-found": "Arrangementer eksisterer ikke",
-          "not-owner": "Kan ikke endre på andre bedrifters arrangementer",
           "missing-event-uid": "eventUID mangler",
           "incorrect-capacity": "Kapasitet må være number eller null",
           "wrong-format-capacity": "Kapasitet må være et tall større enn null",
@@ -221,7 +251,8 @@
             "already-registered": "Brukeren er allerede påmeldt dette arrangementet",
             "registration-closed": "Påmelding er stengt",
             "event-is-full": "Arrangementet er fullt",
-            "not-owner": "Kan ikke endre på andre brukere"
+            "not-owner": "Kan ikke endre på andre brukere",
+            "forbidden": "Du kan ikke melde deg på dette arrangementet."
           }
         },
         "job": {
@@ -274,7 +305,8 @@
         "reset_password": "Epost for tilbakestilling av passord er sendt"
       },
       "user": {
-        "edit": "Brukeren ble oppdatert"
+        "edit": "Brukeren ble oppdatert",
+        "deleted": "Brukeren din er slettet"
       },
       "event": {
         "register": {
@@ -426,7 +458,7 @@
         "logo_choose": "Velg logo",
         "logo_replace": "Bytt logo",
         "logo_undo": "Angre",
-        "logo_hint": "PNG eller JPEG. Lastes opp når du lagrer.",
+        "logo_hint": "PNG, JPEG eller WebP. Tom kant rundt logoen kuttes bort når du lagrer.",
         "description": "Beskrivelse",
         "cv_access": "Tilgang til CV-er",
         "cv_access_hint": "Bedriften kan se og åpne studentenes CV-er.",
@@ -599,12 +631,14 @@
       "filter": {
         "all": "Alle",
         "admin": "Administratorer",
-        "company": "Bedrifter",
+        "coordinator": "Koordinatorer",
+        "company": "Bedriftskontakter",
         "basic": "Studenter"
       },
       "role": {
         "admin": "Admin",
-        "company": "Bedrift",
+        "coordinator": "Koordinator",
+        "company": "Bedriftskontakt",
         "basic": "Student"
       },
       "columns": {
@@ -635,10 +669,13 @@
         "role": "Rolle",
         "role_hint": {
           "admin": "Har tilgang til hele adminpanelet.",
-          "company": "Logger inn på vegne av en bedrift.",
+          "coordinator": "Student i E&T-dagene som har ansvar for én eller flere bedrifter.",
+          "company": "Kontaktperson fra en bedrift.",
           "basic": "Student som kan melde seg på arrangementer."
         },
         "company": "Bedrift",
+        "companies": "Bedrifter",
+        "companies_hint": "Bedriftene koordinatoren har ansvar for. Koordinatorer ser ikke CV-er.",
         "programme": "Studieprogram",
         "optional": "(valgfritt)",
         "choose_programme": "Velg studieprogram",
@@ -697,6 +734,68 @@
       "empty": "Ingen har meldt seg på ennå.",
       "no_match": "Ingen påmeldte passer søket.",
       "no_signup": "Arrangementet har ikke påmelding. Slå på påmelding under Detaljer for å ta imot påmeldte."
+    },
+    "standmaps": {
+      "name": "Standkart",
+      "intro": "Ett standkart per messedag. Det vises ved dagens overskrift i programmet, og besøkende kan åpne det i fullskjerm.",
+      "events": "Ingen arrangementer | 1 arrangement | {n} arrangementer",
+      "none": "Ikke lastet opp",
+      "unnamed": "Uten navn",
+      "legacy": "Gammel opplasting",
+      "upload": "Last opp",
+      "replace": "Erstatt",
+      "remove": "Fjern standkartet for {day}",
+      "open": "Åpne standkartet for {day}",
+      "other": "Annen dag",
+      "formats": "PNG, JPEG eller WebP, høyst 10 MB. Et gammelt standkart forsvinner når du erstatter det.",
+      "empty": "Ingen kommende messedager har arrangementer ennå. Velg en dag under for å laste opp et standkart.",
+      "done": {
+        "uploaded": "Standkartet for {day} er lastet opp.",
+        "removed": "Standkartet for {day} er fjernet."
+      },
+      "confirm": {
+        "title": "Fjerne standkartet?",
+        "text": "Programmet viser ikke lenger et standkart for denne dagen.",
+        "action": "Fjern"
+      }
+    },
+    "board": {
+      "name": "Styret",
+      "intro": "Styret slik kontaktsiden viser det, i denne rekkefølgen.",
+      "create": "Nytt styremedlem",
+      "featured": "Kontakt for bedrifter",
+      "empty": "Ingen styremedlemmer ennå.",
+      "up": "Flytt {name} opp",
+      "down": "Flytt {name} ned",
+      "edit": "Rediger {name}",
+      "remove": "Fjern {name}",
+      "removed": "{name} er fjernet fra styret.",
+      "confirm": {
+        "title": "Fjerne styremedlemmet?",
+        "text": "Personen og bildet forsvinner fra kontaktsiden.",
+        "action": "Fjern"
+      },
+      "form": {
+        "new_title": "Nytt styremedlem",
+        "edit_title": "Rediger styremedlem",
+        "missing": "Fant ikke dette styremedlemmet.",
+        "photo": "Bilde",
+        "photo_choose": "Velg bilde",
+        "photo_replace": "Bytt bilde",
+        "photo_undo": "Angre",
+        "photo_hint": "PNG, JPEG eller WebP, høyst 10 MB. Bildet beskjæres rundt midten til 5:6 og lagres i 800 × 960.",
+        "name": "Navn",
+        "title_nb": "Rolle (norsk)",
+        "title_en": "Rolle (engelsk)",
+        "email": "E-post",
+        "phone": "Telefon",
+        "featured": "Kontakt for bedrifter",
+        "featured_hint": "Vises alene øverst på kontaktsiden. Bare én kan være det.",
+        "create": "Legg til",
+        "save": "Lagre",
+        "created": "Styremedlemmet er lagt til.",
+        "updated": "Endringene er lagret."
+      }
     }
   },
   "edit": {
@@ -936,6 +1035,21 @@
     },
     "company": {
       "invalid-webpage": "Nettsiden må være en adresse som starter med http:// eller https://."
+    },
+    "standmap": {
+      "invalid-day": "Velg en gyldig dato.",
+      "missing-file": "Velg et bilde å laste opp.",
+      "not-found": "Denne dagen har ikke noe standkart."
+    },
+    "board": {
+      "not-found": "Fant ikke dette styremedlemmet.",
+      "invalid-name": "Fyll inn et navn.",
+      "invalid-title": "Fyll inn rollen på norsk og engelsk.",
+      "invalid-email": "Fyll inn en gyldig e-postadresse.",
+      "invalid-phone": "Telefonnummeret kan bare ha sifre, mellomrom og + først.",
+      "invalid-order": "Ugyldig plassering.",
+      "missing-file": "Velg et bilde å laste opp.",
+      "unreadable-image": "Bildet kunne ikke leses. Prøv et annet bilde."
     }
   },
   "form": {
@@ -947,7 +1061,9 @@
       "datetime": "Velg dato og klokkeslett.",
       "end_before_start": "Må komme etter starttidspunktet.",
       "signup_after_start": "Påmeldingen må stenge før arrangementet starter.",
-      "number": "Skriv et helt tall større enn null."
+      "number": "Skriv et helt tall større enn null.",
+      "email": "Fyll inn en gyldig e-postadresse.",
+      "phone": "Bare sifre, mellomrom og + først."
     },
     "leave": "Du har endringer som ikke er lagret. Vil du forlate siden?",
     "richtext": {
