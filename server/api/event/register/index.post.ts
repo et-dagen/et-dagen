@@ -99,8 +99,17 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // Event is full
-  if (Object.keys(attendants).length >= data.capacity) {
+  // reserved spots depend on the study programme of the user being registered
+  const targetProgramme =
+    targetUID === user.uid
+      ? user.studyProgram
+      : (await db.ref(`users/${targetUID}/studyProgram`).once('value')).val()
+
+  const reserved = isReservedProgramme(data, targetProgramme)
+
+  // Event is full, or only has spots reserved for other programmes.
+  // Admins can register users in reserved spots
+  if (!hasAvailableSpot(data, reserved || hasAccess(user, ['admin']))) {
     // Check if the user is already in the queue
     if (Object.values(queue).includes(targetUID)) {
       throw createError({
@@ -120,6 +129,7 @@ export default defineEventHandler(async (event) => {
   await eventRef.child('attendants').child(targetUID).set({
     attended: false,
     registeredAt: Date.now(),
+    reserved,
   })
 
   // User successfully registered for event

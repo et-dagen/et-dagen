@@ -69,6 +69,9 @@
         "required": "Dette feltet er påkrevd",
         "email": "Ugyldig e-postadresse"
       },
+      "event": {
+        "reserved_spots": "Reserverte plasser må være et heltall mellom 1 og kapasiteten"
+      },
       "password": {
         "length": "Passordet må være minst 8 tegn langt.",
         "letters": "Passordet må inneholde minst 3 bokstaver.",
@@ -117,6 +120,7 @@
         "reg_end": "Påmeldingsslutt",
         "reg_programme": "Studieprogram",
         "reg_year": "Årstrinn",
+        "reg_reserved": "{spots} plasser reservert for",
         "location": "Sted",
         "host": "Arrangør"
       },
@@ -217,6 +221,7 @@
           "start-after-end": "Starttid må være før arrangementslutt",
           "registration-after-event": "Påmelding må være før arrangementet",
           "registration-start-after-end": "Påmelding må starte før påmeldingsslutt",
+          "invalid-reserved-spots": "Reserverte plasser må være mellom 1 og kapasiteten, og holdes av for minst ett studieprogram",
           "register": {
             "registration-unnecessary": "Påmelding er ikke nødvendig for dette arrangementet",
             "user-not-registered": "Brukeren er ikke påmeldt dette arrangementet",
@@ -558,6 +563,11 @@
           "requirements": {
             "programmes": "Begrens til studieprogram",
             "years": "Begrens til årstrinn"
+          },
+          "reserved": {
+            "spots": "Reserverte plasser",
+            "programmes": "Reservert for studieprogram",
+            "hint": "Bare de valgte studieprogrammene kan ta disse plassene. De åpner sammen med vanlig påmelding"
           }
         },
         "signupstart": "Påmelding åpner",

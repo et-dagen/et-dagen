@@ -14,5 +14,20 @@ export interface Event {
     name: string
     map: string
   }
+  queue?: {
+    [key: string]: string // key: timestamp, value: userUID
+  }
+  registration?: {
+    start: string | null
+    end: string | null
+    requirements?: {
+      programmes: string[] | null
+      years: number[] | null
+    } | null
+    reserved?: {
+      programmes: string[] // study programme names
+      spots: number // spots held for the programmes above
+    } | null
+  }
   title: string
 }

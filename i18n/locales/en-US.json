@@ -69,6 +69,9 @@
         "required": "This field is required",
         "email": "Invalid email address"
       },
+      "event": {
+        "reserved_spots": "Reserved spots must be a whole number between 1 and the capacity"
+      },
       "password": {
         "length": "The password must be at least 8 characters long.",
         "letters": "The password must contain at least 3 letters.",
@@ -117,6 +120,7 @@
         "reg_end": "Registration end",
         "reg_programme": "Study programmes",
         "reg_year": "Year",
+        "reg_reserved": "{spots} spots reserved for",
         "location": "Location",
         "host": "Organiser"
       },
@@ -217,6 +221,7 @@
           "start-after-end": "Start time must be before end time",
           "registration-after-event": "Registration must end before event starts",
           "registration-start-after-end": "Registration must start before it ends",
+          "invalid-reserved-spots": "Reserved spots must be between 1 and the capacity, and be held for at least one study programme",
           "register": {
             "registration-unnecessary": "Registration is not necessary for this event",
             "user-not-registered": "User not registered for this event",
@@ -559,6 +564,11 @@
           "requirements": {
             "programmes": "Limit to study programmes",
             "years": "Limit to years"
+          },
+          "reserved": {
+            "spots": "Reserved spots",
+            "programmes": "Reserved for study programmes",
+            "hint": "Only the selected study programmes can take these spots. They open with regular registration"
           }
         },
         "attendants": "Registered users",

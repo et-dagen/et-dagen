@@ -157,6 +157,27 @@
       (selectedProgrammes.value.length > 0 || selectedYears.value.length > 0),
   )
 
+  // spots held for certain study programmes, ELSYS by default
+  const reservedSpots = ref(state?.registration?.reserved?.spots ?? null)
+  const reservedProgrammes = ref(
+    state?.registration?.reserved?.programmes ??
+      programmeOptions.value.filter((name) =>
+        /elektronisk system|elsys/i.test(name),
+      ),
+  )
+
+  const validReservedSpots = (value: any) =>
+    !Number(value) ||
+    (Number.isInteger(Number(value)) &&
+      Number(value) > 0 &&
+      Number(value) <= Number(state.capacity)) ||
+    getI18nString('error.form.event.reserved_spots')
+
+  const validReservedProgrammes = (value: string[]) =>
+    !Number(reservedSpots.value) ||
+    value?.length > 0 ||
+    getI18nString('error.form.general.required')
+
   const form = ref()
 
   // Boolean control states
@@ -233,6 +254,13 @@
     } else {
       state.registration.requirements = null
     }
+
+    // spots can only be reserved if the event has a capacity
+    const spots = Number(reservedSpots.value)
+    state.registration.reserved =
+      state.capacity && spots > 0 && reservedProgrammes.value.length > 0
+        ? { spots, programmes: reservedProgrammes.value }
+        : null
   }
 
   const routeOnSuccess = () => {
@@ -367,6 +395,35 @@
             }"
             clearable
           />
+        </VRow>
+
+        <!-- Reserved spots -->
+        <VRow v-if="state.capacity">
+          <VCol>
+            <FormNumberInput
+              v-model="reservedSpots"
+              :content="{
+                label: $t('edit.event.attributes.registration.reserved.spots'),
+                hint: $t('edit.event.attributes.registration.reserved.hint'),
+              }"
+              :rules="[validReservedSpots]"
+              clearable
+            />
+          </VCol>
+          <VCol>
+            <FormSelectInput
+              v-model="reservedProgrammes"
+              :content="{
+                label: $t(
+                  'edit.event.attributes.registration.reserved.programmes',
+                ),
+                options: programmeOptions,
+              }"
+              :rules="[validReservedProgrammes]"
+              clearable
+              multiple
+            />
+          </VCol>
         </VRow>
 
         <VSwitch

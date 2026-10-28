@@ -58,6 +58,22 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Error (event/wrong-format-capacity).',
     })
 
+  // reserved spots must be a whole number between one and the capacity,
+  // held for at least one study programme
+  const reserved = registration?.reserved
+  if (
+    reserved &&
+    (!Number.isInteger(reserved.spots) ||
+      reserved.spots <= 0 ||
+      reserved.spots > capacity ||
+      !Array.isArray(reserved.programmes) ||
+      !reserved.programmes.length)
+  )
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Error (event/invalid-reserved-spots).',
+    })
+
   // check if endtime is after starttime
   if (date.start > date.end)
     throw createError({

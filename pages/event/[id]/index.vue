@@ -139,12 +139,25 @@
       false,
   )
 
-  // check if event is full
+  const reservedSpots = computed(
+    () => event.value?.registration?.reserved ?? null,
+  )
+
+  // admins and users in a reserved programme can take reserved spots
+  const canTakeReserved = computed(
+    () =>
+      isAdmin || isReservedProgramme(event.value, useAuth.user?.studyProgram),
+  )
+
+  // check if event is full, or only has spots reserved for other programmes.
+  // signed out users might be in a reserved programme
   const eventFull = computed(
     () =>
       hasCapacity.value &&
-      hasAttendants.value &&
-      Object.keys(event.value.attendants || {}).length >= event.value.capacity,
+      !hasAvailableSpot(
+        event.value,
+        canTakeReserved.value || !useAuth.isLoggedIn,
+      ),
   )
 
   // does the event have any registration actions, and is user signed in
@@ -487,6 +500,29 @@
           <ul class="ml-6 mt-2">
             <li
               v-for="programme in programmeRequirements"
+              :key="programme"
+              class="py-1 px-2"
+            >
+              {{ programme }}
+            </li>
+          </ul>
+        </VCardText>
+
+        <VCardText
+          v-if="reservedSpots"
+          class="reg__reserved py-0 pb-5 d-flex flex-wrap flex-column"
+        >
+          <strong class="mr-2"
+            >{{
+              $t('event.page.details.reg_reserved', {
+                spots: reservedSpots.spots,
+              })
+            }}:
+          </strong>
+          <VDivider />
+          <ul class="ml-6 mt-2">
+            <li
+              v-for="programme in reservedSpots.programmes"
               :key="programme"
               class="py-1 px-2"
             >

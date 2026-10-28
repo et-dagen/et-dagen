@@ -75,19 +75,30 @@ export default defineEventHandler(async (event) => {
   }
 
   await eventRef.child('attendants').child(targetUID).remove()
+  delete attendants[targetUID]
 
-  // Move the next user from the queue to attendants
-  const nextQueueKey = Object.keys(queue).sort()[0]
+  // Move the first queued user who fits in the freed spot to attendants.
+  // Users outside the reserved programmes cannot take a reserved spot
+  for (const queueKey of Object.keys(queue).sort()) {
+    const queuedUID = queue[queueKey]
 
-  if (nextQueueKey) {
-    const nextUID = queue[nextQueueKey]
+    const programmeSnapshot = await db
+      .ref(`users/${queuedUID}/studyProgram`)
+      .once('value')
 
-    await eventRef.child('queue').child(nextQueueKey).remove()
+    const reserved = isReservedProgramme(data, programmeSnapshot.val())
 
-    await eventRef.child('attendants').child(nextUID).set({
+    if (!hasAvailableSpot({ ...data, attendants }, reserved)) continue
+
+    await eventRef.child('queue').child(queueKey).remove()
+
+    await eventRef.child('attendants').child(queuedUID).set({
       attended: false,
       registeredAt: Date.now(),
+      reserved,
     })
+
+    break
   }
 
   // User successfully opted out of event
