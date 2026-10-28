@@ -81,6 +81,12 @@ export default defineNuxtConfig({
     '@nuxt/image',
   ],
 
+  // The page for companies was served at /faq before it got its own name
+  routeRules: {
+    '/faq': { redirect: { to: '/for-companies', statusCode: 301 } },
+    '/en/faq': { redirect: { to: '/en/for-companies', statusCode: 301 } },
+  },
+
   nitro: {
     experimental: {
       openAPI: true,
