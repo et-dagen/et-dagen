@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { EmailAddress } from '@/domain/email'
 
 /** The kinds of account the admin form sets, from the one with the most access down */
 export const USER_TYPES = ['admin', 'coordinator', 'company', 'basic'] as const
@@ -74,6 +75,50 @@ export function toV1User(uid: string, user: UserInput) {
     access: { uid, ...accessOf(user) },
   }
 }
+
+const count = (value: string, pattern: RegExp) =>
+  (value.match(pattern) ?? []).length
+
+/** The site's password rule: at least 8 characters, 3 of them letters and 3 digits */
+const password = z
+  .string({ error: 'required' })
+  .min(1, 'required')
+  .min(8, 'password_length')
+  .refine((value) => count(value, /[a-zA-Z]/g) >= 3, 'password_letters')
+  .refine((value) => count(value, /\d/g) >= 3, 'password_digits')
+
+const email = z
+  .string({ error: 'required' })
+  .trim()
+  .min(1, 'required')
+  .refine(EmailAddress.is, 'email')
+
+/** A choice from a list, whose error asks to choose rather than to type */
+const chosen = z.string({ error: 'choose' }).trim().min(1, 'choose')
+
+/** What a student types to create an account */
+export const StudentSignup = z.object({
+  name: common.name,
+  email,
+  password,
+  studyProgram: chosen,
+  currentYear: z.coerce
+    .number({ error: 'choose' })
+    .int('choose')
+    .min(1, 'choose')
+    .max(5, 'choose'),
+  dietaryRestrictions: common.dietaryRestrictions,
+})
+export type StudentSignup = z.infer<typeof StudentSignup>
+
+/** What a company contact types to join their company with its registration code */
+export const CompanyJoin = z.object({
+  code: required,
+  name: common.name,
+  email,
+  password,
+})
+export type CompanyJoin = z.infer<typeof CompanyJoin>
 
 /** A membership as `/user/access` sends it */
 export interface MembershipBody {

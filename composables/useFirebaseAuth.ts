@@ -5,6 +5,7 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   updateProfile,
+  type User as FirebaseUser,
 } from 'firebase/auth'
 
 import type { User } from '@/models/User'
@@ -50,12 +51,22 @@ export const registerUser = async (
       })
   }
 
-  const auth = getAuth()
   const authStore = useAuthStore()
+  const localePath = useLocalePath()
 
   // make sure onauthStateChanged does not try to fetch
   // the user data before it is created
   authStore.registeringUser = true
+  try {
+    await createAccount(newUser, registrationCode)
+  } finally {
+    authStore.registeringUser = false
+  }
+  await navigateTo(localePath('/'))
+}
+
+async function createAccount(newUser: newUser, registrationCode?: string) {
+  const auth = getAuth()
 
   // register user in firebase auth
   const { user } = await createUserWithEmailAndPassword(
@@ -63,6 +74,22 @@ export const registerUser = async (
     newUser.email,
     newUser.password,
   )
+
+  try {
+    await saveProfile(user, newUser, registrationCode)
+  } catch (cause) {
+    // an account without a profile would block the next try with "email taken"
+    await user.delete().catch(() => {})
+    throw cause
+  }
+}
+
+async function saveProfile(
+  user: FirebaseUser,
+  newUser: newUser,
+  registrationCode?: string,
+) {
+  const authStore = useAuthStore()
 
   // set displayname in firebase auth
   await updateProfile(user, { displayName: newUser.name })
@@ -84,19 +111,11 @@ export const registerUser = async (
     },
   })
 
-  // sign out the new user
-  await signoutUser()
-
-  // navigate to sign in page
-  const localePath = useLocalePath()
-  await navigateTo({
-    path: localePath('/user/signin'),
-    query: {
-      registered: 'true',
-    },
+  // the new account stays signed in, as after signing in
+  await startSession(idToken)
+  authStore.user = await $fetch<User>('/api/v1/user', {
+    headers: { Authorization: `Bearer ${idToken}` },
   })
-
-  authStore.registeringUser = false
 }
 
 // starts the server session from a sign-in that just happened (#582)
@@ -119,6 +138,9 @@ export const signoutUser = async () => {
   const auth = getAuth()
   const authStore = useAuthStore()
   const localePath = useLocalePath()
+
+  // end the session on the server first, while its cookie still says who is signing out
+  await $fetch('/api/v1/session', { method: 'DELETE' }).catch(() => {})
 
   // end the session on the server first, while its cookie still says who is signing out
   await $fetch('/api/v1/session', { method: 'DELETE' }).catch(() => {})

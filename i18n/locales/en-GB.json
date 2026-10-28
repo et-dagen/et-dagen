@@ -1215,7 +1215,14 @@
       "signup_after_start": "Sign-up must close before the event starts.",
       "number": "Enter a whole number above zero.",
       "email": "Enter a valid email address.",
-      "phone": "Only digits, spaces and a leading +."
+      "phone": "Only digits, spaces and a leading +.",
+      "password_length": "The password needs at least 8 characters.",
+      "password_letters": "The password needs at least 3 letters.",
+      "password_digits": "The password needs at least 3 digits.",
+      "email_taken": "There is already an account with this address. Sign in instead.",
+      "code_invalid": "The code doesn't match. Check it, or contact us.",
+      "choose": "Choose one.",
+      "year_needs_programme": "Choose a programme first."
     },
     "leave": "You have unsaved changes. Leave the page?",
     "richtext": {
@@ -1412,5 +1419,44 @@
       "full": "Full, waiting list",
       "closed": "Sign-up is closed"
     }
+  },
+  "signup": {
+    "you": "You",
+    "studies": "Your studies",
+    "name": "Full name",
+    "email": "Email",
+    "password": "Password",
+    "password_hint": "At least 8 characters, with at least 3 letters and 3 digits.",
+    "show": "Show",
+    "hide": "Hide",
+    "programme": "Study programme",
+    "year": "Year",
+    "year_n": "Year {n}",
+    "choose": "Choose",
+    "optional": "(optional)",
+    "pending": "Creating the account …",
+    "have_account": "Already have an account?",
+    "sign_in": "Sign in",
+    "from_company": "From a company?",
+    "join_company": "Join your company",
+    "diet": {
+      "title": "Allergies and diet",
+      "lead": "We pass this on to the kitchen when you sign up for events with food. You can change it on your profile."
+    },
+    "student": {
+      "title": "Create a student account",
+      "lead": "With an account you sign up for events and share your CV with the companies.",
+      "submit": "Create account"
+    },
+    "company": {
+      "title": "Join your company",
+      "lead": "Your company has received a registration code from us. With it you create an account that belongs to the company.",
+      "code": "Registration code",
+      "email": "Work email",
+      "submit": "Create company account",
+      "no_code": "Haven't received a code?",
+      "contact": "Contact us"
+    },
+    "the_password": "the password"
   }
 }
