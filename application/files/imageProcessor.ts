@@ -14,4 +14,15 @@ export interface ImageProcessor {
     bytes: Uint8Array,
     size: { width: number; height: number },
   ): Promise<{ bytes: Uint8Array; contentType: 'image/webp' } | null>
+
+  /**
+   * Cut away the plain margin around a logo, scale it down to fit a square of `maxSide`, and
+   * encode as WebP, keeping transparency
+   *
+   * @returns null when the bytes are not a picture the processor can read, or nothing is left
+   */
+  trim(
+    bytes: Uint8Array,
+    size: { maxSide: number },
+  ): Promise<{ bytes: Uint8Array; contentType: 'image/webp' } | null>
 }

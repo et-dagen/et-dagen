@@ -1,6 +1,8 @@
 import { createError } from 'h3'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import hasAccess from '@/server/utils/hasAccess'
+import type { Subject } from '@/domain/authorization/subject'
+import { CompanyUid } from '@/domain/business/company'
+import { UserUid } from '@/domain/user'
 
 // The handlers rely on Nitro's auto-imports; stub them so they run as plain functions.
 const owners: Record<string, string> = {}
@@ -20,7 +22,6 @@ beforeEach(async () => {
   vi.stubGlobal('defineRouteMeta', () => {})
   vi.stubGlobal('defineEventHandler', (handler: unknown) => handler)
   vi.stubGlobal('createError', createError)
-  vi.stubGlobal('hasAccess', hasAccess)
   vi.stubGlobal('sendNoContent', sendNoContent)
   for (const name of [
     'setResourceContext',
@@ -46,14 +47,28 @@ beforeEach(async () => {
       transaction: () => Promise.resolve(),
     }),
   })
+  const owner = await import('@/server/utils/eventOwner')
+  vi.stubGlobal('authorizeStoredEvent', owner.authorizeStoredEvent)
   vi.stubGlobal(
-    'assertCompanyOwnsEvent',
-    (await import('@/server/utils/eventOwner')).assertCompanyOwnsEvent,
+    'companyOf',
+    (await import('@/server/utils/companyOf')).companyOf,
   )
 })
 
-const company = { userType: 'company', companyUID: 'our-company' }
-const admin = { userType: 'admin' }
+const company: Subject = {
+  uid: UserUid.parse('rep'),
+  roles: ['company'],
+  companies: new Map([
+    [CompanyUid.parse('our-company'), new Set(['ent:event:manage'] as const)],
+  ]),
+  applicant: null,
+}
+const admin: Subject = {
+  uid: UserUid.parse('boss'),
+  roles: ['admin'],
+  companies: new Map(),
+  applicant: null,
+}
 
 const handlers = {
   'index.delete': () => import('@/server/api/v1/event/index.delete'),
@@ -62,14 +77,14 @@ const handlers = {
 
 async function call(
   handler: keyof typeof handlers,
-  user: object,
+  subject: Subject,
   body: object,
 ) {
   vi.stubGlobal('readBody', () => Promise.resolve(body))
   const { default: run } = (await handlers[handler]()) as unknown as {
     default: (event: unknown) => Promise<unknown>
   }
-  return run({ context: { user } })
+  return run({ context: { subject } })
 }
 
 const eventFields = {
@@ -88,10 +103,7 @@ describe('DELETE /api/v1/event', () => {
         eventUID: 'theirs',
         companyUID: 'our-company',
       }),
-    ).rejects.toMatchObject({
-      statusCode: 401,
-      statusMessage: 'Error (event/not-owner).',
-    })
+    ).rejects.toMatchObject({ code: 'auth/forbidden' })
     expect(remove).not.toHaveBeenCalled()
   })
 
@@ -127,10 +139,7 @@ describe('PUT /api/v1/event', () => {
         eventUID: 'theirs',
         companyUID: 'our-company',
       }),
-    ).rejects.toMatchObject({
-      statusCode: 401,
-      statusMessage: 'Error (event/not-owner).',
-    })
+    ).rejects.toMatchObject({ code: 'auth/forbidden' })
     expect(update).not.toHaveBeenCalled()
   })
 

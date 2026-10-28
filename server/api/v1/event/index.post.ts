@@ -3,6 +3,8 @@
 
 import { fail } from '@/domain/errors'
 import { cleanRichText, safeLink } from '@/server/security/richText'
+import { authorize } from '@/domain/authorization/authorize'
+import { Instant } from '@/domain/time'
 
 defineRouteMeta({
   openAPI: {
@@ -57,13 +59,14 @@ defineRouteMeta({
     // responses: {
     //   201: { description: 'Created, empty body' },
     //   400: { description: 'Error (general/missing-data). Also event/wrong-format-capacity, event/registration-after-event, event/registration-start-after-end, and two free-text messages.' },
-    //   401: { description: 'Error (event/not-owner). or Error (firebase/user-not-authorized).' },
+    //   401: { description: 'auth/signed-out' },
+    //   403: { description: 'auth/forbidden' },
     // },
   },
 })
 
 export default defineEventHandler(async (event) => {
-  const { user } = event.context
+  const { subject } = event.context
 
   const {
     companyUID,
@@ -106,28 +109,9 @@ export default defineEventHandler(async (event) => {
     throw fail('event/invalid-map-link')
   }
 
-  // Check if user is authorized
-  if (hasAccess(user, ['company'])) {
-    if (user.companyUID !== companyUID) {
-      setErrorContext(event, {
-        code: 'event/not-owner',
-        message: 'Company user does not own this event',
-      })
-      throw createError({
-        statusCode: 401,
-        statusMessage: 'Error (event/not-owner).',
-      })
-    }
-  } else if (!hasAccess(user, ['admin'])) {
-    setErrorContext(event, {
-      code: 'firebase/user-not-authorized',
-      message: 'User not authorized to create event',
-    })
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Error (firebase/user-not-authorized).',
-    })
-  }
+  authorize(subject, 'event', 'create', companyOf(companyUID), {
+    now: Instant.now(),
+  })
 
   // Check if capacity is legal
   if (typeof capacity !== 'number' && capacity !== null) {

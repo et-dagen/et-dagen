@@ -69,7 +69,7 @@ describe('reading', () => {
     })
 
     expect((await api('/api/v1/company')).body).toEqual({
-      c1: { name: 'Polarbit', webpage: '' },
+      c1: { name: 'Polarbit', webpage: '', tier: 'prior' },
     })
   })
 })

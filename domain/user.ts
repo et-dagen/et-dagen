@@ -6,7 +6,13 @@ import type { ISO8601String } from '@/domain/time'
 import type { HasName } from '@/domain/traits'
 import type { DietaryRestriction } from '@/domain/allergen'
 
-export type Role = 'admin' | 'coordinator' | 'company' | 'user'
+/** Every role the permission table knows, so stored role names can be checked */
+export const ROLE_NAMES = ['admin', 'coordinator', 'company', 'user'] as const
+
+export type Role = (typeof ROLE_NAMES)[number]
+
+export const isRole = (value: unknown): value is Role =>
+  (ROLE_NAMES as readonly unknown[]).includes(value)
 
 /**
  * Identifies a user

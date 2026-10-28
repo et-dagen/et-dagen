@@ -16,7 +16,7 @@
 
 <template>
   <div>
-    <VCard class="companyWrapper" variant="flat">
+    <VCard class="companyWrapper pa-6" variant="flat" rounded="lg" border>
       <VRow no-gutters>
         <!-- Company logo -->
         <VCol cols="12" lg="7" class="d-flex justify-center pr-lg-3">

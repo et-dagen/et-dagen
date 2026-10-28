@@ -19,7 +19,7 @@
 
 <template>
   <div class="pb-lg-9 py-md-7">
-    <VCard variant="flat" width="60vw" min-width="290px">
+    <VCard variant="flat" color="transparent" width="60vw" min-width="290px">
       <VRow>
         <!-- banner title and caption -->
         <VCol cols="12" md="7">
