@@ -6,6 +6,7 @@ export function memoryCompanyRepository(
   companies: Iterable<EntitledCompany> = [],
 ): CompanyRepository {
   const byUid = new Map([...companies].map((company) => [company.uid, company]))
+  const logos = new Map<string, string>()
   return {
     entitled: (uids) =>
       Promise.resolve(
@@ -14,5 +15,11 @@ export function memoryCompanyRepository(
           return company ? [company] : []
         }),
       ),
+    all: () => Promise.resolve([...byUid.values()]),
+    logoOf: (uid) => Promise.resolve(logos.get(uid) ?? null),
+    setLogo: (uid, link) => {
+      logos.set(uid, link)
+      return Promise.resolve()
+    },
   }
 }

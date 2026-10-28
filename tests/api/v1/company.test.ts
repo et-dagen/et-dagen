@@ -83,13 +83,13 @@ describe('PUT /api/v1/company', () => {
     expect(response.body).toMatchObject({ code: 'auth/signed-out' })
   })
 
-  it('lets an admin set the contract', async () => {
+  it('lets an admin change the profile, and leaves the contract to /affiliation', async () => {
     const { token } = await admin()
 
     expect((await rename('acme', token)).status).toBe(204)
     await expect
       .poll(() => read('companies/acme'))
-      .toMatchObject({ cvAccess: true, type: 'main-partner' })
+      .toMatchObject({ name: 'Renamed', cvAccess: false, type: 'partner' })
   })
 })
 

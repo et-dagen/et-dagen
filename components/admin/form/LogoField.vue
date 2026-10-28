@@ -40,7 +40,7 @@
       <input
         ref="input"
         type="file"
-        accept="image/png,image/jpeg"
+        accept="image/png,image/jpeg,image/webp"
         class="tw:sr-only"
         :aria-label="$t('admin.companies.form.logo_choose')"
         @change="choose"

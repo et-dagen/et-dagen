@@ -128,7 +128,7 @@ describe('attendants and attendance', () => {
       token,
     })
 
-  it('leaves them to admins', async () => {
+  it('refuses company contacts and lets admins see and mark them', async () => {
     const attendant = await student()
     await seed(`events/talk/attendants/${attendant.uid}`, {
       attended: false,
@@ -146,5 +146,79 @@ describe('attendants and attendance', () => {
     expect(await read(`events/talk/attendants/${attendant.uid}/attended`)).toBe(
       true,
     )
+  })
+  it("lets a coordinator scan attendance at their companies' events only", async () => {
+    const attendant = await student()
+    for (const event of ['talk', 'dinner']) {
+      await seed(`events/${event}/attendants/${attendant.uid}`, {
+        attended: false,
+        registeredAt: 1,
+      })
+    }
+    const coordinator = await student()
+    const given = { createdBy: 'test' }
+    await seed(`roles/${coordinator.uid}`, { coordinator: given })
+    await seed(`memberships/${coordinator.uid}/acme`, { kind: 'coordinator' })
+
+    expect((await attendants(coordinator.token)).status).toBe(200)
+    expect((await mark(attendant.uid, coordinator.token)).status).toBe(204)
+    expect(await read(`events/talk/attendants/${attendant.uid}/attended`)).toBe(
+      true,
+    )
+
+    const other = await api('/api/v1/event/attended', {
+      method: 'PATCH',
+      body: { eventUID: 'dinner', userUID: attendant.uid, attended: true },
+      token: coordinator.token,
+    })
+    expect(other.status).toBe(403)
+  })
+  it("lets any coordinator scan attendance at E&T-dagene's own events", async () => {
+    const attendant = await student()
+    await seed('events/fair', {
+      ...fields('etdagene'),
+      attendants: { [attendant.uid]: { attended: false, registeredAt: 1 } },
+    })
+    const coordinator = await student()
+    const given = { createdBy: 'test' }
+    await seed(`roles/${coordinator.uid}`, { coordinator: given })
+    const bystander = await student()
+
+    const markAt = (token: string) =>
+      api('/api/v1/event/attended', {
+        method: 'PATCH',
+        body: { eventUID: 'fair', userUID: attendant.uid, attended: true },
+        token,
+      })
+
+    expect((await markAt(bystander.token)).status).toBe(403)
+    expect((await markAt(coordinator.token)).status).toBe(204)
+    expect(await read(`events/fair/attendants/${attendant.uid}/attended`)).toBe(
+      true,
+    )
+  })
+  it("lets a coordinator sign up for another company's event but not their own", async () => {
+    const open = {
+      start: '2000-01-01T10:00',
+      end: '2999-01-01T10:00',
+    }
+    await seed('events/talk/registration', open)
+    await seed('events/dinner/registration', open)
+    const coordinator = await student()
+    const given = { createdBy: 'test' }
+    await seed(`roles/${coordinator.uid}`, { coordinator: given })
+    await seed(`memberships/${coordinator.uid}/acme`, { kind: 'coordinator' })
+
+    const signUp = (eventUID: string) =>
+      api('/api/v1/event/register', {
+        method: 'POST',
+        body: { eventUID },
+        token: coordinator.token,
+      })
+
+    expect((await signUp('dinner')).status).toBe(201)
+    const own = await signUp('talk')
+    expect(own.status).toBe(403)
+    expect(own.body).toMatchObject({ code: 'event/register/forbidden' })
   })
 })

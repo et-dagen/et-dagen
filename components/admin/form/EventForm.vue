@@ -22,23 +22,47 @@
   } from '@/components/ui/select'
   import { useResourceForm } from '@/composables/admin/useResourceForm'
   import { EventInput, toV1Event } from '@/contracts/event'
+  import { CompanyUid } from '@/domain/business/company'
 
-  const props = defineProps<{
-    uid?: string
-    initial: Record<string, unknown>
-  }>()
+  const props = withDefaults(
+    defineProps<{
+      uid?: string
+      initial: Record<string, unknown>
+      /** The list the form returns to: the admin panel's or the company panel's */
+      panel?: string
+    }>(),
+    { uid: undefined, panel: '/admin/events' },
+  )
 
   const { t } = useI18n()
   const localePath = useLocalePath()
 
   const { data: companies } =
     await useFetch<Record<string, { name?: string }>>('/api/v1/company')
-  const companyOptions = computed(() => [
-    { value: 'etdagene', label: 'E&T-dagene' },
-    ...Object.entries(companies.value ?? {})
-      .map(([value, company]) => ({ value, label: company.name ?? value }))
-      .sort((a, b) => a.label.localeCompare(b.label, 'nb')),
-  ])
+  // a company user or coordinator may only host for the companies they manage
+  const auth = useAuthStore()
+  const mayHost = (value: string) =>
+    !!value &&
+    auth.can('event', props.uid ? 'update' : 'create', {
+      companyUid: CompanyUid.parse(value),
+    })
+  // a company user who opens another company's event gets no form to fill in
+  const allowed = computed(
+    () => !props.uid || mayHost(String(props.initial.companyUID ?? '')),
+  )
+  const panelName = computed(() =>
+    props.panel.startsWith('/company/')
+      ? 'company.admin.events.name'
+      : 'admin.events.name',
+  )
+  const companyOptions = computed(() =>
+    [
+      { value: 'etdagene', label: 'E&T-dagene' },
+      ...Object.entries(companies.value ?? {})
+        .map(([value, company]) => ({ value, label: company.name ?? value }))
+        .sort((a, b) => a.label.localeCompare(b.label, 'nb')),
+    ].filter((option) => mayHost(option.value)),
+  )
   const { data: programmeData } =
     await useFetch<Record<string, string | { name?: string }>>(
       '/api/v1/programme',
@@ -54,7 +78,7 @@
   const { form, submit, saving } = useResourceForm({
     schema: EventInput,
     initial: props.initial,
-    back: '/admin/events',
+    back: props.panel,
     saved: () =>
       t(props.uid ? 'admin.events.form.updated' : 'admin.events.form.created'),
     save: async (values) => {
@@ -69,6 +93,12 @@
       await $fetch('/api/v1/event', { method: 'POST', body })
     },
   })
+  // with one company to choose from, a new entry is for that company
+  watchEffect(() => {
+    const [only, ...others] = companyOptions.value
+    if (!props.uid && only && !others.length && !form.values.companyUID)
+      form.setFieldValue('companyUID', only.value)
+  })
   const signup = computed(() => form.values.signup === true)
 
   function toggle<T>(list: T[] | undefined, item: T) {
@@ -79,17 +109,21 @@
 </script>
 
 <template>
+  <p v-if="!allowed" class="tw:text-muted-foreground">
+    {{ $t('admin.events.form.missing') }}
+  </p>
   <form
+    v-else
     class="tw:flex tw:max-w-3xl tw:flex-col tw:gap-6"
     novalidate
     @submit="submit"
   >
     <NuxtLink
-      :to="localePath('/admin/events')"
+      :to="localePath(panel)"
       class="tw:inline-flex tw:w-fit tw:items-center tw:gap-1 tw:text-sm tw:text-muted-foreground tw:hover:text-foreground"
     >
       <ArrowLeft class="tw:size-4" aria-hidden="true" />
-      {{ $t('admin.events.name') }}
+      {{ $t(panelName) }}
     </NuxtLink>
     <h1
       class="tw:text-2xl tw:leading-8 tw:font-extrabold tw:tracking-tight tw:lg:text-[2rem] tw:lg:leading-10"
@@ -98,7 +132,10 @@
         uid ? String(initial.title ?? '') : $t('admin.events.form.new_title')
       }}
     </h1>
-    <EventTabs v-if="uid && initial.signup" :uid="uid" />
+    <EventTabs
+      v-if="uid && initial.signup && panel === '/admin/events'"
+      :uid="uid"
+    />
 
     <section
       class="tw:grid tw:gap-5 tw:rounded-lg tw:border tw:bg-card tw:p-4 tw:lg:grid-cols-2 tw:lg:p-6"
@@ -295,7 +332,7 @@
         {{ $t(uid ? 'admin.events.form.save' : 'admin.events.form.create') }}
       </Button>
       <Button as-child variant="outline">
-        <NuxtLink :to="localePath('/admin/events')">
+        <NuxtLink :to="localePath(panel)">
           {{ $t('admin.list.cancel') }}
         </NuxtLink>
       </Button>

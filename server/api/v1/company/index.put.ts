@@ -2,7 +2,6 @@
 // endpoint for modifying companies in the db
 
 import { authorize } from '@/domain/authorization/authorize'
-import { hasPermission } from '@/domain/authorization/hasPermission'
 import { CompanyUid } from '@/domain/business/company'
 import { fail } from '@/domain/errors'
 import { Instant } from '@/domain/time'
@@ -15,8 +14,9 @@ defineRouteMeta({
     tags: ['Company'],
     summary: 'Modify company',
     description:
-      'Admin, or a company user editing their own company. Non-admins cannot change `type` - it ' +
-      'is stripped server-side.',
+      'Admin, or a company user editing their own company. Only `name`, `description`, `logo` ' +
+      'and `webpage` are stored; the tier and résumé access are set with ' +
+      '`PUT /api/v1/company/affiliation`.',
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],
     // TODO(api-docs): fill in the request/response schemas below.
     // Shapes are sketched from current handler behaviour - verify each
@@ -59,8 +59,6 @@ export default defineEventHandler(async (event) => {
       : undefined
   const env = { now: Instant.now() }
   authorize(subject, 'company', 'update', company, env)
-  const mayEntitle = hasPermission(subject, 'company', 'entitle', company, env)
-  addEventContext(event, 'is_admin', mayEntitle)
 
   // reference to companies
   const companiesRef = db.ref('companies')
@@ -88,13 +86,12 @@ export default defineEventHandler(async (event) => {
   }
 
   // company users may change only their profile; type and résumé access are set by admins
-  const updates = mayEntitle
-    ? newData
-    : Object.fromEntries(
-        Object.entries(newData).filter(([key]) =>
-          COMPANY_EDITABLE_FIELDS.includes(key),
-        ),
-      )
+  // the tier and résumé access are set through /company/affiliation, by admins only
+  const updates = Object.fromEntries(
+    Object.entries(newData).filter(([key]) =>
+      COMPANY_EDITABLE_FIELDS.includes(key),
+    ),
+  )
 
   if ('webpage' in updates) {
     if (!safeLink(updates.webpage)) throw fail('company/invalid-webpage')
