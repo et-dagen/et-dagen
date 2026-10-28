@@ -63,20 +63,21 @@ const filesOf = (value: Record<string, FileRecord> | null) =>
  * on the server's side of the connection instead of its own.
  */
 export function rtdbFileRepository(db: Database): FileRepository {
-  const files = db.ref('files')
+  // a reference per call: building the adapter must not open a connection
+  const files = () => db.ref('files')
 
   return {
     save: async (file) => {
-      await files.child(file.id).set(toRecord(file))
+      await files().child(file.id).set(toRecord(file))
     },
     find: async (id) => {
       const record = (
-        await files.child(id).once('value')
+        await files().child(id).once('value')
       ).val() as FileRecord | null
       return record ? toFile(id, record) : null
     },
     ofOwner: async (owner, kind) => {
-      const snapshot = await files
+      const snapshot = await files()
         .orderByChild('ownerKey')
         .equalTo(ownerKeyOf(owner))
         .once('value')
@@ -85,16 +86,16 @@ export function rtdbFileRepository(db: Database): FileRepository {
         .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
     },
     remove: async (id) => {
-      await files.child(id).remove()
+      await files().child(id).remove()
     },
     clearUploader: async (user) => {
-      const snapshot = await files
+      const snapshot = await files()
         .orderByChild('uploader')
         .equalTo(user)
         .once('value')
       const ids = Object.keys(snapshot.val() ?? {})
       if (ids.length > 0) {
-        await files.update(
+        await files().update(
           Object.fromEntries(ids.map((id) => [`${id}/uploader`, null])),
         )
       }

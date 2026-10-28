@@ -1,31 +1,40 @@
 import { z } from 'zod'
+import { RELATIONSHIPS, type Relationship } from '@/domain/business/company'
 
-/** The partner levels, from the most visible down to former companies */
-export const COMPANY_TYPES = [
-  'main-partner',
-  'partner',
-  'sponsor',
-  'old',
-] as const
+/** The tiers, from the most visible down to former companies */
+export const COMPANY_TIERS = RELATIONSHIPS
 
-const required = z
-  .string({ required_error: 'required' })
-  .trim()
-  .min(1, 'required')
+/** The key of each tier's translations under `admin.companies.type`, kept from v1's `type` */
+export const TYPE_OF_TIER: Record<Relationship, string> = {
+  mainPartner: 'main-partner',
+  partner: 'partner',
+  sponsor: 'sponsor',
+  prior: 'old',
+}
+
+const required = z.string({ error: 'required' }).trim().min(1, 'required')
 
 /**
  * A company as the admin form sends it, without the logo, which is uploaded on its own
  *
  * @remarks
  * Messages are keys under `form.errors`. Only `http(s)` addresses pass, so a stored link can
- * never run script.
+ * never run script. Résumé access is sold apart from the tier, so it is set on its own.
  */
 export const CompanyInput = z.object({
   name: required.max(100, 'too_long'),
-  type: z.enum(COMPANY_TYPES, { errorMap: () => ({ message: 'required' }) }),
+  tier: z.enum(COMPANY_TIERS, { error: 'required' }),
   webpage: required.refine((url) => /^https?:\/\/\S+$/.test(url), 'url'),
   description: z.string().trim().max(2000, 'too_long').default(''),
-  cvAccess: z.boolean().default(false),
+  resumeAccess: z.boolean().default(false),
 })
 
 export type CompanyInput = z.infer<typeof CompanyInput>
+
+/** The two bodies the form sends: the profile for `/company`, the contract for `/company/affiliation` */
+export function toV1Company({ tier, resumeAccess, ...profile }: CompanyInput) {
+  return {
+    profile,
+    affiliation: { tier, overrides: { 'ent:resume:view': resumeAccess } },
+  }
+}

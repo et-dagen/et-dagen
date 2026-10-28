@@ -112,12 +112,8 @@ export const signinUser = async (email: string, password: string) => {
 // signs out firebase user and removes token cookie
 export const signoutUser = async () => {
   const auth = getAuth()
-  const app = useAppStore()
   const authStore = useAuthStore()
   const localePath = useLocalePath()
-
-  // close app drawer
-  app.drawer = false
 
   // sign out user and navigate to home page
   await navigateTo(localePath('/'))

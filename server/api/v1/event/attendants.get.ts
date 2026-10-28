@@ -1,6 +1,8 @@
 // GET /api/v1/event/attendants
 // Admin-only: get a list of attendant emails for a given event
 
+import { Instant } from '@/domain/time'
+
 defineRouteMeta({
   openAPI: {
     tags: ['Event', 'internal'],
@@ -36,14 +38,15 @@ defineRouteMeta({
     //     },
     //   },
     //   400: { description: 'Error (event/attendants/missing-event-uid).' },
-    //   401: { description: 'Error (event/attendants/not-admin).' },
+    //   401: { description: 'auth/signed-out' },
+    //   403: { description: 'auth/forbidden' },
     //   404: { description: 'Error (event/not-found).' },
     // },
   },
 })
 
 export default defineEventHandler(async (event) => {
-  const { user } = event.context
+  const { subject } = event.context
   const { eventUID } = getQuery(event)
 
   setResourceContext(
@@ -56,19 +59,22 @@ export default defineEventHandler(async (event) => {
   // other users' email addresses: always logged
   setLogImportance(event, 'warn')
 
-  if (!user || !hasAccess(user, ['admin'])) {
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Error (event/attendants/not-admin).',
-    })
-  }
-
   if (!eventUID) {
     throw createError({
       statusCode: 400,
       statusMessage: 'Error (event/attendants/missing-event-uid).',
     })
   }
+
+  await authorizeStoredEvent(
+    event,
+    subject,
+    'listAttendants',
+    String(eventUID),
+    {
+      now: Instant.now(),
+    },
+  )
 
   const eventRef = db.ref(`events/${eventUID}`)
   const snapshot = await eventRef.once('value')

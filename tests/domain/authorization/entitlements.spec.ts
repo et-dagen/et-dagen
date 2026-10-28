@@ -21,8 +21,8 @@ describe('relationship defaults', () => {
     )
   })
 
-  it('grants sponsors and prior companies nothing', () => {
-    expect(setOf({ relationship: 'sponsor' })).toEqual([])
+  it('grants sponsors their profile and prior companies nothing', () => {
+    expect(setOf({ relationship: 'sponsor' })).toEqual(['ent:profile:manage'])
     expect(setOf({ relationship: 'prior' })).toEqual([])
   })
 
@@ -37,7 +37,7 @@ describe('overrides', () => {
   it('adds an entitlement the tier does not grant', () => {
     expect(
       setOf({
-        relationship: 'sponsor',
+        relationship: 'prior',
         entitlementOverrides: { 'ent:profile:manage': true },
       }),
     ).toEqual(['ent:profile:manage'])

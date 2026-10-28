@@ -132,10 +132,13 @@
   background: var(--background);
 }
 
-:where(.et-admin, .et-ui, [data-slot]),
-:where(.et-admin, .et-ui, [data-slot]) :where(*, ::before, ::after) {
-  box-sizing: border-box;
-  border: 0 solid var(--border);
+/* in a layer, so it loses to every utility; at equal specificity it hid divide-y's lines */
+@layer et-base {
+  :where(.et-admin, .et-ui, [data-slot]),
+  :where(.et-admin, .et-ui, [data-slot]) :where(*, ::before, ::after) {
+    box-sizing: border-box;
+    border: 0 solid var(--border);
+  }
 }
 
 :where(.et-admin *, .et-ui *, [data-slot], [data-slot] *):where(
@@ -203,11 +206,6 @@
   &:hover {
     background: var(--accent);
   }
-}
-
-/* the ground runs down to the footer's slant, which shows the app background through its clip */
-.v-application:has(.et-ui) {
-  background: var(--background);
 }
 
 /* Rich text written in the admin editor, as readers see it */

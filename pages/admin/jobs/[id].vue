@@ -21,8 +21,9 @@
       companyUID: job.companyUID,
       jobType: job.jobType,
       location: job.location,
+      deadlineType: job.deadlineType ?? (job.deadline ? 'date' : 'rolling'),
       // v1 has stored deadlines with and without a time; the form edits the date
-      deadline: job.deadline?.slice(0, 10),
+      deadline: job.deadline?.slice(0, 10) ?? '',
       applicationLink: job.applicationLink ?? '',
       description: job.description ?? '',
     }"

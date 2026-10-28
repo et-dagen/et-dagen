@@ -4,6 +4,8 @@
 import { isValidDate } from '@/composables/useDate'
 import { cleanRichText, safeLink } from '@/server/security/richText'
 import { fail } from '@/domain/errors'
+import { authorize } from '@/domain/authorization/authorize'
+import { Instant } from '@/domain/time'
 
 defineRouteMeta({
   openAPI: {
@@ -40,14 +42,15 @@ defineRouteMeta({
     // responses: {
     //   201: { description: 'Created, empty body' },
     //   400: { description: 'Error (general/missing-data). or Error (job/invalid-date).' },
-    //   401: { description: 'Error (firebase/user-not-authorized).' },
+    //   401: { description: 'auth/signed-out' },
+    //   403: { description: 'auth/forbidden' },
     //   404: { description: 'Error (company/not-found).' },
     // },
   },
 })
 
 export default defineEventHandler(async (event) => {
-  const { user } = event.context
+  const { subject } = event.context
 
   const {
     companyUID,
@@ -58,7 +61,10 @@ export default defineEventHandler(async (event) => {
     location,
     applicationLink,
     listing = 'text',
+    deadlineType = 'date',
   } = await readBody(event)
+  // "Snarest" and "Løpende" have no date to check
+  const onDate = deadlineType === 'date'
 
   // Set resource context for wide event logging
   setResourceContext(
@@ -75,7 +81,7 @@ export default defineEventHandler(async (event) => {
   if (
     !companyUID ||
     !title ||
-    !deadline ||
+    (onDate && !deadline) ||
     !jobType ||
     !location ||
     typeof applicationLink !== 'string' ||
@@ -95,8 +101,11 @@ export default defineEventHandler(async (event) => {
   if (!['text', 'link'].includes(listing)) throw fail('job/invalid-listing')
   if (applicationLink && !safeLink(applicationLink))
     throw fail('job/invalid-link')
+  if (!['date', 'asap', 'rolling'].includes(deadlineType)) {
+    throw fail('job/invalid-deadline-type')
+  }
 
-  if (!isValidDate(deadline)) {
+  if (onDate && !isValidDate(deadline)) {
     setErrorContext(event, {
       code: 'job/invalid-date',
       message: 'Invalid deadline date format',
@@ -107,24 +116,8 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const isAdmin = hasAccess(user, ['admin'])
-  const isCompanyAdmin =
-    hasAccess(user, ['company']) && user.companyUID === companyUID
-
-  addEventContext(event, 'is_admin', isAdmin)
-  addEventContext(event, 'is_company_admin', isCompanyAdmin)
-
-  // only admins and company admins can modify jobs
-  if (!isAdmin && !isCompanyAdmin) {
-    setErrorContext(event, {
-      code: 'firebase/user-not-authorized',
-      message: 'User not authorized to create jobs',
-    })
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Error (firebase/user-not-authorized).',
-    })
-  }
+  const env = { now: Instant.now() }
+  authorize(subject, 'job', 'create', companyOf(companyUID), env)
 
   // reference to companies
   const companiesRef = db.ref('companies')
@@ -159,7 +152,8 @@ export default defineEventHandler(async (event) => {
       companyUID,
       title,
       description: cleanRichText(description),
-      deadline,
+      deadline: onDate ? deadline : null,
+      deadlineType,
       jobType,
       location,
       applicationLink: safeLink(applicationLink) ?? '',

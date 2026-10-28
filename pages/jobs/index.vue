@@ -1,196 +1,251 @@
 <script setup lang="ts">
-  import { jobTypes as jobTypeNames } from '~/config/app.config'
+  import { ChevronDown, SlidersHorizontal, X } from '@lucide/vue'
+  import SearchField from '@/components/admin/SearchField.vue'
+  import FilterGroup from '@/components/job/FilterGroup.vue'
+  import JobRowItem from '@/components/job/JobRow.vue'
+  import { Button } from '@/components/ui/button'
+  import { Instant } from '@/domain/time'
+  import type { EventRow } from '@/lib/admin/events'
+  import {
+    facetsOf,
+    filterJobs,
+    jobRows,
+    type JobFilters,
+    type StoredJob,
+  } from '@/lib/jobBoard'
+  import { SOON_DAYS } from '@/lib/jobs'
 
-  // fetch jobs and companies
-  const { data: jobs } = await useFetch('/api/v1/job')
-  const { data: companies } = await useFetch('/api/v1/company')
+  const { t } = useI18n()
+  const route = useRoute()
+  const router = useRouter()
 
-  // format company data
-  const company = computed(() => (UID: string) => {
-    return {
-      companyName: companies.value[UID].name,
-      companyLogo: companies.value[UID].logo,
-    }
+  const [{ data: jobs }, { data: companies }, { data: events }] =
+    await Promise.all([
+      useFetch<Record<string, StoredJob>>('/api/v1/job'),
+      useFetch<Record<string, { name?: string; logo?: string }>>(
+        '/api/v1/company',
+      ),
+      useFetch<Record<string, EventRow>>('/api/v1/event'),
+    ])
+
+  const rows = computed(() =>
+    jobRows(jobs.value, companies.value, events.value, Instant.now()),
+  )
+
+  // the filters live in the address, so a filtered list can be shared
+  const listOf = (value: unknown) =>
+    (Array.isArray(value) ? value : [value]).filter(
+      (v): v is string => typeof v === 'string' && v !== '',
+    )
+  const filters = reactive<JobFilters>({
+    query: String(route.query.q ?? ''),
+    types: listOf(route.query.type),
+    companies: listOf(route.query.company),
+    places: listOf(route.query.place),
+    soon: route.query.soon === '1',
   })
+  watch(filters, (f) =>
+    router.replace({
+      query: {
+        q: f.query || undefined,
+        type: f.types,
+        company: f.companies,
+        place: f.places,
+        soon: f.soon ? '1' : undefined,
+      },
+    }),
+  )
 
-  // job type filtering
-  const jobTypes = ref([0, 1, 2])
-
-  // sorting by deadline
-  const sortOrder = ref('ascending')
-
-  // search string: keywords separated by spaces
-  const search = ref('')
-
-  // format the jobs in the format accepted by the JobCard
-  const formatedJobs = computed(() => {
-    const jobsArray = Object.entries(jobs.value)
-    return jobsArray.map((job: any) => {
-      // combine the data from a job with the relevant data from the jobs company
-      return {
-        jobUID: job[0],
-        ...job[1],
-        ...company.value(job[1].companyUID),
-      }
+  const shown = computed(() => filterJobs(rows.value, filters))
+  const facets = computed(() => facetsOf(rows.value, filters))
+  const active = computed(
+    () =>
+      filters.types.length +
+      filters.companies.length +
+      filters.places.length +
+      (filters.soon ? 1 : 0),
+  )
+  const reset = () => {
+    Object.assign(filters, {
+      query: '',
+      types: [],
+      companies: [],
+      places: [],
+      soon: false,
     })
-  })
+  }
 
-  // do filter and sorting
-  const filteredJobs = computed(() => {
-    // filter by job type
-    const typeFilteredArray = formatedJobs.value.filter((job: any) => {
-      const { jobType } = job
-      const jobIndex = jobTypeNames.indexOf(jobType)
-      return jobTypes.value.includes(jobIndex)
-    })
+  const byLabel = (a: { label: string }, b: { label: string }) =>
+    a.label.localeCompare(b.label, 'nb')
+  const typeOptions = computed(() =>
+    facets.value.types
+      .map(([value, count]) => ({
+        value,
+        count,
+        label: t(`admin.jobs.attributes.jobtype.${value.replace('-', '_')}`),
+      }))
+      .sort(byLabel),
+  )
+  const companyOptions = computed(() =>
+    facets.value.companies
+      .map(([value, count]) => ({
+        value,
+        count,
+        label: companies.value?.[value]?.name ?? value,
+      }))
+      .sort(byLabel),
+  )
+  const placeOptions = computed(() =>
+    facets.value.places.map(([value, count]) => ({
+      value,
+      count,
+      label: value,
+    })),
+  )
 
-    // prepare array of words to search by
-    const searchLower = search.value.toLowerCase()
-    const searchTrimmed = searchLower.trim()
-    const searchWords = searchTrimmed.split(' ')
+  // on phones the filters fold away under one button
+  const filtersOpen = ref(false)
+  const countLine = ref<HTMLElement | null>(null)
+  const showResults = () => {
+    filtersOpen.value = false
+    countLine.value?.focus()
+  }
 
-    // only include jobs that include all the search words
-    const searchFilteredArray = typeFilteredArray.filter((job: any) => {
-      const jobInfo = Object.values(job).join(' ')
-      const jobInfoLower = jobInfo.toLowerCase()
-      return searchWords.every((word) => jobInfoLower.includes(word))
-    })
-
-    // sort array according to deadline
-    const sortedArray =
-      searchFilteredArray.sort((a: any, b: any) => {
-        const firstDate = new Date(a.deadline)
-        const secondDate = new Date(b.deadline)
-
-        const order =
-          /* @ts-ignore */
-          firstDate < secondDate ? -1 : 1
-        return sortOrder.value === 'ascending' ? order : order * -1
-      }) ?? []
-
-    return sortedArray
-  })
+  useHead({ title: () => t('jobs.list.title') })
 </script>
 
 <template>
-  <div class="job-page d-flex flex-column my-10">
-    <!-- title -->
-    <h4 class="font-weight-bold text-center">
-      {{ $t('jobs.title') }}
-    </h4>
+  <div class="et-ui">
+    <div
+      class="tw:mx-auto tw:grid tw:max-w-6xl tw:gap-6 tw:px-4 tw:py-8 tw:lg:grid-cols-[18rem_minmax(0,1fr)] tw:lg:gap-10 tw:lg:px-8 tw:lg:py-12"
+    >
+      <aside
+        class="tw:flex tw:flex-col tw:gap-5 tw:lg:sticky tw:lg:top-24 tw:lg:self-start"
+      >
+        <h1
+          class="tw:text-3xl tw:leading-tight tw:font-extrabold tw:tracking-tight tw:lg:text-[2.5rem]"
+        >
+          {{ $t('jobs.list.title') }}
+        </h1>
+        <SearchField
+          v-model="filters.query"
+          :label="$t('jobs.list.search')"
+          fill
+        />
 
-    <!-- page actions -->
-    <div class="job-actions mx-auto mt-10">
-      <div class="job-filters d-flex justify-space-between">
-        <!-- job types -->
-        <div style="min-width: fit-content">
-          <p>{{ $t('jobs.jobTypes') }}</p>
-          <VChipGroup
-            v-model="jobTypes"
-            class="chip-group me-auto"
-            multiple
-            mandatory
+        <Button
+          variant="outline"
+          class="tw:w-full tw:justify-between tw:bg-card tw:lg:hidden"
+          :aria-expanded="filtersOpen"
+          aria-controls="job-filters"
+          @click="filtersOpen = !filtersOpen"
+        >
+          <span class="tw:inline-flex tw:items-center tw:gap-2">
+            <SlidersHorizontal aria-hidden="true" />
+            {{ $t('jobs.list.filters') }}
+          </span>
+          <span class="tw:inline-flex tw:items-center tw:gap-2">
+            <span
+              v-if="active"
+              class="tw:rounded-sm tw:bg-plate tw:px-1.5 tw:pt-0.5 tw:text-xs tw:font-bold tw:text-plate-foreground"
+            >
+              {{ active }}
+            </span>
+            <ChevronDown
+              class="tw:transition-transform"
+              :class="filtersOpen && 'tw:rotate-180'"
+              aria-hidden="true"
+            />
+          </span>
+        </Button>
+
+        <div
+          id="job-filters"
+          class="tw:flex-col tw:gap-6 tw:lg:flex"
+          :class="filtersOpen ? 'tw:flex' : 'tw:hidden'"
+        >
+          <FilterGroup
+            v-if="typeOptions.length"
+            v-model="filters.types"
+            :label="$t('jobs.list.type')"
+            :options="typeOptions"
+          />
+          <fieldset class="tw:flex tw:flex-col tw:gap-2">
+            <legend
+              class="tw:mb-2 tw:text-sm tw:font-semibold tw:text-muted-foreground"
+            >
+              {{ $t('jobs.list.deadline') }}
+            </legend>
+            <button
+              type="button"
+              :aria-pressed="filters.soon"
+              :disabled="facets.soon === 0 && !filters.soon"
+              class="tw:inline-flex tw:h-9 tw:w-fit tw:items-center tw:gap-2 tw:rounded-md tw:border tw:bg-card tw:px-3 tw:pt-0.5 tw:text-sm tw:font-semibold tw:transition-colors tw:hover:bg-accent tw:active:translate-y-px tw:disabled:opacity-40 tw:aria-pressed:border-signal tw:aria-pressed:bg-signal tw:aria-pressed:text-signal-foreground"
+              @click="filters.soon = !filters.soon"
+            >
+              {{ $t('jobs.list.soon', { n: SOON_DAYS }) }}
+              <span class="tw:font-normal tw:tabular-nums tw:opacity-70">
+                {{ facets.soon }}
+              </span>
+            </button>
+          </fieldset>
+          <FilterGroup
+            v-if="companyOptions.length"
+            v-model="filters.companies"
+            :label="$t('jobs.list.company')"
+            :options="companyOptions"
+          />
+          <FilterGroup
+            v-if="placeOptions.length"
+            v-model="filters.places"
+            :label="$t('jobs.list.place')"
+            :options="placeOptions"
+          />
+          <button
+            v-if="active && shown.length"
+            type="button"
+            class="tw:inline-flex tw:w-fit tw:items-center tw:gap-1 tw:text-sm tw:font-semibold tw:text-muted-foreground tw:hover:text-foreground"
+            @click="reset"
           >
-            <VChip
-              v-for="(jobType, index) in jobTypeNames"
-              :key="index"
-              :class="`bg-neutral-lighten-4 ${
-                jobTypes.includes(index) ? 'v-chip--selected' : ''
-              }`"
-            >
-              {{
-                $t(`admin.jobs.attributes.jobtype.${jobType.replace('-', '_')}`)
-              }}
-            </VChip>
-          </VChipGroup>
+            <X class="tw:size-4" aria-hidden="true" />
+            {{ $t('jobs.list.reset') }}
+          </button>
+          <Button class="tw:w-full tw:lg:hidden" @click="showResults">
+            {{ $t('jobs.list.show', shown.length) }}
+          </Button>
         </div>
+      </aside>
 
-        <!-- sort by deadline -->
-        <div>
-          <p>{{ $t('jobs.deadline') }}</p>
-          <VChipGroup v-model="sortOrder" class="chip-group" mandatory>
-            <VChip
-              :class="`bg-neutral-lighten-4 ${
-                sortOrder === 'ascending' ? 'v-chip--selected' : ''
-              }`"
-              style="margin-right: 0px !important"
-              value="ascending"
-            >
-              {{ $t('admin.users.filterorder.ascending') }}
-            </VChip>
-            <VChip
-              :class="`bg-neutral-lighten-4 ${
-                sortOrder === 'descending' ? 'v-chip--selected' : ''
-              }`"
-              style="margin-right: 0px !important"
-              value="descending"
-            >
-              {{ $t('admin.users.filterorder.descending') }}
-            </VChip>
-          </VChipGroup>
+      <main class="tw:flex tw:min-w-0 tw:flex-col tw:gap-3 tw:lg:pt-3">
+        <p
+          v-show="shown.length"
+          ref="countLine"
+          tabindex="-1"
+          class="tw:text-sm tw:text-muted-foreground tw:outline-none"
+          aria-live="polite"
+        >
+          {{ $t('jobs.list.count', shown.length) }}
+        </p>
+        <ul
+          v-if="shown.length"
+          class="tw:divide-y tw:divide-border tw:overflow-hidden tw:rounded-lg tw:border tw:bg-card"
+        >
+          <li v-for="job in shown" :key="job.uid">
+            <JobRowItem :job="job" />
+          </li>
+        </ul>
+        <div
+          v-else
+          class="tw:flex tw:flex-col tw:items-start tw:gap-4 tw:rounded-lg tw:border tw:bg-card tw:p-6"
+        >
+          <p class="tw:font-semibold">
+            {{ $t(rows.length ? 'jobs.list.no_match' : 'jobs.list.empty') }}
+          </p>
+          <Button v-if="rows.length" variant="outline" @click="reset">
+            {{ $t('jobs.list.reset') }}
+          </Button>
         </div>
-      </div>
-
-      <!-- search field -->
-      <VTextField
-        v-model="search"
-        class="search-field mt-3"
-        :placeholder="$t('jobs.search') + '...'"
-        variant="outlined"
-        density="compact"
-      />
+      </main>
     </div>
-
-    <!-- job list -->
-    <div v-if="jobs" class="job-list mx-auto">
-      <JobCard
-        v-for="(job, index) in filteredJobs"
-        :key="index"
-        :content="job"
-        class="my-3"
-      />
-    </div>
-    <p v-else class="text-center">{{ $t('jobs.no_jobs') }}</p>
   </div>
 </template>
-
-<style lang="scss">
-  @use 'sass:map';
-  @use 'vuetify/settings';
-
-  .job-page {
-    @media #{map.get(settings.$display-breakpoints, 'md-and-up')} {
-      align-items: center !important;
-    }
-  }
-
-  .job-actions {
-    width: 600px;
-    max-width: 95vw;
-  }
-
-  .job-filters {
-    overflow: scroll;
-  }
-
-  .job-filters::-webkit-scrollbar {
-    display: none;
-  }
-
-  .job-list {
-    width: 800px;
-    box-sizing: border-box;
-    max-width: 95vw !important;
-  }
-
-  .chip-group {
-    .v-chip {
-      transition: 0.25s;
-      user-select: none;
-    }
-    .v-chip--selected {
-      background-color: rgb(var(--v-theme-accent)) !important;
-      color: rgb(var(--v-theme-background)) !important;
-    }
-  }
-</style>

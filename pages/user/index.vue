@@ -1,198 +1,153 @@
 <script setup lang="ts">
-  import { dietaryFlags } from '~/config/app.config'
+  import { CalendarDays, RotateCw } from '@lucide/vue'
+  import { Instant } from '@/domain/time'
+  import type { EventRow } from '@/lib/admin/events'
+  import {
+    firstNameOf,
+    signUpRows,
+    ticketOf,
+    type SignUp,
+  } from '@/lib/user/signUps'
+  import { Button } from '@/components/ui/button'
 
   definePageMeta({
     // route is protected
     protected: true,
   })
-  const dietaryIcon = computed(() => {
-    return (restriction: string) => {
-      return dietaryFlags.find((flag) => flag.name === restriction)?.icon
-    }
-  })
 
   const auth = useAuthStore()
-
   const localePath = useLocalePath()
-  const isRegisteredRestriction = computed(() => {
-    return (restriction: string) => {
-      return Object.values(dietaryFlags)
-        .map((entry) => entry.name)
-        .includes(restriction)
-    }
-  })
 
-  const authStore = useAuthStore()
-  const { user } = storeToRefs(authStore)
+  const [
+    { data: signUps, error: signUpsError, refresh: refreshSignUps },
+    { data: events, error: eventsError, refresh: refreshEvents },
+  ] = await Promise.all([
+    useFetch<SignUp[]>('/api/v1/user/events', {
+      key: 'user-sign-ups',
+      headers: useRequestHeaders(['cookie']),
+    }),
+    useFetch<Record<string, EventRow>>('/api/v1/event'),
+  ])
 
-  // const { data } = await useFetch('/api/v1/event')
+  const now = Instant.now()
+  const rows = computed(() => signUpRows(signUps.value, events.value, now))
+  const ticket = computed(() => ticketOf(rows.value))
 
-  // // embed uid into object
-  // const events = computed(() => embedKeyIntoObjectValues(data.value))
-
-  // // return list of the events the user is signed up for
-  // const userEvents = computed(() => {
-  //   if (!events.value) return []
-
-  //   const filteredEvents = events.value.filter((event: any) =>
-  //     Object.values(event?.attendants ?? {}).includes(user.value?.uid),
-  //   )
-
-  //   return filteredEvents.map((event: any) => {
-  //     return {
-  //       title: event.title,
-  //       uid: event.uid,
-  //     }
-  //   })
-  // })
-
-  const uploadResume = async (event: any) => {
-    const resumeFile = event.target.files[0]
-    if (!resumeFile) return
-    const bodyData = new FormData()
-    bodyData.append('file', resumeFile)
-    bodyData.append('userUID', auth.user?.uid)
-
-    await useFetch('/api/v1/resume', {
-      method: 'POST',
-      body: bodyData,
-    })
-      .then(() => {
-        location.reload()
-      })
-      .catch((error) => console.log(error.message))
-  }
-
-  const deleteResume = async () => {
-    await useFetch('/api/v1/resume', {
-      method: 'DELETE',
-      body: {
-        userUID: auth.user?.uid,
-      },
-    })
-      .then(() => location.reload())
-      .catch((error) => console.log(error.message))
-  }
-
-  const getFileName = (URL: string) => {
-    const list = URL.split('/')
-    return list[list.length - 1]
+  // a failed load must not tell someone at the door that they have no ticket
+  const failed = computed(() => !!signUpsError.value || !!eventsError.value)
+  const retrying = ref(false)
+  const refresh = async () => {
+    retrying.value = true
+    await Promise.all([refreshSignUps(), refreshEvents()])
+    retrying.value = false
   }
 </script>
 
 <template>
-  <VContainer class="d-flex justify-center align-center mt-16">
-    <VCard class="pa-4" style="width: 800px; max-width: 90vw" elevation="4">
-      <VRow class="d-flex justify-center h-100 ma-0">
-        <VCol
-          cols="12"
-          lg="4"
-          class="d-flex flex-column justify-between align-center"
-        >
-          <VIcon size="50" class="my-8" color="primary">mdi-account</VIcon>
-          <h6>{{ user?.name }}</h6>
-          <span class="text-neutral-lighten-2">{{ user?.email }}</span>
-          <NuxtLink :to="localePath('/user/edit')" class="mt-4">
-            <VIcon size="x-large" variant="plain" color="primary">
-              mdi-pencil-box
-            </VIcon>
-          </NuxtLink>
-        </VCol>
-        <VCol v-if="!auth.hasAccess(['company'])" cols="12" lg="8">
-          <h6>Information</h6>
-          <VDivider class="my-2" />
-          <p class="my-2">
-            <strong>{{ $t('user.information.studyprogramme') }}: </strong>
-            {{ user?.studyProgram }}
-          </p>
-          <p class="my-2">
-            <strong>{{ $t('user.information.currentyear') }}: </strong>
-            {{ user?.currentYear }}
-          </p>
+  <div class="et-ui tw:bg-background tw:text-foreground">
+    <div
+      class="tw:mx-auto tw:max-w-screen-xl tw:px-4 tw:py-10 tw:lg:px-8 tw:lg:py-14"
+    >
+      <h1 class="tw:text-4xl tw:font-black tw:tracking-tight tw:lg:text-5xl">
+        {{ $t('user.page.hello', { name: firstNameOf(auth.user?.name) }) }}
+      </h1>
 
-          <div v-if="user?.dietaryRestrictions" class="mt-4">
-            <p class="mb-2">
-              <strong>
-                {{ $t('user.information.dietaryrestrictions') }}:
-              </strong>
-            </p>
-            <ul class="allergies d-flex flex-column">
-              <li
-                v-for="restriction in user?.dietaryRestrictions"
-                :key="restriction"
-                class="d-flex align-center"
-              >
-                <span v-if="isRegisteredRestriction(restriction)">
-                  <VIcon size="small" color="primary" class="mr-2">
-                    {{ dietaryIcon(restriction) }}
-                  </VIcon>
-                  {{ $t(`dietary_restrictions.${restriction}`) }}
-                </span>
+      <!-- events on the left, the user's own information on the right; a phone stacks them ticket first -->
+      <div
+        class="tw:mt-8 tw:grid tw:items-start tw:gap-x-10 tw:gap-y-14 tw:lg:grid-cols-[minmax(0,1fr)_24rem]"
+      >
+        <section aria-labelledby="arrangementer-title" class="tw:min-w-0">
+          <div
+            class="tw:flex tw:min-h-10 tw:flex-wrap tw:items-center tw:justify-between tw:gap-3"
+          >
+            <h2
+              id="arrangementer-title"
+              class="tw:text-2xl tw:font-extrabold tw:tracking-tight"
+            >
+              {{ $t('user.page.events') }}
+            </h2>
+            <Button as-child variant="outline">
+              <NuxtLink :to="localePath('/programme')">
+                <CalendarDays aria-hidden="true" />
+                {{ $t('user.page.programme') }}
+              </NuxtLink>
+            </Button>
+          </div>
 
-                <span v-else>
-                  <VIcon size="small" color="primary" class="mr-2">
-                    mdi-food-variant
-                  </VIcon>
-                  {{ restriction }}
+          <div
+            v-if="failed"
+            role="alert"
+            class="tw:mt-4 tw:flex tw:flex-wrap tw:items-center tw:justify-between tw:gap-4 tw:rounded-lg tw:border tw:bg-card tw:p-5"
+          >
+            <div>
+              <p class="tw:font-bold">{{ $t('user.page.load_failed') }}</p>
+              <p class="tw:mt-1 tw:text-sm tw:text-muted-foreground">
+                {{ $t('user.page.load_failed_hint') }}
+              </p>
+            </div>
+            <Button variant="outline" :disabled="retrying" @click="refresh()">
+              <RotateCw aria-hidden="true" />
+              {{ $t('user.page.retry') }}
+            </Button>
+          </div>
+          <template v-else>
+            <UserTicket
+              v-if="ticket && auth.user"
+              :row="ticket"
+              :holder="auth.user.name ?? ''"
+              :uid="auth.user.uid"
+              class="tw:mt-4"
+            />
+            <div
+              v-else
+              class="tw:mt-4 tw:rounded-lg tw:border tw:border-dashed tw:bg-card tw:px-6 tw:py-10 tw:text-center"
+            >
+              <p class="tw:text-lg tw:font-bold">
+                {{ $t('user.page.no_ticket') }}
+              </p>
+              <p class="tw:mt-1 tw:text-muted-foreground">
+                {{ $t('user.page.no_ticket_hint') }}
+              </p>
+            </div>
+
+            <div class="tw:mt-5 tw:rounded-lg tw:border tw:bg-card">
+              <h3
+                class="tw:flex tw:items-center tw:gap-3 tw:border-b tw:px-5 tw:py-4 tw:text-lg tw:font-extrabold tw:sm:px-6"
+              >
+                {{ $t('user.page.sign_ups') }}
+                <span
+                  class="tw:grid tw:min-w-7 tw:place-items-center tw:rounded-full tw:bg-plate tw:px-2 tw:pt-0.5 tw:text-sm tw:text-plate-foreground"
+                >
+                  {{ rows.length }}
                 </span>
-              </li>
-            </ul>
-          </div>
-          <div class="pt-5">
-            <h6>{{ $t('user.resume.resume') }}</h6>
-            <VDivider class="my-2" />
-            <p v-if="auth.user?.resume" class="my-2">
-              <strong>{{ $t('user.resume.your_resume') }}: </strong>
-              <NuxtLink
-                :to="`/api/v1/resume/file?userUID=${auth.user.uid}`"
-                :external="true"
-                target="_blank"
-                class="text-blue"
-                >{{ getFileName(auth.user.resume) }}</NuxtLink
+              </h3>
+              <UserSignUps
+                v-if="rows.length"
+                :rows="rows"
+                @withdrawn="refresh()"
+              />
+              <p
+                v-else
+                class="tw:px-5 tw:py-4 tw:text-muted-foreground tw:sm:px-6"
               >
-            </p>
-            <VRow no-gutters>
-              <VCol cols="12" :sm="auth.user?.resume !== undefined ? 7 : 12">
-                <VFileInput
-                  :active="auth.user?.resume !== undefined"
-                  accept="application/pdf"
-                  :label="$t('user.resume.upload_resume')"
-                  base-color="standard"
-                  color="standard"
-                  @change="uploadResume"
-                />
-              </VCol>
-              <VCol
-                v-if="auth.user?.resume"
-                cols="12"
-                sm="5"
-                class="d-flex justify-center"
-              >
-                <VBtn color="error" @click="deleteResume">{{
-                  $t('user.resume.delete_resume')
-                }}</VBtn>
-              </VCol>
-            </VRow>
+                {{ $t('user.page.no_sign_ups') }}
+              </p>
+            </div>
+          </template>
+        </section>
+
+        <section aria-labelledby="informasjon-title" class="tw:min-w-0">
+          <div class="tw:flex tw:min-h-10 tw:items-center">
+            <h2
+              id="informasjon-title"
+              class="tw:text-2xl tw:font-extrabold tw:tracking-tight"
+            >
+              {{ $t('user.page.information') }}
+            </h2>
           </div>
-        </VCol>
-        <VCol cols="12">
-          <UserDeleteAccount />
-        </VCol>
-      </VRow>
-    </VCard>
-  </VContainer>
+          <UserDetails class="tw:mt-4" />
+        </section>
+      </div>
+    </div>
+  </div>
 </template>
-
-<style scoped lang="scss">
-  .allergies {
-    flex-wrap: wrap;
-    list-style: none;
-    max-height: 150px;
-    gap: 5px;
-    overflow-y: auto;
-
-    li {
-      width: 50%;
-    }
-  }
-</style>
