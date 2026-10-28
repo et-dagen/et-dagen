@@ -12,14 +12,20 @@
   import { Button } from '@/components/ui/button'
   import { Instant } from '@/domain/time'
   import type { EventRow } from '@/lib/admin/events'
-  import { deadlineState, fairEventsOf, formatDeadline } from '@/lib/jobs'
+  import {
+    deadlineState,
+    fairEventsOf,
+    formatDeadline,
+    type DeadlineType,
+  } from '@/lib/jobs'
 
   interface StoredJob {
     title?: string
     companyUID?: string
     jobType?: string
     location?: string
-    deadline?: string
+    deadline?: string | null
+    deadlineType?: DeadlineType
     description?: string
     listing?: 'text' | 'link'
     applicationLink?: string
@@ -48,7 +54,12 @@
     () => companies.value?.[job.value?.companyUID ?? ''] ?? null,
   )
   const now = Instant.now()
-  const deadline = computed(() => deadlineState(job.value?.deadline, now))
+  const deadline = computed(() =>
+    deadlineState(job.value?.deadline, now, job.value?.deadlineType),
+  )
+  const dated = computed(
+    () => deadline.value.kind === 'open' || deadline.value.kind === 'passed',
+  )
   const fair = computed(() =>
     fairEventsOf(job.value?.companyUID, events.value, now),
   )
@@ -131,7 +142,9 @@
               />
             </dt>
             <dd class="tw:font-medium">
-              {{ formatDeadline(job.deadline, locale) }}
+              <template v-if="dated">
+                {{ formatDeadline(job.deadline ?? undefined, locale) }}
+              </template>
             </dd>
             <dd><DeadlineNote :state="deadline" /></dd>
           </div>
@@ -160,9 +173,17 @@
               {{ $t('jobs.deadline') }}
             </p>
             <p class="tw:text-xl tw:font-bold">
-              {{ formatDeadline(job.deadline, locale) || '-' }}
+              {{
+                dated
+                  ? formatDeadline(job.deadline ?? undefined, locale)
+                  : $t(
+                      deadline.kind === 'asap'
+                        ? 'jobs.detail.asap'
+                        : 'jobs.detail.rolling',
+                    )
+              }}
             </p>
-            <DeadlineNote :state="deadline" />
+            <DeadlineNote v-if="dated" :state="deadline" />
           </div>
           <Button v-if="canApply" as-child size="lg" class="tw:w-full">
             <a
