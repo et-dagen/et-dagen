@@ -204,7 +204,9 @@
       method: 'POST',
       body: { eventUID: event.value.uid },
     })
-      .then(() => refresh())
+      .then(() =>
+        Promise.all([refresh(), refreshNuxtData('site-header-events')]),
+      )
       .then(() =>
         useAlert.alert(
           getI18nString('alert.success.event.register.sign_up'),
@@ -225,7 +227,9 @@
       method: 'POST',
       body: { eventUID: event.value.uid },
     })
-      .then(() => refresh())
+      .then(() =>
+        Promise.all([refresh(), refreshNuxtData('site-header-events')]),
+      )
       .then(() =>
         useAlert.alert(
           getI18nString('alert.success.event.register.queue'),
@@ -247,7 +251,9 @@
       method: 'DELETE',
       body: { eventUID: event.value.uid },
     })
-      .then(() => refresh())
+      .then(() =>
+        Promise.all([refresh(), refreshNuxtData('site-header-events')]),
+      )
       .then(() =>
         useAlert.alert(
           getI18nString('alert.success.event.register.opt_out.name'),
@@ -272,7 +278,7 @@
       method: 'DELETE',
       body: { eventUID: event.value.uid },
     })
-      .then(() => refresh())
+      .then(() => Promise.all([refresh(), refreshNuxtData('site-header-events')]))
       .then(() =>
         useAlert.alert(
           getI18nString('alert.success.event.register.opt_out_queue'),

@@ -1062,5 +1062,29 @@
       "matches": "Treff",
       "none": "Ingen treff"
     }
+  },
+  "site": {
+    "skip": "Hopp til innholdet",
+    "next": {
+      "now": "Nå",
+      "next": "Neste",
+      "mine": "Ditt neste"
+    },
+    "language": {
+      "label": "Språk",
+      "current": "Språk: {name}. Velg språk"
+    },
+    "menu": {
+      "open": "Åpne menyen",
+      "close": "Lukk menyen",
+      "label": "Meny",
+      "pages": "Sider"
+    },
+    "account": {
+      "open": "Kontomeny for {name}",
+      "profile": "Min profil",
+      "company": "Bedriftsside",
+      "admin": "Admin"
+    }
   }
 }

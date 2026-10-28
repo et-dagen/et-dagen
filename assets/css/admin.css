@@ -204,11 +204,6 @@
   }
 }
 
-/* the ground runs down to the footer's slant, which shows the app background through its clip */
-.v-application:has(.et-ui) {
-  background: var(--background);
-}
-
 /* Rich text written in the admin editor, as readers see it */
 .et-prose {
   max-width: 68ch;

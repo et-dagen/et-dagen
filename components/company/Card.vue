@@ -40,9 +40,12 @@
     max-height: 100%;
   }
 
+  // every logo on the same white tile, so logos with a white ground do not show as patches
   .card {
     color: transparent;
-    background-color: transparent;
+    background-color: #fff;
+    border: 1px solid #dcdfe3;
+    border-radius: 8px;
     transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
     &:hover {
