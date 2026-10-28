@@ -7,4 +7,8 @@ export interface CompanyRepository {
   entitled(uids: readonly CompanyUid[]): Promise<EntitledCompany[]>
   /** Every stored company, with what it is entitled to */
   all(): Promise<EntitledCompany[]>
+  /** The link of the company's logo, or null when it has none */
+  logoOf(uid: CompanyUid): Promise<string | null>
+  /** Point the company at a new logo */
+  setLogo(uid: CompanyUid, link: string): Promise<void>
 }

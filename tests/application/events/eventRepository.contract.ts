@@ -61,6 +61,25 @@ export function describeEventRepository(
       })
     })
 
+    it("finds the events a user is coming to or waiting for, and no one else's", async () => {
+      const repository = await make([
+        event('workshop'),
+        event('dinner'),
+        event('empty'),
+      ])
+      await repository.registerOrQueue(uid('workshop'), ada, at)
+      await repository.registerOrQueue(uid('workshop'), bo, at)
+      await repository.registerOrQueue(uid('dinner'), cy, at)
+
+      const uids = async (user: (typeof users)[number]) =>
+        (await repository.withUser(user)).map((s) => s.event.uid).sort()
+
+      expect(await uids(ada)).toEqual(['workshop'])
+      expect(await uids(bo)).toEqual(['workshop'])
+      expect(await uids(cy)).toEqual(['dinner'])
+      expect(await uids(users[9]!)).toEqual([])
+    })
+
     it('finds nothing for an unknown uid', async () => {
       const repository = await make([])
       expect(await repository.find(uid('missing'))).toBeNull()

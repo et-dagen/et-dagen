@@ -63,7 +63,7 @@ describe('PUT /api/v1/user/access', () => {
 
     expect(response.status).toBe(403)
     expect(response.body).toMatchObject({ code: 'auth/forbidden' })
-    expect(await read(`roles/${volunteer.uid}`)).toBeNull()
+    expect(await read(`roles/${volunteer.uid}/coordinator`)).toBeNull()
   })
 
   it('refuses a membership without its role, and an unknown company', async () => {
@@ -84,12 +84,12 @@ describe('PUT /api/v1/user/access', () => {
       })
       expect(response.body).toMatchObject({ code })
     }
-    expect(await read(`roles/${volunteer.uid}`)).toBeNull()
+    expect(await read(`roles/${volunteer.uid}/coordinator`)).toBeNull()
   })
 })
 
 describe('GET /api/v1/user/access', () => {
-  it('shows an admin the access a user has, or will have after the migration', async () => {
+  it('shows an admin the roles and memberships a user has', async () => {
     const admin = await createUser({ userType: 'admin' })
     const rep = await createUser({ userType: 'company', companyUID: 'acme' })
 
@@ -98,8 +98,8 @@ describe('GET /api/v1/user/access', () => {
     })
 
     expect(response.body).toEqual({
-      roles: ['coordinator'],
-      memberships: [{ companyUID: 'acme', kind: 'coordinator' }],
+      roles: ['company'],
+      memberships: [{ companyUID: 'acme', kind: 'employee' }],
     })
   })
 
@@ -123,7 +123,10 @@ describe('GET /api/v1/user/access', () => {
       roles: ['coordinator'],
       memberships: [{ companyUID: 'acme', kind: 'coordinator' }],
     })
-    expect(listed.find((u) => u.uid === admin.uid)).not.toHaveProperty('access')
+    expect(listed.find((u) => u.uid === admin.uid)?.access).toEqual({
+      roles: ['admin'],
+      memberships: [],
+    })
   })
 
   it('leaves it to admins', async () => {
@@ -185,6 +188,8 @@ describe('signing up', () => {
     })
 
     await expect.poll(() => read(`users/${uid}/updated`)).toBeTruthy()
-    expect(await read(`roles/${uid}`)).toBeNull()
+    expect(Object.keys((await read(`roles/${uid}`)) as object)).toEqual([
+      'company',
+    ])
   })
 })

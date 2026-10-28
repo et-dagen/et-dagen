@@ -62,7 +62,7 @@ describe('PUT /api/v1/company/affiliation', () => {
     })
 
     expect(response.status).toBe(403)
-    expect(await read('affiliations/acme')).toBeNull()
+    expect(await read('affiliations/acme/tier')).toBe('partner')
   })
 
   it('refuses an unknown tier and an unknown company', async () => {

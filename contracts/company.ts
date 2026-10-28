@@ -4,7 +4,7 @@ import { RELATIONSHIPS, type Relationship } from '@/domain/business/company'
 /** The tiers, from the most visible down to former companies */
 export const COMPANY_TIERS = RELATIONSHIPS
 
-/** The `type` v1 stores for each tier, which also names its translations */
+/** The key of each tier's translations under `admin.companies.type`, kept from v1's `type` */
 export const TYPE_OF_TIER: Record<Relationship, string> = {
   mainPartner: 'main-partner',
   partner: 'partner',
@@ -31,13 +31,10 @@ export const CompanyInput = z.object({
 
 export type CompanyInput = z.infer<typeof CompanyInput>
 
-/**
- * The two bodies the form sends: the profile for `/company`, which v1 still wants a `type` for,
- * and the tier and résumé access for `/company/affiliation`
- */
+/** The two bodies the form sends: the profile for `/company`, the contract for `/company/affiliation` */
 export function toV1Company({ tier, resumeAccess, ...profile }: CompanyInput) {
   return {
-    profile: { ...profile, type: TYPE_OF_TIER[tier], cvAccess: resumeAccess },
+    profile,
     affiliation: { tier, overrides: { 'ent:resume:view': resumeAccess } },
   }
 }

@@ -16,13 +16,6 @@ import { rtdbUserRepository } from '@/server/adapters/rtdb/userRepository'
 
 const host = process.env.FIREBASE_DATABASE_EMULATOR_HOST
 
-const TYPES = {
-  mainPartner: 'main-partner',
-  partner: 'partner',
-  sponsor: 'sponsor',
-  prior: 'old',
-} as const
-
 describe.skipIf(!host)('Realtime Database emulator', () => {
   const db = getDatabase(
     initializeApp(
@@ -35,24 +28,29 @@ describe.skipIf(!host)('Realtime Database emulator', () => {
   )
 
   describeCompanyRepository('rtdb', async (seed) => {
-    await db.ref('companies').set(
-      Object.fromEntries(
+    await db.ref().update({
+      companies: Object.fromEntries(
+        seed.map((company) => [company.uid, { name: company.name }]),
+      ),
+      affiliations: Object.fromEntries(
         seed.map((company) => [
           company.uid,
           {
-            name: company.name,
-            type: TYPES[company.relationship],
-            cvAccess: company.entitlementOverrides['ent:resume:view'],
+            tier: company.relationship,
+            overrides: company.entitlementOverrides,
+            createdBy: 'test',
           },
         ]),
       ),
-    )
+    })
     return rtdbCompanyRepository(db)
   })
 
   it('finds a stored company user, and nobody without a profile', async () => {
-    await db.ref('users').set({
-      c: { userType: 'company', companyUID: 'acme', name: 'Cy' },
+    await db.ref().update({
+      users: { c: { name: 'Cy' } },
+      roles: { c: { company: { createdBy: 'test' } } },
+      memberships: { c: { acme: { kind: 'employee' } } },
     })
     const users = rtdbUserRepository(db)
     const now = Instant.now()

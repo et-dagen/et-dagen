@@ -38,7 +38,7 @@ export default defineEventHandler(async (event) => {
       uid: decodedToken.uid,
       email: decodedToken.email,
       name: decodedToken.name ?? userData?.name,
-      access_level: userData?.accessLevel,
+      roles: asking.subject.roles.join(','),
       study_program: userData?.studyProgram,
       current_year: userData?.currentYear,
     }

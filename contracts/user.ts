@@ -58,17 +58,15 @@ export type UserInput = z.infer<typeof UserInput>
  * and memberships for `PUT /user/access`
  *
  * @remarks
- * v1 has no coordinator, so a coordinator's profile is stored as a student's.
+ * The kind of account is stored only as roles and memberships, through `/user/access`.
  */
 export function toV1User(uid: string, user: UserInput) {
   const student = user.userType === 'company' ? null : user
   return {
     profile: {
       uid,
-      userType: user.userType === 'coordinator' ? 'basic' : user.userType,
       studyProgram: student?.studyProgram || null,
       currentYear: student?.currentYear ? String(student.currentYear) : null,
-      companyUID: user.userType === 'company' ? user.companyUID : null,
       dietaryRestrictions: [...new Set(user.dietaryRestrictions)],
     },
     // no email: v1 leaves the sign-in address as it is when none is sent

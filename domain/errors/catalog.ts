@@ -71,6 +71,19 @@ export const ERRORS = {
     message: 'A user can be a member of each company once',
   },
   'company/not-found': { status: 404, message: 'No company has this uid' },
+  'company/missing-logo': {
+    status: 400,
+    message:
+      'Send the logo as the multipart part named file, and the company as companyUID',
+  },
+  'company/unreadable-logo': {
+    status: 415,
+    message: 'The logo could not be read as a picture',
+  },
+  'company/missing-name-or-webpage': {
+    status: 400,
+    message: 'A company needs a name and a webpage',
+  },
   'company/invalid-affiliation': {
     status: 400,
     message:
@@ -120,6 +133,10 @@ export const ERRORS = {
   'company/invalid-webpage': {
     status: 400,
     message: "A company's website must be an http(s) address",
+  },
+  'job/invalid-deadline-type': {
+    status: 400,
+    message: "A job's deadline type must be 'date', 'asap' or 'rolling'",
   },
 } as const satisfies Record<string, ErrorSpec>
 

@@ -47,6 +47,9 @@
     ])
 
   const event = computed(() => events.value?.[uid])
+  // the header shows the visitor's next event, so it changes with a sign-up
+  const changed = () =>
+    Promise.all([refresh(), refreshNuxtData('site-header-events')])
   // admins, and coordinators of the hosting company or of E&T-dagene, take attendance at the door
   const mayScan = computed(() =>
     auth.can('event', 'markAttended', companyOf(event.value?.companyUID)),
@@ -256,7 +259,7 @@
             :calendar="calendar"
             :ticket="ticket"
             :may-scan="mayScan"
-            @changed="refresh"
+            @changed="changed"
           />
           <template #fallback>
             <div class="tw:h-64 tw:rounded-lg tw:border tw:bg-card" />
