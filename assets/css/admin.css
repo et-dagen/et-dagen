@@ -183,7 +183,8 @@
   text-decoration: inherit;
 }
 
-:is(.et-admin, .et-ui, [data-slot]) :focus-visible {
+/* inputs draw their own focus ring */
+:is(.et-admin, .et-ui, [data-slot]) :focus-visible:not([data-slot='input']) {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
 }

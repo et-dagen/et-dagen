@@ -1337,5 +1337,36 @@
       "copied": "{email} er kopiert",
       "org": "Org.nr."
     }
+  },
+  "signin": {
+    "title": "Logg inn",
+    "step": "Steg {n} av 2",
+    "email": "E-post",
+    "continue": "Fortsett",
+    "invalid_email": "Skriv inn en gyldig e-postadresse.",
+    "password_title": "Skriv passordet",
+    "change": "Endre",
+    "change_label": "Endre e-postadressen",
+    "password": "Passord",
+    "show": "Vis",
+    "hide": "Skjul",
+    "submit": "Logg inn",
+    "pending": "Logger inn …",
+    "forgot": "Glemt passordet?",
+    "reset_sent": "Hvis {email} har en konto, har vi sendt en lenke for å lage nytt passord.",
+    "paths": {
+      "heading": "Ingen konto ennå?",
+      "student": {
+        "name": "Student",
+        "text": "Meld deg på arrangementer og del CV-en din med bedriftene.",
+        "link": "Lag studentkonto"
+      },
+      "company": {
+        "name": "Bedrift",
+        "text": "Har du fått en kode eller invitasjon fra oss?",
+        "link": "Bli med i bedriften"
+      }
+    },
+    "the_password": "passordet"
   }
 }
