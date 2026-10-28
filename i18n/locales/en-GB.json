@@ -198,8 +198,8 @@
     }
   },
   "contact": {
-    "title": "Contact Us",
-    "board": "Board Members",
+    "title": "Contact us",
+    "board": "The board",
     "positions": {
       "head": "Manager",
       "deputyHead": "Deputy manager",
@@ -210,7 +210,30 @@
       "marketing": "Marketing manager",
       "logistics": "Logistics manager",
       "travel": "Travel manager"
-    }
+    },
+    "question": "What is it about?",
+    "organisation": "The organisation",
+    "org_number": "Org. no.",
+    "follow": "Follow us",
+    "copy": "Copy {email}",
+    "copied": "{email} is copied",
+    "copy_failed": "Could not copy. Select the address and copy it yourself.",
+    "topics": {
+      "companies": "Companies taking part",
+      "sponsorship": "Sponsorship",
+      "press": "Press",
+      "website": "Website and account",
+      "other": "Anything else"
+    },
+    "answers": {
+      "companies": "Would your company like to take part, or do you have questions about stands, events or résumés?",
+      "sponsorship": "Questions about sponsorship and partnerships.",
+      "press": "Press, marketing and social media.",
+      "website": "Problems with the website, signing in or your account.",
+      "other": "Anything else goes to the head of the board."
+    },
+    "copy_short": "Copy",
+    "copied_short": "Copied"
   },
   "company": {
     "main_partner": "Main partner in 2026",
