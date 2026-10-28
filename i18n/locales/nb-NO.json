@@ -160,9 +160,13 @@
         "confirmed": "Passordene må være like"
       }
     },
-    "page_not_found": {
-      "page_doesnt_exist": "Denne siden finnes ikke",
-      "navigate_front_page": "Tilbake til forsiden"
+    "page": {
+      "missing_title": "Denne siden finnes ikke",
+      "missing_text": "Det finnes ingenting på {path}. Adressen kan være skrevet feil, eller siden kan ha flyttet.",
+      "failed_title": "Noe gikk galt",
+      "failed_text": "Siden kunne ikke vises. Prøv igjen om litt, og ta kontakt med oss hvis det fortsetter.",
+      "home": "Til forsiden",
+      "elsewhere": "Eller gå til"
     }
   },
   "datetime": {
@@ -883,119 +887,6 @@
         "save": "Lagre",
         "created": "Styremedlemmet er lagt til.",
         "updated": "Endringene er lagret."
-      }
-    }
-  },
-  "edit": {
-    "jobs": {
-      "create": {
-        "title": "Opprett stillingsannonse",
-        "action": "Opprett"
-      },
-      "edit": {
-        "title": "Rediger stillingsannonse",
-        "action": "Lagre"
-      },
-      "cancel": "Avbryt",
-      "attributes": {
-        "title": "Stillingstittel",
-        "company": "Bedrift",
-        "description": "Stillingsbeskrivelse",
-        "deadline": "Søknadsfrist",
-        "application_link": "Link til annonse",
-        "jobtype": {
-          "name": "Stillingstype",
-          "full_time": "Fulltid",
-          "graduate": "Gratuate",
-          "summer_internship": "Sommerjobb"
-        },
-        "location": "Sted"
-      }
-    },
-    "event": {
-      "create": {
-        "title": "Opprett arrangement",
-        "action": "Opprett"
-      },
-      "edit": {
-        "title": "Rediger arrangement",
-        "action": "Lagre"
-      },
-      "cancel": "Avbryt",
-      "attributes": {
-        "title": "Tittel",
-        "company": "Bedrift",
-        "capacity": "Kapasitet",
-        "description": "Beskrivelse",
-        "location": {
-          "name": "Stedsnavn",
-          "map": "Kartlink"
-        },
-        "date": {
-          "start": "Startdato",
-          "end": "Sluttdato"
-        },
-        "registration": {
-          "start": "Påmelding åpner",
-          "end": "Påmelding stenger",
-          "limit": "Begrens påmelding",
-          "requirements": {
-            "programmes": "Begrens til studieprogram",
-            "years": "Begrens til årstrinn"
-          }
-        },
-        "signupstart": "Påmelding åpner",
-        "optoutdeadline": "Avmeldingsfrist",
-        "attendants": "Påmeldte deltakere",
-        "user_id": "Brukerid",
-        "sign_up": "Meld på"
-      }
-    },
-    "company": {
-      "create": {
-        "title": "Opprett bedrift",
-        "action": "Opprett"
-      },
-      "edit": {
-        "title": "Rediger bedrift",
-        "action": "Lagre"
-      },
-      "unlink_logo": "Frakoble logo",
-      "cancel": "Avbryt",
-      "attributes": {
-        "name": "Navn",
-        "description": "Beskrivelse",
-        "logo": "Logo",
-        "webpage": "Nettside",
-        "cvAccess": {
-          "name": "CV tilgang",
-          "yes": "Ja",
-          "no": "Nei"
-        },
-        "type": {
-          "name": "Bedriftstype",
-          "main_partner": "Hovedsponsor",
-          "partner": "Partner",
-          "sponsor": "Sponsor",
-          "old": "Gammel"
-        }
-      }
-    },
-    "user": {
-      "title": "Rediger bruker",
-      "save": "Lagre",
-      "cancel": "Avbryt",
-      "attributes": {
-        "name": "Navn",
-        "email": "Epost",
-        "type": {
-          "name": "Brukertype",
-          "admin": "Administrator",
-          "company": "Bedrift",
-          "basic": "Basis"
-        },
-        "studyprogram": "Studieprogram",
-        "currentyear": "Studieår"
       }
     }
   },

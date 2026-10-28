@@ -1,20 +1,10 @@
 <template>
-  <div class="main">
+  <div class="et-ui tw:flex tw:min-h-dvh tw:flex-col">
     <SiteHeader />
-
-    <!-- main content -->
-    <VMain id="main" style="min-height: 100vh">
+    <!-- the space and height Vuetify's VMain gave every page, which the pages were designed with -->
+    <main id="main" class="tw:min-h-screen tw:flex-1 tw:pt-[90px]">
       <slot />
-    </VMain>
-
+    </main>
     <SiteFooter />
   </div>
 </template>
-
-<style scoped lang="scss">
-  .main {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-</style>

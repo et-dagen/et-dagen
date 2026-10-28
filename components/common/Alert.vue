@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <!-- in <body>, outside Vuetify's wrapper, so the admin theme's light or dark reaches it -->
+  <!-- in <body>, outside the layout, so the admin theme's light or dark reaches it -->
   <Teleport to="body">
     <Toaster
       position="bottom-right"
