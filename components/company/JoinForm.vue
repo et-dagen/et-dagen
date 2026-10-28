@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { toTypedSchema } from '@vee-validate/zod'
   import { useForm } from 'vee-validate'
+  import { typedSchemaOf } from '@/lib/forms/zodSchema'
   import FieldError from '@/components/admin/form/FieldError.vue'
   import { Button } from '@/components/ui/button'
   import {
@@ -14,7 +14,7 @@
   import PasswordInput from '@/components/user/signup/PasswordInput.vue'
   import { CompanyJoin } from '@/contracts/user'
 
-  const form = useForm({ validationSchema: toTypedSchema(CompanyJoin) })
+  const form = useForm({ validationSchema: typedSchemaOf(CompanyJoin) })
   // after a refused submit, the cursor goes to the first field to fix
   const formEl = ref<HTMLFormElement | null>(null)
   const focusInvalid = () =>

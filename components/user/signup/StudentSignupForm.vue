@@ -1,8 +1,8 @@
 <script setup lang="ts">
   import { ChevronRight } from '@lucide/vue'
-  import { toTypedSchema } from '@vee-validate/zod'
   import { useForm } from 'vee-validate'
   import PasswordInput from './PasswordInput.vue'
+  import { typedSchemaOf } from '@/lib/forms/zodSchema'
   import FieldError from '@/components/admin/form/FieldError.vue'
   import { Button } from '@/components/ui/button'
   import { Checkbox } from '@/components/ui/checkbox'
@@ -29,7 +29,7 @@
   )
 
   const form = useForm({
-    validationSchema: toTypedSchema(StudentSignup),
+    validationSchema: typedSchemaOf(StudentSignup),
     initialValues: { dietaryRestrictions: [] },
   })
   const years = computed(() =>
