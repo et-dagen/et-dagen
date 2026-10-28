@@ -1,6 +1,7 @@
 // DELETE /api/v1/user
 // endpoint for removing a user in the database
 
+import { clearSessionCookies } from '@/server/auth/cookies'
 import { eraseUsers } from '@/server/user/erasure'
 import { authorize } from '@/domain/authorization/authorize'
 import { hasPermission } from '@/domain/authorization/hasPermission'
@@ -72,7 +73,7 @@ export default defineEventHandler(async (event) => {
   )
 
   // the caller's token cookie points at an account that no longer exists
-  if ((UIDs as string[]).includes(subject.uid)) deleteCookie(event, '_token')
+  if ((UIDs as string[]).includes(subject.uid)) clearSessionCookies(event)
 
   // users successfully removed
   sendNoContent(event, 204)

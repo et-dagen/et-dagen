@@ -26,17 +26,17 @@ const deleteUsers = (body: unknown, token: string) =>
     body: JSON.stringify(body),
   })
 
-/** The last `_token` cookie the response sets, as the browser would keep it */
+/** The last session cookie the response sets, as the browser would keep it */
 const tokenCookie = (response: Response) =>
   response.headers
     .getSetCookie()
-    .filter((cookie) => cookie.startsWith('_token='))
+    .filter((cookie) => cookie.startsWith('__session='))
     .at(-1)
 
 beforeEach(resetEmulators)
 
 describe('DELETE /api/v1/user', () => {
-  it('deletes the caller and clears their token cookie', async () => {
+  it('deletes the caller and clears their session cookie', async () => {
     const { uid, token } = await createUser(student)
 
     const response = await deleteUsers({}, token)
@@ -44,7 +44,7 @@ describe('DELETE /api/v1/user', () => {
     expect(response.status).toBe(204)
     expect(await read(`users/${uid}`)).toBeNull()
     expect(await accountExists(uid)).toBe(false)
-    expect(tokenCookie(response)).toMatch(/^_token=;.*Max-Age=0/i)
+    expect(tokenCookie(response)).toMatch(/^__session=;.*Max-Age=0/i)
   })
 
   it('frees their event place for the first in the queue', async () => {
@@ -91,6 +91,7 @@ describe('DELETE /api/v1/user', () => {
     expect(response.status).toBe(204)
     expect(await accountExists(other.uid)).toBe(false)
     expect(await read(`users/${uid}`)).toEqual(admin)
-    expect(tokenCookie(response)).not.toMatch(/Max-Age=0/i)
+    // the admin's own session is left alone: nothing clears it
+    expect(tokenCookie(response)).toBeUndefined()
   })
 })

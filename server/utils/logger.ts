@@ -56,7 +56,7 @@ export interface WideEvent {
   auth?: {
     authenticated: boolean
     token_valid?: boolean
-    auth_method?: 'bearer' | 'cookie'
+    auth_method?: 'bearer' | 'session'
   }
 
   // Business context (added by handlers)
