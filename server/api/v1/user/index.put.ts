@@ -55,8 +55,14 @@ export default defineEventHandler(async (event) => {
   const displayName = newData.name
   const newEmail = newData.email
   // update name with ID
-  auth.updateUser(uid, { displayName, email: newEmail })
+  await auth.updateUser(uid, { displayName, email: newEmail })
   trackDbWrite(event, `auth/users/${uid}`)
+
+  // a session keeps the name it started with, and the stored name is read before it
+  if (typeof displayName === 'string' && displayName.trim()) {
+    await db.ref(`users/${uid}/name`).set(displayName)
+    trackDbWrite(event, `users/${uid}/name`)
+  }
 
   // send response to remove cookie
   sendNoContent(event, 204)

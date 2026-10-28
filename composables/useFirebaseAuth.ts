@@ -94,8 +94,8 @@ async function saveProfile(
   // set displayname in firebase auth
   await updateProfile(user, { displayName: newUser.name })
 
-  // get idToken and register user in db
-  const idToken = await user.getIdToken()
+  // a fresh token carries the name; the session started from it keeps its claims for two weeks
+  const idToken = await user.getIdToken(true)
   await $fetch('/api/v1/user', {
     method: 'POST',
     headers: {
