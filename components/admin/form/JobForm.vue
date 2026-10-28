@@ -20,26 +20,49 @@
   } from '@/components/ui/select'
   import { useResourceForm } from '@/composables/admin/useResourceForm'
   import { JOB_LISTINGS, JOB_TYPES, JobInput } from '@/contracts/job'
+  import { CompanyUid } from '@/domain/business/company'
 
-  const props = defineProps<{
-    uid?: string
-    initial: Partial<JobInput>
-  }>()
+  const props = withDefaults(
+    defineProps<{
+      uid?: string
+      initial: Partial<JobInput>
+      /** The list the form returns to: the admin panel's or the company panel's */
+      panel?: string
+    }>(),
+    { uid: undefined, panel: '/admin/jobs' },
+  )
 
   const { t } = useI18n()
   const localePath = useLocalePath()
   const { data: companies } =
     await useFetch<Record<string, { name?: string }>>('/api/v1/company')
+  // a company user or coordinator may only post for the companies they manage
+  const auth = useAuthStore()
+  const mayPost = (value: string) =>
+    !!value &&
+    auth.can('job', props.uid ? 'update' : 'create', {
+      companyUid: CompanyUid.parse(value),
+    })
+  // a company user who opens another company's job gets no form to fill in
+  const allowed = computed(
+    () => !props.uid || mayPost(String(props.initial.companyUID ?? '')),
+  )
+  const panelName = computed(() =>
+    props.panel.startsWith('/company/')
+      ? 'company.admin.jobs.name'
+      : 'admin.jobs.name',
+  )
   const companyOptions = computed(() =>
     Object.entries(companies.value ?? {})
       .map(([value, company]) => ({ value, label: company.name ?? value }))
+      .filter((option) => mayPost(option.value))
       .sort((a, b) => a.label.localeCompare(b.label, 'nb')),
   )
 
   const { form, submit, saving } = useResourceForm({
     schema: JobInput,
     initial: props.initial,
-    back: '/admin/jobs',
+    back: props.panel,
     saved: () =>
       t(props.uid ? 'admin.jobs.form.updated' : 'admin.jobs.form.created'),
     save: async (values) => {
@@ -52,6 +75,12 @@
       }
       await $fetch('/api/v1/job', { method: 'POST', body: values })
     },
+  })
+  // with one company to choose from, a new entry is for that company
+  watchEffect(() => {
+    const [only, ...others] = companyOptions.value
+    if (!props.uid && only && !others.length && !form.values.companyUID)
+      form.setFieldValue('companyUID', only.value)
   })
   const listing = computed(() => form.values.listing ?? 'text')
 
@@ -74,17 +103,21 @@
 </script>
 
 <template>
+  <p v-if="!allowed" class="tw:text-muted-foreground">
+    {{ $t('admin.jobs.form.missing') }}
+  </p>
   <form
+    v-else
     class="tw:flex tw:max-w-3xl tw:flex-col tw:gap-6"
     novalidate
     @submit="submit"
   >
     <NuxtLink
-      :to="localePath('/admin/jobs')"
+      :to="localePath(panel)"
       class="tw:inline-flex tw:w-fit tw:items-center tw:gap-1 tw:text-sm tw:text-muted-foreground tw:hover:text-foreground"
     >
       <ArrowLeft class="tw:size-4" aria-hidden="true" />
-      {{ $t('admin.jobs.name') }}
+      {{ $t(panelName) }}
     </NuxtLink>
     <h1
       class="tw:text-2xl tw:leading-8 tw:font-extrabold tw:tracking-tight tw:lg:text-[2rem] tw:lg:leading-10"
@@ -252,7 +285,7 @@
         {{ $t(uid ? 'admin.jobs.form.save' : 'admin.jobs.form.create') }}
       </Button>
       <Button as-child variant="outline">
-        <NuxtLink :to="localePath('/admin/jobs')">
+        <NuxtLink :to="localePath(panel)">
           {{ $t('admin.list.cancel') }}
         </NuxtLink>
       </Button>

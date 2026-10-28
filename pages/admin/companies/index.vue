@@ -43,6 +43,8 @@
     type CodeRecord,
   } from '@/lib/admin/companies'
   import { pageOf, search, sortBy } from '@/lib/admin/listView'
+  import { TYPE_OF_TIER } from '@/contracts/company'
+  import type { Relationship } from '@/domain/business/company'
 
   const TYPES = ['main-partner', 'partner', 'sponsor', 'old'] as const
   type Type = (typeof TYPES)[number]
@@ -50,10 +52,11 @@
   interface Row {
     uid: string
     name?: string
-    type?: Type
+    tier?: Relationship
+    /** Only admins get these, which is who sees this page */
+    entitlements?: string[]
     logo?: string | null
     webpage?: string | null
-    cvAccess?: boolean
   }
   type Show = 'active' | Type
   const PAGE_SIZE = 25
@@ -78,8 +81,9 @@
   )
   const codesOf = computed(() => codesByCompany(codes.value))
   const firstCode = (row: Row) => codesOf.value.get(row.uid)?.[0]
-  // v1 treats a company without a type as a sponsor
-  const typeOf = (row: Row): Type => row.type ?? 'sponsor'
+  const typeOf = (row: Row) => TYPE_OF_TIER[row.tier ?? 'prior'] as Type
+  const resumesOf = (row: Row) =>
+    row.entitlements?.includes('ent:resume:view') === true
   const typeKey = (type: Type) => type.replace('-', '_')
 
   const query = ref('')
@@ -106,7 +110,7 @@
     name: (row: Row) => row.name,
     type: (row: Row) => String(TYPES.indexOf(typeOf(row))),
     code: (row: Row) => firstCode(row),
-    cvAccess: (row: Row) => (row.cvAccess ? '0' : '1'),
+    cvAccess: (row: Row) => (resumesOf(row) ? '0' : '1'),
     webpage: (row: Row) => siteLabel(row.webpage),
   }
 
@@ -313,7 +317,7 @@
               </Button>
             </TableCell>
             <TableCell>
-              {{ $t(`admin.companies.cv.${row.cvAccess ? 'yes' : 'no'}`) }}
+              {{ $t(`admin.companies.cv.${resumesOf(row) ? 'yes' : 'no'}`) }}
             </TableCell>
             <TableCell class="tw:text-muted-foreground">
               <a

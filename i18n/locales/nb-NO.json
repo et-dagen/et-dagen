@@ -69,6 +69,21 @@
       "confirm_label": "Skriv inn e-postadressen din for å bekrefte",
       "confirm": "Slett brukeren",
       "abort": "Avbryt"
+    },
+    "profile": {
+      "title": "Rediger profilen",
+      "back": "Min side",
+      "name": "Navn",
+      "email": "E-post",
+      "email_hint": "Du logger inn med denne adressen, og den kan ikke endres her.",
+      "programme": "Studieprogram",
+      "programme_hint": "Har du byttet studieprogram? Ta kontakt med E&T-dagene, så endrer vi det.",
+      "year": "Årstrinn",
+      "diet_hint": "Brukes når arrangementer har servering.",
+      "diet_other": "Annet (skill med komma)",
+      "save": "Lagre",
+      "cancel": "Avbryt",
+      "saved": "Profilen er lagret"
     }
   },
   "error": {
@@ -168,6 +183,7 @@
       "events": {
         "name": "Arrangementer",
         "empty": "Dere har ingen arrangementer ennå.",
+        "new": "Nytt arrangement",
         "edit": "Rediger",
         "registration": "Påmelding {from} – {to}",
         "diets": "Allergier og kosthold",
@@ -176,6 +192,13 @@
         "no_attendees": "Ingen påmeldte ennå.",
         "copy_emails": "Kopier e-postadressene",
         "copied": "{n} e-postadresse kopiert | {n} e-postadresser kopiert"
+      },
+      "jobs": {
+        "name": "Stillinger",
+        "new": "Ny stilling",
+        "edit": "Rediger",
+        "deadline": "Frist {date}",
+        "empty": "Dere har ingen stillinger ennå."
       },
       "resumes": {
         "name": "CV-er",
@@ -212,12 +235,10 @@
         },
         "company": {
           "not-found": "Bedriften ble ikke funnet",
-          "require-company-uid": "Bedriftsbrukere må oppgi companyUID",
-          "missing-name-webpage-type": "Mangler navn, nettside eller type"
+          "missing-name-or-webpage": "Mangler navn eller nettside"
         },
         "event": {
           "not-found": "Arrangementer eksisterer ikke",
-          "not-owner": "Kan ikke endre på andre bedrifters arrangementer",
           "missing-event-uid": "eventUID mangler",
           "incorrect-capacity": "Kapasitet må være number eller null",
           "wrong-format-capacity": "Kapasitet må være et tall større enn null",
@@ -230,7 +251,8 @@
             "already-registered": "Brukeren er allerede påmeldt dette arrangementet",
             "registration-closed": "Påmelding er stengt",
             "event-is-full": "Arrangementet er fullt",
-            "not-owner": "Kan ikke endre på andre brukere"
+            "not-owner": "Kan ikke endre på andre brukere",
+            "forbidden": "Du kan ikke melde deg på dette arrangementet."
           }
         },
         "job": {
@@ -419,7 +441,7 @@
         "logo_choose": "Velg logo",
         "logo_replace": "Bytt logo",
         "logo_undo": "Angre",
-        "logo_hint": "PNG eller JPEG. Lastes opp når du lagrer.",
+        "logo_hint": "PNG, JPEG eller WebP. Tom kant rundt logoen kuttes bort når du lagrer.",
         "description": "Beskrivelse",
         "cv_access": "Tilgang til CV-er",
         "cv_access_hint": "Bedriften kan se og åpne studentenes CV-er.",
@@ -592,12 +614,14 @@
       "filter": {
         "all": "Alle",
         "admin": "Administratorer",
-        "company": "Bedrifter",
+        "coordinator": "Koordinatorer",
+        "company": "Bedriftskontakter",
         "basic": "Studenter"
       },
       "role": {
         "admin": "Admin",
-        "company": "Bedrift",
+        "coordinator": "Koordinator",
+        "company": "Bedriftskontakt",
         "basic": "Student"
       },
       "columns": {
@@ -628,10 +652,13 @@
         "role": "Rolle",
         "role_hint": {
           "admin": "Har tilgang til hele adminpanelet.",
-          "company": "Logger inn på vegne av en bedrift.",
+          "coordinator": "Student i E&T-dagene som har ansvar for én eller flere bedrifter.",
+          "company": "Kontaktperson fra en bedrift.",
           "basic": "Student som kan melde seg på arrangementer."
         },
         "company": "Bedrift",
+        "companies": "Bedrifter",
+        "companies_hint": "Bedriftene koordinatoren har ansvar for. Koordinatorer ser ikke CV-er.",
         "programme": "Studieprogram",
         "optional": "(valgfritt)",
         "choose_programme": "Velg studieprogram",
@@ -993,13 +1020,11 @@
       "invalid-webpage": "Nettsiden må være en adresse som starter med http:// eller https://."
     },
     "standmap": {
-      "forbidden": "Bare administratorer kan endre standkart.",
       "invalid-day": "Velg en gyldig dato.",
       "missing-file": "Velg et bilde å laste opp.",
       "not-found": "Denne dagen har ikke noe standkart."
     },
     "board": {
-      "forbidden": "Bare administratorer kan endre styret.",
       "not-found": "Fant ikke dette styremedlemmet.",
       "invalid-name": "Fyll inn et navn.",
       "invalid-title": "Fyll inn rollen på norsk og engelsk.",

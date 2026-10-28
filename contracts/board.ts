@@ -1,9 +1,6 @@
 import { z } from 'zod'
 
-const required = z
-  .string({ required_error: 'required' })
-  .trim()
-  .min(1, 'required')
+const required = z.string({ error: 'required' }).trim().min(1, 'required')
 
 /**
  * A board member as the admin form holds it, without the portrait, which is uploaded on its own

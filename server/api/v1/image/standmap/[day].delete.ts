@@ -2,9 +2,8 @@
 // endpoint for removing a fair day's stand map
 import { removeStandMap } from '@/application/fair/standMaps'
 import { fail } from '@/domain/errors'
-import { FairDay } from '@/domain/fair/day'
 import { Instant } from '@/domain/time'
-import { subjectOf } from '@/server/adapters/rtdb/userRecord'
+import { FairDay } from '@/domain/fair/day'
 import { fileStorage, files, standMaps } from '@/server/composition'
 
 defineRouteMeta({
@@ -19,7 +18,7 @@ defineRouteMeta({
 })
 
 export default defineEventHandler(async (event) => {
-  const { user } = event.context
+  const { subject } = event.context
   setResourceContext(
     event,
     'image',
@@ -30,12 +29,11 @@ export default defineEventHandler(async (event) => {
 
   const day = FairDay.tryParse(getRouterParam(event, 'day') ?? '')
   if (!day) throw fail('standmap/invalid-day')
-  if (!user) throw fail('standmap/forbidden')
   addEventContext(event, 'stand_map_day', day)
 
   await removeStandMap(
     { files, storage: fileStorage, standMaps },
-    { subject: subjectOf(user.uid, user, Instant.now()), day },
+    { subject, now: Instant.now(), day },
   )
   sendNoContent(event, 204)
 })

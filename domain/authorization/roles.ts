@@ -1,5 +1,7 @@
 import type { RolesWithPermissions } from '@/domain/authorization/permissions'
-import { can, canAny } from '@/domain/authorization/predicates'
+import { actsFor, can, canAny } from '@/domain/authorization/predicates'
+import type { Subject } from '@/domain/authorization/subject'
+import { isOrganiser, type CompanyUid } from '@/domain/business/company'
 import { admits, isOpen } from '@/domain/event/registration'
 
 /**
@@ -28,10 +30,19 @@ const student = {
       isOpen(target.event.registration, env.now),
   },
   user: {
-    read: true, // preserved verbatim — see "the hole left open" in the plan document
+    read: true, // what each role sees is narrowed by server/utils/userVisibility.ts
     update: (subject, account) => account.uid === subject.uid,
+    delete: (subject, account) => account.uid === subject.uid,
   },
 } satisfies RolesWithPermissions['user']
+
+/**
+ * Coordinators take attendance at the door: at E&T-dagene's own events, and at the events of the
+ * companies they are responsible for whatever their tier, since it is E&T-dagene's work and not
+ * something a company buys
+ */
+const takesAttendance = (subject: Subject, company: CompanyUid) =>
+  isOrganiser(company) || actsFor(subject, company)
 
 /**
  * Every authorization rule in the application, in one place
@@ -47,18 +58,26 @@ const student = {
  */
 export const ROLES = {
   admin: {
-    company: { create: true, update: true, delete: true },
+    company: { create: true, update: true, delete: true, entitle: true },
     job: { create: true, update: true, delete: true },
     event: {
       create: true,
       update: true,
       delete: true,
+      list: true,
       listAttendants: true,
       markAttended: true,
     },
     registration: { create: true, delete: true },
     resume: { read: true, write: true },
-    user: { read: true, create: true, update: true, delete: true },
+    user: {
+      read: true,
+      list: true,
+      create: true,
+      update: true,
+      delete: true,
+      assign: true,
+    },
     code: { read: true, create: true, delete: true },
     image: { upload: true },
     board: { manage: true },
@@ -81,6 +100,8 @@ export const ROLES = {
         can(subject, hosted.companyUid, 'ent:event:manage'),
       delete: (subject, hosted) =>
         can(subject, hosted.companyUid, 'ent:event:manage'),
+      list: (subject, hosted) =>
+        can(subject, hosted.companyUid, 'ent:event:manage'),
     },
     resume: {
       read: (subject, resume) =>
@@ -89,6 +110,7 @@ export const ROLES = {
     user: {
       read: true,
       update: (subject, account) => account.uid === subject.uid,
+      delete: (subject, account) => account.uid === subject.uid,
     },
   },
 
@@ -96,6 +118,13 @@ export const ROLES = {
   // student entries — a coordinator is a student volunteer, not an employee.
   coordinator: {
     ...student,
+    // a coordinator signs up as a student, except where they take attendance
+    registration: {
+      create: (subject, target, env) =>
+        student.registration.create(subject, target, env) &&
+        !takesAttendance(subject, target.event.companyUid),
+      delete: student.registration.delete,
+    },
     company: {
       update: (subject, company) =>
         can(subject, company.uid, 'ent:profile:manage'),
@@ -110,10 +139,12 @@ export const ROLES = {
         can(subject, hosted.companyUid, 'ent:event:manage'),
       update: (subject, hosted) =>
         can(subject, hosted.companyUid, 'ent:event:manage'),
+      list: (subject, hosted) =>
+        can(subject, hosted.companyUid, 'ent:event:manage'),
       listAttendants: (subject, hosted) =>
-        can(subject, hosted.companyUid, 'ent:event:manage'),
+        takesAttendance(subject, hosted.companyUid),
       markAttended: (subject, hosted) =>
-        can(subject, hosted.companyUid, 'ent:event:manage'),
+        takesAttendance(subject, hosted.companyUid),
     },
   },
 

@@ -1,25 +1,21 @@
+import type { StoredUser } from '@/application/users/userRepository'
 import type { Applicant } from '@/domain/authorization/eligibility'
-import type { Subject } from '@/domain/authorization/subject'
 import { Term, type StudyYear } from '@/domain/ntnu'
 import type { ISO8601String } from '@/domain/time'
-import { UserUid, type Role } from '@/domain/user'
+import {
+  companiesFrom,
+  rolesFrom,
+  type MembershipRecord,
+  type RolesRecord,
+} from '@/server/adapters/rtdb/accessRecords'
 
-/** The fields of a `users/<uid>` node that decide what its owner may do */
+/** The fields of a `users/<uid>` node that decide which events its owner may sign up for */
 export interface UserRecord {
-  userType?: string | null
   studyProgram?: string | null
   currentYear?: number | string | null
 }
 
 const STUDY_YEARS: readonly number[] = [1, 2, 3, 4, 5]
-
-/** v1 treats everyone who is neither an admin nor a company user as a student */
-const rolesOf = (userType: UserRecord['userType']): Role[] =>
-  userType === 'admin'
-    ? ['admin']
-    : userType === 'company'
-      ? ['company']
-      : ['user']
 
 /**
  * v1 stores a study year, not a graduation term, on one scale for every programme: bachelors run
@@ -44,20 +40,26 @@ function applicantOf(record: UserRecord, now: ISO8601String): Applicant | null {
   }
 }
 
+/** Who the user is to the permission table, stored beside the profile */
+export interface AccessRecords {
+  roles: RolesRecord | null
+  memberships: Record<string, MembershipRecord> | null
+}
+
 /**
- * Who is asking, read from a v1 user record
+ * Read a user record
  *
  * @remarks
- * Only what registration needs: company entitlements are left empty. Replaced by the request
- * subject from middleware (#519).
+ * Roles and memberships decide what the user may do; the profile only says which events they may
+ * sign up for. A user without stored roles may do nothing a role grants.
  */
-export const subjectOf = (
-  uid: string,
-  record: UserRecord,
+export const storedUserOf = (
+  record: UserRecord & Record<string, unknown>,
   now: ISO8601String,
-): Subject => ({
-  uid: UserUid.parse(uid),
-  roles: rolesOf(record.userType),
-  companies: new Map(),
+  access: AccessRecords,
+): StoredUser => ({
+  roles: rolesFrom(access.roles ?? {}),
   applicant: applicantOf(record, now),
+  companies: companiesFrom(access.memberships),
+  record,
 })

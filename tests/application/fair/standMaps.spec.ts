@@ -19,6 +19,7 @@ const subject = (role: Role): Subject => ({
   applicant: null,
 })
 const admin = subject('admin')
+const now = Instant.parse('2026-10-25T10:00:00.000Z')
 const tuesday = FairDay.parse('2026-11-03')
 
 const setup = () => {
@@ -42,6 +43,7 @@ describe('putStandMap', () => {
     const deps = setup()
     const map = await putStandMap(deps, {
       subject: admin,
+      now,
       day: tuesday,
       ...png(),
     })
@@ -55,11 +57,13 @@ describe('putStandMap', () => {
     const deps = setup()
     const first = await putStandMap(deps, {
       subject: admin,
+      now,
       day: tuesday,
       ...png('a.png'),
     })
     const second = await putStandMap(deps, {
       subject: admin,
+      now,
       day: tuesday,
       ...png('b.png'),
     })
@@ -74,11 +78,17 @@ describe('putStandMap', () => {
   it('refuses anyone who is not an admin, and formats other than images', async () => {
     const deps = setup()
     await expect(
-      putStandMap(deps, { subject: subject('user'), day: tuesday, ...png() }),
-    ).rejects.toMatchObject({ code: 'standmap/forbidden' })
+      putStandMap(deps, {
+        subject: subject('user'),
+        now,
+        day: tuesday,
+        ...png(),
+      }),
+    ).rejects.toMatchObject({ code: 'auth/forbidden' })
     await expect(
       putStandMap(deps, {
         subject: admin,
+        now,
         day: tuesday,
         ...png('kart.pdf'),
         contentType: 'application/pdf',
@@ -91,8 +101,8 @@ describe('putStandMap', () => {
 describe('removeStandMap', () => {
   it('removes the day’s map and its file', async () => {
     const deps = setup()
-    await putStandMap(deps, { subject: admin, day: tuesday, ...png() })
-    await removeStandMap(deps, { subject: admin, day: tuesday })
+    await putStandMap(deps, { subject: admin, now, day: tuesday, ...png() })
+    await removeStandMap(deps, { subject: admin, now, day: tuesday })
 
     expect(await listStandMaps(deps)).toEqual([])
     expect(deps.storage.files.size).toBe(0)
@@ -101,10 +111,10 @@ describe('removeStandMap', () => {
   it('says when the day has no map, and refuses non-admins', async () => {
     const deps = setup()
     await expect(
-      removeStandMap(deps, { subject: admin, day: tuesday }),
+      removeStandMap(deps, { subject: admin, now, day: tuesday }),
     ).rejects.toMatchObject({ code: 'standmap/not-found' })
     await expect(
-      removeStandMap(deps, { subject: subject('company'), day: tuesday }),
-    ).rejects.toMatchObject({ code: 'standmap/forbidden' })
+      removeStandMap(deps, { subject: subject('company'), now, day: tuesday }),
+    ).rejects.toMatchObject({ code: 'auth/forbidden' })
   })
 })

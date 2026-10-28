@@ -69,6 +69,21 @@
       "confirm_label": "Type your email address to confirm",
       "confirm": "Delete account",
       "abort": "Cancel"
+    },
+    "profile": {
+      "title": "Edit your profile",
+      "back": "My page",
+      "name": "Name",
+      "email": "Email",
+      "email_hint": "You sign in with this address, and it cannot be changed here.",
+      "programme": "Study programme",
+      "programme_hint": "Changed study programme? Contact E&T-dagene, and we will change it.",
+      "year": "Year",
+      "diet_hint": "Used when events serve food.",
+      "diet_other": "Other (separate with commas)",
+      "save": "Save",
+      "cancel": "Cancel",
+      "saved": "Your profile is saved"
     }
   },
   "error": {
@@ -168,6 +183,7 @@
       "events": {
         "name": "Events",
         "empty": "You have no events yet.",
+        "new": "New event",
         "edit": "Edit",
         "registration": "Sign-up {from} – {to}",
         "diets": "Allergies and diets",
@@ -176,6 +192,13 @@
         "no_attendees": "No attendees yet.",
         "copy_emails": "Copy the email addresses",
         "copied": "{n} email address copied | {n} email addresses copied"
+      },
+      "jobs": {
+        "name": "Jobs",
+        "new": "New job",
+        "edit": "Edit",
+        "deadline": "Deadline {date}",
+        "empty": "You have no jobs yet."
       },
       "resumes": {
         "name": "CVs",
@@ -212,12 +235,10 @@
         },
         "company": {
           "not-found": "Company not found",
-          "require-company-uid": "Company users must spesify companyUID",
-          "missing-name-webpage-type": "Missing name, webpage or type"
+          "missing-name-or-webpage": "Missing name or webpage"
         },
         "event": {
           "not-found": "Event doesn't exist",
-          "not-owner": "Cannot modify other companies' events",
           "missing-event-uid": "eventUID missing",
           "incorrect-capacity": "Capacity must be a number or null",
           "wrong-format-capacity": "Capacity must be a number larger than zero",
@@ -230,7 +251,8 @@
             "already-registered": "User already registered for this event",
             "registration-closed": "Registration window is closed",
             "event-is-full": "Event is full",
-            "not-owner": "Cannot register other users"
+            "not-owner": "Cannot register other users",
+            "forbidden": "You can't sign up for this event."
           }
         },
         "job": {
@@ -421,7 +443,7 @@
         "logo_choose": "Choose a logo",
         "logo_replace": "Replace the logo",
         "logo_undo": "Undo",
-        "logo_hint": "PNG or JPEG. Uploaded when you save.",
+        "logo_hint": "PNG, JPEG or WebP. Empty margins around the logo are cut away when you save.",
         "description": "Description",
         "cv_access": "Access to CVs",
         "cv_access_hint": "The company can see and open students' CVs.",
@@ -593,12 +615,14 @@
       "filter": {
         "all": "All",
         "admin": "Admins",
-        "company": "Companies",
+        "coordinator": "Coordinators",
+        "company": "Company contacts",
         "basic": "Students"
       },
       "role": {
         "admin": "Admin",
-        "company": "Company",
+        "coordinator": "Coordinator",
+        "company": "Company contact",
         "basic": "Student"
       },
       "columns": {
@@ -629,10 +653,13 @@
         "role": "Role",
         "role_hint": {
           "admin": "Has access to the whole admin panel.",
-          "company": "Signs in on behalf of a company.",
+          "coordinator": "A student at E&T-dagene responsible for one or more companies.",
+          "company": "A contact person from a company.",
           "basic": "A student who can sign up for events."
         },
         "company": "Company",
+        "companies": "Companies",
+        "companies_hint": "The companies the coordinator is responsible for. Coordinators do not see résumés.",
         "programme": "Study programme",
         "optional": "(optional)",
         "choose_programme": "Choose a study programme",
@@ -992,13 +1019,11 @@
       "invalid-webpage": "The website must be an address starting with http:// or https://."
     },
     "standmap": {
-      "forbidden": "Only administrators can change stand maps.",
       "invalid-day": "Choose a valid date.",
       "missing-file": "Choose an image to upload.",
       "not-found": "This day has no stand map."
     },
     "board": {
-      "forbidden": "Only administrators can change the board.",
       "not-found": "This board member was not found.",
       "invalid-name": "Fill in a name.",
       "invalid-title": "Fill in the role in Norwegian and English.",

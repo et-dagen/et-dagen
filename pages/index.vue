@@ -5,14 +5,14 @@
   const mainPartner = computed(
     () =>
       Object.values(companies.value).find(
-        (company: any) => company.type === 'main-partner' && !!company.logo,
+        (company: any) => company.tier === 'mainPartner' && !!company.logo,
       ) || null,
   )
 
   const partners =
     computed(() =>
       Object.values(companies.value).filter(
-        (company: any) => company.type === 'partner' && !!company.logo,
+        (company: any) => company.tier === 'partner' && !!company.logo,
       ),
     ) || null
 
@@ -23,7 +23,7 @@
   const sponsors =
     computed(() =>
       Object.values(companies.value).filter(
-        (company: any) => company.type === 'sponsor' && !!company.logo,
+        (company: any) => company.tier === 'sponsor' && !!company.logo,
       ),
     ) || null
   const showSponsors = computed(

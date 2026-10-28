@@ -79,7 +79,6 @@
     "@tiptap/pm": "^2.11.5",
     "@tiptap/starter-kit": "^2.11.5",
     "@tiptap/vue-3": "^2.11.5",
-    "@vee-validate/zod": "^4.15.1",
     "class-variance-authority": "0.7.1",
     "clsx": "2.1.1",
     "dotenv": "^16.4.7",
@@ -89,7 +88,7 @@
     "pinia": "^2.3.1",
     "qrcode": "^1.5.4",
     "reka-ui": "^2.11.0",
-    "sanitize-html": "2.18.0",
+    "sanitize-html": "2.18.1",
     "sass-migrator": "^2.3.1",
     "sharp": "^0.35.5",
     "tailwind-merge": "3.7.0",
@@ -97,6 +96,6 @@
     "vue-sonner": "^2.0.9",
     "vuetify": "^3.7.9",
     "vuetify-nuxt-module": "^0.18.3",
-    "zod": "3.25.76"
+    "zod": "4.6.7"
   }
 }
