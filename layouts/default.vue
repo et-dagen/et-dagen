@@ -7,7 +7,7 @@
       <slot />
     </VMain>
 
-    <Footer />
+    <SiteFooter />
   </div>
 </template>
 

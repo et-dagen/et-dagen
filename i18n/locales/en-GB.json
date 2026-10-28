@@ -960,19 +960,6 @@
       }
     }
   },
-  "footer": {
-    "header": {
-      "resources": "Resources",
-      "organisation": "Organisation",
-      "some": "Follow us",
-      "join": "Wish to join us?"
-    },
-    "link": {
-      "contact": "Contact Us",
-      "program": "Programme",
-      "jobs": "Jobs"
-    }
-  },
   "dietary_restrictions": {
     "name": "Allergens and restrictions",
     "gluten": "Gluten",
@@ -1229,6 +1216,22 @@
       "profile": "My profile",
       "company": "Company page",
       "admin": "Admin"
+    },
+    "footer": {
+      "place": "Elbygget, Gløshaugen",
+      "fair": "The fair is held in Glassgården in Elbygget.",
+      "map_open": "Open the map of Glassgården in MazeMap",
+      "directions": "Directions",
+      "links": "Footer",
+      "resources": "Resources",
+      "organisation": "Organisation",
+      "follow": "Follow us",
+      "contact": "Contact us",
+      "external": "(opens in a new tab)",
+      "join": "Want to take part?",
+      "copy": "Copy {email}",
+      "copied": "{email} copied",
+      "org": "Org. no."
     }
   }
 }
