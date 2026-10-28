@@ -108,6 +108,21 @@
       "resume_uploaded": "Your CV is uploaded",
       "resume_deleted": "Your CV is deleted",
       "cancel": "Cancel"
+    },
+    "profile": {
+      "title": "Edit your profile",
+      "back": "My page",
+      "name": "Name",
+      "email": "Email",
+      "email_hint": "You sign in with this address, and it cannot be changed here.",
+      "programme": "Study programme",
+      "programme_hint": "Changed study programme? Contact E&T-dagene, and we will change it.",
+      "year": "Year",
+      "diet_hint": "Used when events serve food.",
+      "diet_other": "Other (separate with commas)",
+      "save": "Save",
+      "cancel": "Cancel",
+      "saved": "Your profile is saved"
     }
   },
   "error": {
@@ -207,6 +222,7 @@
       "events": {
         "name": "Events",
         "empty": "You have no events yet.",
+        "new": "New event",
         "edit": "Edit",
         "registration": "Sign-up {from} – {to}",
         "diets": "Allergies and diets",
@@ -215,6 +231,13 @@
         "no_attendees": "No attendees yet.",
         "copy_emails": "Copy the email addresses",
         "copied": "{n} email address copied | {n} email addresses copied"
+      },
+      "jobs": {
+        "name": "Jobs",
+        "new": "New job",
+        "edit": "Edit",
+        "deadline": "Deadline {date}",
+        "empty": "You have no jobs yet."
       },
       "resumes": {
         "name": "CVs",
@@ -459,7 +482,7 @@
         "logo_choose": "Choose a logo",
         "logo_replace": "Replace the logo",
         "logo_undo": "Undo",
-        "logo_hint": "PNG or JPEG. Uploaded when you save.",
+        "logo_hint": "PNG, JPEG or WebP. Empty margins around the logo are cut away when you save.",
         "description": "Description",
         "cv_access": "Access to CVs",
         "cv_access_hint": "The company can see and open students' CVs.",

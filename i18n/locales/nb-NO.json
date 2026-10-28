@@ -108,6 +108,21 @@
       "resume_uploaded": "CV-en er lastet opp",
       "resume_deleted": "CV-en er slettet",
       "cancel": "Avbryt"
+    },
+    "profile": {
+      "title": "Rediger profilen",
+      "back": "Min side",
+      "name": "Navn",
+      "email": "E-post",
+      "email_hint": "Du logger inn med denne adressen, og den kan ikke endres her.",
+      "programme": "Studieprogram",
+      "programme_hint": "Har du byttet studieprogram? Ta kontakt med E&T-dagene, så endrer vi det.",
+      "year": "Årstrinn",
+      "diet_hint": "Brukes når arrangementer har servering.",
+      "diet_other": "Annet (skill med komma)",
+      "save": "Lagre",
+      "cancel": "Avbryt",
+      "saved": "Profilen er lagret"
     }
   },
   "error": {
@@ -207,6 +222,7 @@
       "events": {
         "name": "Arrangementer",
         "empty": "Dere har ingen arrangementer ennå.",
+        "new": "Nytt arrangement",
         "edit": "Rediger",
         "registration": "Påmelding {from} – {to}",
         "diets": "Allergier og kosthold",
@@ -215,6 +231,13 @@
         "no_attendees": "Ingen påmeldte ennå.",
         "copy_emails": "Kopier e-postadressene",
         "copied": "{n} e-postadresse kopiert | {n} e-postadresser kopiert"
+      },
+      "jobs": {
+        "name": "Stillinger",
+        "new": "Ny stilling",
+        "edit": "Rediger",
+        "deadline": "Frist {date}",
+        "empty": "Dere har ingen stillinger ennå."
       },
       "resumes": {
         "name": "CV-er",
@@ -457,7 +480,7 @@
         "logo_choose": "Velg logo",
         "logo_replace": "Bytt logo",
         "logo_undo": "Angre",
-        "logo_hint": "PNG eller JPEG. Lastes opp når du lagrer.",
+        "logo_hint": "PNG, JPEG eller WebP. Tom kant rundt logoen kuttes bort når du lagrer.",
         "description": "Beskrivelse",
         "cv_access": "Tilgang til CV-er",
         "cv_access_hint": "Bedriften kan se og åpne studentenes CV-er.",

@@ -52,4 +52,11 @@ export const rtdbCompanyRepository = (
       ([uid, record]) => entitledOf(uid, record, affiliations[uid] ?? null),
     )
   },
+  logoOf: async (uid) => {
+    const logo = (await db.ref(`companies/${uid}/logo`).once('value')).val()
+    return typeof logo === 'string' && logo !== '' ? logo : null
+  },
+  setLogo: async (uid, link) => {
+    await db.ref(`companies/${uid}/logo`).set(link)
+  },
 })

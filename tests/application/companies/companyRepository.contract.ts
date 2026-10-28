@@ -50,5 +50,12 @@ export function describeCompanyRepository(
       expect(await companies.entitled([gone, acme])).toEqual([SEED[0]])
       expect(await companies.entitled([])).toEqual([])
     })
+
+    it('stores and reads a logo link', async () => {
+      const companies = await make(SEED)
+      expect(await companies.logoOf(bolt)).toBeNull()
+      await companies.setLogo(bolt, 'https://example.com/bolt.webp')
+      expect(await companies.logoOf(bolt)).toBe('https://example.com/bolt.webp')
+    })
   })
 }
