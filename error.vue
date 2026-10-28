@@ -25,7 +25,7 @@
 <template>
   <NuxtLayout>
     <div
-      class="tw:mx-auto tw:flex tw:max-w-6xl tw:flex-col tw:items-start tw:gap-8 tw:px-4 tw:py-16 tw:lg:px-8 tw:lg:py-24"
+      class="tw:mx-auto tw:flex tw:max-w-6xl tw:flex-col tw:items-start tw:gap-8 tw:px-4 tw:py-8 tw:lg:px-8 tw:lg:py-12"
     >
       <!-- the code on a plate, as the rooms are signed in Elbygget -->
       <p
