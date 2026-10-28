@@ -3,7 +3,9 @@ export default {
   light: {
     dark: false,
     colors: {
-      background: '#FFFFFF',
+      // the cool paper ground of the redesigned pages (--background), so every page shares it
+      background: '#F5F6F7',
+      surface: '#FFFFFF',
       primary: '#A03836',
       'primary-darken-1': '#913331',
       'primary-darken-2': '#7a2b2a',

@@ -17,8 +17,8 @@ const routes = [
     route: '/contact',
   },
   {
-    name: 'faq',
-    route: '/faq',
+    name: 'for-companies',
+    route: '/for-companies',
   },
 ]
 
