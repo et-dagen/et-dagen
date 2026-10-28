@@ -5,14 +5,16 @@ import { fail } from '@/domain/errors'
 import { Instant } from '@/domain/time'
 import { UserUid } from '@/domain/user'
 import { access, profiles } from '@/server/composition'
+import { membershipBodyOf } from '@/contracts/user'
 
 defineRouteMeta({
   openAPI: {
     tags: ['User'],
     summary: "Get a user's roles and memberships",
     description:
-      'Admin only. Query: `uid`. Returns `{ roles, memberships: [{ companyUID, kind }] }` in the ' +
-      'shape `PUT /api/v1/user/access` takes.',
+      'Admin only. Query: `uid`. Returns ' +
+      '`{ roles, memberships: [{ companyUID, kind, withheld? }] }` in the shape ' +
+      '`PUT /api/v1/user/access` takes.',
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],
   },
 })
@@ -36,9 +38,6 @@ export default defineEventHandler(async (event) => {
   )
   return {
     roles: found.roles,
-    memberships: found.memberships.map(({ company, kind }) => ({
-      companyUID: company,
-      kind,
-    })),
+    memberships: found.memberships.map(membershipBodyOf),
   }
 })

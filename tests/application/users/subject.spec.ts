@@ -8,7 +8,9 @@ import { memoryCompanyRepository } from '@/server/adapters/memory/companyReposit
 import { memoryUserStore } from '@/server/adapters/memory/userStore'
 
 const now = Instant.parse('2026-10-25T12:00:00.000Z')
-const [coordinator, student, stranger] = ['co', 'st', 'xx'].map(UserUid.parse)
+const [coordinator, student, stranger, employee] = ['co', 'st', 'xx', 'em'].map(
+  UserUid.parse,
+)
 const [acme, bolt, gone] = ['acme', 'bolt', 'gone'].map(CompanyUid.parse)
 
 const companies = memoryCompanyRepository([
@@ -35,7 +37,7 @@ const stored = (user: Partial<StoredUser>): StoredUser => ({
 })
 
 const users = memoryUserStore(
-  [coordinator, student],
+  [coordinator, student, employee],
   new Map([
     [
       coordinator,
@@ -46,6 +48,14 @@ const users = memoryUserStore(
       }),
     ],
     [student, stored({})],
+    [
+      employee,
+      stored({
+        roles: ['company'],
+        companies: [bolt],
+        withheld: new Map([[bolt, ['ent:resume:view']]]),
+      }),
+    ],
   ]),
 )
 
@@ -64,6 +74,13 @@ describe('whoIsAsking', () => {
       ]),
     )
     expect(asking?.record).toEqual({ name: 'Co' })
+  })
+
+  it('leaves out what an admin withheld from the person, not from the company', async () => {
+    const asking = await whoIsAsking({ users, companies }, employee, now)
+    expect(asking?.subject.companies).toEqual(
+      new Map([[bolt, new Set(['ent:profile:manage'])]]),
+    )
   })
 
   it('gives a student no companies', async () => {

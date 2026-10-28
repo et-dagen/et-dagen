@@ -1,4 +1,5 @@
 import type { Applicant } from '@/domain/authorization/eligibility'
+import type { Entitlement } from '@/domain/authorization/entitlements'
 import type { CompanyUid } from '@/domain/business/company'
 import type { ISO8601String } from '@/domain/time'
 import type { Role, UserUid } from '@/domain/user'
@@ -9,6 +10,8 @@ export interface StoredUser {
   applicant: Applicant | null
   /** The companies the user acts for */
   companies: CompanyUid[]
+  /** Entitlements an admin took from the user at a company, which the company keeps */
+  withheld?: ReadonlyMap<CompanyUid, readonly Entitlement[]>
   /** The profile as stored, for the v1 handlers that still read `event.context.user` */
   record: Readonly<Record<string, unknown>>
 }

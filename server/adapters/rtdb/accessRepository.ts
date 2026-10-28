@@ -1,10 +1,15 @@
 import type { Database } from 'firebase-admin/database'
 import type { AccessRepository } from '@/application/users/accessRepository'
-import { isMembershipKind, type Access } from '@/domain/authorization/access'
+import {
+  isMembershipKind,
+  type Access,
+  type Membership,
+} from '@/domain/authorization/access'
 import { CompanyUid } from '@/domain/business/company'
 import { UserUid } from '@/domain/user'
 import {
   rolesFrom,
+  withheldOf,
   type MembershipRecord,
   type RolesRecord,
 } from '@/server/adapters/rtdb/accessRecords'
@@ -15,10 +20,18 @@ const accessOf = (
 ): Access => ({
   roles: rolesFrom(roles),
   memberships: Object.entries(memberships ?? {}).flatMap(
-    ([company, { kind, endedAt }]) =>
-      !endedAt && isMembershipKind(kind)
-        ? [{ company: CompanyUid.parse(company), kind }]
-        : [],
+    ([company, membership]) => {
+      const { kind, endedAt } = membership
+      if (endedAt || !isMembershipKind(kind)) return []
+      const withheld = withheldOf(membership)
+      return [
+        {
+          company: CompanyUid.parse(company),
+          kind,
+          ...(withheld.length && { withheld }),
+        },
+      ]
+    },
   ),
 })
 
@@ -43,17 +56,31 @@ export const rtdbAccessRepository = (
       if (!roles[role]) update[`roles/${user}/${role}`] = given
     }
 
-    const kinds = new Map<string, string>(
-      access.memberships.map(({ company, kind }) => [company, kind]),
+    const wanted = new Map<string, Membership>(
+      access.memberships.map((membership) => [membership.company, membership]),
     )
     for (const [company, membership] of Object.entries(memberships)) {
-      if (!kinds.has(company) && !membership.endedAt)
+      if (!wanted.has(company) && !membership.endedAt)
         update[`memberships/${user}/${company}/endedAt`] = at
     }
-    for (const [company, kind] of kinds) {
+    for (const [company, { kind, withheld = [] }] of wanted) {
       const membership = memberships[company]
-      if (!membership || membership.endedAt || membership.kind !== kind)
-        update[`memberships/${user}/${company}`] = { kind, ...given }
+      // stored as a map, so one entitlement can be given back without rewriting the rest
+      const record = withheld.length
+        ? Object.fromEntries(withheld.map((entitlement) => [entitlement, true]))
+        : null
+      if (!membership || membership.endedAt || membership.kind !== kind) {
+        update[`memberships/${user}/${company}`] = {
+          kind,
+          ...given,
+          ...(record && { withheld: record }),
+        }
+      } else if (
+        [...withheldOf(membership)].sort().join() !==
+        [...withheld].sort().join()
+      ) {
+        update[`memberships/${user}/${company}/withheld`] = record
+      }
     }
 
     if (Object.keys(update).length > 0) await db.ref().update(update)

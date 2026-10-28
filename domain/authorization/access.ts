@@ -1,3 +1,7 @@
+import {
+  WITHHOLDABLE,
+  type Entitlement,
+} from '@/domain/authorization/entitlements'
 import { CompanyUid } from '@/domain/business/company'
 import { isRole, type Role } from '@/domain/user'
 
@@ -13,6 +17,8 @@ export const isMembershipKind = (value: unknown): value is MembershipKind =>
 export interface Membership {
   company: CompanyUid
   kind: MembershipKind
+  /** Entitlements an admin took from this person; only an employee's, see `WITHHOLDABLE` */
+  withheld?: Entitlement[]
 }
 
 /** What a user holds: their roles, and the companies they act for */
@@ -64,7 +70,8 @@ export const accessOnSignUp = (company: CompanyUid | null): Access =>
     : { roles: ['user'], memberships: [] }
 
 /**
- * Read access as the admin form sends it: `{ roles: string[], memberships: { companyUID, kind }[] }`
+ * Read access as the admin form sends it:
+ * `{ roles: string[], memberships: { companyUID, kind, withheld? }[] }`
  *
  * @remarks
  * Unknown role names and kinds are refused rather than dropped, so an admin never stores less
@@ -80,10 +87,31 @@ export function checkedAccess(
 
   const checked: Membership[] = []
   for (const membership of memberships as unknown[]) {
-    const { companyUID, kind } = (membership ?? {}) as Record<string, unknown>
+    const { companyUID, kind, withheld } = (membership ?? {}) as Record<
+      string,
+      unknown
+    >
     if (typeof companyUID !== 'string' || companyUID === '') return invalid
     if (!isMembershipKind(kind)) return invalid
-    checked.push({ company: CompanyUid.parse(companyUID), kind })
+    const company = CompanyUid.parse(companyUID)
+    if (
+      withheld === undefined ||
+      (Array.isArray(withheld) && !withheld.length)
+    ) {
+      checked.push({ company, kind })
+      continue
+    }
+    // a coordinator's rights come from the membership itself; end it to take them away
+    if (kind !== 'employee' || !Array.isArray(withheld)) return invalid
+    if (
+      !withheld.every((e) => (WITHHOLDABLE as readonly unknown[]).includes(e))
+    )
+      return invalid
+    checked.push({
+      company,
+      kind,
+      withheld: [...new Set(withheld as Entitlement[])],
+    })
   }
   return { roles: [...new Set(roles)], memberships: checked }
 }

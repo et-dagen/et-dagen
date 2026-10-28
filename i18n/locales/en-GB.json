@@ -773,7 +773,14 @@
         "diet_other": "Other (separate with commas)",
         "save": "Save changes",
         "updated": "The changes are saved",
-        "missing": "User not found."
+        "missing": "User not found.",
+        "access": "This person's access",
+        "access_hint": "The company's contract decides what the company has. Untick to take it from this person only; the rest of the company keeps it.",
+        "entitlement": {
+          "resume_view": "See résumés",
+          "job_manage": "Post and edit jobs",
+          "profile_manage": "Edit the company profile"
+        }
       }
     },
     "shell": {

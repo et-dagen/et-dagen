@@ -14,7 +14,9 @@ defineRouteMeta({
     description:
       'Admin only. Body: `{ uid, roles, memberships: [{ companyUID, kind }] }`, where `kind` is ' +
       '`employee` (needs the `company` role) or `coordinator` (needs the `coordinator` role). ' +
-      'Replaces what the user had; a membership left out is ended.',
+      'Replaces what the user had; a membership left out is ended. An `employee` membership may ' +
+      'list `withheld` entitlements (`ent:resume:view`, `ent:job:manage`, `ent:profile:manage`), ' +
+      'which this person loses while the company keeps them.',
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],
   },
 })

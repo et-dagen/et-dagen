@@ -52,6 +52,58 @@ describe('PUT /api/v1/user/access', () => {
     expect(Object.keys(subject.companies).sort()).toEqual(['acme', 'globex'])
   })
 
+  it('withholds an entitlement from one employee, while their colleague keeps it', async () => {
+    const admin = await createUser({ userType: 'admin' })
+    const [one, colleague] = [
+      await createUser({ userType: 'company', companyUID: 'globex' }),
+      await createUser({ userType: 'company', companyUID: 'globex' }),
+    ]
+    const resumes = (token: string) =>
+      api('/api/v1/user?scope=all', { token }).then((r) =>
+        (r.body as { resume?: string }[]).some((u) => 'resume' in u),
+      )
+    await createUser({ ...student, resume: 'resumes/someone.pdf' })
+
+    const response = await api('/api/v1/user/access', {
+      method: 'PUT',
+      body: {
+        uid: one.uid,
+        roles: ['company'],
+        memberships: [
+          {
+            companyUID: 'globex',
+            kind: 'employee',
+            withheld: ['ent:resume:view'],
+          },
+        ],
+      },
+      token: admin.token,
+    })
+
+    expect(response.status).toBe(204)
+    expect((await subjectFor(one.token)).companies.globex).not.toContain(
+      'ent:resume:view',
+    )
+    expect((await subjectFor(colleague.token)).companies.globex).toContain(
+      'ent:resume:view',
+    )
+    expect(await resumes(one.token)).toBe(false)
+    expect(await resumes(colleague.token)).toBe(true)
+
+    const shown = await api(`/api/v1/user/access?uid=${one.uid}`, {
+      token: admin.token,
+    })
+    expect(shown.body).toMatchObject({
+      memberships: [
+        {
+          companyUID: 'globex',
+          kind: 'employee',
+          withheld: ['ent:resume:view'],
+        },
+      ],
+    })
+  })
+
   it('leaves it to admins', async () => {
     const volunteer = await createUser(student)
 

@@ -1,4 +1,9 @@
 import { z } from 'zod'
+import type { Membership } from '@/domain/authorization/access'
+import {
+  WITHHOLDABLE,
+  type Entitlement,
+} from '@/domain/authorization/entitlements'
 import { EmailAddress } from '@/domain/email'
 
 /** The kinds of account the admin form sets, from the one with the most access down */
@@ -50,7 +55,13 @@ export const UserInput = z.discriminatedUnion('userType', [
     currentYear: year,
     companyUIDs: z.array(z.string().min(1)).min(1, 'required'),
   }),
-  z.object({ ...common, userType: z.literal('company'), companyUID: required }),
+  z.object({
+    ...common,
+    userType: z.literal('company'),
+    companyUID: required,
+    // what this person may not do, although the company may
+    withheld: z.array(z.enum(WITHHOLDABLE)).default([]),
+  }),
 ])
 export type UserInput = z.infer<typeof UserInput>
 
@@ -124,7 +135,20 @@ export type CompanyJoin = z.infer<typeof CompanyJoin>
 export interface MembershipBody {
   companyUID: string
   kind: 'employee' | 'coordinator'
+  /** What an admin took from this employee, which the company keeps */
+  withheld?: Entitlement[]
 }
+
+/** A stored membership in the shape `/user/access` sends and takes */
+export const membershipBodyOf = ({
+  company,
+  kind,
+  withheld,
+}: Membership): MembershipBody => ({
+  companyUID: company,
+  kind,
+  ...(withheld?.length && { withheld }),
+})
 
 function accessOf(user: UserInput): {
   roles: string[]
@@ -144,7 +168,15 @@ function accessOf(user: UserInput): {
     case 'company':
       return {
         roles: ['company'],
-        memberships: [{ companyUID: user.companyUID, kind: 'employee' }],
+        memberships: [
+          {
+            companyUID: user.companyUID,
+            kind: 'employee',
+            ...(user.withheld.length && {
+              withheld: [...new Set(user.withheld)],
+            }),
+          },
+        ],
       }
     default:
       return { roles: ['user'], memberships: [] }
@@ -160,12 +192,17 @@ function accessOf(user: UserInput): {
 export function userTypeOf(access: {
   roles: string[]
   memberships: MembershipBody[]
-}): { userType: UserType; companyUIDs: string[] } {
+}): { userType: UserType; companyUIDs: string[]; withheld: Entitlement[] } {
   const companyUIDs = access.memberships.map((m) => m.companyUID)
-  if (access.roles.includes('admin')) return { userType: 'admin', companyUIDs }
+  if (access.roles.includes('admin'))
+    return { userType: 'admin', companyUIDs, withheld: [] }
   if (access.roles.includes('coordinator'))
-    return { userType: 'coordinator', companyUIDs }
+    return { userType: 'coordinator', companyUIDs, withheld: [] }
   if (access.roles.includes('company'))
-    return { userType: 'company', companyUIDs }
-  return { userType: 'basic', companyUIDs: [] }
+    return {
+      userType: 'company',
+      companyUIDs,
+      withheld: access.memberships[0]?.withheld ?? [],
+    }
+  return { userType: 'basic', companyUIDs: [], withheld: [] }
 }
