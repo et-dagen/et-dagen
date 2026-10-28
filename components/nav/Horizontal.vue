@@ -32,7 +32,7 @@
     <template #append>
       <!-- company admin nav -->
       <NavButton
-        v-if="auth.hasAccess(['company'])"
+        v-if="auth.allows('company') && !auth.allows('admin')"
         :route="{
           name: 'company',
           route: '/company/admin',
@@ -42,7 +42,7 @@
 
       <!-- admin nav button -->
       <NavButton
-        v-if="auth.hasAccess(['admin'])"
+        v-if="auth.allows('admin')"
         :route="{
           name: 'admin',
           route: '/admin',
@@ -52,7 +52,7 @@
 
       <!-- divider -->
       <VDivider
-        v-if="auth.hasAccess(['admin', 'company'])"
+        v-if="auth.allows('company')"
         vertical
         inset
         length="75%"

@@ -4,6 +4,8 @@
 import { isValidDate } from '@/composables/useDate'
 import { cleanRichText, safeLink } from '@/server/security/richText'
 import { fail } from '@/domain/errors'
+import { authorize } from '@/domain/authorization/authorize'
+import { Instant } from '@/domain/time'
 
 defineRouteMeta({
   openAPI: {
@@ -40,14 +42,15 @@ defineRouteMeta({
     // responses: {
     //   201: { description: 'Created, empty body' },
     //   400: { description: 'Error (general/missing-data). or Error (job/invalid-date).' },
-    //   401: { description: 'Error (firebase/user-not-authorized).' },
+    //   401: { description: 'auth/signed-out' },
+    //   403: { description: 'auth/forbidden' },
     //   404: { description: 'Error (company/not-found).' },
     // },
   },
 })
 
 export default defineEventHandler(async (event) => {
-  const { user } = event.context
+  const { subject } = event.context
 
   const {
     companyUID,
@@ -113,24 +116,8 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const isAdmin = hasAccess(user, ['admin'])
-  const isCompanyAdmin =
-    hasAccess(user, ['company']) && user.companyUID === companyUID
-
-  addEventContext(event, 'is_admin', isAdmin)
-  addEventContext(event, 'is_company_admin', isCompanyAdmin)
-
-  // only admins and company admins can modify jobs
-  if (!isAdmin && !isCompanyAdmin) {
-    setErrorContext(event, {
-      code: 'firebase/user-not-authorized',
-      message: 'User not authorized to create jobs',
-    })
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Error (firebase/user-not-authorized).',
-    })
-  }
+  const env = { now: Instant.now() }
+  authorize(subject, 'job', 'create', companyOf(companyUID), env)
 
   // reference to companies
   const companiesRef = db.ref('companies')

@@ -49,19 +49,33 @@ export interface Environment {
  */
 export type Permissions = {
   company: {
-    dataType: Pick<Company, 'uid'>
-    action: 'create' | 'update' | 'delete'
+    /** `undefined` for a company that does not exist yet */
+    dataType: Pick<Company, 'uid'> | undefined
+    /** `entitle` sets the contract: the tier and résumé access */
+    action: 'create' | 'update' | 'delete' | 'entitle'
   }
   job: {
-    dataType: Pick<Job, 'companyUid'>
+    /** `undefined` for a stored job that names no company */
+    dataType: Pick<Job, 'companyUid'> | undefined
     action: 'create' | 'update' | 'delete'
   }
   event: {
-    dataType: Pick<Event, 'companyUid'>
-    action: 'create' | 'update' | 'delete' | 'listAttendants' | 'markAttended'
+    /** `undefined` for `list` across every company */
+    dataType: Pick<Event, 'companyUid'> | undefined
+    action:
+      | 'create'
+      | 'update'
+      | 'delete'
+      | 'list'
+      | 'listAttendants'
+      | 'markAttended'
   }
   registration: {
-    dataType: { targetUserUid: UserUid; event: HasRegistration }
+    /** The event's host decides whether a coordinator may sign up for it */
+    dataType: {
+      targetUserUid: UserUid
+      event: HasRegistration & Pick<Event, 'companyUid'>
+    }
     action: 'create' | 'delete'
   }
   resume: {
@@ -70,20 +84,25 @@ export type Permissions = {
   }
   user: {
     dataType: { uid?: UserUid; scope: 'own' | 'all' }
-    action: 'read' | 'create' | 'update' | 'delete'
+    /** `list` is every user in full; `assign` sets a user's roles and company memberships */
+    action: 'read' | 'list' | 'create' | 'update' | 'delete' | 'assign'
   }
   code: { dataType: undefined; action: 'read' | 'create' | 'delete' }
   image: { dataType: undefined; action: 'upload' }
+  board: { dataType: undefined; action: 'manage' }
 }
 
 /**
  * One leaf of the table: an unconditional grant, or a rule to run
+ *
+ * @remarks
+ * A rule never sees missing data: `hasPermission` denies before calling it.
  */
 export type PermissionCheck<K extends keyof Permissions> =
   | boolean
   | ((
       subject: Subject,
-      data: Permissions[K]['dataType'],
+      data: NonNullable<Permissions[K]['dataType']>,
       env: Environment,
     ) => boolean)
 

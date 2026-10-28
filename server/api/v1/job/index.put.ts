@@ -4,6 +4,9 @@
 import { isValidDate } from '@/composables/useDate'
 import { cleanRichText, safeLink } from '@/server/security/richText'
 import { fail } from '@/domain/errors'
+import { authorize } from '@/domain/authorization/authorize'
+import { hasPermission } from '@/domain/authorization/hasPermission'
+import { Instant } from '@/domain/time'
 
 defineRouteMeta({
   openAPI: {
@@ -31,14 +34,15 @@ defineRouteMeta({
     // responses: {
     //   204: { description: 'Updated' },
     //   400: { description: 'Error (job/missing-job-uid). or Error (job/invalid-date).' },
-    //   401: { description: 'Error (job/cannot-remove-single-fields). or Error (firebase/user-not-authorized).' },
+    //   401: { description: 'Error (job/cannot-remove-single-fields). or auth/signed-out' },
+    //   403: { description: 'auth/forbidden' },
     //   404: { description: 'Error (job/not-found).' },
     // },
   },
 })
 
 export default defineEventHandler(async (event) => {
-  const { user } = event.context
+  const { subject } = event.context
 
   const { jobUID, ...newData } = await readBody(event)
 
@@ -147,27 +151,16 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const isAdmin = hasAccess(user, ['admin'])
-  const isCompanyAdmin =
-    hasAccess(user, ['company']) && user.companyUID === companyUID
+  const env = { now: Instant.now() }
+  authorize(subject, 'job', 'update', companyOf(companyUID), env)
 
-  addEventContext(event, 'is_admin', isAdmin)
-  addEventContext(event, 'is_company_admin', isCompanyAdmin)
-
-  // only admins and company admins can modify jobs
-  if (!isAdmin && !isCompanyAdmin) {
-    setErrorContext(event, {
-      code: 'firebase/user-not-authorized',
-      message: 'User not authorized to modify jobs',
-    })
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Error (firebase/user-not-authorized).',
-    })
+  // a job moves only to a company whose jobs the caller also manages
+  if (
+    'companyUID' in newData &&
+    !hasPermission(subject, 'job', 'update', companyOf(newData.companyUID), env)
+  ) {
+    delete newData.companyUID
   }
-
-  // a company may edit its jobs, not move them to another company
-  if (!isAdmin) delete newData.companyUID
 
   if ('applicationLink' in newData) {
     if (newData.applicationLink && !safeLink(newData.applicationLink)) {

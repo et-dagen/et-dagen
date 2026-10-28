@@ -132,6 +132,20 @@ export const signoutUser = async () => {
   authStore.user = null
 }
 
+// deletes the signed-in user and everything stored about them, then signs out locally
+export const deleteSignedInUser = async () => {
+  const authStore = useAuthStore()
+  const localePath = useLocalePath()
+
+  // the server also clears the token cookie
+  await $fetch('/api/v1/user', { method: 'DELETE', body: {} })
+
+  // leave the protected page before the local user disappears
+  await navigateTo(localePath('/'))
+  await getAuth().signOut()
+  authStore.user = null
+}
+
 // called when the application is started
 // listens for changes in the firebase auth state
 export const initUser = () => {
