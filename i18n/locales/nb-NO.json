@@ -1368,5 +1368,35 @@
       }
     },
     "the_password": "passordet"
+  },
+  "programme": {
+    "title": "Program",
+    "days": "Dager",
+    "count": "Ingen arrangementer | 1 arrangement | {n} arrangementer",
+    "empty": "Programmet er ikke klart ennå.",
+    "band": {
+      "label": "Nå og neste",
+      "now": "Nå",
+      "next": "Neste",
+      "until": "til {time}",
+      "in_minutes": "om {n} min",
+      "in_hours": "om {hours} t {minutes} min",
+      "in_days": "om 1 dag | om {n} dager"
+    },
+    "map": {
+      "name": "Standkart",
+      "open": "Åpne standkartet for {day}",
+      "title": "Standkart, {day}",
+      "zoom_in": "Forstørr",
+      "zoom_out": "Forminsk",
+      "close": "Lukk"
+    },
+    "status": {
+      "no-registration": "Åpent for alle",
+      "not-open": "Påmeldingen åpner snart",
+      "open": "Påmeldingen er åpen",
+      "full": "Fullt, venteliste",
+      "closed": "Påmeldingen er stengt"
+    }
   }
 }

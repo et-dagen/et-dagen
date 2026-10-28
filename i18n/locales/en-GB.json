@@ -1367,5 +1367,35 @@
       }
     },
     "the_password": "the password"
+  },
+  "programme": {
+    "title": "Programme",
+    "days": "Days",
+    "count": "No events | 1 event | {n} events",
+    "empty": "The programme is not ready yet.",
+    "band": {
+      "label": "Now and next",
+      "now": "Now",
+      "next": "Next",
+      "until": "until {time}",
+      "in_minutes": "in {n} min",
+      "in_hours": "in {hours} h {minutes} min",
+      "in_days": "in 1 day | in {n} days"
+    },
+    "map": {
+      "name": "Stand map",
+      "open": "Open the stand map for {day}",
+      "title": "Stand map, {day}",
+      "zoom_in": "Zoom in",
+      "zoom_out": "Zoom out",
+      "close": "Close"
+    },
+    "status": {
+      "no-registration": "Open to everyone",
+      "not-open": "Sign-up opens soon",
+      "open": "Sign-up is open",
+      "full": "Full, waiting list",
+      "closed": "Sign-up is closed"
+    }
   }
 }
