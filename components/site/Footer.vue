@@ -22,7 +22,7 @@
       links: [
         { label: 'nav.programme', to: '/programme' },
         { label: 'nav.jobs', to: '/jobs' },
-        { label: 'nav.faq', to: '/faq' },
+        { label: 'nav.for-companies', to: '/for-companies' },
       ],
     },
     {
