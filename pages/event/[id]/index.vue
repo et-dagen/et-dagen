@@ -1,758 +1,467 @@
 <script setup lang="ts">
-  import * as qrcode from 'qrcode'
+  import {
+    ArrowLeft,
+    CalendarClock,
+    ExternalLink,
+    MapPin,
+    Users,
+  } from '@lucide/vue'
   import { companyOf } from '@/lib/auth/companyOf'
-  import AttendantsList from '~/components/event/AttendantsList.vue'
-  import { type AttendantMetadata, type Attendant } from '~/models/Attendant'
+  import CompanyLogo from '@/components/admin/CompanyLogo.vue'
+  import DeadlineNote from '@/components/job/DeadlineNote.vue'
+  import SignupPanel from '@/components/event/page/SignupPanel.vue'
+  import { Instant } from '@/domain/time'
+  import { placeOf } from '@/lib/admin/events'
+  import { formatWhen } from '@/lib/admin/time'
+  import {
+    calendarFileOf,
+    isEventDay,
+    mapEmbedOf,
+    placesOf,
+    signupStateOf,
+    urgencyOf,
+    type PublicEvent,
+  } from '@/lib/eventPage'
+  import { deadlineState, formatDeadline } from '@/lib/jobs'
 
+  interface StoredJob {
+    title?: string
+    companyUID?: string
+    deadline?: string | null
+  }
+
+  const { locale } = useI18n()
   const localePath = useLocalePath()
-  const useAuth = useAuthStore()
-  const useAlert = useAlertStore()
+  const auth = useAuthStore()
+  const uid = String(useRoute().params.id)
 
-  const isAdmin = useAuth.allows('admin')
+  const [{ data: events, refresh }, { data: companies }, { data: jobs }] =
+    await Promise.all([
+      useFetch<Record<string, PublicEvent>>('/api/v1/event', {
+        query: { eventUID: uid },
+      }),
+      useFetch<
+        Record<string, { name?: string; logo?: string; webpage?: string }>
+      >('/api/v1/company'),
+      useFetch<Record<string, StoredJob>>('/api/v1/job'),
+    ])
 
-  // get event id from route
-  const route = useRoute()
-  const eventUid = route.params.id
-
-  // fetch event information from query
-  const { data, refresh } = await useFetch('/api/v1/event', {
-    method: 'GET',
-    query: {
-      eventUID: eventUid,
-    },
-  })
-
-  const { data: users } = await useFetch('/api/v1/user', {
-    query: { scope: 'all' },
-  })
-
-  // fetch all companies
-  const { data: companies } = await useFetch('/api/v1/company')
-
-  // embed uid into object
-  const event = computed(() => embedKeyIntoObjectValues(data.value)[0])
-
-  // admins, and the coordinators of the hosting company, take attendance at the door
+  const event = computed(() => events.value?.[uid])
+  // the header shows the visitor's next event, so it changes with a sign-up
+  const changed = () =>
+    Promise.all([refresh(), refreshNuxtData('site-header-events')])
+  // admins, and coordinators of the hosting company or of E&T-dagene, take attendance at the door
   const mayScan = computed(() =>
-    useAuth.can('event', 'markAttended', companyOf(event.value?.companyUID)),
+    auth.can('event', 'markAttended', companyOf(event.value?.companyUID)),
   )
-  console.log(event.value)
-
-  // get company information
   const company = computed(
-    () => companies.value[event.value.companyUID] || null,
+    () => companies.value?.[event.value?.companyUID ?? ''] ?? null,
   )
-
-  // check if event has capacity and attendants
-  const hasAttendants = computed(
-    () => !!event.value.attendants || Object.hasOwn(event.value, 'attendants'),
-  )
-  const hasCapacity = computed(() => !!event.value.capacity)
-
-  const attendants = computed<Attendant[]>(() =>
-    (
-      Object.entries(event.value.attendants ?? {}) as [
-        string,
-        AttendantMetadata,
-      ][]
-    )
-      .map(([uid, meta]) => {
-        const user = users.value?.find((u: any) => u.uid === uid)
-        if (!user) return null
-
-        return {
-          ...user,
-          attended: meta.attended,
-          registeredAt: meta.registeredAt,
+  const now = Instant.now()
+  const visitor = computed(() =>
+    auth.user
+      ? {
+          uid: auth.user.uid,
+          studyProgram: auth.user.studyProgram,
+          currentYear: auth.user.currentYear,
         }
-      })
-      .filter((a): a is Attendant => Boolean(a)),
-  )
-
-  console.log(attendants.value)
-
-  // Get the number of queued users
-  const totalQueued = computed(() => {
-    return event.value.queue || {}
-      ? Object.keys(event.value.queue || {}).length
-      : 0
-  })
-
-  // get day and month strings from date
-  const eventStartString = computed(
-    () =>
-      `${getDayAndMonthString(
-        event.value.date.start,
-      )} ${getHourAndMinuteStringFromString(event.value.date.start)}`,
-  )
-  const eventEndString = computed(
-    () =>
-      `${getDayAndMonthString(
-        event.value.date.end,
-      )} ${getHourAndMinuteStringFromString(event.value.date.end)}`,
-  )
-
-  // get day and month strings from date
-  const registrationStartString = computed(() =>
-    hasCapacity.value
-      ? `${getDayAndMonthString(
-          event.value.registration.start,
-        )} ${getHourAndMinuteStringFromString(event.value.registration.start)}`
       : null,
   )
-  const registrationEndString = computed(() =>
-    hasCapacity.value
-      ? `${getDayAndMonthString(
-          event.value.registration.end,
-        )} ${getHourAndMinuteStringFromString(event.value.registration.end)}`
+  const state = computed(() =>
+    event.value ? signupStateOf(event.value, visitor.value, now) : null,
+  )
+  const places = computed(() =>
+    event.value ? placesOf(event.value) : { taken: 0, limit: null, waiting: 0 },
+  )
+  const place = computed(() => placeOf(event.value?.location?.name))
+  const urgency = computed(() =>
+    event.value ? urgencyOf(event.value, now) : null,
+  )
+  const mapEmbed = computed(() => mapEmbedOf(event.value?.location?.map))
+
+  const when = computed(() => {
+    const start = formatWhen(event.value?.date?.start, locale.value)
+    const end = formatWhen(event.value?.date?.end, locale.value, {
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+    return end ? `${start}–${end}` : start
+  })
+  // the ticket keeps its time on one line: day and hours only
+  const ticketWhen = computed(() => {
+    const start = formatWhen(event.value?.date?.start, locale.value, {
+      weekday: 'short',
+      day: 'numeric',
+      month: 'short',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+    const end = formatWhen(event.value?.date?.end, locale.value, {
+      hour: '2-digit',
+      minute: '2-digit',
+    })
+    return end ? `${start}–${end}` : start
+  })
+  const windowText = (value: string | undefined) =>
+    formatWhen(value, locale.value)
+
+  const calendar = computed(() =>
+    event.value && import.meta.client
+      ? calendarFileOf(uid, event.value, window.location.href, now)
+      : null,
+  )
+  const ticket = computed(() =>
+    auth.user && event.value
+      ? {
+          uid: auth.user.uid,
+          name: auth.user.name ?? auth.user.email ?? '',
+          title: event.value.title ?? '',
+          when: ticketWhen.value,
+          room: place.value.code,
+        }
       : null,
   )
 
-  const programmeRequirements = computed(
-    () => event.value?.registration?.requirements?.programmes ?? null,
+  const companyJobs = computed(() =>
+    Object.entries(jobs.value ?? {})
+      .filter(([, job]) => job.companyUID === event.value?.companyUID)
+      .map(([jobUid, job]) => ({
+        uid: jobUid,
+        title: job.title ?? '',
+        deadline: job.deadline,
+        state: deadlineState(job.deadline ?? undefined, now),
+      }))
+      .filter((job) => job.state.kind !== 'passed'),
   )
 
-  const hasYearsRequirements = computed(
-    () => event.value?.registration?.requirements?.years ?? null,
-  )
-
-  // check if user meets registration requirements
-  const meetsProgrammeRequirement =
-    event.value?.registration?.requirements?.programmes?.includes(
-      useAuth.user?.studyProgram,
-    ) ?? true
-
-  const meetsYearRequirement =
-    event.value?.registration?.requirements?.years?.includes(
-      useAuth.user?.currentYear,
-    ) ?? true
-
-  // check if user is already registered for event
-  const alreadyRegistered = computed(() => {
-    const uid = useAuth?.user?.uid
-    if (!uid) return false
-
-    return (
-      hasAttendants.value && Object.hasOwn(event.value.attendants ?? {}, uid)
-    )
-  })
-
-  // check if user is already registered for queue
-  const alreadyQueued = computed(
-    () =>
-      (hasAttendants.value &&
-        Object.values(event.value.queue || {}).includes(useAuth?.user?.uid)) ??
-      false,
-  )
-
-  // check if event is full
-  const eventFull = computed(
-    () =>
-      hasCapacity.value &&
-      hasAttendants.value &&
-      Object.keys(event.value.attendants || {}).length >= event.value.capacity,
-  )
-
-  // does the event have any registration actions, and is user signed in
-  const hasEventActions = computed(
-    () => useAuth.isLoggedIn && hasCapacity.value,
-  )
-
-  // check if registration actions should be rendered on client side
-  const showRegistrationAction = ref(
-    hasEventActions.value &&
-      presentWithinTimeWindow(
-        event.value.registration.start,
-        event.value.registration.end,
-      ),
-  )
-
-  // check if registration is open with interval if user is signed in and the event has a capacity
-  let registrationOpenInterval: ReturnType<typeof setInterval>
-  onMounted(() => {
-    if (hasEventActions.value)
-      registrationOpenInterval = setInterval(
-        () =>
-          (showRegistrationAction.value = presentWithinTimeWindow(
-            event.value.registration.start,
-            event.value.registration.end,
-          )),
-        1000,
-      )
-  })
-
-  // clear interval when unmounting the component
-  onBeforeUnmount(() => clearInterval(registrationOpenInterval))
-
-  // check if user is already registered for event
-  const showSignupButton = computed(
-    () => hasCapacity.value && !alreadyRegistered.value && !eventFull.value,
-  )
-
-  // check if user is eligable for queue for event
-  const showQueueButton = computed(
-    () => hasCapacity.value && !alreadyRegistered.value && eventFull.value,
-  )
-
-  const loading = ref(false)
-
-  // sign up for event
-  const signUpForEvent = () => {
-    loading.value = true
-
-    $fetch('/api/v1/event/register', {
-      method: 'POST',
-      body: { eventUID: event.value.uid },
-    })
-      .then(() =>
-        Promise.all([refresh(), refreshNuxtData('site-header-events')]),
-      )
-      .then(() =>
-        useAlert.alert(
-          getI18nString('alert.success.event.register.sign_up'),
-          'success',
-        ),
-      )
-      .catch((error: any) => {
-        alertError(error)
-      })
-      .finally(() => (loading.value = false))
+  const requirements = computed(() => event.value?.registration?.requirements)
+  const TABS = ['about', 'signup', 'company'] as const
+  type Tab = (typeof TABS)[number]
+  const tab = ref<Tab>('about')
+  const tabCount = (name: Tab) =>
+    name === 'company' ? companyJobs.value.length : 0
+  // arrow keys move between tabs, as people expect from a tab list
+  function moveTab(step: number) {
+    const next = (TABS.indexOf(tab.value) + step + TABS.length) % TABS.length
+    tab.value = TABS[next]!
+    nextTick(() => document.getElementById(`tab-${tab.value}`)?.focus())
   }
 
-  // Add user to the queue
-  const addToQueue = () => {
-    loading.value = true
-
-    $fetch('/api/v1/event/register', {
-      method: 'POST',
-      body: { eventUID: event.value.uid },
-    })
-      .then(() =>
-        Promise.all([refresh(), refreshNuxtData('site-header-events')]),
-      )
-      .then(() =>
-        useAlert.alert(
-          getI18nString('alert.success.event.register.queue'),
-          'success',
-        ),
-      )
-      .catch((error: any) => {
-        alertError(error)
-      })
-      .finally(() => (loading.value = false))
-  }
-
-  const dialog = ref(false)
-  // opt out of event
-  const optOutOfEvent = () => {
-    loading.value = true
-
-    $fetch('/api/v1/event/register', {
-      method: 'DELETE',
-      body: { eventUID: event.value.uid },
-    })
-      .then(() =>
-        Promise.all([refresh(), refreshNuxtData('site-header-events')]),
-      )
-      .then(() =>
-        useAlert.alert(
-          getI18nString('alert.success.event.register.opt_out.name'),
-          'success',
-        ),
-      )
-      .catch((error) => {
-        alertError(error)
-      })
-      .finally(() => {
-        loading.value = false
-        dialog.value = false
-      })
-  }
-
-  // opt out of Queue
-  /*
-  const optOutOfQueue = () => {
-    loading.value = true
-
-    $fetch('/api/v1/event/register', {
-      method: 'DELETE',
-      body: { eventUID: event.value.uid },
-    })
-      .then(() => Promise.all([refresh(), refreshNuxtData('site-header-events')]))
-      .then(() =>
-        useAlert.alert(
-          getI18nString('alert.success.event.register.opt_out_queue'),
-          'success',
-        ),
-      )
-      .catch((error) => {
-        alertError(error)
-      })
-      .finally(() => {
-        loading.value = false
-        dialog.value = false
-      })
-  }
-  */
-
-  // get user's position in the queue
-
-  const userUid = useAuth.user?.uid
-
-  const userQueuePosition = computed(() => {
-    if (!event.value.queue) return null
-    const queueEntries = Object.entries(event.value.queue)
-    const sortedQueue = queueEntries.sort(([a], [b]) => a.localeCompare(b))
-    if (!userUid) return null
-    const userIndex = sortedQueue.findIndex(([, uid]) => uid === userUid)
-    return userIndex !== -1 ? userIndex + 1 : null
-  })
-
-  const uidSvgUrl = ref('')
-
-  onMounted(async () => {
-    if (userUid) {
-      const svg = await qrcode.toString(userUid, {
-        type: 'svg',
-        width: 200,
-        margin: 1,
-      })
-
-      uidSvgUrl.value = `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`
-    }
-  })
+  useHead(() => ({ title: event.value?.title }))
 </script>
 
 <template>
-  <VContainer class="container">
-    <!-- company logo -->
-    <VCard
-      class="d-flex justify-center align-center pa-4 image-container"
-      flat
-      rounded="lg"
+  <div class="et-ui">
+    <div
+      v-if="event && state"
+      class="tw:mx-auto tw:grid tw:max-w-6xl tw:gap-8 tw:px-4 tw:py-8 tw:lg:grid-cols-[minmax(0,1fr)_22rem] tw:lg:gap-12 tw:lg:px-8 tw:lg:py-12"
     >
-      <NuxtImg
-        class="image"
-        fit="contain"
-        :src="company?.logo || 'images/logo_long.png'"
-      />
-    </VCard>
-
-    <!-- event description -->
-    <VCard class="description elevation-4" rounded="lg">
-      <VCardTitle class="description__title">{{ event?.title }}</VCardTitle>
-      <!-- eslint-disable vue/no-v-text-v-html-on-component vue/no-v-html -->
-      <VCardText class="description__text mb-3" v-html="event?.description" />
-      <!-- eslint-enable -->
-      <AttendantsList v-if="hasAttendants" :user-list="attendants" />
-    </VCard>
-
-    <!-- event details -->
-    <VCard class="details elevation-4" rounded="lg">
-      <!-- edit event -->
-      <VBtn
-        v-if="isAdmin"
-        class="edit-event"
-        variant="text"
-        icon="mdi-pencil"
-        size="small"
-        color="primary"
-        @click="() => navigateTo(localePath(`/event/edit/${event.uid}`))"
-      />
-
-      <VCardTitle class="details__title">
-        {{ $t('event.page.details.name') }}
-      </VCardTitle>
-
-      <VCardText class="details__from pt-2 pb-0">
-        <strong>{{ $t('event.page.details.from') }}:</strong>
-        {{ eventStartString }}
-      </VCardText>
-
-      <VCardText class="details__to py-0 pb-5">
-        <strong>{{ $t('event.page.details.to') }}:</strong>
-        {{ eventEndString }}
-      </VCardText>
-
-      <VCardText
-        v-if="registrationStartString"
-        class="details__from py-0 pb-0 d-flex flex-wrap"
-      >
-        <strong class="mr-2">{{ $t('event.page.details.reg_start') }}: </strong>
-        <span>{{ registrationStartString }}</span>
-      </VCardText>
-
-      <VCardText
-        v-if="registrationEndString"
-        class="details__to py-0 pb-5 d-flex flex-wrap"
-      >
-        <strong class="mr-2">{{ $t('event.page.details.reg_end') }}: </strong>
-        <span>{{ registrationEndString }}</span>
-      </VCardText>
-
-      <VCardText class="details__location py-0 pb-5">
-        <strong>{{ $t('event.page.details.location') }}: </strong>
+      <header class="tw:flex tw:flex-col tw:gap-5 tw:lg:col-span-2">
         <NuxtLink
-          v-if="event.location.map"
-          :to="event.location.map"
-          class="link"
-          target="_blank"
-          @click.stop
+          :to="localePath('/programme')"
+          class="tw:inline-flex tw:w-fit tw:items-center tw:gap-1 tw:text-sm tw:text-muted-foreground tw:hover:text-foreground"
         >
-          {{ event.location.name }}
-          <VIcon size="x-small" color="primary">mdi-open-in-new</VIcon>
+          <ArrowLeft class="tw:size-4" aria-hidden="true" />
+          {{ $t('events.page.back') }}
         </NuxtLink>
-        <span v-else>
-          {{ event.location.name }}
-        </span>
-      </VCardText>
-
-      <VCardText class="details__host py-0 pb-5">
-        <strong>{{ $t('event.page.details.host') }}: </strong>
-        <NuxtLink v-if="company" :to="company?.webpage" target="_blank">
-          {{ company?.name }}
-          <VIcon size="xsmall" color="primary">mdi-open-in-new</VIcon>
-        </NuxtLink>
-
-        <span v-else>{{ 'E&T-dagene' }}</span>
-      </VCardText>
-    </VCard>
-
-    <!-- event registration -->
-    <div class="attendant-container">
-      <VCard class="attendants elevation-4" color="primary" rounded="lg">
-        <VCardTitle class="attendants__title">
-          {{ $t('event.page.attendants.name') }}
-        </VCardTitle>
-
-        <VCardText
-          v-if="hasCapacity"
-          class="attendants__count d-flex justify-space-between flex-wrap"
+        <div v-if="company" class="tw:flex tw:items-center tw:gap-3">
+          <CompanyLogo :src="company.logo" :name="company.name" size="lg" />
+          <span class="tw:font-semibold">{{ company.name }}</span>
+        </div>
+        <h1
+          class="tw:max-w-4xl tw:text-3xl tw:leading-tight tw:font-extrabold tw:tracking-tight tw:text-balance tw:lg:text-[2.75rem]"
         >
-          <span>
-            <strong>{{ $t('event.page.attendants.attendants') }}: </strong>
-
-            <span v-if="hasAttendants">
-              {{ Object.values(event.attendants).length }}
-            </span>
-            <span v-else>0</span>
-
-            {{ event.capacity ? `/ ${event.capacity}` : '' }}
-
-            <strong style="margin-left: 10px">
-              {{ $t('event.page.queue.name') }}:
-            </strong>
-
-            {{ totalQueued }}
-          </span>
-
-          <span v-if="alreadyRegistered">
-            {{ $t('event.page.attendants.registered') }}
-            <VIcon style="margin-bottom: 2px">mdi-check-circle</VIcon>
-          </span>
-
-          <div v-if="alreadyQueued">
-            {{ $t('event.page.queue.position') }}:
-            {{ userQueuePosition }}
+          {{ event.title }}
+        </h1>
+        <dl
+          class="tw:flex tw:flex-wrap tw:gap-x-8 tw:gap-y-3 tw:border-t tw:pt-5"
+        >
+          <div class="tw:flex tw:items-center tw:gap-2">
+            <dt>
+              <CalendarClock
+                class="tw:size-4 tw:text-muted-foreground"
+                :aria-label="$t('events.page.when')"
+              />
+            </dt>
+            <dd class="tw:font-medium tw:tabular-nums">{{ when }}</dd>
           </div>
-        </VCardText>
-
-        <VCardText v-else>
-          {{ $t('event.page.attendants.nocapacity') }}
-        </VCardText>
-
-        <VCardText
-          v-if="hasYearsRequirements"
-          class="reg__year py-0 pb-5 d-flex flex-wrap"
-        >
-          <strong class="mr-2"
-            >{{ $t('event.page.details.reg_year') }}:
-          </strong>
-          <span
-            v-for="year in hasYearsRequirements"
-            :key="year"
-            class="comma-separated"
-            >{{ year }}</span
+          <div
+            v-if="event.location?.name"
+            class="tw:flex tw:items-center tw:gap-2"
           >
-        </VCardText>
-
-        <VCardText
-          v-if="programmeRequirements"
-          class="reg__programme py-0 pb-5 d-flex flex-wrap flex-column"
-        >
-          <strong class="mr-2"
-            >{{ $t('event.page.details.reg_programme') }}:
-          </strong>
-          <VDivider />
-          <ul class="ml-6 mt-2">
-            <li
-              v-for="programme in programmeRequirements"
-              :key="programme"
-              class="py-1 px-2"
+            <dt>
+              <span
+                v-if="place.code"
+                class="tw:rounded-sm tw:bg-plate tw:px-1.5 tw:pt-0.5 tw:text-sm tw:font-extrabold tw:text-plate-foreground"
+              >
+                {{ place.code }}
+              </span>
+              <MapPin
+                v-else
+                class="tw:size-4 tw:text-muted-foreground"
+                :aria-label="$t('events.page.where')"
+              />
+            </dt>
+            <dd class="tw:font-medium">
+              <a
+                v-if="event.location.map"
+                :href="event.location.map"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="tw:underline tw:decoration-border tw:underline-offset-4 tw:hover:decoration-current"
+              >
+                {{ place.name || event.location.name }}
+              </a>
+              <template v-else>{{
+                place.name || event.location.name
+              }}</template>
+            </dd>
+          </div>
+          <div v-if="places.limit" class="tw:flex tw:items-center tw:gap-2">
+            <dt>
+              <Users
+                class="tw:size-4 tw:text-muted-foreground"
+                :aria-label="$t('events.page.signup')"
+              />
+            </dt>
+            <dd class="tw:font-medium tw:tabular-nums">
+              {{
+                $t('events.page.places', {
+                  taken: places.taken,
+                  limit: places.limit,
+                })
+              }}
+            </dd>
+            <dd
+              v-if="urgency"
+              class="tw:rounded-sm tw:bg-signal tw:px-2 tw:pt-0.5 tw:text-sm tw:font-bold tw:text-signal-foreground"
             >
-              {{ programme }}
+              {{
+                urgency.kind === 'closing'
+                  ? $t('events.page.urgency.closing', urgency.hours)
+                  : $t('events.page.urgency.few', urgency.left)
+              }}
+            </dd>
+          </div>
+        </dl>
+      </header>
+
+      <aside
+        class="tw:lg:sticky tw:lg:top-24 tw:lg:col-start-2 tw:lg:row-start-2 tw:lg:self-start"
+      >
+        <!-- the panel depends on who is signed in and the clock, so it draws in the browser -->
+        <ClientOnly>
+          <SignupPanel
+            :event-uid="uid"
+            :state="state"
+            :places="places"
+            :event-day="isEventDay(event, now)"
+            :calendar="calendar"
+            :ticket="ticket"
+            :may-scan="mayScan"
+            @changed="changed"
+          />
+          <template #fallback>
+            <div class="tw:h-64 tw:rounded-lg tw:border tw:bg-card" />
+          </template>
+        </ClientOnly>
+      </aside>
+
+      <article
+        class="tw:flex tw:min-w-0 tw:flex-col tw:gap-6 tw:lg:col-start-1 tw:lg:row-start-2"
+      >
+        <div
+          role="tablist"
+          :aria-label="$t('events.page.tabs.label')"
+          class="tw:flex tw:gap-4 tw:overflow-x-auto tw:border-b tw:sm:gap-6"
+          @keydown.right.prevent="moveTab(1)"
+          @keydown.left.prevent="moveTab(-1)"
+        >
+          <button
+            v-for="name in TABS"
+            :id="`tab-${name}`"
+            :key="name"
+            role="tab"
+            type="button"
+            :aria-selected="tab === name"
+            :aria-controls="`panel-${name}`"
+            :tabindex="tab === name ? 0 : -1"
+            class="tw:-mb-px tw:inline-flex tw:h-11 tw:shrink-0 tw:items-center tw:border-b-2 tw:border-transparent tw:pt-0.5 tw:font-semibold tw:whitespace-nowrap tw:text-muted-foreground tw:hover:text-foreground tw:aria-selected:border-brand tw:aria-selected:text-foreground"
+            @click="tab = name"
+          >
+            <span class="tw:sm:hidden">
+              {{ $t(`events.page.tabs.${name}_short`) }}
+            </span>
+            <span class="tw:hidden tw:sm:inline">
+              {{ $t(`events.page.tabs.${name}`) }}
+            </span>
+            <span
+              v-if="tabCount(name)"
+              class="tw:ml-2 tw:rounded-sm tw:bg-muted tw:px-1.5 tw:pt-0.5 tw:text-xs tw:font-bold tw:text-foreground tw:tabular-nums"
+              :aria-label="$t('events.page.tabs.jobs_count', tabCount(name))"
+            >
+              {{ tabCount(name) }}
+            </span>
+          </button>
+        </div>
+
+        <section
+          v-show="tab === 'about'"
+          id="panel-about"
+          role="tabpanel"
+          aria-labelledby="tab-about"
+          class="tw:flex tw:flex-col tw:gap-6"
+        >
+          <!-- the API cleans descriptions before they reach the page -->
+          <!-- eslint-disable vue/no-v-html -->
+          <div
+            v-if="event.description"
+            class="et-prose"
+            v-html="event.description"
+          />
+          <!-- eslint-enable vue/no-v-html -->
+          <iframe
+            v-if="mapEmbed"
+            :src="mapEmbed"
+            :title="
+              $t('events.page.map_title', { place: event.location?.name })
+            "
+            loading="lazy"
+            referrerpolicy="no-referrer"
+            class="tw:h-72 tw:w-full tw:rounded-lg tw:border tw:bg-card"
+          />
+          <a
+            v-else-if="event.location?.map"
+            :href="event.location.map"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="tw:inline-flex tw:w-fit tw:items-center tw:gap-2 tw:font-semibold tw:underline tw:decoration-border tw:underline-offset-4"
+          >
+            <MapPin class="tw:size-4" aria-hidden="true" />
+            {{ $t('events.page.open_map') }}
+            <ExternalLink class="tw:size-3.5" aria-hidden="true" />
+          </a>
+        </section>
+
+        <section
+          v-show="tab === 'signup'"
+          id="panel-signup"
+          role="tabpanel"
+          aria-labelledby="tab-signup"
+          class="tw:flex tw:flex-col tw:gap-5"
+        >
+          <p v-if="state.kind === 'none'">{{ $t('events.page.state.none') }}</p>
+          <dl v-else class="tw:grid tw:gap-4 tw:sm:grid-cols-2">
+            <div>
+              <dt class="tw:text-sm tw:text-muted-foreground">
+                {{ $t('events.page.window.opens') }}
+              </dt>
+              <dd class="tw:font-semibold">
+                {{ windowText(event.registration?.start) }}
+              </dd>
+            </div>
+            <div>
+              <dt class="tw:text-sm tw:text-muted-foreground">
+                {{ $t('events.page.window.closes') }}
+              </dt>
+              <dd class="tw:font-semibold">
+                {{ windowText(event.registration?.end) }}
+              </dd>
+            </div>
+            <div v-if="requirements?.years?.length" class="tw:sm:col-span-2">
+              <dt class="tw:text-sm tw:text-muted-foreground">
+                {{ $t('events.page.years') }}
+              </dt>
+              <dd class="tw:mt-1 tw:flex tw:flex-wrap tw:gap-2">
+                <span
+                  v-for="year in requirements.years"
+                  :key="year"
+                  class="tw:rounded-md tw:border tw:bg-card tw:px-2.5 tw:pt-0.5 tw:text-sm tw:font-semibold"
+                >
+                  {{ $t('company.admin.year', { n: year }) }}
+                </span>
+              </dd>
+            </div>
+            <div
+              v-if="requirements?.programmes?.length"
+              class="tw:sm:col-span-2"
+            >
+              <dt class="tw:text-sm tw:text-muted-foreground">
+                {{ $t('events.page.programmes') }}
+              </dt>
+              <dd class="tw:mt-1">
+                <ul class="tw:flex tw:flex-col tw:gap-1">
+                  <li
+                    v-for="programme in requirements.programmes"
+                    :key="programme"
+                  >
+                    {{ programme }}
+                  </li>
+                </ul>
+              </dd>
+            </div>
+          </dl>
+          <p class="tw:text-sm tw:text-muted-foreground">
+            {{ $t('events.page.privacy') }}
+          </p>
+        </section>
+
+        <section
+          v-show="tab === 'company'"
+          id="panel-company"
+          role="tabpanel"
+          aria-labelledby="tab-company"
+          class="tw:flex tw:flex-col tw:gap-4"
+        >
+          <ul
+            v-if="companyJobs.length"
+            class="tw:divide-y tw:divide-border tw:overflow-hidden tw:rounded-lg tw:border tw:bg-card"
+          >
+            <li v-for="job in companyJobs" :key="job.uid">
+              <NuxtLink
+                :to="localePath(`/jobs/${job.uid}`)"
+                class="tw:flex tw:items-center tw:justify-between tw:gap-4 tw:px-4 tw:py-3 tw:hover:bg-accent/60"
+              >
+                <span class="tw:font-semibold">{{ job.title }}</span>
+                <span
+                  class="tw:flex tw:shrink-0 tw:items-center tw:gap-2 tw:text-sm"
+                >
+                  <template v-if="job.state.kind === 'open'">
+                    {{ formatDeadline(job.deadline ?? undefined, locale) }}
+                  </template>
+                  <DeadlineNote :state="job.state" />
+                </span>
+              </NuxtLink>
             </li>
           </ul>
-        </VCardText>
-      </VCard>
-
-      <!-- Event actions: Sign up perform action -->
-      <VBtn
-        v-if="!useAuth.isLoggedIn && hasCapacity && !eventFull"
-        rounded="lg"
-        variant="text"
-        class="text-primary px-4 py-2 d-flex justify-center align-center login"
-        prepend-icon="mdi-login"
-        @click="navigateTo(localePath('/user/signin'))"
-      >
-        {{ $t('program.event.sign_in_to_register') }}
-      </VBtn>
-
-      <span v-if="alreadyRegistered" class="qr-wrapper">
-        <img :src="uidSvgUrl" alt="QR code" />
-      </span>
-
-      <v-btn
-        v-if="mayScan"
-        variant="tonal"
-        append-icon="mdi-camera"
-        :to="`${route.path}/scan_attendants`"
-      >
-        {{ $t('event.page.attendants.scan') }}
-      </v-btn>
-
-      <div
-        v-if="hasEventActions && !showRegistrationAction"
-        class="text-primary px-4 py-2 d-flex justify-center align-center"
-      >
-        <VIcon class="pr-3">mdi-calendar-clock</VIcon>
-        {{ $t('program.event.registration_closed') }}
-      </div>
-
-      <!-- sign up options -->
-      <div v-if="hasEventActions && showRegistrationAction">
-        <!-- sign up -->
-        <VBtn
-          v-if="showSignupButton"
-          color="success"
-          :loading="loading"
-          block
-          variant="flat"
-          :ripple="true"
-          density="comfortable"
-          :disabled="
-            eventFull || !meetsProgrammeRequirement || !meetsYearRequirement
-          "
-          @click.stop="signUpForEvent"
-        >
-          {{ $t('program.event.sign_up') }}
-        </VBtn>
-
-        <!-- Enqueue -->
-        <VBtn
-          v-else-if="showQueueButton && !alreadyQueued"
-          color="success"
-          :loading="loading"
-          block
-          variant="flat"
-          :ripple="true"
-          density="comfortable"
-          :disabled="
-            alreadyQueued || !meetsProgrammeRequirement || !meetsYearRequirement
-          "
-          @click.stop="addToQueue"
-        >
-          {{ $t('program.event.enqueue') }}
-        </VBtn>
-
-        <!-- opt out modal -->
-        <VDialog v-if="alreadyRegistered" v-model="dialog" width="500">
-          <template #activator="{ props }">
-            <VBtn
-              v-bind="props"
-              color="primary"
-              block
-              variant="tonal"
-              :ripple="true"
-              density="comfortable"
-            >
-              {{ $t('program.event.opt_out.name') }}
-            </VBtn>
-          </template>
-          <template #default="{ isActive }">
-            <VCard rounded="lg" class="text-center pa-6">
-              <h6>{{ $t('program.event.opt_out.confirmtext') }}</h6>
-              <div
-                class="d-flex justify-center flex-wrap mt-6"
-                style="gap: 1.5rem"
-              >
-                <VBtn
-                  size="large"
-                  variant="outlined"
-                  color="primary"
-                  :loading="loading"
-                  @click="optOutOfEvent"
-                >
-                  {{ $t('program.event.opt_out.confirm') }}
-                </VBtn>
-                <VBtn
-                  size="large"
-                  flat
-                  color="success"
-                  @click="isActive.value = false"
-                >
-                  {{ $t('program.event.opt_out.abort') }}
-                </VBtn>
-              </div>
-            </VCard>
-          </template>
-        </VDialog>
-
-        <!-- opt out modal -->
-        <VDialog
-          v-if="!alreadyRegistered && alreadyQueued"
-          v-model="dialog"
-          width="500"
-        >
-          <template #activator="{ props }">
-            <VBtn
-              v-bind="props"
-              color="primary"
-              block
-              variant="tonal"
-              :ripple="true"
-              density="comfortable"
-            >
-              {{ $t('program.event.opt_out.queue') }}
-            </VBtn>
-          </template>
-
-          <template #default="{ isActive }">
-            <VCard rounded="lg" class="text-center pa-6">
-              <h6>{{ $t('program.event.opt_out.confirmtext') }}</h6>
-
-              <div
-                class="d-flex justify-center flex-wrap mt-6"
-                style="gap: 1.5rem"
-              >
-                <VBtn
-                  size="large"
-                  variant="outlined"
-                  color="primary"
-                  :loading="loading"
-                  @click="optOutOfEvent"
-                >
-                  {{ $t('program.event.opt_out.confirm') }}
-                </VBtn>
-                <VBtn
-                  size="large"
-                  flat
-                  color="success"
-                  @click="isActive.value = false"
-                >
-                  {{ $t('program.event.opt_out.abort') }}
-                </VBtn>
-              </div>
-            </VCard>
-          </template>
-        </VDialog>
-      </div>
+          <p v-else class="tw:text-muted-foreground">
+            {{ $t('events.page.no_jobs') }}
+          </p>
+          <a
+            v-if="company?.webpage"
+            :href="company.webpage"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="tw:inline-flex tw:w-fit tw:items-center tw:gap-1 tw:font-semibold tw:underline tw:decoration-border tw:underline-offset-4"
+          >
+            {{ $t('events.page.website', { company: company.name }) }}
+            <ExternalLink class="tw:size-3.5" aria-hidden="true" />
+          </a>
+        </section>
+      </article>
     </div>
-  </VContainer>
+
+    <div
+      v-else
+      class="tw:mx-auto tw:flex tw:max-w-6xl tw:flex-col tw:items-start tw:gap-4 tw:px-4 tw:py-16 tw:lg:px-8"
+    >
+      <h1 class="tw:text-2xl tw:font-bold">{{ $t('events.page.missing') }}</h1>
+      <NuxtLink
+        :to="localePath('/programme')"
+        class="tw:font-semibold tw:underline"
+      >
+        {{ $t('events.page.back') }}
+      </NuxtLink>
+    </div>
+  </div>
 </template>
-
-<style scoped lang="scss">
-  @use 'sass:map';
-  @use 'vuetify/settings';
-
-  .comma-separated {
-    &::after {
-      content: ',\00a0';
-    }
-    &:last-child::after {
-      content: '' !important;
-    }
-  }
-
-  .login {
-    font-size: 1rem;
-  }
-  .container {
-    display: grid;
-    width: 100vw;
-    grid-template-columns: 1.1fr 3fr;
-    gap: 1rem;
-    grid-template-areas: 'details image' 'attendants description';
-
-    .image-container {
-      max-height: 300px;
-
-      .image {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-      }
-    }
-
-    .description {
-      grid-area: description;
-
-      :deep(li) {
-        list-style-position: inside;
-
-        p {
-          display: inline;
-        }
-      }
-
-      :deep(h5) {
-        font-size: 1.15rem !important;
-      }
-
-      :deep(h6) {
-        font-size: 1.05rem !important;
-      }
-
-      &__text {
-        white-space: pre-line;
-      }
-    }
-    .details {
-      grid-area: details;
-
-      .edit-event {
-        position: absolute;
-        right: 0.5rem;
-        top: 0.5rem;
-      }
-    }
-
-    .attendant-container {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-    .attendants {
-      grid-area: attendants;
-    }
-
-    .qr-wrapper {
-      display: flex;
-      justify-content: center;
-    }
-
-    @media #{map.get(settings.$display-breakpoints, 'lg-and-up')} {
-      max-width: 1080px;
-    }
-
-    @media #{map.get(settings.$display-breakpoints, 'md-and-down')} {
-      max-width: 750px;
-      grid-template-areas: 'image' 'details' 'attendants' 'description';
-      grid-template-columns: 1fr;
-    }
-
-    @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
-      max-width: 420px;
-    }
-  }
-</style>

@@ -1194,6 +1194,86 @@
       "none": "No matches"
     }
   },
+  "events": {
+    "page": {
+      "back": "Programme",
+      "when": "When",
+      "where": "Where",
+      "signup": "Sign-up",
+      "places": "{taken} of {limit} places",
+      "map_title": "Map of {place}",
+      "open_map": "Open map",
+      "privacy": "The names of those signed up are not shown here.",
+      "years": "Years",
+      "programmes": "Study programmes",
+      "no_jobs": "The company has no open jobs with us right now.",
+      "website": "{company}'s website",
+      "missing": "Event not found",
+      "not_eligible": "You do not meet this event's study programme or year requirements.",
+      "tabs": {
+        "label": "Event",
+        "about": "About",
+        "signup": "Sign-up",
+        "company": "The company",
+        "jobs_count": "{n} job | {n} jobs",
+        "about_short": "About",
+        "signup_short": "Sign-up",
+        "company_short": "Company"
+      },
+      "window": {
+        "opens": "Sign-up opens",
+        "closes": "Sign-up closes"
+      },
+      "state": {
+        "none": "Open to everyone, no sign-up",
+        "past": "The event is over",
+        "not-open": "Sign-up has not opened",
+        "closed": "Sign-up is closed",
+        "registered": "You have a place",
+        "queued": "You are number {n} in the queue",
+        "sign-in": "Sign-up is open",
+        "not-eligible": "Sign-up is open",
+        "open": "Sign-up is open",
+        "full": "Full, waiting list"
+      },
+      "countdown": {
+        "days": "Opens in {days} d {hours} h",
+        "hours": "Opens in {hours} h {minutes} min"
+      },
+      "action": {
+        "register": "Sign me up",
+        "queue": "Join the queue",
+        "sign_in": "Sign in to sign up",
+        "cancel": "Cancel my place",
+        "leave_queue": "Leave the queue",
+        "calendar": "Add to calendar"
+      },
+      "done": {
+        "registered": "You are signed up",
+        "queued": "You are in the queue",
+        "cancelled": "Your place is cancelled"
+      },
+      "confirm": {
+        "title": "Cancel your place?",
+        "text": "Your place goes to the first in the queue, and you would have to sign up again to get one.",
+        "queue_title": "Leave the queue?",
+        "queue_text": "You lose your place in the queue.",
+        "keep": "Keep it"
+      },
+      "ticket": {
+        "open": "Show ticket",
+        "hide": "Hide ticket",
+        "show": "Show the code at the door",
+        "qr_alt": "Ticket code for check-in"
+      },
+      "left": "{n} place left | {n} places left",
+      "waiting_count": "Nobody waiting | {n} waiting | {n} waiting",
+      "urgency": {
+        "closing": "Closes in {n} hour | Closes in {n} hours",
+        "few": "{n} place left | {n} places left"
+      }
+    }
+  },
   "site": {
     "skip": "Skip to content",
     "next": {
