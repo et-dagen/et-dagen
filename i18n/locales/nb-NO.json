@@ -1382,6 +1382,9 @@
     },
     "data": {
       "title": "Hva vi lagrer",
+      "body": [
+        "Ingen i E&T-dagene ser opplysningene dine bare fordi de sitter i styret. Tilgangen følger rollen på nettsiden: administratorer er IT-gruppen, som drifter nettsiden. Koordinatorer er medlemmer av E&T-dagene som har ansvar for arrangementene til én eller flere bedrifter. I tillegg ser bedrifter og andre brukere det som står under hver kategori."
+      ],
       "labels": {
         "what": "Hva",
         "why": "Hvorfor",
@@ -1392,9 +1395,9 @@
       "account": {
         "title": "Brukerkonto",
         "what": "Navn, e-post, studieprogram og hvilket årstrinn du går i. Passordet lagres av Google som en hash, så ingen kan lese det, heller ikke vi.",
-        "why": "For at du skal kunne logge inn og melde deg på arrangementer, og for at styret kan finne og filtrere brukere, for eksempel etter studieprogram og årstrinn.",
+        "why": "For at du skal kunne logge inn og melde deg på arrangementer, og for at administratorene kan finne og filtrere brukere, for eksempel etter studieprogram og årstrinn.",
         "basis": "Avtale, personvernforordningen art. 6 nr. 1 b.",
-        "who": "Du og styret i E&T-dagene, som ser og bruker opplysningene. Bedrifter ser noen av dem når du melder deg på arrangementene deres eller laster opp CV; se under.",
+        "who": "Du og administratorene (IT-gruppen). Koordinatorer, bedrifter og andre brukere ser noen av opplysningene når du melder deg på arrangementer eller laster opp CV; se under.",
         "kept": "Til du sletter kontoen, eller tre år etter at du sist var innlogget. Da sletter vi kontoen og alt som hører til den automatisk."
       },
       "diet": {
@@ -1402,7 +1405,7 @@
         "what": "Allergier og kosthold du velger selv, som vegetar, halal eller kosher. Slike opplysninger kan si noe om helse eller religion, og er særlige kategorier av personopplysninger.",
         "why": "For at maten på arrangementene skal passe for deg.",
         "basis": "Uttrykkelig samtykke, art. 9 nr. 2 a. Feltene er frivillige, og du trekker samtykket ved å fjerne dem i profilen.",
-        "who": "Du og styret. Bedriften som holder et arrangement du er påmeldt, får bare antall per allergi og kosthold, ikke hvem.",
+        "who": "Du, administratorene og koordinatorene for arrangementer du er påmeldt, som bestiller maten. Bedriften som holder arrangementet, får bare antall per allergi og kosthold, ikke hvem.",
         "kept": "Til du fjerner dem eller sletter kontoen."
       },
       "events": {
@@ -1410,7 +1413,7 @@
         "what": "Hvilke arrangementer du er påmeldt eller står på venteliste til, og om du møtte opp.",
         "why": "For å holde plass til deg, flytte folk fra ventelisten og vite hvem som kom.",
         "basis": "Avtale, art. 6 nr. 1 b.",
-        "who": "Styret og bedriften som holder arrangementet. Bedriften ser navn, e-post, studieprogram og årstrinn.",
+        "who": "Administratorene, koordinatorene for arrangementet og bedriften som holder det, som ser navn, e-post, studieprogram og årstrinn. Andre innloggede brukere kan se navn og studieprogram for de påmeldte.",
         "kept": "Så lenge du har kontoen."
       },
       "resume": {
@@ -1418,7 +1421,7 @@
         "what": "CV-en du laster opp.",
         "why": "For at bedrifter som samarbeider med E&T-dagene, kan finne deg til jobb, sommerjobb eller oppgaver. CV-tilgang er en del av avtalen bedriftene inngår med oss.",
         "basis": "Samtykke, art. 6 nr. 1 a. Du trekker det ved å slette CV-en.",
-        "who": "Du, styret og bedrifter med CV-tilgang, normalt samarbeidspartnerne for årets messe. De ser CV-en sammen med navn, e-post, studieprogram og årstrinn, kan filtrere på dem og laste ned CV-en. En bedrift som laster den ned, er selv ansvarlig for sin kopi, og den kan vi ikke slette.",
+        "who": "Du, administratorene og bedrifter med CV-tilgang, normalt samarbeidspartnerne for årets messe. De ser CV-en sammen med navn, e-post, studieprogram og årstrinn, kan filtrere på dem og laste ned CV-en. En bedrift som laster den ned, er selv ansvarlig for sin kopi, og den kan vi ikke slette.",
         "kept": "Til du sletter CV-en eller kontoen. Bedriftenes tilgang fjerner vi noen måneder etter messen."
       },
       "company": {
@@ -1426,7 +1429,7 @@
         "what": "Navn, e-post og hvilken bedrift du representerer.",
         "why": "For å samarbeide med bedriften og gi deg tilgang til bedriftens sider.",
         "basis": "Berettiget interesse, art. 6 nr. 1 f: avtalen vi har med bedriften.",
-        "who": "Du og styret.",
+        "who": "Du, administratorene og koordinatorene for bedriften.",
         "kept": "Som for andre kontoer."
       },
       "board": {
@@ -1442,7 +1445,7 @@
         "what": "For hver forespørsel til nettsiden: tidspunkt, hvilken side, svarkode og bruker-ID om du er innlogget.",
         "why": "For å holde nettsiden i drift, rette feil og oppdage misbruk.",
         "basis": "Berettiget interesse, art. 6 nr. 1 f.",
-        "who": "Styret og de som drifter nettsiden.",
+        "who": "Administratorene.",
         "kept": "Til neste gang nettsiden oppdateres, vanligvis noen dager."
       }
     },

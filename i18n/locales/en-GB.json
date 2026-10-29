@@ -1383,6 +1383,9 @@
     },
     "data": {
       "title": "What we store",
+      "body": [
+        "No one at E&T-dagene sees your information just because they are on the board. Access follows the role on the website: admins are the IT group, who run the website. Coordinators are E&T-dagene members responsible for the events of one or more companies. Companies and other users also see what each category below says."
+      ],
       "labels": {
         "what": "What",
         "why": "Why",
@@ -1393,9 +1396,9 @@
       "account": {
         "title": "User account",
         "what": "Your name, email, study programme and the year you are in. Google stores your password as a hash, so no one can read it, not even us.",
-        "why": "So you can sign in and register for events, and so the board can find and filter users, for example by study programme and year.",
+        "why": "So you can sign in and register for events, and so the admins can find and filter users, for example by study programme and year.",
         "basis": "Contract, GDPR Art. 6(1)(b).",
-        "who": "You and the E&T-dagene board, who see and use the information. Companies see some of it when you register for their events or upload a résumé; see below.",
+        "who": "You and the admins (the IT group). Coordinators, companies and other users see some of it when you register for events or upload a résumé; see below.",
         "kept": "Until you delete your account, or three years after you last signed in. We then delete the account and everything linked to it automatically."
       },
       "diet": {
@@ -1403,7 +1406,7 @@
         "what": "Allergies and diets you choose yourself, such as vegetarian, halal or kosher. These can reveal health or religion, and are special categories of personal data.",
         "why": "So the food at events suits you.",
         "basis": "Explicit consent, Art. 9(2)(a). The fields are optional, and you withdraw consent by removing them from your profile.",
-        "who": "You and the board. The company holding an event you registered for gets only the number of people per allergy and diet, not who.",
+        "who": "You, the admins and the coordinators of events you register for, who order the food. The company holding the event gets only the number of people per allergy and diet, not who.",
         "kept": "Until you remove them or delete your account."
       },
       "events": {
@@ -1411,7 +1414,7 @@
         "what": "Which events you registered or are waitlisted for, and whether you attended.",
         "why": "To hold your place, move people up from the waitlist and know who came.",
         "basis": "Contract, Art. 6(1)(b).",
-        "who": "The board and the company holding the event. The company sees your name, email, study programme and year.",
+        "who": "The admins, the event's coordinators and the company holding it, who see your name, email, study programme and year. Other signed-in users can see the name and study programme of those registered.",
         "kept": "As long as you have your account."
       },
       "resume": {
@@ -1419,7 +1422,7 @@
         "what": "The résumé you upload.",
         "why": "So companies working with E&T-dagene can find you for jobs, summer jobs or theses. Résumé access is part of the agreement companies make with us.",
         "basis": "Consent, Art. 6(1)(a). You withdraw it by deleting the résumé.",
-        "who": "You, the board and companies with résumé access, usually this year's fair partners. They see the résumé with your name, email, study programme and year, can filter on these, and can download the résumé. A company that downloads it is responsible for its own copy, which we cannot delete.",
+        "who": "You, the admins and companies with résumé access, usually this year's fair partners. They see the résumé with your name, email, study programme and year, can filter on these, and can download the résumé. A company that downloads it is responsible for its own copy, which we cannot delete.",
         "kept": "Until you delete the résumé or your account. We remove companies' access a few months after the fair."
       },
       "company": {
@@ -1427,7 +1430,7 @@
         "what": "Your name, email and the company you represent.",
         "why": "To work with your company and give you access to its pages.",
         "basis": "Legitimate interest, Art. 6(1)(f): our agreement with your company.",
-        "who": "You and the board.",
+        "who": "You, the admins and the company's coordinators.",
         "kept": "As for other accounts."
       },
       "board": {
@@ -1443,7 +1446,7 @@
         "what": "For each request to the website: the time, the page, the response code and your user ID if you are signed in.",
         "why": "To keep the website running, fix errors and spot misuse.",
         "basis": "Legitimate interest, Art. 6(1)(f).",
-        "who": "The board and those who run the website.",
+        "who": "The admins.",
         "kept": "Until the website is next updated, usually a few days."
       }
     },

@@ -92,6 +92,11 @@
         <h2 id="data" :class="sectionHeading">
           {{ $t('privacy.data.title') }}
         </h2>
+        <div :class="prose">
+          <p v-for="(line, i) in lines('privacy.data.body')" :key="i">
+            {{ line }}
+          </p>
+        </div>
         <div class="tw:flex tw:flex-col tw:divide-y tw:border-y">
           <article
             v-for="category in CATEGORIES"
@@ -103,11 +108,11 @@
               {{ $t(`privacy.data.${category}.title`) }}
             </h3>
             <dl
-              class="tw:grid tw:gap-x-6 tw:gap-y-1 tw:sm:grid-cols-[9rem_minmax(0,1fr)] tw:sm:gap-y-3"
+              class="tw:grid tw:gap-x-6 tw:gap-y-1 tw:sm:grid-cols-[9rem_minmax(0,1fr)] tw:sm:items-baseline tw:sm:gap-y-3"
             >
               <template v-for="field in FIELDS" :key="field">
                 <dt
-                  class="tw:text-sm tw:font-semibold tw:text-muted-foreground tw:not-first:mt-2 tw:sm:mt-0 tw:sm:pt-0.5"
+                  class="tw:text-sm tw:font-semibold tw:text-muted-foreground tw:not-first:mt-2 tw:sm:mt-0"
                 >
                   {{ $t(`privacy.data.labels.${field}`) }}
                 </dt>
