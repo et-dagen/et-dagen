@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import { ArrowUpLeft } from '@lucide/vue'
-  import ThemeToggle from './ThemeToggle.vue'
   import { isActivePanel, panelsFor } from '@/lib/admin/panels'
   import { usePanelCounts } from '@/composables/admin/usePanelCounts'
 
@@ -80,7 +79,6 @@
           {{ $t('admin.shell.back') }}
         </NuxtLink>
       </div>
-      <ThemeToggle />
     </div>
   </nav>
 </template>

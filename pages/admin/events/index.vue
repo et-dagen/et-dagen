@@ -130,10 +130,7 @@
       past: 'tw:border-transparent tw:bg-secondary tw:text-muted-foreground',
       'no-registration': 'tw:text-muted-foreground',
       'not-open': 'tw:text-foreground',
-      open: [
-        'tw:border-transparent tw:bg-plate/12 tw:text-plate',
-        'tw:dark:bg-plate tw:dark:text-plate-foreground',
-      ].join(' '),
+      open: 'tw:border-transparent tw:bg-plate/12 tw:text-plate',
       full:
         status.kind === 'full' && status.queued > 0
           ? 'tw:border-transparent tw:bg-signal tw:text-signal-foreground'

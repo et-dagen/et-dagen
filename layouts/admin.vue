@@ -1,19 +1,6 @@
 <script setup lang="ts">
   import BottomBar from '@/components/admin/BottomBar.vue'
   import Rail from '@/components/admin/Rail.vue'
-  import ThemeToggle from '@/components/admin/ThemeToggle.vue'
-  import { useAdminTheme } from '@/composables/useAdminTheme'
-
-  const { theme } = useAdminTheme()
-
-  // on <html> so menus and dialogs, which render at the end of <body>, get the palette too
-  useHead({
-    htmlAttrs: {
-      class: 'et-admin-root',
-      'data-admin-theme': () =>
-        theme.value === 'system' ? undefined : theme.value,
-    },
-  })
 </script>
 
 <template>
@@ -28,7 +15,6 @@
       <p class="tw:text-lg tw:font-extrabold tw:tracking-tight">
         E&amp;T-dagene
       </p>
-      <ThemeToggle />
     </header>
 
     <main class="tw:min-w-0 tw:px-4 tw:pt-6 tw:pb-28 tw:lg:px-8 tw:lg:py-8">
