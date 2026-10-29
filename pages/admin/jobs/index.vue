@@ -271,7 +271,7 @@
                   (daysLeft(row) ?? 1) < 0
                     ? 'tw:text-muted-foreground'
                     : (daysLeft(row) ?? 99) <= 7
-                      ? 'tw:font-semibold tw:text-signal-foreground tw:dark:text-signal'
+                      ? 'tw:font-semibold tw:text-signal-foreground'
                       : 'tw:text-muted-foreground'
                 "
               >
