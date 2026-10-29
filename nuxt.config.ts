@@ -116,7 +116,7 @@ export default defineNuxtConfig({
     langDir: 'locales',
     strategy: 'prefix_except_default',
     // the alternate and canonical links need an absolute origin; NUXT_PUBLIC_I18N_BASE_URL overrides it
-    baseUrl: 'https://etdagen.no',
+    baseUrl: 'https://etdagene.no',
     locales: [
       {
         code: 'no',
