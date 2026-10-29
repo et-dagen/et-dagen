@@ -229,7 +229,7 @@
         class="tw:flex tw:flex-wrap tw:items-center tw:gap-x-3 tw:gap-y-1 tw:border-t tw:pt-6 tw:text-sm tw:text-muted-foreground tw:lg:col-span-2"
       >
         <img
-          src="/images/logo.png"
+          src="/images/logo-small.webp"
           alt=""
           width="20"
           height="23"

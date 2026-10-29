@@ -53,7 +53,7 @@
         <div class="tw:flex tw:h-16 tw:items-center tw:justify-between">
           <span class="tw:flex tw:items-center tw:gap-2.5">
             <img
-              src="/images/logo.png"
+              src="/images/logo-small.webp"
               alt=""
               width="26"
               height="30"
