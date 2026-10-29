@@ -99,7 +99,7 @@ export default defineNuxtConfig({
     openAPI: {
       meta: {
         title: 'E&T-dagene API',
-        description: 'HTTP API for etdagen.no',
+        description: 'HTTP API for etdagene.no',
         // Overridden by the docs workflow with branch + short SHA
         version: process.env.DOCS_VERSION ?? 'dev',
       },

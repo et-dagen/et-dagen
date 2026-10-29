@@ -704,7 +704,7 @@
         "listing": "Visning",
         "listings": {
           "text": {
-            "name": "Beskrivelse på etdagen.no",
+            "name": "Beskrivelse på etdagene.no",
             "hint": "Hele annonsen står her, med formatert tekst."
           },
           "link": {
@@ -796,7 +796,7 @@
     },
     "shell": {
       "navigation": "Adminpaneler",
-      "back": "Til etdagen.no",
+      "back": "Til etdagene.no",
       "tag": {
         "admin": "ADMIN",
         "company": "BEDRIFT"
