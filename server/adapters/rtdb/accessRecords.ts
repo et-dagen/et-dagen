@@ -42,13 +42,6 @@ export const companiesFrom = (
     .filter(([uid, membership]) => uid !== '' && !membership.endedAt)
     .map(([uid]) => CompanyUid.parse(uid))
 
-/**
- * Read a stored affiliation
- *
- * @remarks
- * An unknown tier reads as a former company, which grants nothing by default, and an override
- * naming no known entitlement is ignored, so a typo can only take access away.
- */
 /** The entitlements a membership record withholds; unknown names are ignored */
 export const withheldOf = (membership: MembershipRecord): Entitlement[] =>
   Object.entries(membership.withheld ?? {})
@@ -68,6 +61,13 @@ export const withheldFrom = (
     }),
   )
 
+/**
+ * Read a stored affiliation
+ *
+ * @remarks
+ * An unknown tier reads as a former company, which grants nothing by default, and an override
+ * naming no known entitlement is ignored, so a typo can only take access away.
+ */
 export const entitledFromAffiliation = (
   uid: string,
   name: string,
