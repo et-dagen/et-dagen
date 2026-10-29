@@ -866,8 +866,6 @@
       "intro": "Ett standkart per messedag. Det vises ved dagens overskrift i programmet, og besøkende kan åpne det i fullskjerm.",
       "events": "Ingen arrangementer | 1 arrangement | {n} arrangementer",
       "none": "Ikke lastet opp",
-      "unnamed": "Uten navn",
-      "legacy": "Gammel opplasting",
       "upload": "Last opp",
       "replace": "Erstatt",
       "remove": "Fjern standkartet for {day}",
