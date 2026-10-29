@@ -13,7 +13,11 @@ describe('panelsFor', () => {
     expect(panelsFor(true, () => false)).toEqual(ADMIN_PANELS)
   })
 
-  it('shows the jobs and résumé panels only to those allowed them', () => {
+  it('shows the jobs, profile and résumé panels only to those allowed them', () => {
+    expect(names(panelsFor(false, (area) => area === 'profile'))).toEqual([
+      'company-events',
+      'company-profile',
+    ])
     expect(names(panelsFor(false, (area) => area === 'jobs'))).toEqual([
       'company-events',
       'company-jobs',

@@ -93,6 +93,14 @@ export const COMPANY_PANELS: readonly Panel[] = [
     area: 'jobs',
   },
   {
+    name: 'company-profile',
+    route: '/company/admin/profile',
+    label: 'company.admin.profile.name',
+    icon: Building2,
+    count: null,
+    area: 'profile',
+  },
+  {
     name: 'resumes',
     route: '/company/admin/resumes',
     label: 'company.admin.resumes.name',
