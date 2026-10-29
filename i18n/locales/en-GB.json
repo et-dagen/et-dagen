@@ -843,8 +843,6 @@
       "intro": "One stand map per fair day. It shows beside the day's heading in the programme, and visitors can open it full screen.",
       "events": "No events | 1 event | {n} events",
       "none": "Not uploaded",
-      "unnamed": "Unnamed",
-      "legacy": "Old upload",
       "upload": "Upload",
       "replace": "Replace",
       "remove": "Remove the stand map for {day}",
