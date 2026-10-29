@@ -14,16 +14,18 @@ interface StoredEvent {
 /** What another student may see of an attendant: enough for an event's attendant list */
 const ATTENDANT_FIELDS = ['uid', 'name', 'studyProgram'] as const
 
-/** What a company may see of the people on its events, for attendance and catering */
+/** What a company may see of the people on its events; dietary needs reach it only as counts */
 const COMPANY_FIELDS = [
   'uid',
   'name',
   'email',
   'studyProgram',
   'currentYear',
-  'dietaryRestrictions',
   'updated',
 ] as const
+
+/** A coordinator books the food for their events, so also sees who needs what */
+const COORDINATOR_FIELDS = [...COMPANY_FIELDS, 'dietaryRestrictions'] as const
 
 const pick = (user: StoredUser, fields: readonly string[]) =>
   Object.fromEntries(fields.filter((f) => f in user).map((f) => [f, user[f]]))
@@ -37,7 +39,7 @@ const pick = (user: StoredUser, fields: readonly string[]) =>
  *   résumé access, every user with a résumé, résumé link included.
  * - Anyone else sees themselves in full, and the name and study programme of users registered
  *   for an event, which the event page lists. A coordinator also sees the people on the events
- *   they manage as a company user does, but no résumés.
+ *   they manage as a company user does, with their dietary needs, but no résumés.
  */
 export function visibleUsers(
   subject: Subject,
@@ -84,6 +86,6 @@ export function visibleUsers(
     )
     .map((u) => {
       if (u.uid === subject.uid) return u
-      return pick(u, related.has(u.uid) ? COMPANY_FIELDS : ATTENDANT_FIELDS)
+      return pick(u, related.has(u.uid) ? COORDINATOR_FIELDS : ATTENDANT_FIELDS)
     })
 }
