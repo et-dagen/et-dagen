@@ -160,9 +160,13 @@
         "confirmed": "Passwords must match"
       }
     },
-    "page_not_found": {
-      "page_doesnt_exist": "This page doesn't exist",
-      "navigate_front_page": "Back to front page"
+    "page": {
+      "missing_title": "This page does not exist",
+      "missing_text": "There is nothing at {path}. The address may be mistyped, or the page may have moved.",
+      "failed_title": "Something went wrong",
+      "failed_text": "The page could not be shown. Try again in a moment, and contact us if it keeps happening.",
+      "home": "Go to the front page",
+      "elsewhere": "Or go to"
     }
   },
   "datetime": {
@@ -884,117 +888,6 @@
         "save": "Save",
         "created": "The board member is added.",
         "updated": "Your changes are saved."
-      }
-    }
-  },
-  "edit": {
-    "jobs": {
-      "create": {
-        "title": "Create Job",
-        "action": "Create"
-      },
-      "edit": {
-        "title": "Edit Job",
-        "action": "Save"
-      },
-      "cancel": "Cancel",
-      "attributes": {
-        "title": "Job Title",
-        "company": "Company",
-        "description": "Job Description",
-        "deadline": "Application Deadline",
-        "application_link": "Job advertisement link",
-        "jobtype": {
-          "name": "Job Type",
-          "full_time": "Full-time",
-          "graduate": "Gratuate position",
-          "summer_internship": "Summer Internship"
-        },
-        "location": "Job Location"
-      }
-    },
-    "event": {
-      "create": {
-        "title": "Create Event",
-        "action": "Create"
-      },
-      "edit": {
-        "title": "Edit Event",
-        "action": "Save"
-      },
-      "cancel": "Cancel",
-      "attributes": {
-        "title": "Title",
-        "company": "Company",
-        "capacity": "Capacity",
-        "description": "Description",
-        "location": {
-          "name": "Name of Place",
-          "map": "Map Link"
-        },
-        "date": {
-          "start": "Start Date",
-          "end": "End Date"
-        },
-        "registration": {
-          "start": "Registration starts",
-          "end": "Registration ends",
-          "limit": "Limit registration",
-          "requirements": {
-            "programmes": "Limit to study programmes",
-            "years": "Limit to years"
-          }
-        },
-        "attendants": "Registered users",
-        "user_id": "User ID",
-        "sign_up": "Sign up"
-      }
-    },
-    "company": {
-      "create": {
-        "title": "Create Company",
-        "action": "Create"
-      },
-      "edit": {
-        "title": "Edit Company",
-        "action": "Save"
-      },
-      "unlink_logo": "Unlink Logo",
-      "cancel": "Cancel",
-      "attributes": {
-        "name": "Company Name",
-        "description": "Description",
-        "logo": "Logo",
-        "webpage": "webpage",
-        "cvAccess": {
-          "name": "CV access",
-          "yes": "Yes",
-          "no": "No"
-        },
-        "type": {
-          "name": "Company Type",
-          "main_partner": "Main Partner",
-          "partner": "Partner",
-          "sponsor": "Sponsor",
-          "old": "Old"
-        }
-      }
-    },
-    "user": {
-      "title": "Edit User",
-      "save": "Save",
-      "cancel": "Cancel",
-      "attributes": {
-        "name": "Name",
-        "email": "E-mail",
-        "type": {
-          "name": "User type",
-          "admin": "Administrator",
-          "company": "Comany",
-          "basic": "Basic"
-        },
-        "studyprogram": "Study programme",
-        "currentyear": "Current year"
       }
     }
   },

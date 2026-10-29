@@ -1,10 +1,9 @@
 /*
  * Styles for the pages built on shadcn-vue (the admin panel first)
  *
- * Tailwind's preflight is left out, so the Vuetify pages keep their look, and every Tailwind class
- * carries the tw: prefix (tw:bg-primary), because Vuetify defines classes with the same names and
- * !important (bg-primary, border, rounded-lg). Pages on the new
- * components sit inside `.et-admin` (admin, may turn dark) or `.et-ui` (public, always light),
+ * Every Tailwind class carries the tw: prefix (tw:bg-primary), a habit from when Vuetify defined
+ * classes with the same names, and Tailwind's preflight is left out. Pages sit inside `.et-admin`
+ * (admin, may turn dark) or `.et-ui` (public, always light),
  * which get the base styles preflight would have given; so do shadcn-vue components (`[data-slot]`), because menus and dialogs render at the end of <body>.
  * The palette sits on :root for the same reason; only <html class="et-admin-root">, set by the admin
  * layout, lets it turn dark.
@@ -53,8 +52,8 @@
 }
 
 /*
- * The choice of light or dark. Only the admin pages follow the device; the public pages stay light. It is repeated on .et-admin because Vuetify's wrapper, which sits
- * between <html> and the admin pages, resets color-scheme.
+ * The choice of light or dark. Only the admin pages follow the device; the public pages stay light.
+ * It is set on .et-admin too, so the admin wrapper keeps it whatever surrounds it.
  */
 .et-admin-root,
 .et-admin {
@@ -118,7 +117,7 @@
 
 /*
  * What preflight would give, inside the new pages only. The selectors carry no specificity, as in
- * preflight, so Vuetify components still on these pages keep their own borders and margins.
+ * preflight, so a utility class always wins.
  */
 :where(.et-admin, .et-ui, [data-slot], [data-sonner-toaster]) {
   /* @theme inline emits no --font-sans, so the base rule reads the token itself */
@@ -130,6 +129,61 @@
 :where(.et-admin, .et-ui) {
   color: var(--foreground);
   background: var(--background);
+}
+
+/*
+ * What Vuetify's reset gave every page, kept now that it is gone: no default margins or padding,
+ * border-box sizing, a 1.5 line height and bare form controls. The pages were built on it. The
+ * lowest layer, so every other rule wins.
+ */
+@layer et-reset, et-base;
+
+@layer et-reset {
+  html {
+    font-family: var(--font);
+    line-height: 1.5;
+    overflow-y: scroll;
+    -webkit-text-size-adjust: 100%;
+    tab-size: 4;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  *,
+  ::before,
+  ::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    background-repeat: no-repeat;
+  }
+
+  button,
+  input,
+  optgroup,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+    background-color: transparent;
+    border-style: none;
+  }
+
+  button,
+  [type='button'],
+  [type='reset'],
+  [type='submit'],
+  [role='button'] {
+    cursor: pointer;
+  }
+
+  select {
+    appearance: none;
+  }
+
+  textarea {
+    resize: vertical;
+  }
 }
 
 /* in a layer, so it loses to every utility; at equal specificity it hid divide-y's lines */
