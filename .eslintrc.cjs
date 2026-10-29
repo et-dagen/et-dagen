@@ -24,39 +24,6 @@ module.exports = {
         '@typescript-eslint/no-unused-vars': 'off',
       },
     },
-    {
-      // Tailwind class lists in the pages moved to shadcn-vue
-      files: [
-        'components/admin/**',
-        'layouts/admin.vue',
-        'pages/admin.vue',
-        'pages/admin/**',
-        'components/company/EventPanel.vue',
-        'pages/company/admin/**',
-        'components/admin/form/**',
-        'components/site/**',
-        'components/user/DeleteAccount.vue',
-        'components/user/ProfileForm.vue',
-        'components/job/DeadlineNote.vue',
-        'components/job/FairEvents.vue',
-        'pages/jobs/**',
-        'pages/for-companies.vue',
-        'components/forcompanies/**',
-      ],
-      rules: {
-        'vue/max-len': [
-          'error',
-          {
-            code: 100,
-            template: 100,
-            tabWidth: 2,
-            ignoreComments: true,
-            ignoreRegExpLiterals: true,
-            ignoreHTMLAttributeValues: true,
-          },
-        ],
-      },
-    },
   ],
   plugins: [],
   rules: {
