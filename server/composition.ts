@@ -6,6 +6,7 @@
  * PostgreSQL move) changes this file and nothing that uses it.
  */
 import { firebaseFileStorage } from './adapters/firebase/fileStorage'
+import { rtdbActivityLog } from './adapters/rtdb/activityLog'
 import { rtdbAccessRepository } from './adapters/rtdb/accessRepository'
 import { rtdbAffiliationRepository } from './adapters/rtdb/affiliationRepository'
 import { rtdbBoardRepository } from './adapters/rtdb/boardRepository'
@@ -29,3 +30,4 @@ export const fileStorage = firebaseFileStorage(storage.bucket())
 export const standMaps = rtdbStandMapIndex(db)
 export const board = rtdbBoardRepository(db)
 export const images = sharpImageProcessor()
+export const activity = rtdbActivityLog(db)
