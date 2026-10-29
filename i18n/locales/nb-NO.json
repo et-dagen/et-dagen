@@ -797,11 +797,6 @@
     "shell": {
       "navigation": "Adminpaneler",
       "back": "Til etdagene.no",
-      "theme": {
-        "system": "Tema: følger enheten. Bytt til lyst",
-        "light": "Tema: lyst. Bytt til mørkt",
-        "dark": "Tema: mørkt. Følg enheten"
-      },
       "tag": {
         "admin": "ADMIN",
         "company": "BEDRIFT"

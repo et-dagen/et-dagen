@@ -798,11 +798,6 @@
     "shell": {
       "navigation": "Admin panels",
       "back": "Back to etdagene.no",
-      "theme": {
-        "system": "Theme: follows the device. Switch to light",
-        "light": "Theme: light. Switch to dark",
-        "dark": "Theme: dark. Follow the device"
-      },
       "tag": {
         "admin": "ADMIN",
         "company": "COMPANY"

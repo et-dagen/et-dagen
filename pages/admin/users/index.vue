@@ -129,8 +129,7 @@
 
   const roleBadge: Record<Role, string> = {
     admin: 'tw:border-transparent tw:bg-plate tw:text-plate-foreground',
-    coordinator:
-      'tw:border-transparent tw:bg-brand/10 tw:text-brand tw:dark:bg-brand/25',
+    coordinator: 'tw:border-transparent tw:bg-brand/10 tw:text-brand',
     company: 'tw:border-border tw:bg-card tw:text-foreground',
     basic: 'tw:border-transparent tw:bg-secondary tw:text-secondary-foreground',
   }
