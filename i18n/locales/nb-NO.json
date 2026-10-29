@@ -1263,7 +1263,8 @@
       "join": "Vil dere delta?",
       "copy": "Kopier {email}",
       "copied": "{email} er kopiert",
-      "org": "Org.nr."
+      "org": "Org.nr.",
+      "privacy": "Personvern"
     }
   },
   "signin": {
@@ -1365,5 +1366,123 @@
       "contact": "Ta kontakt"
     },
     "the_password": "passordet"
+  },
+  "privacy": {
+    "title": "Personvernerklæring",
+    "heading": "Personvernerklæring",
+    "lead": "Slik behandler E&T-dagene opplysningene om deg: hva vi lagrer, hvorfor, hvem som ser det og hvor lenge vi beholder det.",
+    "updated": "Sist endret 29. oktober 2026",
+    "index": "Innhold",
+    "who": {
+      "title": "Hvem er ansvarlig",
+      "body": [
+        "E&T-dagene (Elektronikk- og Teknologidagene, org.nr. 996 858 545), O.S. Bragstads plass 2, 7034 Trondheim, er behandlingsansvarlig for opplysningene på denne nettsiden.",
+        "Spørsmål om personvern sender du til IT-ansvarlig:"
+      ]
+    },
+    "data": {
+      "title": "Hva vi lagrer",
+      "labels": {
+        "what": "Hva",
+        "why": "Hvorfor",
+        "basis": "Grunnlag",
+        "who": "Hvem ser det",
+        "kept": "Hvor lenge"
+      },
+      "account": {
+        "title": "Brukerkonto",
+        "what": "Navn, e-post, studieprogram og når du regner med å bli ferdig. Passordet lagres av Google, og vi ser det aldri.",
+        "why": "For at du skal kunne logge inn og melde deg på arrangementer.",
+        "basis": "Avtale, personvernforordningen art. 6 nr. 1 b.",
+        "who": "Du og styret i E&T-dagene.",
+        "kept": "Til du sletter kontoen, eller tre år etter at du sist var innlogget. Da sletter vi kontoen og alt som hører til den automatisk."
+      },
+      "diet": {
+        "title": "Allergier og kosthold",
+        "what": "Allergier og kosthold du velger selv, som vegetar, halal eller kosher. Slike opplysninger kan si noe om helse eller religion, og er særlige kategorier av personopplysninger.",
+        "why": "For at maten på arrangementene skal passe for deg.",
+        "basis": "Uttrykkelig samtykke, art. 9 nr. 2 a. Feltene er frivillige, og du trekker samtykket ved å fjerne dem i profilen.",
+        "who": "Du og styret. Bedriften som holder et arrangement du er påmeldt, får bare antall per allergi og kosthold, ikke hvem.",
+        "kept": "Til du fjerner dem eller sletter kontoen."
+      },
+      "events": {
+        "title": "Påmeldinger og oppmøte",
+        "what": "Hvilke arrangementer du er påmeldt eller står på venteliste til, og om du møtte opp.",
+        "why": "For å holde plass til deg, flytte folk fra ventelisten og vite hvem som kom.",
+        "basis": "Avtale, art. 6 nr. 1 b.",
+        "who": "Styret og bedriften som holder arrangementet. Bedriften ser navn, e-post, studieprogram og årstrinn.",
+        "kept": "Så lenge du har kontoen."
+      },
+      "resume": {
+        "title": "CV",
+        "what": "CV-en du laster opp.",
+        "why": "For at bedrifter som samarbeider med E&T-dagene, kan finne deg til jobb, sommerjobb eller oppgaver. CV-tilgang er en del av avtalen bedriftene inngår med oss.",
+        "basis": "Samtykke, art. 6 nr. 1 a. Du trekker det ved å slette CV-en.",
+        "who": "Du, styret og bedrifter med CV-tilgang, normalt samarbeidspartnerne for årets messe. De kan se og laste ned CV-en. En bedrift som laster den ned, er selv ansvarlig for sin kopi, og den kan vi ikke slette.",
+        "kept": "Til du sletter CV-en eller kontoen. Bedriftenes tilgang fjerner vi noen måneder etter messen."
+      },
+      "company": {
+        "title": "Kontaktpersoner i bedrifter",
+        "what": "Navn, e-post og hvilken bedrift du representerer.",
+        "why": "For å samarbeide med bedriften og gi deg tilgang til bedriftens sider.",
+        "basis": "Berettiget interesse, art. 6 nr. 1 f: avtalen vi har med bedriften.",
+        "who": "Du og styret.",
+        "kept": "Som for andre kontoer."
+      },
+      "board": {
+        "title": "Styret",
+        "what": "Navn, rolle, e-post, telefon og bilde av styremedlemmene.",
+        "why": "Så bedrifter og studenter vet hvem de skal kontakte.",
+        "basis": "Samtykke fra hvert styremedlem, art. 6 nr. 1 a.",
+        "who": "Alle, på kontaktsiden.",
+        "kept": "Så lenge personen sitter i styret."
+      },
+      "logs": {
+        "title": "Teknisk logg",
+        "what": "For hver forespørsel til nettsiden: tidspunkt, hvilken side, svarkode og bruker-ID om du er innlogget.",
+        "why": "For å holde nettsiden i drift, rette feil og oppdage misbruk.",
+        "basis": "Berettiget interesse, art. 6 nr. 1 f.",
+        "who": "Styret og de som drifter nettsiden.",
+        "kept": "Til neste gang nettsiden oppdateres, vanligvis noen dager."
+      }
+    },
+    "processors": {
+      "title": "Hvem som behandler opplysningene for oss",
+      "body": [
+        "Disse behandler opplysninger på våre vegne, etter avtale med oss. Opplysningene lagres i EU."
+      ],
+      "items": [
+        "Google (Firebase): innlogging, database og filer.",
+        "DigitalOcean: serverne nettsiden kjører på.",
+        "one.com: e-post.",
+        "MazeMap: kartet nederst på siden. Det lastes fra MazeMap når du blar ned til det, og MazeMap får da IP-adressen din."
+      ]
+    },
+    "cookies": {
+      "title": "Informasjonskapsler",
+      "body": [
+        "Vi bruker bare informasjonskapsler nettsiden trenger for å virke, så vi spør ikke om samtykke. Vi bruker ingen analyse- eller reklameverktøy."
+      ],
+      "items": [
+        "__session: holder deg innlogget i inntil 14 dager.",
+        "et-admin-theme: husker lyst eller mørkt tema i administrasjonen, i ett år.",
+        "Firebase lagrer innloggingen din i nettleseren til du logger ut."
+      ]
+    },
+    "rights": {
+      "title": "Dine rettigheter",
+      "body": [
+        "Du kan be om innsyn i, retting eller sletting av opplysningene om deg, og om å få dem utlevert. Du kan protestere mot behandling som bygger på berettiget interesse, og trekke et samtykke når som helst.",
+        "Mye kan du gjøre selv under Min side: endre profilen, slette CV-en og slette kontoen. Ellers skriver du til {email}, så svarer vi innen en måned.",
+        "Mener du at vi behandler opplysningene dine i strid med regelverket, kan du klage til Datatilsynet."
+      ],
+      "authority": "Klag til Datatilsynet"
+    },
+    "changes": {
+      "title": "Endringer",
+      "body": [
+        "Vi oppdaterer erklæringen når vi endrer hvordan vi behandler opplysninger. Datoen øverst viser når den sist ble endret."
+      ]
+    }
   }
 }

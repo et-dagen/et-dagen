@@ -1264,7 +1264,8 @@
       "join": "Want to take part?",
       "copy": "Copy {email}",
       "copied": "{email} copied",
-      "org": "Org. no."
+      "org": "Org. no.",
+      "privacy": "Privacy"
     }
   },
   "signin": {
@@ -1366,5 +1367,123 @@
       "contact": "Contact us"
     },
     "the_password": "the password"
+  },
+  "privacy": {
+    "title": "Privacy statement",
+    "heading": "Privacy statement",
+    "lead": "How E&T-dagene handles information about you: what we store, why, who sees it and how long we keep it.",
+    "updated": "Last changed 29 October 2026",
+    "index": "Contents",
+    "who": {
+      "title": "Who is responsible",
+      "body": [
+        "E&T-dagene (Elektronikk- og Teknologidagene, org. no. 996 858 545), O.S. Bragstads plass 2, 7034 Trondheim, Norway, is the controller of the information on this website.",
+        "Send questions about privacy to the IT manager:"
+      ]
+    },
+    "data": {
+      "title": "What we store",
+      "labels": {
+        "what": "What",
+        "why": "Why",
+        "basis": "Legal basis",
+        "who": "Who sees it",
+        "kept": "How long"
+      },
+      "account": {
+        "title": "User account",
+        "what": "Your name, email, study programme and when you expect to graduate. Google stores your password, and we never see it.",
+        "why": "So you can sign in and register for events.",
+        "basis": "Contract, GDPR Art. 6(1)(b).",
+        "who": "You and the E&T-dagene board.",
+        "kept": "Until you delete your account, or three years after you last signed in. We then delete the account and everything linked to it automatically."
+      },
+      "diet": {
+        "title": "Allergies and diet",
+        "what": "Allergies and diets you choose yourself, such as vegetarian, halal or kosher. These can reveal health or religion, and are special categories of personal data.",
+        "why": "So the food at events suits you.",
+        "basis": "Explicit consent, Art. 9(2)(a). The fields are optional, and you withdraw consent by removing them from your profile.",
+        "who": "You and the board. The company holding an event you registered for gets only the number of people per allergy and diet, not who.",
+        "kept": "Until you remove them or delete your account."
+      },
+      "events": {
+        "title": "Registrations and attendance",
+        "what": "Which events you registered or are waitlisted for, and whether you attended.",
+        "why": "To hold your place, move people up from the waitlist and know who came.",
+        "basis": "Contract, Art. 6(1)(b).",
+        "who": "The board and the company holding the event. The company sees your name, email, study programme and year.",
+        "kept": "As long as you have your account."
+      },
+      "resume": {
+        "title": "Résumé",
+        "what": "The résumé you upload.",
+        "why": "So companies working with E&T-dagene can find you for jobs, summer jobs or theses. Résumé access is part of the agreement companies make with us.",
+        "basis": "Consent, Art. 6(1)(a). You withdraw it by deleting the résumé.",
+        "who": "You, the board and companies with résumé access, usually this year's fair partners. They can view and download it. A company that downloads it is responsible for its own copy, which we cannot delete.",
+        "kept": "Until you delete the résumé or your account. We remove companies' access a few months after the fair."
+      },
+      "company": {
+        "title": "Company contacts",
+        "what": "Your name, email and the company you represent.",
+        "why": "To work with your company and give you access to its pages.",
+        "basis": "Legitimate interest, Art. 6(1)(f): our agreement with your company.",
+        "who": "You and the board.",
+        "kept": "As for other accounts."
+      },
+      "board": {
+        "title": "The board",
+        "what": "Board members' names, roles, email, phone and photo.",
+        "why": "So companies and students know whom to contact.",
+        "basis": "Consent from each board member, Art. 6(1)(a).",
+        "who": "Everyone, on the contact page.",
+        "kept": "While the person is on the board."
+      },
+      "logs": {
+        "title": "Technical log",
+        "what": "For each request to the website: the time, the page, the response code and your user ID if you are signed in.",
+        "why": "To keep the website running, fix errors and spot misuse.",
+        "basis": "Legitimate interest, Art. 6(1)(f).",
+        "who": "The board and those who run the website.",
+        "kept": "Until the website is next updated, usually a few days."
+      }
+    },
+    "processors": {
+      "title": "Who processes information for us",
+      "body": [
+        "These process information on our behalf, under an agreement with us. The information is stored in the EU."
+      ],
+      "items": [
+        "Google (Firebase): sign-in, database and files.",
+        "DigitalOcean: the servers the website runs on.",
+        "one.com: email.",
+        "MazeMap: the map at the bottom of the page. It loads from MazeMap when you scroll to it, and MazeMap then receives your IP address."
+      ]
+    },
+    "cookies": {
+      "title": "Cookies",
+      "body": [
+        "We only use cookies the website needs to work, so we do not ask for consent. We use no analytics or advertising tools."
+      ],
+      "items": [
+        "__session: keeps you signed in for up to 14 days.",
+        "et-admin-theme: remembers the light or dark theme in the admin panel, for one year.",
+        "Firebase keeps your sign-in in the browser until you sign out."
+      ]
+    },
+    "rights": {
+      "title": "Your rights",
+      "body": [
+        "You can ask for access to, correction or deletion of the information about you, and for a copy of it. You can object to processing based on legitimate interest, and withdraw consent at any time.",
+        "Much of this you can do yourself on My page: edit your profile, delete your résumé and delete your account. Otherwise write to {email}, and we answer within a month.",
+        "If you think we handle your information against the rules, you can complain to the Norwegian Data Protection Authority (Datatilsynet)."
+      ],
+      "authority": "Complain to Datatilsynet"
+    },
+    "changes": {
+      "title": "Changes",
+      "body": [
+        "We update this statement when we change how we handle information. The date at the top shows when it last changed."
+      ]
+    }
   }
 }
