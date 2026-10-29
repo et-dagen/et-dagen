@@ -142,6 +142,8 @@ export default defineNuxtConfig({
     // relative to the i18n/ directory (@nuxtjs/i18n v9)
     vueI18n: '../config/i18n.config.ts',
     detectBrowserLanguage: false,
+    // the site has no v-t directives; set explicitly, since the default is deprecated
+    bundle: { optimizeTranslationDirective: false },
   },
 
   image: {

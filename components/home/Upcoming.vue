@@ -2,9 +2,11 @@
   import { ArrowRight } from '@lucide/vue'
   import { eventStatus, formatStart, placeOf } from '@/lib/admin/events'
   import { placesLeft, type Upcoming } from '@/lib/site/fair'
-  import type { ISO8601String } from '@/domain/time'
+  import { Instant, type ISO8601Literal } from '@/domain/time'
 
-  defineProps<{ events: Upcoming[]; now: ISO8601String }>()
+  // unbranded: Vue checks a branded string at runtime as an object, and warns
+  const props = defineProps<{ events: Upcoming[]; now: ISO8601Literal }>()
+  const now = computed(() => Instant.parse(props.now))
 
   const { locale } = useI18n()
   const localePath = useLocalePath()
