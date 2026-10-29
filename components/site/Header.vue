@@ -74,7 +74,7 @@
         class="tw:flex tw:shrink-0 tw:items-center tw:gap-2.5"
       >
         <img
-          src="/images/logo.png"
+          src="/images/logo-small.webp"
           alt=""
           width="26"
           height="30"
