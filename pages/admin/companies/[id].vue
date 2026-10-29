@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import CompanyInvitations from '@/components/admin/CompanyInvitations.vue'
   import CompanyForm from '@/components/admin/form/CompanyForm.vue'
   import type { CompanyInput } from '@/contracts/company'
 
@@ -17,18 +18,21 @@
 </script>
 
 <template>
-  <CompanyForm
-    v-if="company"
-    :uid="uid"
-    :logo="company.logo"
-    :initial="{
-      name: company.name,
-      tier: company.tier,
-      webpage: company.webpage,
-      description: company.description ?? '',
-      resumeAccess: company.entitlements?.includes('ent:resume:view') === true,
-    }"
-  />
+  <div v-if="company" class="tw:flex tw:flex-col tw:gap-12">
+    <CompanyForm
+      :uid="uid"
+      :logo="company.logo"
+      :initial="{
+        name: company.name,
+        tier: company.tier,
+        webpage: company.webpage,
+        description: company.description ?? '',
+        resumeAccess:
+          company.entitlements?.includes('ent:resume:view') === true,
+      }"
+    />
+    <CompanyInvitations :company-uid="uid" />
+  </div>
   <p v-else class="tw:text-muted-foreground">
     {{ $t('admin.companies.form.missing') }}
   </p>

@@ -562,6 +562,30 @@
         "created": "The company is created",
         "updated": "The changes are saved",
         "missing": "No company found at this address."
+      },
+      "invitations": {
+        "title": "Invitations",
+        "lead": "Invite people from the company by email. Each gets a personal link to create an account, or to join with the account they have. The link works once, for 14 days.",
+        "email": "Email address",
+        "send": "Send invitation",
+        "sending": "Sending …",
+        "invalid_email": "Enter a valid email address.",
+        "sent": "Invitation sent to {email}.",
+        "link_once": "You can also copy the link and send it yourself. It is shown only now.",
+        "link": "Invitation link",
+        "copy": "Copy link",
+        "copied": "Copied",
+        "sent_on": "Sent {day}",
+        "expires_on": "works until {day}",
+        "status": {
+          "pending": "Waiting",
+          "joined": "Joined",
+          "expired": "Expired",
+          "revoked": "Revoked"
+        },
+        "revoke": "Revoke",
+        "revoke_label": "Revoke the invitation to {email}",
+        "empty": "No invitations yet."
       }
     },
     "events": {
@@ -1107,6 +1131,15 @@
     "mail": {
       "send-failed": "The email could not be sent right now. Try again shortly.",
       "not-configured": "The site cannot send email yet. Please contact us."
+    },
+    "invitation": {
+      "not-found": "This invitation link does not work.",
+      "not-pending": "This invitation has been used, withdrawn or has run out.",
+      "wrong-account": "Sign in with the address the invitation was sent to.",
+      "missing-account": "Fill in your name and a password.",
+      "weak-password": "The password needs at least 8 characters, with at least 3 letters and 3 digits.",
+      "account-exists": "This address already has an account. Sign in to join.",
+      "invalid-request": "Choose a company and enter a valid email address."
     }
   },
   "form": {
@@ -1363,5 +1396,43 @@
       "contact": "Contact us"
     },
     "the_password": "the password"
+  },
+  "invitation": {
+    "join": {
+      "title": "Join {company}",
+      "lead": "E&T-dagene invites you to join {company} on our site. The invitation works until {day}.",
+      "address": "Invited address",
+      "signed_in": "You are signed in with this address.",
+      "join": "Join {company}",
+      "other_account": "You are signed in as {email}. Sign out, then create an account or sign in with the invited address.",
+      "sign_out": "Sign out",
+      "new_password": "Choose a password",
+      "open": "Create account and join",
+      "have_account": "Already have an account with this address?",
+      "sign_in_instead": "Sign in instead",
+      "has_account": "This address already has an account. Sign in to join.",
+      "forgot": "Forgot your password?",
+      "sign_in_and_join": "Sign in and join {company}",
+      "no_account": "No account yet?",
+      "open_instead": "Create one"
+    },
+    "closed": {
+      "missing": {
+        "title": "This link does not work",
+        "text": "Check that you opened the whole link from the email. If it still does not work, ask us for a new invitation."
+      },
+      "expired": {
+        "title": "The invitation has run out",
+        "text": "An invitation works for 14 days. Ask us for a new one."
+      },
+      "revoked": {
+        "title": "The invitation was withdrawn",
+        "text": "You may have received a newer invitation, so check your email. Otherwise, ask us for a new one."
+      },
+      "joined": {
+        "title": "The invitation has been used",
+        "text": "The account for this invitation is ready. Sign in to reach the company page."
+      }
+    }
   }
 }
