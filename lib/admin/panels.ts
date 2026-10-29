@@ -1,4 +1,5 @@
 import {
+  Activity,
   BriefcaseBusiness,
   Building2,
   CalendarDays,
@@ -69,6 +70,13 @@ export const ADMIN_PANELS: readonly Panel[] = [
     route: '/admin/board',
     label: 'admin.board.name',
     icon: IdCard,
+    count: null,
+  },
+  {
+    name: 'activity',
+    route: '/admin/activity',
+    label: 'admin.activity.name',
+    icon: Activity,
     count: null,
   },
 ]
