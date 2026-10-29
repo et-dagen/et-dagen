@@ -897,6 +897,50 @@
         "created": "The board member is added.",
         "updated": "Your changes are saved."
       }
+    },
+    "activity": {
+      "name": "Activity",
+      "intro": "What happens on the site, counted per day, and the requests worth a second look. Entries are deleted after {days} days; the counts are kept.",
+      "range": {
+        "label": "Period",
+        "1": "Today",
+        "7": "7 days",
+        "30": "30 days"
+      },
+      "daily": {
+        "title": "Per day",
+        "day": "Day",
+        "total": "Total",
+        "today": "Today"
+      },
+      "tally": {
+        "page-view": "Page views",
+        "sign-up": "Sign-ups",
+        "sign-in": "Sign-ins",
+        "registration": "Registrations",
+        "cancellation": "Cancellations",
+        "attendance": "Attended",
+        "resume-download": "Résumé downloads",
+        "refusal": "Refusals",
+        "error": "Errors"
+      },
+      "journal": {
+        "title": "Journal",
+        "filter": "Kind",
+        "all": "All",
+        "empty": "Nothing to show for this period.",
+        "limited": "Showing the newest {n} entries.",
+        "signed_out": "Signed out",
+        "actor": "Open the user",
+        "target": "Target {target}"
+      },
+      "kind": {
+        "refused": "Refused",
+        "failed": "Server error",
+        "access-changed": "Access changed",
+        "contract-changed": "Contract changed",
+        "deleted": "Deleted"
+      }
     }
   },
   "dietary_restrictions": {

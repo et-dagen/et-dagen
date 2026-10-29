@@ -896,6 +896,50 @@
         "created": "Styremedlemmet er lagt til.",
         "updated": "Endringene er lagret."
       }
+    },
+    "activity": {
+      "name": "Aktivitet",
+      "intro": "Det som skjer på nettsiden, talt per dag, og forespørslene som er verdt et ekstra blikk. Hendelsene slettes etter {days} dager; tallene beholdes.",
+      "range": {
+        "label": "Periode",
+        "1": "I dag",
+        "7": "7 dager",
+        "30": "30 dager"
+      },
+      "daily": {
+        "title": "Per dag",
+        "day": "Dag",
+        "total": "Totalt",
+        "today": "I dag"
+      },
+      "tally": {
+        "page-view": "Sidevisninger",
+        "sign-up": "Nye brukere",
+        "sign-in": "Innlogginger",
+        "registration": "Påmeldinger",
+        "cancellation": "Avmeldinger",
+        "attendance": "Oppmøte",
+        "resume-download": "CV-nedlastinger",
+        "refusal": "Avvisninger",
+        "error": "Feil"
+      },
+      "journal": {
+        "title": "Hendelser",
+        "filter": "Type",
+        "all": "Alle",
+        "empty": "Ingenting å vise for denne perioden.",
+        "limited": "Viser de {n} nyeste hendelsene.",
+        "signed_out": "Ikke logget inn",
+        "actor": "Åpne brukeren",
+        "target": "Mål {target}"
+      },
+      "kind": {
+        "refused": "Avvist",
+        "failed": "Serverfeil",
+        "access-changed": "Tilgang endret",
+        "contract-changed": "Avtale endret",
+        "deleted": "Slettet"
+      }
     }
   },
   "dietary_restrictions": {
