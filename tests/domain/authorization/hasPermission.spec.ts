@@ -116,20 +116,20 @@ describe('multi-role union', () => {
 
 describe('per-company entitlements', () => {
   // The case a flat, per-subject entitlement set gets wrong.
-  const coordinator = subjectOf({
-    roles: ['coordinator'],
-    companies: { a: ['ent:job:manage'], b: ['ent:event:manage'] },
+  const companyUser = subjectOf({
+    roles: ['company'],
+    companies: { a: ['ent:job:manage'], b: ['ent:resume:view'] },
   })
 
   it('allows the action only at the company that carries the entitlement', () => {
     expect(
-      hasPermission(coordinator, 'job', 'create', { companyUid: co('a') }),
+      hasPermission(companyUser, 'job', 'create', { companyUid: co('a') }),
     ).toBe(true)
     expect(
-      hasPermission(coordinator, 'job', 'create', { companyUid: co('b') }),
+      hasPermission(companyUser, 'job', 'create', { companyUid: co('b') }),
     ).toBe(false)
     expect(
-      hasPermission(coordinator, 'job', 'create', { companyUid: co('c') }),
+      hasPermission(companyUser, 'job', 'create', { companyUid: co('c') }),
     ).toBe(false)
   })
 })
@@ -157,7 +157,7 @@ describe('taking attendance', () => {
     ])
   })
 
-  it("lets a coordinator take attendance at a sponsor's events, which it cannot manage", () => {
+  it("lets a coordinator run a sponsor's events and take attendance there", () => {
     const coordinator = subjectOf({
       roles: ['coordinator'],
       companies: { a: ['ent:profile:manage'] as Entitlement[] },
@@ -166,44 +166,66 @@ describe('taking attendance', () => {
     expect(attendance(coordinator, 'a')).toEqual([true, true])
     expect(
       hasPermission(coordinator, 'event', 'update', { companyUid: co('a') }),
-    ).toBe(false)
+    ).toBe(true)
   })
 })
 
 describe('coordinator and company are not the same role', () => {
-  const companies = { a: ['ent:event:manage'] as Entitlement[] }
+  // a sponsor: the contract gives the company its profile and nothing more
+  const companies = { a: ['ent:profile:manage'] as Entitlement[] }
   const coordinator = subjectOf({ roles: ['coordinator'], companies })
   const companyUser = subjectOf({ roles: ['company'], companies })
+  const event = (subject: Subject, action: string, company = 'a') =>
+    hasPermission(subject, 'event', action as 'update', {
+      companyUid: co(company),
+    })
 
-  it('withholds event deletion from a coordinator and grants attendance handling', () => {
-    expect(
-      hasPermission(coordinator, 'event', 'delete', { companyUid: co('a') }),
-    ).toBe(false)
-    expect(
-      hasPermission(coordinator, 'event', 'listAttendants', {
-        companyUid: co('a'),
-      }),
-    ).toBe(true)
-    expect(
-      hasPermission(coordinator, 'event', 'markAttended', {
-        companyUid: co('a'),
-      }),
-    ).toBe(true)
+  it("lets a coordinator run their companies' events, whatever the tier", () => {
+    for (const action of ['create', 'update', 'delete', 'list']) {
+      expect(event(coordinator, action)).toBe(true)
+      expect(event(coordinator, action, 'c')).toBe(false)
+    }
+    expect(event(coordinator, 'listAttendants')).toBe(true)
+    expect(event(coordinator, 'markAttended')).toBe(true)
   })
 
-  it('mirrors that for a company user, who keeps deletion but not attendance', () => {
+  it('shows a company user their events, but leaves them to E&T-dagene', () => {
+    expect(event(companyUser, 'list')).toBe(true)
+    expect(event(companyUser, 'list', 'c')).toBe(false)
+    for (const action of [
+      'create',
+      'update',
+      'delete',
+      'listAttendants',
+      'markAttended',
+    ]) {
+      expect(event(companyUser, action)).toBe(false)
+    }
+  })
+
+  it("lets a coordinator manage every company's jobs, and a company user only its own", () => {
+    for (const company of ['a', 'c']) {
+      expect(
+        hasPermission(coordinator, 'job', 'update', {
+          companyUid: co(company),
+        }),
+      ).toBe(true)
+    }
+    expect(hasPermission(coordinator, 'job', 'update', undefined)).toBe(true)
     expect(
-      hasPermission(companyUser, 'event', 'delete', { companyUid: co('a') }),
+      hasPermission(companyUser, 'job', 'update', { companyUid: co('a') }),
+    ).toBe(false)
+  })
+
+  it('lets a coordinator edit the profiles of their companies only', () => {
+    expect(
+      hasPermission(coordinator, 'company', 'update', { uid: co('a') }),
     ).toBe(true)
     expect(
-      hasPermission(companyUser, 'event', 'listAttendants', {
-        companyUid: co('a'),
-      }),
+      hasPermission(coordinator, 'company', 'update', { uid: co('c') }),
     ).toBe(false)
     expect(
-      hasPermission(companyUser, 'event', 'markAttended', {
-        companyUid: co('a'),
-      }),
+      hasPermission(coordinator, 'company', 'entitle', { uid: co('a') }),
     ).toBe(false)
   })
 })
@@ -373,7 +395,7 @@ describe('company profiles and hosted events', () => {
     companies: { a: ['ent:event:manage', 'ent:profile:manage'] },
   })
 
-  it("lists a company's events only for a user who manages them", () => {
+  it("lists a company's events only for its own users", () => {
     expect(
       hasPermission(companyUser, 'event', 'list', { companyUid: co('a') }),
     ).toBe(true)

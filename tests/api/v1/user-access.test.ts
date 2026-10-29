@@ -32,7 +32,7 @@ describe('GET /api/v1/user?scope=all', () => {
       .map((user) => user.uid)
       .sort()
 
-  it("shows a company the people on the events it manages, and a sponsor's none", async () => {
+  it('shows a company the people on its own events, whatever its tier', async () => {
     const attendant = await createUser(student)
     const bystander = await createUser(student)
     await seed('events', {
@@ -49,7 +49,9 @@ describe('GET /api/v1/user?scope=all', () => {
     expect(await list((await contactFor('acme')).token)).toEqual([
       attendant.uid,
     ])
-    expect(await list((await contactFor('initech')).token)).toEqual([])
+    expect(await list((await contactFor('initech')).token)).toEqual([
+      bystander.uid,
+    ])
   })
 
   it('shows an admin everyone', async () => {

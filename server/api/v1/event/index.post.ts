@@ -11,7 +11,7 @@ defineRouteMeta({
     tags: ['Event'],
     summary: 'Create event',
     description:
-      'Admin, or a company user creating an event for their own company. Capacity may be null ' +
+      'Admin, or a coordinator creating an event for their own company. Capacity may be null ' +
       '(unlimited); when set, a registration window is required and must open before it closes ' +
       'and close before the event starts.',
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],

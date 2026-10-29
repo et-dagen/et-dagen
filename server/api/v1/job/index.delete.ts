@@ -9,7 +9,8 @@ defineRouteMeta({
     tags: ['Job'],
     summary: 'Remove job listing',
     description:
-      'Admin, or the owning company user. Ownership is resolved from the stored record, so ' +
+      'Admin, any coordinator, or the owning company user. Ownership is resolved from the stored ' +
+      'record, so ' +
       'authorization happens after the lookup. This is the only DELETE that takes a query ' +
       'parameter rather than a body.',
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],

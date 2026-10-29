@@ -126,11 +126,14 @@ describe('visibleUsers for others', () => {
     expect(visibleUsers(admin, users, events, env)).toEqual(users)
   })
 
-  it("hides a sponsor's event attendants, since sponsors manage no events", () => {
+  it('shows a sponsor the people on its own events, as any company', () => {
     const rep = { uid: 'rep', userType: 'company', companyUID: 'ours' }
     const sponsor = subjectOf(rep, {
       ours: { name: 'Ours', type: 'sponsor', cvAccess: false },
     })
-    expect(visibleUsers(sponsor, users, events, env)).toEqual([])
+    expect(uids(visibleUsers(sponsor, users, events, env))).toEqual([
+      'attending',
+      'queued',
+    ])
   })
 })

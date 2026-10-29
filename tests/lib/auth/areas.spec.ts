@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
+import type { Subject } from '@/domain/authorization/subject'
 import { CompanyUid } from '@/domain/business/company'
+import { UserUid } from '@/domain/user'
 import { AREAS, type Area } from '@/lib/auth/areas'
 import { askerFor } from '@/lib/auth/asker'
 import { subjectOf } from '@/tests/server/api/support/subject'
@@ -20,16 +22,42 @@ describe('areas', () => {
   it('opens everything to an admin', () => {
     expect(
       areasOf(askerFor(subjectOf({ uid: 'boss', userType: 'admin' }))),
-    ).toEqual(['admin', 'events', 'jobs', 'company'])
+    ).toEqual(['admin', 'events', 'jobs', 'profile', 'resumes', 'company'])
   })
 
-  it("opens a partner's contact the company pages, not the admin panel", () => {
-    expect(areasOf(contact('partner'))).toEqual(['events', 'jobs', 'company'])
+  it("opens a partner's contact the company pages, but not event editing", () => {
+    expect(areasOf(contact('partner'))).toEqual([
+      'jobs',
+      'profile',
+      'resumes',
+      'company',
+    ])
   })
 
-  it('opens the company pages to a sponsor only with résumé access', () => {
-    expect(areasOf(contact('sponsor'))).toEqual([])
-    expect(areasOf(contact('reader'))).toEqual(['company'])
+  it("opens a sponsor's contact its profile, and résumés when bought", () => {
+    expect(areasOf(contact('sponsor'))).toEqual(['profile', 'company'])
+    expect(areasOf(contact('reader'))).toEqual([
+      'profile',
+      'resumes',
+      'company',
+    ])
+  })
+
+  it("opens a sponsor's coordinator its events, every job and its profile", () => {
+    const coordinator: Subject = {
+      uid: UserUid.parse('volunteer'),
+      roles: ['coordinator'],
+      applicant: null,
+      companies: new Map([
+        [CompanyUid.parse('sponsor'), new Set(['ent:profile:manage'] as const)],
+      ]),
+    }
+    expect(areasOf(askerFor(coordinator))).toEqual([
+      'events',
+      'jobs',
+      'profile',
+      'company',
+    ])
   })
 
   it('opens nothing to a student or to nobody', () => {
@@ -45,12 +73,15 @@ describe('areas', () => {
 })
 
 describe('askerFor', () => {
-  it("answers for one company's events, as the server would", () => {
+  it("answers for one company's jobs and events, as the server would", () => {
     const asker = contact('partner')
     const event = (uid: string) => ({ companyUid: CompanyUid.parse(uid) })
 
-    expect(asker.can('event', 'update', event('partner'))).toBe(true)
-    expect(asker.can('event', 'update', event('sponsor'))).toBe(false)
-    expect(asker.canForSome('event', 'update')).toBe(true)
+    expect(asker.can('job', 'update', event('partner'))).toBe(true)
+    expect(asker.can('job', 'update', event('sponsor'))).toBe(false)
+    expect(asker.canForSome('job', 'update')).toBe(true)
+    expect(asker.canForSome('event', 'update')).toBe(false)
+    expect(asker.canForSome('event', 'list')).toBe(true)
+    expect(asker.canForSome('company', 'update')).toBe(true)
   })
 })

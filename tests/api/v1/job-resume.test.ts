@@ -53,6 +53,21 @@ describe('jobs', () => {
     expect((await remove('ours', token)).status).toBe(204)
   })
 
+  it("lets a coordinator manage any company's jobs", async () => {
+    const coordinator = await student()
+    const given = { createdBy: 'test' }
+    await seed(`roles/${coordinator.uid}`, { coordinator: given })
+    await seed(`memberships/${coordinator.uid}/initech`, {
+      kind: 'coordinator',
+      ...given,
+    })
+
+    expect((await create('globex', coordinator.token)).status).toBe(201)
+    expect(
+      (await update('theirs', { title: 'New' }, coordinator.token)).status,
+    ).toBe(204)
+  })
+
   it('refuses another company, a sponsor and a student', async () => {
     const acme = await contactFor('acme')
     const refusals = [

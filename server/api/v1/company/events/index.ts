@@ -10,7 +10,8 @@ defineRouteMeta({
     tags: ['Company'],
     summary: 'List company events',
     description:
-      'Admin sees all events; a company user sees only their own and must supply companyUID.',
+      'Admin sees all events. A company user or coordinator sees only the events of their own ' +
+      'companies and must supply companyUID.',
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],
     parameters: [
       {
@@ -19,7 +20,7 @@ defineRouteMeta({
         required: false,
         schema: { type: 'string' },
         description:
-          'Required for company users, who see only the companies whose events they manage; ' +
+          'Required for company users and coordinators, who see only their own companies; ' +
           'admins leave it out to see every company',
       },
     ],
