@@ -1469,7 +1469,6 @@
       ],
       "items": [
         "__session: keeps you signed in for up to 14 days.",
-        "et-admin-theme: remembers the light or dark theme in the admin panel, for one year.",
         "Firebase keeps your sign-in in the browser until you sign out."
       ]
     },
