@@ -1,6 +1,8 @@
 import { createError } from 'h3'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import hasAccess from '@/server/utils/hasAccess'
+import type { Subject } from '@/domain/authorization/subject'
+import { CompanyUid } from '@/domain/business/company'
+import { UserUid } from '@/domain/user'
 
 // The handlers rely on Nitro's auto-imports; stub them so they run as plain functions.
 const owners: Record<string, string> = {}
@@ -20,7 +22,6 @@ beforeEach(async () => {
   vi.stubGlobal('defineRouteMeta', () => {})
   vi.stubGlobal('defineEventHandler', (handler: unknown) => handler)
   vi.stubGlobal('createError', createError)
-  vi.stubGlobal('hasAccess', hasAccess)
   vi.stubGlobal('sendNoContent', sendNoContent)
   for (const name of [
     'setResourceContext',
@@ -46,14 +47,36 @@ beforeEach(async () => {
       transaction: () => Promise.resolve(),
     }),
   })
+  const owner = await import('@/server/utils/eventOwner')
+  vi.stubGlobal('authorizeStoredEvent', owner.authorizeStoredEvent)
   vi.stubGlobal(
-    'assertCompanyOwnsEvent',
-    (await import('@/server/utils/eventOwner')).assertCompanyOwnsEvent,
+    'companyOf',
+    (await import('@/server/utils/companyOf')).companyOf,
   )
 })
 
-const company = { userType: 'company', companyUID: 'our-company' }
-const admin = { userType: 'admin' }
+// a coordinator runs the events of the companies they volunteer for, whatever the contract
+const coordinator: Subject = {
+  uid: UserUid.parse('volunteer'),
+  roles: ['coordinator'],
+  companies: new Map([[CompanyUid.parse('our-company'), new Set()]]),
+  applicant: null,
+}
+// a company user sees the company's events, but leaves them to E&T-dagene
+const company: Subject = {
+  uid: UserUid.parse('rep'),
+  roles: ['company'],
+  companies: new Map([
+    [CompanyUid.parse('our-company'), new Set(['ent:event:manage'] as const)],
+  ]),
+  applicant: null,
+}
+const admin: Subject = {
+  uid: UserUid.parse('boss'),
+  roles: ['admin'],
+  companies: new Map(),
+  applicant: null,
+}
 
 const handlers = {
   'index.delete': () => import('@/server/api/v1/event/index.delete'),
@@ -62,14 +85,14 @@ const handlers = {
 
 async function call(
   handler: keyof typeof handlers,
-  user: object,
+  subject: Subject,
   body: object,
 ) {
   vi.stubGlobal('readBody', () => Promise.resolve(body))
   const { default: run } = (await handlers[handler]()) as unknown as {
     default: (event: unknown) => Promise<unknown>
   }
-  return run({ context: { user } })
+  return run({ context: { subject } })
 }
 
 const eventFields = {
@@ -82,22 +105,19 @@ const eventFields = {
 }
 
 describe('DELETE /api/v1/event', () => {
-  it("refuses a company user deleting another company's event", async () => {
+  it("refuses a coordinator deleting another company's event", async () => {
     await expect(
-      call('index.delete', company, {
+      call('index.delete', coordinator, {
         eventUID: 'theirs',
         companyUID: 'our-company',
       }),
-    ).rejects.toMatchObject({
-      statusCode: 401,
-      statusMessage: 'Error (event/not-owner).',
-    })
+    ).rejects.toMatchObject({ code: 'auth/forbidden' })
     expect(remove).not.toHaveBeenCalled()
   })
 
-  it('refuses a company user deleting an event that does not exist', async () => {
+  it('refuses a coordinator deleting an event that does not exist', async () => {
     await expect(
-      call('index.delete', company, {
+      call('index.delete', coordinator, {
         eventUID: 'missing',
         companyUID: 'our-company',
       }),
@@ -105,12 +125,22 @@ describe('DELETE /api/v1/event', () => {
     expect(remove).not.toHaveBeenCalled()
   })
 
-  it("lets a company user delete their own company's event", async () => {
-    await call('index.delete', company, {
+  it("lets a coordinator delete their own company's event", async () => {
+    await call('index.delete', coordinator, {
       eventUID: 'ours',
       companyUID: 'our-company',
     })
     expect(remove).toHaveBeenCalledOnce()
+  })
+
+  it("refuses a company user deleting their own company's event", async () => {
+    await expect(
+      call('index.delete', company, {
+        eventUID: 'ours',
+        companyUID: 'our-company',
+      }),
+    ).rejects.toMatchObject({ code: 'auth/forbidden' })
+    expect(remove).not.toHaveBeenCalled()
   })
 
   it('lets an admin delete any event', async () => {
@@ -120,23 +150,20 @@ describe('DELETE /api/v1/event', () => {
 })
 
 describe('PUT /api/v1/event', () => {
-  it("refuses a company user overwriting another company's event", async () => {
+  it("refuses a coordinator overwriting another company's event", async () => {
     await expect(
-      call('index.put', company, {
+      call('index.put', coordinator, {
         ...eventFields,
         eventUID: 'theirs',
         companyUID: 'our-company',
       }),
-    ).rejects.toMatchObject({
-      statusCode: 401,
-      statusMessage: 'Error (event/not-owner).',
-    })
+    ).rejects.toMatchObject({ code: 'auth/forbidden' })
     expect(update).not.toHaveBeenCalled()
   })
 
-  it('refuses a company user creating an event through an update', async () => {
+  it('refuses a coordinator creating an event through an update', async () => {
     await expect(
-      call('index.put', company, {
+      call('index.put', coordinator, {
         ...eventFields,
         eventUID: 'missing',
         companyUID: 'our-company',
@@ -145,13 +172,24 @@ describe('PUT /api/v1/event', () => {
     expect(update).not.toHaveBeenCalled()
   })
 
-  it("lets a company user update their own company's event", async () => {
-    await call('index.put', company, {
+  it("lets a coordinator update their own company's event", async () => {
+    await call('index.put', coordinator, {
       ...eventFields,
       eventUID: 'ours',
       companyUID: 'our-company',
     })
     expect(update).toHaveBeenCalledOnce()
+  })
+
+  it("refuses a company user updating their own company's event", async () => {
+    await expect(
+      call('index.put', company, {
+        ...eventFields,
+        eventUID: 'ours',
+        companyUID: 'our-company',
+      }),
+    ).rejects.toMatchObject({ code: 'auth/forbidden' })
+    expect(update).not.toHaveBeenCalled()
   })
 
   it('lets an admin update any event', async () => {

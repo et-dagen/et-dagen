@@ -1,6 +1,12 @@
 // GET /api/v1/user
 // endpoint for fetching user data from database
 
+import { hasPermission } from '@/domain/authorization/hasPermission'
+import { Instant } from '@/domain/time'
+import { UserUid } from '@/domain/user'
+import { access } from '@/server/composition'
+import { membershipBodyOf } from '@/contracts/user'
+
 defineRouteMeta({
   openAPI: {
     // The $global block is merged into the root of the generated document by
@@ -14,16 +20,15 @@ defineRouteMeta({
             type: 'http',
             scheme: 'bearer',
             description:
-              'Firebase ID token. server/middleware/auth.ts exchanges it for the _token cookie ' +
-              'on first use.',
+              'Firebase ID token, verified and checked for revocation on every request.',
           },
           cookieAuth: {
             type: 'apiKey',
             in: 'cookie',
-            name: '_token',
+            name: '__session',
             description:
-              'httpOnly cookie set from a bearer token, valid for one day. Interchangeable with ' +
-              'bearerAuth.',
+              'Session cookie from POST /api/v1/session: HttpOnly, SameSite=Strict, two weeks, ' +
+              'checked for revocation on every request.',
           },
         },
       },
@@ -54,7 +59,7 @@ defineRouteMeta({
 })
 
 export default defineEventHandler(async (event) => {
-  const { decodedToken, user } = event.context
+  const { decodedToken, subject, user } = event.context
 
   // get scope from query params
   const { scope } = getQuery(event)
@@ -81,7 +86,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  if (!user) {
+  if (!user || !subject) {
     setErrorContext(event, {
       code: 'user/not-found',
       message: 'User not found in database',
@@ -118,33 +123,33 @@ export default defineEventHandler(async (event) => {
     ...dbUsers[firebaseUser.uid],
   }))
 
-  if (hasAccess(user, ['admin'])) {
-    addEventContext(event, 'result_count', users.length)
-    return users
-  }
-
-  // everyone else sees only the users and fields their role needs
-  const eventsSnapshot = await withDbTiming(event, 'events', 'read', () =>
-    db.ref('events').once('value'),
-  )
-  const cvAccess = hasAccess(user, ['company'])
-    ? (
-        await withDbTiming(
-          event,
-          `companies/${user.companyUID}/cvAccess`,
-          'read',
-          () => db.ref(`companies/${user.companyUID}/cvAccess`).once('value'),
-        )
-      ).val() === true
-    : false
-
+  const env = { now: Instant.now() }
   const visible = visibleUsers(
-    user,
+    subject,
     users,
-    eventsSnapshot.val() ?? {},
-    cvAccess,
+    (
+      await withDbTiming(event, 'events', 'read', () =>
+        db.ref('events').once('value'),
+      )
+    ).val() ?? {},
+    env,
   )
   addEventContext(event, 'result_count', visible.length)
 
-  return visible
+  // admins see stored roles and memberships; users not migrated yet have none (#640)
+  if (!hasPermission(subject, 'user', 'assign', { scope: 'all' }, env))
+    return visible
+  const stored = await access.all()
+  return visible.map((user) => {
+    const held = stored.get(UserUid.parse(user.uid as string))
+    return held
+      ? {
+          ...user,
+          access: {
+            roles: held.roles,
+            memberships: held.memberships.map(membershipBodyOf),
+          },
+        }
+      : user
+  })
 })

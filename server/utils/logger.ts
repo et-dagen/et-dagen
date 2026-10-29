@@ -46,7 +46,8 @@ export interface WideEvent {
     uid: string
     email?: string
     name?: string
-    access_level?: string
+    /** The user's roles, comma separated */
+    roles?: string
     study_program?: string
     current_year?: number
   }
@@ -55,7 +56,7 @@ export interface WideEvent {
   auth?: {
     authenticated: boolean
     token_valid?: boolean
-    auth_method?: 'bearer' | 'cookie'
+    auth_method?: 'bearer' | 'session'
   }
 
   // Business context (added by handlers)

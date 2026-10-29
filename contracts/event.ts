@@ -1,16 +1,11 @@
 import { z } from 'zod'
 
-const required = z
-  .string({ required_error: 'required' })
-  .trim()
-  .min(1, 'required')
+const required = z.string({ error: 'required' }).trim().min(1, 'required')
 
 const WALL_CLOCK = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/
 
 /** Oslo wall-clock time as `<input type="datetime-local">` gives it, which is how v1 stores times */
-const wallClock = z
-  .string({ required_error: 'required' })
-  .regex(WALL_CLOCK, 'datetime')
+const wallClock = z.string({ error: 'required' }).regex(WALL_CLOCK, 'datetime')
 
 /** Whether two well-formed times come in the wrong order; malformed times are reported on their own */
 const outOfOrder = (earlier: string, later: string) =>
@@ -23,9 +18,7 @@ const common = {
   title: required.max(120, 'too_long'),
   /** A company uid, or `etdagene` for the fair's own events */
   companyUID: required,
-  description: z
-    .string({ required_error: 'required' })
-    .refine(hasText, 'required'),
+  description: z.string({ error: 'required' }).refine(hasText, 'required'),
   location: z.object({
     name: required.max(120, 'too_long'),
     map: z
@@ -51,7 +44,7 @@ export const EventInput = z
       ...common,
       signup: z.literal(true),
       capacity: z.coerce
-        .number({ invalid_type_error: 'number' })
+        .number({ error: 'number' })
         .int('number')
         .min(1, 'number'),
       opens: wallClock,

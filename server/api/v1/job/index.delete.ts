@@ -1,12 +1,16 @@
 // DELETE /api/v1/job
 // endpoint for removing a job from db
 
+import { authorize } from '@/domain/authorization/authorize'
+import { Instant } from '@/domain/time'
+
 defineRouteMeta({
   openAPI: {
     tags: ['Job'],
     summary: 'Remove job listing',
     description:
-      'Admin, or the owning company user. Ownership is resolved from the stored record, so ' +
+      'Admin, any coordinator, or the owning company user. Ownership is resolved from the stored ' +
+      'record, so ' +
       'authorization happens after the lookup. This is the only DELETE that takes a query ' +
       'parameter rather than a body.',
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],
@@ -24,14 +28,15 @@ defineRouteMeta({
     // responses: {
     //   204: { description: 'Removed' },
     //   400: { description: 'Error (job/missing-job-uid).' },
-    //   401: { description: 'Error (firebase/user-not-authorized).' },
+    //   401: { description: 'auth/signed-out' },
+    //   403: { description: 'auth/forbidden' },
     //   404: { description: 'Error (job/not-found).' },
     // },
   },
 })
 
 export default defineEventHandler(async (event) => {
-  const { user } = event.context
+  const { subject } = event.context
 
   const { jobUID } = getQuery(event)
 
@@ -85,24 +90,8 @@ export default defineEventHandler(async (event) => {
 
   addEventContext(event, 'company_uid', companyUID)
 
-  const isAdmin = hasAccess(user, ['admin'])
-  const isCompanyAdmin =
-    hasAccess(user, ['company']) && user.companyUID === companyUID
-
-  addEventContext(event, 'is_admin', isAdmin)
-  addEventContext(event, 'is_company_admin', isCompanyAdmin)
-
-  // only admins and company admins can modify jobs
-  if (!isAdmin && !isCompanyAdmin) {
-    setErrorContext(event, {
-      code: 'firebase/user-not-authorized',
-      message: 'User not authorized to delete jobs',
-    })
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Error (firebase/user-not-authorized).',
-    })
-  }
+  const env = { now: Instant.now() }
+  authorize(subject, 'job', 'delete', companyOf(companyUID), env)
 
   // remove company
   jobsRef.child(jobUID as string).remove()

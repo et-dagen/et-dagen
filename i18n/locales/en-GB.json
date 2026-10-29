@@ -4,16 +4,34 @@
     "programme": "Programme",
     "jobs": "Jobs",
     "contact": "Contact",
-    "faq": "For companies",
+    "for-companies": "For companies",
     "admin": "Admin",
     "user": "My profile",
     "program_nav": "SEE PROGRAMME",
     "company": "Company"
   },
   "home": {
-    "banner": {
-      "slogan": "Explore your future workplace"
-    }
+    "date_coming": "The date is coming soon",
+    "place": "Glassgården, Elbygget, Gløshaugen",
+    "slogan": "Explore your future workplace",
+    "sign_up": "Sign up for events",
+    "who": "See who is coming",
+    "main_partner": "Main partner",
+    "upcoming": "Next events",
+    "programme": "See the whole programme",
+    "places": "One place left | {n} places left",
+    "status": {
+      "past": "Over",
+      "no-registration": "Open to all",
+      "not-open": "Sign-up opens soon",
+      "open": "Sign-up open",
+      "full": "Full, waiting list",
+      "closed": "Sign-up closed"
+    },
+    "companies": "Who is coming",
+    "partners": "Partners",
+    "sponsors": "Sponsors",
+    "join": "Want your company here?"
   },
   "user": {
     "sign_in": "Sign in",
@@ -63,12 +81,66 @@
     },
     "delete": {
       "title": "Delete my account",
-      "description": "Deletes your account and everything we store about you: your profile, résumé and event registrations. This cannot be undone.",
+      "description": "Deletes your account, CV and sign-ups. This cannot be undone.",
       "dialog_title": "Delete your account?",
       "dialog_text": "Your profile, résumé and event registrations are deleted right away, and you are signed out. This cannot be undone.",
       "confirm_label": "Type your email address to confirm",
       "confirm": "Delete account",
       "abort": "Cancel"
+    },
+    "page": {
+      "hello": "Hi, {name}",
+      "events": "My events",
+      "information": "My information",
+      "sign_ups": "Sign-ups",
+      "profile": "Profile and studies",
+      "allergies": "Allergies and diet",
+      "programme": "See the programme",
+      "qr": "QR code for check-in",
+      "show_code": "Show the code at the door",
+      "attending": "You have a place",
+      "queued": "Waiting list, place {n}",
+      "withdraw": "Withdraw",
+      "withdraw_title": "Withdraw from {title}?",
+      "withdraw_place": "Your place goes to the first person on the waiting list.",
+      "withdraw_queue": "You lose your place on the waiting list.",
+      "keep": "Keep",
+      "withdrawn": "You have withdrawn from {title}",
+      "no_ticket": "No ticket yet",
+      "no_ticket_hint": "When you get a place at an event, the ticket is here.",
+      "no_sign_ups": "You have not signed up for anything yet.",
+      "edit": "Edit",
+      "year": "Year {n}",
+      "upload": "Upload",
+      "replace": "Replace",
+      "remove": "Delete",
+      "no_resume": "No CV uploaded. Companies see your CV once you upload it.",
+      "no_allergies": "No allergies registered.",
+      "load_failed": "We could not load your sign-ups",
+      "load_failed_hint": "Your ticket and sign-ups show up once they are loaded.",
+      "retry": "Try again",
+      "resume_delete_title": "Delete your CV?",
+      "resume_delete_text": "Companies can no longer see your CV. You can upload a new one at any time.",
+      "resume_delete": "Delete CV",
+      "resume_uploading": "Uploading …",
+      "resume_uploaded": "Your CV is uploaded",
+      "resume_deleted": "Your CV is deleted",
+      "cancel": "Cancel"
+    },
+    "profile": {
+      "title": "Edit your profile",
+      "back": "My page",
+      "name": "Name",
+      "email": "Email",
+      "email_hint": "You sign in with this address, and it cannot be changed here.",
+      "programme": "Study programme",
+      "programme_hint": "Changed study programme? Contact E&T-dagene, and we will change it.",
+      "year": "Year",
+      "diet_hint": "Used when events serve food.",
+      "diet_other": "Other (separate with commas)",
+      "save": "Save",
+      "cancel": "Cancel",
+      "saved": "Your profile is saved"
     }
   },
   "error": {
@@ -88,9 +160,13 @@
         "confirmed": "Passwords must match"
       }
     },
-    "page_not_found": {
-      "page_doesnt_exist": "This page doesn't exist",
-      "navigate_front_page": "Back to front page"
+    "page": {
+      "missing_title": "This page does not exist",
+      "missing_text": "There is nothing at {path}. The address may be mistyped, or the page may have moved.",
+      "failed_title": "Something went wrong",
+      "failed_text": "The page could not be shown. Try again in a moment, and contact us if it keeps happening.",
+      "home": "Go to the front page",
+      "elsewhere": "Or go to"
     }
   },
   "datetime": {
@@ -144,8 +220,8 @@
     }
   },
   "contact": {
-    "title": "Contact Us",
-    "board": "Board Members",
+    "title": "Contact us",
+    "board": "The board",
     "positions": {
       "head": "Manager",
       "deputyHead": "Deputy manager",
@@ -156,18 +232,39 @@
       "marketing": "Marketing manager",
       "logistics": "Logistics manager",
       "travel": "Travel manager"
-    }
+    },
+    "question": "What is it about?",
+    "organisation": "The organisation",
+    "org_number": "Org. no.",
+    "follow": "Follow us",
+    "copy": "Copy {email}",
+    "copied": "{email} is copied",
+    "copy_failed": "Could not copy. Select the address and copy it yourself.",
+    "topics": {
+      "companies": "Companies taking part",
+      "sponsorship": "Sponsorship",
+      "press": "Press",
+      "website": "Website and account",
+      "other": "Anything else"
+    },
+    "answers": {
+      "companies": "Would your company like to take part, or do you have questions about stands, events or résumés?",
+      "sponsorship": "Questions about sponsorship and partnerships.",
+      "press": "Press, marketing and social media.",
+      "website": "Problems with the website, signing in or your account.",
+      "other": "Anything else goes to the head of the board."
+    },
+    "copy_short": "Copy",
+    "copied_short": "Copied"
   },
   "company": {
-    "main_partner": "Main partner in 2026",
-    "partners": "Partners 2026",
-    "sponsors": "Sponsors 2026",
     "admin": {
       "title": "Company page",
       "year": "Year {n}",
       "events": {
         "name": "Events",
         "empty": "You have no events yet.",
+        "new": "New event",
         "edit": "Edit",
         "registration": "Sign-up {from} – {to}",
         "diets": "Allergies and diets",
@@ -176,6 +273,13 @@
         "no_attendees": "No attendees yet.",
         "copy_emails": "Copy the email addresses",
         "copied": "{n} email address copied | {n} email addresses copied"
+      },
+      "jobs": {
+        "name": "Jobs",
+        "new": "New job",
+        "edit": "Edit",
+        "deadline": "Deadline {date}",
+        "empty": "You have no jobs yet."
       },
       "resumes": {
         "name": "CVs",
@@ -186,6 +290,14 @@
         "empty": "No CVs match the search.",
         "no_access_title": "No access to CVs",
         "no_access": "Your company does not have access to students' CVs. Contact E&T-dagene if you think this is wrong."
+      },
+      "profile": {
+        "name": "Company profile",
+        "lead": "How the company appears to students on the site.",
+        "company": "Company",
+        "save": "Save the profile",
+        "saved": "The profile is saved",
+        "none": "You have no company to edit."
       }
     }
   },
@@ -212,12 +324,10 @@
         },
         "company": {
           "not-found": "Company not found",
-          "require-company-uid": "Company users must spesify companyUID",
-          "missing-name-webpage-type": "Missing name, webpage or type"
+          "missing-name-or-webpage": "Missing name or webpage"
         },
         "event": {
           "not-found": "Event doesn't exist",
-          "not-owner": "Cannot modify other companies' events",
           "missing-event-uid": "eventUID missing",
           "incorrect-capacity": "Capacity must be a number or null",
           "wrong-format-capacity": "Capacity must be a number larger than zero",
@@ -230,7 +340,8 @@
             "already-registered": "User already registered for this event",
             "registration-closed": "Registration window is closed",
             "event-is-full": "Event is full",
-            "not-owner": "Cannot register other users"
+            "not-owner": "Cannot register other users",
+            "forbidden": "You can't sign up for this event."
           }
         },
         "job": {
@@ -360,7 +471,26 @@
         "full": "Full, waiting list",
         "closed": "Sign-up is closed"
       },
-      "after_deadline": "After the deadline"
+      "after_deadline": "After the deadline",
+      "asap": "As soon as possible",
+      "rolling": "Rolling"
+    },
+    "list": {
+      "title": "Jobs",
+      "search": "Search by job, company or place",
+      "filters": "Filters",
+      "type": "Type",
+      "company": "Company",
+      "place": "Place",
+      "deadline": "Deadline",
+      "soon": "Within {n} days",
+      "reset": "Clear filters",
+      "count": "No jobs | 1 job, nearest deadline first | {n} jobs, nearest deadline first",
+      "no_match": "No jobs match the filters.",
+      "empty": "There are no open jobs right now.",
+      "rolling": "Rolling",
+      "meet": "Meet them {day}",
+      "show": "Show no jobs | Show 1 job | Show {n} jobs"
     }
   },
   "admin": {
@@ -421,7 +551,7 @@
         "logo_choose": "Choose a logo",
         "logo_replace": "Replace the logo",
         "logo_undo": "Undo",
-        "logo_hint": "PNG or JPEG. Uploaded when you save.",
+        "logo_hint": "PNG, JPEG or WebP. Empty margins around the logo are cut away when you save.",
         "description": "Description",
         "cv_access": "Access to CVs",
         "cv_access_hint": "The company can see and open students' CVs.",
@@ -528,7 +658,9 @@
       "deadline": {
         "today": "Last day today",
         "left": "{n} day left | {n} days left",
-        "passed": "Expired"
+        "passed": "Expired",
+        "asap": "As soon as possible",
+        "rolling": "Rolling"
       },
       "actions": {
         "menu": "Options for {title}",
@@ -584,7 +716,14 @@
         "link_text": "Link to the application",
         "link_link": "Link to the listing",
         "summary": "Short summary (optional)",
-        "summary_hint": "One or two sentences, at most 300 characters. Shown above the button to the listing."
+        "summary_hint": "One or two sentences, at most 300 characters. Shown above the button to the listing.",
+        "deadline_date": "Date",
+        "deadline_type": {
+          "date": "On a date",
+          "asap": "As soon as possible",
+          "rolling": "Rolling"
+        },
+        "rolling_hint": "Applications are handled as they come in until the job is filled."
       }
     },
     "users": {
@@ -593,12 +732,14 @@
       "filter": {
         "all": "All",
         "admin": "Admins",
-        "company": "Companies",
+        "coordinator": "Coordinators",
+        "company": "Company contacts",
         "basic": "Students"
       },
       "role": {
         "admin": "Admin",
-        "company": "Company",
+        "coordinator": "Coordinator",
+        "company": "Company contact",
         "basic": "Student"
       },
       "columns": {
@@ -629,10 +770,13 @@
         "role": "Role",
         "role_hint": {
           "admin": "Has access to the whole admin panel.",
-          "company": "Signs in on behalf of a company.",
+          "coordinator": "A student at E&T-dagene responsible for one or more companies.",
+          "company": "A contact person from a company.",
           "basic": "A student who can sign up for events."
         },
         "company": "Company",
+        "companies": "Companies",
+        "companies_hint": "The companies the coordinator is responsible for. Coordinators do not see résumés.",
         "programme": "Study programme",
         "optional": "(optional)",
         "choose_programme": "Choose a study programme",
@@ -641,17 +785,19 @@
         "diet_other": "Other (separate with commas)",
         "save": "Save changes",
         "updated": "The changes are saved",
-        "missing": "User not found."
+        "missing": "User not found.",
+        "access": "This person's access",
+        "access_hint": "The company's contract decides what the company has. Untick to take it from this person only; the rest of the company keeps it.",
+        "entitlement": {
+          "resume_view": "See résumés",
+          "job_manage": "Post and edit jobs",
+          "profile_manage": "Edit the company profile"
+        }
       }
     },
     "shell": {
       "navigation": "Admin panels",
       "back": "Back to etdagen.no",
-      "theme": {
-        "system": "Theme: follows the device. Switch to light",
-        "light": "Theme: light. Switch to dark",
-        "dark": "Theme: dark. Follow the device"
-      },
       "tag": {
         "admin": "ADMIN",
         "company": "COMPANY"
@@ -755,130 +901,6 @@
       }
     }
   },
-  "edit": {
-    "jobs": {
-      "create": {
-        "title": "Create Job",
-        "action": "Create"
-      },
-      "edit": {
-        "title": "Edit Job",
-        "action": "Save"
-      },
-      "cancel": "Cancel",
-      "attributes": {
-        "title": "Job Title",
-        "company": "Company",
-        "description": "Job Description",
-        "deadline": "Application Deadline",
-        "application_link": "Job advertisement link",
-        "jobtype": {
-          "name": "Job Type",
-          "full_time": "Full-time",
-          "graduate": "Gratuate position",
-          "summer_internship": "Summer Internship"
-        },
-        "location": "Job Location"
-      }
-    },
-    "event": {
-      "create": {
-        "title": "Create Event",
-        "action": "Create"
-      },
-      "edit": {
-        "title": "Edit Event",
-        "action": "Save"
-      },
-      "cancel": "Cancel",
-      "attributes": {
-        "title": "Title",
-        "company": "Company",
-        "capacity": "Capacity",
-        "description": "Description",
-        "location": {
-          "name": "Name of Place",
-          "map": "Map Link"
-        },
-        "date": {
-          "start": "Start Date",
-          "end": "End Date"
-        },
-        "registration": {
-          "start": "Registration starts",
-          "end": "Registration ends",
-          "limit": "Limit registration",
-          "requirements": {
-            "programmes": "Limit to study programmes",
-            "years": "Limit to years"
-          }
-        },
-        "attendants": "Registered users",
-        "user_id": "User ID",
-        "sign_up": "Sign up"
-      }
-    },
-    "company": {
-      "create": {
-        "title": "Create Company",
-        "action": "Create"
-      },
-      "edit": {
-        "title": "Edit Company",
-        "action": "Save"
-      },
-      "unlink_logo": "Unlink Logo",
-      "cancel": "Cancel",
-      "attributes": {
-        "name": "Company Name",
-        "description": "Description",
-        "logo": "Logo",
-        "webpage": "webpage",
-        "cvAccess": {
-          "name": "CV access",
-          "yes": "Yes",
-          "no": "No"
-        },
-        "type": {
-          "name": "Company Type",
-          "main_partner": "Main Partner",
-          "partner": "Partner",
-          "sponsor": "Sponsor",
-          "old": "Old"
-        }
-      }
-    },
-    "user": {
-      "title": "Edit User",
-      "save": "Save",
-      "cancel": "Cancel",
-      "attributes": {
-        "name": "Name",
-        "email": "E-mail",
-        "type": {
-          "name": "User type",
-          "admin": "Administrator",
-          "company": "Comany",
-          "basic": "Basic"
-        },
-        "studyprogram": "Study programme",
-        "currentyear": "Current year"
-      }
-    }
-  },
-  "footer": {
-    "header": {
-      "resources": "Resources",
-      "organisation": "Organisation",
-      "some": "Follow us",
-      "join": "Wish to join us?"
-    },
-    "link": {
-      "contact": "Contact Us",
-      "program": "Programme",
-      "jobs": "Jobs"
-    }
-  },
   "dietary_restrictions": {
     "name": "Allergens and restrictions",
     "gluten": "Gluten",
@@ -924,31 +946,108 @@
     "redo": "Redo"
   },
   "forcompanies": {
-    "about": {
-      "heading": "About E&T-dagene",
-      "p1": "The Electronics- and technology days is a yearly career fair hosted by students from Electronic Systems design and Innovation, NTNU. ELSYS is a study programme combining among other things physics, electronics, signal processing and circuit design, where students early on in their studies are faced with projects and real-world problem solving.",
-      "p2": "As a participating company at the E&T days, you will get a unique opportunity to meet highly motivated and enthusiastic masters engineering students, with a wide variety of specialties within electronic engineering. ELSYS has specialties within signal processing, machine learning, acoustics, radiosystems, both analog and digital electronics- and systems design, space systems and quantum technology.",
-      "p3": "The E&T days are promoted to students ahead of the fair, and the venue is Glassgården (in EL-bygget at NTNU Gløshaugen), which lies connected to one of the three largest auditoriums at Gløshaugen, as well as many other lecture- and reading halls. Glassgården is therefore one of the most well-fitting locations on Gløshaugen to attract students, and you will be able to meet students from among others; ELSYS, Cybernetics and Robotics, and Energy-studies.",
-      "contactus": "If you do have any questions, or wish to participate, please contact us at: bedriftansvarlig{'@'}et-dagen.no"
+    "title": "For companies",
+    "heading": "Meet the students of Electronic Systems Design and Innovation",
+    "lead": "E&T-dagene is a yearly career fair at NTNU Gløshaugen, run by students of Electronic Systems Design and Innovation (ELSYS).",
+    "signup": {
+      "title": "Sign-up and prices",
+      "text": "Send us an email for information about sign-up and prices.",
+      "button": "Sign up your company",
+      "copy": "Copy the address",
+      "copied": "Address copied"
     },
-    "faq": {
-      "heading": "FAQ",
-      "questions": {
-        "q1": "What we offer",
-        "q2": "How can I sign my company up?",
-        "q3": "What events do the E&T days help me organise?",
-        "q4": "Tips to succeed at the E&T days",
-        "q5": "Arrival by car",
-        "q6": "Extra equipment"
+    "index": {
+      "label": "On this page",
+      "day": "The day",
+      "audience": "Who you meet",
+      "practical": "Practical",
+      "tips": "Tips for your stand"
+    },
+    "day": {
+      "heading": "Your day at E&T-dagene",
+      "arrival": {
+        "title": "Arrival",
+        "text": "The nearest drop-off by car is the south side of Frimerket, the lawn just behind the Main Building."
       },
-      "answers": {
-        "a1": "-CV database: An online service, helping engineering students and companies get in contact. Students can easily register their CV and job/internship applications with you, and you can announce open positions. As a participating company, you get one full year of access to the CV-database. -Interviews: We arrange for rooms that can be used for interviews during E&T-dagene and the day after. -Company presentations: This is a great opportunity to inform about and inspire students to pursue your company. We arrange auditoriums and promotions ahead of the presentation. -Company quick-fire presentations: A series of short company presentations, where all participating companies get to present themselves and the summer jobs they advertise. -Contact person: You will be provided a contact person specific to your company. This person will be available to you the entire duration of the career fairs. -Food and drink: We arrange for food and drinks for all participants from your company, and a separate break room.",
-        "a2": "Please contact us directly at bedriftansvarlig{'@'}et-dagen.no for more information on signup and prices.",
-        "a3": "We help organise the stand, company presentations and interviews/speedinterviews.",
-        "a4": "1 Be engaged and approachable. An open body language and genuine interest make it more inviting for students to engage with you, and help you attract good candidates. 2 Recruitment and job advertisements. Many of the students visiting E&T-dagene are on the lookout for a summer job, an internship or a permanent job at your company. Do you have open job advertisements? Make them easy to find on your stand! Clear QR-codes on the stand lower the boundaries for potential applicants, and make it easier to apply after visiting your stand. 3 Take up some space! Students are drawn to stands that can be seen and heard. Make sure your stand doesn’t appear closed off. Open surfaces invite conversation. The more approachable and lively the stand, the more stop by. 4 Make the stand memorable. A small giveaway, a good conversation or a fun activity can be the thing that makes the students remember your stand among the others afterwards. 5 After-the-fact followup. If you meet especially motivated students, encourage them to stay in touch with your company. This can be valuable for future recruitment.",
-        "a5": "The closest point of arrival by car/taxi is on the south end of Frimerket; the field behind the main building.",
-        "a6": "Outside of what is included in your package, extra stand equipment can be ordered. E.g. extra tables, coffee or displays. Contact bedriftansvarlig{'@'}et-dagen.no."
+      "stand": {
+        "title": "Your stand",
+        "text": "In Glassgården in the EL building. We help you set it up."
+      },
+      "presentation": {
+        "title": "Company presentation",
+        "text": "We book the lecture hall and promote your presentation beforehand."
+      },
+      "speed": {
+        "title": "Speedbedpress",
+        "text": "Short presentations one after another, about you and the summer jobs you offer."
+      },
+      "interviews": {
+        "title": "Interviews",
+        "text": "Rooms for interviews during the fair and the day after."
+      },
+      "after": {
+        "title": "Afterwards",
+        "text": "A year's access to the resumes students upload."
+      },
+      "allday": {
+        "label": "All day",
+        "contact": "Your own contact person",
+        "food": "Food and drink for everyone from your company",
+        "room": "A separate break room"
       }
+    },
+    "audience": {
+      "heading": "Who you meet",
+      "intro": "ELSYS combines electronics, circuit design, physics and signal processing, with hands-on projects from the first year.",
+      "fields": "Students choose a main profile",
+      "field": {
+        "acoustics": "Acoustics for communication, environment and remote sensing",
+        "analog": "Analogue circuit design and radio engineering",
+        "digital": "Design of digital and embedded systems",
+        "quantum": "Quantum technology and photonics",
+        "signal": "Signal processing and machine learning",
+        "space": "Space systems"
+      },
+      "venue": "The fair is held in Glassgården in the EL building, next to one of the three largest lecture halls at Gløshaugen and several reading and lecture rooms, so many students pass through. You also meet students from cybernetics and energy and environmental engineering, among others.",
+      "promoted": "We promote the fair to students beforehand."
+    },
+    "practical": {
+      "heading": "Practical",
+      "help": {
+        "q": "What do you help us with?",
+        "a": "We help you with the stand, the company presentation, and interviews or speed interviews."
+      },
+      "equipment": {
+        "q": "Extra equipment",
+        "a": "Beyond what your contract includes, you can order extra equipment, such as tables, standing tables, coffee or TV screens. Email bedriftansvarlig{'@'}et-dagen.no."
+      }
+    },
+    "tips": {
+      "heading": "Tips for your stand",
+      "talk": {
+        "title": "Be easy to talk to",
+        "text": "Open body language and real interest make it easier for students to approach you. Ask questions and listen."
+      },
+      "jobs": {
+        "title": "Make your jobs easy to find",
+        "text": "Many students look for a summer job, an internship or a permanent job. A clear QR code to your job ads makes it easy to apply afterwards."
+      },
+      "space": {
+        "title": "Take up space",
+        "text": "Students stop at stands they can see and hear. Keep the stand open, so it invites conversation."
+      },
+      "remembered": {
+        "title": "Be remembered",
+        "text": "A small giveaway, a good conversation or a fun activity makes students remember you after the fair."
+      },
+      "follow": {
+        "title": "Follow up",
+        "text": "If you meet students who are especially interested, ask them to get in touch."
+      }
+    },
+    "closing": {
+      "heading": "Questions, or ready to take part?",
+      "text": "Our corporate relations contact answers everything about sign-up, prices and equipment."
     }
   },
   "errors": {
@@ -977,7 +1076,8 @@
     },
     "job": {
       "invalid-listing": "A job is shown either as a description or as a link.",
-      "invalid-link": "The application link must be a web address starting with http:// or https://."
+      "invalid-link": "The application link must be a web address starting with http:// or https://.",
+      "invalid-deadline-type": "The deadline must be a date, \"As soon as possible\" or \"Rolling\"."
     },
     "file": {
       "unsupported-type": "This file format is not allowed here.",
@@ -992,13 +1092,11 @@
       "invalid-webpage": "The website must be an address starting with http:// or https://."
     },
     "standmap": {
-      "forbidden": "Only administrators can change stand maps.",
       "invalid-day": "Choose a valid date.",
       "missing-file": "Choose an image to upload.",
       "not-found": "This day has no stand map."
     },
     "board": {
-      "forbidden": "Only administrators can change the board.",
       "not-found": "This board member was not found.",
       "invalid-name": "Fill in a name.",
       "invalid-title": "Fill in the role in Norwegian and English.",
@@ -1024,7 +1122,14 @@
       "signup_after_start": "Sign-up must close before the event starts.",
       "number": "Enter a whole number above zero.",
       "email": "Enter a valid email address.",
-      "phone": "Only digits, spaces and a leading +."
+      "phone": "Only digits, spaces and a leading +.",
+      "password_length": "The password needs at least 8 characters.",
+      "password_letters": "The password needs at least 3 letters.",
+      "password_digits": "The password needs at least 3 digits.",
+      "email_taken": "There is already an account with this address. Sign in instead.",
+      "code_invalid": "The code doesn't match. Check it, or contact us.",
+      "choose": "Choose one.",
+      "year_needs_programme": "Choose a programme first."
     },
     "leave": "You have unsaved changes. Leave the page?",
     "richtext": {
@@ -1040,5 +1145,225 @@
       "matches": "Matches",
       "none": "No matches"
     }
+  },
+  "events": {
+    "page": {
+      "back": "Programme",
+      "when": "When",
+      "where": "Where",
+      "signup": "Sign-up",
+      "places": "{taken} of {limit} places",
+      "map_title": "Map of {place}",
+      "open_map": "Open map",
+      "privacy": "The names of those signed up are not shown here.",
+      "years": "Years",
+      "programmes": "Study programmes",
+      "no_jobs": "The company has no open jobs with us right now.",
+      "website": "{company}'s website",
+      "missing": "Event not found",
+      "not_eligible": "You do not meet this event's study programme or year requirements.",
+      "tabs": {
+        "label": "Event",
+        "about": "About",
+        "signup": "Sign-up",
+        "company": "The company",
+        "jobs_count": "{n} job | {n} jobs",
+        "about_short": "About",
+        "signup_short": "Sign-up",
+        "company_short": "Company"
+      },
+      "window": {
+        "opens": "Sign-up opens",
+        "closes": "Sign-up closes"
+      },
+      "state": {
+        "none": "Open to everyone, no sign-up",
+        "past": "The event is over",
+        "not-open": "Sign-up has not opened",
+        "closed": "Sign-up is closed",
+        "registered": "You have a place",
+        "queued": "You are number {n} in the queue",
+        "sign-in": "Sign-up is open",
+        "not-eligible": "Sign-up is open",
+        "open": "Sign-up is open",
+        "full": "Full, waiting list"
+      },
+      "countdown": {
+        "days": "Opens in {days} d {hours} h",
+        "hours": "Opens in {hours} h {minutes} min"
+      },
+      "action": {
+        "register": "Sign me up",
+        "queue": "Join the queue",
+        "sign_in": "Sign in to sign up",
+        "cancel": "Cancel my place",
+        "leave_queue": "Leave the queue",
+        "calendar": "Add to calendar"
+      },
+      "done": {
+        "registered": "You are signed up",
+        "queued": "You are in the queue",
+        "cancelled": "Your place is cancelled"
+      },
+      "confirm": {
+        "title": "Cancel your place?",
+        "text": "Your place goes to the first in the queue, and you would have to sign up again to get one.",
+        "queue_title": "Leave the queue?",
+        "queue_text": "You lose your place in the queue.",
+        "keep": "Keep it"
+      },
+      "ticket": {
+        "open": "Show ticket",
+        "hide": "Hide ticket",
+        "show": "Show the code at the door",
+        "qr_alt": "Ticket code for check-in"
+      },
+      "left": "{n} place left | {n} places left",
+      "waiting_count": "Nobody waiting | {n} waiting | {n} waiting",
+      "urgency": {
+        "closing": "Closes in {n} hour | Closes in {n} hours",
+        "few": "{n} place left | {n} places left"
+      }
+    }
+  },
+  "site": {
+    "skip": "Skip to content",
+    "next": {
+      "now": "Now",
+      "next": "Next",
+      "mine": "Your next"
+    },
+    "language": {
+      "label": "Language",
+      "current": "Language: {name}. Choose a language"
+    },
+    "menu": {
+      "open": "Open the menu",
+      "close": "Close the menu",
+      "label": "Menu",
+      "pages": "Pages"
+    },
+    "account": {
+      "open": "Account menu for {name}",
+      "profile": "My profile",
+      "company": "Company page",
+      "admin": "Admin"
+    },
+    "footer": {
+      "place": "Elbygget, Gløshaugen",
+      "fair": "The fair is held in Glassgården in Elbygget.",
+      "map_open": "Open the map of Glassgården in MazeMap",
+      "directions": "Directions",
+      "links": "Footer",
+      "resources": "Resources",
+      "organisation": "Organisation",
+      "follow": "Follow us",
+      "contact": "Contact us",
+      "external": "(opens in a new tab)",
+      "join": "Want to take part?",
+      "copy": "Copy {email}",
+      "copied": "{email} copied",
+      "org": "Org. no."
+    }
+  },
+  "signin": {
+    "title": "Sign in",
+    "step": "Step {n} of 2",
+    "email": "Email",
+    "continue": "Continue",
+    "invalid_email": "Enter a valid email address.",
+    "password_title": "Enter your password",
+    "change": "Change",
+    "change_label": "Change the email address",
+    "password": "Password",
+    "show": "Show",
+    "hide": "Hide",
+    "submit": "Sign in",
+    "pending": "Signing in …",
+    "forgot": "Forgot your password?",
+    "reset_sent": "If {email} has an account, we have sent a link to set a new password.",
+    "paths": {
+      "heading": "No account yet?",
+      "student": {
+        "name": "Student",
+        "text": "Sign up for events and share your CV with the companies.",
+        "link": "Create a student account"
+      },
+      "company": {
+        "name": "Company",
+        "text": "Have you received a code or an invitation from us?",
+        "link": "Join your company"
+      }
+    },
+    "the_password": "the password"
+  },
+  "programme": {
+    "title": "Programme",
+    "days": "Days",
+    "count": "No events | 1 event | {n} events",
+    "empty": "The programme is not ready yet.",
+    "band": {
+      "label": "Now and next",
+      "now": "Now",
+      "next": "Next",
+      "until": "until {time}",
+      "in_minutes": "in {n} min",
+      "in_hours": "in {hours} h {minutes} min",
+      "in_days": "in 1 day | in {n} days"
+    },
+    "map": {
+      "name": "Stand map",
+      "open": "Open the stand map for {day}",
+      "title": "Stand map, {day}",
+      "zoom_in": "Zoom in",
+      "zoom_out": "Zoom out",
+      "close": "Close"
+    },
+    "status": {
+      "no-registration": "Open to everyone",
+      "not-open": "Sign-up opens soon",
+      "open": "Sign-up is open",
+      "full": "Full, waiting list",
+      "closed": "Sign-up is closed"
+    }
+  },
+  "signup": {
+    "you": "You",
+    "studies": "Your studies",
+    "name": "Full name",
+    "email": "Email",
+    "password": "Password",
+    "password_hint": "At least 8 characters, with at least 3 letters and 3 digits.",
+    "show": "Show",
+    "hide": "Hide",
+    "programme": "Study programme",
+    "year": "Year",
+    "year_n": "Year {n}",
+    "choose": "Choose",
+    "optional": "(optional)",
+    "pending": "Creating the account …",
+    "have_account": "Already have an account?",
+    "sign_in": "Sign in",
+    "from_company": "From a company?",
+    "join_company": "Join your company",
+    "diet": {
+      "title": "Allergies and diet",
+      "lead": "We pass this on to the kitchen when you sign up for events with food. You can change it on your profile."
+    },
+    "student": {
+      "title": "Create a student account",
+      "lead": "With an account you sign up for events and share your CV with the companies.",
+      "submit": "Create account"
+    },
+    "company": {
+      "title": "Join your company",
+      "lead": "Your company has received a registration code from us. With it you create an account that belongs to the company.",
+      "code": "Registration code",
+      "email": "Work email",
+      "submit": "Create company account",
+      "no_code": "Haven't received a code?",
+      "contact": "Contact us"
+    },
+    "the_password": "the password"
   }
 }

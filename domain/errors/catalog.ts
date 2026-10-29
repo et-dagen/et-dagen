@@ -22,9 +22,14 @@ export interface ErrorSpec {
  */
 export const ERRORS = {
   'internal/unexpected': { status: 500, message: 'Unexpected error' },
+  'auth/signed-out': { status: 401, message: 'Sign in to do this' },
+  'auth/forbidden': {
+    status: 403,
+    message: 'This account is not allowed to do this',
+  },
   'event/register/forbidden': {
     status: 403,
-    message: 'This account type cannot sign up for events',
+    message: 'This account cannot sign up for this event',
   },
   'file/unsupported-type': {
     status: 415,
@@ -38,10 +43,6 @@ export const ERRORS = {
   'file/wrong-owner': {
     status: 400,
     message: 'This kind of file belongs to a different kind of owner',
-  },
-  'standmap/forbidden': {
-    status: 403,
-    message: 'Only admins manage stand maps',
   },
   'standmap/invalid-day': {
     status: 400,
@@ -61,8 +62,42 @@ export const ERRORS = {
     status: 503,
     message: 'Sending mail is not set up on this server',
   },
-  'board/forbidden': { status: 403, message: 'Only admins manage the board' },
   'board/not-found': { status: 404, message: 'No board member has this id' },
+  'user/not-found': { status: 404, message: 'No user has this uid' },
+  'user/invalid-access': {
+    status: 400,
+    message:
+      'Send roles as known role names and memberships as a companyUID and a known kind',
+  },
+  'user/no-roles': { status: 400, message: 'A user needs at least one role' },
+  'user/membership-without-role': {
+    status: 400,
+    message:
+      'A membership needs its role: company for an employee, coordinator for a coordinator',
+  },
+  'user/duplicate-membership': {
+    status: 400,
+    message: 'A user can be a member of each company once',
+  },
+  'company/not-found': { status: 404, message: 'No company has this uid' },
+  'company/missing-logo': {
+    status: 400,
+    message:
+      'Send the logo as the multipart part named file, and the company as companyUID',
+  },
+  'company/unreadable-logo': {
+    status: 415,
+    message: 'The logo could not be read as a picture',
+  },
+  'company/missing-name-or-webpage': {
+    status: 400,
+    message: 'A company needs a name and a webpage',
+  },
+  'company/invalid-affiliation': {
+    status: 400,
+    message:
+      'Send a known tier and overrides as known entitlements set to true or false',
+  },
   'board/invalid-name': {
     status: 400,
     message: 'A board member needs a name of at most 120 characters',
@@ -92,6 +127,18 @@ export const ERRORS = {
     status: 415,
     message: 'The portrait could not be read as a picture',
   },
+  'session/missing-token': {
+    status: 400,
+    message: 'Send the ID token from the sign-in as idToken',
+  },
+  'session/invalid-token': {
+    status: 401,
+    message: 'The ID token is not valid, has expired or was revoked',
+  },
+  'session/stale-sign-in': {
+    status: 401,
+    message: 'A session starts only within five minutes of signing in',
+  },
   'job/invalid-listing': {
     status: 400,
     message: "A job's listing must be 'text' or 'link'",
@@ -107,6 +154,10 @@ export const ERRORS = {
   'company/invalid-webpage': {
     status: 400,
     message: "A company's website must be an http(s) address",
+  },
+  'job/invalid-deadline-type': {
+    status: 400,
+    message: "A job's deadline type must be 'date', 'asap' or 'rolling'",
   },
 } as const satisfies Record<string, ErrorSpec>
 

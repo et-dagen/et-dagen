@@ -70,7 +70,7 @@ export default defineNuxtConfig({
     dirs: ['stores'],
   },
 
-  css: ['@/assets/scss/main.scss', '@/assets/css/admin.css'],
+  css: ['@/assets/css/admin.css'],
 
   vite: {
     plugins: [tailwindcss()],
@@ -79,13 +79,19 @@ export default defineNuxtConfig({
   // shadcn-vue components under components/ui are imported explicitly, not auto-imported (#583)
   components: [{ path: '~/components', ignore: ['ui/**'] }],
 
-  modules: [
-    '@nuxtjs/i18n',
-    '@pinia/nuxt',
-    'vuetify-nuxt-module',
-    '@vueuse/nuxt',
-    '@nuxt/image',
-  ],
+  modules: ['@nuxtjs/i18n', '@pinia/nuxt', '@vueuse/nuxt', '@nuxt/image'],
+
+  routeRules: {
+    // The page for companies was served at /faq before it got its own name
+    '/faq': { redirect: { to: '/for-companies', statusCode: 301 } },
+    '/en/faq': { redirect: { to: '/en/for-companies', statusCode: 301 } },
+    // logos and graphics change rarely; a day in the browser, revalidated in the background after
+    '/images/**': {
+      headers: {
+        'cache-control': 'public, max-age=86400, stale-while-revalidate=604800',
+      },
+    },
+  },
 
   nitro: {
     experimental: {
@@ -115,6 +121,8 @@ export default defineNuxtConfig({
     lazy: false,
     langDir: 'locales',
     strategy: 'prefix_except_default',
+    // the alternate and canonical links need an absolute origin; NUXT_PUBLIC_I18N_BASE_URL overrides it
+    baseUrl: 'https://etdagene.no',
     locales: [
       {
         code: 'no',
@@ -145,10 +153,6 @@ export default defineNuxtConfig({
       lg: 1919,
       xl: 2559,
     },
-  },
-
-  vuetify: {
-    vuetifyOptions: './config/vuetify/vuetify.config.ts',
   },
 
   // enable nuxt devtools

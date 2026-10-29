@@ -41,7 +41,11 @@ const closes = Instant.parse('2026-08-15T10:00:00.000Z') // exactly endOf(period
 
 const at = (now: typeof opens): Environment => ({ now })
 
-const eventWith = (eligibility?: EligibilityRule): HasRegistration => ({
+const eventWith = (
+  eligibility?: EligibilityRule,
+  host = 'host',
+): HasRegistration & { companyUid: CompanyUid } => ({
+  companyUid: CompanyUid.parse(host),
   registration: {
     period: { start: opens, duration: Duration.fromDays(14) },
     attendanceLimit: null,
@@ -112,58 +116,116 @@ describe('multi-role union', () => {
 
 describe('per-company entitlements', () => {
   // The case a flat, per-subject entitlement set gets wrong.
-  const coordinator = subjectOf({
-    roles: ['coordinator'],
-    companies: { a: ['ent:job:manage'], b: ['ent:event:manage'] },
+  const companyUser = subjectOf({
+    roles: ['company'],
+    companies: { a: ['ent:job:manage'], b: ['ent:resume:view'] },
   })
 
   it('allows the action only at the company that carries the entitlement', () => {
     expect(
-      hasPermission(coordinator, 'job', 'create', { companyUid: co('a') }),
+      hasPermission(companyUser, 'job', 'create', { companyUid: co('a') }),
     ).toBe(true)
     expect(
-      hasPermission(coordinator, 'job', 'create', { companyUid: co('b') }),
+      hasPermission(companyUser, 'job', 'create', { companyUid: co('b') }),
     ).toBe(false)
     expect(
-      hasPermission(coordinator, 'job', 'create', { companyUid: co('c') }),
+      hasPermission(companyUser, 'job', 'create', { companyUid: co('c') }),
     ).toBe(false)
   })
 })
 
-describe('coordinator and company are not the same role', () => {
-  const companies = { a: ['ent:event:manage'] as Entitlement[] }
-  const coordinator = subjectOf({ roles: ['coordinator'], companies })
-  const companyUser = subjectOf({ roles: ['company'], companies })
+describe('taking attendance', () => {
+  const attendance = (subject: Subject, company: string) =>
+    ['listAttendants', 'markAttended'].map((action) =>
+      hasPermission(subject, 'event', action as 'markAttended', {
+        companyUid: co(company),
+      }),
+    )
 
-  it('withholds event deletion from a coordinator and grants attendance handling', () => {
-    expect(
-      hasPermission(coordinator, 'event', 'delete', { companyUid: co('a') }),
-    ).toBe(false)
-    expect(
-      hasPermission(coordinator, 'event', 'listAttendants', {
-        companyUid: co('a'),
-      }),
-    ).toBe(true)
-    expect(
-      hasPermission(coordinator, 'event', 'markAttended', {
-        companyUid: co('a'),
-      }),
-    ).toBe(true)
+  it("lets every coordinator take attendance at E&T-dagene's own events", () => {
+    const coordinator = subjectOf({ roles: ['coordinator'] })
+
+    expect(attendance(coordinator, 'etdagene')).toEqual([true, true])
+    expect(attendance(coordinator, 'a')).toEqual([false, false])
+    expect(attendance(subjectOf({ roles: ['user'] }), 'etdagene')).toEqual([
+      false,
+      false,
+    ])
+    expect(attendance(subjectOf({ roles: ['company'] }), 'etdagene')).toEqual([
+      false,
+      false,
+    ])
   })
 
-  it('mirrors that for a company user, who keeps deletion but not attendance', () => {
+  it("lets a coordinator run a sponsor's events and take attendance there", () => {
+    const coordinator = subjectOf({
+      roles: ['coordinator'],
+      companies: { a: ['ent:profile:manage'] as Entitlement[] },
+    })
+
+    expect(attendance(coordinator, 'a')).toEqual([true, true])
     expect(
-      hasPermission(companyUser, 'event', 'delete', { companyUid: co('a') }),
+      hasPermission(coordinator, 'event', 'update', { companyUid: co('a') }),
+    ).toBe(true)
+  })
+})
+
+describe('coordinator and company are not the same role', () => {
+  // a sponsor: the contract gives the company its profile and nothing more
+  const companies = { a: ['ent:profile:manage'] as Entitlement[] }
+  const coordinator = subjectOf({ roles: ['coordinator'], companies })
+  const companyUser = subjectOf({ roles: ['company'], companies })
+  const event = (subject: Subject, action: string, company = 'a') =>
+    hasPermission(subject, 'event', action as 'update', {
+      companyUid: co(company),
+    })
+
+  it("lets a coordinator run their companies' events, whatever the tier", () => {
+    for (const action of ['create', 'update', 'delete', 'list']) {
+      expect(event(coordinator, action)).toBe(true)
+      expect(event(coordinator, action, 'c')).toBe(false)
+    }
+    expect(event(coordinator, 'listAttendants')).toBe(true)
+    expect(event(coordinator, 'markAttended')).toBe(true)
+  })
+
+  it('shows a company user their events, but leaves them to E&T-dagene', () => {
+    expect(event(companyUser, 'list')).toBe(true)
+    expect(event(companyUser, 'list', 'c')).toBe(false)
+    for (const action of [
+      'create',
+      'update',
+      'delete',
+      'listAttendants',
+      'markAttended',
+    ]) {
+      expect(event(companyUser, action)).toBe(false)
+    }
+  })
+
+  it("lets a coordinator manage every company's jobs, and a company user only its own", () => {
+    for (const company of ['a', 'c']) {
+      expect(
+        hasPermission(coordinator, 'job', 'update', {
+          companyUid: co(company),
+        }),
+      ).toBe(true)
+    }
+    expect(hasPermission(coordinator, 'job', 'update', undefined)).toBe(true)
+    expect(
+      hasPermission(companyUser, 'job', 'update', { companyUid: co('a') }),
+    ).toBe(false)
+  })
+
+  it('lets a coordinator edit the profiles of their companies only', () => {
+    expect(
+      hasPermission(coordinator, 'company', 'update', { uid: co('a') }),
     ).toBe(true)
     expect(
-      hasPermission(companyUser, 'event', 'listAttendants', {
-        companyUid: co('a'),
-      }),
+      hasPermission(coordinator, 'company', 'update', { uid: co('c') }),
     ).toBe(false)
     expect(
-      hasPermission(companyUser, 'event', 'markAttended', {
-        companyUid: co('a'),
-      }),
+      hasPermission(coordinator, 'company', 'entitle', { uid: co('a') }),
     ).toBe(false)
   })
 })
@@ -236,6 +298,34 @@ describe('registration eligibility', () => {
   })
 })
 
+describe('a coordinator signing up', () => {
+  const coordinator = subjectOf({
+    roles: ['coordinator'],
+    companies: { mine: ['ent:profile:manage'] },
+    applicant: { programme: 'mtel', year: 3 },
+  })
+  const signUp = (host: string) =>
+    hasPermission(
+      coordinator,
+      'registration',
+      'create',
+      {
+        targetUserUid: UserUid.parse('self'),
+        event: eventWith(undefined, host),
+      },
+      at(during),
+    )
+
+  it("signs up like a student for another company's event", () => {
+    expect(signUp('host')).toBe(true)
+  })
+
+  it("is kept off the events they take attendance at, E&T-dagene's included", () => {
+    expect(signUp('mine')).toBe(false)
+    expect(signUp('etdagene')).toBe(false)
+  })
+})
+
 describe('registration ownership', () => {
   const onBehalf = {
     targetUserUid: UserUid.parse('someone-else'),
@@ -296,5 +386,45 @@ describe('resume access', () => {
         scope: 'own',
       }),
     ).toBe(false)
+  })
+})
+
+describe('company profiles and hosted events', () => {
+  const companyUser = subjectOf({
+    roles: ['company'],
+    companies: { a: ['ent:event:manage', 'ent:profile:manage'] },
+  })
+
+  it("lists a company's events only for its own users", () => {
+    expect(
+      hasPermission(companyUser, 'event', 'list', { companyUid: co('a') }),
+    ).toBe(true)
+    expect(
+      hasPermission(companyUser, 'event', 'list', { companyUid: co('b') }),
+    ).toBe(false)
+  })
+
+  it('lists every company only for an admin', () => {
+    expect(hasPermission(admin, 'event', 'list', undefined)).toBe(true)
+    expect(hasPermission(companyUser, 'event', 'list', undefined)).toBe(false)
+  })
+
+  it('leaves the contract to admins', () => {
+    expect(
+      hasPermission(companyUser, 'company', 'update', { uid: co('a') }),
+    ).toBe(true)
+    expect(
+      hasPermission(companyUser, 'company', 'entitle', { uid: co('a') }),
+    ).toBe(false)
+    expect(hasPermission(admin, 'company', 'entitle', { uid: co('a') })).toBe(
+      true,
+    )
+  })
+
+  it('creates a company only as an admin', () => {
+    expect(hasPermission(admin, 'company', 'create', undefined)).toBe(true)
+    expect(hasPermission(companyUser, 'company', 'create', undefined)).toBe(
+      false,
+    )
   })
 })

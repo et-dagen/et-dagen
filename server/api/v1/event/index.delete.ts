@@ -1,12 +1,15 @@
 // DELETE /api/v1/event
 // Endpoint for deleting existing events
 
+import { authorize } from '@/domain/authorization/authorize'
+import { Instant } from '@/domain/time'
+
 defineRouteMeta({
   openAPI: {
     tags: ['Event'],
     summary: 'Delete existing event',
     description:
-      'Admin, or the owning company user. companyUID is used for the ownership check.',
+      'Admin, or a coordinator of the owning company. companyUID is used for the ownership check.',
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],
     // TODO(api-docs): fill in the request/response schemas below.
     // Shapes are sketched from current handler behaviour - verify each
@@ -29,13 +32,14 @@ defineRouteMeta({
     // responses: {
     //   204: { description: 'Removed' },
     //   400: { description: 'Error (event/missing-event-uid).' },
-    //   401: { description: 'Error (event/not-owner). or Error (firebase/user-not-authorized).' },
+    //   401: { description: 'auth/signed-out' },
+    //   403: { description: 'auth/forbidden' },
     // },
   },
 })
 
 export default defineEventHandler(async (event) => {
-  const { user } = event.context
+  const { subject } = event.context
 
   const { eventUID, companyUID } = await readBody(event)
 
@@ -49,28 +53,8 @@ export default defineEventHandler(async (event) => {
   )
   setLogImportance(event, 'warn')
 
-  // Check if user is authorized
-  if (hasAccess(user, ['company'])) {
-    if (user.companyUID !== companyUID) {
-      setErrorContext(event, {
-        code: 'event/not-owner',
-        message: 'Company user does not own this event',
-      })
-      throw createError({
-        statusCode: 401,
-        statusMessage: 'Error (event/not-owner).',
-      })
-    }
-  } else if (!hasAccess(user, ['admin'])) {
-    setErrorContext(event, {
-      code: 'firebase/user-not-authorized',
-      message: 'User not authorized to delete event',
-    })
-    throw createError({
-      statusCode: 401,
-      statusMessage: 'Error (firebase/user-not-authorized).',
-    })
-  }
+  const env = { now: Instant.now() }
+  authorize(subject, 'event', 'delete', companyOf(companyUID), env)
 
   // Check if input is valid
   if (!eventUID) {
@@ -84,9 +68,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  if (hasAccess(user, ['company'])) {
-    await assertCompanyOwnsEvent(event, eventUID, user.companyUID)
-  }
+  await authorizeStoredEvent(event, subject, 'delete', eventUID, env)
 
   // Reference to events
   const eventsRef = db.ref('events')

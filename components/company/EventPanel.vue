@@ -6,6 +6,7 @@
   import { Instant } from '@/domain/time'
   import { eventStatus, placeOf, type EventRow } from '@/lib/admin/events'
   import { formatWhen } from '@/lib/admin/time'
+  import { companyOf } from '@/lib/auth/companyOf'
 
   interface Person {
     uid: string
@@ -23,6 +24,11 @@
   }>()
 
   const localePath = useLocalePath()
+  const auth = useAuthStore()
+  // coordinators edit their companies' events; company users only see them
+  const editable = computed(() =>
+    auth.can('event', 'update', companyOf(props.event.companyUID)),
+  )
   const { t, localeProperties } = useI18n()
   const locale = computed(() => localeProperties.value.language ?? 'nb-NO')
   const { copy } = useClipboard()
@@ -92,8 +98,8 @@
               : $t(`admin.events.status.${status.kind}`)
           }}
         </Badge>
-        <Button as-child variant="outline" size="sm">
-          <NuxtLink :to="localePath(`/event/edit/${uid}`)">
+        <Button v-if="editable" as-child variant="outline" size="sm">
+          <NuxtLink :to="localePath(`/company/admin/events/${uid}`)">
             <Pencil aria-hidden="true" />
             {{ $t('company.admin.events.edit') }}
           </NuxtLink>

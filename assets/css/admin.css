@@ -1,13 +1,11 @@
 /*
  * Styles for the pages built on shadcn-vue (the admin panel first)
  *
- * Tailwind's preflight is left out, so the Vuetify pages keep their look, and every Tailwind class
- * carries the tw: prefix (tw:bg-primary), because Vuetify defines classes with the same names and
- * !important (bg-primary, border, rounded-lg). Pages on the new
- * components sit inside `.et-admin` (admin, may turn dark) or `.et-ui` (public, always light),
+ * Every Tailwind class carries the tw: prefix (tw:bg-primary), a habit from when Vuetify defined
+ * classes with the same names, and Tailwind's preflight is left out. Pages sit inside `.et-admin`
+ * (admin) or `.et-ui` (public),
  * which get the base styles preflight would have given; so do shadcn-vue components (`[data-slot]`), because menus and dialogs render at the end of <body>.
- * The palette sits on :root for the same reason; only <html class="et-admin-root">, set by the admin
- * layout, lets it turn dark.
+ * The palette sits on :root for the same reason.
  * Every colour comes from the palette below: change it here and every page follows.
  */
 @import 'tailwindcss/theme.css' prefix(tw);
@@ -16,72 +14,40 @@
 @import '@fontsource-variable/overpass';
 @import 'vue-sonner/style.css';
 
-/*
- * Palette. Each colour is light-dark(light, dark): the dark value is night signage, the same plates
- * lit on a dark ground. Change the values here and every page follows.
- */
-/* On every page, so toasts on the public pages get it too; dark only where the admin layout allows it */
+/* Palette, on every page so toasts on the public pages get it too */
 :root {
-  --brand: light-dark(#a03836, #b4403e);
-  --brand-strong: light-dark(#7f2a29, #8c302e);
+  --brand: #a03836;
+  --brand-strong: #7f2a29;
   --brand-foreground: #ffffff;
   --signal: #f2b544;
   --signal-foreground: #3d2a00;
-  --plate: light-dark(#2f3a45, #3a4652);
+  --plate: #2f3a45;
   --plate-foreground: #ffffff;
 
-  --background: light-dark(#f5f6f7, #121316);
-  --foreground: light-dark(#1c1d21, #eceef1);
-  --card: light-dark(#ffffff, #1b1d21);
+  --background: #f5f6f7;
+  --foreground: #1c1d21;
+  --card: #ffffff;
   --card-foreground: var(--foreground);
   --popover: var(--card);
   --popover-foreground: var(--foreground);
   --primary: var(--brand);
   --primary-foreground: var(--brand-foreground);
-  --secondary: light-dark(#e9ebee, #26292e);
+  --secondary: #e9ebee;
   --secondary-foreground: var(--foreground);
   --muted: var(--secondary);
-  --muted-foreground: light-dark(#5b6069, #a3a8b0);
+  --muted-foreground: #5b6069;
   --accent: var(--secondary);
   --accent-foreground: var(--foreground);
-  --destructive: light-dark(#c62f1e, #e5533f);
-  --border: light-dark(#dcdfe3, #2e3238);
-  --input: light-dark(#cfd3d8, #3a3f46);
+  --destructive: #c62f1e;
+  --border: #dcdfe3;
+  --input: #cfd3d8;
   --ring: var(--brand);
   --radius: 0.375rem;
   --font: 'Overpass Variable', ui-sans-serif, system-ui, sans-serif;
 }
 
-/*
- * The choice of light or dark. Only the admin pages follow the device; the public pages stay light. It is repeated on .et-admin because Vuetify's wrapper, which sits
- * between <html> and the admin pages, resets color-scheme.
- */
-.et-admin-root,
-.et-admin {
-  color-scheme: light dark;
-}
-
-.et-admin-root[data-admin-theme='light'],
-.et-admin-root[data-admin-theme='light'] .et-admin {
-  color-scheme: light;
-}
-
-.et-admin-root[data-admin-theme='dark'],
-.et-admin-root[data-admin-theme='dark'] .et-admin {
-  color-scheme: dark;
-}
-
-/* dark: in components follows the same choice as the palette, not only the device setting */
-@custom-variant dark {
-  &:where(.et-admin-root[data-admin-theme='dark'] *) {
-    @slot;
-  }
-  @media (prefers-color-scheme: dark) {
-    &:where(.et-admin-root:not([data-admin-theme='light']) *) {
-      @slot;
-    }
-  }
-}
+/* The site is light only. Nothing sets .dark, so the dark: classes shadcn-vue ships stay inert */
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
   --font-sans: var(--font);
@@ -118,7 +84,7 @@
 
 /*
  * What preflight would give, inside the new pages only. The selectors carry no specificity, as in
- * preflight, so Vuetify components still on these pages keep their own borders and margins.
+ * preflight, so a utility class always wins.
  */
 :where(.et-admin, .et-ui, [data-slot], [data-sonner-toaster]) {
   /* @theme inline emits no --font-sans, so the base rule reads the token itself */
@@ -132,10 +98,68 @@
   background: var(--background);
 }
 
-:where(.et-admin, .et-ui, [data-slot]),
-:where(.et-admin, .et-ui, [data-slot]) :where(*, ::before, ::after) {
-  box-sizing: border-box;
-  border: 0 solid var(--border);
+/*
+ * What Vuetify's reset gave every page, kept now that it is gone: no default margins or padding,
+ * border-box sizing, a 1.5 line height and bare form controls. The pages were built on it. The
+ * lowest layer, so every other rule wins.
+ */
+@layer et-reset, et-base;
+
+@layer et-reset {
+  html {
+    font-family: var(--font);
+    line-height: 1.5;
+    overflow-y: scroll;
+    -webkit-text-size-adjust: 100%;
+    tab-size: 4;
+    -webkit-font-smoothing: antialiased;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  *,
+  ::before,
+  ::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    background-repeat: no-repeat;
+  }
+
+  button,
+  input,
+  optgroup,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+    background-color: transparent;
+    border-style: none;
+  }
+
+  button,
+  [type='button'],
+  [type='reset'],
+  [type='submit'],
+  [role='button'] {
+    cursor: pointer;
+  }
+
+  select {
+    appearance: none;
+  }
+
+  textarea {
+    resize: vertical;
+  }
+}
+
+/* in a layer, so it loses to every utility; at equal specificity it hid divide-y's lines */
+@layer et-base {
+  :where(.et-admin, .et-ui, [data-slot]),
+  :where(.et-admin, .et-ui, [data-slot]) :where(*, ::before, ::after) {
+    box-sizing: border-box;
+    border: 0 solid var(--border);
+  }
 }
 
 :where(.et-admin *, .et-ui *, [data-slot], [data-slot] *):where(
@@ -180,7 +204,8 @@
   text-decoration: inherit;
 }
 
-:is(.et-admin, .et-ui, [data-slot]) :focus-visible {
+/* inputs draw their own focus ring */
+:is(.et-admin, .et-ui, [data-slot]) :focus-visible:not([data-slot='input']) {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
 }
@@ -202,11 +227,6 @@
   &:hover {
     background: var(--accent);
   }
-}
-
-/* the ground runs down to the footer's slant, which shows the app background through its clip */
-.v-application:has(.et-ui) {
-  background: var(--background);
 }
 
 /* Rich text written in the admin editor, as readers see it */

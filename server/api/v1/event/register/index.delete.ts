@@ -9,7 +9,6 @@ import { EventUid } from '@/domain/event/event'
 import { fail } from '@/domain/errors'
 import { Instant } from '@/domain/time'
 import { UserUid } from '@/domain/user'
-import { subjectOf } from '@/server/adapters/rtdb/userRecord'
 import { events } from '@/server/composition'
 
 defineRouteMeta({
@@ -48,7 +47,7 @@ defineRouteMeta({
 })
 
 export default defineEventHandler(async (event) => {
-  const { user } = event.context
+  const { subject } = event.context
 
   const { eventUID, userUID } = await readBody(event)
 
@@ -63,7 +62,7 @@ export default defineEventHandler(async (event) => {
   setLogImportance(event, 'warn')
 
   // user is not authenticated
-  if (!user) {
+  if (!subject) {
     setErrorContext(event, {
       code: 'firebase/user-not-found',
       message: 'User not authenticated',
@@ -89,7 +88,7 @@ export default defineEventHandler(async (event) => {
   addEventContext(
     event,
     'is_admin_action',
-    Boolean(userUID && userUID !== user.uid),
+    Boolean(userUID && userUID !== subject.uid),
   )
 
   const now = Instant.now()
@@ -97,9 +96,9 @@ export default defineEventHandler(async (event) => {
     withdrawFromEvent(
       { events },
       {
-        subject: subjectOf(user.uid, user, now),
+        subject,
         event: EventUid.parse(eventUID),
-        user: UserUid.parse(userUID || user.uid),
+        user: UserUid.parse(userUID || subject.uid),
         now,
       },
     ),

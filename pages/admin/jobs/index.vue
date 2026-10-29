@@ -48,7 +48,9 @@
     companyUID?: string
     jobType?: string
     location?: string
-    deadline?: string
+    deadline?: string | null
+    /** Jobs stored before it existed have a date */
+    deadlineType?: 'date' | 'asap' | 'rolling'
   }
   type Show = 'open' | 'expired' | 'all'
   const PAGE_SIZE = 25
@@ -79,8 +81,11 @@
   const typeKey = (row: Row) => (row.jobType ?? '').replace('-', '_')
   const typeLabel = (row: Row) =>
     row.jobType ? t(`admin.jobs.attributes.jobtype.${typeKey(row)}`) : ''
-  const daysLeft = (row: Row) => daysUntil(deadlineOf(row.deadline), now)
-  // a job without a deadline stays open
+  const undated = (row: Row) =>
+    row.deadlineType === 'asap' || row.deadlineType === 'rolling'
+  const daysLeft = (row: Row) =>
+    undated(row) ? null : daysUntil(deadlineOf(row.deadline ?? undefined), now)
+  // a job without a deadline, or open until filled, stays open
   const isOpen = (row: Row) => (daysLeft(row) ?? 0) >= 0
 
   const query = ref('')
@@ -108,7 +113,13 @@
     company: companyOf,
     type: typeLabel,
     location: (row: Row) => row.location,
-    deadline: (row: Row) => instantOf(deadlineOf(row.deadline)),
+    // "Snarest" sorts first, "Løpende" with the undated last
+    deadline: (row: Row) =>
+      row.deadlineType === 'asap'
+        ? '0000'
+        : undated(row)
+          ? null
+          : instantOf(deadlineOf(row.deadline ?? undefined)),
   }
 
   const visible = computed(() => {
@@ -128,6 +139,8 @@
   )
 
   const deadlineNote = (row: Row) => {
+    if (row.deadlineType === 'asap') return t('admin.jobs.deadline.asap')
+    if (row.deadlineType === 'rolling') return t('admin.jobs.deadline.rolling')
     const days = daysLeft(row)
     if (days === null) return ''
     if (days < 0) return t('admin.jobs.deadline.passed')
@@ -249,14 +262,16 @@
               {{ row.location }}
             </TableCell>
             <TableCell class="tw:whitespace-nowrap">
-              {{ formatWhen(deadlineOf(row.deadline), locale, DATE) }}
+              {{
+                formatWhen(deadlineOf(row.deadline ?? undefined), locale, DATE)
+              }}
               <span
                 class="tw:block tw:text-xs"
                 :class="
                   (daysLeft(row) ?? 1) < 0
                     ? 'tw:text-muted-foreground'
                     : (daysLeft(row) ?? 99) <= 7
-                      ? 'tw:font-semibold tw:text-signal-foreground tw:dark:text-signal'
+                      ? 'tw:font-semibold tw:text-signal-foreground'
                       : 'tw:text-muted-foreground'
                 "
               >

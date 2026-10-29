@@ -4,6 +4,7 @@ import type {
 } from '@/application/events/eventRepository'
 import type { EventUid } from '@/domain/event/event'
 import {
+  placeOf,
   promoteWaiting,
   register,
   removeUsers,
@@ -26,6 +27,11 @@ export function memoryEventRepository(
 
   return {
     find: (uid) => Promise.resolve(events.get(uid) ?? null),
+
+    withUser: (user) =>
+      Promise.resolve(
+        [...events.values()].filter((stored) => placeOf(stored.roster, user)),
+      ),
 
     registerOrQueue: (uid, user, at) => {
       const stored = events.get(uid)
