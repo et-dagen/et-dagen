@@ -1104,6 +1104,10 @@
       "invalid-order": "Ugyldig plassering.",
       "missing-file": "Velg et bilde å laste opp.",
       "unreadable-image": "Bildet kunne ikke leses. Prøv et annet bilde."
+    },
+    "mail": {
+      "send-failed": "E-posten kunne ikke sendes akkurat nå. Prøv igjen om litt.",
+      "not-configured": "Nettsiden kan ikke sende e-post ennå. Ta kontakt med oss."
     }
   },
   "form": {

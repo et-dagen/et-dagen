@@ -16,6 +16,7 @@ import { rtdbEventRepository } from './adapters/rtdb/eventRepository'
 import { rtdbFileRepository } from './adapters/rtdb/fileRepository'
 import { rtdbStandMapIndex } from './adapters/rtdb/standMapIndex'
 import { rtdbUserRepository } from './adapters/rtdb/userRepository'
+import { mailerFor } from './mail/mailerFor'
 import { auth, db, storage } from './utils/firebase'
 
 export const events = rtdbEventRepository(db)
@@ -29,3 +30,7 @@ export const fileStorage = firebaseFileStorage(storage.bucket())
 export const standMaps = rtdbStandMapIndex(db)
 export const board = rtdbBoardRepository(db)
 export const images = sharpImageProcessor()
+export const mailer = mailerFor(
+  useRuntimeConfig(),
+  process.env.NODE_ENV === 'production',
+)

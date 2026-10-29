@@ -53,6 +53,15 @@ export const ERRORS = {
     message: 'Send the stand map as the multipart part named file',
   },
   'standmap/not-found': { status: 404, message: 'This day has no stand map' },
+  'mail/send-failed': {
+    status: 503,
+    message: 'The mail provider refused the message or could not be reached',
+    retriable: true,
+  },
+  'mail/not-configured': {
+    status: 503,
+    message: 'Sending mail is not set up on this server',
+  },
   'board/not-found': { status: 404, message: 'No board member has this id' },
   'user/not-found': { status: 404, message: 'No user has this uid' },
   'user/invalid-access': {

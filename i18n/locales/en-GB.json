@@ -1105,6 +1105,10 @@
       "invalid-order": "Invalid place.",
       "missing-file": "Choose a photo to upload.",
       "unreadable-image": "The photo could not be read. Try another one."
+    },
+    "mail": {
+      "send-failed": "The email could not be sent right now. Try again shortly.",
+      "not-configured": "The site cannot send email yet. Please contact us."
     }
   },
   "form": {

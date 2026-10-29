@@ -45,6 +45,12 @@ export default defineNuxtConfig({
       process.env.NUXT_FIREBASE_ADMIN_UNIVERSE_DOMAIN ?? '',
     firebaseAdminStorageBucket:
       process.env.NUXT_FIREBASE_ADMIN_STORAGE_BUCKET ?? '',
+    // outgoing mail through one mailbox; unset in development, where mail is printed instead
+    smtpHost: process.env.NUXT_SMTP_HOST ?? '',
+    smtpPort: process.env.NUXT_SMTP_PORT ?? '465',
+    smtpUser: process.env.NUXT_SMTP_USER ?? '',
+    smtpPassword: process.env.NUXT_SMTP_PASSWORD ?? '',
+    mailFrom: process.env.NUXT_MAIL_FROM ?? '',
     public: {
       firebaseApiKey: process.env.NUXT_PUBLIC_FIREBASE_API_KEY ?? '',
       firebaseAuthDomain: process.env.NUXT_PUBLIC_FIREBASE_AUTH_DOMAIN ?? '',
