@@ -290,6 +290,14 @@
         "empty": "No CVs match the search.",
         "no_access_title": "No access to CVs",
         "no_access": "Your company does not have access to students' CVs. Contact E&T-dagene if you think this is wrong."
+      },
+      "profile": {
+        "name": "Company profile",
+        "lead": "How the company appears to students on the site.",
+        "company": "Company",
+        "save": "Save the profile",
+        "saved": "The profile is saved",
+        "none": "You have no company to edit."
       }
     }
   },

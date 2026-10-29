@@ -31,6 +31,15 @@ export const CompanyInput = z.object({
 
 export type CompanyInput = z.infer<typeof CompanyInput>
 
+/** What a company's own users and coordinators may change: the profile students see */
+export const CompanyProfile = CompanyInput.pick({
+  name: true,
+  webpage: true,
+  description: true,
+})
+
+export type CompanyProfile = z.infer<typeof CompanyProfile>
+
 /** The two bodies the form sends: the profile for `/company`, the contract for `/company/affiliation` */
 export function toV1Company({ tier, resumeAccess, ...profile }: CompanyInput) {
   return {
