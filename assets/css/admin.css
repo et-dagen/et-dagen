@@ -109,7 +109,8 @@
   html {
     font-family: var(--font);
     line-height: 1.5;
-    overflow-y: scroll;
+    /* not overflow-y: scroll, which keeps the body's scroll lock off the page and unsticks the header */
+    scrollbar-gutter: stable;
     -webkit-text-size-adjust: 100%;
     tab-size: 4;
     -webkit-font-smoothing: antialiased;
