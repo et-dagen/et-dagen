@@ -1391,10 +1391,10 @@
       },
       "account": {
         "title": "Brukerkonto",
-        "what": "Navn, e-post, studieprogram og når du regner med å bli ferdig. Passordet lagres av Google, og vi ser det aldri.",
-        "why": "For at du skal kunne logge inn og melde deg på arrangementer.",
+        "what": "Navn, e-post, studieprogram og hvilket årstrinn du går i. Passordet lagres av Google som en hash, så ingen kan lese det, heller ikke vi.",
+        "why": "For at du skal kunne logge inn og melde deg på arrangementer, og for at styret kan finne og filtrere brukere, for eksempel etter studieprogram og årstrinn.",
         "basis": "Avtale, personvernforordningen art. 6 nr. 1 b.",
-        "who": "Du og styret i E&T-dagene.",
+        "who": "Du og styret i E&T-dagene, som ser og bruker opplysningene. Bedrifter ser noen av dem når du melder deg på arrangementene deres eller laster opp CV; se under.",
         "kept": "Til du sletter kontoen, eller tre år etter at du sist var innlogget. Da sletter vi kontoen og alt som hører til den automatisk."
       },
       "diet": {
@@ -1418,7 +1418,7 @@
         "what": "CV-en du laster opp.",
         "why": "For at bedrifter som samarbeider med E&T-dagene, kan finne deg til jobb, sommerjobb eller oppgaver. CV-tilgang er en del av avtalen bedriftene inngår med oss.",
         "basis": "Samtykke, art. 6 nr. 1 a. Du trekker det ved å slette CV-en.",
-        "who": "Du, styret og bedrifter med CV-tilgang, normalt samarbeidspartnerne for årets messe. De kan se og laste ned CV-en. En bedrift som laster den ned, er selv ansvarlig for sin kopi, og den kan vi ikke slette.",
+        "who": "Du, styret og bedrifter med CV-tilgang, normalt samarbeidspartnerne for årets messe. De ser CV-en sammen med navn, e-post, studieprogram og årstrinn, kan filtrere på dem og laste ned CV-en. En bedrift som laster den ned, er selv ansvarlig for sin kopi, og den kan vi ikke slette.",
         "kept": "Til du sletter CV-en eller kontoen. Bedriftenes tilgang fjerner vi noen måneder etter messen."
       },
       "company": {

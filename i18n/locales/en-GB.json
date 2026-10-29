@@ -1392,10 +1392,10 @@
       },
       "account": {
         "title": "User account",
-        "what": "Your name, email, study programme and when you expect to graduate. Google stores your password, and we never see it.",
-        "why": "So you can sign in and register for events.",
+        "what": "Your name, email, study programme and the year you are in. Google stores your password as a hash, so no one can read it, not even us.",
+        "why": "So you can sign in and register for events, and so the board can find and filter users, for example by study programme and year.",
         "basis": "Contract, GDPR Art. 6(1)(b).",
-        "who": "You and the E&T-dagene board.",
+        "who": "You and the E&T-dagene board, who see and use the information. Companies see some of it when you register for their events or upload a résumé; see below.",
         "kept": "Until you delete your account, or three years after you last signed in. We then delete the account and everything linked to it automatically."
       },
       "diet": {
@@ -1419,7 +1419,7 @@
         "what": "The résumé you upload.",
         "why": "So companies working with E&T-dagene can find you for jobs, summer jobs or theses. Résumé access is part of the agreement companies make with us.",
         "basis": "Consent, Art. 6(1)(a). You withdraw it by deleting the résumé.",
-        "who": "You, the board and companies with résumé access, usually this year's fair partners. They can view and download it. A company that downloads it is responsible for its own copy, which we cannot delete.",
+        "who": "You, the board and companies with résumé access, usually this year's fair partners. They see the résumé with your name, email, study programme and year, can filter on these, and can download the résumé. A company that downloads it is responsible for its own copy, which we cannot delete.",
         "kept": "Until you delete the résumé or your account. We remove companies' access a few months after the fair."
       },
       "company": {
