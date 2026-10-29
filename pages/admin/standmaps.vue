@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import { ImageUp, MapPinned, Trash2 } from '@lucide/vue'
   import DeleteDialog from '@/components/admin/DeleteDialog.vue'
-  import { Badge } from '@/components/ui/badge'
   import { Button } from '@/components/ui/button'
   import { Input } from '@/components/ui/input'
   import { Label } from '@/components/ui/label'
@@ -147,12 +146,7 @@
             class="tw:mt-1 tw:flex tw:flex-wrap tw:items-center tw:gap-2 tw:text-sm"
           >
             <template v-if="row.map">
-              <span class="tw:truncate">{{
-                row.map.name ?? $t('admin.standmaps.unnamed')
-              }}</span>
-              <Badge v-if="row.map.legacy" variant="secondary">
-                {{ $t('admin.standmaps.legacy') }}
-              </Badge>
+              <span class="tw:truncate">{{ row.map.name }}</span>
             </template>
             <span v-else class="tw:text-muted-foreground">{{
               $t('admin.standmaps.none')
@@ -172,12 +166,12 @@
             }}
           </Button>
           <Button
-            v-if="row.map && !row.map.legacy"
+            v-if="row.map"
             variant="ghost"
             class="tw:text-destructive tw:hover:bg-destructive/10 tw:hover:text-destructive"
             :disabled="busy !== null"
             :aria-label="$t('admin.standmaps.remove', { day: label(row.day) })"
-            @click="removing = { day: row.day, name: row.map.name ?? '' }"
+            @click="removing = { day: row.day, name: row.map.name }"
           >
             <Trash2 aria-hidden="true" />
           </Button>

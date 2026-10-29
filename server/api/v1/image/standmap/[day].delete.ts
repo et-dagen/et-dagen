@@ -11,8 +11,7 @@ defineRouteMeta({
     tags: ['Image'],
     summary: "Remove a fair day's stand map",
     description:
-      'Admin only. Removes the map uploaded for the day (`YYYY-MM-DD`) and its file. A map ' +
-      'stored the old way, under `standmaps/` in the bucket, is not touched.',
+      'Admin only. Removes the map uploaded for the day (`YYYY-MM-DD`) and its file.',
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],
   },
 })
