@@ -13,7 +13,8 @@ defineRouteMeta({
     tags: ['Event'],
     summary: 'Overwrite existing event',
     description:
-      'Admin, or the owning company user. Replaces the whole event record, so every field must ' +
+      'Admin, or a coordinator of the owning company. Replaces the whole event record, so every ' +
+      'field must ' +
       'be supplied.',
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],
     // TODO(api-docs): fill in the request/response schemas below.

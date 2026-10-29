@@ -9,7 +9,7 @@ defineRouteMeta({
     tags: ['Event'],
     summary: 'Delete existing event',
     description:
-      'Admin, or the owning company user. companyUID is used for the ownership check.',
+      'Admin, or a coordinator of the owning company. companyUID is used for the ownership check.',
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],
     // TODO(api-docs): fill in the request/response schemas below.
     // Shapes are sketched from current handler behaviour - verify each

@@ -21,7 +21,12 @@ export const askerFor = (
     canForSome: (resource, action) =>
       can(resource, action, undefined) ||
       [...(subject?.companies.keys() ?? [])].some((companyUid) =>
-        can(resource, action, { companyUid }),
+        // a company names itself by uid; its events and jobs name it by companyUid
+        resource === 'company'
+          ? can('company', action as 'update', { uid: companyUid })
+          : can(resource as 'event' | 'job', action as 'update', {
+              companyUid,
+            }),
       ),
   }
 }

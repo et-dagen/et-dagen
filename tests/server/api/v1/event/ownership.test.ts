@@ -55,6 +55,14 @@ beforeEach(async () => {
   )
 })
 
+// a coordinator runs the events of the companies they volunteer for, whatever the contract
+const coordinator: Subject = {
+  uid: UserUid.parse('volunteer'),
+  roles: ['coordinator'],
+  companies: new Map([[CompanyUid.parse('our-company'), new Set()]]),
+  applicant: null,
+}
+// a company user sees the company's events, but leaves them to E&T-dagene
 const company: Subject = {
   uid: UserUid.parse('rep'),
   roles: ['company'],
@@ -97,9 +105,9 @@ const eventFields = {
 }
 
 describe('DELETE /api/v1/event', () => {
-  it("refuses a company user deleting another company's event", async () => {
+  it("refuses a coordinator deleting another company's event", async () => {
     await expect(
-      call('index.delete', company, {
+      call('index.delete', coordinator, {
         eventUID: 'theirs',
         companyUID: 'our-company',
       }),
@@ -107,9 +115,9 @@ describe('DELETE /api/v1/event', () => {
     expect(remove).not.toHaveBeenCalled()
   })
 
-  it('refuses a company user deleting an event that does not exist', async () => {
+  it('refuses a coordinator deleting an event that does not exist', async () => {
     await expect(
-      call('index.delete', company, {
+      call('index.delete', coordinator, {
         eventUID: 'missing',
         companyUID: 'our-company',
       }),
@@ -117,12 +125,22 @@ describe('DELETE /api/v1/event', () => {
     expect(remove).not.toHaveBeenCalled()
   })
 
-  it("lets a company user delete their own company's event", async () => {
-    await call('index.delete', company, {
+  it("lets a coordinator delete their own company's event", async () => {
+    await call('index.delete', coordinator, {
       eventUID: 'ours',
       companyUID: 'our-company',
     })
     expect(remove).toHaveBeenCalledOnce()
+  })
+
+  it("refuses a company user deleting their own company's event", async () => {
+    await expect(
+      call('index.delete', company, {
+        eventUID: 'ours',
+        companyUID: 'our-company',
+      }),
+    ).rejects.toMatchObject({ code: 'auth/forbidden' })
+    expect(remove).not.toHaveBeenCalled()
   })
 
   it('lets an admin delete any event', async () => {
@@ -132,9 +150,9 @@ describe('DELETE /api/v1/event', () => {
 })
 
 describe('PUT /api/v1/event', () => {
-  it("refuses a company user overwriting another company's event", async () => {
+  it("refuses a coordinator overwriting another company's event", async () => {
     await expect(
-      call('index.put', company, {
+      call('index.put', coordinator, {
         ...eventFields,
         eventUID: 'theirs',
         companyUID: 'our-company',
@@ -143,9 +161,9 @@ describe('PUT /api/v1/event', () => {
     expect(update).not.toHaveBeenCalled()
   })
 
-  it('refuses a company user creating an event through an update', async () => {
+  it('refuses a coordinator creating an event through an update', async () => {
     await expect(
-      call('index.put', company, {
+      call('index.put', coordinator, {
         ...eventFields,
         eventUID: 'missing',
         companyUID: 'our-company',
@@ -154,13 +172,24 @@ describe('PUT /api/v1/event', () => {
     expect(update).not.toHaveBeenCalled()
   })
 
-  it("lets a company user update their own company's event", async () => {
-    await call('index.put', company, {
+  it("lets a coordinator update their own company's event", async () => {
+    await call('index.put', coordinator, {
       ...eventFields,
       eventUID: 'ours',
       companyUID: 'our-company',
     })
     expect(update).toHaveBeenCalledOnce()
+  })
+
+  it("refuses a company user updating their own company's event", async () => {
+    await expect(
+      call('index.put', company, {
+        ...eventFields,
+        eventUID: 'ours',
+        companyUID: 'our-company',
+      }),
+    ).rejects.toMatchObject({ code: 'auth/forbidden' })
+    expect(update).not.toHaveBeenCalled()
   })
 
   it('lets an admin update any event', async () => {

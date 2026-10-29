@@ -14,7 +14,8 @@ defineRouteMeta({
     tags: ['Company'],
     summary: 'Modify company',
     description:
-      'Admin, or a company user editing their own company. Only `name`, `description`, `logo` ' +
+      'Admin, or a company user or coordinator editing their own company. Only `name`, ' +
+      '`description`, `logo` ' +
       'and `webpage` are stored; the tier and résumé access are set with ' +
       '`PUT /api/v1/company/affiliation`.',
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],

@@ -13,7 +13,8 @@ defineRouteMeta({
     tags: ['Job'],
     summary: 'Edit job listing',
     description:
-      'Admin, or the owning company user. Individual fields cannot be blanked out.',
+      'Admin, any coordinator, or the owning company user. Individual fields cannot be blanked ' +
+      'out.',
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],
     // TODO(api-docs): fill in the request/response schemas below.
     // Shapes are sketched from current handler behaviour - verify each

@@ -13,13 +13,17 @@ describe('panelsFor', () => {
     expect(panelsFor(true, () => false)).toEqual(ADMIN_PANELS)
   })
 
-  it('shows the jobs panel only to company users who may manage jobs', () => {
-    expect(names(panelsFor(false, (area) => area === 'jobs'))).toContain(
+  it('shows the jobs and résumé panels only to those allowed them', () => {
+    expect(names(panelsFor(false, (area) => area === 'jobs'))).toEqual([
+      'company-events',
       'company-jobs',
-    )
-    expect(names(panelsFor(false, () => false))).toEqual(
-      names(COMPANY_PANELS.filter((panel) => panel.name !== 'company-jobs')),
-    )
+    ])
+    expect(names(panelsFor(false, (area) => area === 'resumes'))).toEqual([
+      'company-events',
+      'resumes',
+    ])
+    expect(names(panelsFor(false, () => false))).toEqual(['company-events'])
+    expect(names(panelsFor(false))).toEqual(names(COMPANY_PANELS))
   })
 })
 

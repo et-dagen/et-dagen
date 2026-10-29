@@ -75,10 +75,16 @@ export default defineNuxtConfig({
 
   modules: ['@nuxtjs/i18n', '@pinia/nuxt', '@vueuse/nuxt', '@nuxt/image'],
 
-  // The page for companies was served at /faq before it got its own name
   routeRules: {
+    // The page for companies was served at /faq before it got its own name
     '/faq': { redirect: { to: '/for-companies', statusCode: 301 } },
     '/en/faq': { redirect: { to: '/en/for-companies', statusCode: 301 } },
+    // logos and graphics change rarely; a day in the browser, revalidated in the background after
+    '/images/**': {
+      headers: {
+        'cache-control': 'public, max-age=86400, stale-while-revalidate=604800',
+      },
+    },
   },
 
   nitro: {
