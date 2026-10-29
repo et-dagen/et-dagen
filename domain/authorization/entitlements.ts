@@ -96,3 +96,27 @@ export const entitlementsFor = (
 
   return granted
 }
+
+/**
+ * What an admin may take from one person at a company, while the rest of the company keeps it
+ *
+ * @remarks
+ * `ent:event:manage` is left out: no rule reads it, since coordinators run the events.
+ */
+export const WITHHOLDABLE = [
+  'ent:resume:view',
+  'ent:job:manage',
+  'ent:profile:manage',
+] as const satisfies readonly Entitlement[]
+
+/**
+ * A company's entitlements as one of its people holds them
+ *
+ * @remarks
+ * Only ever removes: a person can hold less than their company, never more.
+ */
+export const withoutWithheld = (
+  granted: ReadonlySet<Entitlement>,
+  withheld: readonly Entitlement[] = [],
+): ReadonlySet<Entitlement> =>
+  new Set([...granted].filter((entitlement) => !withheld.includes(entitlement)))

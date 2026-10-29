@@ -20,6 +20,7 @@
   } from '@/components/ui/select'
   import { useResourceForm } from '@/composables/admin/useResourceForm'
   import { USER_TYPES, toV1User, UserInput } from '@/contracts/user'
+  import { WITHHOLDABLE } from '@/domain/authorization/entitlements'
   import { dietaryFlags } from '~/config/app.config'
 
   const props = defineProps<{
@@ -264,6 +265,51 @@
           </FormItem>
         </FormField>
       </template>
+
+      <FormField
+        v-if="role === 'company'"
+        v-slot="{ value, handleChange }"
+        name="withheld"
+      >
+        <FormItem class="tw:lg:col-span-2">
+          <FormLabel>{{ $t('admin.users.form.access') }}</FormLabel>
+          <p class="tw:text-sm tw:text-muted-foreground">
+            {{ $t('admin.users.form.access_hint') }}
+          </p>
+          <div
+            class="tw:flex tw:flex-col tw:gap-2 tw:rounded-md tw:border tw:p-3"
+          >
+            <label
+              v-for="entitlement in WITHHOLDABLE"
+              :key="entitlement"
+              class="tw:flex tw:items-center tw:gap-2 tw:text-sm"
+            >
+              <!-- ticked while the person keeps it; unticking withholds it -->
+              <Checkbox
+                :model-value="
+                  !((value as string[]) ?? []).includes(entitlement)
+                "
+                @update:model-value="
+                  (keeps) =>
+                    handleChange(
+                      keeps
+                        ? ((value as string[]) ?? []).filter(
+                            (taken) => taken !== entitlement,
+                          )
+                        : [...((value as string[]) ?? []), entitlement],
+                    )
+                "
+              />
+              {{
+                $t(
+                  `admin.users.form.entitlement.${entitlement.slice(4).replace(':', '_')}`,
+                )
+              }}
+            </label>
+          </div>
+          <FieldError />
+        </FormItem>
+      </FormField>
 
       <FormField
         v-if="role === 'coordinator'"

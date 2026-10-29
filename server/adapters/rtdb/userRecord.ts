@@ -5,6 +5,7 @@ import type { ISO8601String } from '@/domain/time'
 import {
   companiesFrom,
   rolesFrom,
+  withheldFrom,
   type MembershipRecord,
   type RolesRecord,
 } from '@/server/adapters/rtdb/accessRecords'
@@ -61,5 +62,6 @@ export const storedUserOf = (
   roles: rolesFrom(access.roles ?? {}),
   applicant: applicantOf(record, now),
   companies: companiesFrom(access.memberships),
+  withheld: withheldFrom(access.memberships),
   record,
 })

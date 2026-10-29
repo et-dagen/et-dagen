@@ -784,7 +784,14 @@
         "diet_other": "Annet (skill med komma)",
         "save": "Lagre endringer",
         "updated": "Endringene er lagret",
-        "missing": "Fant ikke brukeren."
+        "missing": "Fant ikke brukeren.",
+        "access": "Tilganger for denne personen",
+        "access_hint": "Bedriftens avtale avgjør hva bedriften har. Fjern et kryss for å ta det fra akkurat denne personen; resten av bedriften beholder det.",
+        "entitlement": {
+          "resume_view": "Se CV-er",
+          "job_manage": "Legge ut og endre stillinger",
+          "profile_manage": "Endre bedriftsprofilen"
+        }
       }
     },
     "shell": {

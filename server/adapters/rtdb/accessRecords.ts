@@ -18,6 +18,8 @@ export interface MembershipRecord {
   createdAt?: string
   createdBy?: string
   endedAt?: string | null
+  /** `{ 'ent:resume:view': true }`: taken from this person, kept by the company */
+  withheld?: Record<string, unknown> | null
 }
 
 /** `affiliations/<companyUid>`: a company's current tier and its exceptions to it */
@@ -39,6 +41,25 @@ export const companiesFrom = (
   Object.entries(memberships ?? {})
     .filter(([uid, membership]) => uid !== '' && !membership.endedAt)
     .map(([uid]) => CompanyUid.parse(uid))
+
+/** The entitlements a membership record withholds; unknown names are ignored */
+export const withheldOf = (membership: MembershipRecord): Entitlement[] =>
+  Object.entries(membership.withheld ?? {})
+    .filter(([name, taken]) => taken === true && isEntitlement(name))
+    .map(([name]) => name as Entitlement)
+
+/** What each active membership withholds, for the companies that withhold anything */
+export const withheldFrom = (
+  memberships: Record<string, MembershipRecord> | null,
+): Map<CompanyUid, Entitlement[]> =>
+  new Map(
+    Object.entries(memberships ?? {}).flatMap(([uid, membership]) => {
+      const withheld = withheldOf(membership)
+      return uid !== '' && !membership.endedAt && withheld.length
+        ? [[CompanyUid.parse(uid), withheld] as const]
+        : []
+    }),
+  )
 
 /**
  * Read a stored affiliation
