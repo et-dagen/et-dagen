@@ -122,11 +122,22 @@ async function saveProfile(
 const startSession = async (idToken: string) =>
   await $fetch('/api/v1/session', { method: 'POST', body: { idToken } })
 
+// signs in and starts the server session, staying on the page
+export const signInHere = async (email: string, password: string) => {
+  const { user } = await signInWithEmailAndPassword(getAuth(), email, password)
+  await startSession(await user.getIdToken())
+}
+
+// signs out and ends the server session, staying on the page
+export const signOutHere = async () => {
+  await $fetch('/api/v1/session', { method: 'DELETE' }).catch(() => {})
+  await getAuth().signOut()
+  useAuthStore().user = null
+}
+
 // sign in firebase auth user
 export const signinUser = async (email: string, password: string) => {
-  const auth = getAuth()
-  const { user } = await signInWithEmailAndPassword(auth, email, password)
-  await startSession(await user.getIdToken())
+  await signInHere(email, password)
 
   // navigate to home page
   const localePath = useLocalePath()

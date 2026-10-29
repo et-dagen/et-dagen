@@ -560,6 +560,30 @@
         "created": "Bedriften er opprettet",
         "updated": "Endringene er lagret",
         "missing": "Fant ingen bedrift med denne adressen."
+      },
+      "invitations": {
+        "title": "Invitasjoner",
+        "lead": "Inviter folk fra bedriften på e-post. Hver får en personlig lenke for å lage en konto, eller bli med med kontoen de har. Lenken virker én gang, i 14 dager.",
+        "email": "E-postadresse",
+        "send": "Send invitasjon",
+        "sending": "Sender …",
+        "invalid_email": "Skriv inn en gyldig e-postadresse.",
+        "sent": "Invitasjonen er sendt til {email}.",
+        "link_once": "Du kan også kopiere lenken og sende den selv. Den vises bare nå.",
+        "link": "Invitasjonslenke",
+        "copy": "Kopier lenken",
+        "copied": "Kopiert",
+        "sent_on": "Sendt {day}",
+        "expires_on": "virker til {day}",
+        "status": {
+          "pending": "Venter",
+          "joined": "Ble med",
+          "expired": "Utløpt",
+          "revoked": "Trukket tilbake"
+        },
+        "revoke": "Trekk tilbake",
+        "revoke_label": "Trekk tilbake invitasjonen til {email}",
+        "empty": "Ingen invitasjoner ennå."
       }
     },
     "events": {
@@ -1108,6 +1132,15 @@
     "mail": {
       "send-failed": "E-posten kunne ikke sendes akkurat nå. Prøv igjen om litt.",
       "not-configured": "Nettsiden kan ikke sende e-post ennå. Ta kontakt med oss."
+    },
+    "invitation": {
+      "not-found": "Denne invitasjonslenken virker ikke.",
+      "not-pending": "Denne invitasjonen er brukt, trukket tilbake eller har gått ut.",
+      "wrong-account": "Logg inn med adressen invitasjonen ble sendt til.",
+      "missing-account": "Fyll inn navnet ditt og et passord.",
+      "weak-password": "Passordet må ha minst 8 tegn, med minst 3 bokstaver og 3 tall.",
+      "account-exists": "Denne adressen har allerede en konto. Logg inn for å bli med.",
+      "invalid-request": "Velg en bedrift og skriv inn en gyldig e-postadresse."
     }
   },
   "form": {
@@ -1364,5 +1397,43 @@
       "contact": "Ta kontakt"
     },
     "the_password": "passordet"
+  },
+  "invitation": {
+    "join": {
+      "title": "Bli med i {company}",
+      "lead": "E&T-dagene inviterer deg til å bli med i {company} på nettsiden vår. Invitasjonen virker til {day}.",
+      "address": "Invitert adresse",
+      "signed_in": "Du er logget inn med denne adressen.",
+      "join": "Bli med i {company}",
+      "other_account": "Du er logget inn som {email}. Logg ut, og lag så en konto eller logg inn med den inviterte adressen.",
+      "sign_out": "Logg ut",
+      "new_password": "Velg et passord",
+      "open": "Lag konto og bli med",
+      "have_account": "Har du allerede en konto med denne adressen?",
+      "sign_in_instead": "Logg inn i stedet",
+      "has_account": "Denne adressen har allerede en konto. Logg inn for å bli med.",
+      "forgot": "Glemt passordet?",
+      "sign_in_and_join": "Logg inn og bli med i {company}",
+      "no_account": "Ingen konto ennå?",
+      "open_instead": "Lag en"
+    },
+    "closed": {
+      "missing": {
+        "title": "Denne lenken virker ikke",
+        "text": "Sjekk at du åpnet hele lenken fra e-posten. Virker den fortsatt ikke, be oss om en ny invitasjon."
+      },
+      "expired": {
+        "title": "Invitasjonen har gått ut",
+        "text": "En invitasjon virker i 14 dager. Be oss om en ny."
+      },
+      "revoked": {
+        "title": "Invitasjonen er trukket tilbake",
+        "text": "Du kan ha fått en nyere invitasjon, så sjekk e-posten din. Ellers kan du be oss om en ny."
+      },
+      "joined": {
+        "title": "Invitasjonen er brukt",
+        "text": "Kontoen for denne invitasjonen er klar. Logg inn for å komme til bedriftssiden."
+      }
+    }
   }
 }
