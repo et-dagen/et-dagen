@@ -705,7 +705,7 @@
         "listing": "Shown as",
         "listings": {
           "text": {
-            "name": "Description on etdagen.no",
+            "name": "Description on etdagene.no",
             "hint": "The whole listing is here, as formatted text."
           },
           "link": {
@@ -797,7 +797,7 @@
     },
     "shell": {
       "navigation": "Admin panels",
-      "back": "Back to etdagen.no",
+      "back": "Back to etdagene.no",
       "theme": {
         "system": "Theme: follows the device. Switch to light",
         "light": "Theme: light. Switch to dark",
