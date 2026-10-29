@@ -16,6 +16,9 @@ import {
   type WideEvent,
 } from '@/server/utils/logger'
 import { pickSafeQuery } from '@/server/utils/wideEventHelpers'
+import { activityRecorder } from '@/server/activity/recorder'
+import { activity } from '@/server/composition'
+import { UserUid } from '@/domain/user'
 
 // Query parameters safe to record in logs. Everything else is dropped.
 const SAFE_QUERY_PARAMS = [
@@ -29,6 +32,18 @@ const SAFE_QUERY_PARAMS = [
   'offset',
   'page',
 ] as const
+
+// the admin dashboard's journal and tallies; a failed write is logged, never the request's problem
+const recorder = activityRecorder(activity, {
+  onError: (error) =>
+    console.error(
+      JSON.stringify({
+        level: 'error',
+        message: 'activity log',
+        error: `${error}`,
+      }),
+    ),
+})
 
 export default defineEventHandler((event) => {
   const startTime = Date.now()
@@ -83,6 +98,15 @@ export default defineEventHandler((event) => {
           : 'info'
 
     logWideEvent(wideEvent, level)
+
+    recorder.record({
+      method: event.method,
+      path: event.path,
+      status: wideEvent.status_code,
+      code: wideEvent.error?.code ?? null,
+      actor: wideEvent.user?.uid ? UserUid.parse(wideEvent.user.uid) : null,
+      target: wideEvent.resource?.id ?? null,
+    })
   }
 
   event.node.res.on('finish', emit)

@@ -84,6 +84,7 @@ export const ROLES = {
     },
     code: { read: true, create: true, delete: true },
     image: { upload: true },
+    activity: { read: true },
     board: { manage: true },
   },
 

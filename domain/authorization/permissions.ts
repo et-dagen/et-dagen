@@ -90,6 +90,8 @@ export type Permissions = {
   code: { dataType: undefined; action: 'read' | 'create' | 'delete' }
   image: { dataType: undefined; action: 'upload' }
   board: { dataType: undefined; action: 'manage' }
+  /** The admin dashboard: the journal and the daily tallies */
+  activity: { dataType: undefined; action: 'read' }
 }
 
 /**
