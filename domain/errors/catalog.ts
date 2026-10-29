@@ -80,6 +80,34 @@ export const ERRORS = {
     message: 'A user can be a member of each company once',
   },
   'company/not-found': { status: 404, message: 'No company has this uid' },
+  'invitation/not-found': {
+    status: 404,
+    message: 'No invitation has this link or id',
+  },
+  'invitation/not-pending': {
+    status: 410,
+    message: 'This invitation has been used, revoked or has run out',
+  },
+  'invitation/wrong-account': {
+    status: 403,
+    message: 'Sign in with the address the invitation was sent to',
+  },
+  'invitation/missing-account': {
+    status: 400,
+    message: 'Send a name of at most 100 characters and a password',
+  },
+  'invitation/weak-password': {
+    status: 400,
+    message: 'The password needs 8 characters, 3 of them letters and 3 digits',
+  },
+  'invitation/account-exists': {
+    status: 409,
+    message: 'This address already has an account; sign in to accept',
+  },
+  'invitation/invalid-request': {
+    status: 400,
+    message: 'Send a known companyUID and an email address',
+  },
   'company/missing-logo': {
     status: 400,
     message:
