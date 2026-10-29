@@ -1,5 +1,5 @@
 import type { Subject } from '@/domain/authorization/subject'
-import type { Company } from '@/domain/business/company'
+import type { Company, CompanyUid } from '@/domain/business/company'
 import type { Job } from '@/domain/business/job'
 import type { Event, HasRegistration } from '@/domain/event/event'
 import type { ISO8601String } from '@/domain/time'
@@ -88,6 +88,10 @@ export type Permissions = {
     action: 'read' | 'list' | 'create' | 'update' | 'delete' | 'assign'
   }
   code: { dataType: undefined; action: 'read' | 'create' | 'delete' }
+  invitation: {
+    dataType: { companyUid: CompanyUid }
+    action: 'create' | 'list' | 'revoke'
+  }
   image: { dataType: undefined; action: 'upload' }
   board: { dataType: undefined; action: 'manage' }
 }

@@ -5,6 +5,7 @@ import {
   type Entitlement,
 } from '@/domain/authorization/entitlements'
 import { EmailAddress } from '@/domain/email'
+import { passwordProblem } from '@/domain/password'
 
 /** The kinds of account the admin form sets, from the one with the most access down */
 export const USER_TYPES = ['admin', 'coordinator', 'company', 'basic'] as const
@@ -87,16 +88,14 @@ export function toV1User(uid: string, user: UserInput) {
   }
 }
 
-const count = (value: string, pattern: RegExp) =>
-  (value.match(pattern) ?? []).length
-
-/** The site's password rule: at least 8 characters, 3 of them letters and 3 digits */
+/** The site's password rule, as the server checks it too */
 const password = z
   .string({ error: 'required' })
   .min(1, 'required')
-  .min(8, 'password_length')
-  .refine((value) => count(value, /[a-zA-Z]/g) >= 3, 'password_letters')
-  .refine((value) => count(value, /\d/g) >= 3, 'password_digits')
+  .superRefine((value, context) => {
+    const problem = passwordProblem(value)
+    if (problem) context.addIssue({ code: 'custom', message: problem })
+  })
 
 const email = z
   .string({ error: 'required' })
@@ -130,6 +129,20 @@ export const CompanyJoin = z.object({
   password,
 })
 export type CompanyJoin = z.infer<typeof CompanyJoin>
+
+/** What a company contact types to accept an invitation; the address comes with the link */
+export const InvitationAccept = z.object({
+  name: common.name,
+  password,
+})
+export type InvitationAccept = z.infer<typeof InvitationAccept>
+
+/** Who an admin invites, and to which company */
+export const InvitationRequest = z.object({
+  companyUID: chosen,
+  email,
+})
+export type InvitationRequest = z.infer<typeof InvitationRequest>
 
 /** A membership as `/user/access` sends it */
 export interface MembershipBody {
