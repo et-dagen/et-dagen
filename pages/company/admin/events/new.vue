@@ -1,10 +1,11 @@
 <script setup lang="ts">
-  import AdminNewEvent from '@/pages/admin/events/new.vue'
+  import EventForm from '@/components/admin/form/EventForm.vue'
+  import { NEW_EVENT } from '@/lib/admin/eventForm'
 
   definePageMeta({ layout: 'admin', protected: true, area: 'events' })
 </script>
 
 <template>
-  <!-- the admin panel's page; the form lists only the user's companies and returns here -->
-  <AdminNewEvent panel="/company/admin" />
+  <!-- the admin panel's form; it lists only the user's companies and returns here -->
+  <EventForm :initial="NEW_EVENT" panel="/company/admin" />
 </template>

@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { ArrowLeft, Save } from '@lucide/vue'
   import EventTabs from '@/components/admin/EventTabs.vue'
-  import FieldError from '@/components/admin/form/FieldError.vue'
+  import FieldError from '@/components/form/FieldError.vue'
   import RichText from '@/components/admin/form/RichText.vue'
   import SearchPicker from '@/components/admin/form/SearchPicker.vue'
   import { Button } from '@/components/ui/button'

@@ -1,6 +1,7 @@
 /**
  * Keeps the hexagon's dependency rules (ARCHITECTURE.md): the core knows nothing about Nitro,
- * Firebase or the adapters, so an adapter can be swapped without touching it.
+ * Firebase or the adapters, so an adapter can be swapped without touching it. The front end's
+ * imports run one way too: pages use components, components use `components/ui`.
  */
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join, relative, resolve } from 'node:path'
@@ -15,12 +16,12 @@ const ALLOWED: Record<string, readonly string[]> = {
   contracts: ['domain', 'contracts', 'zod'],
 }
 
-const sourceFiles = (dir: string): string[] =>
+const sourceFiles = (dir: string, extensions = ['.ts']): string[] =>
   (existsSync(join(ROOT, dir))
     ? readdirSync(join(ROOT, dir), { recursive: true, encoding: 'utf8' })
     : []
   )
-    .filter((file) => file.endsWith('.ts'))
+    .filter((file) => extensions.some((extension) => file.endsWith(extension)))
     .map((file) => join(dir, file))
 
 /** `from 'x'`, `import 'x'` and `import('x')`, in single or double quotes */
@@ -47,5 +48,55 @@ describe.each(Object.entries(ALLOWED))('%s/', (layer, allowed) => {
         .map((specifier) => `${file} imports ${specifier}`),
     )
     expect(violations).toEqual([])
+  })
+})
+
+const FRONT_END = ['components', 'composables', 'layouts', 'pages', 'stores']
+
+/** Every import in the given files, as `file imports specifier` when `refused` says so */
+const importsWhere = (
+  files: string[],
+  refused: (file: string, specifier: string) => boolean,
+) =>
+  files.flatMap((file) =>
+    [...readFileSync(join(ROOT, file), 'utf8').matchAll(IMPORT)]
+      .map(([, specifier]) => specifier)
+      .filter((specifier) => refused(file, specifier))
+      .map((specifier) => `${file} imports ${specifier}`),
+  )
+
+describe('front end', () => {
+  const vueAndTs = FRONT_END.flatMap((dir) => sourceFiles(dir, ['.ts', '.vue']))
+
+  it('imports no page; a page another one needs belongs in a component', () => {
+    expect(
+      importsWhere(vueAndTs, (_file, specifier) =>
+        /^[@~]\/pages\//.test(specifier),
+      ),
+    ).toEqual([])
+  })
+
+  it('is not imported by the server', () => {
+    expect(
+      importsWhere(sourceFiles('server'), (file, specifier) =>
+        FRONT_END.includes(target(file, specifier)),
+      ),
+    ).toEqual([])
+  })
+
+  it("keeps components out of other areas' folders, except the shared ones", () => {
+    const SHARED = ['ui', 'common', 'form']
+    const areaOf = (path: string) => path.split('/')[1]
+    expect(
+      importsWhere(
+        sourceFiles('components', ['.vue', '.ts']),
+        (file, specifier) => {
+          const imported = specifier.match(/^[@~]\/(components\/.+)$/)?.[1]
+          if (!imported) return false
+          const area = areaOf(imported)
+          return !SHARED.includes(area) && area !== areaOf(file)
+        },
+      ),
+    ).toEqual([])
   })
 })

@@ -7,7 +7,7 @@
     Send,
     Trash2,
   } from '@lucide/vue'
-  import CompanyLogo from '@/components/admin/CompanyLogo.vue'
+  import CompanyLogo from '@/components/common/CompanyLogo.vue'
   import DeleteDialog from '@/components/admin/DeleteDialog.vue'
   import FilterChips from '@/components/admin/FilterChips.vue'
   import Pager from '@/components/admin/Pager.vue'

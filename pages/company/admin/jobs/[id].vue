@@ -1,10 +1,12 @@
 <script setup lang="ts">
-  import AdminJob from '@/pages/admin/jobs/[id].vue'
+  import EditJob from '@/components/admin/form/EditJob.vue'
 
   definePageMeta({ layout: 'admin', protected: true, area: 'jobs' })
+
+  const uid = String(useRoute().params.id)
 </script>
 
 <template>
-  <!-- the admin panel's page; the form lists only the user's companies and returns here -->
-  <AdminJob panel="/company/admin/jobs" />
+  <!-- the admin panel's form; it lists only the user's companies and returns here -->
+  <EditJob :uid="uid" panel="/company/admin/jobs" />
 </template>

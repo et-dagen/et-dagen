@@ -1,5 +1,6 @@
 import { eventStatus, type EventRow } from '@/lib/admin/events'
-import { instantOf } from '@/lib/admin/time'
+import { formatWhen, instantOf } from '@/lib/admin/time'
+import { deadlineState, type DeadlineState } from '@/lib/jobs'
 import { Instant, type ISO8601String } from '@/domain/time'
 
 /** What the event page reads from `events/<uid>`; every field may be missing */
@@ -203,3 +204,54 @@ export function urgencyOf(
   }
   return null
 }
+
+const HOURS: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit' }
+
+/** When the event runs, such as "ons. 4. nov. 2026, 17:15–18:00" */
+export function whenOf(event: PublicEvent, locale: string): string {
+  const start = formatWhen(event.date?.start, locale)
+  const end = formatWhen(event.date?.end, locale, HOURS)
+  return end ? `${start}–${end}` : start
+}
+
+/** When the event runs, short enough for one line on the ticket: day and hours only */
+export function ticketWhenOf(event: PublicEvent, locale: string): string {
+  const start = formatWhen(event.date?.start, locale, {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+    ...HOURS,
+  })
+  const end = formatWhen(event.date?.end, locale, HOURS)
+  return end ? `${start}–${end}` : start
+}
+
+/** A job as the event page reads it from `jobs/<uid>` */
+export interface StoredJob {
+  title?: string
+  companyUID?: string
+  deadline?: string | null
+}
+
+export interface OpenJob {
+  uid: string
+  title: string
+  deadline?: string | null
+  state: DeadlineState
+}
+
+/** The hosting company's jobs that still take applications */
+export const openJobsOf = (
+  jobs: Record<string, StoredJob> | null | undefined,
+  companyUid: string | undefined,
+  now: ISO8601String,
+): OpenJob[] =>
+  Object.entries(jobs ?? {})
+    .filter(([, job]) => companyUid && job.companyUID === companyUid)
+    .map(([uid, job]) => ({
+      uid,
+      title: job.title ?? '',
+      deadline: job.deadline,
+      state: deadlineState(job.deadline ?? undefined, now),
+    }))
+    .filter((job) => job.state.kind !== 'passed')
