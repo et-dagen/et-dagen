@@ -10,6 +10,10 @@ import type { ISO8601String } from '@/domain/time'
 /**
  * Set a company's tier and its exceptions to the tier's entitlements
  *
+ * @remarks
+ * A former company keeps its tier from the last fair while it stays former, so saving its
+ * profile does not drop it from the front page's last fair.
+ *
  * @throws AppError `auth/signed-out`, `auth/forbidden` or `company/not-found`
  */
 export async function setAffiliation(
@@ -27,8 +31,14 @@ export async function setAffiliation(
   const [found] = await deps.companies.entitled([company])
   if (!found) throw fail('company/not-found')
 
-  await deps.affiliations.set(company, affiliation, {
-    at: now,
-    by: subject.uid,
-  })
+  const formerTier =
+    affiliation.tier === 'prior' ? found.formerRelationship : undefined
+  await deps.affiliations.set(
+    company,
+    formerTier ? { ...affiliation, formerTier } : affiliation,
+    {
+      at: now,
+      by: subject.uid,
+    },
+  )
 }

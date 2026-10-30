@@ -16,6 +16,7 @@
     "slogan": "Få et innblikk i din fremtidige arbeidsplass",
     "sign_up": "Meld deg på arrangementer",
     "who": "Se hvem som kommer",
+    "who_last": "Se hvem som kom sist",
     "main_partner": "Hovedpartner",
     "upcoming": "Neste arrangementer",
     "programme": "Se hele programmet",
@@ -29,6 +30,7 @@
       "closed": "Påmeldingen er stengt"
     },
     "companies": "Hvem kommer",
+    "companies_last": "Hvem kom sist",
     "partners": "Partnere",
     "sponsors": "Sponsorer",
     "join": "Vil bedriften deres stå her?"
