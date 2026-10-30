@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { ArrowLeft, Save } from '@lucide/vue'
-  import FieldError from '@/components/admin/form/FieldError.vue'
+  import FieldError from '@/components/form/FieldError.vue'
   import RichText from '@/components/admin/form/RichText.vue'
   import { Button } from '@/components/ui/button'
   import {

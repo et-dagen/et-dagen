@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { ChevronRight } from '@lucide/vue'
   import { useForm } from 'vee-validate'
-  import PasswordInput from './PasswordInput.vue'
+  import PasswordInput from '@/components/form/PasswordInput.vue'
   import { typedSchemaOf } from '@/lib/forms/zodSchema'
-  import FieldError from '@/components/admin/form/FieldError.vue'
+  import FieldError from '@/components/form/FieldError.vue'
   import { Button } from '@/components/ui/button'
   import { Checkbox } from '@/components/ui/checkbox'
   import {

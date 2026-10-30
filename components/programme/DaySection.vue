@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import StandMap from '@/components/programme/StandMap.vue'
-  import CompanyLogo from '@/components/admin/CompanyLogo.vue'
+  import CompanyLogo from '@/components/common/CompanyLogo.vue'
   import { Instant } from '@/domain/time'
   import { eventStatus, placeOf } from '@/lib/admin/events'
   import { isOver, type ProgrammeDay } from '@/lib/programme'

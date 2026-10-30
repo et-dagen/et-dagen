@@ -1,10 +1,12 @@
 <script setup lang="ts">
-  import AdminEvent from '@/pages/admin/events/[id]/index.vue'
+  import EditEvent from '@/components/admin/form/EditEvent.vue'
 
   definePageMeta({ layout: 'admin', protected: true, area: 'events' })
+
+  const uid = String(useRoute().params.id)
 </script>
 
 <template>
-  <!-- the admin panel's page; the form lists only the user's companies and returns here -->
-  <AdminEvent panel="/company/admin" />
+  <!-- the admin panel's form; it lists only the user's companies and returns here -->
+  <EditEvent :uid="uid" panel="/company/admin" />
 </template>

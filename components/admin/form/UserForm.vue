@@ -1,8 +1,9 @@
 <script setup lang="ts">
   import { ArrowLeft, Save } from '@lucide/vue'
-  import FieldError from '@/components/admin/form/FieldError.vue'
+  import CheckGroup from '@/components/admin/form/CheckGroup.vue'
+  import DietField from '@/components/form/DietField.vue'
+  import FieldError from '@/components/form/FieldError.vue'
   import { Button } from '@/components/ui/button'
-  import { Checkbox } from '@/components/ui/checkbox'
   import {
     FormControl,
     FormField,
@@ -21,7 +22,6 @@
   import { useResourceForm } from '@/composables/admin/useResourceForm'
   import { USER_TYPES, toV1User, UserInput } from '@/contracts/user'
   import { WITHHOLDABLE } from '@/domain/authorization/entitlements'
-  import { dietaryFlags } from '~/config/app.config'
 
   const props = defineProps<{
     uid: string
@@ -57,6 +57,20 @@
     return [1, 2, 3, 4, 5]
   }
 
+  const entitlementOptions = computed(() =>
+    WITHHOLDABLE.map((entitlement) => ({
+      value: entitlement,
+      label: t(
+        `admin.users.form.entitlement.${entitlement.slice(4).replace(':', '_')}`,
+      ),
+    })),
+  )
+  // the form stores what is withheld; the boxes show what is kept
+  const kept = (withheld: string[]) =>
+    WITHHOLDABLE.filter((entitlement) => !withheld.includes(entitlement))
+  const withheldOf = (keeps: string[]) =>
+    WITHHOLDABLE.filter((entitlement) => !keeps.includes(entitlement))
+
   const { form, submit, saving } = useResourceForm({
     schema: UserInput,
     initial: props.initial,
@@ -87,33 +101,10 @@
     },
   )
 
-  const KNOWN = dietaryFlags.map((flag) => flag.name)
-  const diet = computed<string[]>(
-    () => (form.values.dietaryRestrictions as string[] | undefined) ?? [],
-  )
-  // restrictions typed by hand, kept as one comma-separated field
-  const other = ref(diet.value.filter((d) => !KNOWN.includes(d)).join(', '))
-  const setDiet = (known: string[], typed: string) =>
-    form.setFieldValue('dietaryRestrictions', [
-      ...known,
-      ...typed
-        .split(',')
-        .map((d) => d.trim())
-        .filter(Boolean),
-    ])
-  const toggleDiet = (flag: string) => {
-    const known = diet.value.filter((d) => KNOWN.includes(d))
-    setDiet(
-      known.includes(flag) ? known.filter((d) => d !== flag) : [...known, flag],
-      other.value,
-    )
-  }
-  watch(other, (typed) =>
-    setDiet(
-      diet.value.filter((d) => KNOWN.includes(d)),
-      typed,
-    ),
-  )
+  const diet = computed({
+    get: () => (form.values.dietaryRestrictions as string[] | undefined) ?? [],
+    set: (value: string[]) => form.setFieldValue('dietaryRestrictions', value),
+  })
 </script>
 
 <template>
@@ -276,37 +267,13 @@
           <p class="tw:text-sm tw:text-muted-foreground">
             {{ $t('admin.users.form.access_hint') }}
           </p>
-          <div
-            class="tw:flex tw:flex-col tw:gap-2 tw:rounded-md tw:border tw:p-3"
-          >
-            <label
-              v-for="entitlement in WITHHOLDABLE"
-              :key="entitlement"
-              class="tw:flex tw:items-center tw:gap-2 tw:text-sm"
-            >
-              <!-- ticked while the person keeps it; unticking withholds it -->
-              <Checkbox
-                :model-value="
-                  !((value as string[]) ?? []).includes(entitlement)
-                "
-                @update:model-value="
-                  (keeps) =>
-                    handleChange(
-                      keeps
-                        ? ((value as string[]) ?? []).filter(
-                            (taken) => taken !== entitlement,
-                          )
-                        : [...((value as string[]) ?? []), entitlement],
-                    )
-                "
-              />
-              {{
-                $t(
-                  `admin.users.form.entitlement.${entitlement.slice(4).replace(':', '_')}`,
-                )
-              }}
-            </label>
-          </div>
+          <!-- ticked while the person keeps it; unticking withholds it -->
+          <CheckGroup
+            :model-value="kept((value as string[]) ?? [])"
+            :options="entitlementOptions"
+            class="tw:flex tw:flex-col"
+            @update:model-value="(keeps) => handleChange(withheldOf(keeps))"
+          />
           <FieldError />
         </FormItem>
       </FormField>
@@ -321,32 +288,12 @@
           <p class="tw:text-sm tw:text-muted-foreground">
             {{ $t('admin.users.form.companies_hint') }}
           </p>
-          <div
-            class="tw:grid tw:max-h-64 tw:gap-2 tw:overflow-y-auto tw:rounded-md tw:border tw:p-3 tw:sm:grid-cols-2"
-          >
-            <label
-              v-for="option in companyOptions"
-              :key="option.value"
-              class="tw:flex tw:items-center tw:gap-2 tw:text-sm"
-            >
-              <Checkbox
-                :model-value="
-                  ((value as string[]) ?? []).includes(option.value)
-                "
-                @update:model-value="
-                  (on) =>
-                    handleChange(
-                      on
-                        ? [...((value as string[]) ?? []), option.value]
-                        : ((value as string[]) ?? []).filter(
-                            (uid) => uid !== option.value,
-                          ),
-                    )
-                "
-              />
-              {{ option.label }}
-            </label>
-          </div>
+          <CheckGroup
+            :model-value="(value as string[]) ?? []"
+            :options="companyOptions"
+            class="tw:grid tw:max-h-64 tw:overflow-y-auto tw:sm:grid-cols-2"
+            @update:model-value="handleChange"
+          />
           <FieldError />
         </FormItem>
       </FormField>
@@ -364,22 +311,10 @@
           {{ $t('admin.users.form.diet_hint') }}
         </p>
       </div>
-      <div class="tw:flex tw:flex-wrap tw:gap-2">
-        <button
-          v-for="flag in KNOWN"
-          :key="flag"
-          type="button"
-          :aria-pressed="diet.includes(flag)"
-          class="tw:inline-flex tw:h-8 tw:items-center tw:rounded-md tw:border tw:bg-card tw:px-2.5 tw:pt-0.5 tw:text-sm tw:hover:bg-accent tw:aria-pressed:border-plate tw:aria-pressed:bg-plate tw:aria-pressed:text-plate-foreground"
-          @click="toggleDiet(flag)"
-        >
-          {{ $t(`dietary_restrictions.${flag}`) }}
-        </button>
-      </div>
-      <div class="tw:flex tw:flex-col tw:gap-2">
-        <Label for="diet-other">{{ $t('admin.users.form.diet_other') }}</Label>
-        <Input id="diet-other" v-model="other" class="tw:lg:w-1/2" />
-      </div>
+      <DietField
+        v-model="diet"
+        :other-label="$t('admin.users.form.diet_other')"
+      />
     </section>
 
     <div class="tw:flex tw:flex-wrap tw:gap-3">

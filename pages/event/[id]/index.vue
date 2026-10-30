@@ -7,7 +7,7 @@
     Users,
   } from '@lucide/vue'
   import { companyOf } from '@/lib/auth/companyOf'
-  import CompanyLogo from '@/components/admin/CompanyLogo.vue'
+  import CompanyLogo from '@/components/common/CompanyLogo.vue'
   import DeadlineNote from '@/components/job/DeadlineNote.vue'
   import SignupPanel from '@/components/event/page/SignupPanel.vue'
   import { Instant } from '@/domain/time'

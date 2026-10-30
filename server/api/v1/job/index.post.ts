@@ -1,7 +1,7 @@
 //  POST /api/v1/job
 // endpoint for creating a new job in the database
 
-import { isValidDate } from '@/composables/useDate'
+import { isValidDate } from '@/server/utils/useTime'
 import { cleanRichText, safeLink } from '@/server/security/richText'
 import { fail } from '@/domain/errors'
 import { authorize } from '@/domain/authorization/authorize'

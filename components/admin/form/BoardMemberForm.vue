@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { ArrowLeft, Save } from '@lucide/vue'
-  import FieldError from '@/components/admin/form/FieldError.vue'
+  import FieldError from '@/components/form/FieldError.vue'
   import PortraitField from '@/components/admin/form/PortraitField.vue'
   import { Button } from '@/components/ui/button'
   import { Checkbox } from '@/components/ui/checkbox'
