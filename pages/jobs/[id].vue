@@ -7,7 +7,7 @@
     MapPin,
   } from '@lucide/vue'
   import CompanyLogo from '@/components/common/CompanyLogo.vue'
-  import DeadlineNote from '@/components/job/DeadlineNote.vue'
+  import DeadlineNote from '@/components/common/DeadlineNote.vue'
   import FairEvents from '@/components/job/FairEvents.vue'
   import { Button } from '@/components/ui/button'
   import { Instant } from '@/domain/time'
