@@ -5,10 +5,13 @@ import {
   isEventDay,
   mapEmbedOf,
   meetsRequirements,
+  openJobsOf,
   placesOf,
   signupStateOf,
+  ticketWhenOf,
   type PublicEvent,
   urgencyOf,
+  whenOf,
 } from '@/lib/eventPage'
 
 // 12:00 in Oslo on 1 November 2026
@@ -179,5 +182,33 @@ describe('urgencyOf', () => {
     expect(
       urgencyOf(workshop({ attendants: { a: {}, b: {} } }), now),
     ).toBeNull()
+  })
+})
+
+describe('whenOf and ticketWhenOf', () => {
+  it('give the start in full and the end as hours', () => {
+    expect(whenOf(workshop(), 'en-GB')).toBe('Thu, 5 Nov 2026, 16:15–19:00')
+    expect(ticketWhenOf(workshop(), 'en-GB')).toBe('Thu 5 Nov, 16:15–19:00')
+  })
+
+  it('give the start alone when the end is missing', () => {
+    const open = workshop({ date: { start: '2026-11-05T16:15' } })
+    expect(whenOf(open, 'en-GB')).toBe('Thu, 5 Nov 2026, 16:15')
+  })
+})
+
+describe('openJobsOf', () => {
+  const jobs = {
+    j1: { title: 'Trainee', companyUID: 'acme', deadline: '2026-12-01' },
+    j2: { title: 'Summer job', companyUID: 'acme', deadline: '2026-10-01' },
+    j3: { title: 'Engineer', companyUID: 'other', deadline: '2026-12-01' },
+  }
+
+  it("lists the company's jobs whose deadline has not passed", () => {
+    expect(openJobsOf(jobs, 'acme', now).map((job) => job.uid)).toEqual(['j1'])
+  })
+
+  it('lists nothing for an event without a company', () => {
+    expect(openJobsOf(jobs, undefined, now)).toEqual([])
   })
 })
