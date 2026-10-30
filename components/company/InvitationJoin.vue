@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { useForm } from 'vee-validate'
-  import FieldError from '@/components/admin/form/FieldError.vue'
+  import FieldError from '@/components/form/FieldError.vue'
   import { Button } from '@/components/ui/button'
   import {
     FormControl,
@@ -11,7 +11,7 @@
   } from '@/components/ui/form'
   import { Input } from '@/components/ui/input'
   import { Label } from '@/components/ui/label'
-  import PasswordInput from '@/components/user/signup/PasswordInput.vue'
+  import PasswordInput from '@/components/form/PasswordInput.vue'
   import { InvitationAccept } from '@/contracts/user'
   import { EmailAddress, sameAccount } from '@/domain/email'
   import { typedSchemaOf } from '@/lib/forms/zodSchema'

@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { MapPin } from '@lucide/vue'
-  import CompanyLogo from '@/components/admin/CompanyLogo.vue'
+  import CompanyLogo from '@/components/common/CompanyLogo.vue'
   import DeadlineNote from '@/components/job/DeadlineNote.vue'
   import { placeOf } from '@/lib/admin/events'
   import { formatWhen } from '@/lib/admin/time'

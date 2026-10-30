@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { Save } from '@lucide/vue'
-  import FieldError from '@/components/admin/form/FieldError.vue'
-  import LogoField from '@/components/admin/form/LogoField.vue'
+  import FieldError from '@/components/form/FieldError.vue'
+  import LogoField from '@/components/form/LogoField.vue'
   import { Button } from '@/components/ui/button'
   import {
     FormControl,

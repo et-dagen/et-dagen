@@ -12,3 +12,8 @@ export const presentWithinTimeWindow = (start: string, end: string) => {
   const now = Zone.toInput(Instant.now(), FAIR_TIME_ZONE)
   return start <= now && now < end
 }
+
+// a stored date: YYYY-MM-DD, optionally followed by a time, that Date can read
+export const isValidDate = (date: string): boolean =>
+  /^\d{4}-\d{2}-\d{2}$/.test(date.split('T')[0]) &&
+  new Date(date).toString() !== 'Invalid Date'

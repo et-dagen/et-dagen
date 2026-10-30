@@ -1,7 +1,7 @@
 // PUT /api/v1/job
 // endpoint for editing jobs in the database
 
-import { isValidDate } from '@/composables/useDate'
+import { isValidDate } from '@/server/utils/useTime'
 import { cleanRichText, safeLink } from '@/server/security/richText'
 import { fail } from '@/domain/errors'
 import { authorize } from '@/domain/authorization/authorize'
