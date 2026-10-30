@@ -36,14 +36,6 @@
   "user": {
     "sign_in": "Sign in",
     "sign_out": "Sign out",
-    "sign_up": "Register user",
-    "information": {
-      "title": "Information",
-      "studyprogramme": "Study Programme",
-      "currentyear": "Current Year",
-      "dietaryrestrictions": "Allergies and Restrictions",
-      "events": "My Events"
-    },
     "register": {
       "title": "Register user",
       "full_name": "Full name",
@@ -67,17 +59,8 @@
         "restrictions": "Yes, I have allergies and/or restrictions"
       }
     },
-    "login": {
-      "email": "E-mail",
-      "password": "Password",
-      "remember": "Remember me",
-      "forgot": "Forgot password?"
-    },
     "resume": {
-      "resume": "resume",
-      "upload_resume": "Upload resume",
-      "your_resume": "Your resume",
-      "delete_resume": "Delete resume"
+      "resume": "resume"
     },
     "delete": {
       "title": "Delete my account",
@@ -122,7 +105,6 @@
       "resume_delete_title": "Delete your CV?",
       "resume_delete_text": "Companies can no longer see your CV. You can upload a new one at any time.",
       "resume_delete": "Delete CV",
-      "resume_uploading": "Uploading …",
       "resume_uploaded": "Your CV is uploaded",
       "resume_deleted": "Your CV is deleted",
       "cancel": "Cancel"
@@ -144,22 +126,6 @@
     }
   },
   "error": {
-    "form": {
-      "general": {
-        "equal_password": "Passwords must match",
-        "required": "This field is required",
-        "email": "Invalid email address"
-      },
-      "password": {
-        "length": "The password must be at least 8 characters long.",
-        "letters": "The password must contain at least 3 letters.",
-        "numbers": "The password must contain at least 3 numbers.",
-        "special": "The password must contain at least 1 special character.",
-        "uppercase": "The password must contain at least 1 uppercase letter.",
-        "required": "Password is required",
-        "confirmed": "Passwords must match"
-      }
-    },
     "page": {
       "missing_title": "This page does not exist",
       "missing_text": "There is nothing at {path}. The address may be mistyped, or the page may have moved.",
@@ -169,53 +135,10 @@
       "elsewhere": "Or go to"
     }
   },
-  "datetime": {
-    "months": {
-      "january": "January",
-      "february": "February",
-      "march": "March",
-      "april": "April",
-      "may": "May",
-      "june": "June",
-      "july": "July",
-      "august": "August",
-      "september": "September",
-      "october": "October",
-      "november": "November",
-      "december": "December"
-    },
-    "times": {
-      "days": "Days",
-      "hours": "Hours",
-      "minutes": "Minutes",
-      "seconds": "Seconds"
-    }
-  },
   "event": {
-    "take_off": "The event is taking off in",
     "page": {
-      "details": {
-        "name": "Details",
-        "from": "From",
-        "to": "To",
-        "reg_start": "Registration start",
-        "reg_end": "Registration end",
-        "reg_programme": "Study programmes",
-        "reg_year": "Year",
-        "location": "Location",
-        "host": "Organiser"
-      },
       "attendants": {
-        "name": "Registration",
-        "attendants": "Attendants",
-        "nocapacity": "No capacity limit",
-        "registered": "You are registered",
-        "scan": "Scan attendants",
-        "attended": "Attended"
-      },
-      "queue": {
-        "name": "Queue",
-        "position": "Position in queue"
+        "scan": "Scan attendants"
       }
     }
   },
@@ -223,15 +146,8 @@
     "title": "Contact us",
     "board": "The board",
     "positions": {
-      "head": "Manager",
-      "deputyHead": "Deputy manager",
-      "IT": "IT manager",
-      "finance": "Finance manager",
       "business": "Business relations manager",
-      "spons": "Sponsorship manager",
-      "marketing": "Marketing manager",
-      "logistics": "Logistics manager",
-      "travel": "Travel manager"
+      "logistics": "Logistics manager"
     },
     "question": "What is it about?",
     "organisation": "The organisation",
@@ -259,7 +175,6 @@
   },
   "company": {
     "admin": {
-      "title": "Company page",
       "year": "Year {n}",
       "events": {
         "name": "Events",
@@ -302,7 +217,6 @@
     }
   },
   "alert": {
-    "default_message": "Oops! Something went wrong.",
     "api": {
       "error": {
         "general": {
@@ -391,69 +305,15 @@
       }
     },
     "success": {
-      "firebase": {
-        "reset_password": "Password reset email sent"
-      },
       "user": {
-        "edit": "User updated",
         "deleted": "Your account has been deleted"
-      },
-      "event": {
-        "register": {
-          "sign_up": "Successfully registered to event",
-          "opt_out": "Successfully opted out of event",
-          "queue": "Successfully registered to event queue",
-          "opt_out_queue": "Successfully opted out of event queue"
-        },
-        "edit": {
-          "created": "Successfully created event",
-          "modified": "Successfully modified event",
-          "deleted_logo": "Successfully deleted logo"
-        }
-      },
-      "company": {
-        "edit": {
-          "created": "Company created",
-          "modified": "Comapny modified",
-          "deleted_logo": "Logo deleted"
-        }
-      },
-      "job": {
-        "edit": {
-          "modified": "Job updated",
-          "created": "Job created"
-        }
       }
     }
   },
-  "program": {
-    "title": "Programme",
-    "standmap": "Stand Map",
-    "event": {
-      "sign_up": "Sign up",
-      "enqueue": "Enqueue",
-      "opt_out": {
-        "name": "Opt out",
-        "queue": "Opt out of queue",
-        "confirmtext": "Are you sure you want to opt out?",
-        "confirm": "Yes, remove me",
-        "abort": "No, abort"
-      },
-      "sign_in_to_register": "Sign in to register",
-      "registration_closed": "Registration is not open"
-    }
-  },
   "jobs": {
-    "title": "Job Advertisements",
-    "jobTypes": "Job Types",
     "deadline": "Deadline",
-    "search": "Search",
     "location": "Location",
-    "company": "Company",
-    "details": "Job Details",
-    "apply": "Apply here",
     "type": "Job Type",
-    "no_jobs": "Could not find any job advertisements ⚠️",
     "link_listing": "The full listing is on {company}'s website.",
     "open_listing": "Read the listing and apply",
     "detail": {
@@ -488,7 +348,6 @@
       "count": "No jobs | 1 job, nearest deadline first | {n} jobs, nearest deadline first",
       "no_match": "No jobs match the filters.",
       "empty": "There are no open jobs right now.",
-      "rolling": "Rolling",
       "meet": "Meet them {day}",
       "show": "Show no jobs | Show 1 job | Show {n} jobs"
     }
@@ -781,11 +640,6 @@
         "confirm": "Delete {n} user | Delete {n} users",
         "done": "{n} user deleted | {n} users deleted"
       },
-      "filterorder": {
-        "name": "Order",
-        "descending": "Descending",
-        "ascending": "Ascending"
-      },
       "form": {
         "edit_title": "Edit user",
         "name": "Name",
@@ -945,27 +799,6 @@
     "halal": "Halal",
     "kosher": "Kosher",
     "lactose": "Lactose"
-  },
-  "weekday": {
-    "sunday": "Sunday",
-    "monday": "Monday",
-    "tuesday": "Tuesday",
-    "wednesday": "Wednesday",
-    "thursday": "Thursday",
-    "friday": "Friday",
-    "saturday": "Saturday"
-  },
-  "formattext": {
-    "bold": "Bold",
-    "italic": "Italic",
-    "strikethrough": "Strikethrough",
-    "paragraph": "Paragraph",
-    "heading": "Heading",
-    "bulletlist": "Bullet list",
-    "numberedlist": "Numbered list",
-    "linebreak": "Line break",
-    "undo": "Undo",
-    "redo": "Redo"
   },
   "forcompanies": {
     "title": "For companies",
