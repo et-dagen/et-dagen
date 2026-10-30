@@ -90,7 +90,8 @@
 
 <template>
   <section
-    class="tw:flex tw:max-w-3xl tw:flex-col tw:gap-5"
+    id="invitations"
+    class="tw:flex tw:max-w-3xl tw:scroll-mt-6 tw:flex-col tw:gap-5"
     aria-labelledby="invitations-title"
   >
     <div class="tw:flex tw:flex-col tw:gap-1">

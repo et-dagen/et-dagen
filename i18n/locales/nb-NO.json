@@ -54,8 +54,6 @@
       "password_confirmation": "Bekreft passord",
       "study_program": "Studieprogram",
       "year": "Årstrinn",
-      "registration_code": "Registreringskode",
-      "code_hint": "Ta kontakt for a motta en registreringskode",
       "user_type": {
         "student": "Studentbruker",
         "company": "Bedriftsbruker"
@@ -318,10 +316,6 @@
             "cannot-upload-file": "Kan ikke laste opp fil"
           }
         },
-        "code": {
-          "not-found": "Koden ble ikke funnet",
-          "missing-company-uid": "Bedrifts-UID mangler"
-        },
         "company": {
           "not-found": "Bedriften ble ikke funnet",
           "missing-name-or-webpage": "Mangler navn eller nettside"
@@ -353,8 +347,7 @@
         "user": {
           "not-found": "Bruker ble ikke funnet",
           "doesnt-exists": "Brukeren eksisterer ikke",
-          "missing-programme": "Studieprogram mangler",
-          "invalid-code": "Ugyldig registreringskode"
+          "missing-programme": "Studieprogram mangler"
         }
       }
     },
@@ -363,9 +356,6 @@
       "form": {
         "missing_email": "Epost ikke oppgitt",
         "invalid": "Skjemaet er ikke gyldig"
-      },
-      "server": {
-        "invalid_registration_code": "Ugyldig registreringskode"
       },
       "event": {
         "event_doesnt_exist": "Arrangementet finnes ikke",
@@ -494,7 +484,7 @@
   "admin": {
     "companies": {
       "name": "Bedrifter",
-      "search": "Søk etter bedrift, nettside eller kode",
+      "search": "Søk etter bedrift eller nettside",
       "create": "Ny bedrift",
       "filter": {
         "active": "Aktive",
@@ -512,7 +502,6 @@
       "columns": {
         "name": "Navn",
         "type": "Type",
-        "code": "Registreringskode",
         "cvAccess": "CV-tilgang",
         "webpage": "Nettside"
       },
@@ -520,13 +509,10 @@
         "yes": "Ja",
         "no": "Nei"
       },
-      "copy_code": "Kopier koden {code}",
-      "create_code": "Lag kode",
-      "code_created": "Ny kode laget for {name}",
       "actions": {
         "menu": "Valg for {name}",
         "edit": "Rediger",
-        "new_code": "Lag ny kode",
+        "invite": "Inviter kontakter",
         "delete": "Slett"
       },
       "select_page": "Velg alle bedriftene på siden",
@@ -534,7 +520,7 @@
       "empty": "Ingen bedrifter passer søket.",
       "delete": {
         "title": "Slette {n} bedrift? | Slette {n} bedrifter?",
-        "text": "Bedriften og logoen slettes for godt. Arrangementer, stillinger og registreringskoder som hører til den, blir liggende. Dette kan ikke angres. | Bedriftene og logoene deres slettes for godt. Arrangementer, stillinger og registreringskoder som hører til dem, blir liggende. Dette kan ikke angres.",
+        "text": "Bedriften og logoen slettes for godt. Arrangementer og stillinger som hører til den, blir liggende. Dette kan ikke angres. | Bedriftene og logoene deres slettes for godt. Arrangementer og stillinger som hører til dem, blir liggende. Dette kan ikke angres.",
         "confirm": "Slett {n} bedrift | Slett {n} bedrifter",
         "done": "{n} bedrift slettet | {n} bedrifter slettet"
       },
@@ -553,8 +539,6 @@
         "description": "Beskrivelse",
         "cv_access": "Tilgang til CV-er",
         "cv_access_hint": "Bedriften kan se og åpne studentenes CV-er.",
-        "create_code": "Lag registreringskode nå",
-        "create_code_hint": "Bedriften trenger en kode for å lage brukere. Du ser den i listen etter at du har lagret.",
         "create": "Opprett bedrift",
         "save": "Lagre endringer",
         "created": "Bedriften er opprettet",
@@ -1157,7 +1141,6 @@
       "password_letters": "Passordet må ha minst 3 bokstaver.",
       "password_digits": "Passordet må ha minst 3 tall.",
       "email_taken": "Det finnes allerede en konto med denne adressen. Logg inn i stedet.",
-      "code_invalid": "Koden stemmer ikke. Sjekk den, eller ta kontakt med oss.",
       "choose": "Velg et alternativ.",
       "year_needs_programme": "Velg studieprogram først."
     },
@@ -1321,7 +1304,7 @@
       },
       "company": {
         "name": "Bedrift",
-        "text": "Har du fått en kode eller invitasjon fra oss?",
+        "text": "Har du fått en invitasjon fra oss?",
         "link": "Bli med i bedriften"
       }
     },
@@ -1387,12 +1370,9 @@
     },
     "company": {
       "title": "Bli med i bedriften",
-      "lead": "Bedriften din har fått en registreringskode fra oss. Med den lager du en konto som hører til bedriften.",
-      "code": "Registreringskode",
-      "email": "E-post på jobben",
-      "submit": "Lag bedriftskonto",
-      "no_code": "Har dere ikke fått en kode?",
-      "contact": "Ta kontakt"
+      "lead": "Bedriftskontoer lages med invitasjon. Vi sender en personlig lenke til e-posten din på jobben; åpne den for å lage kontoen.",
+      "contact": "Ta kontakt",
+      "no_invitation": "Har du ikke fått en invitasjon?"
     },
     "the_password": "passordet"
   },

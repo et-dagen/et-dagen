@@ -16,8 +16,9 @@ const SENSITIVE_READS: Record<string, string> = {
   'resume/file.get.ts': "a user's résumé",
   'event/attendants.get.ts': "attendants' email addresses",
   'company/events/index.ts': "who is registered for a company's events",
-  'code/index.ts': 'registration codes',
-  'code/[code].ts': 'failed guesses at a registration code',
+  'company/invitations/index.get.ts':
+    "the addresses a company's invitations went to",
+  'invitation/[token].get.ts': 'the address an invitation link was sent to',
 }
 
 describe('sensitive reads', () => {

@@ -61,12 +61,12 @@ const student = subjectOf({
 
 describe('default deny', () => {
   it('denies an absent subject', () => {
-    expect(hasPermission(null, 'code', 'read')).toBe(false)
-    expect(hasPermission(undefined, 'code', 'read')).toBe(false)
+    expect(hasPermission(null, 'board', 'manage')).toBe(false)
+    expect(hasPermission(undefined, 'board', 'manage')).toBe(false)
   })
 
   it('denies a resource and action with no leaf', () => {
-    expect(hasPermission(student, 'code', 'create')).toBe(false)
+    expect(hasPermission(student, 'board', 'manage')).toBe(false)
     expect(hasPermission(student, 'company', 'delete', { uid: co('a') })).toBe(
       false,
     )
@@ -91,13 +91,13 @@ describe('default deny', () => {
 
 describe('boolean leaves', () => {
   it('grants admin the resources that carry no data', () => {
-    expect(hasPermission(admin, 'code', 'create')).toBe(true)
+    expect(hasPermission(admin, 'board', 'manage')).toBe(true)
     expect(hasPermission(admin, 'image', 'upload')).toBe(true)
   })
 
   it('denies every other role', () => {
     for (const roles of [['user'], ['company'], ['coordinator']] as Role[][]) {
-      expect(hasPermission(subjectOf({ roles }), 'code', 'create')).toBe(false)
+      expect(hasPermission(subjectOf({ roles }), 'board', 'manage')).toBe(false)
       expect(hasPermission(subjectOf({ roles }), 'image', 'upload')).toBe(false)
     }
   })
@@ -110,7 +110,7 @@ describe('multi-role union', () => {
     expect(hasPermission(both, 'company', 'delete', { uid: co('a') })).toBe(
       true,
     )
-    expect(hasPermission(both, 'code', 'delete')).toBe(true)
+    expect(hasPermission(both, 'board', 'manage')).toBe(true)
   })
 })
 

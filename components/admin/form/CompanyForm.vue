@@ -38,8 +38,6 @@
   const { t } = useI18n()
   const localePath = useLocalePath()
   const logoFile = ref<File | null>(null)
-  // new companies get a registration code straight away, unless the admin opts out
-  const createCode = ref(true)
 
   /** Upload a logo; the server trims it and makes it the company's logo */
   const uploadLogo = async (companyUID: string, file: File) => {
@@ -82,15 +80,9 @@
         { method: 'POST', body: profile },
       )
       await entitle(companyUID)
-      // the company exists now: report a failed logo or code, but do not save it twice
+      // the company exists now: report a failed logo, but do not save it twice
       try {
         if (logoFile.value) await uploadLogo(companyUID, logoFile.value)
-        if (createCode.value) {
-          await $fetch('/api/v1/code', {
-            method: 'POST',
-            query: { companyUID },
-          })
-        }
       } catch (error) {
         alertError(error)
       }
@@ -212,21 +204,6 @@
           </div>
         </FormItem>
       </FormField>
-
-      <label
-        v-if="!uid"
-        class="tw:flex tw:items-start tw:gap-3 tw:lg:col-span-2"
-      >
-        <Checkbox v-model="createCode" class="tw:mt-0.5" />
-        <span>
-          <span class="tw:block tw:text-sm tw:font-medium">
-            {{ $t('admin.companies.form.create_code') }}
-          </span>
-          <span class="tw:block tw:text-sm tw:text-muted-foreground">
-            {{ $t('admin.companies.form.create_code_hint') }}
-          </span>
-        </span>
-      </label>
     </div>
 
     <div class="tw:flex tw:flex-wrap tw:gap-3">

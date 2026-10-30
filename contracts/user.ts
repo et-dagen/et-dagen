@@ -121,15 +121,6 @@ export const StudentSignup = z.object({
 })
 export type StudentSignup = z.infer<typeof StudentSignup>
 
-/** What a company contact types to join their company with its registration code */
-export const CompanyJoin = z.object({
-  code: required,
-  name: common.name,
-  email,
-  password,
-})
-export type CompanyJoin = z.infer<typeof CompanyJoin>
-
 /** What a company contact types to accept an invitation; the address comes with the link */
 export const InvitationAccept = z.object({
   name: common.name,

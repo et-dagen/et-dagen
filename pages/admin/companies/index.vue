@@ -1,12 +1,10 @@
 <script setup lang="ts">
   import {
-    Check,
-    Copy,
     ExternalLink,
-    KeyRound,
     MoreHorizontal,
     Pencil,
     Plus,
+    Send,
     Trash2,
   } from '@lucide/vue'
   import CompanyLogo from '@/components/admin/CompanyLogo.vue'
@@ -37,11 +35,7 @@
   import { useSelection } from '@/composables/admin/useSelection'
   import { useSort } from '@/composables/admin/useSort'
   import { alertError } from '@/composables/useAlerts'
-  import {
-    codesByCompany,
-    siteLabel,
-    type CodeRecord,
-  } from '@/lib/admin/companies'
+  import { siteLabel } from '@/lib/admin/companies'
   import { pageOf, search, sortBy } from '@/lib/admin/listView'
   import { TYPE_OF_TIER } from '@/contracts/company'
   import type { Relationship } from '@/domain/business/company'
@@ -60,18 +54,15 @@
   }
   type Show = 'active' | Type
   const PAGE_SIZE = 25
-  const COLUMNS = ['name', 'type', 'code', 'cvAccess', 'webpage'] as const
+  const COLUMNS = ['name', 'type', 'cvAccess', 'webpage'] as const
 
   const localePath = useLocalePath()
   // the row saved last stays lit until the admin moves on
   const changed = computed(() => String(useRoute().query.changed ?? ''))
   const { t } = useI18n()
-  const { copy, copied, text: copiedText } = useClipboard()
 
   const { data: companies, refresh } =
     await useFetch<Record<string, Omit<Row, 'uid'>>>('/api/v1/company')
-  const { data: codes, refresh: refreshCodes } =
-    await useFetch<Record<string, CodeRecord>>('/api/v1/code')
 
   const rows = computed<Row[]>(() =>
     Object.entries(companies.value ?? {}).map(([uid, company]) => ({
@@ -79,8 +70,6 @@
       ...company,
     })),
   )
-  const codesOf = computed(() => codesByCompany(codes.value))
-  const firstCode = (row: Row) => codesOf.value.get(row.uid)?.[0]
   const typeOf = (row: Row) => TYPE_OF_TIER[row.tier ?? 'prior'] as Type
   const resumesOf = (row: Row) =>
     row.entitlements?.includes('ent:resume:view') === true
@@ -109,7 +98,6 @@
   const sortValue = {
     name: (row: Row) => row.name,
     type: (row: Row) => String(TYPES.indexOf(typeOf(row))),
-    code: (row: Row) => firstCode(row),
     cvAccess: (row: Row) => (resumesOf(row) ? '0' : '1'),
     webpage: (row: Row) => siteLabel(row.webpage),
   }
@@ -118,11 +106,7 @@
     const found = search(
       rows.value.filter((row) => inShow(row, show.value)),
       query.value,
-      (row) => [
-        row.name,
-        siteLabel(row.webpage),
-        ...(codesOf.value.get(row.uid) ?? []),
-      ],
+      (row) => [row.name, siteLabel(row.webpage)],
     )
     return sortBy(found, sortValue[sort.value.column], sort.value.direction)
   })
@@ -141,26 +125,6 @@
     sponsor:
       'tw:border-transparent tw:bg-secondary tw:text-secondary-foreground',
     old: 'tw:text-muted-foreground',
-  }
-
-  const creating = ref<string | null>(null)
-  const createCode = async (row: Row) => {
-    creating.value = row.uid
-    try {
-      await $fetch('/api/v1/code', {
-        method: 'POST',
-        query: { companyUID: row.uid },
-      })
-      await refreshCodes()
-      useAlertStore().alert(
-        t('admin.companies.code_created', { name: row.name }),
-        'success',
-      )
-    } catch (error) {
-      alertError(error)
-    } finally {
-      creating.value = null
-    }
   }
 
   const toDelete = ref<Row[]>([])
@@ -274,49 +238,6 @@
               </Badge>
             </TableCell>
             <TableCell>
-              <span
-                v-if="firstCode(row)"
-                class="tw:inline-flex tw:items-center tw:gap-1"
-              >
-                <code
-                  class="tw:rounded-[3px] tw:bg-secondary tw:px-1.5 tw:py-0.5 tw:font-mono tw:text-sm"
-                >
-                  {{ firstCode(row) }}
-                </code>
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
-                  :aria-label="
-                    $t('admin.companies.copy_code', { code: firstCode(row) })
-                  "
-                  @click="copy(firstCode(row)!)"
-                >
-                  <Check
-                    v-if="copied && copiedText === firstCode(row)"
-                    class="tw:text-plate"
-                    aria-hidden="true"
-                  />
-                  <Copy v-else aria-hidden="true" />
-                </Button>
-                <span
-                  v-if="(codesOf.get(row.uid)?.length ?? 0) > 1"
-                  class="tw:text-xs tw:text-muted-foreground"
-                >
-                  +{{ (codesOf.get(row.uid)?.length ?? 0) - 1 }}
-                </span>
-              </span>
-              <Button
-                v-else
-                variant="outline"
-                size="sm"
-                :disabled="creating === row.uid"
-                @click="createCode(row)"
-              >
-                <KeyRound aria-hidden="true" />
-                {{ $t('admin.companies.create_code') }}
-              </Button>
-            </TableCell>
-            <TableCell>
               {{ $t(`admin.companies.cv.${resumesOf(row) ? 'yes' : 'no'}`) }}
             </TableCell>
             <TableCell class="tw:text-muted-foreground">
@@ -351,9 +272,15 @@
                       {{ $t('admin.companies.actions.edit') }}
                     </NuxtLink>
                   </DropdownMenuItem>
-                  <DropdownMenuItem @select="createCode(row)">
-                    <KeyRound aria-hidden="true" />
-                    {{ $t('admin.companies.actions.new_code') }}
+                  <DropdownMenuItem as-child>
+                    <NuxtLink
+                      :to="
+                        localePath(`/admin/companies/${row.uid}#invitations`)
+                      "
+                    >
+                      <Send aria-hidden="true" />
+                      {{ $t('admin.companies.actions.invite') }}
+                    </NuxtLink>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
@@ -390,35 +317,6 @@
             >
               {{ row.name }}
             </NuxtLink>
-            <p class="tw:mt-1 tw:flex tw:items-center tw:gap-2 tw:text-sm">
-              <template v-if="firstCode(row)">
-                <code
-                  class="tw:rounded-[3px] tw:bg-secondary tw:px-1.5 tw:py-0.5 tw:font-mono"
-                >
-                  {{ firstCode(row) }}
-                </code>
-                <Button
-                  variant="ghost"
-                  size="icon-sm"
-                  :aria-label="
-                    $t('admin.companies.copy_code', { code: firstCode(row) })
-                  "
-                  @click="copy(firstCode(row)!)"
-                >
-                  <Copy aria-hidden="true" />
-                </Button>
-              </template>
-              <Button
-                v-else
-                variant="outline"
-                size="sm"
-                :disabled="creating === row.uid"
-                @click="createCode(row)"
-              >
-                <KeyRound aria-hidden="true" />
-                {{ $t('admin.companies.create_code') }}
-              </Button>
-            </p>
           </div>
           <Badge
             class="tw:shrink-0 tw:rounded-[4px]"

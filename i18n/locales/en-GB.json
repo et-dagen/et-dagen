@@ -54,8 +54,6 @@
       "password_confirmation": "Confirm password",
       "study_program": "Study Programme",
       "year": "Current year",
-      "registration_code": "Registration code",
-      "code_hint": "Contact us to recieve a registration code",
       "user_type": {
         "student": "Student user",
         "company": "Company user"
@@ -318,10 +316,6 @@
             "cannot-upload-file": "Failed to upload file"
           }
         },
-        "code": {
-          "not-found": "Code not found",
-          "missing-company-uid": "companyUID missing"
-        },
         "company": {
           "not-found": "Company not found",
           "missing-name-or-webpage": "Missing name or webpage"
@@ -353,8 +347,7 @@
         "user": {
           "not-found": "User not found",
           "doesnt-exists": "User doesn't exist",
-          "missing-programme": "studyProgram missing",
-          "invalid-code": "Invalid registration code"
+          "missing-programme": "studyProgram missing"
         }
       }
     },
@@ -363,9 +356,6 @@
       "form": {
         "missing_email": "Email input is missing",
         "invalid": "Invalid form"
-      },
-      "server": {
-        "invalid_registration_code": "Invalid registration code"
       },
       "event": {
         "event_doesnt_exist": "Event doesn't exist",
@@ -496,7 +486,7 @@
   "admin": {
     "companies": {
       "name": "Companies",
-      "search": "Search by company, website or code",
+      "search": "Search by company or website",
       "create": "New company",
       "filter": {
         "active": "Active",
@@ -514,7 +504,6 @@
       "columns": {
         "name": "Name",
         "type": "Type",
-        "code": "Registration code",
         "cvAccess": "CV access",
         "webpage": "Website"
       },
@@ -522,13 +511,10 @@
         "yes": "Yes",
         "no": "No"
       },
-      "copy_code": "Copy the code {code}",
-      "create_code": "Create code",
-      "code_created": "New code created for {name}",
       "actions": {
         "menu": "Options for {name}",
         "edit": "Edit",
-        "new_code": "Create another code",
+        "invite": "Invite contacts",
         "delete": "Delete"
       },
       "select_page": "Select all companies on this page",
@@ -536,7 +522,7 @@
       "empty": "No companies match the search.",
       "delete": {
         "title": "Delete {n} company? | Delete {n} companies?",
-        "text": "The company and its logo are deleted for good. Its events, jobs and registration codes stay. This cannot be undone. | The companies and their logos are deleted for good. Their events, jobs and registration codes stay. This cannot be undone.",
+        "text": "The company and its logo are deleted for good. Its events and jobs stay. This cannot be undone. | The companies and their logos are deleted for good. Their events and jobs stay. This cannot be undone.",
         "confirm": "Delete {n} company | Delete {n} companies",
         "done": "{n} company deleted | {n} companies deleted"
       },
@@ -555,8 +541,6 @@
         "description": "Description",
         "cv_access": "Access to CVs",
         "cv_access_hint": "The company can see and open students' CVs.",
-        "create_code": "Create a registration code now",
-        "create_code_hint": "The company needs a code to create accounts. You see it in the list after saving.",
         "create": "Create company",
         "save": "Save changes",
         "created": "The company is created",
@@ -1158,7 +1142,6 @@
       "password_letters": "The password needs at least 3 letters.",
       "password_digits": "The password needs at least 3 digits.",
       "email_taken": "There is already an account with this address. Sign in instead.",
-      "code_invalid": "The code doesn't match. Check it, or contact us.",
       "choose": "Choose one.",
       "year_needs_programme": "Choose a programme first."
     },
@@ -1322,7 +1305,7 @@
       },
       "company": {
         "name": "Company",
-        "text": "Have you received a code or an invitation from us?",
+        "text": "Have you received an invitation from us?",
         "link": "Join your company"
       }
     },
@@ -1388,12 +1371,9 @@
     },
     "company": {
       "title": "Join your company",
-      "lead": "Your company has received a registration code from us. With it you create an account that belongs to the company.",
-      "code": "Registration code",
-      "email": "Work email",
-      "submit": "Create company account",
-      "no_code": "Haven't received a code?",
-      "contact": "Contact us"
+      "lead": "Company accounts are made by invitation. We send a personal link to your work email; open it to create your account.",
+      "contact": "Contact us",
+      "no_invitation": "Haven't received an invitation?"
     },
     "the_password": "the password"
   },

@@ -96,18 +96,13 @@ describe('changing users', () => {
   })
 })
 
-describe('registration codes and images', () => {
+describe('images', () => {
   it('leaves them to admins', async () => {
     const { token } = await contactFor('acme')
 
-    for (const response of [
-      await api('/api/v1/code', { token }),
-      await api('/api/v1/code?companyUID=acme', { method: 'POST', token }),
-      await api('/api/v1/image', { method: 'POST', token }),
-    ]) {
-      expect(response.status).toBe(403)
-      expect(response.body).toMatchObject({ code: 'auth/forbidden' })
-    }
-    expect((await api('/api/v1/code')).status).toBe(401)
+    const response = await api('/api/v1/image', { method: 'POST', token })
+    expect(response.status).toBe(403)
+    expect(response.body).toMatchObject({ code: 'auth/forbidden' })
+    expect((await api('/api/v1/image', { method: 'POST' })).status).toBe(401)
   })
 })

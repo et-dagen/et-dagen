@@ -25,6 +25,8 @@ export default defineEventHandler((event) => {
     'read',
     'Show an invitation',
   )
+  // shows the invited address to whoever holds the link: always logged
+  setLogImportance(event, 'warn')
 
   return previewInvitation(
     { invitations, companies },

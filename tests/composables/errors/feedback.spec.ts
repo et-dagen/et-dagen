@@ -58,10 +58,10 @@ describe('errorFeedback', () => {
       'alert.api.error.event.register.registration-closed',
     )
     const prefixed = {
-      data: { statusMessage: 'Events: Error (user/invalid-code).' },
+      data: { statusMessage: 'Events: Error (user/missing-programme).' },
     }
     expect(errorFeedback(prefixed, has).key).toBe(
-      'alert.api.error.user.invalid-code',
+      'alert.api.error.user.missing-programme',
     )
   })
 
