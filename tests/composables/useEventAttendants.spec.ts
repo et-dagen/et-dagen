@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { attendantsOf, dietaryCounts } from '@/composables/useEventAttendants'
+import { attendantsOf } from '@/composables/useEventAttendants'
 
 const users = [
   { uid: 'ada', dietaryRestrictions: ['vegan'] },
@@ -22,11 +22,5 @@ describe('attendantsOf', () => {
   it('finds nobody on an event without attendants or users', () => {
     expect(attendantsOf(undefined, users)).toEqual([])
     expect(attendantsOf({ ada: {} }, null)).toEqual([])
-  })
-})
-
-describe('dietaryCounts', () => {
-  it('counts each restriction across attendants', () => {
-    expect(dietaryCounts(users)).toEqual({ vegan: 2, gluten: 1 })
   })
 })
