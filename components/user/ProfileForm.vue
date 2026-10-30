@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { ArrowLeft, Save } from '@lucide/vue'
+  import DietField from '@/components/form/DietField.vue'
   import FieldError from '@/components/form/FieldError.vue'
   import { Button } from '@/components/ui/button'
   import {
@@ -12,7 +13,6 @@
   import { Label } from '@/components/ui/label'
   import { useResourceForm } from '@/composables/admin/useResourceForm'
   import { profileInput, toV1Profile } from '@/contracts/profile'
-  import { dietaryFlags } from '~/config/app.config'
 
   const auth = useAuthStore()
   const { t } = useI18n()
@@ -65,33 +65,10 @@
     },
   })
 
-  const KNOWN = dietaryFlags.map((flag) => flag.name)
-  const diet = computed<string[]>(
-    () => (form.values.dietaryRestrictions as string[] | undefined) ?? [],
-  )
-  // restrictions typed by hand, kept as one comma-separated field
-  const other = ref(diet.value.filter((d) => !KNOWN.includes(d)).join(', '))
-  const setDiet = (known: string[], typed: string) =>
-    form.setFieldValue('dietaryRestrictions', [
-      ...known,
-      ...typed
-        .split(',')
-        .map((d) => d.trim())
-        .filter(Boolean),
-    ])
-  const toggleDiet = (flag: string) => {
-    const known = diet.value.filter((d) => KNOWN.includes(d))
-    setDiet(
-      known.includes(flag) ? known.filter((d) => d !== flag) : [...known, flag],
-      other.value,
-    )
-  }
-  watch(other, (typed) =>
-    setDiet(
-      diet.value.filter((d) => KNOWN.includes(d)),
-      typed,
-    ),
-  )
+  const diet = computed({
+    get: () => (form.values.dietaryRestrictions as string[] | undefined) ?? [],
+    set: (value: string[]) => form.setFieldValue('dietaryRestrictions', value),
+  })
 </script>
 
 <template>
@@ -182,22 +159,7 @@
           {{ $t('user.profile.diet_hint') }}
         </p>
       </div>
-      <div class="tw:flex tw:flex-wrap tw:gap-2">
-        <button
-          v-for="flag in KNOWN"
-          :key="flag"
-          type="button"
-          :aria-pressed="diet.includes(flag)"
-          class="tw:inline-flex tw:h-8 tw:items-center tw:rounded-md tw:border tw:bg-card tw:px-2.5 tw:pt-0.5 tw:text-sm tw:hover:bg-accent tw:aria-pressed:border-plate tw:aria-pressed:bg-plate tw:aria-pressed:text-plate-foreground"
-          @click="toggleDiet(flag)"
-        >
-          {{ $t(`dietary_restrictions.${flag}`) }}
-        </button>
-      </div>
-      <div class="tw:flex tw:flex-col tw:gap-2">
-        <Label for="diet-other">{{ $t('user.profile.diet_other') }}</Label>
-        <Input id="diet-other" v-model="other" class="tw:lg:w-1/2" />
-      </div>
+      <DietField v-model="diet" :other-label="$t('user.profile.diet_other')" />
     </section>
 
     <div class="tw:flex tw:flex-wrap tw:gap-3">

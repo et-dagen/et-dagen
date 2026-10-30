@@ -36,14 +36,6 @@
   "user": {
     "sign_in": "Logg inn",
     "sign_out": "Logg ut",
-    "sign_up": "Registrer bruker",
-    "information": {
-      "title": "Informasjon",
-      "studyprogramme": "Studieprogram",
-      "currentyear": "Årstrinn",
-      "dietaryrestrictions": "Allergener og restriksjoner",
-      "events": "Mine arrangementer"
-    },
     "register": {
       "title": "Registrer bruker",
       "full_name": "Fullt navn",
@@ -65,17 +57,8 @@
         "restrictions": "Jeg har allergener og/eller restriksjoner"
       }
     },
-    "login": {
-      "email": "E-post",
-      "password": "Passord",
-      "remember": "Husk meg",
-      "forgot": "Glemt passord?"
-    },
     "resume": {
-      "resume": "CV",
-      "upload_resume": "Last opp CV",
-      "your_resume": "Din CV",
-      "delete_resume": "Slett CV"
+      "resume": "CV"
     },
     "delete": {
       "title": "Slett brukeren min",
@@ -120,7 +103,6 @@
       "resume_delete_title": "Slette CV-en?",
       "resume_delete_text": "Bedriftene kan ikke lenger se CV-en din. Du kan laste opp en ny når som helst.",
       "resume_delete": "Slett CV",
-      "resume_uploading": "Laster opp …",
       "resume_uploaded": "CV-en er lastet opp",
       "resume_deleted": "CV-en er slettet",
       "cancel": "Avbryt"
@@ -142,22 +124,6 @@
     }
   },
   "error": {
-    "form": {
-      "general": {
-        "equal_password": "Passordene må være like",
-        "required": "Dette feltet er påkrevd",
-        "email": "Ugyldig e-postadresse"
-      },
-      "password": {
-        "length": "Passordet må være minst 8 tegn langt.",
-        "letters": "Passordet må inneholde minst 3 bokstaver.",
-        "numbers": "Passordet må inneholde minst 3 tall.",
-        "special": "Passordet må inneholde minst 1 spesialtegn.",
-        "uppercase": "Passordet må inneholde minst 1 stor bokstav.",
-        "required": "Passord er påkrevd",
-        "confirmed": "Passordene må være like"
-      }
-    },
     "page": {
       "missing_title": "Denne siden finnes ikke",
       "missing_text": "Det finnes ingenting på {path}. Adressen kan være skrevet feil, eller siden kan ha flyttet.",
@@ -167,53 +133,10 @@
       "elsewhere": "Eller gå til"
     }
   },
-  "datetime": {
-    "months": {
-      "january": "januar",
-      "february": "februar",
-      "march": "mars",
-      "april": "april",
-      "may": "mai",
-      "june": "juni",
-      "july": "juli",
-      "august": "august",
-      "september": "september",
-      "october": "oktober",
-      "november": "november",
-      "december": "desember"
-    },
-    "times": {
-      "days": "Dager",
-      "hours": "Timer",
-      "minutes": "Minutter",
-      "seconds": "Sekunder"
-    }
-  },
   "event": {
-    "take_off": "Arrangementet tar av om",
     "page": {
-      "details": {
-        "name": "Detaljer",
-        "from": "Fra",
-        "to": "Til",
-        "reg_start": "Påmeldingsstart",
-        "reg_end": "Påmeldingsslutt",
-        "reg_programme": "Studieprogram",
-        "reg_year": "Årstrinn",
-        "location": "Sted",
-        "host": "Arrangør"
-      },
       "attendants": {
-        "name": "Påmelding",
-        "attendants": "Påmeldte",
-        "nocapacity": "Ingen kapasitetsbegrensning",
-        "registered": "Du er påmeldt",
-        "scan": "Skann påmeldte",
-        "attended": "Deltok"
-      },
-      "queue": {
-        "name": "Venteliste",
-        "position": "Plassering i køen"
+        "scan": "Skann påmeldte"
       }
     }
   },
@@ -221,15 +144,8 @@
     "title": "Kontakt oss",
     "board": "Styret",
     "positions": {
-      "head": "Leder",
-      "deputyHead": "Nestleder",
-      "IT": "IT-ansvarlig",
-      "finance": "Økonomiansvarlig",
       "business": "Bedriftansvarlig",
-      "spons": "Sponsoransvarlig",
-      "marketing": "Markedsføringsansvarlig",
-      "logistics": "Logistikkansvarlig",
-      "travel": "Turansvarlig"
+      "logistics": "Logistikkansvarlig"
     },
     "question": "Hva gjelder det?",
     "organisation": "Organisasjonen",
@@ -257,7 +173,6 @@
   },
   "company": {
     "admin": {
-      "title": "Bedriftsside",
       "year": "{n}. år",
       "events": {
         "name": "Arrangementer",
@@ -300,7 +215,6 @@
     }
   },
   "alert": {
-    "default_message": "Oi! Noe gikk galt.",
     "api": {
       "error": {
         "general": {
@@ -380,68 +294,15 @@
       }
     },
     "success": {
-      "firebase": {
-        "reset_password": "Epost for tilbakestilling av passord er sendt"
-      },
       "user": {
-        "edit": "Brukeren ble oppdatert",
         "deleted": "Brukeren din er slettet"
-      },
-      "event": {
-        "register": {
-          "sign_up": "Du er påmeldt dette arrangementet",
-          "opt_out": "Du har meldt deg av dette arrangementet",
-          "queue": "Du er nå på venteliste for dette arrangementet",
-          "opt_out_queue": "Du har meldt deg køen av dette arrangementet"
-        },
-        "edit": {
-          "created": "Arrangement opprettet",
-          "modified": "Arrangement oppdatert"
-        }
-      },
-      "company": {
-        "edit": {
-          "created": "Bedrift opprettet",
-          "modified": "Bedrift oppdatert",
-          "deleted_logo": "Logo slettet"
-        }
-      },
-      "job": {
-        "edit": {
-          "modified": "Jobb oppdatert",
-          "created": "Jobb opprettet"
-        }
       }
     }
   },
-  "program": {
-    "title": "Program",
-    "standmap": "Se standkart",
-    "event": {
-      "sign_up": "Meld meg på",
-      "enqueue": "Meld meg på venteliste",
-      "opt_out": {
-        "name": "Trekk påmelding",
-        "queue": "Trekk køplass",
-        "confirmtext": "Er du sikker på at du vil melde deg av?",
-        "confirm": "Ja, meld meg av",
-        "abort": "Nei, avbryt"
-      },
-      "sign_in_to_register": "Logg inn for å melde deg på",
-      "registration_closed": "Ikke åpent for påmelding"
-    }
-  },
   "jobs": {
-    "title": "Stillingsannonser",
-    "jobTypes": "Jobbtyper",
     "deadline": "Søknadsfrist",
-    "search": "Søk",
     "location": "Sted",
-    "company": "Bedrift",
-    "details": "Stillingsdetaljer",
-    "apply": "Søk her",
     "type": "Jobbtype",
-    "no_jobs": "Fant ingen stillingsannonser ⚠️",
     "link_listing": "Hele annonsen ligger på nettsiden til {company}.",
     "open_listing": "Les annonsen og søk",
     "detail": {
@@ -476,7 +337,6 @@
       "count": "Ingen stillinger | 1 stilling, nærmeste frist først | {n} stillinger, nærmeste frist først",
       "no_match": "Ingen stillinger passer filtrene.",
       "empty": "Det er ingen ledige stillinger akkurat nå.",
-      "rolling": "Løpende",
       "meet": "Møt dem {day}",
       "show": "Vis ingen stillinger | Vis 1 stilling | Vis {n} stillinger"
     }
@@ -687,7 +547,6 @@
         "jobtype": {
           "name": "Jobbtype",
           "full_time": "Fulltid",
-          "part_time": "Deltid",
           "graduate": "Graduate",
           "summer_internship": "Sommerjobb"
         }
@@ -763,11 +622,6 @@
         "text": "Kontoen, profilen, CV-en og påmeldingene slettes for godt. Plassene på kommende arrangementer går videre til de neste i køen. Dette kan ikke angres. | Kontoene, profilene, CV-ene og påmeldingene slettes for godt. Plassene på kommende arrangementer går videre til de neste i køen. Dette kan ikke angres.",
         "confirm": "Slett {n} bruker | Slett {n} brukere",
         "done": "{n} bruker slettet | {n} brukere slettet"
-      },
-      "filterorder": {
-        "name": "Rekkefølge",
-        "descending": "Synkende",
-        "ascending": "Stigende"
       },
       "form": {
         "edit_title": "Rediger bruker",
@@ -928,27 +782,6 @@
     "halal": "Halal",
     "kosher": "Kosher",
     "lactose": "Laktose"
-  },
-  "weekday": {
-    "sunday": "Søndag",
-    "monday": "Mandag",
-    "tuesday": "Tirsdag",
-    "wednesday": "Onsdag",
-    "thursday": "Torsdag",
-    "friday": "Fredag",
-    "saturday": "Lørdag"
-  },
-  "formattext": {
-    "bold": "Bold",
-    "italic": "Italic",
-    "strikethrough": "Strikethrough",
-    "paragraph": "Paragraph",
-    "heading": "Heading",
-    "bulletlist": "Bullet list",
-    "numberedlist": "Numbered list",
-    "linebreak": "Line break",
-    "undo": "Undo",
-    "redo": "Redo"
   },
   "forcompanies": {
     "title": "For bedrifter",
