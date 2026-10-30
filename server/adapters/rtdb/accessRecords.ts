@@ -1,3 +1,4 @@
+import type { Affiliation } from '@/domain/authorization/affiliation'
 import {
   isEntitlement,
   type EntitledCompany,
@@ -26,6 +27,7 @@ export interface MembershipRecord {
 export interface AffiliationRecord {
   tier?: string | null
   overrides?: Record<string, unknown> | null
+  formerTier?: string | null
   createdAt?: string
   createdBy?: string
 }
@@ -62,24 +64,34 @@ export const withheldFrom = (
   )
 
 /**
- * Read a stored affiliation
+ * A stored affiliation as the domain reads it
  *
  * @remarks
  * An unknown tier reads as a former company, which grants nothing by default, and an override
  * naming no known entitlement is ignored, so a typo can only take access away.
  */
-export const entitledFromAffiliation = (
-  uid: string,
-  name: string,
-  affiliation: AffiliationRecord,
-): EntitledCompany => ({
-  uid: CompanyUid.parse(uid),
-  name,
-  relationship: isRelationship(affiliation.tier) ? affiliation.tier : 'prior',
-  entitlementOverrides: Object.fromEntries(
-    Object.entries(affiliation.overrides ?? {}).filter(
+export const affiliationFrom = (record: AffiliationRecord): Affiliation => ({
+  tier: isRelationship(record.tier) ? record.tier : 'prior',
+  overrides: Object.fromEntries(
+    Object.entries(record.overrides ?? {}).filter(
       (entry): entry is [Entitlement, boolean] =>
         isEntitlement(entry[0]) && typeof entry[1] === 'boolean',
     ),
   ),
+  ...(isRelationship(record.formerTier) && { formerTier: record.formerTier }),
 })
+
+/** Read a stored affiliation as the company the authorization layer sees */
+export const entitledFromAffiliation = (
+  uid: string,
+  name: string,
+  affiliation: AffiliationRecord,
+): EntitledCompany => {
+  const { tier, overrides } = affiliationFrom(affiliation)
+  return {
+    uid: CompanyUid.parse(uid),
+    name,
+    relationship: tier,
+    entitlementOverrides: overrides,
+  }
+}

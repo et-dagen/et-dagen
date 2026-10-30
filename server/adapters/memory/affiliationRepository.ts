@@ -1,4 +1,7 @@
-import type { AffiliationRepository } from '@/application/companies/affiliationRepository'
+import type {
+  AffiliationRepository,
+  StoredAffiliation,
+} from '@/application/companies/affiliationRepository'
 import type { Affiliation } from '@/domain/authorization/affiliation'
 import type { CompanyUid } from '@/domain/business/company'
 
@@ -11,16 +14,21 @@ import type { CompanyUid } from '@/domain/business/company'
 export function memoryAffiliationRepository(): AffiliationRepository & {
   read(company: CompanyUid): Affiliation | undefined
 } {
-  const stored = new Map<CompanyUid, Affiliation>()
+  const stored = new Map<CompanyUid, StoredAffiliation>()
   return {
-    set: (company, affiliation) => {
-      stored.set(company, structuredClone(affiliation))
+    set: (company, affiliation, { at }) => {
+      stored.set(company, {
+        company,
+        affiliation: structuredClone(affiliation),
+        setAt: at,
+      })
       return Promise.resolve()
     },
+    all: () => Promise.resolve(structuredClone([...stored.values()])),
     remove: (companies) => {
       for (const company of companies) stored.delete(company)
       return Promise.resolve()
     },
-    read: (company) => stored.get(company),
+    read: (company) => stored.get(company)?.affiliation,
   }
 }
