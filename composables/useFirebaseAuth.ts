@@ -20,12 +20,9 @@ type newUser = {
 }
 
 // registers new user in firebase auth and db
-export const registerUser = async (
-  newUser: newUser,
-  registrationCode?: string,
-) => {
-  // studyprogram and current year are required when not creating a company user
-  if (!registrationCode && (!newUser.studyProgram || !newUser.currentYear))
+export const registerUser = async (newUser: newUser) => {
+  // studyprogram and current year are required
+  if (!newUser.studyProgram || !newUser.currentYear)
     throw createError({
       statusCode: 400,
       statusMessage: 'Missing studyprogram or current year',
@@ -38,19 +35,6 @@ export const registerUser = async (
       statusMessage: 'Missing name',
     })
 
-  // check validity of registratin code
-  // only applicable if creating a company user
-  if (registrationCode) {
-    const { isValid } = await $fetch(`/api/v1/code/${registrationCode}`)
-
-    // do not attempt to create user if the code is invalid
-    if (!isValid)
-      throw createError({
-        statusCode: 401,
-        statusMessage: 'Invalid registration code',
-      })
-  }
-
   const authStore = useAuthStore()
   const localePath = useLocalePath()
 
@@ -58,14 +42,14 @@ export const registerUser = async (
   // the user data before it is created
   authStore.registeringUser = true
   try {
-    await createAccount(newUser, registrationCode)
+    await createAccount(newUser)
   } finally {
     authStore.registeringUser = false
   }
   await navigateTo(localePath('/'))
 }
 
-async function createAccount(newUser: newUser, registrationCode?: string) {
+async function createAccount(newUser: newUser) {
   const auth = getAuth()
 
   // register user in firebase auth
@@ -76,7 +60,7 @@ async function createAccount(newUser: newUser, registrationCode?: string) {
   )
 
   try {
-    await saveProfile(user, newUser, registrationCode)
+    await saveProfile(user, newUser)
   } catch (cause) {
     // an account without a profile would block the next try with "email taken"
     await user.delete().catch(() => {})
@@ -84,11 +68,7 @@ async function createAccount(newUser: newUser, registrationCode?: string) {
   }
 }
 
-async function saveProfile(
-  user: FirebaseUser,
-  newUser: newUser,
-  registrationCode?: string,
-) {
+async function saveProfile(user: FirebaseUser, newUser: newUser) {
   const authStore = useAuthStore()
 
   // set displayname in firebase auth
@@ -105,9 +85,6 @@ async function saveProfile(
       studyProgram: newUser.studyProgram,
       currentYear: newUser.currentYear,
       dietaryRestrictions: newUser.dietaryRestrictions,
-    },
-    query: {
-      code: registrationCode,
     },
   })
 

@@ -33,6 +33,8 @@ export default defineEventHandler((event) => {
     'list',
     "List a company's invitations",
   )
+  // invited addresses are personal data: always logged
+  setLogImportance(event, 'warn')
 
   return listInvitations(
     { invitations },

@@ -64,7 +64,7 @@ const handlers = walk(API_DIR).map((rel) => ({
   source: readFileSync(join(API_DIR, rel), 'utf8'),
 }))
 
-// tags: ['Code', 'internal']
+// tags: ['Image', 'internal']
 const isTaggedInternal = (source: string) =>
   /tags:\s*\[[^\]]*'internal'[^\]]*\]/.test(source)
 

@@ -82,7 +82,6 @@ export const ROLES = {
       delete: true,
       assign: true,
     },
-    code: { read: true, create: true, delete: true },
     invitation: { create: true, list: true, revoke: true },
     image: { upload: true },
     board: { manage: true },
