@@ -6,6 +6,8 @@
     mainPartner: Company | null
     partners: Company[]
     sponsors: Company[]
+    /** The companies are the last fair's */
+    last: boolean
   }>()
 
   // the main partner's tile takes a full row on a phone and two by two from `sm` up
@@ -62,7 +64,7 @@
         id="home-companies"
         class="tw:text-3xl tw:font-black tw:tracking-tight tw:lg:text-4xl"
       >
-        {{ $t('home.companies') }}
+        {{ $t(last ? 'home.companies_last' : 'home.companies') }}
       </h2>
 
       <!-- one wall of logo cells; the grid lines are the gaps over the border colour -->

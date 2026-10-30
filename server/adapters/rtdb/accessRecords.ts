@@ -87,11 +87,12 @@ export const entitledFromAffiliation = (
   name: string,
   affiliation: AffiliationRecord,
 ): EntitledCompany => {
-  const { tier, overrides } = affiliationFrom(affiliation)
+  const { tier, overrides, formerTier } = affiliationFrom(affiliation)
   return {
     uid: CompanyUid.parse(uid),
     name,
     relationship: tier,
+    ...(formerTier && { formerRelationship: formerTier }),
     entitlementOverrides: overrides,
   }
 }

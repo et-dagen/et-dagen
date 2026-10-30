@@ -22,7 +22,31 @@ describe('lineupOf', () => {
 
   it('leaves out companies without a logo', () => {
     const lineup = lineupOf({ a: { name: 'Sony', tier: 'mainPartner' } })
-    expect(lineup).toEqual({ mainPartner: null, partners: [], sponsors: [] })
+    expect(lineup).toEqual({
+      mainPartner: null,
+      partners: [],
+      sponsors: [],
+      last: true,
+    })
+  })
+
+  it("shows the last fair's companies by their former tier until a company has a tier", () => {
+    const companies = {
+      a: { name: 'Sony', logo, tier: 'prior', formerTier: 'partner' },
+      b: { name: 'Gammel AS', logo, tier: 'prior' },
+    } as const
+    expect(lineupOf(companies)).toMatchObject({
+      partners: [{ name: 'Sony' }],
+      sponsors: [],
+      last: true,
+    })
+
+    const next = lineupOf({
+      ...companies,
+      c: { name: 'ABB', logo, tier: 'sponsor' },
+    })
+    expect(next).toMatchObject({ partners: [], last: false })
+    expect(next.sponsors.map((c) => c.name)).toEqual(['ABB'])
   })
 
   it('copes with no companies', () => {

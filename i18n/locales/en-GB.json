@@ -16,6 +16,7 @@
     "slogan": "Explore your future workplace",
     "sign_up": "Sign up for events",
     "who": "See who is coming",
+    "who_last": "See who came last time",
     "main_partner": "Main partner",
     "upcoming": "Next events",
     "programme": "See the whole programme",
@@ -29,6 +30,7 @@
       "closed": "Sign-up closed"
     },
     "companies": "Who is coming",
+    "companies_last": "Who came last time",
     "partners": "Partners",
     "sponsors": "Sponsors",
     "join": "Want your company here?"

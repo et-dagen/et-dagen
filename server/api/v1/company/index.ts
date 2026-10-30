@@ -116,6 +116,9 @@ function withTiers<T>(
         {
           ...record,
           tier: company?.relationship ?? 'prior',
+          ...(company?.formerRelationship && {
+            formerTier: company.formerRelationship,
+          }),
           ...(showEntitlements && {
             entitlements: company ? [...entitlementsFor(company)] : [],
           }),

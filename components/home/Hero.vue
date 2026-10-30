@@ -5,6 +5,8 @@
   defineProps<{
     fair: FairDays | null
     hasCompanies: boolean
+    /** The companies shown are the last fair's */
+    lastCompanies: boolean
   }>()
 
   const localePath = useLocalePath()
@@ -74,7 +76,7 @@
           href="#bedrifter"
           class="tw:text-lg tw:font-bold tw:underline tw:decoration-border tw:decoration-2 tw:underline-offset-[6px] tw:hover:decoration-brand"
         >
-          {{ $t('home.who') }}
+          {{ $t(lastCompanies ? 'home.who_last' : 'home.who') }}
         </a>
       </div>
     </div>
