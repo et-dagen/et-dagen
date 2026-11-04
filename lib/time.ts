@@ -1,4 +1,4 @@
-import { Instant, TimeZone, Zone, type ISO8601String } from '@/domain/time'
+import { TimeZone, Zone, type ISO8601String } from '@/domain/time'
 
 /** v1 stores every time as Norwegian wall-clock time */
 const OSLO = TimeZone.parse('Europe/Oslo')
@@ -34,12 +34,35 @@ export function formatWhen(
   },
 ): string {
   const instant = instantOf(value)
-  if (!instant) return ''
-  return new Intl.DateTimeFormat(locale, {
-    ...options,
-    timeZone: 'Europe/Oslo',
-  }).format(Instant.toDate(instant))
+  return instant ? formatInstant(instant, locale, options) : ''
 }
+
+/** An instant as people read it in Oslo */
+export const formatInstant = (
+  instant: ISO8601String,
+  locale: string,
+  options: Intl.DateTimeFormatOptions,
+): string => Zone.format(instant, OSLO, locale, options)
+
+/** The Oslo calendar day of an instant, as `YYYY-MM-DD` */
+export const osloDay = (instant: ISO8601String): string =>
+  Zone.toInput(instant, OSLO).slice(0, 10)
+
+/**
+ * A calendar day (`YYYY-MM-DD`) as people read it, such as "onsdag 4. november"
+ *
+ * @remarks
+ * A day is the same date in every zone, so it is read at noon UTC and shown in UTC, which keeps the
+ * date from shifting wherever the code runs.
+ */
+export const formatDay = (
+  day: string,
+  locale: string,
+  options: Intl.DateTimeFormatOptions,
+): string =>
+  new Intl.DateTimeFormat(locale, { ...options, timeZone: 'UTC' }).format(
+    new Date(`${day}T12:00:00Z`),
+  )
 
 /** Whole calendar days in Oslo from now until a stored time; negative once it has passed */
 export function daysUntil(
@@ -48,7 +71,6 @@ export function daysUntil(
 ): number | null {
   const instant = instantOf(value)
   if (!instant) return null
-  const day = (at: ISO8601String) => Zone.toInput(at, OSLO).slice(0, 10)
-  const ms = Date.parse(day(instant)) - Date.parse(day(now))
+  const ms = Date.parse(osloDay(instant)) - Date.parse(osloDay(now))
   return Math.round(ms / 86_400_000)
 }

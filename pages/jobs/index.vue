@@ -5,7 +5,7 @@
   import JobRowItem from '@/components/job/JobRow.vue'
   import { Button } from '@/components/ui/button'
   import { Instant } from '@/domain/time'
-  import type { EventRow } from '@/lib/admin/events'
+  import type { EventRow } from '@/lib/events'
   import {
     facetsOf,
     filterJobs,

@@ -2,8 +2,8 @@
   import { Plus } from '@lucide/vue'
   import EventPanel from '@/components/company/EventPanel.vue'
   import { Button } from '@/components/ui/button'
-  import { instantOf } from '@/lib/admin/time'
-  import type { EventRow } from '@/lib/admin/events'
+  import { instantOf } from '@/lib/time'
+  import type { EventRow } from '@/lib/events'
 
   definePageMeta({
     layout: 'admin',

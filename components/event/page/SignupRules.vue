@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { formatWhen } from '@/lib/admin/time'
+  import { formatWhen } from '@/lib/time'
   import type { PublicEvent } from '@/lib/eventPage'
 
   const props = defineProps<{

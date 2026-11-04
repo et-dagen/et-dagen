@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { ChevronRight, MapPin } from '@lucide/vue'
   import { Instant } from '@/domain/time'
-  import { eventStatus, formatStart, placeOf } from '@/lib/admin/events'
+  import { eventStatus, formatStart, placeOf } from '@/lib/events'
   import { afterDeadline, type FairEvent } from '@/lib/jobs'
 
   const props = defineProps<{

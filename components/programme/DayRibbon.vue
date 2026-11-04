@@ -1,17 +1,17 @@
 <script setup lang="ts">
   import type { ProgrammeDay } from '@/lib/programme'
+  import { formatDay } from '@/lib/time'
 
   defineProps<{ days: ProgrammeDay[]; selected: string | null }>()
   defineEmits<{ select: [date: string] }>()
 
   const { locale } = useI18n()
   const label = (date: string) =>
-    new Intl.DateTimeFormat(locale.value, {
+    formatDay(date, locale.value, {
       weekday: 'short',
       day: 'numeric',
       month: 'short',
-      timeZone: 'UTC',
-    }).format(new Date(`${date}T12:00:00Z`))
+    })
 </script>
 
 <template>

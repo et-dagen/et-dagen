@@ -6,7 +6,7 @@ import {
   mapEmbedOf,
   meetsRequirements,
   openJobsOf,
-  placesOf,
+  seatsOf,
   signupStateOf,
   ticketWhenOf,
   type PublicEvent,
@@ -99,10 +99,10 @@ describe('meetsRequirements', () => {
   })
 })
 
-describe('placesOf', () => {
+describe('seatsOf', () => {
   it('counts places and the queue, never names', () => {
     expect(
-      placesOf(workshop({ attendants: { a: {} }, queue: { 1: 'b' } })),
+      seatsOf(workshop({ attendants: { a: {} }, queue: { 1: 'b' } })),
     ).toEqual({
       taken: 1,
       limit: 2,

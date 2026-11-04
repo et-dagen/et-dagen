@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { Instant } from '@/domain/time'
-  import type { EventRow } from '@/lib/admin/events'
+  import type { EventRow } from '@/lib/events'
   import { lineupOf, type Company } from '@/lib/site/companies'
   import { fairDays, upcoming, type GeneralInfo } from '@/lib/site/fair'
 

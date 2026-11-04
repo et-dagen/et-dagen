@@ -1,6 +1,6 @@
 <script setup lang="ts">
-  import { placeOf } from '@/lib/admin/events'
-  import { formatWhen } from '@/lib/admin/time'
+  import { placeOf } from '@/lib/events'
+  import { formatWhen } from '@/lib/time'
   import type { SignUpRow } from '@/lib/user/signUps'
   import {
     AlertDialog,

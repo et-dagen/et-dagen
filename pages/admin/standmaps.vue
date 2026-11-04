@@ -6,7 +6,9 @@
   import { Label } from '@/components/ui/label'
   import { alertError } from '@/composables/useAlerts'
   import { FairDay } from '@/domain/fair/day'
+  import { Instant } from '@/domain/time'
   import { standMapDays, type ListedStandMap } from '@/lib/admin/standMaps'
+  import { formatDay, osloDay } from '@/lib/time'
 
   const { t, locale } = useI18n()
   const alerts = useAlertStore()
@@ -16,19 +18,16 @@
     useFetch<ListedStandMap[]>('/api/v1/image/standmap'),
   ])
 
-  const today = new Intl.DateTimeFormat('en-CA', {
-    timeZone: 'Europe/Oslo',
-  }).format(new Date())
+  const today = osloDay(Instant.now())
   const days = computed(() => standMapDays(events.value, maps.value, today))
 
   const label = (day: string) =>
-    new Intl.DateTimeFormat(locale.value, {
+    formatDay(day, locale.value, {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
       year: 'numeric',
-      timeZone: 'UTC',
-    }).format(new Date(`${day}T12:00:00Z`))
+    })
 
   // one hidden file input serves every row; `target` is the day it uploads for
   const picker = ref<HTMLInputElement | null>(null)

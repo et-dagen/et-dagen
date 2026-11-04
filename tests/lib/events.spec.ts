@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { Instant } from '@/domain/time'
-import { eventStatus, placeOf, type EventRow } from '@/lib/admin/events'
+import { eventStatus, placeOf, type EventRow } from '@/lib/events'
 
 // 12:00 in Oslo on 1 November 2026
 const now = Instant.parse('2026-11-01T11:00:00.000Z')

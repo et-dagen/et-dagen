@@ -2,7 +2,7 @@
   import { Pencil, Plus } from '@lucide/vue'
   import { Button } from '@/components/ui/button'
   import { CompanyUid } from '@/domain/business/company'
-  import { deadlineOf, formatWhen } from '@/lib/admin/time'
+  import { deadlineOf, formatWhen } from '@/lib/time'
 
   definePageMeta({ layout: 'admin', protected: true, area: 'jobs' })
 

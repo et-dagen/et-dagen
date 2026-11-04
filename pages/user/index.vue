@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { CalendarDays, RotateCw } from '@lucide/vue'
   import { Instant } from '@/domain/time'
-  import type { EventRow } from '@/lib/admin/events'
+  import type { EventRow } from '@/lib/events'
   import {
     firstNameOf,
     signUpRows,

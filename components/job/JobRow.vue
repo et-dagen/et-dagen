@@ -2,8 +2,8 @@
   import { MapPin } from '@lucide/vue'
   import CompanyLogo from '@/components/common/CompanyLogo.vue'
   import DeadlineNote from '@/components/common/DeadlineNote.vue'
-  import { placeOf } from '@/lib/admin/events'
-  import { formatWhen } from '@/lib/admin/time'
+  import { placeOf } from '@/lib/events'
+  import { formatWhen } from '@/lib/time'
   import type { JobRow } from '@/lib/jobBoard'
   import { formatShortDeadline } from '@/lib/jobs'
 
