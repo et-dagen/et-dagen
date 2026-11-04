@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import type { ListedCompany } from '@/lib/companies'
   import StandMap from '@/components/programme/StandMap.vue'
   import CompanyLogo from '@/components/common/CompanyLogo.vue'
   import { Instant } from '@/domain/time'
@@ -9,7 +10,7 @@
   const props = defineProps<{
     day: ProgrammeDay
     map: string | null
-    companies: Record<string, { name?: string; logo?: string }>
+    companies: Record<string, ListedCompany>
   }>()
 
   const { locale } = useI18n()

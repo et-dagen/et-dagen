@@ -1,14 +1,8 @@
-/** A company as `GET /api/v1/company` returns it to the landing page */
-type Tier = 'mainPartner' | 'partner' | 'sponsor' | 'prior'
+import type { Relationship } from '@/domain/business/company'
+import type { ListedCompany } from '@/lib/companies'
 
-export interface Company {
-  name?: string
-  logo?: string
-  webpage?: string
-  tier?: Tier
-  /** The tier at the last fair, once the yearly reset has made the company former */
-  formerTier?: Tier
-}
+/** A company on the landing page */
+export type Company = ListedCompany
 
 export interface Lineup {
   mainPartner: Company | null
@@ -33,8 +27,11 @@ export function lineupOf(
   companies: Record<string, Company> | null | undefined,
 ): Lineup {
   const shown = Object.values(companies ?? {}).filter((c) => !!c.logo)
-  const by = (tierOf: (c: Company) => Tier | undefined, last: boolean) => {
-    const tier = (name: Tier) =>
+  const by = (
+    tierOf: (c: Company) => Relationship | undefined,
+    last: boolean,
+  ) => {
+    const tier = (name: Relationship) =>
       shown.filter((c) => tierOf(c) === name).sort(byName)
     return {
       mainPartner: tier('mainPartner')[0] ?? null,

@@ -1,12 +1,13 @@
 <script setup lang="ts">
   import { ExternalLink } from '@lucide/vue'
+  import type { ListedCompany } from '@/lib/companies'
   import DeadlineNote from '@/components/common/DeadlineNote.vue'
   import type { OpenJob } from '@/lib/eventPage'
   import { formatDeadline } from '@/lib/jobs'
 
   defineProps<{
     jobs: OpenJob[]
-    company: { name?: string; webpage?: string } | null
+    company: ListedCompany | null
   }>()
 
   const { locale } = useI18n()

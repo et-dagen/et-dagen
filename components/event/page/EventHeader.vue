@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { ArrowLeft, CalendarClock, MapPin, Users } from '@lucide/vue'
+  import type { ListedCompany } from '@/lib/companies'
   import CompanyLogo from '@/components/common/CompanyLogo.vue'
   import { placeOf } from '@/lib/events'
   import {
@@ -11,7 +12,7 @@
 
   const props = defineProps<{
     event: PublicEvent
-    company: { name?: string; logo?: string } | null
+    company: ListedCompany | null
     urgency: Urgency | null
   }>()
 

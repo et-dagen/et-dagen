@@ -4,7 +4,7 @@
 
   const props = withDefaults(
     defineProps<{
-      src?: string
+      src?: string | null
       name?: string
       area?: number
     }>(),

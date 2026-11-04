@@ -1,5 +1,7 @@
 <script setup lang="ts">
   import { Mail, MoreHorizontal, Pencil, Plus, Trash2 } from '@lucide/vue'
+  import { useCompanies } from '@/composables/useCompanies'
+  import { companyName } from '@/lib/companies'
   import DeleteDialog from '@/components/admin/DeleteDialog.vue'
   import FilterChips from '@/components/admin/FilterChips.vue'
   import Pager from '@/components/admin/Pager.vue'
@@ -60,8 +62,7 @@
 
   const { data: events, refresh } =
     await useFetch<Record<string, EventRow>>('/api/v1/event')
-  const { data: companies } =
-    await useFetch<Record<string, { name: string }>>('/api/v1/company')
+  const { data: companies } = await useCompanies()
 
   const rows = computed<Row[]>(() =>
     Object.entries(events.value ?? {}).map(([uid, event]) => ({
@@ -69,8 +70,7 @@
       ...event,
     })),
   )
-  const companyOf = (row: Row) =>
-    companies.value?.[row.companyUID ?? '']?.name ?? ''
+  const companyOf = (row: Row) => companyName(companies.value, row.companyUID)
   const attendeesOf = (row: Row) => Object.keys(row.attendants ?? {}).length
   const statusOf = (row: Row) => eventStatus(row, now)
 

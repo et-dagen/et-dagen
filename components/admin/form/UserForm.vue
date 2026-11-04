@@ -1,5 +1,8 @@
 <script setup lang="ts">
   import { ArrowLeft, Save } from '@lucide/vue'
+  import { useCompanies } from '@/composables/useCompanies'
+  import { useProgrammes } from '@/composables/useProgrammes'
+  import { STUDY_YEARS } from '@/lib/user/programmes'
   import CheckGroup from '@/components/admin/form/CheckGroup.vue'
   import DietField from '@/components/form/DietField.vue'
   import FieldError from '@/components/form/FieldError.vue'
@@ -33,29 +36,15 @@
   const { t } = useI18n()
   const localePath = useLocalePath()
 
-  const { data: companies } =
-    await useFetch<Record<string, { name?: string }>>('/api/v1/company')
+  const { data: companies } = await useCompanies()
   const companyOptions = computed(() =>
     Object.entries(companies.value ?? {})
       .map(([value, company]) => ({ value, label: company.name ?? value }))
       .sort((a, b) => a.label.localeCompare(b.label, 'nb')),
   )
-  const { data: programmeData } =
-    await useFetch<Record<string, { name?: string; type?: string }>>(
-      '/api/v1/programme',
-    )
-  const programmes = computed(() =>
-    Object.values(programmeData.value ?? {})
-      .filter((programme) => programme.name)
-      .sort((a, b) => a.name!.localeCompare(b.name!, 'nb')),
-  )
-  /** A bachelor runs years 1 to 3 and a master 4 and 5; anything else all five */
-  const yearsOf = (name: unknown) => {
-    const type = programmes.value.find((p) => p.name === name)?.type
-    if (type === 'bachelor') return [1, 2, 3]
-    if (type === 'master') return [4, 5]
-    return [1, 2, 3, 4, 5]
-  }
+  const { programmes, yearsOf: offeredBy } = await useProgrammes()
+  // before a programme is chosen, the admin may still pick any year
+  const yearsOf = (name: unknown) => (name ? offeredBy(name) : STUDY_YEARS)
 
   const entitlementOptions = computed(() =>
     WITHHOLDABLE.map((entitlement) => ({

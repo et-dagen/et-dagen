@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { useCompanies } from '@/composables/useCompanies'
   import AboutPanel from '@/components/event/page/AboutPanel.vue'
   import CompanyJobs from '@/components/event/page/CompanyJobs.vue'
   import EventHeader from '@/components/event/page/EventHeader.vue'
@@ -16,8 +17,8 @@
     ticketWhenOf,
     urgencyOf,
     type PublicEvent,
-    type StoredJob,
   } from '@/lib/eventPage'
+  import type { StoredJob } from '@/lib/jobs'
 
   const { locale } = useI18n()
   const localePath = useLocalePath()
@@ -29,9 +30,7 @@
       useFetch<Record<string, PublicEvent>>('/api/v1/event', {
         query: { eventUID: uid },
       }),
-      useFetch<
-        Record<string, { name?: string; logo?: string; webpage?: string }>
-      >('/api/v1/company'),
+      useCompanies(),
       useFetch<Record<string, StoredJob>>('/api/v1/job'),
     ])
 

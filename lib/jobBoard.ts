@@ -1,3 +1,4 @@
+import type { ListedCompanies } from '@/lib/companies'
 import { deadlineOf, instantOf } from '@/lib/time'
 import type { EventRow } from '@/lib/events'
 import { search } from '@/lib/admin/listView'
@@ -6,21 +7,12 @@ import {
   deadlineState,
   fairEventsOf,
   type DeadlineState,
-  type DeadlineType,
   type FairEvent,
+  type StoredJob,
 } from '@/lib/jobs'
 import type { ISO8601String } from '@/domain/time'
 
 /** What the job list reads from `jobs/<uid>`; every field may be missing */
-export interface StoredJob {
-  title?: string
-  companyUID?: string
-  jobType?: string
-  location?: string
-  deadline?: string | null
-  deadlineType?: DeadlineType
-}
-
 export interface JobRow {
   uid: string
   title: string
@@ -54,10 +46,7 @@ export function locationsOf(location: string | undefined): string[] {
  */
 export function jobRows(
   jobs: Record<string, StoredJob> | null | undefined,
-  companies:
-    | Record<string, { name?: string; logo?: string }>
-    | null
-    | undefined,
+  companies: ListedCompanies | null | undefined,
   events: Record<string, EventRow> | null | undefined,
   now: ISO8601String,
 ): JobRow[] {

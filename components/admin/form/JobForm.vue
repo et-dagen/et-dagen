@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { ArrowLeft, Save } from '@lucide/vue'
+  import { useCompanies } from '@/composables/useCompanies'
   import FieldError from '@/components/form/FieldError.vue'
   import RichText from '@/components/admin/form/RichText.vue'
   import { Button } from '@/components/ui/button'
@@ -41,8 +42,7 @@
 
   const { t } = useI18n()
   const localePath = useLocalePath()
-  const { data: companies } =
-    await useFetch<Record<string, { name?: string }>>('/api/v1/company')
+  const { data: companies } = await useCompanies()
   // a company user or coordinator may only post for the companies they manage
   const auth = useAuthStore()
   const mayPost = (value: string) =>

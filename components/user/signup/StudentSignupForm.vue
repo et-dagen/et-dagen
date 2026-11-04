@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { ChevronRight } from '@lucide/vue'
   import { useForm } from 'vee-validate'
+  import { useProgrammes } from '@/composables/useProgrammes'
   import PasswordInput from '@/components/form/PasswordInput.vue'
   import { typedSchemaOf } from '@/lib/forms/zodSchema'
   import FieldError from '@/components/form/FieldError.vue'
@@ -16,25 +17,16 @@
   import { Input } from '@/components/ui/input'
   import { Label } from '@/components/ui/label'
   import { StudentSignup } from '@/contracts/user'
-  import { yearsOf, type ListedProgramme } from '@/lib/user/programmes'
   import { dietaryFlags } from '~/config/app.config'
 
   const { t } = useI18n()
-  const { data: programmeData } =
-    await useFetch<Record<string, ListedProgramme>>('/api/v1/programme')
-  const programmes = computed(() =>
-    Object.values(programmeData.value ?? {})
-      .filter((programme) => programme.name)
-      .sort((a, b) => a.name!.localeCompare(b.name!, 'nb')),
-  )
+  const { programmes, yearsOf } = await useProgrammes()
 
   const form = useForm({
     validationSchema: typedSchemaOf(StudentSignup),
     initialValues: { dietaryRestrictions: [] },
   })
-  const years = computed(() =>
-    yearsOf(programmes.value, form.values.studyProgram),
-  )
+  const years = computed(() => yearsOf(form.values.studyProgram))
   // a year the new programme does not have would be refused; clear it
   watch(years, (offered) => {
     const year = form.values.currentYear

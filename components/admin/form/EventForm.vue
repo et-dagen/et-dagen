@@ -1,5 +1,8 @@
 <script setup lang="ts">
   import { ArrowLeft, Save } from '@lucide/vue'
+  import { useCompanies } from '@/composables/useCompanies'
+  import { useProgrammes } from '@/composables/useProgrammes'
+  import { STUDY_YEARS } from '@/lib/user/programmes'
   import EventTabs from '@/components/admin/EventTabs.vue'
   import FieldError from '@/components/form/FieldError.vue'
   import RichText from '@/components/admin/form/RichText.vue'
@@ -37,8 +40,7 @@
   const { t } = useI18n()
   const localePath = useLocalePath()
 
-  const { data: companies } =
-    await useFetch<Record<string, { name?: string }>>('/api/v1/company')
+  const { data: companies } = await useCompanies()
   // a company user or coordinator may only host for the companies they manage
   const auth = useAuthStore()
   const mayHost = (value: string) =>
@@ -63,17 +65,8 @@
         .sort((a, b) => a.label.localeCompare(b.label, 'nb')),
     ].filter((option) => mayHost(option.value)),
   )
-  const { data: programmeData } =
-    await useFetch<Record<string, string | { name?: string }>>(
-      '/api/v1/programme',
-    )
-  const programmes = computed(() =>
-    Object.values(programmeData.value ?? {})
-      .map((p) => (typeof p === 'string' ? p : (p.name ?? '')))
-      .filter(Boolean)
-      .sort((a, b) => a.localeCompare(b, 'nb')),
-  )
-  const YEARS = [1, 2, 3, 4, 5]
+  const { programmes: listed } = await useProgrammes()
+  const programmes = computed(() => listed.value.map(({ name }) => name!))
 
   const { form, submit, saving } = useResourceForm({
     schema: EventInput,
@@ -296,7 +289,7 @@
             <FormLabel>{{ $t('admin.events.form.years') }}</FormLabel>
             <div class="tw:flex tw:flex-wrap tw:gap-2">
               <button
-                v-for="year in YEARS"
+                v-for="year in STUDY_YEARS"
                 :key="year"
                 type="button"
                 :aria-pressed="(value ?? []).includes(year)"

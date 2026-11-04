@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { useCompanies } from '@/composables/useCompanies'
   import DayRibbon from '@/components/programme/DayRibbon.vue'
   import DaySection from '@/components/programme/DaySection.vue'
   import NowNext from '@/components/programme/NowNext.vue'
@@ -20,9 +21,7 @@
   const [{ data: events }, { data: companies }, { data: maps }] =
     await Promise.all([
       useFetch<Record<string, EventRow>>('/api/v1/event'),
-      useFetch<Record<string, { name?: string; logo?: string }>>(
-        '/api/v1/company',
-      ),
+      useCompanies(),
       useFetch<{ date: string; url: string }[]>('/api/v1/image/standmap'),
     ])
 

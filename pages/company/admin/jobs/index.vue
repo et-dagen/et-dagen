@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { Pencil, Plus } from '@lucide/vue'
+  import { useCompanies } from '@/composables/useCompanies'
   import { Button } from '@/components/ui/button'
   import { CompanyUid } from '@/domain/business/company'
   import { deadlineOf, formatWhen } from '@/lib/time'
@@ -19,7 +20,7 @@
 
   const [{ data: jobs }, { data: companies }] = await Promise.all([
     useFetch<Record<string, Row>>('/api/v1/job'),
-    useFetch<Record<string, { name?: string }>>('/api/v1/company'),
+    useCompanies(),
   ])
 
   // the jobs of the companies this user may manage, latest deadline first

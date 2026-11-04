@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { Save } from '@lucide/vue'
+  import { refreshCompanies } from '@/composables/useCompanies'
   import FieldError from '@/components/form/FieldError.vue'
   import LogoField from '@/components/form/LogoField.vue'
   import { Button } from '@/components/ui/button'
@@ -40,7 +41,7 @@
         body.append('file', logoFile.value)
         await $fetch('/api/v1/company/logo', { method: 'PUT', body })
       }
-      await refreshNuxtData('company-profile')
+      await refreshCompanies()
       return props.uid
     },
   })
