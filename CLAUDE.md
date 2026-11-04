@@ -43,6 +43,11 @@ server code.
   not extended. Do not add new business logic to a v1 handler.
 - `server/middleware/`, `server/utils/`: request pipeline and shared server helpers.
 - `pages/`, `components/`, `layouts/`, `stores/`, `composables/`: the Vue front end.
+- `lib/`: the front end's plain TypeScript (what a row shows, a form's starting values, how a date
+  is labelled). No Vue, Nuxt, stores or fetching. Code that needs Vue or Nuxt while it runs is a
+  composable (`composables/useX.ts`); code that does not is `lib/`; business rules are `domain/`.
+  "Front end" in `ARCHITECTURE.md` has the full guide.
+- `contracts/`: Zod schemas for request bodies and forms, shared by the client and the server.
 - `models/`: old interfaces that have drifted from the data (#543). Prefer types from `domain/`.
 - `tests/`: all tests, mirroring the source path (`domain/user.ts` → `tests/domain/user.spec.ts`).
   Vitest only looks here.

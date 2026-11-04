@@ -83,6 +83,45 @@ A port method performs a whole operation, such as "register or waitlist this use
 read and write. Each adapter then does it atomically in its own way, and a later PostgreSQL adapter
 can replace the Realtime Database one without changing the use cases.
 
+## Front end
+
+The browser side is a Nuxt app. Business rules stay in `domain/` and are shared with the server;
+the front end only presents them.
+
+| Directory        | Holds                                                                                  | May import                                           |
+| ---------------- | -------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| `pages/`         | Routes: load the data, put components together, declare `definePageMeta`               | Everything below, never another page                 |
+| `components/`    | Vue components, one folder per area (`admin/`, `event/`, `user/`, …)                   | Their own area, `ui/`, `common/`, `form/`, and below |
+| `components/ui/` | shadcn-vue components, copied into the repo                                            | `lib/utils`                                          |
+| `composables/`   | Functions that need Vue or Nuxt while they run                                         | `stores/`, `lib/`, `contracts/`, `domain/`           |
+| `stores/`        | Pinia state shared across pages (the signed-in user and subject)                       | `lib/`, `domain/`                                    |
+| `lib/`           | Plain TypeScript for presentation: view models, formatting, form mapping, list helpers | `lib/`, `contracts/`, `domain/`                      |
+| `contracts/`     | Zod schemas for request bodies and forms, used by the client and the server            | `domain/`                                            |
+
+The server imports none of `pages/`, `components/`, `composables/`, `layouts/` or `stores/`.
+`tests/architecture.spec.ts` checks that, the ban on importing a page, and the component areas.
+
+### Composable or `lib/`?
+
+Ask what the code needs while it runs.
+
+- **It needs Vue or Nuxt: a composable.** It calls `ref`, `computed`, `watch`, a lifecycle hook,
+  `useFetch`, `$fetch`, `useI18n`, `useRoute`, `navigateTo`, a store or the Firebase client. It
+  runs only inside a component's `setup` or another composable. Name it `useX` (`useSort`,
+  `useResourceForm`) and give it one job: own some reactive state, load one thing, or wire one
+  browser API.
+- **It needs nothing but its arguments: `lib/`.** Data in, data out: `eventStatus(event, now)`,
+  `jobFormOf(job)`, `pageOf(rows, page, size)`. Pass in what would otherwise come from the
+  framework, such as the clock, the locale or a translate function. Name it after the value it
+  returns. It runs anywhere, including the server and scripts.
+- **It is a rule of the business: `domain/`.** Who may register, when sign-up opens, what a tier
+  entitles a company to. The server must enforce it too, so it cannot live in the front end.
+
+Prefer `lib/`. A composable should be a thin reactive layer over `lib/` functions, so the logic
+is tested with a plain Vitest call (`tests/lib/`) instead of a mounted component, and components
+stay presentational (#557). When a component grows a calculation, move it to `lib/`; when several
+components repeat the same reactive wiring, move that to a composable.
+
 ## Authorization
 
 - **ABAC:** a per-request `Subject` (uid, roles, per-company entitlements, and the student
