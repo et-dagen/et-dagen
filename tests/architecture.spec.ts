@@ -1,7 +1,8 @@
 /**
  * Keeps the hexagon's dependency rules (ARCHITECTURE.md): the core knows nothing about Nitro,
  * Firebase or the adapters, so an adapter can be swapped without touching it. The front end's
- * imports run one way too: pages use components, components use `components/ui`.
+ * imports run one way too: pages use components, components use `components/ui`, and `lib/` stays
+ * plain TypeScript that needs neither Vue nor Nuxt.
  */
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import { join, relative, resolve } from 'node:path'
@@ -96,6 +97,43 @@ describe('front end', () => {
           const area = areaOf(imported)
           return !SHARED.includes(area) && area !== areaOf(file)
         },
+      ),
+    ).toEqual([])
+  })
+})
+
+/** Packages and directories that need Vue or Nuxt while running; `lib/` may use their types only */
+const RUNTIME =
+  /^(vue|vue-router|pinia|nuxt|#app|#imports|firebase|vee-validate)(\/|$)|^@nuxtjs\/|^[@~]\/(components|composables|layouts|pages|stores)\//
+
+/** Calls to Vue's reactivity or to Nuxt's auto-imports, which `lib/` cannot make without an import */
+const RUNTIME_CALL =
+  /\b(use[A-Z]\w*|ref|computed|reactive|watch|watchEffect|on(Mounted|BeforeUnmount|Unmounted)|navigateTo|defineStore|createError|\$fetch)\s*\(/
+
+describe('lib/', () => {
+  const files = sourceFiles('lib')
+
+  it('imports nothing that needs Vue or Nuxt at runtime, so it runs anywhere', () => {
+    const STATEMENT = /\bimport\s+(type\s+)?[^'"]*?\bfrom\s*['"]([^'"]+)['"]/g
+    expect(
+      files.flatMap((file) =>
+        [...readFileSync(join(ROOT, file), 'utf8').matchAll(STATEMENT)]
+          .filter(
+            ([, typeOnly, specifier]) => !typeOnly && RUNTIME.test(specifier),
+          )
+          .map(([, , specifier]) => `${file} imports ${specifier}`),
+      ),
+    ).toEqual([])
+  })
+
+  it('calls no composable, reactivity or fetch; code that does is a composable', () => {
+    expect(
+      files.flatMap((file) =>
+        readFileSync(join(ROOT, file), 'utf8')
+          .split('\n')
+          .filter((line) => !/^\s*(\/\/|\*|\/\*)/.test(line))
+          .filter((line) => RUNTIME_CALL.test(line))
+          .map((line) => `${file}: ${line.trim()}`),
       ),
     ).toEqual([])
   })

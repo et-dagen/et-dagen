@@ -7,16 +7,17 @@
   const eventUid = route.params.id as string
 
   // fetch event information from query
-  const { data } = await useFetch('/api/v1/event', {
-    method: 'GET',
-    query: {
-      eventUID: eventUid,
+  const { data } = await useFetch<Record<string, { title?: string }>>(
+    '/api/v1/event',
+    {
+      method: 'GET',
+      query: {
+        eventUID: eventUid,
+      },
     },
-  })
+  )
 
-  const event = computed(() => embedKeyIntoObjectValues(data.value)[0])
-
-  const eventTitle = computed(() => event?.value?.title ?? '')
+  const eventTitle = computed(() => data.value?.[eventUid]?.title ?? '')
 
   const camera = ref<CameraFeedExposed | null>(null)
   const isCameraStarting = computed(() => camera.value?.isStarting ?? false)

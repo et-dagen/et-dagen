@@ -2,7 +2,7 @@
   import { ChevronDown, Copy, Pencil } from '@lucide/vue'
   import { Badge } from '@/components/ui/badge'
   import { Button } from '@/components/ui/button'
-  import { attendantsOf, dietaryCounts } from '@/composables/useEventAttendants'
+  import { attendantsOf, dietaryCounts } from '@/lib/company/attendants'
   import { Instant } from '@/domain/time'
   import { eventStatus, placeOf, type EventRow } from '@/lib/admin/events'
   import { formatWhen } from '@/lib/admin/time'
