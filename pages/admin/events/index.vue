@@ -4,10 +4,9 @@
   import { companyName } from '@/lib/companies'
   import DeleteDialog from '@/components/admin/DeleteDialog.vue'
   import FilterChips from '@/components/admin/FilterChips.vue'
-  import Pager from '@/components/admin/Pager.vue'
+  import ListShell from '@/components/admin/ListShell.vue'
   import SearchField from '@/components/admin/SearchField.vue'
   import SelectBox from '@/components/admin/SelectBox.vue'
-  import SelectionBar from '@/components/admin/SelectionBar.vue'
   import SortButton from '@/components/admin/SortButton.vue'
   import { Badge } from '@/components/ui/badge'
   import { Button } from '@/components/ui/button'
@@ -26,8 +25,8 @@
     TableHeader,
     TableRow,
   } from '@/components/ui/table'
-  import { useSelection } from '@/composables/admin/useSelection'
-  import { useSort } from '@/composables/admin/useSort'
+  import { useBulkDelete } from '@/composables/admin/useBulkDelete'
+  import { useListView } from '@/composables/admin/useListView'
   import { alertError } from '@/composables/useAlerts'
   import { Instant } from '@/domain/time'
   import {
@@ -38,12 +37,10 @@
     type EventRow,
     type EventStatus,
   } from '@/lib/events'
-  import { pageOf, search, sortBy } from '@/lib/admin/listView'
   import { instantOf } from '@/lib/time'
 
   type Row = EventRow & { uid: string }
   type When = 'upcoming' | 'past' | 'all'
-  const PAGE_SIZE = 25
   const COLUMNS = [
     'title',
     'company',
@@ -74,50 +71,41 @@
   const attendeesOf = (row: Row) => Object.keys(row.attendants ?? {}).length
   const statusOf = (row: Row) => eventStatus(row, now)
 
-  const query = ref('')
-  const when = ref<When>('upcoming')
+  const inWhen = (row: Row, value: When) =>
+    value === 'all' || isUpcoming(row, now) === (value === 'upcoming')
+
   const {
-    sort,
+    query,
+    filter: when,
+    filterOptions: whenOptions,
+    page,
+    visible,
+    shown,
+    selection,
+    chosen,
     toggle: toggleSort,
     directionOf,
     ariaSort,
-  } = useSort<(typeof COLUMNS)[number]>('date')
-  const page = ref(1)
-
-  const inWhen = (row: Row, value: When) =>
-    value === 'all' || isUpcoming(row, now) === (value === 'upcoming')
-  const whenOptions = computed(() =>
-    (['upcoming', 'past', 'all'] as const).map((value) => ({
-      value,
-      label: t(`admin.events.filter.${value}`),
-      count: rows.value.filter((row) => inWhen(row, value)).length,
-    })),
-  )
-
-  const sortValue = {
-    title: (row: Row) => row.title,
-    company: companyOf,
-    date: (row: Row) => instantOf(row.date?.start),
-    place: (row: Row) => row.location?.name,
-    attendees: (row: Row) => String(attendeesOf(row)),
-    status: (row: Row) => statusLabel(statusOf(row)),
-  }
-
-  const visible = computed(() => {
-    const found = search(
-      rows.value.filter((row) => inWhen(row, when.value)),
-      query.value,
-      (row) => [row.title, companyOf(row), row.location?.name],
-    )
-    return sortBy(found, sortValue[sort.value.column], sort.value.direction)
+  } = useListView({
+    rows,
+    keyOf: (row) => row.uid,
+    filter: {
+      values: ['upcoming', 'past', 'all'] as const,
+      initial: 'upcoming',
+      keeps: inWhen,
+      label: (value) => t(`admin.events.filter.${value}`),
+    },
+    searchIn: (row) => [row.title, companyOf(row), row.location?.name],
+    sortBy: {
+      title: (row) => row.title,
+      company: companyOf,
+      date: (row) => instantOf(row.date?.start),
+      place: (row) => row.location?.name,
+      attendees: (row) => String(attendeesOf(row)),
+      status: (row) => statusLabel(statusOf(row)),
+    },
+    sortFirst: 'date',
   })
-  const shown = computed(() => pageOf(visible.value, page.value, PAGE_SIZE))
-  watch([query, when, sort], () => (page.value = 1))
-
-  const selection = useSelection(
-    computed(() => shown.value.rows),
-    (row) => row.uid,
-  )
 
   function statusLabel(status: EventStatus) {
     if (status.kind === 'full' && status.queued > 0) {
@@ -159,40 +147,38 @@
   }
 
   // what the delete dialog is about: one row from its menu, or the selection
-  const toDelete = ref<Row[]>([])
-  const confirming = ref(false)
-  const deleting = ref(false)
-  const askDelete = (targets: Row[]) => {
-    toDelete.value = targets
-    confirming.value = true
-  }
-  const deleteEvents = async () => {
-    deleting.value = true
-    const results = await Promise.allSettled(
-      toDelete.value.map((row) =>
-        $fetch('/api/v1/event', {
-          method: 'DELETE',
-          body: { eventUID: row.uid },
-        }),
-      ),
-    )
-    const failed = results.find((r) => r.status === 'rejected')
-    const done =
-      results.length - results.filter((r) => r.status === 'rejected').length
-    if (done > 0) {
-      useAlertStore().alert(t('admin.events.delete.done', done), 'success')
-    }
-    if (failed) alertError((failed as PromiseRejectedResult).reason)
-    selection.clear()
-    confirming.value = false
-    deleting.value = false
-    await refresh()
-  }
+  const {
+    targets: toDelete,
+    confirming,
+    deleting,
+    ask: askDelete,
+    confirm: deleteEvents,
+  } = useBulkDelete({
+    remove: async (row: Row) => {
+      await $fetch('/api/v1/event', {
+        method: 'DELETE',
+        body: { eventUID: row.uid },
+      })
+    },
+    done: (count) => t('admin.events.delete.done', count),
+    after: () => {
+      selection.clear()
+      return refresh()
+    },
+  })
 </script>
 
 <template>
-  <div class="tw:flex tw:flex-col tw:gap-4">
-    <div class="tw:flex tw:flex-col tw:gap-3 tw:lg:flex-row tw:lg:items-center">
+  <ListShell
+    v-model:page="page"
+    :shown="shown"
+    :total="visible.length"
+    :selected="selection.selected.value.size"
+    :empty="$t('admin.events.empty')"
+    @clear="selection.clear"
+    @delete="askDelete(chosen())"
+  >
+    <template #toolbar>
       <SearchField v-model="query" :label="$t('admin.events.search')" />
       <FilterChips
         v-model="when"
@@ -205,15 +191,9 @@
           {{ $t('admin.events.create') }}
         </NuxtLink>
       </Button>
-    </div>
+    </template>
 
-    <SelectionBar
-      :count="selection.selected.value.size"
-      @clear="selection.clear"
-      @delete="askDelete(rows.filter((row) => selection.has(row)))"
-    />
-
-    <div class="tw:overflow-hidden tw:rounded-lg tw:border tw:bg-card">
+    <template #table>
       <!-- table from lg and up -->
       <Table class="tw:hidden tw:lg:table">
         <TableHeader>
@@ -350,7 +330,9 @@
           </TableRow>
         </TableBody>
       </Table>
+    </template>
 
+    <template #list>
       <!-- list below lg -->
       <ul class="tw:divide-y tw:lg:hidden">
         <li
@@ -385,16 +367,7 @@
           </Badge>
         </li>
       </ul>
-
-      <p
-        v-if="shown.rows.length === 0"
-        class="tw:px-4 tw:py-10 tw:text-center tw:text-muted-foreground"
-      >
-        {{ $t('admin.events.empty') }}
-      </p>
-
-      <Pager v-model="page" :shown="shown" :total="visible.length" />
-    </div>
+    </template>
 
     <DeleteDialog
       v-model:open="confirming"
@@ -411,5 +384,5 @@
       :loading="deleting"
       @confirm="deleteEvents"
     />
-  </div>
+  </ListShell>
 </template>
