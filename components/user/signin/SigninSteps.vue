@@ -4,7 +4,7 @@
   import { Input } from '@/components/ui/input'
   import { Label } from '@/components/ui/label'
   import { EmailAddress } from '@/domain/email'
-  import { errorFeedback } from '@/composables/errors/feedback'
+  import { errorFeedback } from '@/lib/errors/feedback'
 
   const { t } = useI18n()
   const step = ref<1 | 2>(1)

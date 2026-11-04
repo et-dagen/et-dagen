@@ -7,7 +7,7 @@ import {
   OFFLINE,
   STATUS_KEYS,
   UNKNOWN,
-} from '~/composables/errors/feedback'
+} from '@/lib/errors/feedback'
 
 type Messages = Record<string, unknown>
 

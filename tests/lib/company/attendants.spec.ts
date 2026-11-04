@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { attendantsOf, dietaryCounts } from '@/composables/useEventAttendants'
+import { attendantsOf, dietaryCounts } from '@/lib/company/attendants'
 
 const users = [
   { uid: 'ada', dietaryRestrictions: ['vegan'] },

@@ -1,4 +1,4 @@
-import { errorFeedback, UNKNOWN } from '~/composables/errors/feedback'
+import { errorFeedback, UNKNOWN } from '@/lib/errors/feedback'
 
 /**
  * The message for any error a user action can end in: Firebase Auth, the API, or the network
