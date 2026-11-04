@@ -6,6 +6,7 @@
     ExternalLink,
     MapPin,
   } from '@lucide/vue'
+  import { useCompanies } from '@/composables/useCompanies'
   import CompanyLogo from '@/components/common/CompanyLogo.vue'
   import DeadlineNote from '@/components/common/DeadlineNote.vue'
   import FairEvents from '@/components/job/FairEvents.vue'
@@ -16,25 +17,8 @@
     deadlineState,
     fairEventsOf,
     formatDeadline,
-    type DeadlineType,
+    type StoredJob,
   } from '@/lib/jobs'
-
-  interface StoredJob {
-    title?: string
-    companyUID?: string
-    jobType?: string
-    location?: string
-    deadline?: string | null
-    deadlineType?: DeadlineType
-    description?: string
-    listing?: 'text' | 'link'
-    applicationLink?: string
-  }
-  interface StoredCompany {
-    name?: string
-    logo?: string
-    webpage?: string
-  }
 
   const { locale } = useI18n()
   const localePath = useLocalePath()
@@ -45,7 +29,7 @@
       useFetch<Record<string, StoredJob>>('/api/v1/job', {
         query: { jobUID: uid },
       }),
-      useFetch<Record<string, StoredCompany>>('/api/v1/company'),
+      useCompanies(),
       useFetch<Record<string, EventRow>>('/api/v1/event'),
     ])
 

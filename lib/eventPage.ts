@@ -1,6 +1,6 @@
 import { eventStatus, type EventRow } from '@/lib/events'
 import { formatWhen, instantOf, osloDay } from '@/lib/time'
-import { deadlineState, type DeadlineState } from '@/lib/jobs'
+import { deadlineState, type DeadlineState, type StoredJob } from '@/lib/jobs'
 import type { ISO8601String } from '@/domain/time'
 
 /** What the event page reads from `events/<uid>`; every field may be missing */
@@ -223,12 +223,6 @@ export function ticketWhenOf(event: PublicEvent, locale: string): string {
 }
 
 /** A job as the event page reads it from `jobs/<uid>` */
-export interface StoredJob {
-  title?: string
-  companyUID?: string
-  deadline?: string | null
-}
-
 export interface OpenJob {
   uid: string
   title: string

@@ -6,6 +6,8 @@
     Plus,
     Trash2,
   } from '@lucide/vue'
+  import { useCompanies } from '@/composables/useCompanies'
+  import { companyName } from '@/lib/companies'
   import DeleteDialog from '@/components/admin/DeleteDialog.vue'
   import FilterChips from '@/components/admin/FilterChips.vue'
   import Pager from '@/components/admin/Pager.vue'
@@ -35,18 +37,10 @@
   import { alertError } from '@/composables/useAlerts'
   import { Instant } from '@/domain/time'
   import { pageOf, search, sortBy } from '@/lib/admin/listView'
+  import type { StoredJob } from '@/lib/jobs'
   import { daysUntil, deadlineOf, formatWhen, instantOf } from '@/lib/time'
 
-  interface Row {
-    uid: string
-    title?: string
-    companyUID?: string
-    jobType?: string
-    location?: string
-    deadline?: string | null
-    /** Jobs stored before it existed have a date */
-    deadlineType?: 'date' | 'asap' | 'rolling'
-  }
+  type Row = StoredJob & { uid: string }
   type Show = 'open' | 'expired' | 'all'
   const PAGE_SIZE = 25
   const COLUMNS = ['title', 'company', 'type', 'location', 'deadline'] as const
@@ -65,14 +59,12 @@
 
   const { data: jobs, refresh } =
     await useFetch<Record<string, Omit<Row, 'uid'>>>('/api/v1/job')
-  const { data: companies } =
-    await useFetch<Record<string, { name: string }>>('/api/v1/company')
+  const { data: companies } = await useCompanies()
 
   const rows = computed<Row[]>(() =>
     Object.entries(jobs.value ?? {}).map(([uid, job]) => ({ uid, ...job })),
   )
-  const companyOf = (row: Row) =>
-    companies.value?.[row.companyUID ?? '']?.name ?? ''
+  const companyOf = (row: Row) => companyName(companies.value, row.companyUID)
   const typeKey = (row: Row) => (row.jobType ?? '').replace('-', '_')
   const typeLabel = (row: Row) =>
     row.jobType ? t(`admin.jobs.attributes.jobtype.${typeKey(row)}`) : ''

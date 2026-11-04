@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { ChevronDown, SlidersHorizontal, X } from '@lucide/vue'
+  import { useCompanies } from '@/composables/useCompanies'
   import SearchField from '@/components/admin/SearchField.vue'
   import FilterGroup from '@/components/job/FilterGroup.vue'
   import JobRowItem from '@/components/job/JobRow.vue'
@@ -11,9 +12,8 @@
     filterJobs,
     jobRows,
     type JobFilters,
-    type StoredJob,
   } from '@/lib/jobBoard'
-  import { SOON_DAYS } from '@/lib/jobs'
+  import { SOON_DAYS, type StoredJob } from '@/lib/jobs'
 
   const { t } = useI18n()
   const route = useRoute()
@@ -22,9 +22,7 @@
   const [{ data: jobs }, { data: companies }, { data: events }] =
     await Promise.all([
       useFetch<Record<string, StoredJob>>('/api/v1/job'),
-      useFetch<Record<string, { name?: string; logo?: string }>>(
-        '/api/v1/company',
-      ),
+      useCompanies(),
       useFetch<Record<string, EventRow>>('/api/v1/event'),
     ])
 

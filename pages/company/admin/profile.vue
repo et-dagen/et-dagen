@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import { useCompanies } from '@/composables/useCompanies'
+  import { companyName } from '@/lib/companies'
   import ProfileForm from '@/components/company/ProfileForm.vue'
   import {
     Select,
@@ -11,22 +13,12 @@
 
   definePageMeta({ layout: 'admin', protected: true, area: 'profile' })
 
-  interface StoredCompany {
-    name?: string
-    webpage?: string
-    description?: string
-    logo?: string
-  }
-
   const auth = useAuthStore()
   const route = useRoute()
   const { t } = useI18n()
   useHead({ title: () => t('company.admin.profile.name') })
 
-  const { data: companies } = await useFetch<Record<string, StoredCompany>>(
-    '/api/v1/company',
-    { key: 'company-profile' },
-  )
+  const { data: companies } = await useCompanies()
 
   // an admin may edit every company; anyone else the companies they belong to and may edit
   const editable = computed(() => {
@@ -38,8 +30,8 @@
     return uids
       .filter((uid) => companies.value?.[uid])
       .sort((a, b) =>
-        (companies.value?.[a]?.name ?? '').localeCompare(
-          companies.value?.[b]?.name ?? '',
+        companyName(companies.value, a).localeCompare(
+          companyName(companies.value, b),
           'nb',
         ),
       )

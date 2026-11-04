@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { useCompanies } from '@/composables/useCompanies'
   import DeleteDialog from '@/components/admin/DeleteDialog.vue'
   import FilterChips from '@/components/admin/FilterChips.vue'
   import Pager from '@/components/admin/Pager.vue'
@@ -43,8 +44,7 @@
   const { data: users, refresh } = await useFetch<Listed[]>(
     '/api/v1/user?scope=all',
   )
-  const { data: companies } =
-    await useFetch<Record<string, { name: string }>>('/api/v1/company')
+  const { data: companies } = await useCompanies()
 
   // a user without stored roles is listed as a student, which is what the form offers them
   const accessOf = (user: Listed) =>

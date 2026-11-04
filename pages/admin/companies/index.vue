@@ -38,20 +38,14 @@
   import { siteLabel } from '@/lib/admin/companies'
   import { pageOf, search, sortBy } from '@/lib/admin/listView'
   import { TYPE_OF_TIER } from '@/contracts/company'
-  import type { Relationship } from '@/domain/business/company'
+  import { useCompanies } from '@/composables/useCompanies'
+  import type { ListedCompany } from '@/lib/companies'
 
   const TYPES = ['main-partner', 'partner', 'sponsor', 'old'] as const
   type Type = (typeof TYPES)[number]
 
-  interface Row {
-    uid: string
-    name?: string
-    tier?: Relationship
-    /** Only admins get these, which is who sees this page */
-    entitlements?: string[]
-    logo?: string | null
-    webpage?: string | null
-  }
+  /** Admins get each company's entitlements, and only admins see this page */
+  type Row = ListedCompany & { uid: string }
   type Show = 'active' | Type
   const PAGE_SIZE = 25
   const COLUMNS = ['name', 'type', 'cvAccess', 'webpage'] as const
@@ -61,8 +55,7 @@
   const changed = computed(() => String(useRoute().query.changed ?? ''))
   const { t } = useI18n()
 
-  const { data: companies, refresh } =
-    await useFetch<Record<string, Omit<Row, 'uid'>>>('/api/v1/company')
+  const { data: companies, refresh } = await useCompanies()
 
   const rows = computed<Row[]>(() =>
     Object.entries(companies.value ?? {}).map(([uid, company]) => ({

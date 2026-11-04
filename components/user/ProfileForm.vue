@@ -1,5 +1,7 @@
 <script setup lang="ts">
   import { ArrowLeft, Save } from '@lucide/vue'
+  import { useProgrammes } from '@/composables/useProgrammes'
+  import { STUDY_YEARS } from '@/lib/user/programmes'
   import DietField from '@/components/form/DietField.vue'
   import FieldError from '@/components/form/FieldError.vue'
   import { Button } from '@/components/ui/button'
@@ -22,19 +24,11 @@
   const student = !(auth.currentSubject?.roles.includes('company') ?? false)
   const user = auth.user!
 
-  const { data: programmeData } =
-    await useFetch<Record<string, { name?: string; type?: string }>>(
-      '/api/v1/programme',
-    )
-  /** A bachelor runs years 1 to 3 and a master 4 and 5; anything else all five */
-  const years = computed(() => {
-    const type = Object.values(programmeData.value ?? {}).find(
-      (programme) => programme.name === user.studyProgram,
-    )?.type
-    if (type === 'bachelor') return [1, 2, 3]
-    if (type === 'master') return [4, 5]
-    return [1, 2, 3, 4, 5]
-  })
+  const { yearsOf } = await useProgrammes()
+  // a student without a programme on record may still pick any year
+  const years = computed(() =>
+    user.studyProgram ? yearsOf(user.studyProgram) : STUDY_YEARS,
+  )
 
   const { form, submit, saving } = useResourceForm({
     schema: profileInput(student),

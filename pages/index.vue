@@ -1,14 +1,15 @@
 <script setup lang="ts">
+  import { useCompanies } from '@/composables/useCompanies'
   import { Instant } from '@/domain/time'
   import type { EventRow } from '@/lib/events'
-  import { lineupOf, type Company } from '@/lib/site/companies'
+  import { lineupOf } from '@/lib/site/companies'
   import { fairDays, upcoming, type GeneralInfo } from '@/lib/site/fair'
 
   const { locale } = useI18n()
 
   const [{ data: companies }, { data: info }, { data: events }] =
     await Promise.all([
-      useFetch<Record<string, Company>>('/api/v1/company'),
+      useCompanies(),
       useFetch<GeneralInfo>('/api/v1/generalInfo'),
       useFetch<Record<string, EventRow>>('/api/v1/event'),
     ])
