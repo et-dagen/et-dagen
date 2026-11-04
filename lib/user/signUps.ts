@@ -1,4 +1,4 @@
-import { isUpcoming, type EventRow } from '@/lib/admin/events'
+import { isUpcoming, type EventRow } from '@/lib/events'
 import type { ISO8601String } from '@/domain/time'
 
 /** One entry of `GET /api/v1/user/events` */

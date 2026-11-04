@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { placeOf } from '@/lib/admin/events'
+  import { placeOf } from '@/lib/events'
   import type { ProgrammeEvent } from '@/lib/programme'
 
   const props = defineProps<{

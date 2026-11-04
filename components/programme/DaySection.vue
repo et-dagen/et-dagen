@@ -2,8 +2,9 @@
   import StandMap from '@/components/programme/StandMap.vue'
   import CompanyLogo from '@/components/common/CompanyLogo.vue'
   import { Instant } from '@/domain/time'
-  import { eventStatus, placeOf } from '@/lib/admin/events'
+  import { eventStatus, placeOf } from '@/lib/events'
   import { isOver, type ProgrammeDay } from '@/lib/programme'
+  import { formatDay } from '@/lib/time'
 
   const props = defineProps<{
     day: ProgrammeDay
@@ -16,12 +17,11 @@
   const now = Instant.now()
 
   const heading = computed(() =>
-    new Intl.DateTimeFormat(locale.value, {
+    formatDay(props.day.date, locale.value, {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
-      timeZone: 'UTC',
-    }).format(new Date(`${props.day.date}T12:00:00Z`)),
+    }),
   )
   const hhmm = (value: string | undefined) =>
     value?.split('T')[1]?.slice(0, 5) ?? ''

@@ -1,7 +1,7 @@
-import { eventStatus, type EventRow } from '@/lib/admin/events'
-import { formatWhen, instantOf } from '@/lib/admin/time'
+import { eventStatus, type EventRow } from '@/lib/events'
+import { formatWhen, instantOf, osloDay } from '@/lib/time'
 import { deadlineState, type DeadlineState } from '@/lib/jobs'
-import { Instant, type ISO8601String } from '@/domain/time'
+import type { ISO8601String } from '@/domain/time'
 
 /** What the event page reads from `events/<uid>`; every field may be missing */
 export interface PublicEvent extends EventRow {
@@ -92,8 +92,8 @@ export function signupStateOf(
   return status.kind === 'full' ? { kind: 'full' } : { kind: 'open' }
 }
 
-/** Places taken and waiting, the only attendance a visitor sees */
-export const placesOf = (event: PublicEvent) => ({
+/** Seats taken and the queue, the only attendance a visitor sees */
+export const seatsOf = (event: PublicEvent) => ({
   taken: Object.keys(event.attendants ?? {}).length,
   limit: event.capacity ?? null,
   waiting: Object.keys(event.queue ?? {}).length,
@@ -103,11 +103,7 @@ export const placesOf = (event: PublicEvent) => ({
 export function isEventDay(event: PublicEvent, now: ISO8601String): boolean {
   const start = instantOf(event.date?.start)
   if (!start) return false
-  const day = (at: ISO8601String) =>
-    new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Oslo' }).format(
-      Instant.toDate(at),
-    )
-  return day(start) === day(now)
+  return osloDay(start) === osloDay(now)
 }
 
 /**
@@ -197,7 +193,7 @@ export function urgencyOf(
     const hours = Math.ceil((Date.parse(closes) - Date.parse(now)) / 3_600_000)
     if (hours <= CLOSING_HOURS) return { kind: 'closing', hours }
   }
-  const { taken, limit } = placesOf(event)
+  const { taken, limit } = seatsOf(event)
   if (limit) {
     const left = limit - taken
     if (left <= Math.max(3, Math.ceil(limit / 10))) return { kind: 'few', left }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
   import { ArrowRight } from '@lucide/vue'
-  import { eventStatus, formatStart, placeOf } from '@/lib/admin/events'
+  import { eventStatus, formatStart, placeOf } from '@/lib/events'
   import { placesLeft, type Upcoming } from '@/lib/site/fair'
   import { Instant, type ISO8601Literal } from '@/domain/time'
 

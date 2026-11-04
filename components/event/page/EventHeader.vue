@@ -1,9 +1,9 @@
 <script setup lang="ts">
   import { ArrowLeft, CalendarClock, MapPin, Users } from '@lucide/vue'
   import CompanyLogo from '@/components/common/CompanyLogo.vue'
-  import { placeOf } from '@/lib/admin/events'
+  import { placeOf } from '@/lib/events'
   import {
-    placesOf,
+    seatsOf,
     whenOf,
     type PublicEvent,
     type Urgency,
@@ -19,7 +19,7 @@
   const localePath = useLocalePath()
   const when = computed(() => whenOf(props.event, locale.value))
   const place = computed(() => placeOf(props.event.location?.name))
-  const places = computed(() => placesOf(props.event))
+  const places = computed(() => seatsOf(props.event))
 </script>
 
 <template>

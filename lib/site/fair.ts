@@ -1,5 +1,5 @@
-import { eventStatus, isUpcoming, type EventRow } from '@/lib/admin/events'
-import { instantOf } from '@/lib/admin/time'
+import { eventStatus, isUpcoming, type EventRow } from '@/lib/events'
+import { instantOf } from '@/lib/time'
 import { Instant, type ISO8601String } from '@/domain/time'
 
 /** `generalInfo` as the landing page reads it; the fair's days as Oslo wall-clock times */

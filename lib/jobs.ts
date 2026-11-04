@@ -1,5 +1,5 @@
-import { deadlineOf, daysUntil, formatWhen, instantOf } from '@/lib/admin/time'
-import { isUpcoming, type EventRow } from '@/lib/admin/events'
+import { deadlineOf, daysUntil, formatWhen, instantOf } from '@/lib/time'
+import { isUpcoming, type EventRow } from '@/lib/events'
 import { Instant, type ISO8601String } from '@/domain/time'
 
 /** Deadlines this many days away or closer are marked, so students apply in time */

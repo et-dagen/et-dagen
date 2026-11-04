@@ -5,13 +5,13 @@
   import SignupPanel from '@/components/event/page/SignupPanel.vue'
   import SignupRules from '@/components/event/page/SignupRules.vue'
   import { Instant } from '@/domain/time'
-  import { placeOf } from '@/lib/admin/events'
+  import { placeOf } from '@/lib/events'
   import { companyOf } from '@/lib/auth/companyOf'
   import {
     calendarFileOf,
     isEventDay,
     openJobsOf,
-    placesOf,
+    seatsOf,
     signupStateOf,
     ticketWhenOf,
     urgencyOf,
@@ -60,7 +60,7 @@
     event.value ? signupStateOf(event.value, visitor.value, now) : null,
   )
   const places = computed(() =>
-    event.value ? placesOf(event.value) : { taken: 0, limit: null, waiting: 0 },
+    event.value ? seatsOf(event.value) : { taken: 0, limit: null, waiting: 0 },
   )
   const urgency = computed(() =>
     event.value ? urgencyOf(event.value, now) : null,

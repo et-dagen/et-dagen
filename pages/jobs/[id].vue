@@ -11,7 +11,7 @@
   import FairEvents from '@/components/job/FairEvents.vue'
   import { Button } from '@/components/ui/button'
   import { Instant } from '@/domain/time'
-  import type { EventRow } from '@/lib/admin/events'
+  import type { EventRow } from '@/lib/events'
   import {
     deadlineState,
     fairEventsOf,

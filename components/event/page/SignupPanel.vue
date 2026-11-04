@@ -13,7 +13,7 @@
   } from '@/components/ui/alert-dialog'
   import { Button } from '@/components/ui/button'
   import { alertError } from '@/composables/useAlerts'
-  import { Instant } from '@/domain/time'
+  import { formatInstant } from '@/lib/time'
   import type { SignupState } from '@/lib/eventPage'
 
   const props = defineProps<{
@@ -80,14 +80,13 @@
   })
   const opensAtText = computed(() =>
     props.state.kind === 'not-open' && props.state.opensAt
-      ? new Intl.DateTimeFormat(locale.value, {
+      ? formatInstant(props.state.opensAt, locale.value, {
           weekday: 'short',
           day: 'numeric',
           month: 'short',
           hour: '2-digit',
           minute: '2-digit',
-          timeZone: 'Europe/Oslo',
-        }).format(Instant.toDate(props.state.opensAt))
+        })
       : '',
   )
 

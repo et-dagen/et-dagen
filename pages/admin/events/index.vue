@@ -35,9 +35,9 @@
     placeOf,
     type EventRow,
     type EventStatus,
-  } from '@/lib/admin/events'
+  } from '@/lib/events'
   import { pageOf, search, sortBy } from '@/lib/admin/listView'
-  import { instantOf } from '@/lib/admin/time'
+  import { instantOf } from '@/lib/time'
 
   type Row = EventRow & { uid: string }
   type When = 'upcoming' | 'past' | 'all'

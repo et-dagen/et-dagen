@@ -4,8 +4,8 @@
   import { Button } from '@/components/ui/button'
   import { attendantsOf, dietaryCounts } from '@/composables/useEventAttendants'
   import { Instant } from '@/domain/time'
-  import { eventStatus, placeOf, type EventRow } from '@/lib/admin/events'
-  import { formatWhen } from '@/lib/admin/time'
+  import { eventStatus, placeOf, type EventRow } from '@/lib/events'
+  import { formatWhen } from '@/lib/time'
   import { companyOf } from '@/lib/auth/companyOf'
 
   interface Person {

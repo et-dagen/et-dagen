@@ -4,7 +4,7 @@
   import NextUpPill from './NextUpPill.vue'
   import PhoneMenu from './PhoneMenu.vue'
   import { Instant } from '@/domain/time'
-  import type { EventRow } from '@/lib/admin/events'
+  import type { EventRow } from '@/lib/events'
   import { nextUp } from '@/lib/site/nextUp'
   import { routes } from '~/config/app.config'
 

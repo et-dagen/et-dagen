@@ -1,6 +1,6 @@
-import { instantOf } from '@/lib/admin/time'
-import type { EventRow } from '@/lib/admin/events'
-import type { ISO8601String } from '@/domain/time'
+import { instantOf, osloDay } from '@/lib/time'
+import type { EventRow } from '@/lib/events'
+import { Instant, type ISO8601String } from '@/domain/time'
 
 /** How far ahead the header looks for the fair's next event; past that, it is not news yet */
 const LOOKAHEAD_MS = 7 * 24 * 60 * 60 * 1000
@@ -14,9 +14,6 @@ export interface NextUp {
   /** How far away the start is, for how the time is written */
   when: 'today' | 'week' | 'later'
 }
-
-const osloDay = (at: number) =>
-  new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Oslo' }).format(at)
 
 const isMine = (event: EventRow, uid: string) =>
   uid in (event.attendants ?? {}) ||
@@ -64,7 +61,8 @@ export function nextUp(
     const next = items.find((item) => item.start > t && item.start - t <= limit)
     if (!next) return null
     const when =
-      osloDay(next.start) === osloDay(t)
+      osloDay(Instant.of(new Date(next.start))) ===
+      osloDay(Instant.of(new Date(t)))
         ? 'today'
         : next.start - t <= LOOKAHEAD_MS
           ? 'week'

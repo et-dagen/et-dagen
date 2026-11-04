@@ -3,7 +3,7 @@
   import DaySection from '@/components/programme/DaySection.vue'
   import NowNext from '@/components/programme/NowNext.vue'
   import { Instant } from '@/domain/time'
-  import type { EventRow } from '@/lib/admin/events'
+  import type { EventRow } from '@/lib/events'
   import {
     initialDay,
     nowAndNext,

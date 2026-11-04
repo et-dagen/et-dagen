@@ -1,6 +1,7 @@
 <script setup lang="ts">
-  import { placeOf } from '@/lib/admin/events'
+  import { placeOf } from '@/lib/events'
   import type { NextUp } from '@/lib/site/nextUp'
+  import { formatDay } from '@/lib/time'
 
   const props = defineProps<{ next: NextUp; large?: boolean }>()
 
@@ -11,12 +12,13 @@
     const start = props.next.event.date?.start ?? ''
     const hhmm = start.split('T')[1]?.slice(0, 5) ?? ''
     if (props.next.when === 'today') return hhmm
-    const day = new Intl.DateTimeFormat(
+    const day = formatDay(
+      start.slice(0, 10),
       locale.value,
       props.next.when === 'week'
-        ? { weekday: 'short', timeZone: 'UTC' }
-        : { day: 'numeric', month: 'short', timeZone: 'UTC' },
-    ).format(new Date(`${start.slice(0, 10)}T12:00:00Z`))
+        ? { weekday: 'short' }
+        : { day: 'numeric', month: 'short' },
+    )
     return `${day} ${hhmm}`
   })
   const heading = computed(() =>

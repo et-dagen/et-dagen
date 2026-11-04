@@ -35,12 +35,7 @@
   import { alertError } from '@/composables/useAlerts'
   import { Instant } from '@/domain/time'
   import { pageOf, search, sortBy } from '@/lib/admin/listView'
-  import {
-    daysUntil,
-    deadlineOf,
-    formatWhen,
-    instantOf,
-  } from '@/lib/admin/time'
+  import { daysUntil, deadlineOf, formatWhen, instantOf } from '@/lib/time'
 
   interface Row {
     uid: string

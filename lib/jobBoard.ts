@@ -1,5 +1,5 @@
-import { deadlineOf, instantOf } from '@/lib/admin/time'
-import type { EventRow } from '@/lib/admin/events'
+import { deadlineOf, instantOf } from '@/lib/time'
+import type { EventRow } from '@/lib/events'
 import { search } from '@/lib/admin/listView'
 import {
   afterDeadline,
@@ -37,11 +37,11 @@ export interface JobRow {
 }
 
 /**
- * The places a location names, so "Bergen og Trondheim" counts for both
+ * The places a job location names, so "Bergen og Trondheim" counts for both
  *
- * @example placesOf('Bergen og Trondheim') // ['Bergen', 'Trondheim']
+ * @example locationsOf('Bergen og Trondheim') // ['Bergen', 'Trondheim']
  */
-export function placesOf(location: string | undefined): string[] {
+export function locationsOf(location: string | undefined): string[] {
   return (location ?? '')
     .split(/\s*(?:,|\/|\bog\b|\band\b|&)\s*/i)
     .map((place) => place.trim())
@@ -76,7 +76,7 @@ export function jobRows(
         logo: company?.logo ?? null,
         jobType: job.jobType ?? null,
         location: job.location ?? '',
-        places: placesOf(job.location),
+        places: locationsOf(job.location),
         deadline: job.deadline,
         state: deadlineState(job.deadline, now, job.deadlineType),
         // a meeting after the deadline is no stop on the way to applying
