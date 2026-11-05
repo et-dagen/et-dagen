@@ -6,11 +6,12 @@
   import { Instant } from '@/domain/time'
   import type { EventRow } from '@/lib/events'
   import { nextUp } from '@/lib/site/nextUp'
+  import { usePageLoading } from '@/composables/usePageLoading'
   import { routes } from '~/config/app.config'
 
   const route = useRoute()
   const localePath = useLocalePath()
-  const app = useAppStore()
+  const loading = usePageLoading()
 
   const isCurrent = (target: string) => {
     const path = localePath(target)
@@ -123,9 +124,7 @@
     <div
       class="tw:absolute tw:inset-x-0 tw:-bottom-px tw:h-0.5 tw:origin-left tw:bg-brand tw:transition-opacity"
       :class="
-        app.loading
-          ? 'tw:opacity-100 tw:motion-safe:animate-pulse'
-          : 'tw:opacity-0'
+        loading ? 'tw:opacity-100 tw:motion-safe:animate-pulse' : 'tw:opacity-0'
       "
       aria-hidden="true"
     />
