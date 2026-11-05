@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { Instant } from '@/domain/time'
 import {
   calendarFileOf,
+  countdownOf,
   isEventDay,
   mapEmbedOf,
   meetsRequirements,
@@ -210,5 +211,34 @@ describe('openJobsOf', () => {
 
   it('lists nothing for an event without a company', () => {
     expect(openJobsOf(jobs, undefined, now)).toEqual([])
+  })
+})
+
+describe('countdownOf', () => {
+  const now = Instant.parse('2026-11-05T10:00:00.000Z')
+  const at = (iso: Parameters<typeof Instant.parse>[0]) => Instant.parse(iso)
+
+  it('splits the time left into days, hours and minutes', () => {
+    expect(countdownOf(at('2026-11-07T13:20:00.000Z'), now)).toEqual({
+      days: 2,
+      hours: 3,
+      minutes: 20,
+    })
+  })
+
+  it('rounds up, so the last seconds read as one minute', () => {
+    expect(countdownOf(at('2026-11-05T10:00:30.000Z'), now)).toEqual({
+      days: 0,
+      hours: 0,
+      minutes: 1,
+    })
+  })
+
+  it('stops at zero once sign-up has opened', () => {
+    expect(countdownOf(at('2026-11-05T09:00:00.000Z'), now)).toEqual({
+      days: 0,
+      hours: 0,
+      minutes: 0,
+    })
   })
 })

@@ -201,6 +201,25 @@ export function urgencyOf(
   return null
 }
 
+/**
+ * How long until sign-up opens, in whole days, hours and minutes, rounded up to the minute so
+ * the last minute reads as one and not zero; all zero once it has opened
+ */
+export function countdownOf(
+  opensAt: ISO8601String,
+  now: ISO8601String,
+): { days: number; hours: number; minutes: number } {
+  const total = Math.max(
+    0,
+    Math.ceil((Date.parse(opensAt) - Date.parse(now)) / 60_000),
+  )
+  return {
+    days: Math.floor(total / 1440),
+    hours: Math.floor((total % 1440) / 60),
+    minutes: total % 60,
+  }
+}
+
 const HOURS: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit' }
 
 /** When the event runs, such as "ons. 4. nov. 2026, 17:15–18:00" */
