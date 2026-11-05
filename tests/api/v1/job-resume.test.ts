@@ -160,6 +160,64 @@ describe('résumés', () => {
     expect((await remove(owner.uid, other.token)).status).toBe(403)
   })
 
+  // the answer is a redirect to a signed link, which is not followed
+  const redirectOf = async (userUID: string, token: string) => {
+    const response = await fetch(
+      `http://127.0.0.1:${API_PORT}/api/v1/resume/file?userUID=${userUID}`,
+      { headers: { authorization: `Bearer ${token}` }, redirect: 'manual' },
+    )
+    return {
+      status: response.status,
+      location: response.headers.get('location'),
+    }
+  }
+
+  it('lets a student upload, open and delete their own résumé', async () => {
+    const owner = await student()
+
+    expect((await upload(owner.uid, owner.token)).status).toBe(200)
+    expect(await read(`users/${owner.uid}/resume`)).toEqual(expect.any(String))
+
+    const opened = await redirectOf(owner.uid, owner.token)
+    expect(opened.status).toBe(302)
+    expect(opened.location).toContain('X-Goog-Signature')
+
+    expect((await remove(owner.uid, owner.token)).status).toBe(204)
+    expect(await read(`users/${owner.uid}/resume`)).toBeNull()
+    expect((await open(owner.uid, owner.token)).status).toBe(404)
+  })
+
+  it('lets a company with résumé access open a résumé', async () => {
+    const owner = await student()
+    await upload(owner.uid, owner.token)
+    const contact = await contactFor('acme')
+
+    expect((await redirectOf(owner.uid, contact.token)).status).toBe(302)
+  })
+
+  it('takes a second upload in place of the first', async () => {
+    const owner = await student()
+    await upload(owner.uid, owner.token)
+
+    expect((await upload(owner.uid, owner.token)).status).toBe(200)
+    expect((await redirectOf(owner.uid, owner.token)).status).toBe(302)
+  })
+
+  it('refuses a file that is not a PDF', async () => {
+    const owner = await student()
+    const form = new FormData()
+    form.append('file', new Blob(['hello'], { type: 'text/plain' }), 'cv.txt')
+    form.append('userUID', owner.uid)
+    const response = await fetch(`http://127.0.0.1:${API_PORT}/api/v1/resume`, {
+      method: 'POST',
+      headers: { authorization: `Bearer ${owner.token}` },
+      body: form,
+    })
+
+    expect(response.status).toBe(400)
+    expect(await read(`users/${owner.uid}/resume`)).toBeNull()
+  })
+
   it('answers 404 when deleting a résumé that does not exist', async () => {
     const { uid, token } = await student()
 
