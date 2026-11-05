@@ -7,8 +7,13 @@ import { JobUid } from '@/domain/business/job'
 export function rtdbJobRepository(db: Pick<Database, 'ref'>): JobRepository {
   // a reference per call: building the adapter must not open a connection
   const jobs = () => db.ref('jobs')
+  // a uid comes from the request; one with a path separator or a character keys cannot hold
+  // names no job, rather than a field inside one
+  const isKey = (uid: string) => !/[./#$[\]]/.test(uid)
   const read = async (uid: string) =>
-    (await jobs().child(uid).once('value')).val() as JobRecord | null
+    isKey(uid)
+      ? ((await jobs().child(uid).once('value')).val() as JobRecord | null)
+      : null
 
   return {
     stored: async () =>
@@ -23,6 +28,7 @@ export function rtdbJobRepository(db: Pick<Database, 'ref'>): JobRepository {
       return JobUid.parse(key ?? '')
     },
     update: async (uid, changes) => {
+      if (!isKey(uid)) return
       // A transaction, so a job removed meanwhile is not brought back as a stub. The first attempt
       // may run on an empty local cache; writing null back makes the database answer with the
       // stored value and run this again.
@@ -33,6 +39,7 @@ export function rtdbJobRepository(db: Pick<Database, 'ref'>): JobRepository {
         )
     },
     remove: async (uid) => {
+      if (!isKey(uid)) return
       await jobs().child(uid).remove()
     },
   }

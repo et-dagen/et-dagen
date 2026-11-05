@@ -79,6 +79,18 @@ export function describeJobRepository(
       expect(await jobs.find(JobUid.parse('missing'))).toBeNull()
     })
 
+    it('finds nothing for a uid that points inside a job', async () => {
+      const jobs = await make({ j1: { companyUID: 'acme', title: 'Engineer' } })
+      const inside = JobUid.parse('j1/title')
+
+      expect(await jobs.storedOne(inside)).toBeNull()
+      await jobs.update(inside, { title: 'Changed' })
+      await jobs.remove(inside)
+      expect(await jobs.stored()).toEqual({
+        j1: { companyUID: 'acme', title: 'Engineer' },
+      })
+    })
+
     it('refuses to read a job that names no company', async () => {
       const jobs = await make({ broken: { title: 'Lost' } })
       await expect(jobs.find(JobUid.parse('broken'))).rejects.toThrow(
