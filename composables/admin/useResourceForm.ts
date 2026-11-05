@@ -1,6 +1,6 @@
 import { useForm } from 'vee-validate'
 import type { z } from 'zod'
-import { alertError } from '@/composables/useAlerts'
+import { alertError, notify } from '@/composables/useAlerts'
 import { typedSchemaOf } from '@/lib/forms/zodSchema'
 
 interface Options<S extends z.ZodType> {
@@ -41,7 +41,7 @@ export function useResourceForm<S extends z.ZodType>(options: Options<S>) {
       try {
         const uid = await options.save(values as z.infer<S>)
         saved = true
-        useAlertStore().alert(options.saved(), 'success')
+        notify(options.saved(), 'success')
         await navigateTo({
           path: localePath(options.back),
           query: uid ? { changed: uid } : {},

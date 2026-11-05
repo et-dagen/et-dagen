@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { Trash2 } from '@lucide/vue'
+  import { notify } from '@/composables/useAlerts'
   import {
     AlertDialog,
     AlertDialogCancel,
@@ -29,14 +30,12 @@
 
   watch(open, () => (confirmation.value = ''))
 
+  const { t } = useI18n()
   const deleteAccount = async () => {
     loading.value = true
     try {
       await deleteSignedInUser()
-      useAlertStore().alert(
-        getI18nString('alert.success.user.deleted'),
-        'success',
-      )
+      notify(t('alert.success.user.deleted'), 'success')
     } catch (error) {
       alertError(error)
     } finally {

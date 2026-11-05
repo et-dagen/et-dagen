@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { notify } from '@/composables/useAlerts'
   import { placeOf } from '@/lib/events'
   import { formatWhen } from '@/lib/time'
   import type { SignUpRow } from '@/lib/user/signUps'
@@ -38,7 +39,7 @@
         method: 'DELETE',
         body: { eventUID: row.eventUID },
       })
-      useAlertStore().alert(
+      notify(
         t('user.page.withdrawn', { title: row.event.title ?? '' }),
         'success',
       )
