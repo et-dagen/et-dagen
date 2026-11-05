@@ -99,7 +99,8 @@ the front end only presents them.
 | `contracts/`     | Zod schemas for request bodies and forms, used by the client and the server            | `domain/`                                            |
 
 The server imports none of `pages/`, `components/`, `composables/`, `layouts/` or `stores/`.
-`tests/architecture.spec.ts` checks that, the ban on importing a page, and the component areas.
+`tests/architecture.spec.ts` checks that, the ban on importing a page, the component areas, and
+that `lib/` neither imports nor calls anything that needs Vue or Nuxt at runtime.
 
 ### Composable or `lib/`?
 
