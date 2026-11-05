@@ -21,29 +21,60 @@ function fakeDatabase(tree: Tree) {
     if (value === null) delete parent[keys.at(-1)!]
     else parent[keys.at(-1)!] = value
   }
-  return {
-    tree,
-    ref: (path: string) => ({
-      once: () =>
-        Promise.resolve({ val: () => structuredClone(at(path) ?? null) }),
-      transaction: (change: (current: unknown) => unknown) => {
-        set(path, change(structuredClone(at(path) ?? null)))
-        return Promise.resolve()
-      },
-      update: (values: Record<string, unknown>) => {
-        for (const [key, value] of Object.entries(values))
-          set(`${path}/${key}`, value)
-        return Promise.resolve()
-      },
+  const ref = (path: string) => ({
+    child: (key: string) => ref(`${path}/${key}`),
+    orderByChild: (field: string) => ({
+      equalTo: (value: unknown) => ({
+        once: () => {
+          const hits = Object.entries(
+            (at(path) as Tree | undefined) ?? {},
+          ).filter(([, child]) => (child as Tree)[field] === value)
+          return Promise.resolve({
+            val: () =>
+              hits.length ? structuredClone(Object.fromEntries(hits)) : null,
+          })
+        },
+      }),
     }),
-  }
+    remove: () => {
+      set(path, null)
+      return Promise.resolve()
+    },
+    once: () =>
+      Promise.resolve({ val: () => structuredClone(at(path) ?? null) }),
+    transaction: (change: (current: unknown) => unknown) => {
+      set(path, change(structuredClone(at(path) ?? null)))
+      return Promise.resolve()
+    },
+    update: (values: Record<string, unknown>) => {
+      for (const [key, value] of Object.entries(values))
+        set(`${path}/${key}`, value)
+      return Promise.resolve()
+    },
+  })
+  return { tree, ref }
 }
 
 const now = Instant.parse('2026-10-22T12:00:00.000Z')
+const RESUME = '0b0c4f5e-8d1a-4c2b-9e3f-1a2b3c4d5e6f'
+const LOGO = '1c1d5a6f-9e2b-4d3c-8f4a-2b3c4d5e6f70'
 
 function setup() {
+  const record = (ownerKey: string, kind: string) => ({
+    ownerKey,
+    kind,
+    uploader: 'gone',
+    name: `${kind}.bin`,
+    contentType: kind === 'resume' ? 'application/pdf' : 'image/webp',
+    size: 1,
+    createdAt: '2026-10-01T10:00:00.000Z',
+  })
   const db = fakeDatabase({
     users: { gone: { name: 'Gone' }, kept: { name: 'Kept' } },
+    files: {
+      [RESUME]: record('user:gone', 'resume'),
+      [LOGO]: record('company:company', 'logo'),
+    },
     events: {
       upcoming: {
         companyUID: 'company',
@@ -79,7 +110,7 @@ function setup() {
 }
 
 describe('eraseUsers', () => {
-  it('deletes the résumé files, the profile and the account', async () => {
+  it('deletes the résumé files and their records, the profile and the account', async () => {
     const { db, files, auth } = setup()
     await eraseUsers(
       { db: db as never, files, auth: auth as never },
@@ -88,6 +119,8 @@ describe('eraseUsers', () => {
     )
 
     expect(files.deleteFiles).toHaveBeenCalledWith({ prefix: 'users/gone/' })
+    expect(Object.keys(db.tree.files as Tree)).toEqual([LOGO])
+    expect(((db.tree.files as Tree)[LOGO] as Tree).uploader).toBeUndefined()
     expect(db.tree.users).toEqual({ kept: { name: 'Kept' } })
     expect(auth.deleteUsers).toHaveBeenCalledWith(['gone'])
   })

@@ -16,6 +16,7 @@ import { firebaseUserDirectory } from './adapters/firebase/userDirectory'
 import { rtdbEventRepository } from './adapters/rtdb/eventRepository'
 import { rtdbFileRepository } from './adapters/rtdb/fileRepository'
 import { rtdbInvitationRepository } from './adapters/rtdb/invitationRepository'
+import { rtdbResumeIndex } from './adapters/rtdb/resumeIndex'
 import { rtdbStandMapIndex } from './adapters/rtdb/standMapIndex'
 import { rtdbUserRepository } from './adapters/rtdb/userRepository'
 import { mailerFor } from './mail/mailerFor'
@@ -30,6 +31,7 @@ export const affiliations = rtdbAffiliationRepository(db)
 export const files = rtdbFileRepository(db)
 export const fileStorage = firebaseFileStorage(storage.bucket())
 export const standMaps = rtdbStandMapIndex(db)
+export const resumes = rtdbResumeIndex(db)
 export const board = rtdbBoardRepository(db)
 export const invitations = rtdbInvitationRepository(db)
 export const newAccounts = firebaseNewAccounts(auth, db)

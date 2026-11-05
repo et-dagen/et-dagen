@@ -1,22 +1,24 @@
 import { createError } from 'h3'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { subjectOf } from '@/tests/server/api/support/subject'
+import { memoryFileRepository } from '@/server/adapters/memory/fileRepository'
+import { memoryFileStorage } from '@/server/adapters/memory/fileStorage'
+import { memoryResumeIndex } from '@/server/adapters/memory/resumeIndex'
 
-// The handler relies on Nitro's auto-imports; stub them so it runs as a plain function.
-const BUCKET = 'demo-bucket'
-let stored: Record<string, unknown> = {}
-const getSignedUrl = vi.fn()
+// The handler relies on Nitro's auto-imports; stub them so it runs as a plain function. Its ports
+// are the in-memory adapters, where a link stored before files had records starts `memory://`.
 const sendRedirect = vi.fn()
 
 beforeEach(() => {
   vi.resetModules()
-  getSignedUrl.mockReset().mockResolvedValue(['https://signed.example/cv'])
   sendRedirect.mockClear()
-  stored = {
-    'users/student/resume': `https://storage.googleapis.com/${BUCKET}/users/student/my cv.pdf`,
-    'companies/paying/cvAccess': true,
-    'companies/free/cvAccess': false,
-  }
+  vi.doMock('@/server/composition', () => ({
+    files: memoryFileRepository(),
+    fileStorage: memoryFileStorage(),
+    resumes: memoryResumeIndex({
+      student: 'memory://users/student/my%20cv.pdf',
+    }),
+  }))
 
   vi.stubGlobal('defineRouteMeta', () => {})
   vi.stubGlobal('defineEventHandler', (handler: unknown) => handler)
@@ -30,23 +32,6 @@ beforeEach(() => {
   ]) {
     vi.stubGlobal(name, () => {})
   }
-  vi.stubGlobal(
-    'withDbTiming',
-    (_e: unknown, _p: unknown, _o: unknown, fn: () => unknown) => fn(),
-  )
-  vi.stubGlobal('db', {
-    ref: (path: string) => ({
-      once: () => Promise.resolve({ val: () => stored[path] ?? null }),
-    }),
-  })
-  vi.stubGlobal('storage', {
-    bucket: () => ({
-      name: BUCKET,
-      file: (path: string) => ({
-        getSignedUrl: (o: unknown) => getSignedUrl(path, o),
-      }),
-    }),
-  })
 })
 
 const COMPANIES = {
@@ -76,20 +61,11 @@ const free = { uid: 'rep2', userType: 'company', companyUID: 'free' }
 
 describe('GET /api/v1/resume/file', () => {
   it('redirects the owner to a link that expires in five minutes', async () => {
-    const before = Date.now()
     await open(student, 'student')
 
-    expect(getSignedUrl).toHaveBeenCalledWith('users/student/my cv.pdf', {
-      version: 'v4',
-      action: 'read',
-      expires: expect.any(Number),
-    })
-    const { expires } = getSignedUrl.mock.calls[0][1] as { expires: number }
-    expect(expires - before).toBeGreaterThanOrEqual(5 * 60 * 1000)
-    expect(expires - before).toBeLessThan(5 * 60 * 1000 + 1000)
     expect(sendRedirect).toHaveBeenCalledWith(
       expect.anything(),
-      'https://signed.example/cv',
+      'memory://users/student/my cv.pdf?expires=300',
       302,
     )
   })
@@ -106,7 +82,7 @@ describe('GET /api/v1/resume/file', () => {
         code: 'auth/forbidden',
       })
     }
-    expect(getSignedUrl).not.toHaveBeenCalled()
+    expect(sendRedirect).not.toHaveBeenCalled()
   })
 
   it('refuses signed-out requests', async () => {
@@ -118,8 +94,7 @@ describe('GET /api/v1/resume/file', () => {
   it('answers 400 without a user and 404 without a resume', async () => {
     await expect(open(admin)).rejects.toMatchObject({ statusCode: 400 })
     await expect(open(admin, 'nobody')).rejects.toMatchObject({
-      statusCode: 404,
-      statusMessage: 'Error (resume/not-found).',
+      code: 'resume/not-found',
     })
   })
 })

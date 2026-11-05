@@ -80,7 +80,15 @@ describe('eraseInactiveUsers', () => {
     }
     const update = vi.fn(() => Promise.resolve())
     const db = {
-      ref: () => ({ once: () => Promise.resolve({ val: () => null }), update }),
+      ref: () => {
+        const empty = { once: () => Promise.resolve({ val: () => null }) }
+        // no file records: the stale user uploaded nothing that was recorded
+        return {
+          ...empty,
+          orderByChild: () => ({ equalTo: () => empty }),
+          update,
+        }
+      },
     }
     const files = { deleteFiles: vi.fn(() => Promise.resolve()) }
 

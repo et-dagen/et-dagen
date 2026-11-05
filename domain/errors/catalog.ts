@@ -187,6 +187,7 @@ export const ERRORS = {
     status: 400,
     message: "A job's deadline type must be 'date', 'asap' or 'rolling'",
   },
+  'resume/not-found': { status: 404, message: 'The user has no résumé' },
 } as const satisfies Record<string, ErrorSpec>
 
 export type ErrorCode = keyof typeof ERRORS

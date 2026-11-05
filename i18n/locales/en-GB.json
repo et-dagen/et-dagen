@@ -915,6 +915,9 @@
     "internal": {
       "unexpected": "Something went wrong on our side. Please try again shortly."
     },
+    "resume": {
+      "not-found": "There is no CV here."
+    },
     "job": {
       "invalid-listing": "A job is shown either as a description or as a link.",
       "invalid-link": "The application link must be a web address starting with http:// or https://.",
