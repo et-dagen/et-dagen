@@ -1,4 +1,5 @@
 import { initializeApp } from 'firebase/app'
+import { followSignIn } from '@/composables/auth/session'
 
 export default defineNuxtPlugin(() => {
   const config = useRuntimeConfig()
@@ -18,5 +19,5 @@ export default defineNuxtPlugin(() => {
   // Initialize Firebase
   initializeApp(firebaseConfig)
 
-  initUser()
+  followSignIn()
 })

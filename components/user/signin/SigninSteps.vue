@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { Eye, EyeOff } from '@lucide/vue'
+  import { requestPasswordReset, signinUser } from '@/composables/auth/session'
   import { Button } from '@/components/ui/button'
   import { Input } from '@/components/ui/input'
   import { Label } from '@/components/ui/label'

@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { ChevronRight } from '@lucide/vue'
   import { useForm } from 'vee-validate'
+  import { registerUser } from '@/composables/auth/registration'
   import { useProgrammes } from '@/composables/useProgrammes'
   import PasswordInput from '@/components/form/PasswordInput.vue'
   import { typedSchemaOf } from '@/lib/forms/zodSchema'
