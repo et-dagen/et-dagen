@@ -10,10 +10,9 @@
   import { companyName } from '@/lib/companies'
   import DeleteDialog from '@/components/admin/DeleteDialog.vue'
   import FilterChips from '@/components/admin/FilterChips.vue'
-  import Pager from '@/components/admin/Pager.vue'
+  import ListShell from '@/components/admin/ListShell.vue'
   import SearchField from '@/components/admin/SearchField.vue'
   import SelectBox from '@/components/admin/SelectBox.vue'
-  import SelectionBar from '@/components/admin/SelectionBar.vue'
   import SortButton from '@/components/admin/SortButton.vue'
   import { Badge } from '@/components/ui/badge'
   import { Button } from '@/components/ui/button'
@@ -32,17 +31,14 @@
     TableHeader,
     TableRow,
   } from '@/components/ui/table'
-  import { useSelection } from '@/composables/admin/useSelection'
-  import { useSort } from '@/composables/admin/useSort'
-  import { alertError } from '@/composables/useAlerts'
+  import { useBulkDelete } from '@/composables/admin/useBulkDelete'
+  import { useListView } from '@/composables/admin/useListView'
   import { Instant } from '@/domain/time'
-  import { pageOf, search, sortBy } from '@/lib/admin/listView'
   import type { StoredJob } from '@/lib/jobs'
   import { daysUntil, deadlineOf, formatWhen, instantOf } from '@/lib/time'
 
   type Row = StoredJob & { uid: string }
   type Show = 'open' | 'expired' | 'all'
-  const PAGE_SIZE = 25
   const COLUMNS = ['title', 'company', 'type', 'location', 'deadline'] as const
   const DATE: Intl.DateTimeFormatOptions = {
     day: 'numeric',
@@ -75,55 +71,51 @@
   // a job without a deadline, or open until filled, stays open
   const isOpen = (row: Row) => (daysLeft(row) ?? 0) >= 0
 
-  const query = ref('')
-  const show = ref<Show>('open')
+  const inShow = (row: Row, value: Show) =>
+    value === 'all' || isOpen(row) === (value === 'open')
+
   const {
-    sort,
+    query,
+    filter: show,
+    filterOptions: showOptions,
+    page,
+    visible,
+    shown,
+    selection,
+    chosen,
     toggle: toggleSort,
     directionOf,
     ariaSort,
-  } = useSort<(typeof COLUMNS)[number]>('deadline')
-  const page = ref(1)
-
-  const inShow = (row: Row, value: Show) =>
-    value === 'all' || isOpen(row) === (value === 'open')
-  const showOptions = computed(() =>
-    (['open', 'expired', 'all'] as const).map((value) => ({
-      value,
-      label: t(`admin.jobs.filter.${value}`),
-      count: rows.value.filter((row) => inShow(row, value)).length,
-    })),
-  )
-
-  const sortValue = {
-    title: (row: Row) => row.title,
-    company: companyOf,
-    type: typeLabel,
-    location: (row: Row) => row.location,
-    // "Snarest" sorts first, "Løpende" with the undated last
-    deadline: (row: Row) =>
-      row.deadlineType === 'asap'
-        ? '0000'
-        : undated(row)
-          ? null
-          : instantOf(deadlineOf(row.deadline ?? undefined)),
-  }
-
-  const visible = computed(() => {
-    const found = search(
-      rows.value.filter((row) => inShow(row, show.value)),
-      query.value,
-      (row) => [row.title, companyOf(row), row.location, typeLabel(row)],
-    )
-    return sortBy(found, sortValue[sort.value.column], sort.value.direction)
+  } = useListView({
+    rows,
+    keyOf: (row) => row.uid,
+    filter: {
+      values: ['open', 'expired', 'all'] as const,
+      initial: 'open',
+      keeps: inShow,
+      label: (value) => t(`admin.jobs.filter.${value}`),
+    },
+    searchIn: (row) => [
+      row.title,
+      companyOf(row),
+      row.location,
+      typeLabel(row),
+    ],
+    sortBy: {
+      title: (row) => row.title,
+      company: companyOf,
+      type: typeLabel,
+      location: (row) => row.location,
+      // "Snarest" sorts first, "Løpende" with the undated last
+      deadline: (row) =>
+        row.deadlineType === 'asap'
+          ? '0000'
+          : undated(row)
+            ? null
+            : instantOf(deadlineOf(row.deadline ?? undefined)),
+    },
+    sortFirst: 'deadline',
   })
-  const shown = computed(() => pageOf(visible.value, page.value, PAGE_SIZE))
-  watch([query, show, sort], () => (page.value = 1))
-
-  const selection = useSelection(
-    computed(() => shown.value.rows),
-    (row) => row.uid,
-  )
 
   const deadlineNote = (row: Row) => {
     if (row.deadlineType === 'asap') return t('admin.jobs.deadline.asap')
@@ -135,36 +127,39 @@
     return t('admin.jobs.deadline.left', days)
   }
 
-  const toDelete = ref<Row[]>([])
-  const confirming = ref(false)
-  const deleting = ref(false)
-  const askDelete = (targets: Row[]) => {
-    toDelete.value = targets
-    confirming.value = true
-  }
-  const deleteJobs = async () => {
-    deleting.value = true
-    const results = await Promise.allSettled(
-      toDelete.value.map((row) =>
-        $fetch('/api/v1/job', { method: 'DELETE', query: { jobUID: row.uid } }),
-      ),
-    )
-    const failed = results.find((r) => r.status === 'rejected')
-    const done = results.filter((r) => r.status === 'fulfilled').length
-    if (done > 0) {
-      useAlertStore().alert(t('admin.jobs.delete.done', done), 'success')
-    }
-    if (failed) alertError((failed as PromiseRejectedResult).reason)
-    selection.clear()
-    confirming.value = false
-    deleting.value = false
-    await refresh()
-  }
+  // what the delete dialog is about: one row from its menu, or the selection
+  const {
+    targets: toDelete,
+    confirming,
+    deleting,
+    ask: askDelete,
+    confirm: deleteJobs,
+  } = useBulkDelete({
+    remove: async (row: Row) => {
+      await $fetch('/api/v1/job', {
+        method: 'DELETE',
+        query: { jobUID: row.uid },
+      })
+    },
+    done: (count) => t('admin.jobs.delete.done', count),
+    after: () => {
+      selection.clear()
+      return refresh()
+    },
+  })
 </script>
 
 <template>
-  <div class="tw:flex tw:flex-col tw:gap-4">
-    <div class="tw:flex tw:flex-col tw:gap-3 tw:lg:flex-row tw:lg:items-center">
+  <ListShell
+    v-model:page="page"
+    :shown="shown"
+    :total="visible.length"
+    :selected="selection.selected.value.size"
+    :empty="$t('admin.jobs.empty')"
+    @clear="selection.clear"
+    @delete="askDelete(chosen())"
+  >
+    <template #toolbar>
       <SearchField v-model="query" :label="$t('admin.jobs.search')" />
       <FilterChips
         v-model="show"
@@ -177,15 +172,9 @@
           {{ $t('admin.jobs.create') }}
         </NuxtLink>
       </Button>
-    </div>
+    </template>
 
-    <SelectionBar
-      :count="selection.selected.value.size"
-      @clear="selection.clear"
-      @delete="askDelete(rows.filter((row) => selection.has(row)))"
-    />
-
-    <div class="tw:overflow-hidden tw:rounded-lg tw:border tw:bg-card">
+    <template #table>
       <!-- table from lg and up -->
       <Table class="tw:hidden tw:lg:table">
         <TableHeader>
@@ -305,7 +294,9 @@
           </TableRow>
         </TableBody>
       </Table>
+    </template>
 
+    <template #list>
       <!-- list below lg -->
       <ul class="tw:divide-y tw:lg:hidden">
         <li
@@ -338,16 +329,7 @@
           </Badge>
         </li>
       </ul>
-
-      <p
-        v-if="shown.rows.length === 0"
-        class="tw:px-4 tw:py-10 tw:text-center tw:text-muted-foreground"
-      >
-        {{ $t('admin.jobs.empty') }}
-      </p>
-
-      <Pager v-model="page" :shown="shown" :total="visible.length" />
-    </div>
+    </template>
 
     <DeleteDialog
       v-model:open="confirming"
@@ -364,5 +346,5 @@
       :loading="deleting"
       @confirm="deleteJobs"
     />
-  </div>
+  </ListShell>
 </template>
