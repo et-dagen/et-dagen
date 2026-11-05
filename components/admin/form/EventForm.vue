@@ -1,10 +1,10 @@
 <script setup lang="ts">
   import { ArrowLeft, Save } from '@lucide/vue'
-  import { useCompanies } from '@/composables/useCompanies'
   import { useProgrammes } from '@/composables/useProgrammes'
   import { STUDY_YEARS } from '@/lib/user/programmes'
   import EventTabs from '@/components/admin/EventTabs.vue'
   import FieldError from '@/components/form/FieldError.vue'
+  import TextField from '@/components/form/TextField.vue'
   import RichText from '@/components/admin/form/RichText.vue'
   import SearchPicker from '@/components/admin/form/SearchPicker.vue'
   import { Button } from '@/components/ui/button'
@@ -23,9 +23,9 @@
     SelectTrigger,
     SelectValue,
   } from '@/components/ui/select'
+  import { useHostCompanies } from '@/composables/admin/useHostCompanies'
   import { useResourceForm } from '@/composables/admin/useResourceForm'
   import { EventInput, toV1Event } from '@/contracts/event'
-  import { CompanyUid } from '@/domain/business/company'
 
   const props = withDefaults(
     defineProps<{
@@ -40,30 +40,20 @@
   const { t } = useI18n()
   const localePath = useLocalePath()
 
-  const { data: companies } = await useCompanies()
-  // a company user or coordinator may only host for the companies they manage
-  const auth = useAuthStore()
-  const mayHost = (value: string) =>
-    !!value &&
-    auth.can('event', props.uid ? 'update' : 'create', {
-      companyUid: CompanyUid.parse(value),
-    })
-  // a company user who opens another company's event gets no form to fill in
-  const allowed = computed(
-    () => !props.uid || mayHost(String(props.initial.companyUID ?? '')),
-  )
+  const {
+    allowed,
+    choices: companyOptions,
+    onlyChoice,
+  } = await useHostCompanies({
+    resource: 'event',
+    uid: props.uid,
+    current: props.initial.companyUID,
+    first: [{ value: 'etdagene', label: 'E&T-dagene' }],
+  })
   const panelName = computed(() =>
     props.panel.startsWith('/company/')
       ? 'company.admin.events.name'
       : 'admin.events.name',
-  )
-  const companyOptions = computed(() =>
-    [
-      { value: 'etdagene', label: 'E&T-dagene' },
-      ...Object.entries(companies.value ?? {})
-        .map(([value, company]) => ({ value, label: company.name ?? value }))
-        .sort((a, b) => a.label.localeCompare(b.label, 'nb')),
-    ].filter((option) => mayHost(option.value)),
   )
   const { programmes: listed } = await useProgrammes()
   const programmes = computed(() => listed.value.map(({ name }) => name!))
@@ -88,9 +78,8 @@
   })
   // with one company to choose from, a new entry is for that company
   watchEffect(() => {
-    const [only, ...others] = companyOptions.value
-    if (!props.uid && only && !others.length && !form.values.companyUID)
-      form.setFieldValue('companyUID', only.value)
+    if (onlyChoice.value && !form.values.companyUID)
+      form.setFieldValue('companyUID', onlyChoice.value)
   })
   const signup = computed(() => form.values.signup === true)
 
@@ -133,13 +122,11 @@
     <section
       class="tw:grid tw:gap-5 tw:rounded-lg tw:border tw:bg-card tw:p-4 tw:lg:grid-cols-2 tw:lg:p-6"
     >
-      <FormField v-slot="{ componentField }" name="title">
-        <FormItem class="tw:lg:col-span-2">
-          <FormLabel>{{ $t('admin.events.form.title') }}</FormLabel>
-          <FormControl><Input v-bind="componentField" /></FormControl>
-          <FieldError />
-        </FormItem>
-      </FormField>
+      <TextField
+        name="title"
+        :label="$t('admin.events.form.title')"
+        class="tw:lg:col-span-2"
+      />
 
       <FormField v-slot="{ componentField }" name="companyUID">
         <FormItem class="tw:lg:col-span-2">
@@ -166,25 +153,16 @@
         </FormItem>
       </FormField>
 
-      <FormField v-slot="{ componentField }" name="start">
-        <FormItem>
-          <FormLabel>{{ $t('admin.events.form.start') }}</FormLabel>
-          <FormControl>
-            <Input type="datetime-local" v-bind="componentField" />
-          </FormControl>
-          <FieldError />
-        </FormItem>
-      </FormField>
-
-      <FormField v-slot="{ componentField }" name="end">
-        <FormItem>
-          <FormLabel>{{ $t('admin.events.form.end') }}</FormLabel>
-          <FormControl>
-            <Input type="datetime-local" v-bind="componentField" />
-          </FormControl>
-          <FieldError />
-        </FormItem>
-      </FormField>
+      <TextField
+        name="start"
+        :label="$t('admin.events.form.start')"
+        type="datetime-local"
+      />
+      <TextField
+        name="end"
+        :label="$t('admin.events.form.end')"
+        type="datetime-local"
+      />
 
       <FormField v-slot="{ componentField }" name="location.name">
         <FormItem>
@@ -199,15 +177,12 @@
         </FormItem>
       </FormField>
 
-      <FormField v-slot="{ componentField }" name="location.map">
-        <FormItem>
-          <FormLabel>{{ $t('admin.events.form.map') }}</FormLabel>
-          <FormControl>
-            <Input type="url" placeholder="https://" v-bind="componentField" />
-          </FormControl>
-          <FieldError />
-        </FormItem>
-      </FormField>
+      <TextField
+        name="location.map"
+        :label="$t('admin.events.form.map')"
+        type="url"
+        placeholder="https://"
+      />
 
       <FormField
         v-slot="{ value, handleChange, errorMessage }"
@@ -264,25 +239,16 @@
           </FormItem>
         </FormField>
 
-        <FormField v-slot="{ componentField }" name="opens">
-          <FormItem>
-            <FormLabel>{{ $t('admin.events.form.opens') }}</FormLabel>
-            <FormControl>
-              <Input type="datetime-local" v-bind="componentField" />
-            </FormControl>
-            <FieldError />
-          </FormItem>
-        </FormField>
-
-        <FormField v-slot="{ componentField }" name="closes">
-          <FormItem>
-            <FormLabel>{{ $t('admin.events.form.closes') }}</FormLabel>
-            <FormControl>
-              <Input type="datetime-local" v-bind="componentField" />
-            </FormControl>
-            <FieldError />
-          </FormItem>
-        </FormField>
+        <TextField
+          name="opens"
+          :label="$t('admin.events.form.opens')"
+          type="datetime-local"
+        />
+        <TextField
+          name="closes"
+          :label="$t('admin.events.form.closes')"
+          type="datetime-local"
+        />
 
         <FormField v-slot="{ value, handleChange }" name="years">
           <FormItem class="tw:lg:col-span-2">

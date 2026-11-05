@@ -10,10 +10,17 @@
   import { Input } from '@/components/ui/input'
 
   /**
-   * A labelled text field of a vee-validate form, with its hint and error. Other attributes, such
-   * as `type` or `autocomplete`, go to the input.
+   * A labelled text field of a vee-validate form, with its hint and error. `class` sets the
+   * field's place in the form's grid; other attributes, such as `type` or `autocomplete`, go to
+   * the input.
    */
   defineOptions({ inheritAttrs: false })
+  const attrs = useAttrs()
+  const inputAttrs = computed(() =>
+    Object.fromEntries(
+      Object.entries(attrs).filter(([key]) => key !== 'class'),
+    ),
+  )
   defineProps<{
     name: string
     label: string
@@ -24,10 +31,13 @@
 
 <template>
   <FormField v-slot="{ componentField }" :name="name">
-    <FormItem>
+    <FormItem :class="attrs.class">
       <FormLabel>{{ label }}</FormLabel>
       <FormControl>
-        <Input v-bind="{ ...$attrs, ...componentField }" :variant="variant" />
+        <Input
+          v-bind="{ ...inputAttrs, ...componentField }"
+          :variant="variant"
+        />
       </FormControl>
       <FormDescription v-if="hint">{{ hint }}</FormDescription>
       <FieldError />
