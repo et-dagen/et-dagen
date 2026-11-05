@@ -2,7 +2,7 @@
   import EventForm from '@/components/admin/form/EventForm.vue'
   import { NEW_EVENT } from '@/lib/admin/eventForm'
 
-  definePageMeta({ layout: 'admin', protected: true, area: 'events' })
+  definePageMeta({ layout: 'admin', area: 'events' })
 </script>
 
 <template>
