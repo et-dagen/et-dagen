@@ -180,7 +180,7 @@ describe('résumés', () => {
 
     const opened = await redirectOf(owner.uid, owner.token)
     expect(opened.status).toBe(302)
-    expect(opened.location).toContain('X-Goog-Signature')
+    expect(opened.location).toContain('Signature=')
 
     expect((await remove(owner.uid, owner.token)).status).toBe(204)
     expect(await read(`users/${owner.uid}/resume`)).toBeNull()
