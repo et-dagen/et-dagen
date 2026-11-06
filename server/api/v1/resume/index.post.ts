@@ -118,7 +118,7 @@ export default defineEventHandler(async (event) => {
 
   const userRef = db.ref(`users/${userUID}`)
 
-  userRef.update({ resume: URL })
+  await userRef.update({ resume: URL })
   trackDbWrite(event, `users/${userUID}`)
   return URL
 })

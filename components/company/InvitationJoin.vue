@@ -1,5 +1,10 @@
 <script setup lang="ts">
   import { useForm } from 'vee-validate'
+  import {
+    requestPasswordReset,
+    signInHere,
+    signOutHere,
+  } from '@/composables/auth/session'
   import FieldError from '@/components/form/FieldError.vue'
   import { Button } from '@/components/ui/button'
   import {
@@ -12,6 +17,7 @@
   import { Input } from '@/components/ui/input'
   import { Label } from '@/components/ui/label'
   import PasswordInput from '@/components/form/PasswordInput.vue'
+  import { useFocusInvalid } from '@/composables/useFocusInvalid'
   import { InvitationAccept } from '@/contracts/user'
   import { EmailAddress, sameAccount } from '@/domain/email'
   import { typedSchemaOf } from '@/lib/forms/zodSchema'
@@ -65,12 +71,7 @@
 
   const form = useForm({ validationSchema: typedSchemaOf(InvitationAccept) })
   const formEl = ref<HTMLFormElement | null>(null)
-  const focusInvalid = () =>
-    nextTick(() =>
-      formEl.value
-        ?.querySelector<HTMLElement>('[aria-invalid="true"]')
-        ?.focus(),
-    )
+  const focusInvalid = useFocusInvalid(formEl)
 
   const openAccount = form.handleSubmit(async (account) => {
     pending.value = true
@@ -122,11 +123,6 @@
     error.value = ''
     notice.value = ''
   }
-
-  const inputClass = [
-    'tw:h-11 tw:focus-visible:border-plate tw:focus-visible:ring-plate/15',
-    'tw:aria-invalid:focus-visible:border-destructive',
-  ].join(' ')
 </script>
 
 <template>
@@ -212,7 +208,7 @@
             <Input
               v-bind="componentField"
               autocomplete="name"
-              :class="inputClass"
+              variant="public"
             />
           </FormControl>
           <FieldError />
@@ -222,7 +218,7 @@
         <FormItem>
           <FormLabel>{{ $t('invitation.join.new_password') }}</FormLabel>
           <FormControl>
-            <PasswordInput v-bind="componentField" :class="inputClass" />
+            <PasswordInput v-bind="componentField" variant="public" />
           </FormControl>
           <FormDescription>{{ $t('signup.password_hint') }}</FormDescription>
           <FieldError />
@@ -280,7 +276,7 @@
           type="password"
           name="password"
           autocomplete="current-password"
-          :class="inputClass"
+          variant="public"
           :aria-invalid="!!error || undefined"
           :aria-describedby="error ? 'join-error' : undefined"
         />
