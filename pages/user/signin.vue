@@ -5,9 +5,7 @@
 
 <template>
   <div class="et-ui">
-    <div
-      class="tw:mx-auto tw:flex tw:max-w-md tw:flex-col tw:gap-8 tw:px-4 tw:py-10 tw:lg:py-16"
-    >
+    <div class="mx-auto flex max-w-md flex-col gap-8 px-4 py-10 lg:py-16">
       <SigninSteps />
       <AccountPaths />
     </div>

@@ -45,6 +45,12 @@ export default defineNuxtConfig({
       process.env.NUXT_FIREBASE_ADMIN_UNIVERSE_DOMAIN ?? '',
     firebaseAdminStorageBucket:
       process.env.NUXT_FIREBASE_ADMIN_STORAGE_BUCKET ?? '',
+    // outgoing mail through one mailbox; unset in development, where mail is printed instead
+    smtpHost: process.env.NUXT_SMTP_HOST ?? '',
+    smtpPort: process.env.NUXT_SMTP_PORT ?? '465',
+    smtpUser: process.env.NUXT_SMTP_USER ?? '',
+    smtpPassword: process.env.NUXT_SMTP_PASSWORD ?? '',
+    mailFrom: process.env.NUXT_MAIL_FROM ?? '',
     public: {
       firebaseApiKey: process.env.NUXT_PUBLIC_FIREBASE_API_KEY ?? '',
       firebaseAuthDomain: process.env.NUXT_PUBLIC_FIREBASE_AUTH_DOMAIN ?? '',
@@ -60,8 +66,9 @@ export default defineNuxtConfig({
     },
   },
 
+  // our composables and stores are imported explicitly; Vue and Nuxt APIs stay automatic (#583)
   imports: {
-    dirs: ['stores'],
+    scan: false,
   },
 
   css: ['@/assets/css/admin.css'],
@@ -70,10 +77,22 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
   },
 
-  // shadcn-vue components under components/ui are imported explicitly, not auto-imported (#583)
-  components: [{ path: '~/components', ignore: ['ui/**'] }],
+  // components are imported explicitly, not auto-imported (#583)
+  components: { dirs: [] },
 
-  modules: ['@nuxtjs/i18n', '@pinia/nuxt', '@vueuse/nuxt', '@nuxt/image'],
+  modules: [
+    '@nuxtjs/i18n',
+    '@pinia/nuxt',
+    '@vueuse/nuxt',
+    '@nuxt/image',
+    // Server code imports what it uses (#583). Last, because modules add their server
+    // auto-imports in `nitro:config`.
+    (_, nuxt) => {
+      nuxt.hook('nitro:config', (config) => {
+        config.imports = { ...config.imports, autoImport: false }
+      })
+    },
+  ],
 
   routeRules: {
     // The page for companies was served at /faq before it got its own name
@@ -95,11 +114,13 @@ export default defineNuxtConfig({
     // Times are the server's, UTC in production
     scheduledTasks: {
       '0 3 * * *': ['users:retention'],
+      // 1 June, a few months after the fair; see nextFairFrom in domain/authorization/affiliation
+      '0 4 1 6 *': ['companies:tier-reset'],
     },
     openAPI: {
       meta: {
         title: 'E&T-dagene API',
-        description: 'HTTP API for etdagen.no',
+        description: 'HTTP API for etdagene.no',
         // Overridden by the docs workflow with branch + short SHA
         version: process.env.DOCS_VERSION ?? 'dev',
       },
@@ -115,6 +136,8 @@ export default defineNuxtConfig({
     lazy: false,
     langDir: 'locales',
     strategy: 'prefix_except_default',
+    // the alternate and canonical links need an absolute origin; NUXT_PUBLIC_I18N_BASE_URL overrides it
+    baseUrl: 'https://etdagene.no',
     locales: [
       {
         code: 'no',
@@ -134,6 +157,8 @@ export default defineNuxtConfig({
     // relative to the i18n/ directory (@nuxtjs/i18n v9)
     vueI18n: '../config/i18n.config.ts',
     detectBrowserLanguage: false,
+    // the site has no v-t directives; set explicitly, since the default is deprecated
+    bundle: { optimizeTranslationDirective: false },
   },
 
   image: {

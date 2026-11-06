@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { entitlementsFor } from '~/domain/authorization/entitlements'
+import {
+  entitlementsFor,
+  withoutWithheld,
+} from '~/domain/authorization/entitlements'
 
 const setOf = (...args: Parameters<typeof entitlementsFor>) => [
   ...entitlementsFor(...args),
@@ -79,5 +82,16 @@ describe('overrides', () => {
       'ent:profile:manage',
       'ent:resume:view',
     ])
+  })
+})
+
+describe('withoutWithheld', () => {
+  it('only ever takes away', () => {
+    const granted = new Set(['ent:resume:view', 'ent:job:manage'] as const)
+    expect(withoutWithheld(granted, ['ent:resume:view'])).toEqual(
+      new Set(['ent:job:manage']),
+    )
+    expect(withoutWithheld(granted, ['ent:profile:manage'])).toEqual(granted)
+    expect(withoutWithheld(granted)).toEqual(granted)
   })
 })

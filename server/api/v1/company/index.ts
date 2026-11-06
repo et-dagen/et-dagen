@@ -2,6 +2,8 @@
 // endpoint for fetching companies from db
 
 import type { H3Event } from 'h3'
+import { defineEventHandler, getQuery } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import {
   entitlementsFor,
   type EntitledCompany,
@@ -11,6 +13,13 @@ import { CompanyUid } from '@/domain/business/company'
 import { Instant } from '@/domain/time'
 import { companies } from '@/server/composition'
 import { readableCompanies } from '@/server/security/richText'
+import { db } from '@/server/utils/firebase'
+import {
+  addEventContext,
+  setLogImportance,
+  setResourceContext,
+  withDbTiming,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {
@@ -116,6 +125,9 @@ function withTiers<T>(
         {
           ...record,
           tier: company?.relationship ?? 'prior',
+          ...(company?.formerRelationship && {
+            formerTier: company.formerRelationship,
+          }),
           ...(showEntitlements && {
             entitlements: company ? [...entitlementsFor(company)] : [],
           }),

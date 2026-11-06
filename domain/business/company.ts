@@ -50,6 +50,8 @@ export interface Company {
   uid: CompanyUid
   name: string
   relationship: Relationship
+  /** The tier at the last fair, for a company the yearly reset made former */
+  formerRelationship?: Relationship
 }
 
 /**

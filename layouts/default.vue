@@ -1,8 +1,13 @@
+<script setup lang="ts">
+  import SiteFooter from '@/components/site/Footer.vue'
+  import SiteHeader from '@/components/site/Header.vue'
+</script>
+
 <template>
-  <div class="et-ui tw:flex tw:min-h-dvh tw:flex-col">
+  <div class="et-ui flex min-h-dvh flex-col">
     <SiteHeader />
     <!-- the space and height Vuetify's VMain gave every page, which the pages were designed with -->
-    <main id="main" class="tw:min-h-screen tw:flex-1 tw:pt-[90px]">
+    <main id="main" class="min-h-screen flex-1 pt-[90px]">
       <slot />
     </main>
     <SiteFooter />

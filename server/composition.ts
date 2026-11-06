@@ -5,8 +5,10 @@
  * Handlers import their dependencies from here rather than building them, so a later store (the
  * PostgreSQL move) changes this file and nothing that uses it.
  */
+import { useRuntimeConfig } from 'nitropack/runtime'
 import { firebaseFileStorage } from './adapters/firebase/fileStorage'
 import { rtdbActivityLog } from './adapters/rtdb/activityLog'
+import { firebaseNewAccounts } from './adapters/firebase/newAccounts'
 import { rtdbAccessRepository } from './adapters/rtdb/accessRepository'
 import { rtdbAffiliationRepository } from './adapters/rtdb/affiliationRepository'
 import { rtdbBoardRepository } from './adapters/rtdb/boardRepository'
@@ -15,8 +17,12 @@ import { sharpImageProcessor } from './adapters/sharp/imageProcessor'
 import { firebaseUserDirectory } from './adapters/firebase/userDirectory'
 import { rtdbEventRepository } from './adapters/rtdb/eventRepository'
 import { rtdbFileRepository } from './adapters/rtdb/fileRepository'
+import { rtdbInvitationRepository } from './adapters/rtdb/invitationRepository'
+import { rtdbJobRepository } from './adapters/rtdb/jobRepository'
+import { rtdbResumeIndex } from './adapters/rtdb/resumeIndex'
 import { rtdbStandMapIndex } from './adapters/rtdb/standMapIndex'
 import { rtdbUserRepository } from './adapters/rtdb/userRepository'
+import { mailerFor } from './mail/mailerFor'
 import { auth, db, storage } from './utils/firebase'
 
 export const events = rtdbEventRepository(db)
@@ -28,6 +34,15 @@ export const affiliations = rtdbAffiliationRepository(db)
 export const files = rtdbFileRepository(db)
 export const fileStorage = firebaseFileStorage(storage.bucket())
 export const standMaps = rtdbStandMapIndex(db)
+export const resumes = rtdbResumeIndex(db)
 export const board = rtdbBoardRepository(db)
+export const invitations = rtdbInvitationRepository(db)
+export const jobs = rtdbJobRepository(db)
+export const newAccounts = firebaseNewAccounts(auth, db)
 export const images = sharpImageProcessor()
 export const activity = rtdbActivityLog(db)
+
+export const mailer = mailerFor(
+  useRuntimeConfig(),
+  process.env.NODE_ENV === 'production',
+)

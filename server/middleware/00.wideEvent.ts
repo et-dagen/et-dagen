@@ -8,6 +8,7 @@
  * Named with 00. prefix to ensure it runs first (Nuxt loads middleware alphabetically)
  */
 
+import { defineEventHandler, getHeader, getQuery, setHeader } from 'h3'
 import {
   createWideEvent,
   generateRequestId,

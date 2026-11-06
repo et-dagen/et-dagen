@@ -32,6 +32,8 @@ export const AREAS = {
     AREAS.profile(auth) ||
     auth.canForSome('event', 'list') ||
     AREAS.resumes(auth),
+  /** Taking attendance with the scanner; the server still checks each event */
+  scan: (auth: Asker) => auth.canForSome('event', 'markAttended'),
 }
 
 export type Area = keyof typeof AREAS

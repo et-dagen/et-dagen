@@ -89,6 +89,36 @@ export function describeAccessRepository(
       expect(all.get(ada)?.memberships).toHaveLength(2)
     })
 
+    it('keeps what an admin withholds from an employee, and gives it back', async () => {
+      const { store } = await make()
+      const employee = (withheld?: Access['memberships'][number]['withheld']) =>
+        ({
+          roles: ['company'],
+          memberships: [
+            { company: acme, kind: 'employee', ...(withheld && { withheld }) },
+          ],
+        }) satisfies Access
+
+      await store.replace(ada, employee(['ent:resume:view']), stamp)
+      expect((await store.find(ada))?.memberships).toEqual([
+        { company: acme, kind: 'employee', withheld: ['ent:resume:view'] },
+      ])
+
+      await store.replace(
+        ada,
+        employee(['ent:resume:view', 'ent:job:manage']),
+        stamp,
+      )
+      expect((await store.find(ada))?.memberships[0]?.withheld?.sort()).toEqual(
+        ['ent:job:manage', 'ent:resume:view'],
+      )
+
+      await store.replace(ada, employee(), stamp)
+      expect((await store.find(ada))?.memberships).toEqual([
+        { company: acme, kind: 'employee' },
+      ])
+    })
+
     it('lets a user act for a company again after leaving it', async () => {
       const { store, held } = await make()
       await store.replace(ada, coordinator, stamp)

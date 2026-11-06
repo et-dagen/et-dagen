@@ -1,5 +1,7 @@
 <script setup lang="ts">
   import { LogIn, LogOut } from '@lucide/vue'
+  import { useAuthStore } from '@/stores/authStore'
+  import { signoutUser } from '@/composables/auth/session'
   import { accountLinks, initialsOf } from '@/lib/site/account'
   import { Button } from '@/components/ui/button'
   import {
@@ -19,13 +21,13 @@
 <template>
   <DropdownMenu v-if="auth.isLoggedIn">
     <DropdownMenuTrigger
-      class="tw:grid tw:size-9 tw:place-items-center tw:rounded-full tw:bg-plate tw:text-sm tw:font-extrabold tw:text-plate-foreground tw:outline-offset-2 tw:hover:bg-plate/90"
+      class="grid size-9 place-items-center rounded-full bg-plate text-sm font-extrabold text-plate-foreground outline-offset-2 hover:bg-plate/90"
       :aria-label="$t('site.account.open', { name: auth.user?.name ?? '' })"
     >
       {{ initialsOf(auth.user?.name) || '?' }}
     </DropdownMenuTrigger>
-    <DropdownMenuContent align="end" class="tw:w-56">
-      <DropdownMenuLabel class="tw:truncate tw:font-bold">
+    <DropdownMenuContent align="end" class="w-56">
+      <DropdownMenuLabel class="truncate font-bold">
         {{ auth.user?.name }}
       </DropdownMenuLabel>
       <DropdownMenuItem v-for="link in links" :key="link.route" as-child>

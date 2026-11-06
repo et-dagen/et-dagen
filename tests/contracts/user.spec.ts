@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import {
-  CompanyJoin,
   StudentSignup,
   toV1User,
   UserInput,
@@ -90,6 +89,7 @@ describe('toV1User', () => {
       name: 'Bo',
       companyUID: 'c1',
       dietaryRestrictions: [],
+      withheld: [],
     })
     expect(company.profile).toEqual({
       uid: 'u2',
@@ -152,18 +152,6 @@ describe('StudentSignup', () => {
   })
 })
 
-describe('CompanyJoin', () => {
-  it('needs the code', () => {
-    expect(
-      CompanyJoin.safeParse({
-        name: 'Bo',
-        email: 'bo@firma.no',
-        password: 'abc12345',
-      }).error?.issues.map((i) => i.path.join('.')),
-    ).toEqual(['code'])
-  })
-})
-
 describe('toV1User access', () => {
   it('makes a coordinator a student with coordinator memberships', () => {
     const { profile, access } = toV1User('u3', {
@@ -191,11 +179,32 @@ describe('toV1User access', () => {
       name: 'Bo',
       companyUID: 'c1',
       dietaryRestrictions: [],
+      withheld: [],
     })
     expect(access).toEqual({
       uid: 'u2',
       roles: ['company'],
       memberships: [{ companyUID: 'c1', kind: 'employee' }],
+    })
+  })
+
+  it('sends what an admin withheld from a company account, and reads it back', () => {
+    const { access } = toV1User('u2', {
+      userType: 'company',
+      name: 'Bo',
+      companyUID: 'c1',
+      dietaryRestrictions: [],
+      withheld: ['ent:resume:view'],
+    })
+    expect(access.memberships).toEqual([
+      { companyUID: 'c1', kind: 'employee', withheld: ['ent:resume:view'] },
+    ])
+    expect(
+      userTypeOf({ roles: ['company'], memberships: access.memberships }),
+    ).toEqual({
+      userType: 'company',
+      companyUIDs: ['c1'],
+      withheld: ['ent:resume:view'],
     })
   })
 })
@@ -209,6 +218,7 @@ describe('userTypeOf', () => {
     expect(userTypeOf(coordinator)).toEqual({
       userType: 'coordinator',
       companyUIDs: ['c1'],
+      withheld: [],
     })
     expect(userTypeOf({ roles: ['user'], memberships: [] }).userType).toBe(
       'basic',

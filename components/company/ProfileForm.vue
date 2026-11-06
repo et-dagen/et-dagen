@@ -1,7 +1,8 @@
 <script setup lang="ts">
   import { Save } from '@lucide/vue'
-  import FieldError from '@/components/admin/form/FieldError.vue'
-  import LogoField from '@/components/admin/form/LogoField.vue'
+  import { refreshCompanies } from '@/composables/useCompanies'
+  import FieldError from '@/components/form/FieldError.vue'
+  import LogoField from '@/components/form/LogoField.vue'
   import { Button } from '@/components/ui/button'
   import {
     FormControl,
@@ -40,17 +41,15 @@
         body.append('file', logoFile.value)
         await $fetch('/api/v1/company/logo', { method: 'PUT', body })
       }
-      await refreshNuxtData('company-profile')
+      await refreshCompanies()
       return props.uid
     },
   })
 </script>
 
 <template>
-  <form class="tw:flex tw:flex-col tw:gap-6" novalidate @submit="submit">
-    <div
-      class="tw:grid tw:gap-5 tw:rounded-lg tw:border tw:bg-card tw:p-4 tw:lg:grid-cols-2 tw:lg:p-6"
-    >
+  <form class="flex flex-col gap-6" novalidate @submit="submit">
+    <div class="grid gap-5 rounded-lg border bg-card p-4 lg:grid-cols-2 lg:p-6">
       <FormField v-slot="{ componentField }" name="name">
         <FormItem>
           <FormLabel>{{ $t('admin.companies.form.name') }}</FormLabel>
@@ -71,13 +70,13 @@
         </FormItem>
       </FormField>
 
-      <div class="tw:flex tw:flex-col tw:gap-2 tw:lg:col-span-2">
+      <div class="flex flex-col gap-2 lg:col-span-2">
         <Label>{{ $t('admin.companies.form.logo') }}</Label>
         <LogoField v-model="logoFile" :current="logo" />
       </div>
 
       <FormField v-slot="{ componentField }" name="description">
-        <FormItem class="tw:lg:col-span-2">
+        <FormItem class="lg:col-span-2">
           <FormLabel>{{ $t('admin.companies.form.description') }}</FormLabel>
           <FormControl>
             <Textarea v-bind="componentField" rows="6" />
@@ -87,7 +86,7 @@
       </FormField>
     </div>
 
-    <Button type="submit" :disabled="saving" class="tw:w-fit">
+    <Button type="submit" :disabled="saving" class="w-fit">
       <Save aria-hidden="true" />
       {{ $t('company.admin.profile.save') }}
     </Button>

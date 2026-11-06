@@ -2,13 +2,17 @@ import { describe, expect, it } from 'vitest'
 import { Instant } from '@/domain/time'
 import {
   calendarFileOf,
+  countdownOf,
   isEventDay,
   mapEmbedOf,
   meetsRequirements,
-  placesOf,
+  openJobsOf,
+  seatsOf,
   signupStateOf,
+  ticketWhenOf,
   type PublicEvent,
   urgencyOf,
+  whenOf,
 } from '@/lib/eventPage'
 
 // 12:00 in Oslo on 1 November 2026
@@ -96,10 +100,10 @@ describe('meetsRequirements', () => {
   })
 })
 
-describe('placesOf', () => {
+describe('seatsOf', () => {
   it('counts places and the queue, never names', () => {
     expect(
-      placesOf(workshop({ attendants: { a: {} }, queue: { 1: 'b' } })),
+      seatsOf(workshop({ attendants: { a: {} }, queue: { 1: 'b' } })),
     ).toEqual({
       taken: 1,
       limit: 2,
@@ -179,5 +183,62 @@ describe('urgencyOf', () => {
     expect(
       urgencyOf(workshop({ attendants: { a: {}, b: {} } }), now),
     ).toBeNull()
+  })
+})
+
+describe('whenOf and ticketWhenOf', () => {
+  it('give the start in full and the end as hours', () => {
+    expect(whenOf(workshop(), 'en-GB')).toBe('Thu, 5 Nov 2026, 16:15–19:00')
+    expect(ticketWhenOf(workshop(), 'en-GB')).toBe('Thu 5 Nov, 16:15–19:00')
+  })
+
+  it('give the start alone when the end is missing', () => {
+    const open = workshop({ date: { start: '2026-11-05T16:15' } })
+    expect(whenOf(open, 'en-GB')).toBe('Thu, 5 Nov 2026, 16:15')
+  })
+})
+
+describe('openJobsOf', () => {
+  const jobs = {
+    j1: { title: 'Trainee', companyUID: 'acme', deadline: '2026-12-01' },
+    j2: { title: 'Summer job', companyUID: 'acme', deadline: '2026-10-01' },
+    j3: { title: 'Engineer', companyUID: 'other', deadline: '2026-12-01' },
+  }
+
+  it("lists the company's jobs whose deadline has not passed", () => {
+    expect(openJobsOf(jobs, 'acme', now).map((job) => job.uid)).toEqual(['j1'])
+  })
+
+  it('lists nothing for an event without a company', () => {
+    expect(openJobsOf(jobs, undefined, now)).toEqual([])
+  })
+})
+
+describe('countdownOf', () => {
+  const now = Instant.parse('2026-11-05T10:00:00.000Z')
+  const at = (iso: Parameters<typeof Instant.parse>[0]) => Instant.parse(iso)
+
+  it('splits the time left into days, hours and minutes', () => {
+    expect(countdownOf(at('2026-11-07T13:20:00.000Z'), now)).toEqual({
+      days: 2,
+      hours: 3,
+      minutes: 20,
+    })
+  })
+
+  it('rounds up, so the last seconds read as one minute', () => {
+    expect(countdownOf(at('2026-11-05T10:00:30.000Z'), now)).toEqual({
+      days: 0,
+      hours: 0,
+      minutes: 1,
+    })
+  })
+
+  it('stops at zero once sign-up has opened', () => {
+    expect(countdownOf(at('2026-11-05T09:00:00.000Z'), now)).toEqual({
+      days: 0,
+      hours: 0,
+      minutes: 0,
+    })
   })
 })

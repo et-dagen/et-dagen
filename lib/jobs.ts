@@ -1,5 +1,5 @@
-import { deadlineOf, daysUntil, formatWhen, instantOf } from '@/lib/admin/time'
-import { isUpcoming, type EventRow } from '@/lib/admin/events'
+import { deadlineOf, daysUntil, formatWhen, instantOf } from '@/lib/time'
+import { isUpcoming, type EventRow } from '@/lib/events'
 import { Instant, type ISO8601String } from '@/domain/time'
 
 /** Deadlines this many days away or closer are marked, so students apply in time */
@@ -7,6 +7,20 @@ export const SOON_DAYS = 14
 
 /** How a job's deadline is given; jobs stored before the choice existed have a date */
 export type DeadlineType = 'date' | 'asap' | 'rolling'
+
+/** A job as `GET /api/v1/job` returns it; every field may be missing from old records */
+export interface StoredJob {
+  title?: string
+  companyUID?: string
+  jobType?: string
+  location?: string
+  deadline?: string | null
+  /** Jobs stored before it existed have a date */
+  deadlineType?: DeadlineType
+  description?: string
+  listing?: 'text' | 'link'
+  applicationLink?: string
+}
 
 export type DeadlineState =
   | { kind: 'none' }

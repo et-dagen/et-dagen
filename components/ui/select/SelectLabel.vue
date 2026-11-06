@@ -12,9 +12,7 @@
 <template>
   <SelectLabel
     data-slot="select-label"
-    :class="
-      cn('tw:text-muted-foreground tw:px-2 tw:py-1.5 tw:text-xs', props.class)
-    "
+    :class="cn('text-muted-foreground px-2 py-1.5 text-xs', props.class)"
   >
     <slot />
   </SelectLabel>

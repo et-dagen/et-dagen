@@ -20,6 +20,8 @@ const sponsorWithResumes = {
   overrides: { 'ent:resume:view': true },
 } as const
 
+const globex = CompanyUid.parse('globex')
+
 const setup = () => {
   const affiliations = memoryAffiliationRepository()
   const companies = memoryCompanyRepository([
@@ -27,6 +29,13 @@ const setup = () => {
       uid: acme,
       name: 'Acme',
       relationship: 'partner',
+      entitlementOverrides: {},
+    },
+    {
+      uid: globex,
+      name: 'Globex',
+      relationship: 'prior',
+      formerRelationship: 'sponsor',
       entitlementOverrides: {},
     },
   ])
@@ -58,6 +67,29 @@ describe('setAffiliation', () => {
       ).rejects.toMatchObject({ code: 'auth/forbidden' })
     }
     expect(affiliations.read(acme)).toBeUndefined()
+  })
+
+  it("keeps a former company's tier from the last fair while it stays former", async () => {
+    const { affiliations, deps } = setup()
+    const asAdmin = (tier: 'prior' | 'partner') =>
+      setAffiliation(deps, {
+        subject: subject('admin'),
+        company: globex,
+        affiliation: { tier, overrides: {} },
+        now,
+      })
+
+    await asAdmin('prior')
+    expect(affiliations.read(globex)).toEqual({
+      tier: 'prior',
+      overrides: {},
+      formerTier: 'sponsor',
+    })
+    await asAdmin('partner')
+    expect(affiliations.read(globex)).toEqual({
+      tier: 'partner',
+      overrides: {},
+    })
   })
 
   it('refuses a company that does not exist', async () => {

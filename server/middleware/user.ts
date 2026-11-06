@@ -1,8 +1,11 @@
+import { defineEventHandler } from 'h3'
 import { whoIsAsking } from '@/application/users/subject'
 import type { Subject } from '@/domain/authorization/subject'
 import { Instant } from '@/domain/time'
 import { UserUid } from '@/domain/user'
 import { companies, profiles } from '@/server/composition'
+import { trackDbRead } from '@/server/utils/wideEventHelpers'
+import formatFirebaseUser from '@/server/utils/formatFirebaseUser'
 
 export default defineEventHandler(async (event) => {
   const { decodedToken, wideEvent } = event.context

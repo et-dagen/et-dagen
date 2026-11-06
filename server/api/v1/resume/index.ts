@@ -1,8 +1,19 @@
 // GET /api/v1/resume
 // endpoint for fetching user data with resumes from database
 
+import { createError, defineEventHandler, getQuery } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { hasPermission } from '@/domain/authorization/hasPermission'
 import { Instant } from '@/domain/time'
+import { auth, db } from '@/server/utils/firebase'
+import {
+  addEventContext,
+  setErrorContext,
+  setLogImportance,
+  setResourceContext,
+  withDbTiming,
+} from '@/server/utils/wideEventHelpers'
+import formatFirebaseUser from '@/server/utils/formatFirebaseUser'
 
 const isValidFirebaseStorageLink = async (link: string): Promise<boolean> => {
   // check if link is a string

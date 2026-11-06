@@ -45,11 +45,10 @@
           height: props.height ? { ideal: props.height } : undefined,
         },
       })
-    } catch (err: any) {
+    } catch (err) {
+      // a refused permission, or no camera at all; the page says which
       isStarting.value = false
-      if (err.name === 'NotAllowedError') {
-        emit('error', err)
-      }
+      emit('error', err as Error)
       return
     }
 

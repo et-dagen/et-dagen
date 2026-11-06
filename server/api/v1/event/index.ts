@@ -1,7 +1,15 @@
 // GET /api/v1/event
 // endpoint for fetching events from db
 
+import { defineEventHandler, getQuery } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { readableEvents } from '@/server/security/richText'
+import { db } from '@/server/utils/firebase'
+import {
+  addEventContext,
+  setResourceContext,
+  withDbTiming,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

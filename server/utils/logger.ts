@@ -7,6 +7,8 @@
  * - Structured JSON output for easy parsing
  */
 
+import { useRuntimeConfig } from 'nitropack/runtime'
+
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error'
 
 /**
@@ -124,7 +126,6 @@ function getLogConfig(): {
   serviceName?: string
 } {
   try {
-    // useRuntimeConfig is auto-imported in the Nitro server context
     const config = useRuntimeConfig()
     return {
       logLevel: (config.logLevel as string) || process.env.LOG_LEVEL,
@@ -352,6 +353,16 @@ export function logWideEvent(event: WideEvent, level: LogLevel = 'info'): void {
 }
 
 // Helper to create a partial wide event that can be enriched
+/** Paths that end in an invitation's link token, which works as a password and stays out of logs */
+const SECRET_PATHS = [
+  /^((?:\/en)?\/company\/join\/)[^/?#]+/,
+  /^(\/api\/v1\/invitation\/)[^/?#]+/,
+]
+
+/** The request path as the log keeps it, with link tokens replaced by `:token` */
+export const loggedPath = (path: string): string =>
+  SECRET_PATHS.reduce((kept, secret) => kept.replace(secret, '$1:token'), path)
+
 export function createWideEvent(
   requestId: string,
   method: string,
@@ -364,7 +375,7 @@ export function createWideEvent(
     version: process.env.npm_package_version ?? '1.0.0',
     environment: process.env.NODE_ENV ?? 'development',
     method,
-    path,
+    path: loggedPath(path),
     outcome: 'success',
     _importance: defaultImportance(method),
     db: {

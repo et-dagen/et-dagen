@@ -1,7 +1,13 @@
 // GET /api/v1/board
 // endpoint for the board members on the contact page
+import { defineEventHandler } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { listBoard } from '@/application/board/members'
 import { board, fileStorage, files } from '@/server/composition'
+import {
+  setLogImportance,
+  setResourceContext,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

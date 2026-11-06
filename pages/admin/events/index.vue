@@ -1,11 +1,12 @@
 <script setup lang="ts">
   import { Mail, MoreHorizontal, Pencil, Plus, Trash2 } from '@lucide/vue'
+  import { useCompanies } from '@/composables/useCompanies'
+  import { companyName } from '@/lib/companies'
   import DeleteDialog from '@/components/admin/DeleteDialog.vue'
   import FilterChips from '@/components/admin/FilterChips.vue'
-  import Pager from '@/components/admin/Pager.vue'
+  import ListShell from '@/components/admin/ListShell.vue'
   import SearchField from '@/components/admin/SearchField.vue'
   import SelectBox from '@/components/admin/SelectBox.vue'
-  import SelectionBar from '@/components/admin/SelectionBar.vue'
   import SortButton from '@/components/admin/SortButton.vue'
   import { Badge } from '@/components/ui/badge'
   import { Button } from '@/components/ui/button'
@@ -24,9 +25,9 @@
     TableHeader,
     TableRow,
   } from '@/components/ui/table'
-  import { useSelection } from '@/composables/admin/useSelection'
-  import { useSort } from '@/composables/admin/useSort'
-  import { alertError } from '@/composables/useAlerts'
+  import { useBulkDelete } from '@/composables/admin/useBulkDelete'
+  import { useListView } from '@/composables/admin/useListView'
+  import { alertError, notify } from '@/composables/useAlerts'
   import { Instant } from '@/domain/time'
   import {
     eventStatus,
@@ -35,13 +36,11 @@
     placeOf,
     type EventRow,
     type EventStatus,
-  } from '@/lib/admin/events'
-  import { pageOf, search, sortBy } from '@/lib/admin/listView'
-  import { instantOf } from '@/lib/admin/time'
+  } from '@/lib/events'
+  import { instantOf } from '@/lib/time'
 
   type Row = EventRow & { uid: string }
   type When = 'upcoming' | 'past' | 'all'
-  const PAGE_SIZE = 25
   const COLUMNS = [
     'title',
     'company',
@@ -60,8 +59,7 @@
 
   const { data: events, refresh } =
     await useFetch<Record<string, EventRow>>('/api/v1/event')
-  const { data: companies } =
-    await useFetch<Record<string, { name: string }>>('/api/v1/company')
+  const { data: companies } = await useCompanies()
 
   const rows = computed<Row[]>(() =>
     Object.entries(events.value ?? {}).map(([uid, event]) => ({
@@ -69,55 +67,45 @@
       ...event,
     })),
   )
-  const companyOf = (row: Row) =>
-    companies.value?.[row.companyUID ?? '']?.name ?? ''
+  const companyOf = (row: Row) => companyName(companies.value, row.companyUID)
   const attendeesOf = (row: Row) => Object.keys(row.attendants ?? {}).length
   const statusOf = (row: Row) => eventStatus(row, now)
 
-  const query = ref('')
-  const when = ref<When>('upcoming')
+  const inWhen = (row: Row, value: When) =>
+    value === 'all' || isUpcoming(row, now) === (value === 'upcoming')
+
   const {
-    sort,
+    query,
+    filter: when,
+    filterOptions: whenOptions,
+    page,
+    visible,
+    shown,
+    selection,
+    chosen,
     toggle: toggleSort,
     directionOf,
     ariaSort,
-  } = useSort<(typeof COLUMNS)[number]>('date')
-  const page = ref(1)
-
-  const inWhen = (row: Row, value: When) =>
-    value === 'all' || isUpcoming(row, now) === (value === 'upcoming')
-  const whenOptions = computed(() =>
-    (['upcoming', 'past', 'all'] as const).map((value) => ({
-      value,
-      label: t(`admin.events.filter.${value}`),
-      count: rows.value.filter((row) => inWhen(row, value)).length,
-    })),
-  )
-
-  const sortValue = {
-    title: (row: Row) => row.title,
-    company: companyOf,
-    date: (row: Row) => instantOf(row.date?.start),
-    place: (row: Row) => row.location?.name,
-    attendees: (row: Row) => String(attendeesOf(row)),
-    status: (row: Row) => statusLabel(statusOf(row)),
-  }
-
-  const visible = computed(() => {
-    const found = search(
-      rows.value.filter((row) => inWhen(row, when.value)),
-      query.value,
-      (row) => [row.title, companyOf(row), row.location?.name],
-    )
-    return sortBy(found, sortValue[sort.value.column], sort.value.direction)
+  } = useListView({
+    rows,
+    keyOf: (row) => row.uid,
+    filter: {
+      values: ['upcoming', 'past', 'all'] as const,
+      initial: 'upcoming',
+      keeps: inWhen,
+      label: (value) => t(`admin.events.filter.${value}`),
+    },
+    searchIn: (row) => [row.title, companyOf(row), row.location?.name],
+    sortBy: {
+      title: (row) => row.title,
+      company: companyOf,
+      date: (row) => instantOf(row.date?.start),
+      place: (row) => row.location?.name,
+      attendees: (row) => String(attendeesOf(row)),
+      status: (row) => statusLabel(statusOf(row)),
+    },
+    sortFirst: 'date',
   })
-  const shown = computed(() => pageOf(visible.value, page.value, PAGE_SIZE))
-  watch([query, when, sort], () => (page.value = 1))
-
-  const selection = useSelection(
-    computed(() => shown.value.rows),
-    (row) => row.uid,
-  )
 
   function statusLabel(status: EventStatus) {
     if (status.kind === 'full' && status.queued > 0) {
@@ -127,18 +115,15 @@
   }
   const statusBadge = (status: EventStatus) =>
     ({
-      past: 'tw:border-transparent tw:bg-secondary tw:text-muted-foreground',
-      'no-registration': 'tw:text-muted-foreground',
-      'not-open': 'tw:text-foreground',
-      open: [
-        'tw:border-transparent tw:bg-plate/12 tw:text-plate',
-        'tw:dark:bg-plate tw:dark:text-plate-foreground',
-      ].join(' '),
+      past: 'border-transparent bg-secondary text-muted-foreground',
+      'no-registration': 'text-muted-foreground',
+      'not-open': 'text-foreground',
+      open: 'border-transparent bg-plate/12 text-plate',
       full:
         status.kind === 'full' && status.queued > 0
-          ? 'tw:border-transparent tw:bg-signal tw:text-signal-foreground'
-          : 'tw:border-transparent tw:bg-foreground tw:text-background',
-      closed: 'tw:text-muted-foreground',
+          ? 'border-transparent bg-signal text-signal-foreground'
+          : 'border-transparent bg-foreground text-background',
+      closed: 'text-muted-foreground',
     })[status.kind]
 
   const copyEmails = async (row: Row) => {
@@ -148,80 +133,69 @@
         { query: { eventUID: row.uid } },
       )
       if (emails.length === 0) {
-        useAlertStore().alert(t('admin.events.emails_none'), 'info')
+        notify(t('admin.events.emails_none'), 'info')
         return
       }
       await copy(emails.join(', '))
-      useAlertStore().alert(
-        t('admin.events.emails_copied', emails.length),
-        'success',
-      )
+      notify(t('admin.events.emails_copied', emails.length), 'success')
     } catch (error) {
       alertError(error)
     }
   }
 
   // what the delete dialog is about: one row from its menu, or the selection
-  const toDelete = ref<Row[]>([])
-  const confirming = ref(false)
-  const deleting = ref(false)
-  const askDelete = (targets: Row[]) => {
-    toDelete.value = targets
-    confirming.value = true
-  }
-  const deleteEvents = async () => {
-    deleting.value = true
-    const results = await Promise.allSettled(
-      toDelete.value.map((row) =>
-        $fetch('/api/v1/event', {
-          method: 'DELETE',
-          body: { eventUID: row.uid },
-        }),
-      ),
-    )
-    const failed = results.find((r) => r.status === 'rejected')
-    const done =
-      results.length - results.filter((r) => r.status === 'rejected').length
-    if (done > 0) {
-      useAlertStore().alert(t('admin.events.delete.done', done), 'success')
-    }
-    if (failed) alertError((failed as PromiseRejectedResult).reason)
-    selection.clear()
-    confirming.value = false
-    deleting.value = false
-    await refresh()
-  }
+  const {
+    targets: toDelete,
+    confirming,
+    deleting,
+    ask: askDelete,
+    confirm: deleteEvents,
+  } = useBulkDelete({
+    remove: async (row: Row) => {
+      await $fetch('/api/v1/event', {
+        method: 'DELETE',
+        body: { eventUID: row.uid },
+      })
+    },
+    done: (count) => t('admin.events.delete.done', count),
+    after: () => {
+      selection.clear()
+      return refresh()
+    },
+  })
 </script>
 
 <template>
-  <div class="tw:flex tw:flex-col tw:gap-4">
-    <div class="tw:flex tw:flex-col tw:gap-3 tw:lg:flex-row tw:lg:items-center">
+  <ListShell
+    v-model:page="page"
+    :shown="shown"
+    :total="visible.length"
+    :selected="selection.selected.value.size"
+    :empty="$t('admin.events.empty')"
+    @clear="selection.clear"
+    @delete="askDelete(chosen())"
+  >
+    <template #toolbar>
       <SearchField v-model="query" :label="$t('admin.events.search')" />
       <FilterChips
         v-model="when"
         :label="$t('admin.events.columns.date')"
         :options="whenOptions"
       />
-      <Button as-child class="tw:h-10 tw:lg:ml-auto">
+      <Button as-child class="h-10 lg:ml-auto">
         <NuxtLink :to="localePath('/admin/events/new')">
           <Plus aria-hidden="true" />
           {{ $t('admin.events.create') }}
         </NuxtLink>
       </Button>
-    </div>
+    </template>
 
-    <SelectionBar
-      :count="selection.selected.value.size"
-      @clear="selection.clear"
-      @delete="askDelete(rows.filter((row) => selection.has(row)))"
-    />
-
-    <div class="tw:overflow-hidden tw:rounded-lg tw:border tw:bg-card">
+    <template #table>
       <!-- table from lg and up -->
-      <Table class="tw:hidden tw:lg:table">
+      <Table class="hidden lg:table">
         <TableHeader>
-          <TableRow class="tw:hover:bg-transparent">
-            <TableHead class="tw:w-12 tw:pl-4">
+          <TableRow class="hover:bg-transparent">
+            <TableHead class="w-12 pl-4">
               <SelectBox
                 :checked="selection.pageState.value"
                 :label="$t('admin.events.select_page')"
@@ -239,7 +213,7 @@
                 @toggle="toggleSort(column)"
               />
             </TableHead>
-            <TableHead class="tw:w-12" />
+            <TableHead class="w-12" />
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -248,71 +222,71 @@
             :key="row.uid"
             :data-state="selection.has(row) ? 'selected' : undefined"
             :data-changed="row.uid === changed || undefined"
-            class="tw:data-[state=selected]:bg-brand/8 tw:data-changed:bg-signal/15 tw:data-changed:shadow-[inset_4px_0_0_var(--signal)]"
+            class="data-[state=selected]:bg-brand/8 data-changed:bg-signal/15 data-changed:shadow-[inset_4px_0_0_var(--signal)]"
           >
-            <TableCell class="tw:pl-4">
+            <TableCell class="pl-4">
               <SelectBox
                 :checked="selection.has(row)"
                 :label="$t('admin.events.select_row', { name: row.title })"
                 @change="(on) => selection.toggle(row, on)"
               />
             </TableCell>
-            <TableCell class="tw:max-w-80 tw:truncate tw:font-semibold">
+            <TableCell class="max-w-80 truncate font-semibold">
               <NuxtLink
                 :to="localePath(`/admin/events/${row.uid}`)"
-                class="tw:underline tw:decoration-border tw:decoration-1 tw:underline-offset-4 tw:hover:decoration-current"
+                class="underline decoration-border decoration-1 underline-offset-4 hover:decoration-current"
               >
                 {{ row.title }}
               </NuxtLink>
             </TableCell>
-            <TableCell class="tw:text-muted-foreground">
+            <TableCell class="text-muted-foreground">
               {{ companyOf(row) }}
             </TableCell>
-            <TableCell class="tw:whitespace-nowrap">
+            <TableCell class="whitespace-nowrap">
               {{ formatStart(row, localeProperties.language ?? 'nb-NO') }}
             </TableCell>
             <TableCell>
               <span
                 v-if="placeOf(row.location?.name).code"
-                class="tw:mr-2 tw:inline-flex tw:h-6 tw:min-w-10 tw:items-center tw:justify-center tw:rounded-[3px] tw:bg-plate tw:px-2 tw:pt-0.5 tw:text-xs tw:font-extrabold tw:tracking-wider tw:text-plate-foreground tw:shadow-[inset_0_0_0_2px_var(--plate),inset_0_0_0_3px_rgb(255_255_255/0.45)]"
+                class="mr-2 inline-flex h-6 min-w-10 items-center justify-center rounded-[3px] bg-plate px-2 pt-0.5 text-xs font-extrabold tracking-wider text-plate-foreground shadow-[inset_0_0_0_2px_var(--plate),inset_0_0_0_3px_rgb(255_255_255/0.45)]"
               >
                 {{ placeOf(row.location?.name).code }}
               </span>
-              <span class="tw:text-muted-foreground">
+              <span class="text-muted-foreground">
                 {{ placeOf(row.location?.name).name }}
               </span>
             </TableCell>
             <TableCell>
               <template v-if="row.capacity">
-                <span class="tw:font-semibold tw:tabular-nums">
+                <span class="font-semibold tabular-nums">
                   {{ attendeesOf(row) }}
                 </span>
-                <span class="tw:text-muted-foreground tw:tabular-nums">
+                <span class="text-muted-foreground tabular-nums">
                   / {{ row.capacity }}
                 </span>
                 <span
-                  class="tw:mt-1 tw:block tw:h-1 tw:w-16 tw:overflow-hidden tw:rounded-full tw:bg-secondary"
+                  class="mt-1 block h-1 w-16 overflow-hidden rounded-full bg-secondary"
                 >
                   <span
-                    class="tw:block tw:h-full tw:bg-plate"
+                    class="block h-full bg-plate"
                     :style="{
                       width: `${Math.min(100, (attendeesOf(row) / row.capacity) * 100)}%`,
                     }"
                   />
                 </span>
               </template>
-              <span v-else class="tw:text-muted-foreground">–</span>
+              <span v-else class="text-muted-foreground">–</span>
             </TableCell>
             <TableCell>
               <Badge
                 variant="outline"
-                class="tw:rounded-[4px]"
+                class="rounded-[4px]"
                 :class="statusBadge(statusOf(row))"
               >
                 {{ statusLabel(statusOf(row)) }}
               </Badge>
             </TableCell>
-            <TableCell class="tw:pr-4">
+            <TableCell class="pr-4">
               <DropdownMenu>
                 <DropdownMenuTrigger as-child>
                   <Button
@@ -344,7 +318,7 @@
                     variant="destructive"
                     @select="askDelete([row])"
                   >
-                    <Trash2 aria-hidden="true" class="tw:text-destructive" />
+                    <Trash2 aria-hidden="true" class="text-destructive" />
                     {{ $t('admin.events.actions.delete') }}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -353,51 +327,44 @@
           </TableRow>
         </TableBody>
       </Table>
+    </template>
 
+    <template #list>
       <!-- list below lg -->
-      <ul class="tw:divide-y tw:lg:hidden">
+      <ul class="divide-y lg:hidden">
         <li
           v-for="row in shown.rows"
           :key="row.uid"
-          class="tw:flex tw:items-start tw:gap-3 tw:px-4 tw:py-3"
+          class="flex items-start gap-3 px-4 py-3"
         >
           <SelectBox
             :checked="selection.has(row)"
             :label="$t('admin.events.select_row', { name: row.title })"
-            class="tw:mt-1 tw:size-5"
+            class="mt-1 size-5"
             @change="(on) => selection.toggle(row, on)"
           />
-          <div class="tw:min-w-0 tw:flex-1">
+          <div class="min-w-0 flex-1">
             <NuxtLink
               :to="localePath(`/admin/events/${row.uid}`)"
-              class="tw:block tw:truncate tw:font-semibold tw:underline tw:decoration-border tw:underline-offset-4"
+              class="block truncate font-semibold underline decoration-border underline-offset-4"
             >
               {{ row.title }}
             </NuxtLink>
-            <p class="tw:truncate tw:text-sm tw:text-muted-foreground">
+            <p class="truncate text-sm text-muted-foreground">
               {{ formatStart(row, localeProperties.language ?? 'nb-NO') }}
               · {{ row.location?.name }}
             </p>
           </div>
           <Badge
             variant="outline"
-            class="tw:shrink-0 tw:rounded-[4px]"
+            class="shrink-0 rounded-[4px]"
             :class="statusBadge(statusOf(row))"
           >
             {{ statusLabel(statusOf(row)) }}
           </Badge>
         </li>
       </ul>
-
-      <p
-        v-if="shown.rows.length === 0"
-        class="tw:px-4 tw:py-10 tw:text-center tw:text-muted-foreground"
-      >
-        {{ $t('admin.events.empty') }}
-      </p>
-
-      <Pager v-model="page" :shown="shown" :total="visible.length" />
-    </div>
+    </template>
 
     <DeleteDialog
       v-model:open="confirming"
@@ -414,5 +381,5 @@
       :loading="deleting"
       @confirm="deleteEvents"
     />
-  </div>
+  </ListShell>
 </template>

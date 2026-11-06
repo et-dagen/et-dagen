@@ -13,6 +13,6 @@
     :aria-label="label"
     @update:model-value="(on) => $emit('change', on)"
   >
-    <Minus v-if="checked === 'indeterminate'" class="tw:size-3.5" />
+    <Minus v-if="checked === 'indeterminate'" class="size-3.5" />
   </Checkbox>
 </template>

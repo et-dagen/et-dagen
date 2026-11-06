@@ -1,5 +1,11 @@
 import { z } from 'zod'
+import type { Membership } from '@/domain/authorization/access'
+import {
+  WITHHOLDABLE,
+  type Entitlement,
+} from '@/domain/authorization/entitlements'
 import { EmailAddress } from '@/domain/email'
+import { passwordProblem } from '@/domain/password'
 
 /** The kinds of account the admin form sets, from the one with the most access down */
 export const USER_TYPES = ['admin', 'coordinator', 'company', 'basic'] as const
@@ -50,7 +56,13 @@ export const UserInput = z.discriminatedUnion('userType', [
     currentYear: year,
     companyUIDs: z.array(z.string().min(1)).min(1, 'required'),
   }),
-  z.object({ ...common, userType: z.literal('company'), companyUID: required }),
+  z.object({
+    ...common,
+    userType: z.literal('company'),
+    companyUID: required,
+    // what this person may not do, although the company may
+    withheld: z.array(z.enum(WITHHOLDABLE)).default([]),
+  }),
 ])
 export type UserInput = z.infer<typeof UserInput>
 
@@ -76,16 +88,14 @@ export function toV1User(uid: string, user: UserInput) {
   }
 }
 
-const count = (value: string, pattern: RegExp) =>
-  (value.match(pattern) ?? []).length
-
-/** The site's password rule: at least 8 characters, 3 of them letters and 3 digits */
+/** The site's password rule, as the server checks it too */
 const password = z
   .string({ error: 'required' })
   .min(1, 'required')
-  .min(8, 'password_length')
-  .refine((value) => count(value, /[a-zA-Z]/g) >= 3, 'password_letters')
-  .refine((value) => count(value, /\d/g) >= 3, 'password_digits')
+  .superRefine((value, context) => {
+    const problem = passwordProblem(value)
+    if (problem) context.addIssue({ code: 'custom', message: problem })
+  })
 
 const email = z
   .string({ error: 'required' })
@@ -111,20 +121,38 @@ export const StudentSignup = z.object({
 })
 export type StudentSignup = z.infer<typeof StudentSignup>
 
-/** What a company contact types to join their company with its registration code */
-export const CompanyJoin = z.object({
-  code: required,
+/** What a company contact types to accept an invitation; the address comes with the link */
+export const InvitationAccept = z.object({
   name: common.name,
-  email,
   password,
 })
-export type CompanyJoin = z.infer<typeof CompanyJoin>
+export type InvitationAccept = z.infer<typeof InvitationAccept>
+
+/** Who an admin invites, and to which company */
+export const InvitationRequest = z.object({
+  companyUID: chosen,
+  email,
+})
+export type InvitationRequest = z.infer<typeof InvitationRequest>
 
 /** A membership as `/user/access` sends it */
 export interface MembershipBody {
   companyUID: string
   kind: 'employee' | 'coordinator'
+  /** What an admin took from this employee, which the company keeps */
+  withheld?: Entitlement[]
 }
+
+/** A stored membership in the shape `/user/access` sends and takes */
+export const membershipBodyOf = ({
+  company,
+  kind,
+  withheld,
+}: Membership): MembershipBody => ({
+  companyUID: company,
+  kind,
+  ...(withheld?.length && { withheld }),
+})
 
 function accessOf(user: UserInput): {
   roles: string[]
@@ -144,7 +172,15 @@ function accessOf(user: UserInput): {
     case 'company':
       return {
         roles: ['company'],
-        memberships: [{ companyUID: user.companyUID, kind: 'employee' }],
+        memberships: [
+          {
+            companyUID: user.companyUID,
+            kind: 'employee',
+            ...(user.withheld.length && {
+              withheld: [...new Set(user.withheld)],
+            }),
+          },
+        ],
       }
     default:
       return { roles: ['user'], memberships: [] }
@@ -160,12 +196,17 @@ function accessOf(user: UserInput): {
 export function userTypeOf(access: {
   roles: string[]
   memberships: MembershipBody[]
-}): { userType: UserType; companyUIDs: string[] } {
+}): { userType: UserType; companyUIDs: string[]; withheld: Entitlement[] } {
   const companyUIDs = access.memberships.map((m) => m.companyUID)
-  if (access.roles.includes('admin')) return { userType: 'admin', companyUIDs }
+  if (access.roles.includes('admin'))
+    return { userType: 'admin', companyUIDs, withheld: [] }
   if (access.roles.includes('coordinator'))
-    return { userType: 'coordinator', companyUIDs }
+    return { userType: 'coordinator', companyUIDs, withheld: [] }
   if (access.roles.includes('company'))
-    return { userType: 'company', companyUIDs }
-  return { userType: 'basic', companyUIDs: [] }
+    return {
+      userType: 'company',
+      companyUIDs,
+      withheld: access.memberships[0]?.withheld ?? [],
+    }
+  return { userType: 'basic', companyUIDs: [], withheld: [] }
 }
