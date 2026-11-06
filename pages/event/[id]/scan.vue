@@ -11,8 +11,7 @@
     notify,
   } from '@/composables/useAlerts'
 
-  // `protected` until #712 lets the area alone guard a page
-  definePageMeta({ protected: true, area: 'scan' })
+  definePageMeta({ area: 'scan' })
 
   const { t } = useI18n()
   const localePath = useLocalePath()
