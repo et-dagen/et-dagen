@@ -2,7 +2,7 @@
   import JobForm from '@/components/admin/form/JobForm.vue'
   import { NEW_JOB } from '@/lib/admin/jobForm'
 
-  definePageMeta({ layout: 'admin', protected: true, area: 'jobs' })
+  definePageMeta({ layout: 'admin', area: 'jobs' })
 </script>
 
 <template>
