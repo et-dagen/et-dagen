@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { CalendarDays, RotateCw } from '@lucide/vue'
+  import { useAuthStore } from '@/stores/authStore'
   import { Instant } from '@/domain/time'
   import type { EventRow } from '@/lib/events'
   import {

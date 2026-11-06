@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { ChevronDown, Copy, Pencil } from '@lucide/vue'
+  import { useAuthStore } from '@/stores/authStore'
   import { notify } from '@/composables/useAlerts'
   import { Badge } from '@/components/ui/badge'
   import { Button } from '@/components/ui/button'

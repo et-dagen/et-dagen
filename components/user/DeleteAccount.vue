@@ -1,7 +1,8 @@
 <script setup lang="ts">
   import { Trash2 } from '@lucide/vue'
+  import { alertError, notify } from '@/composables/useAlerts'
+  import { useAuthStore } from '@/stores/authStore'
   import { deleteSignedInUser } from '@/composables/auth/session'
-  import { notify } from '@/composables/useAlerts'
   import {
     AlertDialog,
     AlertDialogCancel,

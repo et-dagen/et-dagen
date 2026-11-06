@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { ArrowUpLeft } from '@lucide/vue'
+  import { useAuthStore } from '@/stores/authStore'
   import { isActivePanel, panelsFor } from '@/lib/admin/panels'
   import { usePanelCounts } from '@/composables/admin/usePanelCounts'
 

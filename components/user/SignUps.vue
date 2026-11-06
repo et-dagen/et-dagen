@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { notify } from '@/composables/useAlerts'
+  import { alertError, notify } from '@/composables/useAlerts'
   import { placeOf } from '@/lib/events'
   import { formatWhen } from '@/lib/time'
   import type { SignUpRow } from '@/lib/user/signUps'

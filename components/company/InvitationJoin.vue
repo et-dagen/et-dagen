@@ -1,5 +1,7 @@
 <script setup lang="ts">
   import { useForm } from 'vee-validate'
+  import { getErrorAlertContext } from '@/composables/useAlerts'
+  import { useAuthStore } from '@/stores/authStore'
   import {
     requestPasswordReset,
     signInHere,

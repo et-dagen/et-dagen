@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { useAuthStore } from '@/stores/authStore'
   import { isActivePanel, panelsFor } from '@/lib/admin/panels'
 
   const localePath = useLocalePath()
