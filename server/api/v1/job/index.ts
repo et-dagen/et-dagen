@@ -1,6 +1,8 @@
 // GET /api/v1/job
 // endpoint for fetching jobs from db
 
+import { JobUid } from '@/domain/business/job'
+import { jobs } from '@/server/composition'
 import { readableJobs } from '@/server/security/richText'
 
 defineRouteMeta({
@@ -40,14 +42,9 @@ export default defineEventHandler(async (event) => {
     jobUID ? 'Fetch single job' : 'List all jobs',
   )
 
-  const jobsRef = db.ref('jobs')
-
   // return all jobs if no job is specified
   if (!jobUID) {
-    const snapshot = await withDbTiming(event, 'jobs', 'read', () =>
-      jobsRef.orderByKey().once('value'),
-    )
-    const data = snapshot.val()
+    const data = await withDbTiming(event, 'jobs', 'read', () => jobs.stored())
 
     // Add result metadata to wide event
     addEventContext(event, 'result_count', data ? Object.keys(data).length : 0)
@@ -55,15 +52,12 @@ export default defineEventHandler(async (event) => {
     return readableJobs(data)
   }
 
-  // get specified event
-  const snapshot = await withDbTiming(event, `jobs/${jobUID}`, 'read', () =>
-    jobsRef
-      .orderByKey()
-      .equalTo(jobUID as string)
-      .once('value'),
+  // get one job
+  const uid = JobUid.parse(String(jobUID))
+  const record = await withDbTiming(event, `jobs/${uid}`, 'read', () =>
+    jobs.storedOne(uid),
   )
-
-  const data = snapshot.val()
+  const data = record ? { [uid]: record } : null
 
   // Track whether job was found
   addEventContext(event, 'job_found', !!data)
