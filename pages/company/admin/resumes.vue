@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { FileText, Lock } from '@lucide/vue'
+  import { useAuthStore } from '@/stores/authStore'
   import FilterChips from '@/components/admin/FilterChips.vue'
   import Pager from '@/components/admin/Pager.vue'
   import SearchField from '@/components/admin/SearchField.vue'

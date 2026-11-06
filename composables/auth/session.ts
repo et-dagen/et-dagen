@@ -5,6 +5,7 @@ import {
   signInWithEmailAndPassword,
 } from 'firebase/auth'
 import type { User } from '@/models/User'
+import { useAuthStore } from '@/stores/authStore'
 
 /** Starts the server session from a sign-in that just happened (#582) */
 export const startSession = async (idToken: string) =>

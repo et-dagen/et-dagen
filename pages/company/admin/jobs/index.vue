@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { Pencil, Plus } from '@lucide/vue'
+  import { useAuthStore } from '@/stores/authStore'
   import { useCompanies } from '@/composables/useCompanies'
   import { Button } from '@/components/ui/button'
   import { CompanyUid } from '@/domain/business/company'

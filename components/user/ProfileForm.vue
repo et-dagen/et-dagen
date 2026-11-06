@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { ArrowLeft, Save } from '@lucide/vue'
+  import { useAuthStore } from '@/stores/authStore'
   import { useProgrammes } from '@/composables/useProgrammes'
   import { STUDY_YEARS } from '@/lib/user/programmes'
   import DietField from '@/components/form/DietField.vue'

@@ -66,8 +66,9 @@ export default defineNuxtConfig({
     },
   },
 
+  // our composables and stores are imported explicitly; Vue and Nuxt APIs stay automatic (#583)
   imports: {
-    dirs: ['stores'],
+    scan: false,
   },
 
   css: ['@/assets/css/admin.css'],

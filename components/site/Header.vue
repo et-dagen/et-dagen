@@ -3,6 +3,7 @@
   import LanguageSwitch from './LanguageSwitch.vue'
   import NextUpPill from './NextUpPill.vue'
   import PhoneMenu from './PhoneMenu.vue'
+  import { useAuthStore } from '@/stores/authStore'
   import { Instant } from '@/domain/time'
   import type { EventRow } from '@/lib/events'
   import { nextUp } from '@/lib/site/nextUp'

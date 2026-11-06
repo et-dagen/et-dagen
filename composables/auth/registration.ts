@@ -7,6 +7,7 @@ import {
 import { startSession } from '@/composables/auth/session'
 import type { StudentSignup } from '@/contracts/user'
 import type { User } from '@/models/User'
+import { useAuthStore } from '@/stores/authStore'
 
 /**
  * Opens a student account: the Firebase account, then the profile, then a session, and goes to

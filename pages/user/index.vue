@@ -3,6 +3,7 @@
   import UserDetails from '@/components/user/Details.vue'
   import SignUps from '@/components/user/SignUps.vue'
   import Ticket from '@/components/user/Ticket.vue'
+  import { useAuthStore } from '@/stores/authStore'
   import { Instant } from '@/domain/time'
   import type { EventRow } from '@/lib/events'
   import {

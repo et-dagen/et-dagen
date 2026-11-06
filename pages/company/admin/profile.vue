@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { useAuthStore } from '@/stores/authStore'
   import { useCompanies } from '@/composables/useCompanies'
   import { companyName } from '@/lib/companies'
   import ProfileForm from '@/components/company/ProfileForm.vue'

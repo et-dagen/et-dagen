@@ -1,7 +1,8 @@
 <script setup lang="ts">
   import { FileText, Pencil, Upload } from '@lucide/vue'
   import DeleteAccount from '@/components/user/DeleteAccount.vue'
-  import { notify } from '@/composables/useAlerts'
+  import { alertError, notify } from '@/composables/useAlerts'
+  import { useAuthStore } from '@/stores/authStore'
   import {
     AlertDialog,
     AlertDialogAction,

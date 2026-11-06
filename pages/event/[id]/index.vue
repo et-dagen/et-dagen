@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { useAuthStore } from '@/stores/authStore'
   import { useCompanies } from '@/composables/useCompanies'
   import AboutPanel from '@/components/event/page/AboutPanel.vue'
   import CompanyJobs from '@/components/event/page/CompanyJobs.vue'

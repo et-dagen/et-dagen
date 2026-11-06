@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-// The middleware relies on Nuxt's auto-imports; stub them so it runs as a plain function.
+// Nuxt's own functions are auto-imported; stub them so the middleware runs as a plain function.
 const navigateTo = vi.fn((path: string) => path)
 let auth: {
   isLoggedIn: boolean
@@ -21,7 +21,7 @@ beforeEach(() => {
     loadSubject: () => Promise.resolve(),
   }
   vi.stubGlobal('defineNuxtRouteMiddleware', (fn: unknown) => fn)
-  vi.stubGlobal('useAuthStore', () => auth)
+  vi.doMock('@/stores/authStore', () => ({ useAuthStore: () => auth }))
   vi.stubGlobal('navigateTo', navigateTo)
   vi.stubGlobal('useLocalePath', () => (path: string) => path)
 })

@@ -1,10 +1,10 @@
 <script setup lang="ts">
   import { Check, Copy, Send, X } from '@lucide/vue'
+  import { getErrorAlertContext, alertError } from '@/composables/useAlerts'
   import { Badge } from '@/components/ui/badge'
   import { Button } from '@/components/ui/button'
   import { Input } from '@/components/ui/input'
   import { Label } from '@/components/ui/label'
-  import { alertError } from '@/composables/useAlerts'
   import type { InvitationStatus } from '@/domain/business/invitation'
   import { EmailAddress } from '@/domain/email'
   import { dayOf, type ListedInvitation } from '@/lib/invitations'

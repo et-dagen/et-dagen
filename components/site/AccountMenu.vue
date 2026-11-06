@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { LogIn, LogOut } from '@lucide/vue'
+  import { useAuthStore } from '@/stores/authStore'
   import { signoutUser } from '@/composables/auth/session'
   import { accountLinks, initialsOf } from '@/lib/site/account'
   import { Button } from '@/components/ui/button'

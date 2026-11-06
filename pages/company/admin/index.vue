@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { Plus } from '@lucide/vue'
+  import { useAuthStore } from '@/stores/authStore'
   import EventPanel from '@/components/company/EventPanel.vue'
   import { Button } from '@/components/ui/button'
   import { instantOf } from '@/lib/time'
