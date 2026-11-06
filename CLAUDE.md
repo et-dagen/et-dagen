@@ -67,6 +67,8 @@ The target layout, and how to place code while both shapes exist, is in `ARCHITE
   decisions"; do not settle them silently in code.
 - **Imports**: import from another directory through the `@/` alias for the project root
   (`@/domain/time`), not with `../`. `./` is for files in the same directory. ESLint enforces it.
+  Import components too (`import Rail from '@/components/admin/Rail.vue'`): Nuxt does not register
+  them globally, and `typecheck:full` fails on a component used without an import.
 - **Types**: use the branded types in `domain/` (`Instant`, `Term`, `EmailAddress`, `HttpUrl`,
   `MapLink`, ...) and their `parse`/`tryParse` functions at boundaries. Only the owning module casts to a brand.
 - **Authorization**: decide with `authorize()` from `domain/authorization/authorize.ts`, which asks the

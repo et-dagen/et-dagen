@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { ArrowRight, ArrowUpRight } from '@lucide/vue'
+  import Logo from '@/components/home/Logo.vue'
   import { fillerCount, type Company } from '@/lib/site/companies'
 
   const props = defineProps<{
@@ -95,7 +96,7 @@
             <span
               class="tw:relative tw:grid tw:min-h-32 tw:flex-1 tw:place-items-center tw:sm:min-h-0"
             >
-              <HomeLogo
+              <Logo
                 :src="mainPartner.logo"
                 :name="mainPartner.name"
                 class="tw:p-4 tw:text-2xl tw:sm:p-10"
@@ -109,7 +110,7 @@
             v-bind="linkOf(company)"
             class="tw:relative tw:grid tw:aspect-[3/2] tw:place-items-center tw:transition-colors tw:hover:bg-muted/40"
           >
-            <HomeLogo
+            <Logo
               :src="company.logo"
               :name="company.name"
               class="tw:p-5 tw:text-sm tw:sm:p-7 tw:sm:text-base"
@@ -151,7 +152,7 @@
               v-bind="linkOf(company)"
               class="tw:relative tw:grid tw:aspect-[2/1] tw:place-items-center tw:rounded-md tw:border tw:bg-card tw:transition-colors tw:hover:bg-muted/40"
             >
-              <HomeLogo
+              <Logo
                 :src="company.logo"
                 :name="company.name"
                 class="tw:p-3 tw:text-sm"

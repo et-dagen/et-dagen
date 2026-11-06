@@ -1,4 +1,7 @@
 <script setup lang="ts">
+  import Companies from '@/components/home/Companies.vue'
+  import Hero from '@/components/home/Hero.vue'
+  import Upcoming from '@/components/home/Upcoming.vue'
   import { useCompanies } from '@/composables/useCompanies'
   import { Instant } from '@/domain/time'
   import type { EventRow } from '@/lib/events'
@@ -28,12 +31,12 @@
 
 <template>
   <div class="et-ui tw:bg-background tw:text-foreground">
-    <HomeHero
+    <Hero
       :fair="fair"
       :has-companies="hasCompanies"
       :last-companies="lineup.last"
     />
-    <HomeUpcoming v-if="next.length" :events="next" :now="now" />
-    <HomeCompanies v-if="hasCompanies" v-bind="lineup" />
+    <Upcoming v-if="next.length" :events="next" :now="now" />
+    <Companies v-if="hasCompanies" v-bind="lineup" />
   </div>
 </template>

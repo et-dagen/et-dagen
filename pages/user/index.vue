@@ -1,5 +1,8 @@
 <script setup lang="ts">
   import { CalendarDays, RotateCw } from '@lucide/vue'
+  import UserDetails from '@/components/user/Details.vue'
+  import SignUps from '@/components/user/SignUps.vue'
+  import Ticket from '@/components/user/Ticket.vue'
   import { Instant } from '@/domain/time'
   import type { EventRow } from '@/lib/events'
   import {
@@ -91,7 +94,7 @@
             </Button>
           </div>
           <template v-else>
-            <UserTicket
+            <Ticket
               v-if="ticket && auth.user"
               :row="ticket"
               :holder="auth.user.name ?? ''"
@@ -121,11 +124,7 @@
                   {{ rows.length }}
                 </span>
               </h3>
-              <UserSignUps
-                v-if="rows.length"
-                :rows="rows"
-                @withdrawn="refresh()"
-              />
+              <SignUps v-if="rows.length" :rows="rows" @withdrawn="refresh()" />
               <p
                 v-else
                 class="tw:px-5 tw:py-4 tw:text-muted-foreground tw:sm:px-6"
