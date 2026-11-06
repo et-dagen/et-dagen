@@ -15,7 +15,7 @@ const job = (companyUID: string) => ({
   title: 'Summer job',
   description: 'Build things',
   deadline: '2999-01-01',
-  jobType: 'summer',
+  jobType: 'summer-internship',
   location: 'Trondheim',
   applicationLink: '',
   listing: 'text',
@@ -100,6 +100,43 @@ describe('jobs', () => {
     const { token } = await admin()
     await update('ours', { companyUID: 'globex' }, token)
     await expect.poll(() => read('jobs/ours/companyUID')).toBe('globex')
+  })
+})
+
+describe('job fields', () => {
+  it('refuses a job type outside the three', async () => {
+    const { token } = await admin()
+    const created = await api('/api/v1/job', {
+      method: 'POST',
+      body: { ...job('acme'), jobType: 'summer' },
+      token,
+    })
+    const edited = await api('/api/v1/job', {
+      method: 'PUT',
+      body: { jobUID: 'ours', jobType: 'summer' },
+      token,
+    })
+
+    for (const response of [created, edited]) {
+      expect(response.status).toBe(400)
+      expect(response.body).toMatchObject({ code: 'job/invalid-type' })
+    }
+    expect(await read('jobs/ours/jobType')).toBe('summer-internship')
+  })
+
+  it('keeps stored fields an edit does not name', async () => {
+    await seed('jobs/ours/legacy', 'kept')
+    const { token } = await admin()
+
+    const response = await api('/api/v1/job', {
+      method: 'PUT',
+      body: { jobUID: 'ours', title: 'New', legacy: 'changed' },
+      token,
+    })
+
+    expect(response.status).toBe(204)
+    expect(await read('jobs/ours/title')).toBe('New')
+    expect(await read('jobs/ours/legacy')).toBe('kept')
   })
 })
 
