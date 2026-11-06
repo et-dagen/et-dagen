@@ -1,9 +1,12 @@
 import type { H3Event } from 'h3'
+import { createError } from 'h3'
 import { authorize } from '@/domain/authorization/authorize'
 import { hasPermission } from '@/domain/authorization/hasPermission'
 import type { Environment } from '@/domain/authorization/permissions'
 import type { Subject } from '@/domain/authorization/subject'
 import { CompanyUid } from '@/domain/business/company'
+import { db } from '@/server/utils/firebase'
+import { setErrorContext, withDbTiming } from '@/server/utils/wideEventHelpers'
 
 /**
  * Authorize an action on a stored event against the company that owns it

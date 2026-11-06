@@ -1,9 +1,15 @@
 // GET /api/v1/company/invitations?companyUID=
 // endpoint for listing a company's invitations
+import { defineEventHandler } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { listInvitations } from '@/application/invitations/invitations'
 import { Instant } from '@/domain/time'
 import { invitations } from '@/server/composition'
 import { companyOf } from '@/server/invitations/request'
+import {
+  setLogImportance,
+  setResourceContext,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

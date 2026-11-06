@@ -1,6 +1,8 @@
 // DELETE /api/v1/event/register/:eventUID
 
 // endpoint for opting out of an event
+import { createError, defineEventHandler, readBody, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import {
   withdrawFromEvent,
   type WithdrawResult,
@@ -10,6 +12,13 @@ import { fail } from '@/domain/errors'
 import { Instant } from '@/domain/time'
 import { UserUid } from '@/domain/user'
 import { events } from '@/server/composition'
+import {
+  addEventContext,
+  setErrorContext,
+  setLogImportance,
+  setResourceContext,
+  withDbTiming,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

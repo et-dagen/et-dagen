@@ -60,6 +60,9 @@ The target layout, and how to place code while both shapes exist, is in `ARCHITE
   `addEventContext` for useful fields, and `setErrorContext` before every `throw createError(...)`.
   Error codes are `area/kebab-case` and the status message is `Error (<code>).`. Describe each
   endpoint with `defineRouteMeta` as the wiki's "Adding an API endpoint" page shows.
+  Server code imports what it uses: `defineEventHandler` and `createError` from `h3`,
+  `defineRouteMeta` and `useRuntimeConfig` from `nitropack/runtime`, helpers from
+  `@/server/utils/...`. Nitro does not auto-import, so a missing import fails `typecheck`.
 - **Errors in new code**: add the code to `domain/errors/catalog.ts` and `throw fail(code)`. Do not
   call `setErrorContext` or `createError` for it; the error boundary in `server/errors/` logs it and
   builds the response from the catalogue. Pass the underlying error as `cause` instead of logging it.
@@ -67,6 +70,8 @@ The target layout, and how to place code while both shapes exist, is in `ARCHITE
   decisions"; do not settle them silently in code.
 - **Imports**: import from another directory through the `@/` alias for the project root
   (`@/domain/time`), not with `../`. `./` is for files in the same directory. ESLint enforces it.
+  Import components too (`import Rail from '@/components/admin/Rail.vue'`): Nuxt does not register
+  them globally, and `typecheck:full` fails on a component used without an import.
 - **Types**: use the branded types in `domain/` (`Instant`, `Term`, `EmailAddress`, `HttpUrl`,
   `MapLink`, ...) and their `parse`/`tryParse` functions at boundaries. Only the owning module casts to a brand.
 - **Authorization**: decide with `authorize()` from `domain/authorization/authorize.ts`, which asks the

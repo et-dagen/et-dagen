@@ -1,10 +1,16 @@
 // DELETE /api/v1/image/standmap/:day
 // endpoint for removing a fair day's stand map
+import { defineEventHandler, getRouterParam, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { removeStandMap } from '@/application/fair/standMaps'
 import { fail } from '@/domain/errors'
 import { Instant } from '@/domain/time'
 import { FairDay } from '@/domain/fair/day'
 import { fileStorage, files, standMaps } from '@/server/composition'
+import {
+  addEventContext,
+  setResourceContext,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

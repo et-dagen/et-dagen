@@ -1,3 +1,4 @@
+import { defineTask } from 'nitropack/runtime'
 import { eraseInactiveUsers } from '@/server/user/retention'
 import { auth, db, storage } from '@/server/utils/firebase'
 import {

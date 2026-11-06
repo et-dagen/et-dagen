@@ -1,11 +1,21 @@
 // POST /api/v1/user
 // endpoint for creating or updating a user in the database
 
+import { createError, defineEventHandler, readBody, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { startAccess } from '@/application/users/access'
 import { hasPermission } from '@/domain/authorization/hasPermission'
 import { Instant } from '@/domain/time'
 import { UserUid } from '@/domain/user'
 import { access } from '@/server/composition'
+import { db } from '@/server/utils/firebase'
+import {
+  addEventContext,
+  setErrorContext,
+  setLogImportance,
+  setResourceContext,
+  trackDbWrite,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

@@ -1,4 +1,5 @@
 import type { H3Event } from 'h3'
+import { getRouterParam } from 'h3'
 import { BoardMemberId } from '@/domain/board/member'
 import { fail } from '@/domain/errors'
 

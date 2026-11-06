@@ -1,10 +1,18 @@
 // POST /api/v1/resume
 // endpoint for storing a user's resume
 
+import { createError, defineEventHandler, readMultipartFormData } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { uploadResume } from '@/application/users/resume'
 import { Instant } from '@/domain/time'
 import { UserUid } from '@/domain/user'
 import { files, fileStorage, resumes } from '@/server/composition'
+import {
+  addEventContext,
+  setErrorContext,
+  setLogImportance,
+  setResourceContext,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

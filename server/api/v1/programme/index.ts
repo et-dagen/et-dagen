@@ -1,3 +1,12 @@
+import { defineEventHandler } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
+import { db } from '@/server/utils/firebase'
+import {
+  setLogImportance,
+  setResourceContext,
+  withDbTiming,
+} from '@/server/utils/wideEventHelpers'
+
 defineRouteMeta({
   openAPI: {
     tags: ['Reference'],

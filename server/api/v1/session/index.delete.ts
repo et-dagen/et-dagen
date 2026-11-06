@@ -1,7 +1,11 @@
 // DELETE /api/v1/session
 // endpoint for signing out
+import { defineEventHandler, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { clearSessionCookies } from '@/server/auth/cookies'
 import { endSessions } from '@/server/auth/session'
+import { auth } from '@/server/utils/firebase'
+import { setResourceContext } from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

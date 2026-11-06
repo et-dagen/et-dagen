@@ -1,9 +1,16 @@
 // GET /api/v1/job
 // endpoint for fetching jobs from db
 
+import { defineEventHandler, getQuery } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { JobUid } from '@/domain/business/job'
 import { jobs } from '@/server/composition'
 import { readableJobs } from '@/server/security/richText'
+import {
+  addEventContext,
+  setResourceContext,
+  withDbTiming,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {
