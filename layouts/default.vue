@@ -1,3 +1,8 @@
+<script setup lang="ts">
+  import SiteFooter from '@/components/site/Footer.vue'
+  import SiteHeader from '@/components/site/Header.vue'
+</script>
+
 <template>
   <div class="et-ui tw:flex tw:min-h-dvh tw:flex-col">
     <SiteHeader />

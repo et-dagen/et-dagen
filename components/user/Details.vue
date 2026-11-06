@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { FileText, Pencil, Upload } from '@lucide/vue'
+  import DeleteAccount from '@/components/user/DeleteAccount.vue'
   import { notify } from '@/composables/useAlerts'
   import {
     AlertDialog,
@@ -209,6 +210,6 @@
       </p>
     </section>
 
-    <UserDeleteAccount class="tw:border-t tw:p-5 tw:sm:px-6" />
+    <DeleteAccount class="tw:border-t tw:p-5 tw:sm:px-6" />
   </div>
 </template>

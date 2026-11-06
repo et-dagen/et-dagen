@@ -76,8 +76,8 @@ export default defineNuxtConfig({
     plugins: [tailwindcss()],
   },
 
-  // shadcn-vue components under components/ui are imported explicitly, not auto-imported (#583)
-  components: [{ path: '~/components', ignore: ['ui/**'] }],
+  // components are imported explicitly, not auto-imported (#583)
+  components: { dirs: [] },
 
   modules: ['@nuxtjs/i18n', '@pinia/nuxt', '@vueuse/nuxt', '@nuxt/image'],
 
