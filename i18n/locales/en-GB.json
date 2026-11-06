@@ -921,7 +921,8 @@
     "job": {
       "invalid-listing": "A job is shown either as a description or as a link.",
       "invalid-link": "The application link must be a web address starting with http:// or https://.",
-      "invalid-deadline-type": "The deadline must be a date, \"As soon as possible\" or \"Rolling\"."
+      "invalid-deadline-type": "The deadline must be a date, \"As soon as possible\" or \"Rolling\".",
+      "invalid-type": "The job type must be full-time, graduate or summer job."
     },
     "file": {
       "unsupported-type": "This file format is not allowed here.",
