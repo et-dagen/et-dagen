@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import EditEvent from '@/components/admin/form/EditEvent.vue'
 
-  definePageMeta({ layout: 'admin', protected: true, area: 'events' })
+  definePageMeta({ layout: 'admin', area: 'events' })
 
   const uid = String(useRoute().params.id)
 </script>

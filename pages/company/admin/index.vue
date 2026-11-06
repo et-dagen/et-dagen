@@ -7,7 +7,6 @@
 
   definePageMeta({
     layout: 'admin',
-    protected: true,
     area: 'company',
   })
 

@@ -11,7 +11,7 @@
   } from '@/components/ui/select'
   import { CompanyUid } from '@/domain/business/company'
 
-  definePageMeta({ layout: 'admin', protected: true, area: 'profile' })
+  definePageMeta({ layout: 'admin', area: 'profile' })
 
   const auth = useAuthStore()
   const route = useRoute()
