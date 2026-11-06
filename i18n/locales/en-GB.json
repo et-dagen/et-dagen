@@ -697,7 +697,6 @@
       "added": "{name} is signed up",
       "queued": "The event is full, so {name} is in the queue",
       "removed": "{name} is removed",
-      "failed": "Something went wrong. Try again.",
       "empty": "Nobody has signed up yet.",
       "no_match": "No signed-up people match the search.",
       "no_signup": "This event has no sign-up. Turn on sign-up under Details to take sign-ups."

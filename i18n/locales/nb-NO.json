@@ -696,7 +696,6 @@
       "added": "{name} er påmeldt",
       "queued": "Arrangementet er fullt, så {name} står i kø",
       "removed": "{name} er fjernet",
-      "failed": "Noe gikk galt. Prøv igjen.",
       "empty": "Ingen har meldt seg på ennå.",
       "no_match": "Ingen påmeldte passer søket.",
       "no_signup": "Arrangementet har ikke påmelding. Slå på påmelding under Detaljer for å ta imot påmeldte."

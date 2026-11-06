@@ -3,9 +3,9 @@ import { useBulkDelete } from '@/composables/admin/useBulkDelete'
 
 const alert = vi.fn()
 const alertError = vi.fn()
-vi.mock('@/stores/alertStore', () => ({ useAlertStore: () => ({ alert }) }))
 vi.mock('@/composables/useAlerts', () => ({
   alertError: (error: unknown) => alertError(error),
+  notify: (message: string, type?: string) => alert(message, type),
 }))
 
 beforeEach(() => {

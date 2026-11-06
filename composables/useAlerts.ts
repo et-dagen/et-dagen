@@ -1,4 +1,14 @@
+import { toast } from 'vue-sonner'
 import { errorFeedback, UNKNOWN } from '@/lib/errors/feedback'
+
+export type NoticeType = 'success' | 'info' | 'warning' | 'error'
+
+/** Short feedback after an action, shown as a toast; toasts only exist in the browser */
+export const notify = (message: string, type?: NoticeType) => {
+  if (import.meta.server) return
+  if (type) toast[type](message)
+  else toast(message)
+}
 
 /**
  * The message for any error a user action can end in: Firebase Auth, the API, or the network
@@ -18,5 +28,5 @@ export const getErrorAlertContext = (error: unknown) => {
 /** Show the alert for an error, as every failed form submit should */
 export const alertError = (error: unknown) => {
   const { type, message } = getErrorAlertContext(error)
-  useAlertStore().alert(message, type)
+  notify(message, type)
 }

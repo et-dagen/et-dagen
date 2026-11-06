@@ -16,7 +16,7 @@
     TableRow,
   } from '@/components/ui/table'
   import { useListView } from '@/composables/admin/useListView'
-  import { alertError } from '@/composables/useAlerts'
+  import { alertError, notify } from '@/composables/useAlerts'
   import {
     USER_TYPES as ROLES,
     userTypeOf,
@@ -96,7 +96,7 @@
         method: 'DELETE',
         body: { UIDs: [...selection.selected.value] },
       })
-      useAlertStore().alert(t('admin.users.delete.done', count), 'success')
+      notify(t('admin.users.delete.done', count), 'success')
       selection.clear()
       confirming.value = false
       await refresh()

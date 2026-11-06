@@ -27,7 +27,7 @@
   } from '@/components/ui/table'
   import { useBulkDelete } from '@/composables/admin/useBulkDelete'
   import { useListView } from '@/composables/admin/useListView'
-  import { alertError } from '@/composables/useAlerts'
+  import { alertError, notify } from '@/composables/useAlerts'
   import { Instant } from '@/domain/time'
   import {
     eventStatus,
@@ -133,14 +133,11 @@
         { query: { eventUID: row.uid } },
       )
       if (emails.length === 0) {
-        useAlertStore().alert(t('admin.events.emails_none'), 'info')
+        notify(t('admin.events.emails_none'), 'info')
         return
       }
       await copy(emails.join(', '))
-      useAlertStore().alert(
-        t('admin.events.emails_copied', emails.length),
-        'success',
-      )
+      notify(t('admin.events.emails_copied', emails.length), 'success')
     } catch (error) {
       alertError(error)
     }
