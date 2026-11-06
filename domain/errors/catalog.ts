@@ -192,6 +192,7 @@ export const ERRORS = {
     message:
       "A job's type must be 'full-time', 'graduate' or 'summer-internship'",
   },
+  'resume/not-found': { status: 404, message: 'The user has no résumé' },
 } as const satisfies Record<string, ErrorSpec>
 
 export type ErrorCode = keyof typeof ERRORS

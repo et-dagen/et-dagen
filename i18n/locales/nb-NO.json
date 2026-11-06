@@ -913,6 +913,9 @@
     "internal": {
       "unexpected": "Noe gikk galt hos oss. Prøv igjen om litt."
     },
+    "resume": {
+      "not-found": "Det finnes ingen CV her."
+    },
     "job": {
       "invalid-listing": "En stilling vises enten som beskrivelse eller som lenke.",
       "invalid-link": "Søknadslenken må være en nettadresse som starter med http:// eller https://.",

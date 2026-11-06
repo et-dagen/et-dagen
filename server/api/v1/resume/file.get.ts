@@ -1,9 +1,10 @@
 // GET /api/v1/resume/file
 // endpoint for opening one user's resume through a short-lived signed link
 
-import { authorize } from '@/domain/authorization/authorize'
+import { openResume } from '@/application/users/resume'
 import { Instant } from '@/domain/time'
 import { UserUid } from '@/domain/user'
+import { files, fileStorage, resumes } from '@/server/composition'
 
 defineRouteMeta({
   openAPI: {
@@ -25,8 +26,6 @@ defineRouteMeta({
     ],
   },
 })
-
-const LINK_LIFETIME_MS = 5 * 60 * 1000
 
 export default defineEventHandler(async (event) => {
   const { subject } = event.context
@@ -50,43 +49,16 @@ export default defineEventHandler(async (event) => {
       statusMessage: 'Error (resume/missing-user-uid).',
     })
   }
+  addEventContext(event, 'is_owner', subject?.uid === userUID)
 
-  const isOwner = subject?.uid === userUID
-  addEventContext(event, 'is_owner', isOwner)
-  authorize(
-    subject,
-    'resume',
-    'read',
-    { ownerUid: UserUid.parse(userUID), scope: isOwner ? 'own' : 'all' },
-    { now: Instant.now() },
+  const link = await openResume(
+    { files, storage: fileStorage, resumes, now: Instant.now },
+    {
+      subject,
+      now: Instant.now(),
+      owner: UserUid.parse(userUID),
+    },
   )
-
-  const snapshot = await withDbTiming(
-    event,
-    `users/${userUID}/resume`,
-    'read',
-    () => db.ref(`users/${userUID}/resume`).once('value'),
-  )
-  const stored = snapshot.val()
-  const bucket = storage.bucket()
-  const prefix = `https://storage.googleapis.com/${bucket.name}/`
-
-  if (typeof stored !== 'string' || !stored.startsWith(prefix)) {
-    setErrorContext(event, {
-      code: 'resume/not-found',
-      message: 'User has no resume',
-    })
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'Error (resume/not-found).',
-    })
-  }
-
-  const [link] = await bucket.file(stored.slice(prefix.length)).getSignedUrl({
-    version: 'v4',
-    action: 'read',
-    expires: Date.now() + LINK_LIFETIME_MS,
-  })
 
   setLogImportance(event, 'warn')
   return sendRedirect(event, link, 302)

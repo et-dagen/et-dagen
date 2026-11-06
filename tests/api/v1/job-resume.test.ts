@@ -251,7 +251,10 @@ describe('résumés', () => {
       body: form,
     })
 
-    expect(response.status).toBe(400)
+    expect(response.status).toBe(415)
+    expect(await response.json()).toMatchObject({
+      code: 'file/unsupported-type',
+    })
     expect(await read(`users/${owner.uid}/resume`)).toBeNull()
   })
 
