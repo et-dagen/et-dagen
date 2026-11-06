@@ -5,7 +5,7 @@
   import { CompanyUid } from '@/domain/business/company'
   import { deadlineOf, formatWhen } from '@/lib/time'
 
-  definePageMeta({ layout: 'admin', protected: true, area: 'jobs' })
+  definePageMeta({ layout: 'admin', area: 'jobs' })
 
   interface Row {
     title?: string

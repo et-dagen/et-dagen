@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import EditJob from '@/components/admin/form/EditJob.vue'
 
-  definePageMeta({ layout: 'admin', protected: true, area: 'jobs' })
+  definePageMeta({ layout: 'admin', area: 'jobs' })
 
   const uid = String(useRoute().params.id)
 </script>

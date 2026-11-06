@@ -696,7 +696,6 @@
       "added": "{name} er påmeldt",
       "queued": "Arrangementet er fullt, så {name} står i kø",
       "removed": "{name} er fjernet",
-      "failed": "Noe gikk galt. Prøv igjen.",
       "empty": "Ingen har meldt seg på ennå.",
       "no_match": "Ingen påmeldte passer søket.",
       "no_signup": "Arrangementet har ikke påmelding. Slå på påmelding under Detaljer for å ta imot påmeldte."
@@ -917,7 +916,8 @@
     "job": {
       "invalid-listing": "En stilling vises enten som beskrivelse eller som lenke.",
       "invalid-link": "Søknadslenken må være en nettadresse som starter med http:// eller https://.",
-      "invalid-deadline-type": "Fristen må være en dato, «Snarest» eller «Løpende»."
+      "invalid-deadline-type": "Fristen må være en dato, «Snarest» eller «Løpende».",
+      "invalid-type": "Jobbtypen må være fulltid, graduate eller sommerjobb."
     },
     "file": {
       "unsupported-type": "Filen har et format som ikke er tillatt her.",

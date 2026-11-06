@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { ref } from 'vue'
   import jsQR from 'jsqr'
+  import { notify } from '@/composables/useAlerts'
   import type { CameraFeedExposed } from '~/components/camera/CameraFeed.vue'
 
   const route = useRoute()
@@ -23,8 +24,6 @@
   const isCameraStarting = computed(() => camera.value?.isStarting ?? false)
   const isCameraRunning = computed(() => camera.value?.isRunning ?? false)
 
-  const useAlert = useAlertStore()
-
   const markAttended = async (userUid: string) => {
     if (!userUid) return
 
@@ -38,14 +37,14 @@
         },
       })
 
-      useAlert.alert('Attendance registered successfully', 'success')
+      notify('Attendance registered successfully', 'success')
     } catch (error: any) {
       const statusMessage = error?.statusMessage ?? ''
 
       if (statusMessage.includes('event/attended/user-not-attendant')) {
-        useAlert.alert('This user is not registered for the event', 'warning')
+        notify('This user is not registered for the event', 'warning')
       } else {
-        useAlert.alert('Failed to register attendance', 'error')
+        notify('Failed to register attendance', 'error')
       }
     }
   }

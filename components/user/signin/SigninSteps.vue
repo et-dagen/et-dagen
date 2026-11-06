@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { Eye, EyeOff } from '@lucide/vue'
+  import { requestPasswordReset, signinUser } from '@/composables/auth/session'
   import { Button } from '@/components/ui/button'
   import { Input } from '@/components/ui/input'
   import { Label } from '@/components/ui/label'
@@ -126,7 +127,7 @@
             autocomplete="username"
             inputmode="email"
             autofocus
-            class="tw:h-11 tw:focus-visible:border-plate tw:focus-visible:ring-plate/15 tw:aria-invalid:focus-visible:border-destructive"
+            variant="public"
             :aria-invalid="!!error || undefined"
             :aria-describedby="error ? 'signin-error' : undefined"
           />
@@ -189,7 +190,8 @@
               :type="showPassword ? 'text' : 'password'"
               name="password"
               autocomplete="current-password"
-              class="tw:h-11 tw:pr-20 tw:focus-visible:border-plate tw:focus-visible:ring-plate/15 tw:aria-invalid:focus-visible:border-destructive"
+              variant="public"
+              class="tw:pr-20"
               :aria-invalid="!!error || undefined"
               :aria-describedby="error ? 'signin-error' : undefined"
             />
