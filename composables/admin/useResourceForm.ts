@@ -1,6 +1,7 @@
 import { useForm } from 'vee-validate'
 import type { z } from 'zod'
 import { alertError } from '@/composables/useAlerts'
+import { useFocusInvalid } from '@/composables/useFocusInvalid'
 import { typedSchemaOf } from '@/lib/forms/zodSchema'
 
 interface Options<S extends z.ZodType> {
@@ -35,28 +36,22 @@ export function useResourceForm<S extends z.ZodType>(options: Options<S>) {
   const saving = ref(false)
   let saved = false
 
-  const submit = form.handleSubmit(
-    async (values) => {
-      saving.value = true
-      try {
-        const uid = await options.save(values as z.infer<S>)
-        saved = true
-        useAlertStore().alert(options.saved(), 'success')
-        await navigateTo({
-          path: localePath(options.back),
-          query: uid ? { changed: uid } : {},
-        })
-      } catch (error) {
-        alertError(error)
-      } finally {
-        saving.value = false
-      }
-    },
-    async () => {
-      await nextTick()
-      document.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus()
-    },
-  )
+  const submit = form.handleSubmit(async (values) => {
+    saving.value = true
+    try {
+      const uid = await options.save(values as z.infer<S>)
+      saved = true
+      useAlertStore().alert(options.saved(), 'success')
+      await navigateTo({
+        path: localePath(options.back),
+        query: uid ? { changed: uid } : {},
+      })
+    } catch (error) {
+      alertError(error)
+    } finally {
+      saving.value = false
+    }
+  }, useFocusInvalid())
 
   onBeforeRouteLeave(() => {
     if (!saved && form.meta.value.dirty && !window.confirm(t('form.leave'))) {
