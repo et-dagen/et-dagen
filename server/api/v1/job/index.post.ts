@@ -1,11 +1,23 @@
 //  POST /api/v1/job
 // endpoint for creating a new job in the database
 
-import { isValidDate } from '@/composables/useDate'
+import { createError, defineEventHandler, readBody, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
+import { isValidDate } from '@/server/utils/useTime'
 import { cleanRichText, safeLink } from '@/server/security/richText'
 import { fail } from '@/domain/errors'
 import { authorize } from '@/domain/authorization/authorize'
+import { CompanyUid } from '@/domain/business/company'
+import { JOB_TYPES } from '@/domain/business/job'
 import { Instant } from '@/domain/time'
+import { companies, jobs } from '@/server/composition'
+import { companyOf } from '@/server/utils/companyOf'
+import {
+  addEventContext,
+  setErrorContext,
+  setResourceContext,
+  withDbTiming,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {
@@ -98,6 +110,7 @@ export default defineEventHandler(async (event) => {
     })
   }
 
+  if (!JOB_TYPES.includes(jobType)) throw fail('job/invalid-type')
   if (!['text', 'link'].includes(listing)) throw fail('job/invalid-listing')
   if (applicationLink && !safeLink(applicationLink))
     throw fail('job/invalid-link')
@@ -119,21 +132,14 @@ export default defineEventHandler(async (event) => {
   const env = { now: Instant.now() }
   authorize(subject, 'job', 'create', companyOf(companyUID), env)
 
-  // reference to companies
-  const companiesRef = db.ref('companies')
-
   // check if the company exists
-  const snapshot = await withDbTiming(
-    event,
-    `companies/${companyUID}`,
-    'read',
-    () => companiesRef.orderByKey().equalTo(companyUID).once('value'),
+  const company = CompanyUid.parse(companyUID)
+  const found = await withDbTiming(event, `companies/${company}`, 'read', () =>
+    companies.entitled([company]),
   )
 
-  const data = snapshot.val()
-
   // the company does not exist in db
-  if (!data) {
+  if (found.length === 0) {
     setErrorContext(event, {
       code: 'company/not-found',
       message: 'Company not found',
@@ -144,26 +150,19 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const jobsRef = db.ref('jobs')
-
-  let newJobKey: string | null = null
-  await withDbTiming(event, 'jobs', 'write', () => {
-    const ref = jobsRef.push({
-      companyUID,
+  const newJobKey = await withDbTiming(event, 'jobs', 'write', () =>
+    jobs.add({
+      companyUid: company,
       title,
       description: cleanRichText(description),
-      deadline: onDate ? deadline : null,
-      deadlineType,
-      jobType,
+      type: jobType,
       location,
-      applicationLink: safeLink(applicationLink) ?? '',
       listing,
-    })
-    newJobKey = ref.key
-    // Adopt the push promise so the write is actually awaited/timed and a
-    // write failure is caught instead of returning 201 prematurely.
-    return Promise.resolve(ref)
-  })
+      applicationLink: safeLink(applicationLink) ?? '',
+      deadlineType,
+      deadline: onDate ? deadline : null,
+    }),
+  )
 
   addEventContext(event, 'created_job_id', newJobKey)
 

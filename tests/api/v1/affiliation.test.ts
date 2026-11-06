@@ -85,6 +85,38 @@ describe('PUT /api/v1/company/affiliation', () => {
   })
 })
 
+describe("a former company's tier from the last fair", () => {
+  beforeEach(() =>
+    seed('affiliations/acme', {
+      tier: 'prior',
+      formerTier: 'partner',
+      createdBy: 'task:companies:tier-reset',
+    }),
+  )
+
+  it('is shown to everyone with the company', async () => {
+    const { body } = await api('/api/v1/company')
+    expect(body).toMatchObject({
+      acme: { tier: 'prior', formerTier: 'partner' },
+    })
+  })
+
+  it('stays while an admin keeps the company former, and goes with a new tier', async () => {
+    const admin = await createUser({ userType: 'admin' })
+    const entitle = (tier: string) =>
+      api('/api/v1/company/affiliation', {
+        method: 'PUT',
+        body: { companyUID: 'acme', tier },
+        token: admin.token,
+      })
+
+    await entitle('prior')
+    expect(await read('affiliations/acme/formerTier')).toBe('partner')
+    await entitle('sponsor')
+    expect(await read('affiliations/acme/formerTier')).toBeNull()
+  })
+})
+
 describe('DELETE /api/v1/company', () => {
   it('forgets the affiliation with the company', async () => {
     const admin = await createUser({ userType: 'admin' })

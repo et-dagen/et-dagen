@@ -16,35 +16,28 @@
   <div>
     <button
       type="button"
-      class="tw:group tw:relative tw:block tw:h-24 tw:w-40 tw:overflow-hidden tw:rounded-lg tw:border tw:bg-card tw:sm:h-28 tw:sm:w-48"
+      class="group relative block h-24 w-40 overflow-hidden rounded-lg border bg-card sm:h-28 sm:w-48"
       :aria-label="$t('programme.map.open', { day })"
       @click="open"
     >
-      <img
-        :src="url"
-        alt=""
-        class="tw:size-full tw:object-cover"
-        loading="lazy"
-      />
+      <img :src="url" alt="" class="size-full object-cover" loading="lazy" />
       <span
-        class="tw:absolute tw:inset-x-0 tw:bottom-0 tw:flex tw:items-center tw:gap-1 tw:bg-card/95 tw:px-2 tw:py-1 tw:text-xs tw:font-semibold"
+        class="absolute inset-x-0 bottom-0 flex items-center gap-1 bg-card/95 px-2 py-1 text-xs font-semibold"
       >
-        <Maximize2 class="tw:size-3.5" aria-hidden="true" />
+        <Maximize2 class="size-3.5" aria-hidden="true" />
         {{ $t('programme.map.name') }}
       </span>
     </button>
     <!-- a native modal: Escape closes it and focus returns to the button -->
     <dialog
       ref="dialog"
-      class="tw:m-0 tw:h-dvh tw:max-h-none tw:w-dvw tw:max-w-none tw:bg-foreground tw:p-0 tw:backdrop:bg-transparent"
+      class="m-0 h-dvh max-h-none w-dvw max-w-none bg-foreground p-0 backdrop:bg-transparent"
       :aria-label="$t('programme.map.title', { day })"
     >
-      <div class="tw:flex tw:h-full tw:flex-col">
-        <div
-          class="tw:flex tw:items-center tw:justify-between tw:gap-3 tw:p-3 tw:text-white"
-        >
-          <p class="tw:font-bold">{{ $t('programme.map.title', { day }) }}</p>
-          <div class="tw:flex tw:gap-2">
+      <div class="flex h-full flex-col">
+        <div class="flex items-center justify-between gap-3 p-3 text-white">
+          <p class="font-bold">{{ $t('programme.map.title', { day }) }}</p>
+          <div class="flex gap-2">
             <Button
               variant="secondary"
               size="icon"
@@ -66,12 +59,12 @@
             </Button>
           </div>
         </div>
-        <div class="tw:min-h-0 tw:flex-1 tw:overflow-auto tw:p-3">
+        <div class="min-h-0 flex-1 overflow-auto p-3">
           <img
             :src="url"
             :alt="$t('programme.map.title', { day })"
-            class="tw:mx-auto tw:object-contain"
-            :class="zoomed ? 'tw:w-[200%] tw:max-w-none' : 'tw:size-full'"
+            class="mx-auto object-contain"
+            :class="zoomed ? 'w-[200%] max-w-none' : 'size-full'"
           />
         </div>
       </div>

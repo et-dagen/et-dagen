@@ -25,17 +25,17 @@
 </script>
 
 <template>
-  <section aria-labelledby="topic-heading" class="tw:flex tw:flex-col tw:gap-3">
+  <section aria-labelledby="topic-heading" class="flex flex-col gap-3">
     <h2
       id="topic-heading"
-      class="tw:text-2xl tw:font-extrabold tw:tracking-tight tw:lg:text-[2rem]"
+      class="text-2xl font-extrabold tracking-tight lg:text-[2rem]"
     >
       {{ $t('contact.question') }}
     </h2>
     <div
       role="tablist"
       :aria-label="$t('contact.question')"
-      class="tw:grid tw:grid-cols-2 tw:gap-2 tw:sm:grid-cols-3 tw:lg:grid-cols-5 tw:lg:gap-0 tw:lg:overflow-hidden tw:lg:rounded-lg tw:lg:border tw:lg:bg-card"
+      class="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5 lg:gap-0 lg:overflow-hidden lg:rounded-lg lg:border lg:bg-card"
       @keydown.right.prevent="move(1)"
       @keydown.left.prevent="move(-1)"
     >
@@ -48,7 +48,7 @@
         :aria-selected="index === selected"
         :aria-controls="`answer-${item.key}`"
         :tabindex="index === selected ? 0 : -1"
-        class="tw:rounded-lg tw:border tw:bg-card tw:px-3 tw:py-3 tw:text-sm tw:font-bold tw:transition-colors tw:outline-none tw:hover:bg-muted tw:focus-visible:ring-2 tw:focus-visible:ring-brand tw:focus-visible:ring-inset tw:max-lg:last:odd:col-span-2 tw:aria-selected:border-plate tw:aria-selected:bg-plate tw:aria-selected:text-plate-foreground tw:lg:rounded-none tw:lg:border-0 tw:lg:border-l tw:lg:py-3.5 tw:lg:text-[15px] tw:lg:first:border-l-0"
+        class="rounded-lg border bg-card px-3 py-3 text-sm font-bold transition-colors outline-none hover:bg-muted focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-inset max-lg:last:odd:col-span-2 aria-selected:border-plate aria-selected:bg-plate aria-selected:text-plate-foreground lg:rounded-none lg:border-0 lg:border-l lg:py-3.5 lg:text-[15px] lg:first:border-l-0"
         @click="selected = index"
       >
         {{ $t(`contact.topics.${item.key}`) }}
@@ -57,53 +57,51 @@
 
     <Transition
       mode="out-in"
-      enter-active-class="tw:transition tw:duration-200 tw:ease-out tw:motion-reduce:transition-none"
-      enter-from-class="tw:opacity-0 tw:translate-y-1"
-      leave-active-class="tw:transition tw:duration-100 tw:motion-reduce:transition-none"
-      leave-to-class="tw:opacity-0"
+      enter-active-class="transition duration-200 ease-out motion-reduce:transition-none"
+      enter-from-class="opacity-0 translate-y-1"
+      leave-active-class="transition duration-100 motion-reduce:transition-none"
+      leave-to-class="opacity-0"
     >
       <div
         :id="`answer-${topic.key}`"
         :key="topic.key"
         role="tabpanel"
         :aria-labelledby="`topic-${topic.key}`"
-        class="tw:grid tw:gap-5 tw:rounded-lg tw:border tw:bg-card tw:p-4 tw:sm:grid-cols-[12rem_minmax(0,1fr)] tw:sm:items-center tw:sm:gap-8 tw:sm:p-6"
+        class="grid gap-5 rounded-lg border bg-card p-4 sm:grid-cols-[12rem_minmax(0,1fr)] sm:items-center sm:gap-8 sm:p-6"
       >
         <Portrait
           v-if="person"
           :src="person.photoUrl"
           :name="person.name"
-          class="tw:w-32 tw:sm:w-48"
+          class="w-32 sm:w-48"
         />
         <div
-          class="tw:flex tw:min-w-0 tw:flex-col tw:gap-2"
-          :class="!person && 'tw:sm:col-span-2'"
+          class="flex min-w-0 flex-col gap-2"
+          :class="!person && 'sm:col-span-2'"
         >
-          <p class="tw:max-w-prose tw:text-muted-foreground">
+          <p class="max-w-prose text-muted-foreground">
             {{ $t(`contact.answers.${topic.key}`) }}
           </p>
           <template v-if="person">
-            <p class="tw:mt-1 tw:font-bold tw:text-brand">
+            <p class="mt-1 font-bold text-brand">
               {{ titleOf(person) }}
             </p>
-            <p
-              class="tw:text-3xl tw:leading-tight tw:font-extrabold tw:tracking-tight"
-            >
+            <p class="text-3xl leading-tight font-extrabold tracking-tight">
               {{ person.name }}
             </p>
           </template>
-          <div class="tw:mt-2 tw:flex tw:flex-col tw:gap-2">
+          <div class="mt-2 flex flex-col gap-2">
             <CopyEmail
               :email="person?.email ?? topic.email"
               labelled
-              class="tw:text-lg"
+              class="text-lg"
             />
             <a
               v-if="person?.phone"
               :href="`tel:${person.phone.replace(/\s/g, '')}`"
-              class="tw:inline-flex tw:w-fit tw:items-center tw:gap-2 tw:text-lg tw:font-semibold tw:tabular-nums tw:hover:underline tw:hover:underline-offset-4"
+              class="inline-flex w-fit items-center gap-2 text-lg font-semibold tabular-nums hover:underline hover:underline-offset-4"
             >
-              <Phone class="tw:size-4" aria-hidden="true" />
+              <Phone class="size-4" aria-hidden="true" />
               {{ person.phone }}
             </a>
           </div>

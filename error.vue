@@ -25,31 +25,31 @@
 <template>
   <NuxtLayout>
     <div
-      class="tw:mx-auto tw:flex tw:max-w-6xl tw:flex-col tw:items-start tw:gap-8 tw:px-4 tw:py-8 tw:lg:px-8 tw:lg:py-12"
+      class="mx-auto flex max-w-6xl flex-col items-start gap-8 px-4 py-8 lg:px-8 lg:py-12"
     >
       <!-- the code on a plate, as the rooms are signed in Elbygget -->
       <p
-        class="tw:rounded-md tw:bg-plate tw:px-4 tw:pt-2 tw:pb-1 tw:text-5xl tw:font-black tw:tabular-nums tw:text-plate-foreground tw:lg:text-6xl"
+        class="rounded-md bg-plate px-4 pt-2 pb-1 text-5xl font-black tabular-nums text-plate-foreground lg:text-6xl"
       >
         {{ error.statusCode }}
       </p>
 
-      <div class="tw:flex tw:max-w-prose tw:flex-col tw:gap-3">
+      <div class="flex max-w-prose flex-col gap-3">
         <h1
-          class="tw:text-3xl tw:font-extrabold tw:tracking-tight tw:text-balance tw:lg:text-[2.5rem]"
+          class="text-3xl font-extrabold tracking-tight text-balance lg:text-[2.5rem]"
         >
           {{ title }}
         </h1>
-        <p v-if="missing" class="tw:text-lg tw:text-muted-foreground">
+        <p v-if="missing" class="text-lg text-muted-foreground">
           <i18n-t keypath="error.page.missing_text" scope="global">
             <template #path>
-              <span class="tw:font-semibold tw:break-all tw:text-foreground">
+              <span class="font-semibold break-all text-foreground">
                 {{ route.path }}
               </span>
             </template>
           </i18n-t>
         </p>
-        <p v-else class="tw:text-lg tw:text-muted-foreground">
+        <p v-else class="text-lg text-muted-foreground">
           {{ $t('error.page.failed_text') }}
         </p>
       </div>
@@ -63,17 +63,17 @@
 
       <nav
         :aria-label="$t('error.page.elsewhere')"
-        class="tw:flex tw:w-full tw:flex-col tw:gap-3 tw:border-t tw:pt-6"
+        class="flex w-full flex-col gap-3 border-t pt-6"
       >
-        <p class="tw:text-sm tw:font-bold">{{ $t('error.page.elsewhere') }}</p>
-        <ul class="tw:flex tw:flex-wrap tw:gap-x-8 tw:gap-y-2">
+        <p class="text-sm font-bold">{{ $t('error.page.elsewhere') }}</p>
+        <ul class="flex flex-wrap gap-x-8 gap-y-2">
           <li v-for="link in elsewhere" :key="link.to">
             <NuxtLink
               :to="localePath(link.to)"
-              class="tw:inline-flex tw:items-center tw:gap-1 tw:font-semibold tw:underline tw:decoration-border tw:decoration-2 tw:underline-offset-4 tw:hover:decoration-brand"
+              class="inline-flex items-center gap-1 font-semibold underline decoration-border decoration-2 underline-offset-4 hover:decoration-brand"
             >
               {{ $t(link.label) }}
-              <ArrowRight class="tw:size-4" aria-hidden="true" />
+              <ArrowRight class="size-4" aria-hidden="true" />
             </NuxtLink>
           </li>
         </ul>

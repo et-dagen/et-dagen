@@ -1,9 +1,10 @@
 <script setup lang="ts">
+  import { useCompanies } from '@/composables/useCompanies'
   import DayRibbon from '@/components/programme/DayRibbon.vue'
   import DaySection from '@/components/programme/DaySection.vue'
   import NowNext from '@/components/programme/NowNext.vue'
   import { Instant } from '@/domain/time'
-  import type { EventRow } from '@/lib/admin/events'
+  import type { EventRow } from '@/lib/events'
   import {
     initialDay,
     nowAndNext,
@@ -20,9 +21,7 @@
   const [{ data: events }, { data: companies }, { data: maps }] =
     await Promise.all([
       useFetch<Record<string, EventRow>>('/api/v1/event'),
-      useFetch<Record<string, { name?: string; logo?: string }>>(
-        '/api/v1/company',
-      ),
+      useCompanies(),
       useFetch<{ date: string; url: string }[]>('/api/v1/image/standmap'),
     ])
 
@@ -92,11 +91,9 @@
 <template>
   <div class="et-ui">
     <div
-      class="tw:mx-auto tw:flex tw:max-w-5xl tw:flex-col tw:gap-6 tw:px-4 tw:py-8 tw:lg:px-8 tw:lg:py-12"
+      class="mx-auto flex max-w-5xl flex-col gap-6 px-4 py-8 lg:px-8 lg:py-12"
     >
-      <h1
-        class="tw:text-3xl tw:font-extrabold tw:tracking-tight tw:lg:text-[2.5rem]"
-      >
+      <h1 class="text-3xl font-extrabold tracking-tight lg:text-[2.5rem]">
         {{ $t('programme.title') }}
       </h1>
       <!-- now and next depend on the clock, so the band draws in the browser -->
@@ -109,7 +106,7 @@
         :selected="selected"
         @select="select"
       />
-      <div v-if="days.length" class="tw:flex tw:flex-col tw:gap-10">
+      <div v-if="days.length" class="flex flex-col gap-10">
         <DaySection
           v-for="day in days"
           :key="day.date"
@@ -118,10 +115,7 @@
           :companies="companies ?? {}"
         />
       </div>
-      <p
-        v-else
-        class="tw:rounded-lg tw:border tw:bg-card tw:p-6 tw:text-muted-foreground"
-      >
+      <p v-else class="rounded-lg border bg-card p-6 text-muted-foreground">
         {{ $t('programme.empty') }}
       </p>
     </div>

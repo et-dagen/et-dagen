@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { presentWithinTimeWindow } from '@/server/utils/useTime'
+import { isValidDate, presentWithinTimeWindow } from '@/server/utils/useTime'
 
 // Registration windows are stored as Oslo wall-clock time without an offset,
 // as the admin typed them. Production servers run in UTC.
@@ -45,5 +45,18 @@ describe('presentWithinTimeWindow on a server running in UTC', () => {
     expect(
       presentWithinTimeWindow('2026-07-01T10:00', '2026-07-01T12:00'),
     ).toBe(true)
+  })
+})
+
+describe('isValidDate', () => {
+  it('takes a date, with or without a time', () => {
+    expect(isValidDate('2026-11-12')).toBe(true)
+    expect(isValidDate('2026-11-12T23:59')).toBe(true)
+  })
+
+  it('refuses other shapes and dates Date cannot read', () => {
+    expect(isValidDate('12.11.2026')).toBe(false)
+    expect(isValidDate('2026-11')).toBe(false)
+    expect(isValidDate('2026-13-01')).toBe(false)
   })
 })

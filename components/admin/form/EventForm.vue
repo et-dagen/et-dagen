@@ -1,7 +1,10 @@
 <script setup lang="ts">
   import { ArrowLeft, Save } from '@lucide/vue'
+  import { useProgrammes } from '@/composables/useProgrammes'
+  import { STUDY_YEARS } from '@/lib/user/programmes'
   import EventTabs from '@/components/admin/EventTabs.vue'
-  import FieldError from '@/components/admin/form/FieldError.vue'
+  import FieldError from '@/components/form/FieldError.vue'
+  import TextField from '@/components/form/TextField.vue'
   import RichText from '@/components/admin/form/RichText.vue'
   import SearchPicker from '@/components/admin/form/SearchPicker.vue'
   import { Button } from '@/components/ui/button'
@@ -20,9 +23,9 @@
     SelectTrigger,
     SelectValue,
   } from '@/components/ui/select'
+  import { useHostCompanies } from '@/composables/admin/useHostCompanies'
   import { useResourceForm } from '@/composables/admin/useResourceForm'
   import { EventInput, toV1Event } from '@/contracts/event'
-  import { CompanyUid } from '@/domain/business/company'
 
   const props = withDefaults(
     defineProps<{
@@ -37,43 +40,23 @@
   const { t } = useI18n()
   const localePath = useLocalePath()
 
-  const { data: companies } =
-    await useFetch<Record<string, { name?: string }>>('/api/v1/company')
-  // a company user or coordinator may only host for the companies they manage
-  const auth = useAuthStore()
-  const mayHost = (value: string) =>
-    !!value &&
-    auth.can('event', props.uid ? 'update' : 'create', {
-      companyUid: CompanyUid.parse(value),
-    })
-  // a company user who opens another company's event gets no form to fill in
-  const allowed = computed(
-    () => !props.uid || mayHost(String(props.initial.companyUID ?? '')),
-  )
+  const {
+    allowed,
+    choices: companyOptions,
+    onlyChoice,
+  } = await useHostCompanies({
+    resource: 'event',
+    uid: props.uid,
+    current: props.initial.companyUID,
+    first: [{ value: 'etdagene', label: 'E&T-dagene' }],
+  })
   const panelName = computed(() =>
     props.panel.startsWith('/company/')
       ? 'company.admin.events.name'
       : 'admin.events.name',
   )
-  const companyOptions = computed(() =>
-    [
-      { value: 'etdagene', label: 'E&T-dagene' },
-      ...Object.entries(companies.value ?? {})
-        .map(([value, company]) => ({ value, label: company.name ?? value }))
-        .sort((a, b) => a.label.localeCompare(b.label, 'nb')),
-    ].filter((option) => mayHost(option.value)),
-  )
-  const { data: programmeData } =
-    await useFetch<Record<string, string | { name?: string }>>(
-      '/api/v1/programme',
-    )
-  const programmes = computed(() =>
-    Object.values(programmeData.value ?? {})
-      .map((p) => (typeof p === 'string' ? p : (p.name ?? '')))
-      .filter(Boolean)
-      .sort((a, b) => a.localeCompare(b, 'nb')),
-  )
-  const YEARS = [1, 2, 3, 4, 5]
+  const { programmes: listed } = await useProgrammes()
+  const programmes = computed(() => listed.value.map(({ name }) => name!))
 
   const { form, submit, saving } = useResourceForm({
     schema: EventInput,
@@ -95,9 +78,8 @@
   })
   // with one company to choose from, a new entry is for that company
   watchEffect(() => {
-    const [only, ...others] = companyOptions.value
-    if (!props.uid && only && !others.length && !form.values.companyUID)
-      form.setFieldValue('companyUID', only.value)
+    if (onlyChoice.value && !form.values.companyUID)
+      form.setFieldValue('companyUID', onlyChoice.value)
   })
   const signup = computed(() => form.values.signup === true)
 
@@ -109,24 +91,24 @@
 </script>
 
 <template>
-  <p v-if="!allowed" class="tw:text-muted-foreground">
+  <p v-if="!allowed" class="text-muted-foreground">
     {{ $t('admin.events.form.missing') }}
   </p>
   <form
     v-else
-    class="tw:flex tw:max-w-3xl tw:flex-col tw:gap-6"
+    class="flex max-w-3xl flex-col gap-6"
     novalidate
     @submit="submit"
   >
     <NuxtLink
       :to="localePath(panel)"
-      class="tw:inline-flex tw:w-fit tw:items-center tw:gap-1 tw:text-sm tw:text-muted-foreground tw:hover:text-foreground"
+      class="inline-flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
     >
-      <ArrowLeft class="tw:size-4" aria-hidden="true" />
+      <ArrowLeft class="size-4" aria-hidden="true" />
       {{ $t(panelName) }}
     </NuxtLink>
     <h1
-      class="tw:text-2xl tw:leading-8 tw:font-extrabold tw:tracking-tight tw:lg:text-[2rem] tw:lg:leading-10"
+      class="text-2xl leading-8 font-extrabold tracking-tight lg:text-[2rem] lg:leading-10"
     >
       {{
         uid ? String(initial.title ?? '') : $t('admin.events.form.new_title')
@@ -138,22 +120,20 @@
     />
 
     <section
-      class="tw:grid tw:gap-5 tw:rounded-lg tw:border tw:bg-card tw:p-4 tw:lg:grid-cols-2 tw:lg:p-6"
+      class="grid gap-5 rounded-lg border bg-card p-4 lg:grid-cols-2 lg:p-6"
     >
-      <FormField v-slot="{ componentField }" name="title">
-        <FormItem class="tw:lg:col-span-2">
-          <FormLabel>{{ $t('admin.events.form.title') }}</FormLabel>
-          <FormControl><Input v-bind="componentField" /></FormControl>
-          <FieldError />
-        </FormItem>
-      </FormField>
+      <TextField
+        name="title"
+        :label="$t('admin.events.form.title')"
+        class="lg:col-span-2"
+      />
 
       <FormField v-slot="{ componentField }" name="companyUID">
-        <FormItem class="tw:lg:col-span-2">
+        <FormItem class="lg:col-span-2">
           <FormLabel>{{ $t('admin.events.form.company') }}</FormLabel>
           <Select v-bind="componentField">
             <FormControl>
-              <SelectTrigger class="tw:w-full">
+              <SelectTrigger class="w-full">
                 <SelectValue
                   :placeholder="$t('admin.events.form.choose_company')"
                 />
@@ -173,25 +153,16 @@
         </FormItem>
       </FormField>
 
-      <FormField v-slot="{ componentField }" name="start">
-        <FormItem>
-          <FormLabel>{{ $t('admin.events.form.start') }}</FormLabel>
-          <FormControl>
-            <Input type="datetime-local" v-bind="componentField" />
-          </FormControl>
-          <FieldError />
-        </FormItem>
-      </FormField>
-
-      <FormField v-slot="{ componentField }" name="end">
-        <FormItem>
-          <FormLabel>{{ $t('admin.events.form.end') }}</FormLabel>
-          <FormControl>
-            <Input type="datetime-local" v-bind="componentField" />
-          </FormControl>
-          <FieldError />
-        </FormItem>
-      </FormField>
+      <TextField
+        name="start"
+        :label="$t('admin.events.form.start')"
+        type="datetime-local"
+      />
+      <TextField
+        name="end"
+        :label="$t('admin.events.form.end')"
+        type="datetime-local"
+      />
 
       <FormField v-slot="{ componentField }" name="location.name">
         <FormItem>
@@ -199,28 +170,25 @@
           <FormControl>
             <Input v-bind="componentField" placeholder="EL5, Elektrobygget" />
           </FormControl>
-          <p class="tw:text-sm tw:text-muted-foreground">
+          <p class="text-sm text-muted-foreground">
             {{ $t('admin.events.form.place_hint') }}
           </p>
           <FieldError />
         </FormItem>
       </FormField>
 
-      <FormField v-slot="{ componentField }" name="location.map">
-        <FormItem>
-          <FormLabel>{{ $t('admin.events.form.map') }}</FormLabel>
-          <FormControl>
-            <Input type="url" placeholder="https://" v-bind="componentField" />
-          </FormControl>
-          <FieldError />
-        </FormItem>
-      </FormField>
+      <TextField
+        name="location.map"
+        :label="$t('admin.events.form.map')"
+        type="url"
+        placeholder="https://"
+      />
 
       <FormField
         v-slot="{ value, handleChange, errorMessage }"
         name="description"
       >
-        <FormItem class="tw:lg:col-span-2">
+        <FormItem class="lg:col-span-2">
           <FormLabel>{{ $t('admin.events.form.description') }}</FormLabel>
           <FormControl>
             <RichText
@@ -235,20 +203,20 @@
     </section>
 
     <section
-      class="tw:grid tw:gap-5 tw:rounded-lg tw:border tw:bg-card tw:p-4 tw:lg:grid-cols-2 tw:lg:p-6"
+      class="grid gap-5 rounded-lg border bg-card p-4 lg:grid-cols-2 lg:p-6"
     >
       <FormField v-slot="{ value, handleChange }" name="signup" type="checkbox">
-        <FormItem class="tw:flex tw:items-start tw:gap-3 tw:lg:col-span-2">
+        <FormItem class="flex items-start gap-3 lg:col-span-2">
           <FormControl>
             <Checkbox
               :model-value="value"
-              class="tw:mt-0.5"
+              class="mt-0.5"
               @update:model-value="handleChange"
             />
           </FormControl>
           <div>
             <FormLabel>{{ $t('admin.events.form.signup') }}</FormLabel>
-            <p class="tw:text-sm tw:text-muted-foreground">
+            <p class="text-sm text-muted-foreground">
               {{ $t('admin.events.form.signup_hint') }}
             </p>
           </div>
@@ -257,13 +225,13 @@
 
       <template v-if="signup">
         <FormField v-slot="{ componentField }" name="capacity">
-          <FormItem class="tw:lg:col-span-2">
+          <FormItem class="lg:col-span-2">
             <FormLabel>{{ $t('admin.events.form.capacity') }}</FormLabel>
             <FormControl>
               <Input
                 type="number"
                 min="1"
-                class="tw:max-w-40"
+                class="max-w-40"
                 v-bind="componentField"
               />
             </FormControl>
@@ -271,49 +239,40 @@
           </FormItem>
         </FormField>
 
-        <FormField v-slot="{ componentField }" name="opens">
-          <FormItem>
-            <FormLabel>{{ $t('admin.events.form.opens') }}</FormLabel>
-            <FormControl>
-              <Input type="datetime-local" v-bind="componentField" />
-            </FormControl>
-            <FieldError />
-          </FormItem>
-        </FormField>
-
-        <FormField v-slot="{ componentField }" name="closes">
-          <FormItem>
-            <FormLabel>{{ $t('admin.events.form.closes') }}</FormLabel>
-            <FormControl>
-              <Input type="datetime-local" v-bind="componentField" />
-            </FormControl>
-            <FieldError />
-          </FormItem>
-        </FormField>
+        <TextField
+          name="opens"
+          :label="$t('admin.events.form.opens')"
+          type="datetime-local"
+        />
+        <TextField
+          name="closes"
+          :label="$t('admin.events.form.closes')"
+          type="datetime-local"
+        />
 
         <FormField v-slot="{ value, handleChange }" name="years">
-          <FormItem class="tw:lg:col-span-2">
+          <FormItem class="lg:col-span-2">
             <FormLabel>{{ $t('admin.events.form.years') }}</FormLabel>
-            <div class="tw:flex tw:flex-wrap tw:gap-2">
+            <div class="flex flex-wrap gap-2">
               <button
-                v-for="year in YEARS"
+                v-for="year in STUDY_YEARS"
                 :key="year"
                 type="button"
                 :aria-pressed="(value ?? []).includes(year)"
-                class="tw:inline-flex tw:h-9 tw:min-w-16 tw:items-center tw:justify-center tw:rounded-md tw:border tw:bg-card tw:px-3 tw:pt-0.5 tw:text-sm tw:font-semibold tw:hover:bg-accent tw:aria-pressed:border-plate tw:aria-pressed:bg-plate tw:aria-pressed:text-plate-foreground"
+                class="inline-flex h-9 min-w-16 items-center justify-center rounded-md border bg-card px-3 pt-0.5 text-sm font-semibold hover:bg-accent aria-pressed:border-plate aria-pressed:bg-plate aria-pressed:text-plate-foreground"
                 @click="handleChange(toggle(value, year))"
               >
                 {{ $t('company.admin.year', { n: year }) }}
               </button>
             </div>
-            <p class="tw:text-sm tw:text-muted-foreground">
+            <p class="text-sm text-muted-foreground">
               {{ $t('admin.events.form.requirements_hint') }}
             </p>
           </FormItem>
         </FormField>
 
         <FormField v-slot="{ value, handleChange }" name="programmes">
-          <FormItem class="tw:lg:col-span-2">
+          <FormItem class="lg:col-span-2">
             <FormLabel>{{ $t('admin.events.form.programmes') }}</FormLabel>
             <SearchPicker
               :model-value="value ?? []"
@@ -326,7 +285,7 @@
       </template>
     </section>
 
-    <div class="tw:flex tw:flex-wrap tw:gap-3">
+    <div class="flex flex-wrap gap-3">
       <Button type="submit" :disabled="saving">
         <Save aria-hidden="true" />
         {{ $t(uid ? 'admin.events.form.save' : 'admin.events.form.create') }}

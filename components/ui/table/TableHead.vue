@@ -12,7 +12,7 @@
     data-slot="table-head"
     :class="
       cn(
-        'tw:text-foreground tw:h-10 tw:px-2 tw:text-left tw:align-middle tw:font-medium tw:whitespace-nowrap tw:[&:has([role=checkbox])]:pr-0 tw:*:[[role=checkbox]]:translate-y-0.5',
+        'text-foreground h-10 px-2 text-left align-middle font-medium whitespace-nowrap [&:has([role=checkbox])]:pr-0 *:[[role=checkbox]]:translate-y-0.5',
         props.class,
       )
     "

@@ -1,3 +1,4 @@
+import { ref, type Ref } from 'vue'
 import type { SortDirection } from '@/lib/admin/listView'
 
 /** Which column a list is sorted by; choosing the same column again reverses it */

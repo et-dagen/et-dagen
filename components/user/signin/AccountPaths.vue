@@ -9,28 +9,28 @@
 </script>
 
 <template>
-  <section aria-labelledby="paths-heading" class="tw:flex tw:flex-col tw:gap-3">
-    <h2 id="paths-heading" class="tw:text-lg tw:font-extrabold">
+  <section aria-labelledby="paths-heading" class="flex flex-col gap-3">
+    <h2 id="paths-heading" class="text-lg font-extrabold">
       {{ $t('signin.paths.heading') }}
     </h2>
-    <ul class="tw:grid tw:grid-cols-1 tw:gap-3 tw:min-[400px]:grid-cols-2">
+    <ul class="grid grid-cols-1 gap-3 min-[400px]:grid-cols-2">
       <li v-for="path in paths" :key="path.key">
         <NuxtLink
           :to="localePath({ path: '/user/signup', query: { type: path.type } })"
-          class="tw:group tw:flex tw:h-full tw:flex-col tw:gap-1 tw:rounded-lg tw:border tw:bg-card tw:p-4 tw:transition-colors tw:outline-none tw:hover:border-plate tw:focus-visible:ring-2 tw:focus-visible:ring-brand"
+          class="group flex h-full flex-col gap-1 rounded-lg border bg-card p-4 transition-colors outline-none hover:border-plate focus-visible:ring-2 focus-visible:ring-brand"
         >
-          <span class="tw:font-extrabold">
+          <span class="font-extrabold">
             {{ $t(`signin.paths.${path.key}.name`) }}
           </span>
-          <span class="tw:text-sm tw:text-muted-foreground">
+          <span class="text-sm text-muted-foreground">
             {{ $t(`signin.paths.${path.key}.text`) }}
           </span>
           <span
-            class="tw:mt-auto tw:flex tw:items-center tw:gap-1.5 tw:pt-2 tw:text-sm tw:font-bold tw:text-brand"
+            class="mt-auto flex items-center gap-1.5 pt-2 text-sm font-bold text-brand"
           >
             {{ $t(`signin.paths.${path.key}.link`) }}
             <ArrowRight
-              class="tw:size-4 tw:transition-transform tw:group-hover:translate-x-0.5 tw:motion-reduce:transition-none"
+              class="size-4 transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none"
               aria-hidden="true"
             />
           </span>

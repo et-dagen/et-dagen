@@ -22,7 +22,15 @@ describe('areas', () => {
   it('opens everything to an admin', () => {
     expect(
       areasOf(askerFor(subjectOf({ uid: 'boss', userType: 'admin' }))),
-    ).toEqual(['admin', 'events', 'jobs', 'profile', 'resumes', 'company'])
+    ).toEqual([
+      'admin',
+      'events',
+      'jobs',
+      'profile',
+      'resumes',
+      'company',
+      'scan',
+    ])
   })
 
   it("opens a partner's contact the company pages, but not event editing", () => {
@@ -43,7 +51,7 @@ describe('areas', () => {
     ])
   })
 
-  it("opens a sponsor's coordinator its events, every job and its profile", () => {
+  it("opens a sponsor's coordinator its events, every job, its profile and the scanner", () => {
     const coordinator: Subject = {
       uid: UserUid.parse('volunteer'),
       roles: ['coordinator'],
@@ -57,6 +65,7 @@ describe('areas', () => {
       'jobs',
       'profile',
       'company',
+      'scan',
     ])
   })
 

@@ -1,26 +1,18 @@
-import { deadlineOf, instantOf } from '@/lib/admin/time'
-import type { EventRow } from '@/lib/admin/events'
+import type { ListedCompanies } from '@/lib/companies'
+import { deadlineOf, instantOf } from '@/lib/time'
+import type { EventRow } from '@/lib/events'
 import { search } from '@/lib/admin/listView'
 import {
   afterDeadline,
   deadlineState,
   fairEventsOf,
   type DeadlineState,
-  type DeadlineType,
   type FairEvent,
+  type StoredJob,
 } from '@/lib/jobs'
 import type { ISO8601String } from '@/domain/time'
 
 /** What the job list reads from `jobs/<uid>`; every field may be missing */
-export interface StoredJob {
-  title?: string
-  companyUID?: string
-  jobType?: string
-  location?: string
-  deadline?: string | null
-  deadlineType?: DeadlineType
-}
-
 export interface JobRow {
   uid: string
   title: string
@@ -37,11 +29,11 @@ export interface JobRow {
 }
 
 /**
- * The places a location names, so "Bergen og Trondheim" counts for both
+ * The places a job location names, so "Bergen og Trondheim" counts for both
  *
- * @example placesOf('Bergen og Trondheim') // ['Bergen', 'Trondheim']
+ * @example locationsOf('Bergen og Trondheim') // ['Bergen', 'Trondheim']
  */
-export function placesOf(location: string | undefined): string[] {
+export function locationsOf(location: string | undefined): string[] {
   return (location ?? '')
     .split(/\s*(?:,|\/|\bog\b|\band\b|&)\s*/i)
     .map((place) => place.trim())
@@ -54,10 +46,7 @@ export function placesOf(location: string | undefined): string[] {
  */
 export function jobRows(
   jobs: Record<string, StoredJob> | null | undefined,
-  companies:
-    | Record<string, { name?: string; logo?: string }>
-    | null
-    | undefined,
+  companies: ListedCompanies | null | undefined,
   events: Record<string, EventRow> | null | undefined,
   now: ISO8601String,
 ): JobRow[] {
@@ -76,7 +65,7 @@ export function jobRows(
         logo: company?.logo ?? null,
         jobType: job.jobType ?? null,
         location: job.location ?? '',
-        places: placesOf(job.location),
+        places: locationsOf(job.location),
         deadline: job.deadline,
         state: deadlineState(job.deadline, now, job.deadlineType),
         // a meeting after the deadline is no stop on the way to applying

@@ -1,11 +1,18 @@
 // PUT /api/v1/company/affiliation
 // endpoint for setting a company's tier and entitlement overrides
+import { defineEventHandler, readBody, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { setAffiliation } from '@/application/companies/affiliation'
 import { checkedAffiliation } from '@/domain/authorization/affiliation'
 import { CompanyUid } from '@/domain/business/company'
 import { fail } from '@/domain/errors'
 import { Instant } from '@/domain/time'
 import { affiliations, companies } from '@/server/composition'
+import {
+  addEventContext,
+  setLogImportance,
+  setResourceContext,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

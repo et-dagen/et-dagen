@@ -18,6 +18,6 @@
     data-slot="form-message"
     as="p"
     :name="toValue(name)"
-    :class="cn('tw:text-destructive tw:text-sm', props.class)"
+    :class="cn('text-destructive text-sm', props.class)"
   />
 </template>

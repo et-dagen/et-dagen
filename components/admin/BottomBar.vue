@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { useAuthStore } from '@/stores/authStore'
   import { isActivePanel, panelsFor } from '@/lib/admin/panels'
 
   const localePath = useLocalePath()
@@ -24,27 +25,27 @@
 <template>
   <nav
     :aria-label="$t('admin.shell.navigation')"
-    class="tw:fixed tw:inset-x-0 tw:bottom-0 tw:z-10 tw:bg-brand tw:px-2 tw:pt-2 tw:pb-[max(0.5rem,env(safe-area-inset-bottom))] tw:text-brand-foreground"
+    class="fixed inset-x-0 bottom-0 z-10 bg-brand px-2 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] text-brand-foreground"
   >
     <!-- the panels share the width while their names fit, and scroll sideways once they do not -->
     <ul
       ref="list"
-      class="tw:grid tw:auto-cols-[minmax(4.75rem,1fr)] tw:grid-flow-col tw:gap-1 tw:overflow-x-auto tw:[scrollbar-width:none]"
+      class="grid auto-cols-[minmax(4.75rem,1fr)] grid-flow-col gap-1 overflow-x-auto [scrollbar-width:none]"
     >
       <li v-for="panel in panels" :key="panel.name">
         <NuxtLink
           :to="localePath(panel.route)"
           :data-active="isActive(panel)"
           :aria-current="isActive(panel) ? 'page' : undefined"
-          class="tw:group tw:flex tw:h-14 tw:flex-col tw:items-center tw:justify-center tw:gap-1 tw:rounded-md tw:text-xs tw:font-semibold tw:data-[active=true]:bg-white"
+          class="group flex h-14 flex-col items-center justify-center gap-1 rounded-md text-xs font-semibold data-[active=true]:bg-white"
         >
           <component
             :is="panel.icon"
-            class="tw:size-5 tw:group-data-[active=true]:text-brand"
+            class="size-5 group-data-[active=true]:text-brand"
             stroke-width="1.5"
             aria-hidden="true"
           />
-          <span class="tw:group-data-[active=true]:text-brand">
+          <span class="group-data-[active=true]:text-brand">
             {{ $t(panel.label) }}
           </span>
         </NuxtLink>

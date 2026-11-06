@@ -61,7 +61,7 @@ export function accessProblem(access: Access): AccessProblem | null {
  * What a new account starts with
  *
  * @remarks
- * A registration code makes the account a contact for the code's company. Everyone else signs up
+ * An invitation makes the account a contact for the invitation's company. Everyone else signs up
  * as a student, coordinators included: an admin makes them coordinators afterwards.
  */
 export const accessOnSignUp = (company: CompanyUid | null): Access =>

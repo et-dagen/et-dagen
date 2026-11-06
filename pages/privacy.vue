@@ -32,63 +32,63 @@
       rt(line, { email }),
     )
 
-  const sectionHeading = 'tw:text-2xl tw:font-extrabold tw:tracking-tight'
-  const prose = 'tw:flex tw:max-w-[68ch] tw:flex-col tw:gap-4'
+  const sectionHeading = 'text-2xl font-extrabold tracking-tight'
+  const prose = 'flex max-w-[68ch] flex-col gap-4'
   const list = [
-    'tw:flex tw:max-w-[68ch] tw:list-disc tw:flex-col tw:gap-2 tw:pl-5',
-    'tw:marker:text-muted-foreground',
+    'flex max-w-[68ch] list-disc flex-col gap-2 pl-5',
+    'marker:text-muted-foreground',
   ]
   const link = [
-    'tw:font-bold tw:underline tw:decoration-border tw:decoration-2',
-    'tw:underline-offset-4 tw:hover:decoration-brand',
+    'font-bold underline decoration-border decoration-2',
+    'underline-offset-4 hover:decoration-brand',
   ]
 </script>
 
 <template>
   <div class="et-ui">
     <div
-      class="tw:mx-auto tw:flex tw:max-w-4xl tw:flex-col tw:gap-14 tw:px-4 tw:py-8 tw:lg:px-8 tw:lg:py-12"
+      class="mx-auto flex max-w-4xl flex-col gap-14 px-4 py-8 lg:px-8 lg:py-12"
     >
-      <header class="tw:flex tw:flex-col tw:gap-4">
+      <header class="flex flex-col gap-4">
         <h1
-          class="tw:text-4xl tw:leading-[1.08] tw:font-extrabold tw:tracking-tight tw:text-balance tw:lg:text-[2.875rem]"
+          class="text-4xl leading-[1.08] font-extrabold tracking-tight text-balance lg:text-[2.875rem]"
         >
           {{ $t('privacy.heading') }}
         </h1>
-        <p class="tw:max-w-[60ch] tw:text-lg tw:text-muted-foreground">
+        <p class="max-w-[60ch] text-lg text-muted-foreground">
           {{ $t('privacy.lead') }}
         </p>
-        <p class="tw:text-sm tw:text-muted-foreground">
+        <p class="text-sm text-muted-foreground">
           {{ $t('privacy.updated') }}
         </p>
         <nav
           :aria-label="$t('privacy.index')"
-          class="tw:mt-4 tw:flex tw:flex-wrap tw:gap-x-6 tw:gap-y-2 tw:border-t tw:pt-4 tw:text-sm tw:font-bold"
+          class="mt-4 flex flex-wrap gap-x-6 gap-y-2 border-t pt-4 text-sm font-bold"
         >
           <a
             v-for="section in SECTIONS"
             :key="section"
             :href="`#${section}`"
-            class="tw:text-muted-foreground tw:underline-offset-4 tw:hover:text-foreground tw:hover:underline"
+            class="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
           >
             {{ $t(`privacy.${section}.title`) }}
           </a>
         </nav>
       </header>
 
-      <section aria-labelledby="who" class="tw:flex tw:flex-col tw:gap-4">
+      <section aria-labelledby="who" class="flex flex-col gap-4">
         <h2 id="who" :class="sectionHeading">{{ $t('privacy.who.title') }}</h2>
         <div :class="prose">
           <p v-for="(line, i) in lines('privacy.who.body')" :key="i">
             {{ line }}
           </p>
         </div>
-        <a :href="`mailto:${email}`" :class="link" class="tw:self-start">
+        <a :href="`mailto:${email}`" :class="link" class="self-start">
           {{ email }}
         </a>
       </section>
 
-      <section aria-labelledby="data" class="tw:flex tw:flex-col tw:gap-6">
+      <section aria-labelledby="data" class="flex flex-col gap-6">
         <h2 id="data" :class="sectionHeading">
           {{ $t('privacy.data.title') }}
         </h2>
@@ -97,26 +97,26 @@
             {{ line }}
           </p>
         </div>
-        <div class="tw:flex tw:flex-col tw:divide-y tw:border-y">
+        <div class="flex flex-col divide-y border-y">
           <article
             v-for="category in CATEGORIES"
             :key="category"
             :aria-labelledby="`data-${category}`"
-            class="tw:flex tw:flex-col tw:gap-3 tw:py-6"
+            class="flex flex-col gap-3 py-6"
           >
-            <h3 :id="`data-${category}`" class="tw:text-lg tw:font-extrabold">
+            <h3 :id="`data-${category}`" class="text-lg font-extrabold">
               {{ $t(`privacy.data.${category}.title`) }}
             </h3>
             <dl
-              class="tw:grid tw:gap-x-6 tw:gap-y-1 tw:sm:grid-cols-[9rem_minmax(0,1fr)] tw:sm:items-baseline tw:sm:gap-y-3"
+              class="grid gap-x-6 gap-y-1 sm:grid-cols-[9rem_minmax(0,1fr)] sm:items-baseline sm:gap-y-3"
             >
               <template v-for="field in FIELDS" :key="field">
                 <dt
-                  class="tw:text-sm tw:font-semibold tw:text-muted-foreground tw:not-first:mt-2 tw:sm:mt-0"
+                  class="text-sm font-semibold text-muted-foreground not-first:mt-2 sm:mt-0"
                 >
                   {{ $t(`privacy.data.labels.${field}`) }}
                 </dt>
-                <dd class="tw:max-w-[68ch]">
+                <dd class="max-w-[68ch]">
                   {{ $t(`privacy.data.${category}.${field}`) }}
                 </dd>
               </template>
@@ -129,7 +129,7 @@
         v-for="section in ['processors', 'cookies'] as const"
         :key="section"
         :aria-labelledby="section"
-        class="tw:flex tw:flex-col tw:gap-4"
+        class="flex flex-col gap-4"
       >
         <h2 :id="section" :class="sectionHeading">
           {{ $t(`privacy.${section}.title`) }}
@@ -146,7 +146,7 @@
         </ul>
       </section>
 
-      <section aria-labelledby="rights" class="tw:flex tw:flex-col tw:gap-4">
+      <section aria-labelledby="rights" class="flex flex-col gap-4">
         <h2 id="rights" :class="sectionHeading">
           {{ $t('privacy.rights.title') }}
         </h2>
@@ -160,15 +160,15 @@
           target="_blank"
           rel="noopener"
           :class="link"
-          class="tw:inline-flex tw:items-center tw:gap-1 tw:self-start"
+          class="inline-flex items-center gap-1 self-start"
         >
           {{ $t('privacy.rights.authority') }}
-          <ArrowUpRight aria-hidden="true" class="tw:size-4" />
-          <span class="tw:sr-only">{{ $t('site.footer.external') }}</span>
+          <ArrowUpRight aria-hidden="true" class="size-4" />
+          <span class="sr-only">{{ $t('site.footer.external') }}</span>
         </a>
       </section>
 
-      <section aria-labelledby="changes" class="tw:flex tw:flex-col tw:gap-4">
+      <section aria-labelledby="changes" class="flex flex-col gap-4">
         <h2 id="changes" :class="sectionHeading">
           {{ $t('privacy.changes.title') }}
         </h2>

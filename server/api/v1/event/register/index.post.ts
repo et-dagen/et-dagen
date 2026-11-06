@@ -1,6 +1,8 @@
 // POST /api/v1/event/register/:eventUID
 
 // endpoint for signing up for an event
+import { createError, defineEventHandler, readBody, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import {
   registerForEvent,
   type RegisterResult,
@@ -10,6 +12,12 @@ import { fail } from '@/domain/errors'
 import { Instant } from '@/domain/time'
 import { UserUid } from '@/domain/user'
 import { events, users } from '@/server/composition'
+import {
+  addEventContext,
+  setErrorContext,
+  setResourceContext,
+  withDbTiming,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

@@ -4,6 +4,7 @@ import {
   createWideEvent,
   determineOutcome,
   logWideEvent,
+  loggedPath,
   type WideEvent,
 } from '@/server/utils/logger'
 
@@ -71,6 +72,25 @@ function emit(event: WideEvent, level?: Parameters<typeof logWideEvent>[1]) {
   }
   return null
 }
+
+describe('loggedPath', () => {
+  it('keeps invitation link tokens out of the log', () => {
+    expect(loggedPath('/company/join/abc-DEF_123')).toBe('/company/join/:token')
+    expect(loggedPath('/en/company/join/abc?x=1')).toBe(
+      '/en/company/join/:token?x=1',
+    )
+    expect(loggedPath('/api/v1/invitation/abc')).toBe(
+      '/api/v1/invitation/:token',
+    )
+  })
+
+  it('leaves other paths as they are', () => {
+    expect(loggedPath('/company/join')).toBe('/company/join')
+    expect(loggedPath('/api/v1/company/invitations')).toBe(
+      '/api/v1/company/invitations',
+    )
+  })
+})
 
 describe('logWideEvent', () => {
   it('strips internal _importance from output', () => {

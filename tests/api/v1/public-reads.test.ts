@@ -94,20 +94,3 @@ describe('GET /api/v1/job', () => {
     expect(await api('/api/v1/job?jobUID=missing')).toEqual(empty)
   })
 })
-
-describe('GET /api/v1/code/:code', () => {
-  it('says whether a registration code exists, and nothing more', async () => {
-    await seed('registrationCodes', {
-      k1: { code: 'acme-abcdefgh', companyUID: 'acme' },
-    })
-
-    expect(await api('/api/v1/code/acme-abcdefgh')).toEqual({
-      status: 200,
-      body: { isValid: true },
-    })
-    expect(await api('/api/v1/code/acme-wrong')).toEqual({
-      status: 200,
-      body: { isValid: false },
-    })
-  })
-})

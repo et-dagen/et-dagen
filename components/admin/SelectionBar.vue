@@ -9,9 +9,9 @@
 <template>
   <div
     v-if="count > 0"
-    class="tw:flex tw:items-center tw:gap-3 tw:rounded-md tw:border tw:border-signal/60 tw:bg-signal/15 tw:px-3 tw:py-2 tw:text-sm"
+    class="flex items-center gap-3 rounded-md border border-signal/60 bg-signal/15 px-3 py-2 text-sm"
   >
-    <span class="tw:font-semibold">
+    <span class="font-semibold">
       {{ $t('admin.list.selected', { n: count }) }}
     </span>
     <Button variant="ghost" size="sm" @click="$emit('clear')">
@@ -21,7 +21,7 @@
     <Button
       variant="destructive"
       size="sm"
-      class="tw:ml-auto"
+      class="ml-auto"
       @click="$emit('delete')"
     >
       <Trash2 aria-hidden="true" />

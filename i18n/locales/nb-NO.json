@@ -16,6 +16,7 @@
     "slogan": "Få et innblikk i din fremtidige arbeidsplass",
     "sign_up": "Meld deg på arrangementer",
     "who": "Se hvem som kommer",
+    "who_last": "Se hvem som kom sist",
     "main_partner": "Hovedpartner",
     "upcoming": "Neste arrangementer",
     "programme": "Se hele programmet",
@@ -29,6 +30,7 @@
       "closed": "Påmeldingen er stengt"
     },
     "companies": "Hvem kommer",
+    "companies_last": "Hvem kom sist",
     "partners": "Partnere",
     "sponsors": "Sponsorer",
     "join": "Vil bedriften deres stå her?"
@@ -36,14 +38,6 @@
   "user": {
     "sign_in": "Logg inn",
     "sign_out": "Logg ut",
-    "sign_up": "Registrer bruker",
-    "information": {
-      "title": "Informasjon",
-      "studyprogramme": "Studieprogram",
-      "currentyear": "Årstrinn",
-      "dietaryrestrictions": "Allergener og restriksjoner",
-      "events": "Mine arrangementer"
-    },
     "register": {
       "title": "Registrer bruker",
       "full_name": "Fullt navn",
@@ -54,8 +48,6 @@
       "password_confirmation": "Bekreft passord",
       "study_program": "Studieprogram",
       "year": "Årstrinn",
-      "registration_code": "Registreringskode",
-      "code_hint": "Ta kontakt for a motta en registreringskode",
       "user_type": {
         "student": "Studentbruker",
         "company": "Bedriftsbruker"
@@ -67,17 +59,8 @@
         "restrictions": "Jeg har allergener og/eller restriksjoner"
       }
     },
-    "login": {
-      "email": "E-post",
-      "password": "Passord",
-      "remember": "Husk meg",
-      "forgot": "Glemt passord?"
-    },
     "resume": {
-      "resume": "CV",
-      "upload_resume": "Last opp CV",
-      "your_resume": "Din CV",
-      "delete_resume": "Slett CV"
+      "resume": "CV"
     },
     "delete": {
       "title": "Slett brukeren min",
@@ -122,7 +105,6 @@
       "resume_delete_title": "Slette CV-en?",
       "resume_delete_text": "Bedriftene kan ikke lenger se CV-en din. Du kan laste opp en ny når som helst.",
       "resume_delete": "Slett CV",
-      "resume_uploading": "Laster opp …",
       "resume_uploaded": "CV-en er lastet opp",
       "resume_deleted": "CV-en er slettet",
       "cancel": "Avbryt"
@@ -144,22 +126,6 @@
     }
   },
   "error": {
-    "form": {
-      "general": {
-        "equal_password": "Passordene må være like",
-        "required": "Dette feltet er påkrevd",
-        "email": "Ugyldig e-postadresse"
-      },
-      "password": {
-        "length": "Passordet må være minst 8 tegn langt.",
-        "letters": "Passordet må inneholde minst 3 bokstaver.",
-        "numbers": "Passordet må inneholde minst 3 tall.",
-        "special": "Passordet må inneholde minst 1 spesialtegn.",
-        "uppercase": "Passordet må inneholde minst 1 stor bokstav.",
-        "required": "Passord er påkrevd",
-        "confirmed": "Passordene må være like"
-      }
-    },
     "page": {
       "missing_title": "Denne siden finnes ikke",
       "missing_text": "Det finnes ingenting på {path}. Adressen kan være skrevet feil, eller siden kan ha flyttet.",
@@ -169,69 +135,30 @@
       "elsewhere": "Eller gå til"
     }
   },
-  "datetime": {
-    "months": {
-      "january": "januar",
-      "february": "februar",
-      "march": "mars",
-      "april": "april",
-      "may": "mai",
-      "june": "juni",
-      "july": "juli",
-      "august": "august",
-      "september": "september",
-      "october": "oktober",
-      "november": "november",
-      "december": "desember"
-    },
-    "times": {
-      "days": "Dager",
-      "hours": "Timer",
-      "minutes": "Minutter",
-      "seconds": "Sekunder"
-    }
-  },
   "event": {
-    "take_off": "Arrangementet tar av om",
     "page": {
-      "details": {
-        "name": "Detaljer",
-        "from": "Fra",
-        "to": "Til",
-        "reg_start": "Påmeldingsstart",
-        "reg_end": "Påmeldingsslutt",
-        "reg_programme": "Studieprogram",
-        "reg_year": "Årstrinn",
-        "location": "Sted",
-        "host": "Arrangør"
-      },
       "attendants": {
-        "name": "Påmelding",
-        "attendants": "Påmeldte",
-        "nocapacity": "Ingen kapasitetsbegrensning",
-        "registered": "Du er påmeldt",
-        "scan": "Skann påmeldte",
-        "attended": "Deltok"
-      },
-      "queue": {
-        "name": "Venteliste",
-        "position": "Plassering i køen"
+        "scan": "Skann påmeldte"
       }
+    },
+    "scan": {
+      "title": "Skann oppmøte",
+      "lead": "Skann billetten deltakeren viser på telefonen, så registreres oppmøtet.",
+      "start": "Start kameraet",
+      "stop": "Stopp kameraet",
+      "starting": "Starter kameraet …",
+      "off": "Kameraet er av",
+      "done": "Oppmøte registrert",
+      "camera_denied": "Gi nettleseren tilgang til kameraet for å skanne.",
+      "camera_failed": "Fant ikke noe kamera å skanne med."
     }
   },
   "contact": {
     "title": "Kontakt oss",
     "board": "Styret",
     "positions": {
-      "head": "Leder",
-      "deputyHead": "Nestleder",
-      "IT": "IT-ansvarlig",
-      "finance": "Økonomiansvarlig",
       "business": "Bedriftansvarlig",
-      "spons": "Sponsoransvarlig",
-      "marketing": "Markedsføringsansvarlig",
-      "logistics": "Logistikkansvarlig",
-      "travel": "Turansvarlig"
+      "logistics": "Logistikkansvarlig"
     },
     "question": "Hva gjelder det?",
     "organisation": "Organisasjonen",
@@ -259,7 +186,6 @@
   },
   "company": {
     "admin": {
-      "title": "Bedriftsside",
       "year": "{n}. år",
       "events": {
         "name": "Arrangementer",
@@ -302,7 +228,6 @@
     }
   },
   "alert": {
-    "default_message": "Oi! Noe gikk galt.",
     "api": {
       "error": {
         "general": {
@@ -317,10 +242,6 @@
             "unsupported-file-type": "Ugyldig filtype",
             "cannot-upload-file": "Kan ikke laste opp fil"
           }
-        },
-        "code": {
-          "not-found": "Koden ble ikke funnet",
-          "missing-company-uid": "Bedrifts-UID mangler"
         },
         "company": {
           "not-found": "Bedriften ble ikke funnet",
@@ -353,8 +274,7 @@
         "user": {
           "not-found": "Bruker ble ikke funnet",
           "doesnt-exists": "Brukeren eksisterer ikke",
-          "missing-programme": "Studieprogram mangler",
-          "invalid-code": "Ugyldig registreringskode"
+          "missing-programme": "Studieprogram mangler"
         }
       }
     },
@@ -363,9 +283,6 @@
       "form": {
         "missing_email": "Epost ikke oppgitt",
         "invalid": "Skjemaet er ikke gyldig"
-      },
-      "server": {
-        "invalid_registration_code": "Ugyldig registreringskode"
       },
       "event": {
         "event_doesnt_exist": "Arrangementet finnes ikke",
@@ -390,68 +307,15 @@
       }
     },
     "success": {
-      "firebase": {
-        "reset_password": "Epost for tilbakestilling av passord er sendt"
-      },
       "user": {
-        "edit": "Brukeren ble oppdatert",
         "deleted": "Brukeren din er slettet"
-      },
-      "event": {
-        "register": {
-          "sign_up": "Du er påmeldt dette arrangementet",
-          "opt_out": "Du har meldt deg av dette arrangementet",
-          "queue": "Du er nå på venteliste for dette arrangementet",
-          "opt_out_queue": "Du har meldt deg køen av dette arrangementet"
-        },
-        "edit": {
-          "created": "Arrangement opprettet",
-          "modified": "Arrangement oppdatert"
-        }
-      },
-      "company": {
-        "edit": {
-          "created": "Bedrift opprettet",
-          "modified": "Bedrift oppdatert",
-          "deleted_logo": "Logo slettet"
-        }
-      },
-      "job": {
-        "edit": {
-          "modified": "Jobb oppdatert",
-          "created": "Jobb opprettet"
-        }
       }
     }
   },
-  "program": {
-    "title": "Program",
-    "standmap": "Se standkart",
-    "event": {
-      "sign_up": "Meld meg på",
-      "enqueue": "Meld meg på venteliste",
-      "opt_out": {
-        "name": "Trekk påmelding",
-        "queue": "Trekk køplass",
-        "confirmtext": "Er du sikker på at du vil melde deg av?",
-        "confirm": "Ja, meld meg av",
-        "abort": "Nei, avbryt"
-      },
-      "sign_in_to_register": "Logg inn for å melde deg på",
-      "registration_closed": "Ikke åpent for påmelding"
-    }
-  },
   "jobs": {
-    "title": "Stillingsannonser",
-    "jobTypes": "Jobbtyper",
     "deadline": "Søknadsfrist",
-    "search": "Søk",
     "location": "Sted",
-    "company": "Bedrift",
-    "details": "Stillingsdetaljer",
-    "apply": "Søk her",
     "type": "Jobbtype",
-    "no_jobs": "Fant ingen stillingsannonser ⚠️",
     "link_listing": "Hele annonsen ligger på nettsiden til {company}.",
     "open_listing": "Les annonsen og søk",
     "detail": {
@@ -486,7 +350,6 @@
       "count": "Ingen stillinger | 1 stilling, nærmeste frist først | {n} stillinger, nærmeste frist først",
       "no_match": "Ingen stillinger passer filtrene.",
       "empty": "Det er ingen ledige stillinger akkurat nå.",
-      "rolling": "Løpende",
       "meet": "Møt dem {day}",
       "show": "Vis ingen stillinger | Vis 1 stilling | Vis {n} stillinger"
     }
@@ -494,7 +357,7 @@
   "admin": {
     "companies": {
       "name": "Bedrifter",
-      "search": "Søk etter bedrift, nettside eller kode",
+      "search": "Søk etter bedrift eller nettside",
       "create": "Ny bedrift",
       "filter": {
         "active": "Aktive",
@@ -512,7 +375,6 @@
       "columns": {
         "name": "Navn",
         "type": "Type",
-        "code": "Registreringskode",
         "cvAccess": "CV-tilgang",
         "webpage": "Nettside"
       },
@@ -520,13 +382,10 @@
         "yes": "Ja",
         "no": "Nei"
       },
-      "copy_code": "Kopier koden {code}",
-      "create_code": "Lag kode",
-      "code_created": "Ny kode laget for {name}",
       "actions": {
         "menu": "Valg for {name}",
         "edit": "Rediger",
-        "new_code": "Lag ny kode",
+        "invite": "Inviter kontakter",
         "delete": "Slett"
       },
       "select_page": "Velg alle bedriftene på siden",
@@ -534,7 +393,7 @@
       "empty": "Ingen bedrifter passer søket.",
       "delete": {
         "title": "Slette {n} bedrift? | Slette {n} bedrifter?",
-        "text": "Bedriften og logoen slettes for godt. Arrangementer, stillinger og registreringskoder som hører til den, blir liggende. Dette kan ikke angres. | Bedriftene og logoene deres slettes for godt. Arrangementer, stillinger og registreringskoder som hører til dem, blir liggende. Dette kan ikke angres.",
+        "text": "Bedriften og logoen slettes for godt. Arrangementer og stillinger som hører til den, blir liggende. Dette kan ikke angres. | Bedriftene og logoene deres slettes for godt. Arrangementer og stillinger som hører til dem, blir liggende. Dette kan ikke angres.",
         "confirm": "Slett {n} bedrift | Slett {n} bedrifter",
         "done": "{n} bedrift slettet | {n} bedrifter slettet"
       },
@@ -553,13 +412,35 @@
         "description": "Beskrivelse",
         "cv_access": "Tilgang til CV-er",
         "cv_access_hint": "Bedriften kan se og åpne studentenes CV-er.",
-        "create_code": "Lag registreringskode nå",
-        "create_code_hint": "Bedriften trenger en kode for å lage brukere. Du ser den i listen etter at du har lagret.",
         "create": "Opprett bedrift",
         "save": "Lagre endringer",
         "created": "Bedriften er opprettet",
         "updated": "Endringene er lagret",
         "missing": "Fant ingen bedrift med denne adressen."
+      },
+      "invitations": {
+        "title": "Invitasjoner",
+        "lead": "Inviter folk fra bedriften på e-post. Hver får en personlig lenke for å lage en konto, eller bli med med kontoen de har. Lenken virker én gang, i 14 dager.",
+        "email": "E-postadresse",
+        "send": "Send invitasjon",
+        "sending": "Sender …",
+        "invalid_email": "Skriv inn en gyldig e-postadresse.",
+        "sent": "Invitasjonen er sendt til {email}.",
+        "link_once": "Du kan også kopiere lenken og sende den selv. Den vises bare nå.",
+        "link": "Invitasjonslenke",
+        "copy": "Kopier lenken",
+        "copied": "Kopiert",
+        "sent_on": "Sendt {day}",
+        "expires_on": "virker til {day}",
+        "status": {
+          "pending": "Venter",
+          "joined": "Ble med",
+          "expired": "Utløpt",
+          "revoked": "Trukket tilbake"
+        },
+        "revoke": "Trekk tilbake",
+        "revoke_label": "Trekk tilbake invitasjonen til {email}",
+        "empty": "Ingen invitasjoner ennå."
       }
     },
     "events": {
@@ -679,7 +560,6 @@
         "jobtype": {
           "name": "Jobbtype",
           "full_time": "Fulltid",
-          "part_time": "Deltid",
           "graduate": "Graduate",
           "summer_internship": "Sommerjobb"
         }
@@ -704,7 +584,7 @@
         "listing": "Visning",
         "listings": {
           "text": {
-            "name": "Beskrivelse på etdagen.no",
+            "name": "Beskrivelse på etdagene.no",
             "hint": "Hele annonsen står her, med formatert tekst."
           },
           "link": {
@@ -756,11 +636,6 @@
         "confirm": "Slett {n} bruker | Slett {n} brukere",
         "done": "{n} bruker slettet | {n} brukere slettet"
       },
-      "filterorder": {
-        "name": "Rekkefølge",
-        "descending": "Synkende",
-        "ascending": "Stigende"
-      },
       "form": {
         "edit_title": "Rediger bruker",
         "name": "Navn",
@@ -796,12 +671,7 @@
     },
     "shell": {
       "navigation": "Adminpaneler",
-      "back": "Til etdagen.no",
-      "theme": {
-        "system": "Tema: følger enheten. Bytt til lyst",
-        "light": "Tema: lyst. Bytt til mørkt",
-        "dark": "Tema: mørkt. Følg enheten"
-      },
+      "back": "Til etdagene.no",
       "tag": {
         "admin": "ADMIN",
         "company": "BEDRIFT"
@@ -837,7 +707,6 @@
       "added": "{name} er påmeldt",
       "queued": "Arrangementet er fullt, så {name} står i kø",
       "removed": "{name} er fjernet",
-      "failed": "Noe gikk galt. Prøv igjen.",
       "empty": "Ingen har meldt seg på ennå.",
       "no_match": "Ingen påmeldte passer søket.",
       "no_signup": "Arrangementet har ikke påmelding. Slå på påmelding under Detaljer for å ta imot påmeldte."
@@ -847,8 +716,6 @@
       "intro": "Ett standkart per messedag. Det vises ved dagens overskrift i programmet, og besøkende kan åpne det i fullskjerm.",
       "events": "Ingen arrangementer | 1 arrangement | {n} arrangementer",
       "none": "Ikke lastet opp",
-      "unnamed": "Uten navn",
-      "legacy": "Gammel opplasting",
       "upload": "Last opp",
       "replace": "Erstatt",
       "remove": "Fjern standkartet for {day}",
@@ -927,27 +794,6 @@
     "halal": "Halal",
     "kosher": "Kosher",
     "lactose": "Laktose"
-  },
-  "weekday": {
-    "sunday": "Søndag",
-    "monday": "Mandag",
-    "tuesday": "Tirsdag",
-    "wednesday": "Onsdag",
-    "thursday": "Torsdag",
-    "friday": "Fredag",
-    "saturday": "Lørdag"
-  },
-  "formattext": {
-    "bold": "Bold",
-    "italic": "Italic",
-    "strikethrough": "Strikethrough",
-    "paragraph": "Paragraph",
-    "heading": "Heading",
-    "bulletlist": "Bullet list",
-    "numberedlist": "Numbered list",
-    "linebreak": "Line break",
-    "undo": "Undo",
-    "redo": "Redo"
   },
   "forcompanies": {
     "title": "For bedrifter",
@@ -1078,10 +924,14 @@
     "internal": {
       "unexpected": "Noe gikk galt hos oss. Prøv igjen om litt."
     },
+    "resume": {
+      "not-found": "Det finnes ingen CV her."
+    },
     "job": {
       "invalid-listing": "En stilling vises enten som beskrivelse eller som lenke.",
       "invalid-link": "Søknadslenken må være en nettadresse som starter med http:// eller https://.",
-      "invalid-deadline-type": "Fristen må være en dato, «Snarest» eller «Løpende»."
+      "invalid-deadline-type": "Fristen må være en dato, «Snarest» eller «Løpende».",
+      "invalid-type": "Jobbtypen må være fulltid, graduate eller sommerjobb."
     },
     "file": {
       "unsupported-type": "Filen har et format som ikke er tillatt her.",
@@ -1090,7 +940,10 @@
       "wrong-owner": "Filen kan ikke lagres her."
     },
     "event": {
-      "invalid-map-link": "Kartlenken må være en nettadresse som starter med http:// eller https://."
+      "invalid-map-link": "Kartlenken må være en nettadresse som starter med http:// eller https://.",
+      "attended": {
+        "user-not-attendant": "Personen er ikke påmeldt dette arrangementet."
+      }
     },
     "company": {
       "invalid-webpage": "Nettsiden må være en adresse som starter med http:// eller https://."
@@ -1109,6 +962,19 @@
       "invalid-order": "Ugyldig plassering.",
       "missing-file": "Velg et bilde å laste opp.",
       "unreadable-image": "Bildet kunne ikke leses. Prøv et annet bilde."
+    },
+    "mail": {
+      "send-failed": "E-posten kunne ikke sendes akkurat nå. Prøv igjen om litt.",
+      "not-configured": "Nettsiden kan ikke sende e-post ennå. Ta kontakt med oss."
+    },
+    "invitation": {
+      "not-found": "Denne invitasjonslenken virker ikke.",
+      "not-pending": "Denne invitasjonen er brukt, trukket tilbake eller har gått ut.",
+      "wrong-account": "Logg inn med adressen invitasjonen ble sendt til.",
+      "missing-account": "Fyll inn navnet ditt og et passord.",
+      "weak-password": "Passordet må ha minst 8 tegn, med minst 3 bokstaver og 3 tall.",
+      "account-exists": "Denne adressen har allerede en konto. Logg inn for å bli med.",
+      "invalid-request": "Velg en bedrift og skriv inn en gyldig e-postadresse."
     }
   },
   "form": {
@@ -1127,7 +993,6 @@
       "password_letters": "Passordet må ha minst 3 bokstaver.",
       "password_digits": "Passordet må ha minst 3 tall.",
       "email_taken": "Det finnes allerede en konto med denne adressen. Logg inn i stedet.",
-      "code_invalid": "Koden stemmer ikke. Sjekk den, eller ta kontakt med oss.",
       "choose": "Velg et alternativ.",
       "year_needs_programme": "Velg studieprogram først."
     },
@@ -1292,7 +1157,7 @@
       },
       "company": {
         "name": "Bedrift",
-        "text": "Har du fått en kode eller invitasjon fra oss?",
+        "text": "Har du fått en invitasjon fra oss?",
         "link": "Bli med i bedriften"
       }
     },
@@ -1358,12 +1223,9 @@
     },
     "company": {
       "title": "Bli med i bedriften",
-      "lead": "Bedriften din har fått en registreringskode fra oss. Med den lager du en konto som hører til bedriften.",
-      "code": "Registreringskode",
-      "email": "E-post på jobben",
-      "submit": "Lag bedriftskonto",
-      "no_code": "Har dere ikke fått en kode?",
-      "contact": "Ta kontakt"
+      "lead": "Bedriftskontoer lages med invitasjon. Vi sender en personlig lenke til e-posten din på jobben; åpne den for å lage kontoen.",
+      "contact": "Ta kontakt",
+      "no_invitation": "Har du ikke fått en invitasjon?"
     },
     "the_password": "passordet"
   },
@@ -1485,6 +1347,44 @@
       "body": [
         "Vi oppdaterer erklæringen når vi endrer hvordan vi behandler opplysninger. Datoen øverst viser når den sist ble endret."
       ]
+    }
+  },
+  "invitation": {
+    "join": {
+      "title": "Bli med i {company}",
+      "lead": "E&T-dagene inviterer deg til å bli med i {company} på nettsiden vår. Invitasjonen virker til {day}.",
+      "address": "Invitert adresse",
+      "signed_in": "Du er logget inn med denne adressen.",
+      "join": "Bli med i {company}",
+      "other_account": "Du er logget inn som {email}. Logg ut, og lag så en konto eller logg inn med den inviterte adressen.",
+      "sign_out": "Logg ut",
+      "new_password": "Velg et passord",
+      "open": "Lag konto og bli med",
+      "have_account": "Har du allerede en konto med denne adressen?",
+      "sign_in_instead": "Logg inn i stedet",
+      "has_account": "Denne adressen har allerede en konto. Logg inn for å bli med.",
+      "forgot": "Glemt passordet?",
+      "sign_in_and_join": "Logg inn og bli med i {company}",
+      "no_account": "Ingen konto ennå?",
+      "open_instead": "Lag en"
+    },
+    "closed": {
+      "missing": {
+        "title": "Denne lenken virker ikke",
+        "text": "Sjekk at du åpnet hele lenken fra e-posten. Virker den fortsatt ikke, be oss om en ny invitasjon."
+      },
+      "expired": {
+        "title": "Invitasjonen har gått ut",
+        "text": "En invitasjon virker i 14 dager. Be oss om en ny."
+      },
+      "revoked": {
+        "title": "Invitasjonen er trukket tilbake",
+        "text": "Du kan ha fått en nyere invitasjon, så sjekk e-posten din. Ellers kan du be oss om en ny."
+      },
+      "joined": {
+        "title": "Invitasjonen er brukt",
+        "text": "Kontoen for denne invitasjonen er klar. Logg inn for å komme til bedriftssiden."
+      }
     }
   }
 }

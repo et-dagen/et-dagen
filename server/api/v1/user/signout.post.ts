@@ -1,7 +1,15 @@
 // POST /api/v1/user/signout
 // endpoint for signing out; kept for older clients, DELETE /api/v1/session does the same
+import { createError, defineEventHandler, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { clearSessionCookies } from '@/server/auth/cookies'
 import { endSessions } from '@/server/auth/session'
+import { auth } from '@/server/utils/firebase'
+import {
+  setErrorContext,
+  setLogImportance,
+  setResourceContext,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

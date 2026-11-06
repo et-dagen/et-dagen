@@ -1,13 +1,13 @@
 <script setup lang="ts">
   import { Plus } from '@lucide/vue'
+  import { useAuthStore } from '@/stores/authStore'
   import EventPanel from '@/components/company/EventPanel.vue'
   import { Button } from '@/components/ui/button'
-  import { instantOf } from '@/lib/admin/time'
-  import type { EventRow } from '@/lib/admin/events'
+  import { instantOf } from '@/lib/time'
+  import type { EventRow } from '@/lib/events'
 
   definePageMeta({
     layout: 'admin',
-    protected: true,
     area: 'company',
   })
 
@@ -62,12 +62,10 @@
 </script>
 
 <template>
-  <div class="tw:flex tw:flex-col tw:gap-4">
-    <div
-      class="tw:mb-2 tw:flex tw:flex-wrap tw:items-center tw:justify-between tw:gap-3"
-    >
+  <div class="flex flex-col gap-4">
+    <div class="mb-2 flex flex-wrap items-center justify-between gap-3">
       <h1
-        class="tw:text-2xl tw:leading-8 tw:font-extrabold tw:tracking-tight tw:lg:text-[2rem] tw:lg:leading-10"
+        class="text-2xl leading-8 font-extrabold tracking-tight lg:text-[2rem] lg:leading-10"
       >
         {{ $t('company.admin.events.name') }}
       </h1>
@@ -89,7 +87,7 @@
 
     <p
       v-if="!ordered.length"
-      class="tw:rounded-lg tw:border tw:bg-card tw:px-4 tw:py-10 tw:text-center tw:text-muted-foreground"
+      class="rounded-lg border bg-card px-4 py-10 text-center text-muted-foreground"
     >
       {{ $t('company.admin.events.empty') }}
     </p>

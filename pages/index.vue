@@ -1,14 +1,18 @@
 <script setup lang="ts">
+  import Companies from '@/components/home/Companies.vue'
+  import Hero from '@/components/home/Hero.vue'
+  import Upcoming from '@/components/home/Upcoming.vue'
+  import { useCompanies } from '@/composables/useCompanies'
   import { Instant } from '@/domain/time'
-  import type { EventRow } from '@/lib/admin/events'
-  import { lineupOf, type Company } from '@/lib/site/companies'
+  import type { EventRow } from '@/lib/events'
+  import { lineupOf } from '@/lib/site/companies'
   import { fairDays, upcoming, type GeneralInfo } from '@/lib/site/fair'
 
   const { locale } = useI18n()
 
   const [{ data: companies }, { data: info }, { data: events }] =
     await Promise.all([
-      useFetch<Record<string, Company>>('/api/v1/company'),
+      useCompanies(),
       useFetch<GeneralInfo>('/api/v1/generalInfo'),
       useFetch<Record<string, EventRow>>('/api/v1/event'),
     ])
@@ -26,9 +30,13 @@
 </script>
 
 <template>
-  <div class="et-ui tw:bg-background tw:text-foreground">
-    <HomeHero :fair="fair" :has-companies="hasCompanies" />
-    <HomeUpcoming v-if="next.length" :events="next" :now="now" />
-    <HomeCompanies v-if="hasCompanies" v-bind="lineup" />
+  <div class="et-ui bg-background text-foreground">
+    <Hero
+      :fair="fair"
+      :has-companies="hasCompanies"
+      :last-companies="lineup.last"
+    />
+    <Upcoming v-if="next.length" :events="next" :now="now" />
+    <Companies v-if="hasCompanies" v-bind="lineup" />
   </div>
 </template>
