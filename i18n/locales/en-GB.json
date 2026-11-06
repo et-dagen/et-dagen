@@ -140,6 +140,17 @@
       "attendants": {
         "scan": "Scan attendants"
       }
+    },
+    "scan": {
+      "title": "Scan attendance",
+      "lead": "Scan the ticket the attendee shows on their phone to register them as present.",
+      "start": "Start the camera",
+      "stop": "Stop the camera",
+      "starting": "Starting the camera …",
+      "off": "The camera is off",
+      "done": "Attendance registered",
+      "camera_denied": "Allow the browser to use the camera to scan.",
+      "camera_failed": "Found no camera to scan with."
     }
   },
   "contact": {
@@ -930,7 +941,10 @@
       "wrong-owner": "The file cannot be stored here."
     },
     "event": {
-      "invalid-map-link": "The map link must be a web address starting with http:// or https://."
+      "invalid-map-link": "The map link must be a web address starting with http:// or https://.",
+      "attended": {
+        "user-not-attendant": "This person is not signed up for this event."
+      }
     },
     "company": {
       "invalid-webpage": "The website must be an address starting with http:// or https://."

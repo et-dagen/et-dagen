@@ -140,6 +140,17 @@
       "attendants": {
         "scan": "Skann påmeldte"
       }
+    },
+    "scan": {
+      "title": "Skann oppmøte",
+      "lead": "Skann billetten deltakeren viser på telefonen, så registreres oppmøtet.",
+      "start": "Start kameraet",
+      "stop": "Stopp kameraet",
+      "starting": "Starter kameraet …",
+      "off": "Kameraet er av",
+      "done": "Oppmøte registrert",
+      "camera_denied": "Gi nettleseren tilgang til kameraet for å skanne.",
+      "camera_failed": "Fant ikke noe kamera å skanne med."
     }
   },
   "contact": {
@@ -929,7 +940,10 @@
       "wrong-owner": "Filen kan ikke lagres her."
     },
     "event": {
-      "invalid-map-link": "Kartlenken må være en nettadresse som starter med http:// eller https://."
+      "invalid-map-link": "Kartlenken må være en nettadresse som starter med http:// eller https://.",
+      "attended": {
+        "user-not-attendant": "Personen er ikke påmeldt dette arrangementet."
+      }
     },
     "company": {
       "invalid-webpage": "Nettsiden må være en adresse som starter med http:// eller https://."

@@ -202,7 +202,7 @@
           </div>
         </dl>
         <Button as-child variant="outline">
-          <NuxtLink :to="localePath(`/event/${uid}/scan_attendants`)">
+          <NuxtLink :to="localePath(`/event/${uid}/scan`)">
             <ScanLine aria-hidden="true" />
             {{ $t('admin.attendees.scan') }}
           </NuxtLink>

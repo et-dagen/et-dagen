@@ -223,7 +223,7 @@
     </Button>
 
     <Button v-if="mayScan" as-child variant="ghost" class="tw:w-full">
-      <NuxtLink :to="localePath(`/event/${eventUid}/scan_attendants`)">
+      <NuxtLink :to="localePath(`/event/${eventUid}/scan`)">
         <ScanLine aria-hidden="true" />
         {{ $t('event.page.attendants.scan') }}
       </NuxtLink>
