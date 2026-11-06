@@ -4,6 +4,8 @@
   import { registerUser } from '@/composables/auth/registration'
   import { useProgrammes } from '@/composables/useProgrammes'
   import PasswordInput from '@/components/form/PasswordInput.vue'
+  import TextField from '@/components/form/TextField.vue'
+  import { useFocusInvalid } from '@/composables/useFocusInvalid'
   import { typedSchemaOf } from '@/lib/forms/zodSchema'
   import FieldError from '@/components/form/FieldError.vue'
   import { Button } from '@/components/ui/button'
@@ -15,7 +17,6 @@
     FormItem,
     FormLabel,
   } from '@/components/ui/form'
-  import { Input } from '@/components/ui/input'
   import { Label } from '@/components/ui/label'
   import { StudentSignup } from '@/contracts/user'
   import { dietaryFlags } from '~/config/app.config'
@@ -47,12 +48,7 @@
 
   // after a refused submit, the cursor goes to the first field to fix
   const formEl = ref<HTMLFormElement | null>(null)
-  const focusInvalid = () =>
-    nextTick(() =>
-      formEl.value
-        ?.querySelector<HTMLElement>('[aria-invalid="true"]')
-        ?.focus(),
-    )
+  const focusInvalid = useFocusInvalid(formEl)
 
   const pending = ref(false)
   const error = ref('')
@@ -79,10 +75,6 @@
     'tw:focus-visible:ring-3 tw:focus-visible:ring-plate/15',
     'tw:disabled:opacity-50 tw:aria-invalid:border-destructive',
   ].join(' ')
-  const inputClass = [
-    'tw:h-11 tw:focus-visible:border-plate tw:focus-visible:ring-plate/15',
-    'tw:aria-invalid:focus-visible:border-destructive',
-  ].join(' ')
 </script>
 
 <template>
@@ -103,39 +95,25 @@
       <legend class="tw:mb-4 tw:font-extrabold">
         {{ $t('signup.you') }}
       </legend>
-      <FormField v-slot="{ componentField }" name="name">
-        <FormItem>
-          <FormLabel>{{ $t('signup.name') }}</FormLabel>
-          <FormControl>
-            <Input
-              v-bind="componentField"
-              autocomplete="name"
-              :class="inputClass"
-            />
-          </FormControl>
-          <FieldError />
-        </FormItem>
-      </FormField>
-      <FormField v-slot="{ componentField }" name="email">
-        <FormItem>
-          <FormLabel>{{ $t('signup.email') }}</FormLabel>
-          <FormControl>
-            <Input
-              v-bind="componentField"
-              type="email"
-              autocomplete="email"
-              inputmode="email"
-              :class="inputClass"
-            />
-          </FormControl>
-          <FieldError />
-        </FormItem>
-      </FormField>
+      <TextField
+        name="name"
+        :label="$t('signup.name')"
+        variant="public"
+        autocomplete="name"
+      />
+      <TextField
+        name="email"
+        :label="$t('signup.email')"
+        variant="public"
+        type="email"
+        autocomplete="email"
+        inputmode="email"
+      />
       <FormField v-slot="{ componentField }" name="password">
         <FormItem>
           <FormLabel>{{ $t('signup.password') }}</FormLabel>
           <FormControl>
-            <PasswordInput v-bind="componentField" :class="inputClass" />
+            <PasswordInput v-bind="componentField" variant="public" />
           </FormControl>
           <FormDescription>{{ $t('signup.password_hint') }}</FormDescription>
           <FieldError />
