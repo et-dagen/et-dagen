@@ -11,7 +11,8 @@ interface State {
   user: User | null
   /** The caller as the server resolved them; plain data, so it survives the SSR payload */
   subject: SerializedSubject | null
-  registeringUser: boolean
+  /** While a sign-in or a new account starts its own session, the auth state listener waits */
+  signingIn: boolean
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -19,7 +20,7 @@ export const useAuthStore = defineStore('auth', {
     return {
       user: null,
       subject: null,
-      registeringUser: false,
+      signingIn: false,
     }
   },
   getters: {

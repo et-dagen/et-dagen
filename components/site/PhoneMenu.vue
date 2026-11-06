@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { LogIn, LogOut, Menu, X } from '@lucide/vue'
   import NextUpPill from './NextUpPill.vue'
+  import { signoutUser } from '@/composables/auth/session'
   import { accountLinks, initialsOf } from '@/lib/site/account'
   import { LANGUAGES as languages } from '@/lib/site/languages'
   import { Button } from '@/components/ui/button'

@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import { ArrowLeft, Save } from '@lucide/vue'
-  import { useCompanies } from '@/composables/useCompanies'
   import FieldError from '@/components/form/FieldError.vue'
+  import TextField from '@/components/form/TextField.vue'
   import RichText from '@/components/admin/form/RichText.vue'
   import { Button } from '@/components/ui/button'
   import {
@@ -19,6 +19,7 @@
     SelectTrigger,
     SelectValue,
   } from '@/components/ui/select'
+  import { useHostCompanies } from '@/composables/admin/useHostCompanies'
   import { useResourceForm } from '@/composables/admin/useResourceForm'
   import {
     DEADLINE_TYPES,
@@ -28,7 +29,6 @@
     toV1Job,
     type JobInput,
   } from '@/contracts/job'
-  import { CompanyUid } from '@/domain/business/company'
 
   const props = withDefaults(
     defineProps<{
@@ -42,28 +42,19 @@
 
   const { t } = useI18n()
   const localePath = useLocalePath()
-  const { data: companies } = await useCompanies()
-  // a company user or coordinator may only post for the companies they manage
-  const auth = useAuthStore()
-  const mayPost = (value: string) =>
-    !!value &&
-    auth.can('job', props.uid ? 'update' : 'create', {
-      companyUid: CompanyUid.parse(value),
-    })
-  // a company user who opens another company's job gets no form to fill in
-  const allowed = computed(
-    () => !props.uid || mayPost(String(props.initial.companyUID ?? '')),
-  )
+  const {
+    allowed,
+    choices: companyOptions,
+    onlyChoice,
+  } = await useHostCompanies({
+    resource: 'job',
+    uid: props.uid,
+    current: props.initial.companyUID,
+  })
   const panelName = computed(() =>
     props.panel.startsWith('/company/')
       ? 'company.admin.jobs.name'
       : 'admin.jobs.name',
-  )
-  const companyOptions = computed(() =>
-    Object.entries(companies.value ?? {})
-      .map(([value, company]) => ({ value, label: company.name ?? value }))
-      .filter((option) => mayPost(option.value))
-      .sort((a, b) => a.label.localeCompare(b.label, 'nb')),
   )
 
   const { form, submit, saving } = useResourceForm({
@@ -83,11 +74,9 @@
       await $fetch('/api/v1/job', { method: 'POST', body: toV1Job(values) })
     },
   })
-  // with one company to choose from, a new entry is for that company
   watchEffect(() => {
-    const [only, ...others] = companyOptions.value
-    if (!props.uid && only && !others.length && !form.values.companyUID)
-      form.setFieldValue('companyUID', only.value)
+    if (onlyChoice.value && !form.values.companyUID)
+      form.setFieldValue('companyUID', onlyChoice.value)
   })
   const listing = computed(() => form.values.listing ?? 'text')
 
@@ -163,15 +152,11 @@
         </FormItem>
       </FormField>
 
-      <FormField v-slot="{ componentField }" name="title">
-        <FormItem class="tw:lg:col-span-2">
-          <FormLabel>{{ $t('admin.jobs.form.title') }}</FormLabel>
-          <FormControl>
-            <Input v-bind="componentField" />
-          </FormControl>
-          <FieldError />
-        </FormItem>
-      </FormField>
+      <TextField
+        name="title"
+        :label="$t('admin.jobs.form.title')"
+        class="tw:lg:col-span-2"
+      />
 
       <FormField v-slot="{ componentField }" name="companyUID">
         <FormItem>
@@ -219,15 +204,7 @@
         </FormItem>
       </FormField>
 
-      <FormField v-slot="{ componentField }" name="location">
-        <FormItem>
-          <FormLabel>{{ $t('admin.jobs.form.location') }}</FormLabel>
-          <FormControl>
-            <Input v-bind="componentField" />
-          </FormControl>
-          <FieldError />
-        </FormItem>
-      </FormField>
+      <TextField name="location" :label="$t('admin.jobs.form.location')" />
 
       <FormField v-slot="{ componentField }" name="deadlineType">
         <FormItem>
