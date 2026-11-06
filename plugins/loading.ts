@@ -1,11 +1,11 @@
-export default defineNuxtPlugin((nuxtApp: any) => {
-  const appStore = useAppStore()
+import { usePageLoading } from '@/composables/usePageLoading'
 
+export default defineNuxtPlugin((nuxtApp) => {
+  const loading = usePageLoading()
   nuxtApp.hook('page:start', () => {
-    appStore.loading = true
+    loading.value = true
   })
-
   nuxtApp.hook('page:finish', () => {
-    appStore.loading = false
+    loading.value = false
   })
 })

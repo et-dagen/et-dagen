@@ -13,21 +13,17 @@
     AlertDialogTrigger,
   } from '@/components/ui/alert-dialog'
   import { Button } from '@/components/ui/button'
-  import { dietaryFlags } from '~/config/app.config'
+  import { dietLabel } from '@/lib/forms/diet'
 
   const auth = useAuthStore()
   const localePath = useLocalePath()
-  const { te, t } = useI18n()
+  const { t } = useI18n()
 
   const user = computed(() => auth.user)
   const restrictions = computed<string[]>(() =>
     Object.values(user.value?.dietaryRestrictions ?? {}),
   )
-  const known = new Set(dietaryFlags.map((flag) => flag.name))
-  const restrictionName = (value: string) =>
-    known.has(value) && te(`dietary_restrictions.${value}`)
-      ? t(`dietary_restrictions.${value}`)
-      : value
+  const restrictionName = (value: string) => dietLabel(value, t)
 
   const studies = computed(() =>
     [

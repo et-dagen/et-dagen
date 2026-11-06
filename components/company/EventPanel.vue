@@ -6,6 +6,7 @@
   import { attendantsOf, dietaryCounts } from '@/lib/company/attendants'
   import { Instant } from '@/domain/time'
   import { eventStatus, placeOf, type EventRow } from '@/lib/events'
+  import { dietLabel } from '@/lib/forms/diet'
   import { formatWhen } from '@/lib/time'
   import { companyOf } from '@/lib/auth/companyOf'
 
@@ -48,10 +49,7 @@
     () => Object.keys(props.event.attendants ?? {}).length,
   )
 
-  const dietName = (key: string) => {
-    const name = t(`dietary_restrictions.${key}`)
-    return name.startsWith('dietary_restrictions') ? key : name
-  }
+  const dietName = (key: string) => dietLabel(key, t)
 
   const copyEmails = async () => {
     await copy(attendants.value.map((person) => person.email).join(', '))
