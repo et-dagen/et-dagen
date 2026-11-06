@@ -1,8 +1,14 @@
 // GET /api/v1/user/events
 // endpoint for the events the caller signed up for
+import { defineEventHandler } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { signUpsOf } from '@/application/events/signUps'
 import { Instant } from '@/domain/time'
 import { events } from '@/server/composition'
+import {
+  addEventContext,
+  setResourceContext,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

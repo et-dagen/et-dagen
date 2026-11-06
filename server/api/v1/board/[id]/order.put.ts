@@ -1,10 +1,13 @@
 // PUT /api/v1/board/:id/order
 // endpoint for moving a board member on the contact page
+import { defineEventHandler, readBody, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { moveMember } from '@/application/board/members'
 import { fail } from '@/domain/errors'
 import { Instant } from '@/domain/time'
 import { memberIdOf } from '@/server/board/memberId'
 import { board, fileStorage, files } from '@/server/composition'
+import { setResourceContext } from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

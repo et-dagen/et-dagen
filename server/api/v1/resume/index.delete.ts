@@ -1,12 +1,19 @@
 // DELETE /api/v1/resume
 // endpoint for deleting existing resumes
 
+import { defineEventHandler, readBody, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { removeResume } from '@/application/users/resume'
 import { authorize } from '@/domain/authorization/authorize'
 import { fail } from '@/domain/errors'
 import { Instant } from '@/domain/time'
 import { UserUid } from '@/domain/user'
 import { files, fileStorage, resumes } from '@/server/composition'
+import {
+  addEventContext,
+  setLogImportance,
+  setResourceContext,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

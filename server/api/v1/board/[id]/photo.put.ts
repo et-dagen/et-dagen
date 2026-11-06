@@ -1,10 +1,16 @@
 // PUT /api/v1/board/:id/photo
 // endpoint for a board member's portrait
+import { defineEventHandler, readMultipartFormData } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { setPortrait } from '@/application/board/members'
 import { fail } from '@/domain/errors'
 import { Instant } from '@/domain/time'
 import { memberIdOf } from '@/server/board/memberId'
 import { board, fileStorage, files, images } from '@/server/composition'
+import {
+  addEventContext,
+  setResourceContext,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

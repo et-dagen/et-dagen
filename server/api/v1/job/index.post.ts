@@ -1,6 +1,8 @@
 //  POST /api/v1/job
 // endpoint for creating a new job in the database
 
+import { createError, defineEventHandler, readBody, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { isValidDate } from '@/server/utils/useTime'
 import { cleanRichText, safeLink } from '@/server/security/richText'
 import { fail } from '@/domain/errors'
@@ -9,6 +11,13 @@ import { CompanyUid } from '@/domain/business/company'
 import { JOB_TYPES } from '@/domain/business/job'
 import { Instant } from '@/domain/time'
 import { companies, jobs } from '@/server/composition'
+import { companyOf } from '@/server/utils/companyOf'
+import {
+  addEventContext,
+  setErrorContext,
+  setResourceContext,
+  withDbTiming,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

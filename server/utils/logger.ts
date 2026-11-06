@@ -7,6 +7,8 @@
  * - Structured JSON output for easy parsing
  */
 
+import { useRuntimeConfig } from 'nitropack/runtime'
+
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error'
 
 /**
@@ -124,7 +126,6 @@ function getLogConfig(): {
   serviceName?: string
 } {
   try {
-    // useRuntimeConfig is auto-imported in the Nitro server context
     const config = useRuntimeConfig()
     return {
       logLevel: (config.logLevel as string) || process.env.LOG_LEVEL,

@@ -1,10 +1,20 @@
 // DELETE /api/v1/job
 // endpoint for removing a job from db
 
+import { createError, defineEventHandler, getQuery, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { authorize } from '@/domain/authorization/authorize'
 import { JobUid } from '@/domain/business/job'
 import { Instant } from '@/domain/time'
 import { jobs } from '@/server/composition'
+import { companyOf } from '@/server/utils/companyOf'
+import {
+  addEventContext,
+  setErrorContext,
+  setLogImportance,
+  setResourceContext,
+  withDbTiming,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

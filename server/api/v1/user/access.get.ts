@@ -1,11 +1,14 @@
 // GET /api/v1/user/access
 // endpoint for a user's roles and company memberships
+import { defineEventHandler, getQuery } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { accessOf } from '@/application/users/access'
 import { fail } from '@/domain/errors'
 import { Instant } from '@/domain/time'
 import { UserUid } from '@/domain/user'
 import { access, profiles } from '@/server/composition'
 import { membershipBodyOf } from '@/contracts/user'
+import { setResourceContext } from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

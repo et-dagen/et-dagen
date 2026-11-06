@@ -1,9 +1,12 @@
 // DELETE /api/v1/company/invitations/:id
 // endpoint for revoking an invitation
+import { defineEventHandler, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { revokeInvitation } from '@/application/invitations/invitations'
 import { Instant } from '@/domain/time'
 import { invitations } from '@/server/composition'
 import { invitationIdOf } from '@/server/invitations/request'
+import { setResourceContext } from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

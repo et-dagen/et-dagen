@@ -1,3 +1,4 @@
+import { defineTask } from 'nitropack/runtime'
 import { resetTiers } from '@/application/companies/tierReset'
 import { Instant } from '@/domain/time'
 import { affiliations } from '@/server/composition'

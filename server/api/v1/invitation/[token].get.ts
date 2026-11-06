@@ -1,9 +1,15 @@
 // GET /api/v1/invitation/:token
 // endpoint for the page behind an invitation link
+import { defineEventHandler } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { previewInvitation } from '@/application/invitations/invitations'
 import { Instant } from '@/domain/time'
 import { companies, invitations } from '@/server/composition'
 import { tokenOf } from '@/server/invitations/request'
+import {
+  setLogImportance,
+  setResourceContext,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {
