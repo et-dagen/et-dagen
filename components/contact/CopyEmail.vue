@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { Check, Copy } from '@lucide/vue'
+  import { notify } from '@/composables/useAlerts'
   import { Button } from '@/components/ui/button'
 
   const props = defineProps<{
@@ -16,7 +17,7 @@
       copied.value = true
       setTimeout(() => (copied.value = false), 2000)
     } catch {
-      useAlertStore().alert(t('contact.copy_failed'), 'error')
+      notify(t('contact.copy_failed'), 'error')
     }
   }
   // a long address breaks after the @ only, never inside the domain

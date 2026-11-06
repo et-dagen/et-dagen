@@ -4,14 +4,13 @@
   import { Button } from '@/components/ui/button'
   import { Input } from '@/components/ui/input'
   import { Label } from '@/components/ui/label'
-  import { alertError } from '@/composables/useAlerts'
+  import { alertError, notify } from '@/composables/useAlerts'
   import { FairDay } from '@/domain/fair/day'
   import { Instant } from '@/domain/time'
   import { standMapDays, type ListedStandMap } from '@/lib/admin/standMaps'
   import { formatDay, osloDay } from '@/lib/time'
 
   const { t, locale } = useI18n()
-  const alerts = useAlertStore()
 
   const [{ data: events }, { data: maps, refresh }] = await Promise.all([
     useFetch<Record<string, { date?: { start?: string } }>>('/api/v1/event'),
@@ -50,10 +49,7 @@
       const body = new FormData()
       body.append('file', file)
       await $fetch(`/api/v1/image/standmap/${day}`, { method: 'PUT', body })
-      alerts.alert(
-        t('admin.standmaps.done.uploaded', { day: label(day) }),
-        'success',
-      )
+      notify(t('admin.standmaps.done.uploaded', { day: label(day) }), 'success')
       await refresh()
     } catch (error) {
       alertError(error)
@@ -82,10 +78,7 @@
     busy.value = day
     try {
       await $fetch(`/api/v1/image/standmap/${day}`, { method: 'DELETE' })
-      alerts.alert(
-        t('admin.standmaps.done.removed', { day: label(day) }),
-        'success',
-      )
+      notify(t('admin.standmaps.done.removed', { day: label(day) }), 'success')
       removing.value = null
       await refresh()
     } catch (error) {

@@ -1,6 +1,5 @@
 import { ref, type Ref } from 'vue'
-import { alertError } from '@/composables/useAlerts'
-import { useAlertStore } from '@/stores/alertStore'
+import { alertError, notify } from '@/composables/useAlerts'
 
 interface Options<T> {
   /** Delete one row */
@@ -35,7 +34,7 @@ export function useBulkDelete<T>(options: Options<T>) {
     const failed = results.find(
       (r): r is PromiseRejectedResult => r.status === 'rejected',
     )
-    if (done > 0) useAlertStore().alert(options.done(done), 'success')
+    if (done > 0) notify(options.done(done), 'success')
     if (failed) alertError(failed.reason)
     confirming.value = false
     deleting.value = false
