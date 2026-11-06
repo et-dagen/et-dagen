@@ -62,7 +62,7 @@ const filesOf = (value: Record<string, FileRecord> | null) =>
  * Production rules should index `files` on `ownerKey` and `uploader`, or the database filters
  * on the server's side of the connection instead of its own.
  */
-export function rtdbFileRepository(db: Database): FileRepository {
+export function rtdbFileRepository(db: Pick<Database, 'ref'>): FileRepository {
   // a reference per call: building the adapter must not open a connection
   const files = () => db.ref('files')
 
