@@ -30,17 +30,17 @@
     v-bind="forwarded"
     :class="
       cn(
-        `tw:focus:bg-accent tw:focus:text-accent-foreground tw:relative tw:flex tw:cursor-default tw:items-center tw:gap-2 tw:rounded-sm tw:py-1.5 tw:pr-2 tw:pl-8 tw:text-sm tw:outline-hidden tw:select-none tw:data-[disabled]:pointer-events-none tw:data-[disabled]:opacity-50 tw:[&_svg]:pointer-events-none tw:[&_svg]:shrink-0 tw:[&_svg:not([class*='size-'])]:size-4`,
+        `focus:bg-accent focus:text-accent-foreground relative flex cursor-default items-center gap-2 rounded-sm py-1.5 pr-2 pl-8 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4`,
         props.class,
       )
     "
   >
     <span
-      class="tw:pointer-events-none tw:absolute tw:left-2 tw:flex tw:size-3.5 tw:items-center tw:justify-center"
+      class="pointer-events-none absolute left-2 flex size-3.5 items-center justify-center"
     >
       <DropdownMenuItemIndicator>
         <slot name="indicator-icon">
-          <Circle class="tw:size-2 tw:fill-current" />
+          <Circle class="size-2 fill-current" />
         </slot>
       </DropdownMenuItemIndicator>
     </span>

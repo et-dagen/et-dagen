@@ -1,13 +1,15 @@
-import { createError } from 'h3'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import formatFirebaseUser from '@/server/utils/formatFirebaseUser'
 import { subjectOf } from '@/tests/server/api/support/subject'
+import type { JobRepository } from '@/application/jobs/jobRepository'
+import { JobUid } from '@/domain/business/job'
+import { memoryJobRepository } from '@/server/adapters/memory/jobRepository'
 
-// The handlers rely on Nitro's auto-imports; stub them so they run as plain functions.
+// The handlers run as plain functions, with the request and the database faked.
 let stored: Record<string, unknown> = {}
 // what the middleware reads to build the subject
 let companies: Record<string, { name: string; type: string; cvAccess: boolean }>
 const update = vi.fn()
+const request = { body: {} as object }
 
 const snapshot = (path: string) => {
   const value = stored[path] ?? null
@@ -31,47 +33,43 @@ const reference = (path: string) => {
   return ref
 }
 
-beforeEach(async () => {
+beforeEach(() => {
   vi.resetModules()
   update.mockClear()
   companies = { ours: { name: 'Ours', type: 'partner', cvAccess: false } }
   stored = {
     'companies/ours': { name: 'Ours', type: 'standard', cvAccess: false },
     'companies/ours/cvAccess': false,
-    'jobs/j1': { companyUID: 'ours', title: 'Job' },
     users: { student: { resume: 'https://example.com/cv.pdf' } },
   }
 
-  vi.stubGlobal('defineRouteMeta', () => {})
-  vi.stubGlobal('defineEventHandler', (handler: unknown) => handler)
-  vi.stubGlobal('createError', createError)
-  vi.stubGlobal('formatFirebaseUser', formatFirebaseUser)
-  vi.stubGlobal('getQuery', () => ({ scope: 'all' }))
-  for (const name of [
-    'setResourceContext',
-    'setLogImportance',
-    'setErrorContext',
-    'addEventContext',
-    'trackDbWrite',
-    'sendNoContent',
-  ]) {
-    vi.stubGlobal(name, () => {})
-  }
-  vi.stubGlobal(
-    'withDbTiming',
-    (_e: unknown, _p: unknown, _o: unknown, fn: () => unknown) => fn(),
-  )
-  vi.stubGlobal('db', { ref: reference })
-  vi.stubGlobal(
-    'companyOf',
-    (await import('@/server/utils/companyOf')).companyOf,
-  )
-  vi.stubGlobal('auth', {
-    listUsers: () =>
-      Promise.resolve({
-        users: [{ uid: 'student', email: 'student@example.com' }],
-      }),
-  })
+  vi.doMock('h3', async (importOriginal) => ({
+    ...(await importOriginal<typeof import('h3')>()),
+    getQuery: () => ({ scope: 'all' }),
+    readBody: () => Promise.resolve(request.body),
+    sendNoContent: () => {},
+  }))
+  vi.doMock('@/server/utils/wideEventHelpers', async (importOriginal) => ({
+    ...(await importOriginal<
+      typeof import('@/server/utils/wideEventHelpers')
+    >()),
+    setResourceContext: () => {},
+    setLogImportance: () => {},
+    setErrorContext: () => {},
+    addEventContext: () => {},
+    trackDbWrite: () => {},
+    withDbTiming: (_e: unknown, _p: unknown, _o: unknown, fn: () => unknown) =>
+      fn(),
+  }))
+  vi.doMock('@/server/utils/firebase', () => ({
+    db: { ref: reference },
+    auth: {
+      listUsers: () =>
+        Promise.resolve({
+          users: [{ uid: 'student', email: 'student@example.com' }],
+        }),
+    },
+  }))
 })
 
 const company = { uid: 'rep', userType: 'company', companyUID: 'ours' }
@@ -89,7 +87,7 @@ async function call(
   user: { uid: string; userType: string; companyUID?: string },
   body = {},
 ) {
-  vi.stubGlobal('readBody', () => Promise.resolve(body))
+  request.body = body
   const { default: run } = (await handlers[name]()) as unknown as {
     default: (event: unknown) => Promise<unknown>
   }
@@ -143,17 +141,31 @@ describe('GET /api/v1/resume?scope=all', () => {
 })
 
 describe('PUT /api/v1/job', () => {
+  // the handler writes through the JobRepository, so the stored job is what to check
+  let jobs: JobRepository
+  beforeEach(() => {
+    jobs = memoryJobRepository({ j1: { companyUID: 'ours', title: 'Job' } })
+    vi.doMock('@/server/composition', () => ({ jobs }))
+  })
+  const j1 = JobUid.parse('j1')
+
   it('ignores a company user moving its job to another company', async () => {
     await call('job', company, {
       jobUID: 'j1',
       companyUID: 'theirs',
       title: 'New',
     })
-    expect(update).toHaveBeenCalledWith('j1', { title: 'New' })
+    expect(await jobs.storedOne(j1)).toEqual({
+      companyUID: 'ours',
+      title: 'New',
+    })
   })
 
   it('lets an admin move a job', async () => {
     await call('job', admin, { jobUID: 'j1', companyUID: 'theirs' })
-    expect(update).toHaveBeenCalledWith('j1', { companyUID: 'theirs' })
+    expect(await jobs.storedOne(j1)).toEqual({
+      companyUID: 'theirs',
+      title: 'Job',
+    })
   })
 })

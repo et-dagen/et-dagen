@@ -118,13 +118,10 @@ describe('assignAccess', () => {
 })
 
 describe('startAccess', () => {
-  it('stores a new contact as employee of the code company', async () => {
+  it('stores a new account as a student', async () => {
     const { access } = setup()
-    await startAccess({ access }, { user: ada, company: acme, now })
-    expect(access.read(ada)).toEqual({
-      roles: ['company'],
-      memberships: [{ company: acme, kind: 'employee' }],
-    })
+    await startAccess({ access }, { user: ada, now })
+    expect(access.read(ada)).toEqual({ roles: ['user'], memberships: [] })
   })
 })
 

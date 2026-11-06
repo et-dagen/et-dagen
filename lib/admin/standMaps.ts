@@ -4,9 +4,7 @@ import { FairDay } from '@/domain/fair/day'
 export interface ListedStandMap {
   date: string
   url: string
-  name?: string
-  /** Stored by file name before the admin upload; replace it to manage it here */
-  legacy?: boolean
+  name: string
 }
 
 export interface StandMapDay {

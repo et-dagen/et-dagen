@@ -1,10 +1,16 @@
 // POST /api/v1/board
 // endpoint for adding a board member
+import { defineEventHandler, readBody, setResponseStatus } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { addMember } from '@/application/board/members'
 import { checkedMemberInput } from '@/domain/board/member'
 import { fail } from '@/domain/errors'
 import { Instant } from '@/domain/time'
 import { board, fileStorage, files } from '@/server/composition'
+import {
+  addEventContext,
+  setResourceContext,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

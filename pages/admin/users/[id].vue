@@ -17,12 +17,13 @@
   const initial = computed(() => {
     const u = user.value
     if (!u) return null
-    const { userType, companyUIDs } = access.value
+    const { userType, companyUIDs, withheld } = access.value
       ? userTypeOf(access.value)
-      : { userType: 'basic' as const, companyUIDs: [] }
+      : { userType: 'basic' as const, companyUIDs: [], withheld: [] }
     return {
       userType,
       companyUIDs,
+      withheld,
       name: u.name ?? '',
       studyProgram: u.studyProgram ?? '',
       currentYear: u.currentYear ? Number(u.currentYear) : '',
@@ -41,7 +42,7 @@
     :email="user?.email ?? ''"
     :initial="initial"
   />
-  <p v-else class="tw:text-muted-foreground">
+  <p v-else class="text-muted-foreground">
     {{ $t('admin.users.form.missing') }}
   </p>
 </template>

@@ -1,8 +1,20 @@
 // DELETE /api/v1/job
 // endpoint for removing a job from db
 
+import { createError, defineEventHandler, getQuery, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { authorize } from '@/domain/authorization/authorize'
+import { JobUid } from '@/domain/business/job'
 import { Instant } from '@/domain/time'
+import { jobs } from '@/server/composition'
+import { companyOf } from '@/server/utils/companyOf'
+import {
+  addEventContext,
+  setErrorContext,
+  setLogImportance,
+  setResourceContext,
+  withDbTiming,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {
@@ -61,21 +73,15 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  // reference to jobs
-  const jobsRef = db.ref('jobs')
+  const uid = JobUid.parse(String(jobUID))
 
   // check if the job exists
-  const snapshot = await withDbTiming(event, `jobs/${jobUID}`, 'read', () =>
-    jobsRef
-      .orderByKey()
-      .equalTo(jobUID as string)
-      .once('value'),
+  const job = await withDbTiming(event, `jobs/${uid}`, 'read', () =>
+    jobs.storedOne(uid),
   )
 
-  const data = snapshot.val()
-
   // the job does not exist in db
-  if (!data) {
+  if (!job) {
     setErrorContext(event, {
       code: 'job/not-found',
       message: 'Job not found',
@@ -86,16 +92,14 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const { companyUID } = data[Object.keys(data)[0]]
+  const { companyUID } = job
 
   addEventContext(event, 'company_uid', companyUID)
 
   const env = { now: Instant.now() }
   authorize(subject, 'job', 'delete', companyOf(companyUID), env)
 
-  // remove company
-  jobsRef.child(jobUID as string).remove()
-  trackDbDelete(event, `jobs/${jobUID}`)
+  await withDbTiming(event, `jobs/${uid}`, 'delete', () => jobs.remove(uid))
 
   // company successfully removed
   sendNoContent(event, 204)

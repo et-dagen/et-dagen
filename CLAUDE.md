@@ -43,6 +43,11 @@ server code.
   not extended. Do not add new business logic to a v1 handler.
 - `server/middleware/`, `server/utils/`: request pipeline and shared server helpers.
 - `pages/`, `components/`, `layouts/`, `stores/`, `composables/`: the Vue front end.
+- `lib/`: the front end's plain TypeScript (what a row shows, a form's starting values, how a date
+  is labelled). No Vue, Nuxt, stores or fetching. Code that needs Vue or Nuxt while it runs is a
+  composable (`composables/useX.ts`); code that does not is `lib/`; business rules are `domain/`.
+  "Front end" in `ARCHITECTURE.md` has the full guide.
+- `contracts/`: Zod schemas for request bodies and forms, shared by the client and the server.
 - `models/`: old interfaces that have drifted from the data (#543). Prefer types from `domain/`.
 - `tests/`: all tests, mirroring the source path (`domain/user.ts` → `tests/domain/user.spec.ts`).
   Vitest only looks here.
@@ -55,6 +60,9 @@ The target layout, and how to place code while both shapes exist, is in `ARCHITE
   `addEventContext` for useful fields, and `setErrorContext` before every `throw createError(...)`.
   Error codes are `area/kebab-case` and the status message is `Error (<code>).`. Describe each
   endpoint with `defineRouteMeta` as the wiki's "Adding an API endpoint" page shows.
+  Server code imports what it uses: `defineEventHandler` and `createError` from `h3`,
+  `defineRouteMeta` and `useRuntimeConfig` from `nitropack/runtime`, helpers from
+  `@/server/utils/...`. Nitro does not auto-import, so a missing import fails `typecheck`.
 - **Errors in new code**: add the code to `domain/errors/catalog.ts` and `throw fail(code)`. Do not
   call `setErrorContext` or `createError` for it; the error boundary in `server/errors/` logs it and
   builds the response from the catalogue. Pass the underlying error as `cause` instead of logging it.
@@ -62,6 +70,8 @@ The target layout, and how to place code while both shapes exist, is in `ARCHITE
   decisions"; do not settle them silently in code.
 - **Imports**: import from another directory through the `@/` alias for the project root
   (`@/domain/time`), not with `../`. `./` is for files in the same directory. ESLint enforces it.
+  Import components too (`import Rail from '@/components/admin/Rail.vue'`): Nuxt does not register
+  them globally, and `typecheck:full` fails on a component used without an import.
 - **Types**: use the branded types in `domain/` (`Instant`, `Term`, `EmailAddress`, `HttpUrl`,
   `MapLink`, ...) and their `parse`/`tryParse` functions at boundaries. Only the owning module casts to a brand.
 - **Authorization**: decide with `authorize()` from `domain/authorization/authorize.ts`, which asks the
@@ -70,12 +80,11 @@ The target layout, and how to place code while both shapes exist, is in `ARCHITE
   `companyUID` or `cvAccess` in a handler; the subject carries roles and entitlements.
   The client asks the same table through the auth store (`can`, `canForSome`), and a protected
   page names its area in `definePageMeta({ area })` (`lib/auth/areas.ts`).
-- **UI** uses shadcn-vue components from `components/ui`, Tailwind classes with the `tw:` prefix
-  and Lucide icons. Pages sit inside `.et-ui` (public) or `.et-admin`, which carry the base
+- **UI** uses shadcn-vue components from `components/ui`, Tailwind classes and Lucide icons.
+  Pages sit inside `.et-ui` (public) or `.et-admin`, which carry the base
   styles (`assets/css/admin.css`). Forms validate through `typedSchemaOf` (`lib/forms/zodSchema.ts`),
   since `@vee-validate/zod` supports only zod 3. After `bunx shadcn-vue add`, check
-  the result: the CLI leaves class lists in template strings unprefixed, sometimes prefixes plain
-  string values such as `'popper'`, imports `cn` from a `cn`
+  the result: the CLI may import `cn` from a `cn`
   package instead of `@/lib/utils`, and may bump dependencies such as `@vueuse/core`. Do not use
   `!important` (or Tailwind's `!` suffix); fix the conflicting rule instead.
 - **Translations**: user-facing text goes in both `i18n/locales/en-GB.json` and `nb-NO.json`.

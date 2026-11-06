@@ -9,8 +9,8 @@
 <template>
   <button
     type="button"
-    class="tw:inline-flex tw:items-center tw:gap-1 tw:text-xs tw:font-bold tw:tracking-[0.06em] tw:uppercase tw:hover:text-foreground"
-    :class="direction ? 'tw:text-foreground' : 'tw:text-muted-foreground'"
+    class="inline-flex items-center gap-1 text-xs font-bold tracking-[0.06em] uppercase hover:text-foreground"
+    :class="direction ? 'text-foreground' : 'text-muted-foreground'"
     @click="$emit('toggle')"
   >
     {{ label }}
@@ -22,7 +22,7 @@
             ? ArrowDown
             : ChevronsUpDown
       "
-      class="tw:size-3.5"
+      class="size-3.5"
       aria-hidden="true"
     />
   </button>

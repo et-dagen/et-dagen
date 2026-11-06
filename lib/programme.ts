@@ -1,6 +1,6 @@
-import { instantOf } from '@/lib/admin/time'
-import type { EventRow } from '@/lib/admin/events'
-import { Instant, type ISO8601String } from '@/domain/time'
+import { instantOf, osloDay } from '@/lib/time'
+import type { EventRow } from '@/lib/events'
+import type { ISO8601String } from '@/domain/time'
 
 /** An event as the programme lists it */
 export type ProgrammeEvent = EventRow & { uid: string }
@@ -17,11 +17,6 @@ export interface ProgrammeDay {
 const FIRST_HOUR = 8
 const LAST_HOUR = 22
 
-const osloDate = (at: ISO8601String) =>
-  new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Oslo' }).format(
-    Instant.toDate(at),
-  )
-
 /** The days that have events, in order, each with its events by start time */
 export function programmeDays(
   events: Record<string, EventRow> | null | undefined,
@@ -30,7 +25,7 @@ export function programmeDays(
   for (const [uid, event] of Object.entries(events ?? {})) {
     const start = instantOf(event.date?.start)
     if (!start) continue
-    const date = osloDate(start)
+    const date = osloDay(start)
     byDay.set(date, [...(byDay.get(date) ?? []), { ...event, uid }])
   }
   return [...byDay.entries()]
@@ -77,7 +72,7 @@ export function initialDay(
   days: readonly ProgrammeDay[],
   now: ISO8601String,
 ): string | null {
-  const today = osloDate(now)
+  const today = osloDay(now)
   return (
     days.find((day) => day.date >= today)?.date ?? days.at(-1)?.date ?? null
   )
@@ -102,7 +97,7 @@ export function upcomingDays(
   days: readonly ProgrammeDay[],
   now: ISO8601String,
 ): ProgrammeDay[] {
-  const today = osloDate(now)
+  const today = osloDay(now)
   const coming = days.filter((day) => day.date >= today)
   return coming.length ? coming : [...days]
 }

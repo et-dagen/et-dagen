@@ -1,8 +1,14 @@
 // GET /api/v1/activity
 // endpoint for the admin dashboard
+import { defineEventHandler, getQuery } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { activityOverview } from '@/application/activity/overview'
 import { Instant } from '@/domain/time'
 import { activity } from '@/server/composition'
+import {
+  setLogImportance,
+  setResourceContext,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

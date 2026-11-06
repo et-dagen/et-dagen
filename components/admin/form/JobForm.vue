@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { ArrowLeft, Save } from '@lucide/vue'
-  import FieldError from '@/components/admin/form/FieldError.vue'
+  import FieldError from '@/components/form/FieldError.vue'
+  import TextField from '@/components/form/TextField.vue'
   import RichText from '@/components/admin/form/RichText.vue'
   import { Button } from '@/components/ui/button'
   import {
@@ -18,6 +19,7 @@
     SelectTrigger,
     SelectValue,
   } from '@/components/ui/select'
+  import { useHostCompanies } from '@/composables/admin/useHostCompanies'
   import { useResourceForm } from '@/composables/admin/useResourceForm'
   import {
     DEADLINE_TYPES,
@@ -27,7 +29,6 @@
     toV1Job,
     type JobInput,
   } from '@/contracts/job'
-  import { CompanyUid } from '@/domain/business/company'
 
   const props = withDefaults(
     defineProps<{
@@ -41,29 +42,19 @@
 
   const { t } = useI18n()
   const localePath = useLocalePath()
-  const { data: companies } =
-    await useFetch<Record<string, { name?: string }>>('/api/v1/company')
-  // a company user or coordinator may only post for the companies they manage
-  const auth = useAuthStore()
-  const mayPost = (value: string) =>
-    !!value &&
-    auth.can('job', props.uid ? 'update' : 'create', {
-      companyUid: CompanyUid.parse(value),
-    })
-  // a company user who opens another company's job gets no form to fill in
-  const allowed = computed(
-    () => !props.uid || mayPost(String(props.initial.companyUID ?? '')),
-  )
+  const {
+    allowed,
+    choices: companyOptions,
+    onlyChoice,
+  } = await useHostCompanies({
+    resource: 'job',
+    uid: props.uid,
+    current: props.initial.companyUID,
+  })
   const panelName = computed(() =>
     props.panel.startsWith('/company/')
       ? 'company.admin.jobs.name'
       : 'admin.jobs.name',
-  )
-  const companyOptions = computed(() =>
-    Object.entries(companies.value ?? {})
-      .map(([value, company]) => ({ value, label: company.name ?? value }))
-      .filter((option) => mayPost(option.value))
-      .sort((a, b) => a.label.localeCompare(b.label, 'nb')),
   )
 
   const { form, submit, saving } = useResourceForm({
@@ -83,11 +74,9 @@
       await $fetch('/api/v1/job', { method: 'POST', body: toV1Job(values) })
     },
   })
-  // with one company to choose from, a new entry is for that company
   watchEffect(() => {
-    const [only, ...others] = companyOptions.value
-    if (!props.uid && only && !others.length && !form.values.companyUID)
-      form.setFieldValue('companyUID', only.value)
+    if (onlyChoice.value && !form.values.companyUID)
+      form.setFieldValue('companyUID', onlyChoice.value)
   })
   const listing = computed(() => form.values.listing ?? 'text')
 
@@ -110,38 +99,36 @@
 </script>
 
 <template>
-  <p v-if="!allowed" class="tw:text-muted-foreground">
+  <p v-if="!allowed" class="text-muted-foreground">
     {{ $t('admin.jobs.form.missing') }}
   </p>
   <form
     v-else
-    class="tw:flex tw:max-w-3xl tw:flex-col tw:gap-6"
+    class="flex max-w-3xl flex-col gap-6"
     novalidate
     @submit="submit"
   >
     <NuxtLink
       :to="localePath(panel)"
-      class="tw:inline-flex tw:w-fit tw:items-center tw:gap-1 tw:text-sm tw:text-muted-foreground tw:hover:text-foreground"
+      class="inline-flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
     >
-      <ArrowLeft class="tw:size-4" aria-hidden="true" />
+      <ArrowLeft class="size-4" aria-hidden="true" />
       {{ $t(panelName) }}
     </NuxtLink>
     <h1
-      class="tw:text-2xl tw:leading-8 tw:font-extrabold tw:tracking-tight tw:lg:text-[2rem] tw:lg:leading-10"
+      class="text-2xl leading-8 font-extrabold tracking-tight lg:text-[2rem] lg:leading-10"
     >
       {{ $t(uid ? 'admin.jobs.form.edit_title' : 'admin.jobs.form.new_title') }}
     </h1>
 
-    <div
-      class="tw:grid tw:gap-5 tw:rounded-lg tw:border tw:bg-card tw:p-4 tw:lg:grid-cols-2 tw:lg:p-6"
-    >
+    <div class="grid gap-5 rounded-lg border bg-card p-4 lg:grid-cols-2 lg:p-6">
       <FormField v-slot="{ value }" name="listing">
-        <FormItem class="tw:lg:col-span-2">
+        <FormItem class="lg:col-span-2">
           <FormLabel>{{ $t('admin.jobs.form.listing') }}</FormLabel>
           <div
             role="radiogroup"
             :aria-label="$t('admin.jobs.form.listing')"
-            class="tw:grid tw:gap-2 tw:sm:grid-cols-2"
+            class="grid gap-2 sm:grid-cols-2"
           >
             <button
               v-for="option in JOB_LISTINGS"
@@ -149,13 +136,13 @@
               type="button"
               role="radio"
               :aria-checked="value === option"
-              class="tw:rounded-md tw:border tw:p-3 tw:text-left tw:transition-colors tw:hover:bg-accent tw:aria-checked:border-plate tw:aria-checked:bg-plate tw:aria-checked:text-plate-foreground"
+              class="rounded-md border p-3 text-left transition-colors hover:bg-accent aria-checked:border-plate aria-checked:bg-plate aria-checked:text-plate-foreground"
               @click="switchListing(option)"
             >
-              <span class="tw:block tw:font-semibold">
+              <span class="block font-semibold">
                 {{ $t(`admin.jobs.form.listings.${option}.name`) }}
               </span>
-              <span class="tw:block tw:text-sm tw:opacity-80">
+              <span class="block text-sm opacity-80">
                 {{ $t(`admin.jobs.form.listings.${option}.hint`) }}
               </span>
             </button>
@@ -163,22 +150,18 @@
         </FormItem>
       </FormField>
 
-      <FormField v-slot="{ componentField }" name="title">
-        <FormItem class="tw:lg:col-span-2">
-          <FormLabel>{{ $t('admin.jobs.form.title') }}</FormLabel>
-          <FormControl>
-            <Input v-bind="componentField" />
-          </FormControl>
-          <FieldError />
-        </FormItem>
-      </FormField>
+      <TextField
+        name="title"
+        :label="$t('admin.jobs.form.title')"
+        class="lg:col-span-2"
+      />
 
       <FormField v-slot="{ componentField }" name="companyUID">
         <FormItem>
           <FormLabel>{{ $t('admin.jobs.form.company') }}</FormLabel>
           <Select v-bind="componentField">
             <FormControl>
-              <SelectTrigger class="tw:w-full">
+              <SelectTrigger class="w-full">
                 <SelectValue
                   :placeholder="$t('admin.jobs.form.choose_company')"
                 />
@@ -203,7 +186,7 @@
           <FormLabel>{{ $t('admin.jobs.form.type') }}</FormLabel>
           <Select v-bind="componentField">
             <FormControl>
-              <SelectTrigger class="tw:w-full">
+              <SelectTrigger class="w-full">
                 <SelectValue :placeholder="$t('admin.jobs.form.choose_type')" />
               </SelectTrigger>
             </FormControl>
@@ -219,22 +202,14 @@
         </FormItem>
       </FormField>
 
-      <FormField v-slot="{ componentField }" name="location">
-        <FormItem>
-          <FormLabel>{{ $t('admin.jobs.form.location') }}</FormLabel>
-          <FormControl>
-            <Input v-bind="componentField" />
-          </FormControl>
-          <FieldError />
-        </FormItem>
-      </FormField>
+      <TextField name="location" :label="$t('admin.jobs.form.location')" />
 
       <FormField v-slot="{ componentField }" name="deadlineType">
         <FormItem>
           <FormLabel>{{ $t('admin.jobs.form.deadline') }}</FormLabel>
           <Select v-bind="componentField">
             <FormControl>
-              <SelectTrigger class="tw:w-full">
+              <SelectTrigger class="w-full">
                 <SelectValue />
               </SelectTrigger>
             </FormControl>
@@ -250,7 +225,7 @@
           </Select>
           <p
             v-if="form.values.deadlineType === 'rolling'"
-            class="tw:text-sm tw:text-muted-foreground"
+            class="text-sm text-muted-foreground"
           >
             {{ $t('admin.jobs.form.rolling_hint') }}
           </p>
@@ -272,15 +247,12 @@
       </FormField>
 
       <FormField v-slot="{ componentField }" name="applicationLink">
-        <FormItem class="tw:lg:col-span-2">
+        <FormItem class="lg:col-span-2">
           <FormLabel>{{ $t(`admin.jobs.form.link_${listing}`) }}</FormLabel>
           <FormControl>
             <Input type="url" placeholder="https://" v-bind="componentField" />
           </FormControl>
-          <p
-            v-if="listing === 'text'"
-            class="tw:text-sm tw:text-muted-foreground"
-          >
+          <p v-if="listing === 'text'" class="text-sm text-muted-foreground">
             {{ $t('admin.jobs.form.link_hint') }}
           </p>
           <FieldError />
@@ -292,7 +264,7 @@
         v-slot="{ value, handleChange, errorMessage }"
         name="description"
       >
-        <FormItem class="tw:lg:col-span-2">
+        <FormItem class="lg:col-span-2">
           <FormLabel>{{ $t('admin.jobs.form.description') }}</FormLabel>
           <FormControl>
             <RichText
@@ -305,12 +277,12 @@
         </FormItem>
       </FormField>
       <FormField v-else v-slot="{ componentField }" name="description">
-        <FormItem class="tw:lg:col-span-2">
+        <FormItem class="lg:col-span-2">
           <FormLabel>{{ $t('admin.jobs.form.summary') }}</FormLabel>
           <FormControl>
             <Textarea v-bind="componentField" rows="3" maxlength="300" />
           </FormControl>
-          <p class="tw:text-sm tw:text-muted-foreground">
+          <p class="text-sm text-muted-foreground">
             {{ $t('admin.jobs.form.summary_hint') }}
           </p>
           <FieldError />
@@ -318,7 +290,7 @@
       </FormField>
     </div>
 
-    <div class="tw:flex tw:flex-wrap tw:gap-3">
+    <div class="flex flex-wrap gap-3">
       <Button type="submit" :disabled="saving">
         <Save aria-hidden="true" />
         {{ $t(uid ? 'admin.jobs.form.save' : 'admin.jobs.form.create') }}

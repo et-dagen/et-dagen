@@ -3,14 +3,16 @@
   import LanguageSwitch from './LanguageSwitch.vue'
   import NextUpPill from './NextUpPill.vue'
   import PhoneMenu from './PhoneMenu.vue'
+  import { useAuthStore } from '@/stores/authStore'
   import { Instant } from '@/domain/time'
-  import type { EventRow } from '@/lib/admin/events'
+  import type { EventRow } from '@/lib/events'
   import { nextUp } from '@/lib/site/nextUp'
+  import { usePageLoading } from '@/composables/usePageLoading'
   import { routes } from '~/config/app.config'
 
   const route = useRoute()
   const localePath = useLocalePath()
-  const app = useAppStore()
+  const loading = usePageLoading()
 
   const isCurrent = (target: string) => {
     const path = localePath(target)
@@ -57,42 +59,41 @@
 
 <template>
   <header
-    class="et-ui tw:sticky tw:top-0 tw:z-20 tw:border-b tw:bg-card tw:transition-transform tw:duration-300 tw:ease-[cubic-bezier(0.16,1,0.3,1)] tw:focus-within:translate-y-0 tw:motion-reduce:transition-none"
-    :class="hidden && 'tw:-translate-y-full'"
+    class="et-ui sticky top-0 z-20 border-b bg-card transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] focus-within:translate-y-0 motion-reduce:transition-none"
+    :class="hidden && '-translate-y-full'"
   >
     <a
       href="#main"
-      class="tw:sr-only tw:focus:not-sr-only tw:focus:absolute tw:focus:top-2 tw:focus:left-2 tw:focus:rounded-md tw:focus:bg-card tw:focus:px-3 tw:focus:py-2 tw:focus:shadow"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:rounded-md focus:bg-card focus:px-3 focus:py-2 focus:shadow"
     >
       {{ $t('site.skip') }}
     </a>
     <div
-      class="tw:mx-auto tw:flex tw:h-16 tw:max-w-screen-2xl tw:items-center tw:gap-6 tw:px-4 tw:lg:h-[4.25rem] tw:lg:px-8"
+      class="mx-auto flex h-16 max-w-screen-2xl items-center gap-6 px-4 lg:h-[4.25rem] lg:px-8"
     >
       <NuxtLink
         :to="localePath('/')"
-        class="tw:flex tw:shrink-0 tw:items-center tw:gap-2.5"
+        class="flex shrink-0 items-center gap-2.5"
       >
         <img
           src="/images/logo-small.webp"
           alt=""
           width="26"
           height="30"
-          class="tw:h-[30px] tw:w-auto"
+          class="h-[30px] w-auto"
         />
-        <span
-          class="tw:text-xl tw:font-extrabold tw:tracking-tight tw:text-brand"
+        <span class="text-xl font-extrabold tracking-tight text-brand"
           >E&amp;T-dagene</span
         >
       </NuxtLink>
 
-      <nav :aria-label="$t('site.menu.pages')" class="tw:hidden tw:lg:block">
-        <ul class="tw:flex tw:items-center tw:gap-6">
+      <nav :aria-label="$t('site.menu.pages')" class="hidden lg:block">
+        <ul class="flex items-center gap-6">
           <li v-for="page in routes" :key="page.name">
             <NuxtLink
               :to="localePath(page.route)"
               :aria-current="isCurrent(page.route) ? 'page' : undefined"
-              class="tw:block tw:py-2 tw:text-[15px] tw:font-semibold tw:whitespace-nowrap tw:text-muted-foreground tw:transition-colors tw:hover:text-foreground tw:aria-[current=page]:text-foreground tw:aria-[current=page]:shadow-[inset_0_-3px_0_var(--brand)]"
+              class="block py-2 text-[15px] font-semibold whitespace-nowrap text-muted-foreground transition-colors hover:text-foreground aria-[current=page]:text-foreground aria-[current=page]:shadow-[inset_0_-3px_0_var(--brand)]"
             >
               {{ $t(`nav.${page.name}`) }}
             </NuxtLink>
@@ -100,15 +101,15 @@
         </ul>
       </nav>
 
-      <div class="tw:ml-auto tw:flex tw:min-w-0 tw:items-center tw:gap-3">
+      <div class="ml-auto flex min-w-0 items-center gap-3">
         <ClientOnly>
           <NextUpPill
             v-if="next"
             :next="next"
-            class="tw:hidden tw:max-w-sm tw:lg:flex"
+            class="hidden max-w-sm lg:flex"
           />
         </ClientOnly>
-        <div class="tw:hidden tw:items-center tw:gap-2 tw:lg:flex">
+        <div class="hidden items-center gap-2 lg:flex">
           <LanguageSwitch />
           <AccountMenu />
         </div>
@@ -116,17 +117,13 @@
           :pages="routes"
           :current="current"
           :next="next"
-          class="tw:lg:hidden"
+          class="lg:hidden"
         />
       </div>
     </div>
     <div
-      class="tw:absolute tw:inset-x-0 tw:-bottom-px tw:h-0.5 tw:origin-left tw:bg-brand tw:transition-opacity"
-      :class="
-        app.loading
-          ? 'tw:opacity-100 tw:motion-safe:animate-pulse'
-          : 'tw:opacity-0'
-      "
+      class="absolute inset-x-0 -bottom-px h-0.5 origin-left bg-brand transition-opacity"
+      :class="loading ? 'opacity-100 motion-safe:animate-pulse' : 'opacity-0'"
       aria-hidden="true"
     />
   </header>

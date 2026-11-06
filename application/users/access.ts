@@ -10,7 +10,6 @@ import {
 } from '@/domain/authorization/access'
 import { authorize } from '@/domain/authorization/authorize'
 import type { Subject } from '@/domain/authorization/subject'
-import type { CompanyUid } from '@/domain/business/company'
 import { fail } from '@/domain/errors'
 import type { ISO8601String } from '@/domain/time'
 import type { UserUid } from '@/domain/user'
@@ -52,18 +51,12 @@ export async function assignAccess(
   })
 }
 
-/**
- * Give a new account what it starts with: a student, or a contact for the registration code's
- * company
- *
- * @remarks
- * The caller has already checked the code; this only stores the outcome.
- */
+/** Give a new account what it starts with: a student; invitations bring company contacts */
 export const startAccess = (
   deps: { access: AccessRepository },
-  request: { user: UserUid; company: CompanyUid | null; now: ISO8601String },
+  request: { user: UserUid; now: ISO8601String },
 ): Promise<void> =>
-  deps.access.replace(request.user, accessOnSignUp(request.company), {
+  deps.access.replace(request.user, accessOnSignUp(null), {
     at: request.now,
     by: request.user,
   })

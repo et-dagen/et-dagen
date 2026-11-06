@@ -9,12 +9,12 @@
 
 <template>
   <div
-    class="tw:flex tw:items-center tw:justify-between tw:gap-3 tw:border-t tw:px-4 tw:py-3 tw:text-sm tw:text-muted-foreground"
+    class="flex items-center justify-between gap-3 border-t px-4 py-3 text-sm text-muted-foreground"
   >
     <span aria-live="polite">
       {{ $t('admin.list.showing', { from: shown.from, to: shown.to, total }) }}
     </span>
-    <div class="tw:flex tw:items-center tw:gap-2">
+    <div class="flex items-center gap-2">
       <Button
         variant="outline"
         size="icon-sm"
@@ -24,7 +24,7 @@
       >
         <ChevronLeft aria-hidden="true" />
       </Button>
-      <span class="tw:text-foreground tw:tabular-nums">
+      <span class="text-foreground tabular-nums">
         {{ shown.page }} / {{ shown.pages }}
       </span>
       <Button

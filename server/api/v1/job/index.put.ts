@@ -1,12 +1,26 @@
 // PUT /api/v1/job
 // endpoint for editing jobs in the database
 
-import { isValidDate } from '@/composables/useDate'
+import { createError, defineEventHandler, readBody, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
+import { isValidDate } from '@/server/utils/useTime'
 import { cleanRichText, safeLink } from '@/server/security/richText'
 import { fail } from '@/domain/errors'
 import { authorize } from '@/domain/authorization/authorize'
 import { hasPermission } from '@/domain/authorization/hasPermission'
+import type { JobChanges } from '@/application/jobs/jobRepository'
+import { CompanyUid } from '@/domain/business/company'
+import { JOB_TYPES, JobUid } from '@/domain/business/job'
 import { Instant } from '@/domain/time'
+import { jobs } from '@/server/composition'
+import { companyOf } from '@/server/utils/companyOf'
+import {
+  addEventContext,
+  setErrorContext,
+  setLogImportance,
+  setResourceContext,
+  withDbTiming,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {
@@ -41,6 +55,17 @@ defineRouteMeta({
     // },
   },
 })
+
+/** The body fields that name a job field of the same name */
+const EDITABLE = [
+  'title',
+  'description',
+  'location',
+  'listing',
+  'applicationLink',
+  'deadlineType',
+  'deadline',
+]
 
 export default defineEventHandler(async (event) => {
   const { subject } = event.context
@@ -81,20 +106,15 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const jobsRef = db.ref('jobs')
+  const uid = JobUid.parse(String(jobUID))
 
   // check if the job exists
-  const snapshot = await withDbTiming(event, `jobs/${jobUID}`, 'read', () =>
-    jobsRef
-      .orderByKey()
-      .equalTo(jobUID as string)
-      .once('value'),
+  const dbData = await withDbTiming(event, `jobs/${uid}`, 'read', () =>
+    jobs.storedOne(uid),
   )
 
-  const data = snapshot.val()
-
   // the job does not exist in db
-  if (!data) {
+  if (!dbData) {
     setErrorContext(event, {
       code: 'job/not-found',
       message: 'Job not found',
@@ -105,7 +125,6 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  const dbData = data[Object.keys(data)[0]]
   const { companyUID } = dbData
 
   addEventContext(event, 'company_uid', companyUID)
@@ -124,6 +143,10 @@ export default defineEventHandler(async (event) => {
       statusCode: 400,
       statusMessage: 'Error (job/cannot-remove-single-fields).',
     })
+  }
+
+  if ('jobType' in newData && !JOB_TYPES.includes(newData.jobType)) {
+    throw fail('job/invalid-type')
   }
 
   if ('listing' in newData && !['text', 'link'].includes(newData.listing)) {
@@ -173,8 +196,18 @@ export default defineEventHandler(async (event) => {
     newData.description = cleanRichText(newData.description)
   }
 
-  jobsRef.child(jobUID).update(newData)
-  trackDbWrite(event, `jobs/${jobUID}`)
+  // fields the job type does not name, which old records may hold, are left as they are
+  const { companyUID: movedTo, jobType, ...same } = newData
+  const changes: JobChanges = {
+    ...Object.fromEntries(
+      Object.entries(same).filter(([key]) => EDITABLE.includes(key)),
+    ),
+    ...(movedTo !== undefined && { companyUid: CompanyUid.parse(movedTo) }),
+    ...(jobType !== undefined && { type: jobType }),
+  }
+  await withDbTiming(event, `jobs/${uid}`, 'write', () =>
+    jobs.update(uid, changes),
+  )
 
   sendNoContent(event, 204)
 })

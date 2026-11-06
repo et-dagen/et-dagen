@@ -33,58 +33,58 @@
 </script>
 
 <template>
-  <div class="tw:flex tw:flex-col tw:gap-2">
-    <ul v-if="chosen.length" class="tw:flex tw:flex-wrap tw:gap-2">
+  <div class="flex flex-col gap-2">
+    <ul v-if="chosen.length" class="flex flex-wrap gap-2">
       <li
         v-for="option in chosen"
         :key="option"
-        class="tw:inline-flex tw:items-center tw:gap-1 tw:rounded-md tw:bg-plate tw:py-1 tw:pr-1 tw:pl-2.5 tw:text-sm tw:text-plate-foreground"
+        class="inline-flex items-center gap-1 rounded-md bg-plate py-1 pr-1 pl-2.5 text-sm text-plate-foreground"
       >
         {{ option }}
         <button
           type="button"
-          class="tw:grid tw:size-6 tw:place-items-center tw:rounded-sm tw:hover:bg-white/15"
+          class="grid size-6 place-items-center rounded-sm hover:bg-white/15"
           :aria-label="$t('form.picker.remove', { option })"
           @click="remove(option)"
         >
-          <X class="tw:size-3.5" aria-hidden="true" />
+          <X class="size-3.5" aria-hidden="true" />
         </button>
       </li>
     </ul>
 
-    <label class="tw:relative tw:block">
-      <span class="tw:sr-only">{{ placeholder }}</span>
+    <label class="relative block">
+      <span class="sr-only">{{ placeholder }}</span>
       <Search
-        class="tw:pointer-events-none tw:absolute tw:top-1/2 tw:left-3 tw:size-4 tw:-translate-y-1/2 tw:text-muted-foreground"
+        class="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
         aria-hidden="true"
       />
       <Input
         v-model="query"
         type="search"
         :placeholder="placeholder"
-        class="tw:pl-9"
+        class="pl-9"
         @keydown.enter.prevent="matches[0] && add(matches[0])"
       />
     </label>
 
     <ul
       v-if="query.trim()"
-      class="tw:overflow-hidden tw:rounded-md tw:border tw:bg-card"
+      class="overflow-hidden rounded-md border bg-card"
       :aria-label="$t('form.picker.matches')"
     >
       <li v-for="option in matches" :key="option">
         <button
           type="button"
-          class="tw:flex tw:w-full tw:items-center tw:gap-2 tw:px-3 tw:py-2 tw:text-left tw:text-sm tw:hover:bg-accent"
+          class="flex w-full items-center gap-2 px-3 py-2 text-left text-sm hover:bg-accent"
           @click="add(option)"
         >
-          <Plus class="tw:size-4 tw:text-muted-foreground" aria-hidden="true" />
+          <Plus class="size-4 text-muted-foreground" aria-hidden="true" />
           {{ option }}
         </button>
       </li>
       <li
         v-if="!matches.length"
-        class="tw:px-3 tw:py-2 tw:text-sm tw:text-muted-foreground"
+        class="px-3 py-2 text-sm text-muted-foreground"
       >
         {{ $t('form.picker.none') }}
       </li>

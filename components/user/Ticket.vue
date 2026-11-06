@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import * as qrcode from 'qrcode'
-  import { placeOf } from '@/lib/admin/events'
-  import { formatWhen } from '@/lib/admin/time'
+  import { placeOf } from '@/lib/events'
+  import { formatWhen } from '@/lib/time'
   import type { SignUpRow } from '@/lib/user/signUps'
 
   const props = defineProps<{ row: SignUpRow; holder: string; uid: string }>()
@@ -34,83 +34,68 @@
 
 <template>
   <article
-    class="tw:relative tw:grid tw:overflow-hidden tw:rounded-lg tw:border tw:bg-card tw:sm:grid-cols-[13rem_minmax(0,1fr)]"
+    class="relative grid overflow-hidden rounded-lg border bg-card sm:grid-cols-[13rem_minmax(0,1fr)]"
   >
     <div
-      class="tw:flex tw:flex-col tw:items-center tw:justify-center tw:gap-4 tw:bg-plate tw:p-6 tw:text-plate-foreground"
+      class="flex flex-col items-center justify-center gap-4 bg-plate p-6 text-plate-foreground"
     >
-      <div class="tw:size-40 tw:rounded-md tw:bg-white tw:p-3">
-        <img
-          v-if="qr"
-          :src="qr"
-          :alt="$t('user.page.qr')"
-          class="tw:size-full"
-        />
+      <div class="size-40 rounded-md bg-white p-3">
+        <img v-if="qr" :src="qr" :alt="$t('user.page.qr')" class="size-full" />
       </div>
-      <p class="tw:font-bold">{{ $t('user.page.show_code') }}</p>
+      <p class="font-bold">{{ $t('user.page.show_code') }}</p>
     </div>
 
     <div
-      class="tw:relative tw:flex tw:flex-col tw:border-dashed tw:border-foreground/30 tw:p-6 tw:max-sm:border-t-2 tw:sm:border-l-2 tw:lg:p-8"
+      class="relative flex flex-col border-dashed border-foreground/30 p-6 max-sm:border-t-2 sm:border-l-2 lg:p-8"
     >
       <!-- the tear line's notches, cut out of the ticket's edge -->
       <span
         v-for="side in [
-          'tw:max-sm:-left-3 tw:sm:-top-3',
-          'tw:max-sm:-right-3 tw:sm:-bottom-3',
+          'max-sm:-left-3 sm:-top-3',
+          'max-sm:-right-3 sm:-bottom-3',
         ]"
         :key="side"
         aria-hidden="true"
-        class="tw:absolute tw:size-6 tw:rounded-full tw:border tw:bg-background tw:max-sm:-top-3 tw:sm:-left-3"
+        class="absolute size-6 rounded-full border bg-background max-sm:-top-3 sm:-left-3"
         :class="side"
       />
-      <h3 class="tw:text-xl tw:leading-snug tw:font-extrabold tw:lg:text-2xl">
+      <h3 class="text-xl leading-snug font-extrabold lg:text-2xl">
         <NuxtLink
           :to="localePath(`/event/${row.eventUID}`)"
-          class="tw:hover:underline tw:hover:decoration-brand tw:hover:decoration-2 tw:hover:underline-offset-4"
+          class="hover:underline hover:decoration-brand hover:decoration-2 hover:underline-offset-4"
         >
           {{ row.event.title }}
         </NuxtLink>
       </h3>
       <p
-        class="tw:mt-2 tw:font-semibold tw:text-muted-foreground tw:first-letter:uppercase"
+        class="mt-2 font-semibold text-muted-foreground first-letter:uppercase"
       >
         {{ day }}
       </p>
-      <div
-        class="tw:mt-1 tw:flex tw:flex-wrap tw:items-center tw:gap-x-5 tw:gap-y-2"
-      >
+      <div class="mt-1 flex flex-wrap items-center gap-x-5 gap-y-2">
         <span
-          class="tw:text-6xl tw:font-black tw:tracking-[-0.04em] tw:tabular-nums tw:lg:text-7xl"
+          class="text-6xl font-black tracking-[-0.04em] tabular-nums lg:text-7xl"
         >
           {{ time }}
         </span>
-        <span
-          v-if="place.code || place.name"
-          class="tw:flex tw:flex-col tw:gap-1"
-        >
+        <span v-if="place.code || place.name" class="flex flex-col gap-1">
           <span
             v-if="place.code"
-            class="tw:self-start tw:rounded-md tw:bg-plate tw:px-3 tw:pt-1.5 tw:pb-1 tw:text-3xl tw:font-black tw:text-plate-foreground"
+            class="self-start rounded-md bg-plate px-3 pt-1.5 pb-1 text-3xl font-black text-plate-foreground"
           >
             {{ place.code }}
           </span>
-          <span class="tw:font-semibold tw:text-muted-foreground">
+          <span class="font-semibold text-muted-foreground">
             {{ place.name }}
           </span>
         </span>
       </div>
-      <div
-        class="tw:mt-6 tw:flex tw:flex-wrap tw:items-center tw:gap-3 tw:pt-2 tw:sm:mt-auto"
-      >
-        <span class="tw:font-bold">{{ holder }}</span>
+      <div class="mt-6 flex flex-wrap items-center gap-3 pt-2 sm:mt-auto">
+        <span class="font-bold">{{ holder }}</span>
         <span
-          class="tw:inline-flex tw:items-center tw:gap-2 tw:rounded-full tw:bg-muted tw:px-3 tw:pt-1 tw:pb-0.5 tw:text-sm tw:font-bold tw:text-plate"
+          class="inline-flex items-center gap-2 rounded-full bg-muted px-3 pt-1 pb-0.5 text-sm font-bold text-plate"
         >
-          <span
-            class="tw:size-2 tw:rounded-full tw:bg-plate"
-            aria-hidden="true"
-          />
+          <span class="size-2 rounded-full bg-plate" aria-hidden="true" />
           {{ $t('user.page.attending') }}
         </span>
       </div>

@@ -10,6 +10,7 @@ import type { App, ServiceAccount } from 'firebase-admin/app'
 import { getAuth } from 'firebase-admin/auth'
 import { getDatabase } from 'firebase-admin/database'
 import { getStorage } from 'firebase-admin/storage'
+import { useRuntimeConfig } from 'nitropack/runtime'
 
 let firebaseAdminApp: App
 const config = useRuntimeConfig()

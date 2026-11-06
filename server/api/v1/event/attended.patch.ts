@@ -1,7 +1,18 @@
 // PATCH /api/v1/event/attended
 // Admin-only: set attended = true/false for an attendant
 
+import { createError, defineEventHandler, readBody, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { Instant } from '@/domain/time'
+import { authorizeStoredEvent } from '@/server/utils/eventOwner'
+import { db } from '@/server/utils/firebase'
+import {
+  addEventContext,
+  setErrorContext,
+  setLogImportance,
+  setResourceContext,
+  withDbTiming,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

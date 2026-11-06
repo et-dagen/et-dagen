@@ -3,7 +3,10 @@ import type {
   StoredUser,
   UserRepository,
 } from '@/application/users/userRepository'
-import { entitlementsFor } from '@/domain/authorization/entitlements'
+import {
+  entitlementsFor,
+  withoutWithheld,
+} from '@/domain/authorization/entitlements'
 import type { Subject } from '@/domain/authorization/subject'
 import type { ISO8601String } from '@/domain/time'
 import type { UserUid } from '@/domain/user'
@@ -35,7 +38,13 @@ export async function whoIsAsking(
       uid,
       roles: user.roles,
       companies: new Map(
-        companies.map((company) => [company.uid, entitlementsFor(company)]),
+        companies.map((company) => [
+          company.uid,
+          withoutWithheld(
+            entitlementsFor(company),
+            user.withheld?.get(company.uid),
+          ),
+        ]),
       ),
       applicant: user.applicant,
     },

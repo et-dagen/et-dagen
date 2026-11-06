@@ -52,6 +52,58 @@ describe('PUT /api/v1/user/access', () => {
     expect(Object.keys(subject.companies).sort()).toEqual(['acme', 'globex'])
   })
 
+  it('withholds an entitlement from one employee, while their colleague keeps it', async () => {
+    const admin = await createUser({ userType: 'admin' })
+    const [one, colleague] = [
+      await createUser({ userType: 'company', companyUID: 'globex' }),
+      await createUser({ userType: 'company', companyUID: 'globex' }),
+    ]
+    const resumes = (token: string) =>
+      api('/api/v1/user?scope=all', { token }).then((r) =>
+        (r.body as { resume?: string }[]).some((u) => 'resume' in u),
+      )
+    await createUser({ ...student, resume: 'resumes/someone.pdf' })
+
+    const response = await api('/api/v1/user/access', {
+      method: 'PUT',
+      body: {
+        uid: one.uid,
+        roles: ['company'],
+        memberships: [
+          {
+            companyUID: 'globex',
+            kind: 'employee',
+            withheld: ['ent:resume:view'],
+          },
+        ],
+      },
+      token: admin.token,
+    })
+
+    expect(response.status).toBe(204)
+    expect((await subjectFor(one.token)).companies.globex).not.toContain(
+      'ent:resume:view',
+    )
+    expect((await subjectFor(colleague.token)).companies.globex).toContain(
+      'ent:resume:view',
+    )
+    expect(await resumes(one.token)).toBe(false)
+    expect(await resumes(colleague.token)).toBe(true)
+
+    const shown = await api(`/api/v1/user/access?uid=${one.uid}`, {
+      token: admin.token,
+    })
+    expect(shown.body).toMatchObject({
+      memberships: [
+        {
+          companyUID: 'globex',
+          kind: 'employee',
+          withheld: ['ent:resume:view'],
+        },
+      ],
+    })
+  })
+
   it('leaves it to admins', async () => {
     const volunteer = await createUser(student)
 
@@ -156,7 +208,7 @@ describe('signing up', () => {
     expect(await read(`memberships/${uid}`)).toBeNull()
   })
 
-  it("makes an account with a registration code a contact for the code's company", async () => {
+  it('makes an account with an old registration code a student, not a contact', async () => {
     await seed('registrationCodes', {
       k1: { code: 'acme-abcdefgh', companyUID: 'acme' },
     })
@@ -164,15 +216,14 @@ describe('signing up', () => {
 
     await api('/api/v1/user?code=acme-abcdefgh', {
       method: 'POST',
-      body: {},
+      body: { studyProgram: 'MTEL', currentYear: 3 },
       token,
     })
 
     expect(Object.keys((await read(`roles/${uid}`)) as object)).toEqual([
-      'company',
+      'user',
     ])
-    expect(await read(`memberships/${uid}/acme/kind`)).toBe('employee')
-    expect((await subjectFor(token)).companies).toHaveProperty('acme')
+    expect(await read(`memberships/${uid}`)).toBeNull()
   })
 
   it("leaves an existing account's roles alone when it changes its profile", async () => {

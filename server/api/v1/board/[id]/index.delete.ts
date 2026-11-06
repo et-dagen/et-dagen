@@ -1,9 +1,12 @@
 // DELETE /api/v1/board/:id
 // endpoint for removing a board member
+import { defineEventHandler, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { removeMember } from '@/application/board/members'
 import { Instant } from '@/domain/time'
 import { memberIdOf } from '@/server/board/memberId'
 import { board, fileStorage, files } from '@/server/composition'
+import { setResourceContext } from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

@@ -1,6 +1,8 @@
+import { useAuthStore } from '@/stores/authStore'
+
 export default defineNuxtRouteMiddleware(async (to) => {
-  // check if route is protected
-  if (!to.meta.protected) return
+  // a page in an area is protected too; `protected` alone asks only for a signed-in user
+  if (!to.meta.protected && !to.meta.area) return
 
   const auth = useAuthStore()
   // signed in on this page, so the server has not sent the subject yet

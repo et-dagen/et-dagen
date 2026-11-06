@@ -1,10 +1,23 @@
 // GET /api/v1/user
 // endpoint for fetching user data from database
 
+import { createError, defineEventHandler, getQuery } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { hasPermission } from '@/domain/authorization/hasPermission'
 import { Instant } from '@/domain/time'
 import { UserUid } from '@/domain/user'
 import { access } from '@/server/composition'
+import { membershipBodyOf } from '@/contracts/user'
+import { auth, db } from '@/server/utils/firebase'
+import { visibleUsers } from '@/server/utils/userVisibility'
+import {
+  addEventContext,
+  setErrorContext,
+  setLogImportance,
+  setResourceContext,
+  withDbTiming,
+} from '@/server/utils/wideEventHelpers'
+import formatFirebaseUser from '@/server/utils/formatFirebaseUser'
 
 defineRouteMeta({
   openAPI: {
@@ -146,10 +159,7 @@ export default defineEventHandler(async (event) => {
           ...user,
           access: {
             roles: held.roles,
-            memberships: held.memberships.map(({ company, kind }) => ({
-              companyUID: company,
-              kind,
-            })),
+            memberships: held.memberships.map(membershipBodyOf),
           },
         }
       : user

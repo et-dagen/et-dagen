@@ -1,11 +1,18 @@
 // PUT /api/v1/user/access
 // endpoint for setting a user's roles and company memberships
+import { defineEventHandler, readBody, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { assignAccess } from '@/application/users/access'
 import { checkedAccess } from '@/domain/authorization/access'
 import { fail } from '@/domain/errors'
 import { Instant } from '@/domain/time'
 import { UserUid } from '@/domain/user'
 import { access, companies, users } from '@/server/composition'
+import {
+  addEventContext,
+  setLogImportance,
+  setResourceContext,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {
@@ -14,7 +21,9 @@ defineRouteMeta({
     description:
       'Admin only. Body: `{ uid, roles, memberships: [{ companyUID, kind }] }`, where `kind` is ' +
       '`employee` (needs the `company` role) or `coordinator` (needs the `coordinator` role). ' +
-      'Replaces what the user had; a membership left out is ended.',
+      'Replaces what the user had; a membership left out is ended. An `employee` membership may ' +
+      'list `withheld` entitlements (`ent:resume:view`, `ent:job:manage`, `ent:profile:manage`), ' +
+      'which this person loses while the company keeps them.',
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],
   },
 })

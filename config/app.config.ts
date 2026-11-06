@@ -46,6 +46,4 @@ const dietaryFlags = [
   { name: 'lactose' },
 ]
 
-const jobTypes = ['full-time', 'graduate', 'summer-internship']
-
-export { routes, dietaryFlags, jobTypes }
+export { routes, dietaryFlags }

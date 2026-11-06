@@ -96,4 +96,39 @@ describe('checkedAccess', () => {
       expect(checkedAccess(body)).toEqual({ problem: 'user/invalid-access' })
     }
   })
+
+  it('reads what is withheld from an employee, once each', () => {
+    expect(
+      checkedAccess({
+        roles: ['company'],
+        memberships: [
+          {
+            companyUID: 'acme',
+            kind: 'employee',
+            withheld: ['ent:resume:view', 'ent:resume:view'],
+          },
+        ],
+      }),
+    ).toEqual({
+      roles: ['company'],
+      memberships: [
+        { company: acme, kind: 'employee', withheld: ['ent:resume:view'] },
+      ],
+    })
+  })
+
+  it("refuses withholding from a coordinator, or what can't be withheld", () => {
+    for (const membership of [
+      { companyUID: 'acme', kind: 'coordinator', withheld: ['ent:job:manage'] },
+      { companyUID: 'acme', kind: 'employee', withheld: ['ent:event:manage'] },
+      { companyUID: 'acme', kind: 'employee', withheld: 'ent:job:manage' },
+    ]) {
+      expect(
+        checkedAccess({
+          roles: ['company', 'coordinator'],
+          memberships: [membership],
+        }),
+      ).toEqual({ problem: 'user/invalid-access' })
+    }
+  })
 })

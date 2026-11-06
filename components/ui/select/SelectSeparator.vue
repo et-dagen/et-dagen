@@ -16,11 +16,6 @@
   <SelectSeparator
     data-slot="select-separator"
     v-bind="delegatedProps"
-    :class="
-      cn(
-        'tw:bg-border tw:pointer-events-none tw:-mx-1 tw:my-1 tw:h-px',
-        props.class,
-      )
-    "
+    :class="cn('bg-border pointer-events-none -mx-1 my-1 h-px', props.class)"
   />
 </template>
