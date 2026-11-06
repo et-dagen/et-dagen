@@ -28,7 +28,7 @@
   <div>
     <h1
       v-if="isList"
-      class="tw:mb-6 tw:text-2xl tw:leading-8 tw:font-extrabold tw:tracking-tight tw:lg:text-[2rem] tw:lg:leading-10"
+      class="mb-6 text-2xl leading-8 font-extrabold tracking-tight lg:text-[2rem] lg:leading-10"
     >
       {{ $t(`admin.${panel}.name`) }}
     </h1>

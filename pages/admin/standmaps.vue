@@ -90,63 +90,61 @@
 </script>
 
 <template>
-  <div class="tw:flex tw:max-w-4xl tw:flex-col tw:gap-6">
-    <p class="tw:text-muted-foreground">{{ $t('admin.standmaps.intro') }}</p>
+  <div class="flex max-w-4xl flex-col gap-6">
+    <p class="text-muted-foreground">{{ $t('admin.standmaps.intro') }}</p>
 
     <input
       ref="picker"
       type="file"
       accept="image/png,image/jpeg,image/webp"
-      class="tw:hidden"
+      class="hidden"
       @change="upload"
     />
 
     <ul
       v-if="days.length"
-      class="tw:divide-y tw:overflow-hidden tw:rounded-lg tw:border tw:bg-card"
+      class="divide-y overflow-hidden rounded-lg border bg-card"
     >
       <li
         v-for="row in days"
         :key="row.day"
-        class="tw:flex tw:flex-col tw:gap-4 tw:p-4 tw:sm:flex-row tw:sm:items-center"
+        class="flex flex-col gap-4 p-4 sm:flex-row sm:items-center"
       >
         <a
           v-if="row.map"
           :href="row.map.url"
           target="_blank"
           rel="noopener"
-          class="tw:block tw:h-20 tw:w-32 tw:shrink-0 tw:overflow-hidden tw:rounded-md tw:border tw:bg-muted"
+          class="block h-20 w-32 shrink-0 overflow-hidden rounded-md border bg-muted"
           :aria-label="$t('admin.standmaps.open', { day: label(row.day) })"
         >
-          <img :src="row.map.url" alt="" class="tw:size-full tw:object-cover" />
+          <img :src="row.map.url" alt="" class="size-full object-cover" />
         </a>
         <div
           v-else
-          class="tw:flex tw:h-20 tw:w-32 tw:shrink-0 tw:items-center tw:justify-center tw:rounded-md tw:border tw:border-dashed tw:text-muted-foreground"
+          class="flex h-20 w-32 shrink-0 items-center justify-center rounded-md border border-dashed text-muted-foreground"
         >
-          <MapPinned class="tw:size-6" stroke-width="1.5" aria-hidden="true" />
+          <MapPinned class="size-6" stroke-width="1.5" aria-hidden="true" />
         </div>
 
-        <div class="tw:min-w-0 tw:flex-1">
-          <p class="tw:font-bold tw:first-letter:uppercase">
+        <div class="min-w-0 flex-1">
+          <p class="font-bold first-letter:uppercase">
             {{ label(row.day) }}
           </p>
-          <p class="tw:text-sm tw:text-muted-foreground">
+          <p class="text-sm text-muted-foreground">
             {{ $t('admin.standmaps.events', row.events) }}
           </p>
-          <div
-            class="tw:mt-1 tw:flex tw:flex-wrap tw:items-center tw:gap-2 tw:text-sm"
-          >
+          <div class="mt-1 flex flex-wrap items-center gap-2 text-sm">
             <template v-if="row.map">
-              <span class="tw:truncate">{{ row.map.name }}</span>
+              <span class="truncate">{{ row.map.name }}</span>
             </template>
-            <span v-else class="tw:text-muted-foreground">{{
+            <span v-else class="text-muted-foreground">{{
               $t('admin.standmaps.none')
             }}</span>
           </div>
         </div>
 
-        <div class="tw:flex tw:gap-2">
+        <div class="flex gap-2">
           <Button
             variant="outline"
             :disabled="busy !== null"
@@ -160,7 +158,7 @@
           <Button
             v-if="row.map"
             variant="ghost"
-            class="tw:text-destructive tw:hover:bg-destructive/10 tw:hover:text-destructive"
+            class="text-destructive hover:bg-destructive/10 hover:text-destructive"
             :disabled="busy !== null"
             :aria-label="$t('admin.standmaps.remove', { day: label(row.day) })"
             @click="removing = { day: row.day, name: row.map.name }"
@@ -170,25 +168,22 @@
         </div>
       </li>
     </ul>
-    <p
-      v-else
-      class="tw:rounded-lg tw:border tw:bg-card tw:p-6 tw:text-muted-foreground"
-    >
+    <p v-else class="rounded-lg border bg-card p-6 text-muted-foreground">
       {{ $t('admin.standmaps.empty') }}
     </p>
 
     <form
-      class="tw:flex tw:flex-col tw:gap-2 tw:sm:flex-row tw:sm:items-end"
+      class="flex flex-col gap-2 sm:flex-row sm:items-end"
       @submit.prevent="chooseOther"
     >
-      <div class="tw:flex tw:flex-col tw:gap-1.5">
+      <div class="flex flex-col gap-1.5">
         <Label for="other-day">{{ $t('admin.standmaps.other') }}</Label>
         <Input
           id="other-day"
           v-model="otherDay"
           type="date"
           :min="today"
-          class="tw:w-48"
+          class="w-48"
         />
       </div>
       <Button
@@ -200,7 +195,7 @@
         {{ $t('admin.standmaps.upload') }}
       </Button>
     </form>
-    <p class="tw:text-sm tw:text-muted-foreground">
+    <p class="text-sm text-muted-foreground">
       {{ $t('admin.standmaps.formats') }}
     </p>
 

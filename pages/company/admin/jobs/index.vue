@@ -43,12 +43,10 @@
 </script>
 
 <template>
-  <div class="tw:flex tw:flex-col tw:gap-4">
-    <div
-      class="tw:mb-2 tw:flex tw:flex-wrap tw:items-center tw:justify-between tw:gap-3"
-    >
+  <div class="flex flex-col gap-4">
+    <div class="mb-2 flex flex-wrap items-center justify-between gap-3">
       <h1
-        class="tw:text-2xl tw:leading-8 tw:font-extrabold tw:tracking-tight tw:lg:text-[2rem] tw:lg:leading-10"
+        class="text-2xl leading-8 font-extrabold tracking-tight lg:text-[2rem] lg:leading-10"
       >
         {{ $t('company.admin.jobs.name') }}
       </h1>
@@ -60,15 +58,15 @@
       </Button>
     </div>
 
-    <ul v-if="managed.length" class="tw:rounded-lg tw:border tw:bg-card">
+    <ul v-if="managed.length" class="rounded-lg border bg-card">
       <li
         v-for="[uid, job] in managed"
         :key="uid"
-        class="tw:flex tw:flex-wrap tw:items-center tw:justify-between tw:gap-3 tw:border-t tw:p-4 tw:first:border-t-0 tw:lg:px-5"
+        class="flex flex-wrap items-center justify-between gap-3 border-t p-4 first:border-t-0 lg:px-5"
       >
-        <div class="tw:min-w-0">
-          <p class="tw:font-bold">{{ job.title }}</p>
-          <p class="tw:mt-1 tw:text-sm tw:text-muted-foreground">
+        <div class="min-w-0">
+          <p class="font-bold">{{ job.title }}</p>
+          <p class="mt-1 text-sm text-muted-foreground">
             {{ companies?.[job.companyUID ?? '']?.name }}
             <template v-if="job.deadline">
               ·
@@ -94,7 +92,7 @@
     </ul>
     <p
       v-else
-      class="tw:rounded-lg tw:border tw:bg-card tw:px-4 tw:py-10 tw:text-center tw:text-muted-foreground"
+      class="rounded-lg border bg-card px-4 py-10 text-center text-muted-foreground"
     >
       {{ $t('company.admin.jobs.empty') }}
     </p>

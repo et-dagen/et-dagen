@@ -28,7 +28,7 @@
 <template>
   <DropdownMenu>
     <DropdownMenuTrigger
-      class="tw:flex tw:items-center tw:gap-1.5 tw:rounded-md tw:px-2 tw:py-1.5 tw:text-sm tw:font-bold tw:hover:bg-muted"
+      class="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-bold hover:bg-muted"
       :aria-label="$t('site.language.current', { name: current.name })"
     >
       <img
@@ -36,15 +36,12 @@
         alt=""
         width="20"
         height="15"
-        class="tw:h-[15px] tw:w-5 tw:rounded-[2px] tw:object-cover tw:shadow-[0_0_0_1px_rgb(0_0_0/0.08)]"
+        class="h-[15px] w-5 rounded-[2px] object-cover shadow-[0_0_0_1px_rgb(0_0_0/0.08)]"
       />
       {{ current.code.toUpperCase() }}
-      <ChevronDown
-        class="tw:size-4 tw:text-muted-foreground"
-        aria-hidden="true"
-      />
+      <ChevronDown class="size-4 text-muted-foreground" aria-hidden="true" />
     </DropdownMenuTrigger>
-    <DropdownMenuContent align="end" class="tw:w-44">
+    <DropdownMenuContent align="end" class="w-44">
       <DropdownMenuRadioGroup
         :model-value="locale"
         @update:model-value="choose"
@@ -54,14 +51,14 @@
           :key="language.code"
           :value="language.code"
           :lang="language.lang"
-          class="tw:gap-2"
+          class="gap-2"
         >
           <img
             :src="language.flag"
             alt=""
             width="20"
             height="15"
-            class="tw:h-[15px] tw:w-5 tw:rounded-[2px] tw:object-cover tw:shadow-[0_0_0_1px_rgb(0_0_0/0.08)]"
+            class="h-[15px] w-5 rounded-[2px] object-cover shadow-[0_0_0_1px_rgb(0_0_0/0.08)]"
           />
           {{ language.name }}
         </DropdownMenuRadioItem>

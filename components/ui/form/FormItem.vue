@@ -16,7 +16,7 @@
 <template>
   <div
     data-slot="form-item"
-    :class="cn('tw:grid tw:content-start tw:gap-2', props.class)"
+    :class="cn('grid content-start gap-2', props.class)"
   >
     <slot />
   </div>

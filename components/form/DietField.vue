@@ -24,20 +24,20 @@
 </script>
 
 <template>
-  <div class="tw:flex tw:flex-wrap tw:gap-2">
+  <div class="flex flex-wrap gap-2">
     <button
       v-for="flag in KNOWN"
       :key="flag"
       type="button"
       :aria-pressed="diet.includes(flag)"
-      class="tw:inline-flex tw:h-8 tw:items-center tw:rounded-md tw:border tw:bg-card tw:px-2.5 tw:pt-0.5 tw:text-sm tw:hover:bg-accent tw:aria-pressed:border-plate tw:aria-pressed:bg-plate tw:aria-pressed:text-plate-foreground"
+      class="inline-flex h-8 items-center rounded-md border bg-card px-2.5 pt-0.5 text-sm hover:bg-accent aria-pressed:border-plate aria-pressed:bg-plate aria-pressed:text-plate-foreground"
       @click="toggle(flag)"
     >
       {{ $t(`dietary_restrictions.${flag}`) }}
     </button>
   </div>
-  <div class="tw:flex tw:flex-col tw:gap-2">
+  <div class="flex flex-col gap-2">
     <Label for="diet-other">{{ otherLabel }}</Label>
-    <Input id="diet-other" v-model="other" class="tw:lg:w-1/2" />
+    <Input id="diet-other" v-model="other" class="lg:w-1/2" />
   </div>
 </template>

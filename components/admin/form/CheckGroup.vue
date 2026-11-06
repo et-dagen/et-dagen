@@ -12,11 +12,11 @@
 </script>
 
 <template>
-  <div class="tw:gap-2 tw:rounded-md tw:border tw:p-3">
+  <div class="gap-2 rounded-md border p-3">
     <label
       v-for="option in options"
       :key="option.value"
-      class="tw:flex tw:items-center tw:gap-2 tw:text-sm"
+      class="flex items-center gap-2 text-sm"
     >
       <Checkbox
         :model-value="checked.includes(option.value)"

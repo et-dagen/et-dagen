@@ -88,37 +88,37 @@
 </script>
 
 <template>
-  <div class="tw:rounded-lg tw:border tw:bg-card tw:p-6 tw:sm:p-8">
-    <div class="tw:mb-6 tw:grid tw:grid-cols-2 tw:gap-1.5" aria-hidden="true">
-      <span class="tw:h-1 tw:rounded-full tw:bg-brand" />
+  <div class="rounded-lg border bg-card p-6 sm:p-8">
+    <div class="mb-6 grid grid-cols-2 gap-1.5" aria-hidden="true">
+      <span class="h-1 rounded-full bg-brand" />
       <span
-        class="tw:h-1 tw:rounded-full tw:bg-border tw:transition-colors tw:duration-300"
-        :class="step === 2 && 'tw:bg-brand'"
+        class="h-1 rounded-full bg-border transition-colors duration-300"
+        :class="step === 2 && 'bg-brand'"
       />
     </div>
-    <p class="tw:sr-only" aria-live="polite">
+    <p class="sr-only" aria-live="polite">
       {{ $t('signin.step', { n: step }) }}
     </p>
 
     <Transition
       mode="out-in"
-      enter-active-class="tw:transition tw:duration-200 tw:ease-out tw:motion-reduce:transition-none"
-      enter-from-class="tw:opacity-0 tw:translate-x-2"
-      leave-active-class="tw:transition tw:duration-100 tw:motion-reduce:transition-none"
-      leave-to-class="tw:opacity-0"
+      enter-active-class="transition duration-200 ease-out motion-reduce:transition-none"
+      enter-from-class="opacity-0 translate-x-2"
+      leave-active-class="transition duration-100 motion-reduce:transition-none"
+      leave-to-class="opacity-0"
       @after-enter="focusStep"
     >
       <form
         v-if="step === 1"
         key="email"
         novalidate
-        class="tw:flex tw:flex-col tw:gap-5"
+        class="flex flex-col gap-5"
         @submit.prevent="next"
       >
-        <h1 class="tw:text-3xl tw:font-extrabold tw:tracking-tight">
+        <h1 class="text-3xl font-extrabold tracking-tight">
           {{ $t('signin.title') }}
         </h1>
-        <div class="tw:flex tw:flex-col tw:gap-2">
+        <div class="flex flex-col gap-2">
           <Label for="signin-email">{{ $t('signin.email') }}</Label>
           <Input
             id="signin-email"
@@ -136,12 +136,12 @@
             v-if="error"
             id="signin-error"
             role="alert"
-            class="tw:text-sm tw:font-semibold tw:text-destructive"
+            class="text-sm font-semibold text-destructive"
           >
             {{ error }}
           </p>
         </div>
-        <Button type="submit" size="lg" class="tw:h-11">
+        <Button type="submit" size="lg" class="h-11">
           {{ $t('signin.continue') }}
         </Button>
       </form>
@@ -150,20 +150,20 @@
         v-else
         key="password"
         novalidate
-        class="tw:flex tw:flex-col tw:gap-5"
+        class="flex flex-col gap-5"
         @submit.prevent="submit"
       >
-        <div class="tw:flex tw:flex-col tw:gap-1">
-          <h1 class="tw:text-3xl tw:font-extrabold tw:tracking-tight">
+        <div class="flex flex-col gap-1">
+          <h1 class="text-3xl font-extrabold tracking-tight">
             {{ $t('signin.password_title') }}
           </h1>
           <p
-            class="tw:flex tw:min-w-0 tw:flex-wrap tw:items-baseline tw:gap-x-2 tw:text-muted-foreground"
+            class="flex min-w-0 flex-wrap items-baseline gap-x-2 text-muted-foreground"
           >
-            <span class="tw:min-w-0 tw:break-all">{{ email }}</span>
+            <span class="min-w-0 break-all">{{ email }}</span>
             <button
               type="button"
-              class="tw:font-semibold tw:text-foreground tw:underline tw:underline-offset-4 tw:hover:text-brand"
+              class="font-semibold text-foreground underline underline-offset-4 hover:text-brand"
               :aria-label="$t('signin.change_label')"
               @click="back"
             >
@@ -180,11 +180,11 @@
           readonly
           tabindex="-1"
           aria-hidden="true"
-          class="tw:sr-only"
+          class="sr-only"
         />
-        <div class="tw:flex tw:flex-col tw:gap-2">
+        <div class="flex flex-col gap-2">
           <Label for="signin-password">{{ $t('signin.password') }}</Label>
-          <div class="tw:relative">
+          <div class="relative">
             <Input
               id="signin-password"
               v-model="password"
@@ -192,7 +192,7 @@
               name="password"
               autocomplete="current-password"
               variant="public"
-              class="tw:pr-20"
+              class="pr-20"
               :aria-invalid="!!error || undefined"
               :aria-describedby="error ? 'signin-error' : undefined"
             />
@@ -200,41 +200,37 @@
               type="button"
               variant="ghost"
               size="sm"
-              class="tw:absolute tw:inset-y-1 tw:right-1 tw:h-auto"
+              class="absolute inset-y-1 right-1 h-auto"
               @click="showPassword = !showPassword"
             >
               <EyeOff v-if="showPassword" aria-hidden="true" />
               <Eye v-else aria-hidden="true" />
               {{ $t(showPassword ? 'signin.hide' : 'signin.show') }}
-              <span class="tw:sr-only">{{ $t('signin.the_password') }}</span>
+              <span class="sr-only">{{ $t('signin.the_password') }}</span>
             </Button>
           </div>
           <p
             v-if="error"
             id="signin-error"
             role="alert"
-            class="tw:text-sm tw:font-semibold tw:text-destructive"
+            class="text-sm font-semibold text-destructive"
           >
             {{ error }}
           </p>
         </div>
-        <Button type="submit" size="lg" class="tw:h-11" :disabled="pending">
+        <Button type="submit" size="lg" class="h-11" :disabled="pending">
           {{ $t(pending ? 'signin.pending' : 'signin.submit') }}
         </Button>
-        <div class="tw:flex tw:flex-col tw:gap-2">
+        <div class="flex flex-col gap-2">
           <button
             type="button"
-            class="tw:w-fit tw:font-semibold tw:text-brand tw:underline-offset-4 tw:hover:underline tw:disabled:opacity-60"
+            class="w-fit font-semibold text-brand underline-offset-4 hover:underline disabled:opacity-60"
             :disabled="resetting"
             @click="forgot"
           >
             {{ $t('signin.forgot') }}
           </button>
-          <p
-            v-if="notice"
-            role="status"
-            class="tw:text-sm tw:text-muted-foreground"
-          >
+          <p v-if="notice" role="status" class="text-sm text-muted-foreground">
             {{ notice }}
           </p>
         </div>

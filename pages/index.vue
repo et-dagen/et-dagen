@@ -30,7 +30,7 @@
 </script>
 
 <template>
-  <div class="et-ui tw:bg-background tw:text-foreground">
+  <div class="et-ui bg-background text-foreground">
     <Hero
       :fair="fair"
       :has-companies="hasCompanies"

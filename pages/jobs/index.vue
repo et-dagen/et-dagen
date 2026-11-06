@@ -115,13 +115,11 @@
 <template>
   <div class="et-ui">
     <div
-      class="tw:mx-auto tw:grid tw:max-w-6xl tw:gap-6 tw:px-4 tw:py-8 tw:lg:grid-cols-[18rem_minmax(0,1fr)] tw:lg:gap-10 tw:lg:px-8 tw:lg:py-12"
+      class="mx-auto grid max-w-6xl gap-6 px-4 py-8 lg:grid-cols-[18rem_minmax(0,1fr)] lg:gap-10 lg:px-8 lg:py-12"
     >
-      <aside
-        class="tw:flex tw:flex-col tw:gap-5 tw:lg:sticky tw:lg:top-24 tw:lg:self-start"
-      >
+      <aside class="flex flex-col gap-5 lg:sticky lg:top-24 lg:self-start">
         <h1
-          class="tw:text-3xl tw:leading-tight tw:font-extrabold tw:tracking-tight tw:lg:text-[2.5rem]"
+          class="text-3xl leading-tight font-extrabold tracking-tight lg:text-[2.5rem]"
         >
           {{ $t('jobs.list.title') }}
         </h1>
@@ -133,25 +131,25 @@
 
         <Button
           variant="outline"
-          class="tw:w-full tw:justify-between tw:bg-card tw:lg:hidden"
+          class="w-full justify-between bg-card lg:hidden"
           :aria-expanded="filtersOpen"
           aria-controls="job-filters"
           @click="filtersOpen = !filtersOpen"
         >
-          <span class="tw:inline-flex tw:items-center tw:gap-2">
+          <span class="inline-flex items-center gap-2">
             <SlidersHorizontal aria-hidden="true" />
             {{ $t('jobs.list.filters') }}
           </span>
-          <span class="tw:inline-flex tw:items-center tw:gap-2">
+          <span class="inline-flex items-center gap-2">
             <span
               v-if="active"
-              class="tw:rounded-sm tw:bg-plate tw:px-1.5 tw:pt-0.5 tw:text-xs tw:font-bold tw:text-plate-foreground"
+              class="rounded-sm bg-plate px-1.5 pt-0.5 text-xs font-bold text-plate-foreground"
             >
               {{ active }}
             </span>
             <ChevronDown
-              class="tw:transition-transform"
-              :class="filtersOpen && 'tw:rotate-180'"
+              class="transition-transform"
+              :class="filtersOpen && 'rotate-180'"
               aria-hidden="true"
             />
           </span>
@@ -159,8 +157,8 @@
 
         <div
           id="job-filters"
-          class="tw:flex-col tw:gap-6 tw:lg:flex"
-          :class="filtersOpen ? 'tw:flex' : 'tw:hidden'"
+          class="flex-col gap-6 lg:flex"
+          :class="filtersOpen ? 'flex' : 'hidden'"
         >
           <FilterGroup
             v-if="typeOptions.length"
@@ -168,21 +166,19 @@
             :label="$t('jobs.list.type')"
             :options="typeOptions"
           />
-          <fieldset class="tw:flex tw:flex-col tw:gap-2">
-            <legend
-              class="tw:mb-2 tw:text-sm tw:font-semibold tw:text-muted-foreground"
-            >
+          <fieldset class="flex flex-col gap-2">
+            <legend class="mb-2 text-sm font-semibold text-muted-foreground">
               {{ $t('jobs.list.deadline') }}
             </legend>
             <button
               type="button"
               :aria-pressed="filters.soon"
               :disabled="facets.soon === 0 && !filters.soon"
-              class="tw:inline-flex tw:h-9 tw:w-fit tw:items-center tw:gap-2 tw:rounded-md tw:border tw:bg-card tw:px-3 tw:pt-0.5 tw:text-sm tw:font-semibold tw:transition-colors tw:hover:bg-accent tw:active:translate-y-px tw:disabled:opacity-40 tw:aria-pressed:border-signal tw:aria-pressed:bg-signal tw:aria-pressed:text-signal-foreground"
+              class="inline-flex h-9 w-fit items-center gap-2 rounded-md border bg-card px-3 pt-0.5 text-sm font-semibold transition-colors hover:bg-accent active:translate-y-px disabled:opacity-40 aria-pressed:border-signal aria-pressed:bg-signal aria-pressed:text-signal-foreground"
               @click="filters.soon = !filters.soon"
             >
               {{ $t('jobs.list.soon', { n: SOON_DAYS }) }}
-              <span class="tw:font-normal tw:tabular-nums tw:opacity-70">
+              <span class="font-normal tabular-nums opacity-70">
                 {{ facets.soon }}
               </span>
             </button>
@@ -202,31 +198,31 @@
           <button
             v-if="active && shown.length"
             type="button"
-            class="tw:inline-flex tw:w-fit tw:items-center tw:gap-1 tw:text-sm tw:font-semibold tw:text-muted-foreground tw:hover:text-foreground"
+            class="inline-flex w-fit items-center gap-1 text-sm font-semibold text-muted-foreground hover:text-foreground"
             @click="reset"
           >
-            <X class="tw:size-4" aria-hidden="true" />
+            <X class="size-4" aria-hidden="true" />
             {{ $t('jobs.list.reset') }}
           </button>
-          <Button class="tw:w-full tw:lg:hidden" @click="showResults">
+          <Button class="w-full lg:hidden" @click="showResults">
             {{ $t('jobs.list.show', shown.length) }}
           </Button>
         </div>
       </aside>
 
-      <main class="tw:flex tw:min-w-0 tw:flex-col tw:gap-3 tw:lg:pt-3">
+      <main class="flex min-w-0 flex-col gap-3 lg:pt-3">
         <p
           v-show="shown.length"
           ref="countLine"
           tabindex="-1"
-          class="tw:text-sm tw:text-muted-foreground tw:outline-none"
+          class="text-sm text-muted-foreground outline-none"
           aria-live="polite"
         >
           {{ $t('jobs.list.count', shown.length) }}
         </p>
         <ul
           v-if="shown.length"
-          class="tw:divide-y tw:divide-border tw:overflow-hidden tw:rounded-lg tw:border tw:bg-card"
+          class="divide-y divide-border overflow-hidden rounded-lg border bg-card"
         >
           <li v-for="job in shown" :key="job.uid">
             <JobRowItem :job="job" />
@@ -234,9 +230,9 @@
         </ul>
         <div
           v-else
-          class="tw:flex tw:flex-col tw:items-start tw:gap-4 tw:rounded-lg tw:border tw:bg-card tw:p-6"
+          class="flex flex-col items-start gap-4 rounded-lg border bg-card p-6"
         >
-          <p class="tw:font-semibold">
+          <p class="font-semibold">
             {{ $t(rows.length ? 'jobs.list.no_match' : 'jobs.list.empty') }}
           </p>
           <Button v-if="rows.length" variant="outline" @click="reset">

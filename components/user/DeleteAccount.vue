@@ -47,21 +47,21 @@
 </script>
 
 <template>
-  <div class="tw:flex tw:flex-wrap tw:items-center tw:gap-x-4 tw:gap-y-3">
+  <div class="flex flex-wrap items-center gap-x-4 gap-y-3">
     <AlertDialog v-model:open="open">
       <AlertDialogTrigger as-child>
         <Button
           variant="outline"
-          class="tw:border-destructive tw:text-destructive tw:hover:bg-destructive/10 tw:hover:text-destructive"
+          class="border-destructive text-destructive hover:bg-destructive/10 hover:text-destructive"
         >
           <Trash2 aria-hidden="true" />
           {{ $t('user.delete.title') }}
         </Button>
       </AlertDialogTrigger>
 
-      <AlertDialogContent class="tw:rounded-md tw:bg-card">
+      <AlertDialogContent class="rounded-md bg-card">
         <AlertDialogHeader>
-          <AlertDialogTitle class="tw:text-lg tw:font-bold">
+          <AlertDialogTitle class="text-lg font-bold">
             {{ $t('user.delete.dialog_title') }}
           </AlertDialogTitle>
           <AlertDialogDescription>
@@ -69,7 +69,7 @@
           </AlertDialogDescription>
         </AlertDialogHeader>
 
-        <div class="tw:flex tw:flex-col tw:gap-2">
+        <div class="flex flex-col gap-2">
           <Label for="delete-confirmation">
             {{ $t('user.delete.confirm_label') }}
           </Label>
@@ -87,7 +87,7 @@
             {{ $t('user.delete.abort') }}
           </AlertDialogCancel>
           <Button
-            class="tw:bg-destructive tw:text-white tw:hover:bg-destructive/90"
+            class="bg-destructive text-white hover:bg-destructive/90"
             :disabled="!confirmed || loading"
             @click="deleteAccount"
           >
@@ -96,7 +96,7 @@
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-    <p class="tw:min-w-48 tw:flex-1 tw:text-sm tw:text-muted-foreground">
+    <p class="min-w-48 flex-1 text-sm text-muted-foreground">
       {{ $t('user.delete.description') }}
     </p>
   </div>

@@ -10,7 +10,7 @@
     v-if="error"
     :id="formMessageId"
     data-slot="form-message"
-    class="tw:text-sm tw:text-destructive"
+    class="text-sm text-destructive"
   >
     {{ $t(`form.errors.${error}`) }}
   </p>

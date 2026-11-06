@@ -4,23 +4,19 @@
 </script>
 
 <template>
-  <div
-    class="et-admin tw:min-h-dvh tw:lg:grid tw:lg:grid-cols-[240px_minmax(0,1fr)]"
-  >
-    <Rail class="tw:hidden tw:lg:flex" />
+  <div class="et-admin min-h-dvh lg:grid lg:grid-cols-[240px_minmax(0,1fr)]">
+    <Rail class="hidden lg:flex" />
 
     <header
-      class="tw:flex tw:h-14 tw:items-center tw:justify-between tw:bg-brand tw:px-4 tw:text-brand-foreground tw:lg:hidden"
+      class="flex h-14 items-center justify-between bg-brand px-4 text-brand-foreground lg:hidden"
     >
-      <p class="tw:text-lg tw:font-extrabold tw:tracking-tight">
-        E&amp;T-dagene
-      </p>
+      <p class="text-lg font-extrabold tracking-tight">E&amp;T-dagene</p>
     </header>
 
-    <main class="tw:min-w-0 tw:px-4 tw:pt-6 tw:pb-28 tw:lg:px-8 tw:lg:py-8">
+    <main class="min-w-0 px-4 pt-6 pb-28 lg:px-8 lg:py-8">
       <slot />
     </main>
 
-    <BottomBar class="tw:lg:hidden" />
+    <BottomBar class="lg:hidden" />
   </div>
 </template>

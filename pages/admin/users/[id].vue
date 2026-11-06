@@ -42,7 +42,7 @@
     :email="user?.email ?? ''"
     :initial="initial"
   />
-  <p v-else class="tw:text-muted-foreground">
+  <p v-else class="text-muted-foreground">
     {{ $t('admin.users.form.missing') }}
   </p>
 </template>

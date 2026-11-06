@@ -16,57 +16,55 @@
   ] as const
 
   const plate = [
-    'tw:relative tw:z-10 tw:grid tw:size-12 tw:shrink-0 tw:place-items-center tw:rounded-full',
-    'tw:text-xl tw:font-extrabold tw:text-plate-foreground tw:tabular-nums',
-    'tw:ring-4 tw:ring-background tw:lg:size-14 tw:lg:text-2xl',
+    'relative z-10 grid size-12 shrink-0 place-items-center rounded-full',
+    'text-xl font-extrabold text-plate-foreground tabular-nums',
+    'ring-4 ring-background lg:size-14 lg:text-2xl',
   ].join(' ')
 </script>
 
 <template>
   <div>
     <!-- the route runs down a rail on phones and across the page on wide screens -->
-    <ol
-      class="day-route tw:relative tw:grid tw:gap-6 tw:lg:grid-cols-6 tw:lg:gap-4"
-    >
+    <ol class="day-route relative grid gap-6 lg:grid-cols-6 lg:gap-4">
       <li
         v-for="(stop, index) in STOPS"
         :key="stop"
         :style="{ '--stop': index }"
-        class="tw:relative tw:flex tw:gap-4 tw:lg:flex-col tw:lg:gap-0"
+        class="relative flex gap-4 lg:flex-col lg:gap-0"
       >
         <span
           :class="[
             plate,
-            index === STOPS.length - 1 ? 'tw:bg-primary' : 'tw:bg-plate',
+            index === STOPS.length - 1 ? 'bg-primary' : 'bg-plate',
           ]"
           aria-hidden="true"
         >
           {{ index + 1 }}
         </span>
-        <div class="tw:pt-2 tw:lg:pt-4 tw:lg:pr-2">
-          <h3 class="tw:text-lg tw:font-extrabold tw:hyphens-auto">
+        <div class="pt-2 lg:pt-4 lg:pr-2">
+          <h3 class="text-lg font-extrabold hyphens-auto">
             {{ $t(`forcompanies.day.${stop}.title`) }}
           </h3>
-          <p class="tw:mt-1 tw:text-muted-foreground">
+          <p class="mt-1 text-muted-foreground">
             {{ $t(`forcompanies.day.${stop}.text`) }}
           </p>
         </div>
       </li>
     </ol>
     <div
-      class="tw:mt-6 tw:flex tw:flex-col tw:gap-3 tw:rounded-lg tw:border tw:border-dashed tw:border-primary tw:bg-card tw:px-5 tw:py-4 tw:sm:flex-row tw:sm:flex-wrap tw:sm:items-center tw:sm:gap-x-8"
+      class="mt-6 flex flex-col gap-3 rounded-lg border border-dashed border-primary bg-card px-5 py-4 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8"
     >
-      <p class="tw:font-extrabold tw:text-primary">
+      <p class="font-extrabold text-primary">
         {{ $t('forcompanies.day.allday.label') }}
       </p>
       <p
         v-for="{ key, icon } in ALL_DAY"
         :key="key"
-        class="tw:flex tw:items-center tw:gap-2"
+        class="flex items-center gap-2"
       >
         <component
           :is="icon"
-          class="tw:size-4 tw:text-muted-foreground"
+          class="size-4 text-muted-foreground"
           aria-hidden="true"
         />
         {{ $t(`forcompanies.day.allday.${key}`) }}

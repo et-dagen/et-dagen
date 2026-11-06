@@ -11,20 +11,17 @@
 </script>
 
 <template>
-  <label
-    class="tw:relative tw:block"
-    :class="fill ? 'tw:w-full' : 'tw:lg:w-96'"
-  >
-    <span class="tw:sr-only">{{ label }}</span>
+  <label class="relative block" :class="fill ? 'w-full' : 'lg:w-96'">
+    <span class="sr-only">{{ label }}</span>
     <Search
-      class="tw:pointer-events-none tw:absolute tw:top-1/2 tw:left-3 tw:size-4 tw:-translate-y-1/2 tw:text-muted-foreground"
+      class="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
       aria-hidden="true"
     />
     <Input
       v-model="query"
       type="search"
       :placeholder="label"
-      class="tw:h-10 tw:bg-card tw:pl-9"
+      class="h-10 bg-card pl-9"
     />
   </label>
 </template>

@@ -106,12 +106,12 @@
   <div class="et-ui">
     <div
       v-if="event && state"
-      class="tw:mx-auto tw:grid tw:max-w-6xl tw:gap-8 tw:px-4 tw:py-8 tw:lg:grid-cols-[minmax(0,1fr)_22rem] tw:lg:gap-12 tw:lg:px-8 tw:lg:py-12"
+      class="mx-auto grid max-w-6xl gap-8 px-4 py-8 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12 lg:px-8 lg:py-12"
     >
       <EventHeader :event="event" :company="company" :urgency="urgency" />
 
       <aside
-        class="tw:lg:sticky tw:lg:top-24 tw:lg:col-start-2 tw:lg:row-start-2 tw:lg:self-start"
+        class="lg:sticky lg:top-24 lg:col-start-2 lg:row-start-2 lg:self-start"
       >
         <!-- the panel depends on who is signed in and the clock, so it draws in the browser -->
         <ClientOnly>
@@ -126,18 +126,18 @@
             @changed="changed"
           />
           <template #fallback>
-            <div class="tw:h-64 tw:rounded-lg tw:border tw:bg-card" />
+            <div class="h-64 rounded-lg border bg-card" />
           </template>
         </ClientOnly>
       </aside>
 
       <article
-        class="tw:flex tw:min-w-0 tw:flex-col tw:gap-6 tw:lg:col-start-1 tw:lg:row-start-2"
+        class="flex min-w-0 flex-col gap-6 lg:col-start-1 lg:row-start-2"
       >
         <div
           role="tablist"
           :aria-label="$t('events.page.tabs.label')"
-          class="tw:flex tw:gap-4 tw:overflow-x-auto tw:border-b tw:sm:gap-6"
+          class="flex gap-4 overflow-x-auto border-b sm:gap-6"
           @keydown.right.prevent="moveTab(1)"
           @keydown.left.prevent="moveTab(-1)"
         >
@@ -150,18 +150,18 @@
             :aria-selected="tab === name"
             :aria-controls="`panel-${name}`"
             :tabindex="tab === name ? 0 : -1"
-            class="tw:-mb-px tw:inline-flex tw:h-11 tw:shrink-0 tw:items-center tw:border-b-2 tw:border-transparent tw:pt-0.5 tw:font-semibold tw:whitespace-nowrap tw:text-muted-foreground tw:hover:text-foreground tw:aria-selected:border-brand tw:aria-selected:text-foreground"
+            class="-mb-px inline-flex h-11 shrink-0 items-center border-b-2 border-transparent pt-0.5 font-semibold whitespace-nowrap text-muted-foreground hover:text-foreground aria-selected:border-brand aria-selected:text-foreground"
             @click="tab = name"
           >
-            <span class="tw:sm:hidden">
+            <span class="sm:hidden">
               {{ $t(`events.page.tabs.${name}_short`) }}
             </span>
-            <span class="tw:hidden tw:sm:inline">
+            <span class="hidden sm:inline">
               {{ $t(`events.page.tabs.${name}`) }}
             </span>
             <span
               v-if="tabCount(name)"
-              class="tw:ml-2 tw:rounded-sm tw:bg-muted tw:px-1.5 tw:pt-0.5 tw:text-xs tw:font-bold tw:text-foreground tw:tabular-nums"
+              class="ml-2 rounded-sm bg-muted px-1.5 pt-0.5 text-xs font-bold text-foreground tabular-nums"
               :aria-label="$t('events.page.tabs.jobs_count', tabCount(name))"
             >
               {{ tabCount(name) }}
@@ -200,13 +200,10 @@
 
     <div
       v-else
-      class="tw:mx-auto tw:flex tw:max-w-6xl tw:flex-col tw:items-start tw:gap-4 tw:px-4 tw:py-16 tw:lg:px-8"
+      class="mx-auto flex max-w-6xl flex-col items-start gap-4 px-4 py-16 lg:px-8"
     >
-      <h1 class="tw:text-2xl tw:font-bold">{{ $t('events.page.missing') }}</h1>
-      <NuxtLink
-        :to="localePath('/programme')"
-        class="tw:font-semibold tw:underline"
-      >
+      <h1 class="text-2xl font-bold">{{ $t('events.page.missing') }}</h1>
+      <NuxtLink :to="localePath('/programme')" class="font-semibold underline">
         {{ $t('events.page.back') }}
       </NuxtLink>
     </div>

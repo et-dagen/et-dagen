@@ -15,45 +15,45 @@
 </script>
 
 <template>
-  <div class="tw:flex tw:flex-col tw:gap-5">
+  <div class="flex flex-col gap-5">
     <p v-if="noSignup">{{ $t('events.page.state.none') }}</p>
-    <dl v-else class="tw:grid tw:gap-4 tw:sm:grid-cols-2">
+    <dl v-else class="grid gap-4 sm:grid-cols-2">
       <div>
-        <dt class="tw:text-sm tw:text-muted-foreground">
+        <dt class="text-sm text-muted-foreground">
           {{ $t('events.page.window.opens') }}
         </dt>
-        <dd class="tw:font-semibold">
+        <dd class="font-semibold">
           {{ windowText(event.registration?.start) }}
         </dd>
       </div>
       <div>
-        <dt class="tw:text-sm tw:text-muted-foreground">
+        <dt class="text-sm text-muted-foreground">
           {{ $t('events.page.window.closes') }}
         </dt>
-        <dd class="tw:font-semibold">
+        <dd class="font-semibold">
           {{ windowText(event.registration?.end) }}
         </dd>
       </div>
-      <div v-if="requirements?.years?.length" class="tw:sm:col-span-2">
-        <dt class="tw:text-sm tw:text-muted-foreground">
+      <div v-if="requirements?.years?.length" class="sm:col-span-2">
+        <dt class="text-sm text-muted-foreground">
           {{ $t('events.page.years') }}
         </dt>
-        <dd class="tw:mt-1 tw:flex tw:flex-wrap tw:gap-2">
+        <dd class="mt-1 flex flex-wrap gap-2">
           <span
             v-for="year in requirements.years"
             :key="year"
-            class="tw:rounded-md tw:border tw:bg-card tw:px-2.5 tw:pt-0.5 tw:text-sm tw:font-semibold"
+            class="rounded-md border bg-card px-2.5 pt-0.5 text-sm font-semibold"
           >
             {{ $t('company.admin.year', { n: year }) }}
           </span>
         </dd>
       </div>
-      <div v-if="requirements?.programmes?.length" class="tw:sm:col-span-2">
-        <dt class="tw:text-sm tw:text-muted-foreground">
+      <div v-if="requirements?.programmes?.length" class="sm:col-span-2">
+        <dt class="text-sm text-muted-foreground">
           {{ $t('events.page.programmes') }}
         </dt>
-        <dd class="tw:mt-1">
-          <ul class="tw:flex tw:flex-col tw:gap-1">
+        <dd class="mt-1">
+          <ul class="flex flex-col gap-1">
             <li v-for="programme in requirements.programmes" :key="programme">
               {{ programme }}
             </li>
@@ -61,7 +61,7 @@
         </dd>
       </div>
     </dl>
-    <p class="tw:text-sm tw:text-muted-foreground">
+    <p class="text-sm text-muted-foreground">
       {{ $t('events.page.privacy') }}
     </p>
   </div>

@@ -27,11 +27,11 @@
     data-slot="input"
     :class="
       cn(
-        'tw:file:text-foreground tw:placeholder:text-muted-foreground tw:selection:bg-primary tw:selection:text-primary-foreground tw:dark:bg-input/30 tw:border-input tw:h-9 tw:w-full tw:min-w-0 tw:rounded-md tw:border tw:bg-transparent tw:px-3 tw:py-1 tw:text-base tw:shadow-xs tw:transition-[color,box-shadow] tw:outline-none tw:file:inline-flex tw:file:h-7 tw:file:border-0 tw:file:bg-transparent tw:file:text-sm tw:file:font-medium tw:disabled:pointer-events-none tw:disabled:cursor-not-allowed tw:disabled:opacity-50 tw:md:text-sm',
-        'tw:focus-visible:border-ring tw:focus-visible:ring-ring/50 tw:focus-visible:ring-3',
-        'tw:aria-invalid:ring-destructive/20 tw:dark:aria-invalid:ring-destructive/40 tw:aria-invalid:border-destructive',
+        'file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm',
+        'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-3',
+        'aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive',
         props.variant === 'public' &&
-          'tw:h-11 tw:focus-visible:border-plate tw:focus-visible:ring-plate/15 tw:aria-invalid:focus-visible:border-destructive',
+          'h-11 focus-visible:border-plate focus-visible:ring-plate/15 aria-invalid:focus-visible:border-destructive',
         props.class,
       )
     "
