@@ -2,6 +2,9 @@ import { createError } from 'h3'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import formatFirebaseUser from '@/server/utils/formatFirebaseUser'
 import { subjectOf } from '@/tests/server/api/support/subject'
+import type { JobRepository } from '@/application/jobs/jobRepository'
+import { JobUid } from '@/domain/business/job'
+import { memoryJobRepository } from '@/server/adapters/memory/jobRepository'
 
 // The handlers rely on Nitro's auto-imports; stub them so they run as plain functions.
 let stored: Record<string, unknown> = {}
@@ -38,7 +41,6 @@ beforeEach(async () => {
   stored = {
     'companies/ours': { name: 'Ours', type: 'standard', cvAccess: false },
     'companies/ours/cvAccess': false,
-    'jobs/j1': { companyUID: 'ours', title: 'Job' },
     users: { student: { resume: 'https://example.com/cv.pdf' } },
   }
 
@@ -143,17 +145,31 @@ describe('GET /api/v1/resume?scope=all', () => {
 })
 
 describe('PUT /api/v1/job', () => {
+  // the handler writes through the JobRepository, so the stored job is what to check
+  let jobs: JobRepository
+  beforeEach(() => {
+    jobs = memoryJobRepository({ j1: { companyUID: 'ours', title: 'Job' } })
+    vi.doMock('@/server/composition', () => ({ jobs }))
+  })
+  const j1 = JobUid.parse('j1')
+
   it('ignores a company user moving its job to another company', async () => {
     await call('job', company, {
       jobUID: 'j1',
       companyUID: 'theirs',
       title: 'New',
     })
-    expect(update).toHaveBeenCalledWith('j1', { title: 'New' })
+    expect(await jobs.storedOne(j1)).toEqual({
+      companyUID: 'ours',
+      title: 'New',
+    })
   })
 
   it('lets an admin move a job', async () => {
     await call('job', admin, { jobUID: 'j1', companyUID: 'theirs' })
-    expect(update).toHaveBeenCalledWith('j1', { companyUID: 'theirs' })
+    expect(await jobs.storedOne(j1)).toEqual({
+      companyUID: 'theirs',
+      title: 'Job',
+    })
   })
 })
