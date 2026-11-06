@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { yearsOf } from '@/lib/user/programmes'
+import { programmesOf, yearsOf } from '@/lib/user/programmes'
 
 const programmes = [
   { name: 'Elektroingeniør', type: 'bachelor' },
@@ -18,5 +18,21 @@ describe('yearsOf', () => {
 
   it('offers nothing before a programme is chosen', () => {
     expect(yearsOf(programmes, '')).toEqual([])
+  })
+})
+
+describe('programmesOf', () => {
+  it('sorts the named programmes and reads old bare names', () => {
+    expect(
+      programmesOf({
+        a: { name: 'Kybernetikk', type: 'master' },
+        b: 'Elektroingeniør',
+        c: { type: 'bachelor' },
+      }),
+    ).toEqual([
+      { name: 'Elektroingeniør' },
+      { name: 'Kybernetikk', type: 'master' },
+    ])
+    expect(programmesOf(null)).toEqual([])
   })
 })

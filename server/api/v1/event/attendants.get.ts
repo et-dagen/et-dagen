@@ -1,7 +1,15 @@
 // GET /api/v1/event/attendants
 // Admin-only: get a list of attendant emails for a given event
 
+import { createError, defineEventHandler, getQuery } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { Instant } from '@/domain/time'
+import { authorizeStoredEvent } from '@/server/utils/eventOwner'
+import { auth, db } from '@/server/utils/firebase'
+import {
+  setLogImportance,
+  setResourceContext,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

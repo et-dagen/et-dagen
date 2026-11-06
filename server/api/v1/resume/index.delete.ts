@@ -1,9 +1,19 @@
 // DELETE /api/v1/resume
 // endpoint for deleting existing resumes
 
+import { defineEventHandler, readBody, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
+import { removeResume } from '@/application/users/resume'
 import { authorize } from '@/domain/authorization/authorize'
+import { fail } from '@/domain/errors'
 import { Instant } from '@/domain/time'
 import { UserUid } from '@/domain/user'
+import { files, fileStorage, resumes } from '@/server/composition'
+import {
+  addEventContext,
+  setLogImportance,
+  setResourceContext,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {
@@ -31,8 +41,7 @@ defineRouteMeta({
     //   204: { description: 'Deleted' },
     //   401: { description: 'auth/signed-out' },
     //   403: { description: 'auth/forbidden' },
-    //   404: { description: 'User does not have a resume' },
-    //   500: { description: 'Firebase: Error (storage/cannot-delete-file).' },
+    //   404: { description: 'resume/not-found' },
     // },
   },
 })
@@ -48,64 +57,26 @@ export default defineEventHandler(async (event) => {
 
   addEventContext(event, 'user_uid', userUID)
 
-  authorize(
-    subject,
-    'resume',
-    'write',
-    {
-      ownerUid:
-        typeof userUID === 'string' && userUID
-          ? UserUid.parse(userUID)
-          : undefined,
-      scope: 'own',
-    },
-    { now: Instant.now() },
-  )
-
-  const stored = await withDbTiming(
-    event,
-    `users/${userUID}/resume`,
-    'read',
-    () => db.ref(`users/${userUID}/resume`).once('value'),
-  )
-  const file = typeof stored.val() === 'string' ? stored.val().split('/') : null
-
-  if (!file) {
-    setErrorContext(event, {
-      code: 'storage/no-resume',
-      message: 'User does not have a resume',
-    })
-    throw createError({
-      statusCode: 404,
-      statusMessage: 'User does not have a resume',
-    })
+  if (typeof userUID !== 'string' || !userUID) {
+    // no user named: refused as v1 refused it, or nothing to delete
+    authorize(
+      subject,
+      'resume',
+      'write',
+      { scope: 'own' },
+      { now: Instant.now() },
+    )
+    throw fail('resume/not-found')
   }
 
-  // Get last element in array to get specific file name
-  const filename = file[file.length - 1]
-
-  // get storage bucket
-  const bucket = storage.bucket()
-  const filePath = `users/${userUID}/${filename}`
-  const fileRef = bucket.file(filePath)
-
-  // delete pdf buffer at reference
-  await withDbTiming(event, filePath, 'delete', () =>
-    fileRef.delete().catch(() => {
-      sendError(
-        event,
-        createError({
-          statusCode: 500,
-          statusMessage: 'Firebase: Error (storage/cannot-delete-file).',
-        }),
-      )
-    }),
+  await removeResume(
+    { files, storage: fileStorage, resumes, now: Instant.now },
+    {
+      subject,
+      now: Instant.now(),
+      owner: UserUid.parse(userUID),
+    },
   )
-
-  // Delete file reference from database
-  const userRef = db.ref('users')
-  userRef.child(userUID).child('resume').remove()
-  trackDbDelete(event, `users/${userUID}/resume`)
 
   sendNoContent(event, 204)
 })

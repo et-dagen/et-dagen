@@ -6,12 +6,13 @@
     Plus,
     Trash2,
   } from '@lucide/vue'
+  import { useCompanies } from '@/composables/useCompanies'
+  import { companyName } from '@/lib/companies'
   import DeleteDialog from '@/components/admin/DeleteDialog.vue'
   import FilterChips from '@/components/admin/FilterChips.vue'
-  import Pager from '@/components/admin/Pager.vue'
+  import ListShell from '@/components/admin/ListShell.vue'
   import SearchField from '@/components/admin/SearchField.vue'
   import SelectBox from '@/components/admin/SelectBox.vue'
-  import SelectionBar from '@/components/admin/SelectionBar.vue'
   import SortButton from '@/components/admin/SortButton.vue'
   import { Badge } from '@/components/ui/badge'
   import { Button } from '@/components/ui/button'
@@ -30,30 +31,14 @@
     TableHeader,
     TableRow,
   } from '@/components/ui/table'
-  import { useSelection } from '@/composables/admin/useSelection'
-  import { useSort } from '@/composables/admin/useSort'
-  import { alertError } from '@/composables/useAlerts'
+  import { useBulkDelete } from '@/composables/admin/useBulkDelete'
+  import { useListView } from '@/composables/admin/useListView'
   import { Instant } from '@/domain/time'
-  import { pageOf, search, sortBy } from '@/lib/admin/listView'
-  import {
-    daysUntil,
-    deadlineOf,
-    formatWhen,
-    instantOf,
-  } from '@/lib/admin/time'
+  import type { StoredJob } from '@/lib/jobs'
+  import { daysUntil, deadlineOf, formatWhen, instantOf } from '@/lib/time'
 
-  interface Row {
-    uid: string
-    title?: string
-    companyUID?: string
-    jobType?: string
-    location?: string
-    deadline?: string | null
-    /** Jobs stored before it existed have a date */
-    deadlineType?: 'date' | 'asap' | 'rolling'
-  }
+  type Row = StoredJob & { uid: string }
   type Show = 'open' | 'expired' | 'all'
-  const PAGE_SIZE = 25
   const COLUMNS = ['title', 'company', 'type', 'location', 'deadline'] as const
   const DATE: Intl.DateTimeFormatOptions = {
     day: 'numeric',
@@ -70,14 +55,12 @@
 
   const { data: jobs, refresh } =
     await useFetch<Record<string, Omit<Row, 'uid'>>>('/api/v1/job')
-  const { data: companies } =
-    await useFetch<Record<string, { name: string }>>('/api/v1/company')
+  const { data: companies } = await useCompanies()
 
   const rows = computed<Row[]>(() =>
     Object.entries(jobs.value ?? {}).map(([uid, job]) => ({ uid, ...job })),
   )
-  const companyOf = (row: Row) =>
-    companies.value?.[row.companyUID ?? '']?.name ?? ''
+  const companyOf = (row: Row) => companyName(companies.value, row.companyUID)
   const typeKey = (row: Row) => (row.jobType ?? '').replace('-', '_')
   const typeLabel = (row: Row) =>
     row.jobType ? t(`admin.jobs.attributes.jobtype.${typeKey(row)}`) : ''
@@ -88,55 +71,51 @@
   // a job without a deadline, or open until filled, stays open
   const isOpen = (row: Row) => (daysLeft(row) ?? 0) >= 0
 
-  const query = ref('')
-  const show = ref<Show>('open')
+  const inShow = (row: Row, value: Show) =>
+    value === 'all' || isOpen(row) === (value === 'open')
+
   const {
-    sort,
+    query,
+    filter: show,
+    filterOptions: showOptions,
+    page,
+    visible,
+    shown,
+    selection,
+    chosen,
     toggle: toggleSort,
     directionOf,
     ariaSort,
-  } = useSort<(typeof COLUMNS)[number]>('deadline')
-  const page = ref(1)
-
-  const inShow = (row: Row, value: Show) =>
-    value === 'all' || isOpen(row) === (value === 'open')
-  const showOptions = computed(() =>
-    (['open', 'expired', 'all'] as const).map((value) => ({
-      value,
-      label: t(`admin.jobs.filter.${value}`),
-      count: rows.value.filter((row) => inShow(row, value)).length,
-    })),
-  )
-
-  const sortValue = {
-    title: (row: Row) => row.title,
-    company: companyOf,
-    type: typeLabel,
-    location: (row: Row) => row.location,
-    // "Snarest" sorts first, "Løpende" with the undated last
-    deadline: (row: Row) =>
-      row.deadlineType === 'asap'
-        ? '0000'
-        : undated(row)
-          ? null
-          : instantOf(deadlineOf(row.deadline ?? undefined)),
-  }
-
-  const visible = computed(() => {
-    const found = search(
-      rows.value.filter((row) => inShow(row, show.value)),
-      query.value,
-      (row) => [row.title, companyOf(row), row.location, typeLabel(row)],
-    )
-    return sortBy(found, sortValue[sort.value.column], sort.value.direction)
+  } = useListView({
+    rows,
+    keyOf: (row) => row.uid,
+    filter: {
+      values: ['open', 'expired', 'all'] as const,
+      initial: 'open',
+      keeps: inShow,
+      label: (value) => t(`admin.jobs.filter.${value}`),
+    },
+    searchIn: (row) => [
+      row.title,
+      companyOf(row),
+      row.location,
+      typeLabel(row),
+    ],
+    sortBy: {
+      title: (row) => row.title,
+      company: companyOf,
+      type: typeLabel,
+      location: (row) => row.location,
+      // "Snarest" sorts first, "Løpende" with the undated last
+      deadline: (row) =>
+        row.deadlineType === 'asap'
+          ? '0000'
+          : undated(row)
+            ? null
+            : instantOf(deadlineOf(row.deadline ?? undefined)),
+    },
+    sortFirst: 'deadline',
   })
-  const shown = computed(() => pageOf(visible.value, page.value, PAGE_SIZE))
-  watch([query, show, sort], () => (page.value = 1))
-
-  const selection = useSelection(
-    computed(() => shown.value.rows),
-    (row) => row.uid,
-  )
 
   const deadlineNote = (row: Row) => {
     if (row.deadlineType === 'asap') return t('admin.jobs.deadline.asap')
@@ -148,62 +127,59 @@
     return t('admin.jobs.deadline.left', days)
   }
 
-  const toDelete = ref<Row[]>([])
-  const confirming = ref(false)
-  const deleting = ref(false)
-  const askDelete = (targets: Row[]) => {
-    toDelete.value = targets
-    confirming.value = true
-  }
-  const deleteJobs = async () => {
-    deleting.value = true
-    const results = await Promise.allSettled(
-      toDelete.value.map((row) =>
-        $fetch('/api/v1/job', { method: 'DELETE', query: { jobUID: row.uid } }),
-      ),
-    )
-    const failed = results.find((r) => r.status === 'rejected')
-    const done = results.filter((r) => r.status === 'fulfilled').length
-    if (done > 0) {
-      useAlertStore().alert(t('admin.jobs.delete.done', done), 'success')
-    }
-    if (failed) alertError((failed as PromiseRejectedResult).reason)
-    selection.clear()
-    confirming.value = false
-    deleting.value = false
-    await refresh()
-  }
+  // what the delete dialog is about: one row from its menu, or the selection
+  const {
+    targets: toDelete,
+    confirming,
+    deleting,
+    ask: askDelete,
+    confirm: deleteJobs,
+  } = useBulkDelete({
+    remove: async (row: Row) => {
+      await $fetch('/api/v1/job', {
+        method: 'DELETE',
+        query: { jobUID: row.uid },
+      })
+    },
+    done: (count) => t('admin.jobs.delete.done', count),
+    after: () => {
+      selection.clear()
+      return refresh()
+    },
+  })
 </script>
 
 <template>
-  <div class="tw:flex tw:flex-col tw:gap-4">
-    <div class="tw:flex tw:flex-col tw:gap-3 tw:lg:flex-row tw:lg:items-center">
+  <ListShell
+    v-model:page="page"
+    :shown="shown"
+    :total="visible.length"
+    :selected="selection.selected.value.size"
+    :empty="$t('admin.jobs.empty')"
+    @clear="selection.clear"
+    @delete="askDelete(chosen())"
+  >
+    <template #toolbar>
       <SearchField v-model="query" :label="$t('admin.jobs.search')" />
       <FilterChips
         v-model="show"
         :label="$t('admin.jobs.columns.deadline')"
         :options="showOptions"
       />
-      <Button as-child class="tw:h-10 tw:lg:ml-auto">
+      <Button as-child class="h-10 lg:ml-auto">
         <NuxtLink :to="localePath('/admin/jobs/new')">
           <Plus aria-hidden="true" />
           {{ $t('admin.jobs.create') }}
         </NuxtLink>
       </Button>
-    </div>
+    </template>
 
-    <SelectionBar
-      :count="selection.selected.value.size"
-      @clear="selection.clear"
-      @delete="askDelete(rows.filter((row) => selection.has(row)))"
-    />
-
-    <div class="tw:overflow-hidden tw:rounded-lg tw:border tw:bg-card">
+    <template #table>
       <!-- table from lg and up -->
-      <Table class="tw:hidden tw:lg:table">
+      <Table class="hidden lg:table">
         <TableHeader>
-          <TableRow class="tw:hover:bg-transparent">
-            <TableHead class="tw:w-12 tw:pl-4">
+          <TableRow class="hover:bg-transparent">
+            <TableHead class="w-12 pl-4">
               <SelectBox
                 :checked="selection.pageState.value"
                 :label="$t('admin.jobs.select_page')"
@@ -221,7 +197,7 @@
                 @toggle="toggleSort(column)"
               />
             </TableHead>
-            <TableHead class="tw:w-12" />
+            <TableHead class="w-12" />
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -230,55 +206,55 @@
             :key="row.uid"
             :data-state="selection.has(row) ? 'selected' : undefined"
             :data-changed="row.uid === changed || undefined"
-            class="tw:data-[state=selected]:bg-brand/8 tw:data-changed:bg-signal/15 tw:data-changed:shadow-[inset_4px_0_0_var(--signal)]"
+            class="data-[state=selected]:bg-brand/8 data-changed:bg-signal/15 data-changed:shadow-[inset_4px_0_0_var(--signal)]"
           >
-            <TableCell class="tw:pl-4">
+            <TableCell class="pl-4">
               <SelectBox
                 :checked="selection.has(row)"
                 :label="$t('admin.jobs.select_row', { name: row.title })"
                 @change="(on) => selection.toggle(row, on)"
               />
             </TableCell>
-            <TableCell class="tw:max-w-80 tw:truncate tw:font-semibold">
+            <TableCell class="max-w-80 truncate font-semibold">
               <NuxtLink
                 :to="localePath(`/admin/jobs/${row.uid}`)"
-                class="tw:underline tw:decoration-border tw:decoration-1 tw:underline-offset-4 tw:hover:decoration-current"
+                class="underline decoration-border decoration-1 underline-offset-4 hover:decoration-current"
               >
                 {{ row.title }}
               </NuxtLink>
             </TableCell>
-            <TableCell class="tw:text-muted-foreground">
+            <TableCell class="text-muted-foreground">
               {{ companyOf(row) }}
             </TableCell>
             <TableCell>
               <Badge
                 v-if="row.jobType"
-                class="tw:rounded-[4px] tw:border-transparent tw:bg-secondary tw:text-secondary-foreground"
+                class="rounded-[4px] border-transparent bg-secondary text-secondary-foreground"
               >
                 {{ typeLabel(row) }}
               </Badge>
             </TableCell>
-            <TableCell class="tw:text-muted-foreground">
+            <TableCell class="text-muted-foreground">
               {{ row.location }}
             </TableCell>
-            <TableCell class="tw:whitespace-nowrap">
+            <TableCell class="whitespace-nowrap">
               {{
                 formatWhen(deadlineOf(row.deadline ?? undefined), locale, DATE)
               }}
               <span
-                class="tw:block tw:text-xs"
+                class="block text-xs"
                 :class="
                   (daysLeft(row) ?? 1) < 0
-                    ? 'tw:text-muted-foreground'
+                    ? 'text-muted-foreground'
                     : (daysLeft(row) ?? 99) <= 7
-                      ? 'tw:font-semibold tw:text-signal-foreground tw:dark:text-signal'
-                      : 'tw:text-muted-foreground'
+                      ? 'font-semibold text-signal-foreground'
+                      : 'text-muted-foreground'
                 "
               >
                 {{ deadlineNote(row) }}
               </span>
             </TableCell>
-            <TableCell class="tw:pr-4">
+            <TableCell class="pr-4">
               <DropdownMenu>
                 <DropdownMenuTrigger as-child>
                   <Button
@@ -309,7 +285,7 @@
                     variant="destructive"
                     @select="askDelete([row])"
                   >
-                    <Trash2 aria-hidden="true" class="tw:text-destructive" />
+                    <Trash2 aria-hidden="true" class="text-destructive" />
                     {{ $t('admin.jobs.actions.delete') }}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -318,49 +294,42 @@
           </TableRow>
         </TableBody>
       </Table>
+    </template>
 
+    <template #list>
       <!-- list below lg -->
-      <ul class="tw:divide-y tw:lg:hidden">
+      <ul class="divide-y lg:hidden">
         <li
           v-for="row in shown.rows"
           :key="row.uid"
-          class="tw:flex tw:items-start tw:gap-3 tw:px-4 tw:py-3"
+          class="flex items-start gap-3 px-4 py-3"
         >
           <SelectBox
             :checked="selection.has(row)"
             :label="$t('admin.jobs.select_row', { name: row.title })"
-            class="tw:mt-1 tw:size-5"
+            class="mt-1 size-5"
             @change="(on) => selection.toggle(row, on)"
           />
-          <div class="tw:min-w-0 tw:flex-1">
+          <div class="min-w-0 flex-1">
             <NuxtLink
               :to="localePath(`/admin/jobs/${row.uid}`)"
-              class="tw:block tw:truncate tw:font-semibold tw:underline tw:decoration-border tw:underline-offset-4"
+              class="block truncate font-semibold underline decoration-border underline-offset-4"
             >
               {{ row.title }}
             </NuxtLink>
-            <p class="tw:truncate tw:text-sm tw:text-muted-foreground">
+            <p class="truncate text-sm text-muted-foreground">
               {{ companyOf(row) }} · {{ deadlineNote(row) }}
             </p>
           </div>
           <Badge
             v-if="row.jobType"
-            class="tw:shrink-0 tw:rounded-[4px] tw:border-transparent tw:bg-secondary tw:text-secondary-foreground"
+            class="shrink-0 rounded-[4px] border-transparent bg-secondary text-secondary-foreground"
           >
             {{ typeLabel(row) }}
           </Badge>
         </li>
       </ul>
-
-      <p
-        v-if="shown.rows.length === 0"
-        class="tw:px-4 tw:py-10 tw:text-center tw:text-muted-foreground"
-      >
-        {{ $t('admin.jobs.empty') }}
-      </p>
-
-      <Pager v-model="page" :shown="shown" :total="visible.length" />
-    </div>
+    </template>
 
     <DeleteDialog
       v-model:open="confirming"
@@ -377,5 +346,5 @@
       :loading="deleting"
       @confirm="deleteJobs"
     />
-  </div>
+  </ListShell>
 </template>

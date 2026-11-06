@@ -1,10 +1,19 @@
 // POST /api/v1/company
 // endpoint for creating companies in the db
 
+import { defineEventHandler, readBody } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { authorize } from '@/domain/authorization/authorize'
 import { Instant } from '@/domain/time'
 import { fail } from '@/domain/errors'
 import { safeLink } from '@/server/security/richText'
+import { db } from '@/server/utils/firebase'
+import {
+  addEventContext,
+  setLogImportance,
+  setResourceContext,
+  withDbTiming,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

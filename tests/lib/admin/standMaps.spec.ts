@@ -10,8 +10,8 @@ const events = {
 }
 const maps = [
   { date: '2026-11-04', url: 'u1', name: 'ons.png' },
-  { date: '2026-11-06', url: 'u2', legacy: true },
-  { date: '2026-02-11', url: 'old' },
+  { date: '2026-11-06', url: 'u2', name: 'fre.png' },
+  { date: '2026-02-11', url: 'old', name: 'feb.png' },
 ]
 
 describe('standMapDays', () => {

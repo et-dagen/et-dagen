@@ -4,7 +4,7 @@
 
   const props = withDefaults(
     defineProps<{
-      src?: string
+      src?: string | null
       name?: string
       area?: number
     }>(),
@@ -45,20 +45,20 @@
 </script>
 
 <template>
-  <span ref="box" class="tw:absolute tw:inset-0 tw:grid tw:place-items-center">
+  <span ref="box" class="absolute inset-0 grid place-items-center">
     <img
       v-if="src && !failed"
       ref="img"
       :src="src"
       :alt="name ?? ''"
       loading="lazy"
-      class="tw:max-h-full tw:max-w-full tw:object-contain tw:transition-opacity tw:duration-150"
-      :class="size ? 'tw:opacity-100' : 'tw:opacity-0'"
+      class="max-h-full max-w-full object-contain transition-opacity duration-150"
+      :class="size ? 'opacity-100' : 'opacity-0'"
       :style="size && { width: `${size.width}px`, height: `${size.height}px` }"
       @load="measure"
       @error="failed = true"
     />
-    <span v-else class="tw:text-center tw:font-bold tw:text-balance">
+    <span v-else class="text-center font-bold text-balance">
       {{ name }}
     </span>
   </span>

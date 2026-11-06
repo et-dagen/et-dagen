@@ -12,9 +12,10 @@
     AlertDialogTitle,
   } from '@/components/ui/alert-dialog'
   import { Button } from '@/components/ui/button'
-  import { alertError } from '@/composables/useAlerts'
+  import { alertError, notify } from '@/composables/useAlerts'
   import { Instant } from '@/domain/time'
-  import type { SignupState } from '@/lib/eventPage'
+  import { countdownOf, type SignupState } from '@/lib/eventPage'
+  import { formatInstant } from '@/lib/time'
 
   const props = defineProps<{
     eventUid: string
@@ -37,7 +38,6 @@
 
   const { t, locale } = useI18n()
   const localePath = useLocalePath()
-  const alerts = useAlertStore()
 
   const busy = ref(false)
   async function send(method: 'POST' | 'DELETE', done: string) {
@@ -47,7 +47,7 @@
         method,
         body: { eventUID: props.eventUid },
       })
-      alerts.alert(t(done), 'success')
+      notify(t(done), 'success')
       emit('changed')
     } catch (error) {
       alertError(error)
@@ -69,25 +69,22 @@
   onBeforeUnmount(() => clearInterval(timer))
   const countdown = computed(() => {
     if (props.state.kind !== 'not-open' || !props.state.opensAt) return null
-    const minutes = Math.max(
-      0,
-      Math.ceil((Date.parse(props.state.opensAt) - now.value) / 60_000),
+    const { days, hours, minutes } = countdownOf(
+      props.state.opensAt,
+      Instant.of(new Date(now.value)),
     )
-    const days = Math.floor(minutes / 1440)
-    const hours = Math.floor((minutes % 1440) / 60)
     if (days > 0) return t('events.page.countdown.days', { days, hours })
-    return t('events.page.countdown.hours', { hours, minutes: minutes % 60 })
+    return t('events.page.countdown.hours', { hours, minutes })
   })
   const opensAtText = computed(() =>
     props.state.kind === 'not-open' && props.state.opensAt
-      ? new Intl.DateTimeFormat(locale.value, {
+      ? formatInstant(props.state.opensAt, locale.value, {
           weekday: 'short',
           day: 'numeric',
           month: 'short',
           hour: '2-digit',
           minute: '2-digit',
-          timeZone: 'Europe/Oslo',
-        }).format(Instant.toDate(props.state.opensAt))
+        })
       : '',
   )
 
@@ -110,7 +107,7 @@
 
 <template>
   <section
-    class="tw:flex tw:flex-col tw:gap-4 tw:rounded-lg tw:border tw:bg-card tw:p-5"
+    class="flex flex-col gap-4 rounded-lg border bg-card p-5"
     aria-labelledby="signup-heading"
   >
     <EventTicket
@@ -120,7 +117,7 @@
     />
 
     <div>
-      <h2 id="signup-heading" class="tw:text-xl tw:font-bold">
+      <h2 id="signup-heading" class="text-xl font-bold">
         {{
           $t(
             `events.page.state.${state.kind}`,
@@ -130,7 +127,7 @@
       </h2>
       <p
         v-if="places.limit && (state.kind === 'open' || state.kind === 'full')"
-        class="tw:text-sm tw:text-muted-foreground tw:tabular-nums"
+        class="text-sm text-muted-foreground tabular-nums"
       >
         {{
           state.kind === 'full'
@@ -140,18 +137,15 @@
       </p>
     </div>
 
-    <p
-      v-if="countdown"
-      class="tw:rounded-md tw:bg-muted tw:px-3 tw:py-2 tw:text-sm"
-    >
-      <span class="tw:font-semibold">{{ countdown }}</span>
-      <span class="tw:block tw:text-muted-foreground">{{ opensAtText }}</span>
+    <p v-if="countdown" class="rounded-md bg-muted px-3 py-2 text-sm">
+      <span class="font-semibold">{{ countdown }}</span>
+      <span class="block text-muted-foreground">{{ opensAtText }}</span>
     </p>
 
     <Button
       v-if="state.kind === 'open' || state.kind === 'full'"
       size="lg"
-      class="tw:w-full"
+      class="w-full"
       :disabled="busy"
       @click="
         send(
@@ -174,13 +168,13 @@
       v-else-if="state.kind === 'sign-in'"
       as-child
       size="lg"
-      class="tw:w-full"
+      class="w-full"
     >
       <NuxtLink :to="localePath('/user/signin')">
         {{ $t('events.page.action.sign_in') }}
       </NuxtLink>
     </Button>
-    <p v-else-if="state.kind === 'not-eligible'" class="tw:text-sm">
+    <p v-else-if="state.kind === 'not-eligible'" class="text-sm">
       {{ $t('events.page.not_eligible') }}
     </p>
 
@@ -188,7 +182,7 @@
       <Button
         v-if="state.kind === 'registered' && !eventDay && ticket"
         variant="outline"
-        class="tw:w-full"
+        class="w-full"
         :aria-expanded="showTicket"
         @click="showTicket = !showTicket"
       >
@@ -200,7 +194,7 @@
       <EventTicket v-if="showTicket && ticket" v-bind="ticket" />
       <Button
         variant="ghost"
-        class="tw:w-full tw:text-destructive tw:hover:bg-destructive/10 tw:hover:text-destructive"
+        class="w-full text-destructive hover:bg-destructive/10 hover:text-destructive"
         :disabled="busy"
         @click="confirming = true"
       >
@@ -217,24 +211,24 @@
     <Button
       v-if="calendar && state.kind !== 'past'"
       variant="outline"
-      class="tw:w-full"
+      class="w-full"
       @click="downloadCalendar"
     >
       <CalendarPlus aria-hidden="true" />
       {{ $t('events.page.action.calendar') }}
     </Button>
 
-    <Button v-if="mayScan" as-child variant="ghost" class="tw:w-full">
-      <NuxtLink :to="localePath(`/event/${eventUid}/scan_attendants`)">
+    <Button v-if="mayScan" as-child variant="ghost" class="w-full">
+      <NuxtLink :to="localePath(`/event/${eventUid}/scan`)">
         <ScanLine aria-hidden="true" />
         {{ $t('event.page.attendants.scan') }}
       </NuxtLink>
     </Button>
 
     <AlertDialog v-model:open="confirming">
-      <AlertDialogContent class="tw:rounded-md tw:bg-card">
+      <AlertDialogContent class="rounded-md bg-card">
         <AlertDialogHeader>
-          <AlertDialogTitle class="tw:text-lg tw:font-bold">
+          <AlertDialogTitle class="text-lg font-bold">
             {{
               $t(
                 state.kind === 'queued'
@@ -258,7 +252,7 @@
             $t('events.page.confirm.keep')
           }}</AlertDialogCancel>
           <AlertDialogAction
-            class="tw:bg-destructive tw:text-white tw:hover:bg-destructive/90"
+            class="bg-destructive text-white hover:bg-destructive/90"
             @click="send('DELETE', 'events.page.done.cancelled')"
           >
             {{

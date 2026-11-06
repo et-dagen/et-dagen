@@ -1,9 +1,18 @@
 // PUT /api/v1/user
 // endpoint for updating the name of a user in the database
 
+import { defineEventHandler, readBody, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { authorize } from '@/domain/authorization/authorize'
 import { Instant } from '@/domain/time'
 import { UserUid } from '@/domain/user'
+import { auth, db } from '@/server/utils/firebase'
+import {
+  addEventContext,
+  setLogImportance,
+  setResourceContext,
+  trackDbWrite,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

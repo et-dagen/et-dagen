@@ -1,12 +1,24 @@
 // PUT /api/v1/event
 // Endpoint for overwriting existing events
 
+import { createError, defineEventHandler, readBody, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { fail } from '@/domain/errors'
 import { EventUid } from '@/domain/event/event'
 import { Instant } from '@/domain/time'
 import { rtdbEventRepository } from '@/server/adapters/rtdb/eventRepository'
 import { cleanRichText, safeLink } from '@/server/security/richText'
 import { authorize } from '@/domain/authorization/authorize'
+import { companyOf } from '@/server/utils/companyOf'
+import { authorizeStoredEvent } from '@/server/utils/eventOwner'
+import { db } from '@/server/utils/firebase'
+import {
+  addEventContext,
+  setErrorContext,
+  setLogImportance,
+  setResourceContext,
+  trackDbWrite,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

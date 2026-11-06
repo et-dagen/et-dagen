@@ -199,14 +199,6 @@ export function setErrorContext(
 }
 
 /**
- * Get the wide event from the H3 event context
- * Useful when you need direct access to the event object
- */
-export function getWideEvent(event: H3Event): WideEvent | undefined {
-  return event.context.wideEvent
-}
-
-/**
  * Pick only allow-listed query parameters for logging.
  * Avoids logging sensitive or unbounded query data — only the named keys
  * (when present) are copied through.

@@ -1,10 +1,19 @@
 // DELETE /api/v1/company
 // endpoint for removing a company from db
 
+import { defineEventHandler, readBody, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { authorize } from '@/domain/authorization/authorize'
 import { CompanyUid } from '@/domain/business/company'
 import { Instant } from '@/domain/time'
 import { affiliations } from '@/server/composition'
+import { db, storage } from '@/server/utils/firebase'
+import {
+  addEventContext,
+  setLogImportance,
+  setResourceContext,
+  trackDbDelete,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

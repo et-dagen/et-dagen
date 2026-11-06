@@ -20,34 +20,29 @@
 </script>
 
 <template>
-  <div class="tw:flex tw:items-center tw:gap-4">
+  <div class="flex items-center gap-4">
     <!-- the frame the contact page uses, so the preview shows the crop the server makes -->
     <div
-      class="tw:grid tw:aspect-[5/6] tw:w-24 tw:shrink-0 tw:place-items-center tw:overflow-hidden tw:rounded-md tw:border tw:bg-muted"
+      class="grid aspect-[5/6] w-24 shrink-0 place-items-center overflow-hidden rounded-md border bg-muted"
     >
-      <img
-        v-if="shown"
-        :src="shown"
-        alt=""
-        class="tw:size-full tw:object-cover"
-      />
+      <img v-if="shown" :src="shown" alt="" class="size-full object-cover" />
       <UserRound
         v-else
-        class="tw:size-8 tw:text-muted-foreground"
+        class="size-8 text-muted-foreground"
         stroke-width="1.5"
         aria-hidden="true"
       />
     </div>
-    <div class="tw:flex tw:flex-col tw:gap-2">
+    <div class="flex flex-col gap-2">
       <input
         ref="input"
         type="file"
         accept="image/png,image/jpeg,image/webp"
-        class="tw:sr-only"
+        class="sr-only"
         :aria-label="$t('admin.board.form.photo_choose')"
         @change="choose"
       />
-      <div class="tw:flex tw:gap-2">
+      <div class="flex gap-2">
         <Button
           type="button"
           variant="outline"
@@ -74,7 +69,7 @@
           {{ $t('admin.board.form.photo_undo') }}
         </Button>
       </div>
-      <p class="tw:text-sm tw:text-muted-foreground">
+      <p class="text-sm text-muted-foreground">
         {{ file ? file.name : $t('admin.board.form.photo_hint') }}
       </p>
     </div>

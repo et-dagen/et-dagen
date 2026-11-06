@@ -1,6 +1,7 @@
-import { eventStatus, type EventRow } from '@/lib/admin/events'
-import { instantOf } from '@/lib/admin/time'
-import { Instant, type ISO8601String } from '@/domain/time'
+import { eventStatus, type EventRow } from '@/lib/events'
+import { formatWhen, instantOf, osloDay } from '@/lib/time'
+import { deadlineState, type DeadlineState, type StoredJob } from '@/lib/jobs'
+import type { ISO8601String } from '@/domain/time'
 
 /** What the event page reads from `events/<uid>`; every field may be missing */
 export interface PublicEvent extends EventRow {
@@ -91,8 +92,8 @@ export function signupStateOf(
   return status.kind === 'full' ? { kind: 'full' } : { kind: 'open' }
 }
 
-/** Places taken and waiting, the only attendance a visitor sees */
-export const placesOf = (event: PublicEvent) => ({
+/** Seats taken and the queue, the only attendance a visitor sees */
+export const seatsOf = (event: PublicEvent) => ({
   taken: Object.keys(event.attendants ?? {}).length,
   limit: event.capacity ?? null,
   waiting: Object.keys(event.queue ?? {}).length,
@@ -102,11 +103,7 @@ export const placesOf = (event: PublicEvent) => ({
 export function isEventDay(event: PublicEvent, now: ISO8601String): boolean {
   const start = instantOf(event.date?.start)
   if (!start) return false
-  const day = (at: ISO8601String) =>
-    new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Oslo' }).format(
-      Instant.toDate(at),
-    )
-  return day(start) === day(now)
+  return osloDay(start) === osloDay(now)
 }
 
 /**
@@ -196,10 +193,74 @@ export function urgencyOf(
     const hours = Math.ceil((Date.parse(closes) - Date.parse(now)) / 3_600_000)
     if (hours <= CLOSING_HOURS) return { kind: 'closing', hours }
   }
-  const { taken, limit } = placesOf(event)
+  const { taken, limit } = seatsOf(event)
   if (limit) {
     const left = limit - taken
     if (left <= Math.max(3, Math.ceil(limit / 10))) return { kind: 'few', left }
   }
   return null
 }
+
+/**
+ * How long until sign-up opens, in whole days, hours and minutes, rounded up to the minute so
+ * the last minute reads as one and not zero; all zero once it has opened
+ */
+export function countdownOf(
+  opensAt: ISO8601String,
+  now: ISO8601String,
+): { days: number; hours: number; minutes: number } {
+  const total = Math.max(
+    0,
+    Math.ceil((Date.parse(opensAt) - Date.parse(now)) / 60_000),
+  )
+  return {
+    days: Math.floor(total / 1440),
+    hours: Math.floor((total % 1440) / 60),
+    minutes: total % 60,
+  }
+}
+
+const HOURS: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit' }
+
+/** When the event runs, such as "ons. 4. nov. 2026, 17:15–18:00" */
+export function whenOf(event: PublicEvent, locale: string): string {
+  const start = formatWhen(event.date?.start, locale)
+  const end = formatWhen(event.date?.end, locale, HOURS)
+  return end ? `${start}–${end}` : start
+}
+
+/** When the event runs, short enough for one line on the ticket: day and hours only */
+export function ticketWhenOf(event: PublicEvent, locale: string): string {
+  const start = formatWhen(event.date?.start, locale, {
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+    ...HOURS,
+  })
+  const end = formatWhen(event.date?.end, locale, HOURS)
+  return end ? `${start}–${end}` : start
+}
+
+/** A job as the event page reads it from `jobs/<uid>` */
+export interface OpenJob {
+  uid: string
+  title: string
+  deadline?: string | null
+  state: DeadlineState
+}
+
+/** The hosting company's jobs that still take applications */
+export const openJobsOf = (
+  jobs: Record<string, StoredJob> | null | undefined,
+  companyUid: string | undefined,
+  now: ISO8601String,
+): OpenJob[] =>
+  Object.entries(jobs ?? {})
+    .filter(([, job]) => companyUid && job.companyUID === companyUid)
+    .map(([uid, job]) => ({
+      uid,
+      title: job.title ?? '',
+      deadline: job.deadline,
+      state: deadlineState(job.deadline ?? undefined, now),
+    }))
+    .filter((job) => job.state.kind !== 'passed')

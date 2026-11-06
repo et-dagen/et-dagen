@@ -70,22 +70,22 @@
 </script>
 
 <template>
-  <footer class="et-ui tw:mt-16 tw:border-t tw:bg-card tw:text-foreground">
+  <footer class="et-ui mt-16 border-t bg-card text-foreground">
     <div
-      class="tw:mx-auto tw:grid tw:max-w-screen-2xl tw:gap-12 tw:px-4 tw:pt-12 tw:pb-8 tw:lg:grid-cols-[minmax(0,34rem)_minmax(0,1fr)] tw:lg:gap-16 tw:lg:px-8 tw:lg:pt-14"
+      class="mx-auto grid max-w-screen-2xl gap-12 px-4 pt-12 pb-8 lg:grid-cols-[minmax(0,34rem)_minmax(0,1fr)] lg:gap-16 lg:px-8 lg:pt-14"
     >
       <section
         aria-labelledby="footer-place"
-        class="tw:flex tw:flex-col tw:overflow-hidden tw:rounded-lg tw:border tw:bg-background"
+        class="flex flex-col overflow-hidden rounded-lg border bg-background"
       >
-        <div class="tw:px-6 tw:pt-6">
+        <div class="px-6 pt-6">
           <h2
             id="footer-place"
-            class="tw:text-2xl tw:font-black tw:tracking-tight tw:lg:text-3xl"
+            class="text-2xl font-black tracking-tight lg:text-3xl"
           >
             {{ $t('site.footer.place') }}
           </h2>
-          <p class="tw:mt-1 tw:text-muted-foreground">
+          <p class="mt-1 text-muted-foreground">
             {{ $t('site.footer.fair') }}
           </p>
         </div>
@@ -95,7 +95,7 @@
           target="_blank"
           rel="noopener"
           :aria-label="$t('site.footer.map_open')"
-          class="tw:relative tw:mt-4 tw:block tw:h-72 tw:overflow-hidden tw:border-y tw:bg-muted"
+          class="relative mt-4 block h-72 overflow-hidden border-y bg-muted"
         >
           <iframe
             :src="embed"
@@ -104,32 +104,27 @@
             referrerpolicy="no-referrer"
             tabindex="-1"
             aria-hidden="true"
-            class="tw:pointer-events-none tw:block tw:size-full"
+            class="pointer-events-none block size-full"
           />
           <span
-            class="tw:pointer-events-none tw:absolute tw:top-1/2 tw:left-1/2 tw:flex tw:-translate-x-1/2 tw:-translate-y-full tw:flex-col tw:items-center"
+            class="pointer-events-none absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-full flex-col items-center"
             aria-hidden="true"
           >
             <span
-              class="tw:mb-1 tw:rounded tw:bg-plate tw:px-2 tw:pt-1 tw:pb-0.5 tw:text-sm tw:font-extrabold tw:text-plate-foreground"
+              class="mb-1 rounded bg-plate px-2 pt-1 pb-0.5 text-sm font-extrabold text-plate-foreground"
             >
               Glassgården
             </span>
-            <MapPin
-              class="tw:size-9 tw:fill-brand tw:text-card"
-              stroke-width="1.5"
-            />
+            <MapPin class="size-9 fill-brand text-card" stroke-width="1.5" />
           </span>
         </a>
-        <div
-          class="tw:flex tw:flex-wrap tw:items-center tw:gap-4 tw:bg-card tw:px-6 tw:py-4"
-        >
-          <address class="tw:not-italic">
+        <div class="flex flex-wrap items-center gap-4 bg-card px-6 py-4">
+          <address class="not-italic">
             O.S. Bragstads plass 2, 7034 Trondheim
           </address>
           <Button
             as-child
-            class="tw:h-11 tw:w-full tw:px-5 tw:text-base tw:font-bold tw:sm:ml-auto tw:sm:w-auto"
+            class="h-11 w-full px-5 text-base font-bold sm:ml-auto sm:w-auto"
           >
             <a :href="directions" target="_blank" rel="noopener">
               <Navigation aria-hidden="true" />
@@ -139,23 +134,23 @@
         </div>
       </section>
 
-      <div class="tw:flex tw:flex-col">
+      <div class="flex flex-col">
         <nav
           :aria-label="$t('site.footer.links')"
-          class="tw:grid tw:grid-cols-2 tw:gap-x-8 tw:gap-y-10 tw:sm:grid-cols-3"
+          class="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-3"
         >
           <div v-for="group in groups" :key="group.title">
             <h3
-              class="tw:text-xs tw:font-semibold tw:tracking-[0.08em] tw:text-muted-foreground tw:uppercase"
+              class="text-xs font-semibold tracking-[0.08em] text-muted-foreground uppercase"
             >
               {{ $t(group.title) }}
             </h3>
-            <ul class="tw:mt-4 tw:space-y-3">
+            <ul class="mt-4 space-y-3">
               <li v-for="link in group.links" :key="link.to ?? link.href">
                 <NuxtLink
                   v-if="link.to"
                   :to="localePath(link.to)"
-                  class="tw:text-lg tw:font-semibold tw:underline tw:decoration-border tw:decoration-2 tw:underline-offset-[6px] tw:hover:decoration-brand"
+                  class="text-lg font-semibold underline decoration-border decoration-2 underline-offset-[6px] hover:decoration-brand"
                 >
                   {{ $t(link.label) }}
                 </NuxtLink>
@@ -164,45 +159,40 @@
                   :href="link.href"
                   target="_blank"
                   rel="noopener"
-                  class="tw:inline-flex tw:items-center tw:gap-1 tw:text-lg tw:font-semibold tw:underline tw:decoration-border tw:decoration-2 tw:underline-offset-[6px] tw:hover:decoration-brand"
+                  class="inline-flex items-center gap-1 text-lg font-semibold underline decoration-border decoration-2 underline-offset-[6px] hover:decoration-brand"
                 >
                   {{ link.name }}
                   <ArrowUpRight
-                    class="tw:size-4 tw:text-muted-foreground"
+                    class="size-4 text-muted-foreground"
                     aria-hidden="true"
                   />
-                  <span class="tw:sr-only">{{
-                    $t('site.footer.external')
-                  }}</span>
+                  <span class="sr-only">{{ $t('site.footer.external') }}</span>
                 </a>
               </li>
             </ul>
           </div>
         </nav>
 
-        <section
-          aria-labelledby="footer-join"
-          class="tw:mt-10 tw:border-t tw:pt-6"
-        >
+        <section aria-labelledby="footer-join" class="mt-10 border-t pt-6">
           <h3
             id="footer-join"
-            class="tw:text-xs tw:font-semibold tw:tracking-[0.08em] tw:text-muted-foreground tw:uppercase"
+            class="text-xs font-semibold tracking-[0.08em] text-muted-foreground uppercase"
           >
             {{ $t('site.footer.join') }}
           </h3>
-          <ul class="tw:mt-4 tw:grid tw:gap-3">
+          <ul class="mt-4 grid gap-3">
             <li
               v-for="box in mailboxes"
               :key="box.email"
-              class="tw:flex tw:items-center tw:gap-3 tw:rounded-lg tw:border tw:bg-card tw:px-4 tw:py-3"
+              class="flex items-center gap-3 rounded-lg border bg-card px-4 py-3"
             >
-              <p class="tw:min-w-0">
-                <span class="tw:block tw:text-sm tw:text-muted-foreground">
+              <p class="min-w-0">
+                <span class="block text-sm text-muted-foreground">
                   {{ $t(box.role) }}
                 </span>
                 <a
                   :href="`mailto:${box.email}`"
-                  class="tw:block tw:truncate tw:text-lg tw:font-bold tw:underline tw:decoration-border tw:decoration-2 tw:underline-offset-4 tw:hover:decoration-brand"
+                  class="block truncate text-lg font-bold underline decoration-border decoration-2 underline-offset-4 hover:decoration-brand"
                 >
                   {{ box.email }}
                 </a>
@@ -210,7 +200,7 @@
               <Button
                 variant="outline"
                 size="icon"
-                class="tw:ml-auto tw:shrink-0"
+                class="ml-auto shrink-0"
                 :aria-label="$t('site.footer.copy', { email: box.email })"
                 @click="copy(box.email)"
               >
@@ -219,27 +209,27 @@
               </Button>
             </li>
           </ul>
-          <p class="tw:sr-only" aria-live="polite">
+          <p class="sr-only" aria-live="polite">
             {{ copied ? $t('site.footer.copied', { email: copied }) : '' }}
           </p>
         </section>
       </div>
 
       <p
-        class="tw:flex tw:flex-wrap tw:items-center tw:gap-x-3 tw:gap-y-1 tw:border-t tw:pt-6 tw:text-sm tw:text-muted-foreground tw:lg:col-span-2"
+        class="flex flex-wrap items-center gap-x-3 gap-y-1 border-t pt-6 text-sm text-muted-foreground lg:col-span-2"
       >
         <img
           src="/images/logo-small.webp"
           alt=""
           width="20"
           height="23"
-          class="tw:h-[23px] tw:w-auto"
+          class="h-[23px] w-auto"
         />
-        <span class="tw:font-bold tw:text-foreground">
+        <span class="font-bold text-foreground">
           Elektronikk- og Teknologidagene
         </span>
         <span>O.S. Bragstads plass 2, 7034 Trondheim</span>
-        <span aria-hidden="true" class="tw:hidden tw:sm:inline">·</span>
+        <span aria-hidden="true" class="hidden sm:inline">·</span>
         <span>{{ $t('site.footer.org') }} 996 858 545</span>
       </p>
     </div>

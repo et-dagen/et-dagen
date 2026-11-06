@@ -1,11 +1,14 @@
 <script setup lang="ts">
   import { ChevronDown, Copy, Pencil } from '@lucide/vue'
+  import { useAuthStore } from '@/stores/authStore'
+  import { notify } from '@/composables/useAlerts'
   import { Badge } from '@/components/ui/badge'
   import { Button } from '@/components/ui/button'
-  import { attendantsOf } from '@/composables/useEventAttendants'
+  import { attendantsOf } from '@/lib/company/attendants'
   import { Instant } from '@/domain/time'
-  import { eventStatus, placeOf, type EventRow } from '@/lib/admin/events'
-  import { formatWhen } from '@/lib/admin/time'
+  import { eventStatus, placeOf, type EventRow } from '@/lib/events'
+  import { dietLabel } from '@/lib/forms/diet'
+  import { formatWhen } from '@/lib/time'
   import { companyOf } from '@/lib/auth/companyOf'
 
   interface Person {
@@ -45,34 +48,26 @@
     () => Object.keys(props.event.attendants ?? {}).length,
   )
 
-  const dietName = (key: string) => {
-    const name = t(`dietary_restrictions.${key}`)
-    return name.startsWith('dietary_restrictions') ? key : name
-  }
+  const dietName = (key: string) => dietLabel(key, t)
 
   const copyEmails = async () => {
     await copy(attendants.value.map((person) => person.email).join(', '))
-    useAlertStore().alert(
-      t('company.admin.events.copied', attendants.value.length),
-      'success',
-    )
+    notify(t('company.admin.events.copied', attendants.value.length), 'success')
   }
 </script>
 
 <template>
-  <article class="tw:rounded-lg tw:border tw:bg-card">
-    <header
-      class="tw:flex tw:flex-wrap tw:items-start tw:justify-between tw:gap-3 tw:p-4 tw:lg:p-5"
-    >
-      <div class="tw:min-w-0">
-        <h2 class="tw:text-lg tw:font-bold tw:leading-6">{{ event.title }}</h2>
-        <p class="tw:mt-1 tw:text-sm tw:text-muted-foreground">
+  <article class="rounded-lg border bg-card">
+    <header class="flex flex-wrap items-start justify-between gap-3 p-4 lg:p-5">
+      <div class="min-w-0">
+        <h2 class="text-lg font-bold leading-6">{{ event.title }}</h2>
+        <p class="mt-1 text-sm text-muted-foreground">
           {{ formatWhen(event.date?.start, locale) }}
         </p>
-        <p class="tw:mt-2 tw:flex tw:items-center tw:gap-2 tw:text-sm">
+        <p class="mt-2 flex items-center gap-2 text-sm">
           <span
             v-if="place.code"
-            class="tw:inline-flex tw:h-6 tw:min-w-10 tw:items-center tw:justify-center tw:rounded-[3px] tw:bg-plate tw:px-2 tw:pt-0.5 tw:text-xs tw:font-extrabold tw:tracking-wider tw:text-plate-foreground"
+            class="inline-flex h-6 min-w-10 items-center justify-center rounded-[3px] bg-plate px-2 pt-0.5 text-xs font-extrabold tracking-wider text-plate-foreground"
           >
             {{ place.code }}
           </span>
@@ -81,15 +76,15 @@
             :href="event.location.map"
             target="_blank"
             rel="noopener"
-            class="tw:underline tw:decoration-border tw:underline-offset-4"
+            class="underline decoration-border underline-offset-4"
           >
             {{ place.name || event.location?.name }}
           </a>
           <span v-else>{{ place.name || event.location?.name }}</span>
         </p>
       </div>
-      <div class="tw:flex tw:items-center tw:gap-2">
-        <Badge variant="outline" class="tw:rounded-[4px]">
+      <div class="flex items-center gap-2">
+        <Badge variant="outline" class="rounded-[4px]">
           {{
             status.kind === 'full' && status.queued > 0
               ? $t('admin.events.status.queue', { n: status.queued })
@@ -107,23 +102,23 @@
 
     <div
       v-if="event.capacity"
-      class="tw:flex tw:flex-wrap tw:items-center tw:gap-x-6 tw:gap-y-2 tw:border-t tw:px-4 tw:py-3 tw:text-sm tw:lg:px-5"
+      class="flex flex-wrap items-center gap-x-6 gap-y-2 border-t px-4 py-3 text-sm lg:px-5"
     >
       <span>
-        <b class="tw:tabular-nums">{{ attending }}</b>
-        <span class="tw:text-muted-foreground"> / {{ event.capacity }}</span>
+        <b class="tabular-nums">{{ attending }}</b>
+        <span class="text-muted-foreground"> / {{ event.capacity }}</span>
         <span
-          class="tw:ml-2 tw:inline-block tw:h-1 tw:w-24 tw:overflow-hidden tw:rounded-full tw:bg-secondary tw:align-middle"
+          class="ml-2 inline-block h-1 w-24 overflow-hidden rounded-full bg-secondary align-middle"
         >
           <span
-            class="tw:block tw:h-full tw:bg-plate"
+            class="block h-full bg-plate"
             :style="{
               width: `${Math.min(100, (attending / event.capacity) * 100)}%`,
             }"
           />
         </span>
       </span>
-      <span v-if="event.registration" class="tw:text-muted-foreground">
+      <span v-if="event.registration" class="text-muted-foreground">
         {{
           $t('company.admin.events.registration', {
             from: formatWhen(event.registration.start, locale),
@@ -134,75 +129,64 @@
     </div>
 
     <!-- counts for every viewer; only coordinators get each person's needs, in the list below -->
-    <section
-      v-if="event.capacity"
-      class="tw:border-t tw:px-4 tw:py-3 tw:lg:px-5"
-    >
-      <h3 class="tw:text-sm tw:font-semibold">
+    <section v-if="event.capacity" class="border-t px-4 py-3 lg:px-5">
+      <h3 class="text-sm font-semibold">
         {{ $t('company.admin.events.diets') }}
       </h3>
-      <ul v-if="diets.length" class="tw:mt-2 tw:flex tw:flex-wrap tw:gap-2">
+      <ul v-if="diets.length" class="mt-2 flex flex-wrap gap-2">
         <li
           v-for="[key, count] in diets"
           :key="key"
-          class="tw:rounded-md tw:bg-secondary tw:px-2 tw:py-1 tw:text-sm"
+          class="rounded-md bg-secondary px-2 py-1 text-sm"
         >
           {{ dietName(key) }}
-          <b class="tw:ml-1 tw:tabular-nums">{{ count }}</b>
+          <b class="ml-1 tabular-nums">{{ count }}</b>
         </li>
       </ul>
-      <p v-else class="tw:mt-1 tw:text-sm tw:text-muted-foreground">
+      <p v-else class="mt-1 text-sm text-muted-foreground">
         {{ $t('company.admin.events.no_diets') }}
       </p>
     </section>
 
-    <details v-if="event.capacity" class="tw:group tw:border-t">
+    <details v-if="event.capacity" class="group border-t">
       <summary
-        class="tw:flex tw:cursor-pointer tw:list-none tw:items-center tw:gap-2 tw:px-4 tw:py-3 tw:text-sm tw:font-semibold tw:lg:px-5"
+        class="flex cursor-pointer list-none items-center gap-2 px-4 py-3 text-sm font-semibold lg:px-5"
       >
         <ChevronDown
-          class="tw:size-4 tw:transition-transform tw:group-open:rotate-180"
+          class="size-4 transition-transform group-open:rotate-180"
           aria-hidden="true"
         />
         {{ $t('company.admin.events.attendees', { n: attendants.length }) }}
       </summary>
 
-      <div class="tw:px-4 tw:pb-4 tw:lg:px-5">
-        <p
-          v-if="!attendants.length"
-          class="tw:text-sm tw:text-muted-foreground"
-        >
+      <div class="px-4 pb-4 lg:px-5">
+        <p v-if="!attendants.length" class="text-sm text-muted-foreground">
           {{ $t('company.admin.events.no_attendees') }}
         </p>
         <template v-else>
-          <Button
-            variant="outline"
-            size="sm"
-            class="tw:mb-3"
-            @click="copyEmails"
-          >
+          <Button variant="outline" size="sm" class="mb-3" @click="copyEmails">
             <Copy aria-hidden="true" />
             {{ $t('company.admin.events.copy_emails') }}
           </Button>
-          <ul class="tw:divide-y tw:rounded-md tw:border">
+          <ul class="divide-y rounded-md border">
             <li
               v-for="person in attendants"
               :key="person.uid"
-              class="tw:grid tw:gap-x-4 tw:px-3 tw:py-2 tw:text-sm tw:sm:grid-cols-[1fr_1fr_auto]"
+              class="grid gap-x-4 px-3 py-2 text-sm sm:grid-cols-[1fr_1fr_auto]"
             >
-              <span class="tw:font-semibold">{{ person.name }}</span>
-              <span class="tw:text-muted-foreground">
+              <span class="font-semibold">{{ person.name }}</span>
+              <span class="text-muted-foreground">
                 {{ person.studyProgram }}
                 <template v-if="person.currentYear">
                   · {{ $t('company.admin.year', { n: person.currentYear }) }}
                 </template>
               </span>
-              <span class="tw:break-all tw:text-muted-foreground">
+              <span class="break-all text-muted-foreground">
                 {{ person.email }}
               </span>
               <span
                 v-if="person.dietaryRestrictions?.length"
-                class="tw:sm:col-span-3"
+                class="sm:col-span-3"
               >
                 {{ person.dietaryRestrictions.map(dietName).join(', ') }}
               </span>

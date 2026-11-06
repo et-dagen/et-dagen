@@ -1,10 +1,19 @@
 // GET /api/v1/company/events
 // endpoint for fetching all company events from db
 
+import { defineEventHandler, getQuery } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { dietaryCounts } from '@/domain/allergen'
 import { authorize } from '@/domain/authorization/authorize'
 import { CompanyUid } from '@/domain/business/company'
 import { Instant } from '@/domain/time'
+import { db } from '@/server/utils/firebase'
+import {
+  addEventContext,
+  setLogImportance,
+  setResourceContext,
+  withDbTiming,
+} from '@/server/utils/wideEventHelpers'
 
 interface HostedEvent {
   attendants?: Record<string, unknown>

@@ -1,8 +1,15 @@
 // POST /api/v1/session
 // endpoint for starting a browser session after signing in
+import { defineEventHandler, readBody, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { fail } from '@/domain/errors'
 import { setSessionCookie } from '@/server/auth/cookies'
 import { startSession } from '@/server/auth/session'
+import { auth } from '@/server/utils/firebase'
+import {
+  addEventContext,
+  setResourceContext,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

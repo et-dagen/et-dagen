@@ -1,4 +1,5 @@
 import { serializeSubject } from '@/domain/authorization/subject'
+import { useAuthStore } from '@/stores/authStore'
 
 export default defineNuxtPlugin((nuxtApp: any) => {
   const authStore = useAuthStore(nuxtApp.$pinia)

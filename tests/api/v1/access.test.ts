@@ -208,7 +208,7 @@ describe('signing up', () => {
     expect(await read(`memberships/${uid}`)).toBeNull()
   })
 
-  it("makes an account with a registration code a contact for the code's company", async () => {
+  it('makes an account with an old registration code a student, not a contact', async () => {
     await seed('registrationCodes', {
       k1: { code: 'acme-abcdefgh', companyUID: 'acme' },
     })
@@ -216,15 +216,14 @@ describe('signing up', () => {
 
     await api('/api/v1/user?code=acme-abcdefgh', {
       method: 'POST',
-      body: {},
+      body: { studyProgram: 'MTEL', currentYear: 3 },
       token,
     })
 
     expect(Object.keys((await read(`roles/${uid}`)) as object)).toEqual([
-      'company',
+      'user',
     ])
-    expect(await read(`memberships/${uid}/acme/kind`)).toBe('employee')
-    expect((await subjectFor(token)).companies).toHaveProperty('acme')
+    expect(await read(`memberships/${uid}`)).toBeNull()
   })
 
   it("leaves an existing account's roles alone when it changes its profile", async () => {

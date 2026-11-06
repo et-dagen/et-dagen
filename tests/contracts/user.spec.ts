@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import {
-  CompanyJoin,
   StudentSignup,
   toV1User,
   UserInput,
@@ -150,18 +149,6 @@ describe('StudentSignup', () => {
     expect(signupIssues({ ...valid, email: 'ada' })).toEqual([
       ['email', 'email'],
     ])
-  })
-})
-
-describe('CompanyJoin', () => {
-  it('needs the code', () => {
-    expect(
-      CompanyJoin.safeParse({
-        name: 'Bo',
-        email: 'bo@firma.no',
-        password: 'abc12345',
-      }).error?.issues.map((i) => i.path.join('.')),
-    ).toEqual(['code'])
   })
 })
 

@@ -4,7 +4,7 @@ import {
   facetsOf,
   filterJobs,
   jobRows,
-  placesOf,
+  locationsOf,
   type JobFilters,
 } from '@/lib/jobBoard'
 
@@ -60,15 +60,15 @@ const none: JobFilters = {
   soon: false,
 }
 
-describe('placesOf', () => {
+describe('locationsOf', () => {
   it('splits a location into its places', () => {
-    expect(placesOf('Bergen og Trondheim')).toEqual(['Bergen', 'Trondheim'])
-    expect(placesOf('Oslo, Bergen / Stavanger')).toEqual([
+    expect(locationsOf('Bergen og Trondheim')).toEqual(['Bergen', 'Trondheim'])
+    expect(locationsOf('Oslo, Bergen / Stavanger')).toEqual([
       'Oslo',
       'Bergen',
       'Stavanger',
     ])
-    expect(placesOf(undefined)).toEqual([])
+    expect(locationsOf(undefined)).toEqual([])
   })
 })
 

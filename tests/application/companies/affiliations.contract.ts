@@ -42,6 +42,31 @@ export function describeAffiliationRepository(
       })
     })
 
+    it('lists every affiliation with when it was set', async () => {
+      const { store } = await make()
+      await store.set(acme, { tier: 'partner', overrides: {} }, stamp)
+      await store.set(
+        globex,
+        { tier: 'prior', overrides: {}, formerTier: 'sponsor' },
+        stamp,
+      )
+
+      expect(
+        (await store.all()).sort((a, b) => a.company.localeCompare(b.company)),
+      ).toEqual([
+        {
+          company: acme,
+          affiliation: { tier: 'partner', overrides: {} },
+          setAt: stamp.at,
+        },
+        {
+          company: globex,
+          affiliation: { tier: 'prior', overrides: {}, formerTier: 'sponsor' },
+          setAt: stamp.at,
+        },
+      ])
+    })
+
     it('removes the given companies and keeps the rest', async () => {
       const { store, held } = await make()
       await store.set(acme, { tier: 'partner', overrides: {} }, stamp)

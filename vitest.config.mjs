@@ -21,6 +21,12 @@ export default defineConfig({
         test: {
           name: 'unit',
           include: ['tests/**/*.{test,spec}.ts'],
+          // the real module needs a Nitro build
+          alias: {
+            'nitropack/runtime': fileURLToPath(
+              new URL('tests/support/nitropackRuntime.ts', import.meta.url),
+            ),
+          },
           exclude: ['tests/api/**', 'tests/**/*.emulator.test.ts'],
         },
       },
