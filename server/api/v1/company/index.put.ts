@@ -1,11 +1,21 @@
 // PUT /api/v1/company
 // endpoint for modifying companies in the db
 
+import { createError, defineEventHandler, readBody, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { authorize } from '@/domain/authorization/authorize'
 import { CompanyUid } from '@/domain/business/company'
 import { fail } from '@/domain/errors'
 import { Instant } from '@/domain/time'
 import { safeLink } from '@/server/security/richText'
+import { db } from '@/server/utils/firebase'
+import {
+  setErrorContext,
+  setLogImportance,
+  setResourceContext,
+  trackDbWrite,
+  withDbTiming,
+} from '@/server/utils/wideEventHelpers'
 
 const COMPANY_EDITABLE_FIELDS = ['name', 'description', 'logo', 'webpage']
 

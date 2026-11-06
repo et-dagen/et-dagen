@@ -1,11 +1,18 @@
 // POST /api/v1/invitation/:token
 // endpoint for accepting an invitation
+import { defineEventHandler, readBody, setResponseStatus } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { redeemInvitation } from '@/application/invitations/invitations'
 import { EmailAddress } from '@/domain/email'
 import { Instant } from '@/domain/time'
 import { UserUid } from '@/domain/user'
 import { access, invitations, newAccounts } from '@/server/composition'
 import { tokenOf } from '@/server/invitations/request'
+import {
+  addEventContext,
+  setLogImportance,
+  setResourceContext,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

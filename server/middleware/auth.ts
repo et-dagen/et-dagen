@@ -4,13 +4,14 @@
  * Both are verified with Firebase and checked for revocation (#582). An invalid session cookie is
  * removed, so the browser stops sending it.
  */
-import { deleteCookie, getCookie, getHeader } from 'h3'
+import { defineEventHandler, deleteCookie, getCookie, getHeader } from 'h3'
 import {
   bearerOf,
   callerOf,
   OLD_TOKEN_COOKIE,
   SESSION_COOKIE,
 } from '@/server/auth/session'
+import { auth } from '@/server/utils/firebase'
 
 export default defineEventHandler(async (event) => {
   const { wideEvent } = event.context

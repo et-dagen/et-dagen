@@ -1,16 +1,15 @@
-import { createError } from 'h3'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import formatFirebaseUser from '@/server/utils/formatFirebaseUser'
 import { subjectOf } from '@/tests/server/api/support/subject'
 import type { JobRepository } from '@/application/jobs/jobRepository'
 import { JobUid } from '@/domain/business/job'
 import { memoryJobRepository } from '@/server/adapters/memory/jobRepository'
 
-// The handlers rely on Nitro's auto-imports; stub them so they run as plain functions.
+// The handlers run as plain functions, with the request and the database faked.
 let stored: Record<string, unknown> = {}
 // what the middleware reads to build the subject
 let companies: Record<string, { name: string; type: string; cvAccess: boolean }>
 const update = vi.fn()
+const request = { body: {} as object }
 
 const snapshot = (path: string) => {
   const value = stored[path] ?? null
@@ -34,7 +33,7 @@ const reference = (path: string) => {
   return ref
 }
 
-beforeEach(async () => {
+beforeEach(() => {
   vi.resetModules()
   update.mockClear()
   companies = { ours: { name: 'Ours', type: 'partner', cvAccess: false } }
@@ -44,36 +43,33 @@ beforeEach(async () => {
     users: { student: { resume: 'https://example.com/cv.pdf' } },
   }
 
-  vi.stubGlobal('defineRouteMeta', () => {})
-  vi.stubGlobal('defineEventHandler', (handler: unknown) => handler)
-  vi.stubGlobal('createError', createError)
-  vi.stubGlobal('formatFirebaseUser', formatFirebaseUser)
-  vi.stubGlobal('getQuery', () => ({ scope: 'all' }))
-  for (const name of [
-    'setResourceContext',
-    'setLogImportance',
-    'setErrorContext',
-    'addEventContext',
-    'trackDbWrite',
-    'sendNoContent',
-  ]) {
-    vi.stubGlobal(name, () => {})
-  }
-  vi.stubGlobal(
-    'withDbTiming',
-    (_e: unknown, _p: unknown, _o: unknown, fn: () => unknown) => fn(),
-  )
-  vi.stubGlobal('db', { ref: reference })
-  vi.stubGlobal(
-    'companyOf',
-    (await import('@/server/utils/companyOf')).companyOf,
-  )
-  vi.stubGlobal('auth', {
-    listUsers: () =>
-      Promise.resolve({
-        users: [{ uid: 'student', email: 'student@example.com' }],
-      }),
-  })
+  vi.doMock('h3', async (importOriginal) => ({
+    ...(await importOriginal<typeof import('h3')>()),
+    getQuery: () => ({ scope: 'all' }),
+    readBody: () => Promise.resolve(request.body),
+    sendNoContent: () => {},
+  }))
+  vi.doMock('@/server/utils/wideEventHelpers', async (importOriginal) => ({
+    ...(await importOriginal<
+      typeof import('@/server/utils/wideEventHelpers')
+    >()),
+    setResourceContext: () => {},
+    setLogImportance: () => {},
+    setErrorContext: () => {},
+    addEventContext: () => {},
+    trackDbWrite: () => {},
+    withDbTiming: (_e: unknown, _p: unknown, _o: unknown, fn: () => unknown) =>
+      fn(),
+  }))
+  vi.doMock('@/server/utils/firebase', () => ({
+    db: { ref: reference },
+    auth: {
+      listUsers: () =>
+        Promise.resolve({
+          users: [{ uid: 'student', email: 'student@example.com' }],
+        }),
+    },
+  }))
 })
 
 const company = { uid: 'rep', userType: 'company', companyUID: 'ours' }
@@ -91,7 +87,7 @@ async function call(
   user: { uid: string; userType: string; companyUID?: string },
   body = {},
 ) {
-  vi.stubGlobal('readBody', () => Promise.resolve(body))
+  request.body = body
   const { default: run } = (await handlers[name]()) as unknown as {
     default: (event: unknown) => Promise<unknown>
   }

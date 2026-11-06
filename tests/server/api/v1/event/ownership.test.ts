@@ -1,43 +1,35 @@
-import { createError } from 'h3'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import type { Subject } from '@/domain/authorization/subject'
 import { CompanyUid } from '@/domain/business/company'
 import { UserUid } from '@/domain/user'
 
-// The handlers rely on Nitro's auto-imports; stub them so they run as plain functions.
-const owners: Record<string, string> = {}
-const remove = vi.fn()
-const update = vi.fn()
-const sendNoContent = vi.fn()
+// The handlers run as plain functions, with the request body and the database faked.
+const { owners, remove, update, sendNoContent, request } = vi.hoisted(() => ({
+  owners: {} as Record<string, string>,
+  remove: vi.fn(),
+  update: vi.fn(),
+  sendNoContent: vi.fn(),
+  request: { body: {} as object },
+}))
 
-beforeEach(async () => {
-  vi.resetModules()
-  for (const key of Object.keys(owners)) delete owners[key]
-  owners['events/theirs/companyUID'] = 'other-company'
-  owners['events/ours/companyUID'] = 'our-company'
-  remove.mockClear()
-  update.mockClear()
-  sendNoContent.mockClear()
-
-  vi.stubGlobal('defineRouteMeta', () => {})
-  vi.stubGlobal('defineEventHandler', (handler: unknown) => handler)
-  vi.stubGlobal('createError', createError)
-  vi.stubGlobal('sendNoContent', sendNoContent)
-  for (const name of [
-    'setResourceContext',
-    'setLogImportance',
-    'setErrorContext',
-    'addEventContext',
-    'trackDbWrite',
-    'trackDbDelete',
-  ]) {
-    vi.stubGlobal(name, () => {})
-  }
-  vi.stubGlobal(
-    'withDbTiming',
-    (_e: unknown, _p: unknown, _o: unknown, fn: () => unknown) => fn(),
-  )
-  vi.stubGlobal('db', {
+vi.mock('h3', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('h3')>()),
+  readBody: () => Promise.resolve(request.body),
+  sendNoContent,
+}))
+vi.mock('@/server/utils/wideEventHelpers', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/server/utils/wideEventHelpers')>()),
+  setResourceContext: () => {},
+  setLogImportance: () => {},
+  setErrorContext: () => {},
+  addEventContext: () => {},
+  trackDbWrite: () => {},
+  trackDbDelete: () => {},
+  withDbTiming: (_e: unknown, _p: unknown, _o: unknown, fn: () => unknown) =>
+    fn(),
+}))
+vi.mock('@/server/utils/firebase', () => ({
+  db: {
     ref: (path: string) => ({
       once: () => Promise.resolve({ val: () => owners[path] ?? null }),
       child: () => ({ remove }),
@@ -46,13 +38,17 @@ beforeEach(async () => {
       // the queue check after an update; its outcome is the repository's business
       transaction: () => Promise.resolve(),
     }),
-  })
-  const owner = await import('@/server/utils/eventOwner')
-  vi.stubGlobal('authorizeStoredEvent', owner.authorizeStoredEvent)
-  vi.stubGlobal(
-    'companyOf',
-    (await import('@/server/utils/companyOf')).companyOf,
-  )
+  },
+}))
+
+beforeEach(() => {
+  vi.resetModules()
+  for (const key of Object.keys(owners)) delete owners[key]
+  owners['events/theirs/companyUID'] = 'other-company'
+  owners['events/ours/companyUID'] = 'our-company'
+  remove.mockClear()
+  update.mockClear()
+  sendNoContent.mockClear()
 })
 
 // a coordinator runs the events of the companies they volunteer for, whatever the contract
@@ -88,7 +84,7 @@ async function call(
   subject: Subject,
   body: object,
 ) {
-  vi.stubGlobal('readBody', () => Promise.resolve(body))
+  request.body = body
   const { default: run } = (await handlers[handler]()) as unknown as {
     default: (event: unknown) => Promise<unknown>
   }

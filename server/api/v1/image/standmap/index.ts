@@ -1,7 +1,13 @@
 // GET /api/v1/image/standmap
 // endpoint for fetching stand maps
+import { defineEventHandler } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { listStandMaps } from '@/application/fair/standMaps'
 import { fileStorage, files, standMaps } from '@/server/composition'
+import {
+  setLogImportance,
+  setResourceContext,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

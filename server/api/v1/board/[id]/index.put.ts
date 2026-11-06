@@ -1,11 +1,14 @@
 // PUT /api/v1/board/:id
 // endpoint for changing a board member's details
+import { defineEventHandler, readBody } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { updateMember } from '@/application/board/members'
 import { checkedMemberInput } from '@/domain/board/member'
 import { fail } from '@/domain/errors'
 import { Instant } from '@/domain/time'
 import { memberIdOf } from '@/server/board/memberId'
 import { board, fileStorage, files } from '@/server/composition'
+import { setResourceContext } from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

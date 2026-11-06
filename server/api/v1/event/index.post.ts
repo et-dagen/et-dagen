@@ -1,10 +1,21 @@
 // POST /api/v1/event
 // Endpoint for adding a new event to db
 
+import { createError, defineEventHandler, readBody, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { fail } from '@/domain/errors'
 import { cleanRichText, safeLink } from '@/server/security/richText'
 import { authorize } from '@/domain/authorization/authorize'
 import { Instant } from '@/domain/time'
+import { companyOf } from '@/server/utils/companyOf'
+import { db } from '@/server/utils/firebase'
+import {
+  addEventContext,
+  setErrorContext,
+  setLogImportance,
+  setResourceContext,
+  trackDbWrite,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

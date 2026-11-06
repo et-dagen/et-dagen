@@ -1,11 +1,20 @@
 // DELETE /api/v1/user
 // endpoint for removing a user in the database
 
+import { defineEventHandler, readBody, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { clearSessionCookies } from '@/server/auth/cookies'
 import { eraseUsers } from '@/server/user/erasure'
 import { authorize } from '@/domain/authorization/authorize'
 import { hasPermission } from '@/domain/authorization/hasPermission'
 import { Instant } from '@/domain/time'
+import { auth, db, storage } from '@/server/utils/firebase'
+import {
+  addEventContext,
+  setLogImportance,
+  setResourceContext,
+  withDbTiming,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

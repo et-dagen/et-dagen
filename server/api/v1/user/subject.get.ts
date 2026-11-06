@@ -1,9 +1,12 @@
 // GET /api/v1/user/subject
 // endpoint for the caller's roles and company entitlements, as the permission table reads them
 
+import { defineEventHandler } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { authorize } from '@/domain/authorization/authorize'
 import { serializeSubject } from '@/domain/authorization/subject'
 import { Instant } from '@/domain/time'
+import { setResourceContext } from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

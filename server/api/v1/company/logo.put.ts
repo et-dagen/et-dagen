@@ -1,10 +1,16 @@
 // PUT /api/v1/company/logo
 // endpoint for a company's logo
+import { defineEventHandler, readMultipartFormData } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { setLogo } from '@/application/companies/logo'
 import { CompanyUid } from '@/domain/business/company'
 import { fail } from '@/domain/errors'
 import { Instant } from '@/domain/time'
 import { companies, fileStorage, files, images } from '@/server/composition'
+import {
+  addEventContext,
+  setResourceContext,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

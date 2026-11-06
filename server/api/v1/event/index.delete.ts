@@ -1,8 +1,19 @@
 // DELETE /api/v1/event
 // Endpoint for deleting existing events
 
+import { createError, defineEventHandler, readBody, sendNoContent } from 'h3'
+import { defineRouteMeta } from 'nitropack/runtime'
 import { authorize } from '@/domain/authorization/authorize'
 import { Instant } from '@/domain/time'
+import { companyOf } from '@/server/utils/companyOf'
+import { authorizeStoredEvent } from '@/server/utils/eventOwner'
+import { db } from '@/server/utils/firebase'
+import {
+  setErrorContext,
+  setLogImportance,
+  setResourceContext,
+  trackDbDelete,
+} from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
   openAPI: {

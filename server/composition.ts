@@ -5,6 +5,7 @@
  * Handlers import their dependencies from here rather than building them, so a later store (the
  * PostgreSQL move) changes this file and nothing that uses it.
  */
+import { useRuntimeConfig } from 'nitropack/runtime'
 import { firebaseFileStorage } from './adapters/firebase/fileStorage'
 import { firebaseNewAccounts } from './adapters/firebase/newAccounts'
 import { rtdbAccessRepository } from './adapters/rtdb/accessRepository'

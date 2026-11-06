@@ -79,7 +79,19 @@ export default defineNuxtConfig({
   // shadcn-vue components under components/ui are imported explicitly, not auto-imported (#583)
   components: [{ path: '~/components', ignore: ['ui/**'] }],
 
-  modules: ['@nuxtjs/i18n', '@pinia/nuxt', '@vueuse/nuxt', '@nuxt/image'],
+  modules: [
+    '@nuxtjs/i18n',
+    '@pinia/nuxt',
+    '@vueuse/nuxt',
+    '@nuxt/image',
+    // Server code imports what it uses (#583). Last, because modules add their server
+    // auto-imports in `nitro:config`.
+    (_, nuxt) => {
+      nuxt.hook('nitro:config', (config) => {
+        config.imports = { ...config.imports, autoImport: false }
+      })
+    },
+  ],
 
   routeRules: {
     // The page for companies was served at /faq before it got its own name

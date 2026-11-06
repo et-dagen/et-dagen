@@ -13,10 +13,10 @@ beforeEach(() => {
   vi.doMock('@/application/fair/standMaps', () => ({
     listStandMaps: () => Promise.resolve(recorded),
   }))
-  vi.stubGlobal('defineRouteMeta', () => {})
-  vi.stubGlobal('defineEventHandler', (handler: unknown) => handler)
-  vi.stubGlobal('setLogImportance', () => {})
-  vi.stubGlobal('setResourceContext', () => {})
+  vi.doMock('@/server/utils/wideEventHelpers', () => ({
+    setLogImportance: () => {},
+    setResourceContext: () => {},
+  }))
 })
 
 const handler = async () =>
