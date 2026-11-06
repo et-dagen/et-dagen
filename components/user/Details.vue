@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { FileText, Pencil, Upload } from '@lucide/vue'
+  import { notify } from '@/composables/useAlerts'
   import {
     AlertDialog,
     AlertDialogAction,
@@ -55,7 +56,7 @@
         body,
       })
       auth.user = { ...auth.user, resume: link }
-      useAlertStore().alert(t('user.page.resume_uploaded'), 'success')
+      notify(t('user.page.resume_uploaded'), 'success')
     } catch (error) {
       alertError(error)
     } finally {
@@ -73,7 +74,7 @@
         body: { userUID: auth.user.uid },
       })
       auth.user = { ...auth.user, resume: '' }
-      useAlertStore().alert(t('user.page.resume_deleted'), 'success')
+      notify(t('user.page.resume_deleted'), 'success')
     } catch (error) {
       alertError(error)
     } finally {

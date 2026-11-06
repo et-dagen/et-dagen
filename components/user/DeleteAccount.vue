@@ -1,5 +1,7 @@
 <script setup lang="ts">
   import { Trash2 } from '@lucide/vue'
+  import { deleteSignedInUser } from '@/composables/auth/session'
+  import { notify } from '@/composables/useAlerts'
   import {
     AlertDialog,
     AlertDialogCancel,
@@ -34,7 +36,7 @@
     loading.value = true
     try {
       await deleteSignedInUser()
-      useAlertStore().alert(t('alert.success.user.deleted'), 'success')
+      notify(t('alert.success.user.deleted'), 'success')
     } catch (error) {
       alertError(error)
     } finally {

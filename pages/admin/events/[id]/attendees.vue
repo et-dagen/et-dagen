@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { ArrowLeft, Plus, ScanLine, Trash2, UserPlus } from '@lucide/vue'
+  import { alertError, notify } from '@/composables/useAlerts'
   import DeleteDialog from '@/components/admin/DeleteDialog.vue'
   import EventTabs from '@/components/admin/EventTabs.vue'
   import SearchField from '@/components/admin/SearchField.vue'
@@ -24,7 +25,6 @@
 
   const { t } = useI18n()
   const localePath = useLocalePath()
-  const alerts = useAlertStore()
   const uid = String(useRoute().params.id)
 
   const { data: events, refresh } = await useFetch<Record<string, StoredEvent>>(
@@ -57,12 +57,6 @@
     candidates(users.value ?? [], roster.value, lookup.value),
   )
 
-  /** Shows the message for an error from v1, or a general one */
-  function failed(error: unknown) {
-    const message = (error as { statusMessage?: string }).statusMessage
-    alerts.alert(message ?? t('admin.attendees.failed'), 'error')
-  }
-
   const busy = ref<string | null>(null)
   async function add(person: Person) {
     busy.value = person.uid
@@ -75,12 +69,12 @@
       lookup.value = ''
       await refresh()
       const name = person.name || person.email || person.uid
-      alerts.alert(
+      notify(
         t(full ? 'admin.attendees.queued' : 'admin.attendees.added', { name }),
         'success',
       )
     } catch (error) {
-      failed(error)
+      alertError(error)
     } finally {
       busy.value = null
     }
@@ -99,7 +93,7 @@
         body: { eventUID: uid, userUID: attendee.uid, attended: value },
       })
     } catch (error) {
-      failed(error)
+      alertError(error)
     }
     await refresh()
     ticking.value = Object.fromEntries(
@@ -125,12 +119,9 @@
       })
       removing.value = null
       await refresh()
-      alerts.alert(
-        t('admin.attendees.removed', { name: attendee.name }),
-        'success',
-      )
+      notify(t('admin.attendees.removed', { name: attendee.name }), 'success')
     } catch (error) {
-      failed(error)
+      alertError(error)
     } finally {
       busy.value = null
     }

@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { ChevronDown, Copy, Pencil } from '@lucide/vue'
+  import { notify } from '@/composables/useAlerts'
   import { Badge } from '@/components/ui/badge'
   import { Button } from '@/components/ui/button'
   import { attendantsOf, dietaryCounts } from '@/lib/company/attendants'
@@ -52,10 +53,7 @@
 
   const copyEmails = async () => {
     await copy(attendants.value.map((person) => person.email).join(', '))
-    useAlertStore().alert(
-      t('company.admin.events.copied', attendants.value.length),
-      'success',
-    )
+    notify(t('company.admin.events.copied', attendants.value.length), 'success')
   }
 </script>
 

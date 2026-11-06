@@ -10,12 +10,11 @@
   import DeleteDialog from '@/components/admin/DeleteDialog.vue'
   import { Badge } from '@/components/ui/badge'
   import { Button } from '@/components/ui/button'
-  import { alertError } from '@/composables/useAlerts'
+  import { alertError, notify } from '@/composables/useAlerts'
   import type { ListedMember } from '@/contracts/board'
 
   const { t, locale } = useI18n()
   const localePath = useLocalePath()
-  const alerts = useAlertStore()
   // the member saved last stays lit until the admin moves on
   const changed = computed(() => String(useRoute().query.changed ?? ''))
 
@@ -53,7 +52,7 @@
     busy.value = true
     try {
       await $fetch(`/api/v1/board/${member.id}`, { method: 'DELETE' })
-      alerts.alert(t('admin.board.removed', { name: member.name }), 'success')
+      notify(t('admin.board.removed', { name: member.name }), 'success')
       removing.value = null
       await refresh()
     } catch (error) {
