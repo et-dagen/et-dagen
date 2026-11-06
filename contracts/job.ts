@@ -1,27 +1,14 @@
 import { z } from 'zod'
+import {
+  DEADLINE_TYPES,
+  JOB_LISTINGS,
+  JOB_TYPES,
+  type DeadlineType,
+  type JobListing,
+} from '@/domain/business/job'
 
-/**
- * A job listing as the admin form sends it
- *
- * @remarks
- * Messages are keys under `form.errors` in the locale files, so the same schema can check
- * requests on the server later (#525) and still give translated messages in the form.
- */
-export const JOB_TYPES = ['full-time', 'graduate', 'summer-internship'] as const
-
-/**
- * How the site shows a job: its description as rich text, or a short summary and a link to the
- * company's own listing
- */
-export const JOB_LISTINGS = ['text', 'link'] as const
-export type JobListing = (typeof JOB_LISTINGS)[number]
-
-/**
- * When applications close: on a date, as soon as possible ("Snarest"), or when the job is filled
- * ("Løpende")
- */
-export const DEADLINE_TYPES = ['date', 'asap', 'rolling'] as const
-export type DeadlineType = (typeof DEADLINE_TYPES)[number]
+export { JOB_TYPES, JOB_LISTINGS, DEADLINE_TYPES }
+export type { JobListing, DeadlineType }
 
 const required = z.string({ error: 'required' }).trim().min(1, 'required')
 
@@ -52,6 +39,13 @@ const common = {
 }
 
 // one variant per listing, so every field's error shows at once whichever is chosen
+/**
+ * A job listing as the admin form sends it
+ *
+ * @remarks
+ * Messages are keys under `form.errors` in the locale files, so the same schema can check
+ * requests on the server later (#525) and still give translated messages in the form.
+ */
 export const JobInput = z.discriminatedUnion('listing', [
   z.object({
     ...common,
