@@ -108,32 +108,31 @@
   const ALARMING = new Set<Tally>(['refusal', 'error'])
   const countClass = (tally: Tally, n: number) =>
     n === 0
-      ? 'tw:text-muted-foreground/70'
+      ? 'text-muted-foreground/70'
       : ALARMING.has(tally)
-        ? 'tw:font-semibold tw:text-brand'
+        ? 'font-semibold text-brand'
         : ''
 
   const kindBadge: Record<Notable, string> = {
-    refused:
-      'tw:border-transparent tw:bg-secondary tw:text-secondary-foreground',
+    refused: 'border-transparent bg-secondary text-secondary-foreground',
     failed: [
-      'tw:border-transparent tw:bg-brand/10 tw:text-brand',
-      'tw:dark:bg-brand/40 tw:dark:text-foreground',
+      'border-transparent bg-brand/10 text-brand',
+      'dark:bg-brand/40 dark:text-foreground',
     ].join(' '),
     'access-changed':
-      'tw:border-transparent tw:bg-signal/30 tw:text-signal-foreground tw:dark:text-foreground',
+      'border-transparent bg-signal/30 text-signal-foreground dark:text-foreground',
     'contract-changed':
-      'tw:border-transparent tw:bg-signal/30 tw:text-signal-foreground tw:dark:text-foreground',
-    deleted: 'tw:border-transparent tw:bg-plate tw:text-plate-foreground',
+      'border-transparent bg-signal/30 text-signal-foreground dark:text-foreground',
+    deleted: 'border-transparent bg-plate text-plate-foreground',
   }
 </script>
 
 <template>
-  <div class="tw:flex tw:flex-col tw:gap-10">
+  <div class="flex flex-col gap-10">
     <div
-      class="tw:flex tw:flex-col tw:gap-4 tw:lg:flex-row tw:lg:items-end tw:lg:justify-between"
+      class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"
     >
-      <p class="tw:max-w-prose tw:text-muted-foreground">
+      <p class="max-w-prose text-muted-foreground">
         {{ $t('admin.activity.intro', { days: ACTIVITY_RETENTION_DAYS }) }}
       </p>
       <FilterChips
@@ -143,26 +142,21 @@
       />
     </div>
 
-    <section
-      aria-labelledby="activity-daily"
-      class="tw:flex tw:flex-col tw:gap-3"
-    >
-      <h2 id="activity-daily" class="tw:text-lg tw:font-bold">
+    <section aria-labelledby="activity-daily" class="flex flex-col gap-3">
+      <h2 id="activity-daily" class="text-lg font-bold">
         {{ $t('admin.activity.daily.title') }}
       </h2>
-      <div class="tw:overflow-x-auto tw:rounded-lg tw:border tw:bg-card">
-        <Table class="tw:tabular-nums">
+      <div class="overflow-x-auto rounded-lg border bg-card">
+        <Table class="tabular-nums">
           <TableHeader>
-            <TableRow class="tw:hover:bg-transparent">
-              <TableHead
-                class="tw:sticky tw:left-0 tw:bg-card tw:pl-4 tw:whitespace-nowrap"
-              >
+            <TableRow class="hover:bg-transparent">
+              <TableHead class="sticky left-0 bg-card pl-4 whitespace-nowrap">
                 {{ $t('admin.activity.daily.day') }}
               </TableHead>
               <TableHead
                 v-for="tally in SHOWN_TALLIES"
                 :key="tally"
-                class="tw:text-right tw:whitespace-nowrap tw:last:pr-4"
+                class="text-right whitespace-nowrap last:pr-4"
               >
                 {{ $t(`admin.activity.tally.${tally}`) }}
               </TableHead>
@@ -171,30 +165,28 @@
           <TableBody>
             <TableRow
               v-if="rows.length > 1"
-              class="tw:bg-muted tw:font-semibold tw:hover:bg-muted"
+              class="bg-muted font-semibold hover:bg-muted"
             >
-              <TableCell class="tw:sticky tw:left-0 tw:bg-muted tw:pl-4">
+              <TableCell class="sticky left-0 bg-muted pl-4">
                 {{ $t('admin.activity.daily.total') }}
               </TableCell>
               <TableCell
                 v-for="tally in SHOWN_TALLIES"
                 :key="tally"
-                class="tw:text-right tw:last:pr-4"
+                class="text-right last:pr-4"
                 :class="countClass(tally, totals[tally] ?? 0)"
               >
                 {{ totals[tally] ?? 0 }}
               </TableCell>
             </TableRow>
             <TableRow v-for="row in rows" :key="row.day">
-              <TableCell
-                class="tw:sticky tw:left-0 tw:bg-card tw:pl-4 tw:whitespace-nowrap"
-              >
+              <TableCell class="sticky left-0 bg-card pl-4 whitespace-nowrap">
                 <time :datetime="row.day">{{ dayLabel(row.day) }}</time>
               </TableCell>
               <TableCell
                 v-for="tally in SHOWN_TALLIES"
                 :key="tally"
-                class="tw:text-right tw:last:pr-4"
+                class="text-right last:pr-4"
                 :class="countClass(tally, row.counts[tally] ?? 0)"
               >
                 {{ row.counts[tally] ?? 0 }}
@@ -205,11 +197,8 @@
       </div>
     </section>
 
-    <section
-      aria-labelledby="activity-journal"
-      class="tw:flex tw:flex-col tw:gap-3"
-    >
-      <h2 id="activity-journal" class="tw:text-lg tw:font-bold">
+    <section aria-labelledby="activity-journal" class="flex flex-col gap-3">
+      <h2 id="activity-journal" class="text-lg font-bold">
         {{ $t('admin.activity.journal.title') }}
       </h2>
       <FilterChips
@@ -221,45 +210,43 @@
 
       <ul
         v-if="entries.length"
-        class="tw:divide-y tw:overflow-hidden tw:rounded-lg tw:border tw:bg-card"
+        class="divide-y overflow-hidden rounded-lg border bg-card"
       >
         <li
           v-for="entry in entries"
           :key="`${entry.at}-${entry.path}-${entry.actor}`"
-          class="tw:grid tw:gap-x-4 tw:gap-y-1.5 tw:p-4 tw:sm:grid-cols-[9.5rem_8.5rem_minmax(0,1fr)] tw:sm:items-baseline"
+          class="grid gap-x-4 gap-y-1.5 p-4 sm:grid-cols-[9.5rem_8.5rem_minmax(0,1fr)] sm:items-baseline"
         >
-          <div class="tw:flex tw:items-center tw:gap-3 tw:sm:contents">
+          <div class="flex items-center gap-3 sm:contents">
             <time
               :datetime="entry.at"
-              class="tw:text-sm tw:text-muted-foreground tw:tabular-nums"
+              class="text-sm text-muted-foreground tabular-nums"
             >
               {{ timeLabel(entry.at) }}
             </time>
-            <Badge :class="kindBadge[entry.kind]" class="tw:rounded-[4px]">
+            <Badge :class="kindBadge[entry.kind]" class="rounded-[4px]">
               {{ $t(`admin.activity.kind.${entry.kind}`) }}
             </Badge>
           </div>
-          <div class="tw:flex tw:min-w-0 tw:flex-col tw:gap-1">
-            <p class="tw:font-mono tw:text-sm tw:break-all">
-              <span class="tw:font-semibold">{{ entry.method }}</span>
+          <div class="flex min-w-0 flex-col gap-1">
+            <p class="font-mono text-sm break-all">
+              <span class="font-semibold">{{ entry.method }}</span>
               {{ entry.path }}
-              <span class="tw:text-muted-foreground">{{ entry.status }}</span>
+              <span class="text-muted-foreground">{{ entry.status }}</span>
             </p>
             <p
-              class="tw:flex tw:flex-wrap tw:gap-x-4 tw:gap-y-1 tw:text-sm tw:text-muted-foreground"
+              class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground"
             >
-              <span v-if="entry.code" class="tw:font-mono">{{
-                entry.code
-              }}</span>
+              <span v-if="entry.code" class="font-mono">{{ entry.code }}</span>
               <NuxtLink
                 v-if="entry.actor"
                 :to="localePath(`/admin/users/${entry.actor}`)"
-                class="tw:text-foreground tw:underline tw:decoration-border tw:decoration-1 tw:underline-offset-4 tw:hover:decoration-current"
+                class="text-foreground underline decoration-border decoration-1 underline-offset-4 hover:decoration-current"
               >
                 {{ $t('admin.activity.journal.actor') }}
               </NuxtLink>
               <span v-else>{{ $t('admin.activity.journal.signed_out') }}</span>
-              <span v-if="entry.target" class="tw:break-all">
+              <span v-if="entry.target" class="break-all">
                 {{
                   $t('admin.activity.journal.target', { target: entry.target })
                 }}
@@ -270,13 +257,13 @@
       </ul>
       <p
         v-else
-        class="tw:rounded-lg tw:border tw:border-dashed tw:p-6 tw:text-muted-foreground"
+        class="rounded-lg border border-dashed p-6 text-muted-foreground"
       >
         {{ $t('admin.activity.journal.empty') }}
       </p>
       <p
         v-if="(overview?.entries.length ?? 0) >= JOURNAL_LIMIT"
-        class="tw:text-sm tw:text-muted-foreground"
+        class="text-sm text-muted-foreground"
       >
         {{ $t('admin.activity.journal.limited', { n: JOURNAL_LIMIT }) }}
       </p>
