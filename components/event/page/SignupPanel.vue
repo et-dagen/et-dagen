@@ -13,8 +13,9 @@
   } from '@/components/ui/alert-dialog'
   import { Button } from '@/components/ui/button'
   import { alertError, notify } from '@/composables/useAlerts'
+  import { Instant } from '@/domain/time'
+  import { countdownOf, type SignupState } from '@/lib/eventPage'
   import { formatInstant } from '@/lib/time'
-  import type { SignupState } from '@/lib/eventPage'
 
   const props = defineProps<{
     eventUid: string
@@ -68,14 +69,12 @@
   onBeforeUnmount(() => clearInterval(timer))
   const countdown = computed(() => {
     if (props.state.kind !== 'not-open' || !props.state.opensAt) return null
-    const minutes = Math.max(
-      0,
-      Math.ceil((Date.parse(props.state.opensAt) - now.value) / 60_000),
+    const { days, hours, minutes } = countdownOf(
+      props.state.opensAt,
+      Instant.of(new Date(now.value)),
     )
-    const days = Math.floor(minutes / 1440)
-    const hours = Math.floor((minutes % 1440) / 60)
     if (days > 0) return t('events.page.countdown.days', { days, hours })
-    return t('events.page.countdown.hours', { hours, minutes: minutes % 60 })
+    return t('events.page.countdown.hours', { hours, minutes })
   })
   const opensAtText = computed(() =>
     props.state.kind === 'not-open' && props.state.opensAt
