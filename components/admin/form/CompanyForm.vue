@@ -92,20 +92,16 @@
 </script>
 
 <template>
-  <form
-    class="tw:flex tw:max-w-3xl tw:flex-col tw:gap-6"
-    novalidate
-    @submit="submit"
-  >
+  <form class="flex max-w-3xl flex-col gap-6" novalidate @submit="submit">
     <NuxtLink
       :to="localePath('/admin/companies')"
-      class="tw:inline-flex tw:w-fit tw:items-center tw:gap-1 tw:text-sm tw:text-muted-foreground tw:hover:text-foreground"
+      class="inline-flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
     >
-      <ArrowLeft class="tw:size-4" aria-hidden="true" />
+      <ArrowLeft class="size-4" aria-hidden="true" />
       {{ $t('admin.companies.name') }}
     </NuxtLink>
     <h1
-      class="tw:text-2xl tw:leading-8 tw:font-extrabold tw:tracking-tight tw:lg:text-[2rem] tw:lg:leading-10"
+      class="text-2xl leading-8 font-extrabold tracking-tight lg:text-[2rem] lg:leading-10"
     >
       {{
         $t(
@@ -116,11 +112,9 @@
       }}
     </h1>
 
-    <div
-      class="tw:grid tw:gap-5 tw:rounded-lg tw:border tw:bg-card tw:p-4 tw:lg:grid-cols-2 tw:lg:p-6"
-    >
+    <div class="grid gap-5 rounded-lg border bg-card p-4 lg:grid-cols-2 lg:p-6">
       <FormField v-slot="{ componentField }" name="name">
-        <FormItem class="tw:lg:col-span-2">
+        <FormItem class="lg:col-span-2">
           <FormLabel>{{ $t('admin.companies.form.name') }}</FormLabel>
           <FormControl>
             <Input v-bind="componentField" />
@@ -134,7 +128,7 @@
           <FormLabel>{{ $t('admin.companies.form.type') }}</FormLabel>
           <Select v-bind="componentField">
             <FormControl>
-              <SelectTrigger class="tw:w-full">
+              <SelectTrigger class="w-full">
                 <SelectValue
                   :placeholder="$t('admin.companies.form.choose_type')"
                 />
@@ -168,13 +162,13 @@
         </FormItem>
       </FormField>
 
-      <div class="tw:flex tw:flex-col tw:gap-2 tw:lg:col-span-2">
+      <div class="flex flex-col gap-2 lg:col-span-2">
         <Label>{{ $t('admin.companies.form.logo') }}</Label>
         <LogoField v-model="logoFile" :current="logo" />
       </div>
 
       <FormField v-slot="{ componentField }" name="description">
-        <FormItem class="tw:lg:col-span-2">
+        <FormItem class="lg:col-span-2">
           <FormLabel>{{ $t('admin.companies.form.description') }}</FormLabel>
           <FormControl>
             <Textarea v-bind="componentField" rows="5" />
@@ -188,17 +182,17 @@
         name="resumeAccess"
         type="checkbox"
       >
-        <FormItem class="tw:flex tw:items-start tw:gap-3 tw:lg:col-span-2">
+        <FormItem class="flex items-start gap-3 lg:col-span-2">
           <FormControl>
             <Checkbox
               :model-value="value"
-              class="tw:mt-0.5"
+              class="mt-0.5"
               @update:model-value="handleChange"
             />
           </FormControl>
           <div>
             <FormLabel>{{ $t('admin.companies.form.cv_access') }}</FormLabel>
-            <p class="tw:text-sm tw:text-muted-foreground">
+            <p class="text-sm text-muted-foreground">
               {{ $t('admin.companies.form.cv_access_hint') }}
             </p>
           </div>
@@ -206,7 +200,7 @@
       </FormField>
     </div>
 
-    <div class="tw:flex tw:flex-wrap tw:gap-3">
+    <div class="flex flex-wrap gap-3">
       <Button type="submit" :disabled="saving">
         <Save aria-hidden="true" />
         {{

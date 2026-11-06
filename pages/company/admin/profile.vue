@@ -51,24 +51,24 @@
 </script>
 
 <template>
-  <div class="tw:flex tw:max-w-3xl tw:flex-col tw:gap-6">
-    <div class="tw:flex tw:flex-col tw:gap-2">
+  <div class="flex max-w-3xl flex-col gap-6">
+    <div class="flex flex-col gap-2">
       <h1
-        class="tw:text-2xl tw:leading-8 tw:font-extrabold tw:tracking-tight tw:lg:text-[2rem] tw:lg:leading-10"
+        class="text-2xl leading-8 font-extrabold tracking-tight lg:text-[2rem] lg:leading-10"
       >
         {{ $t('company.admin.profile.name') }}
       </h1>
-      <p class="tw:text-muted-foreground">
+      <p class="text-muted-foreground">
         {{ $t('company.admin.profile.lead') }}
       </p>
     </div>
 
-    <div v-if="editable.length > 1" class="tw:flex tw:flex-col tw:gap-2">
-      <label id="profile-company" class="tw:text-sm tw:font-medium">
+    <div v-if="editable.length > 1" class="flex flex-col gap-2">
+      <label id="profile-company" class="text-sm font-medium">
         {{ $t('company.admin.profile.company') }}
       </label>
       <Select :model-value="chosen" @update:model-value="choose">
-        <SelectTrigger aria-labelledby="profile-company" class="tw:w-72">
+        <SelectTrigger aria-labelledby="profile-company" class="w-72">
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -90,7 +90,7 @@
         description: company.description ?? '',
       }"
     />
-    <p v-else class="tw:rounded-lg tw:border tw:bg-card tw:p-6">
+    <p v-else class="rounded-lg border bg-card p-6">
       {{ $t('company.admin.profile.none') }}
     </p>
   </div>

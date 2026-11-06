@@ -14,7 +14,7 @@
 
 <template>
   <JobForm v-if="job" :uid="uid" :initial="jobFormOf(job)" :panel="panel" />
-  <p v-else class="tw:text-muted-foreground">
+  <p v-else class="text-muted-foreground">
     {{ $t('admin.jobs.form.missing') }}
   </p>
 </template>

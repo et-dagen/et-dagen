@@ -64,10 +64,10 @@
 </script>
 
 <template>
-  <div class="tw:flex tw:max-w-4xl tw:flex-col tw:gap-4">
-    <div class="tw:flex tw:flex-col tw:gap-3 tw:sm:flex-row tw:sm:items-center">
-      <p class="tw:text-muted-foreground">{{ $t('admin.board.intro') }}</p>
-      <Button as-child class="tw:h-10 tw:shrink-0 tw:sm:ml-auto">
+  <div class="flex max-w-4xl flex-col gap-4">
+    <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+      <p class="text-muted-foreground">{{ $t('admin.board.intro') }}</p>
+      <Button as-child class="h-10 shrink-0 sm:ml-auto">
         <NuxtLink :to="localePath('/admin/board/new')">
           <Plus aria-hidden="true" />
           {{ $t('admin.board.create') }}
@@ -77,36 +77,36 @@
 
     <ol
       v-if="board?.length"
-      class="tw:divide-y tw:overflow-hidden tw:rounded-lg tw:border tw:bg-card"
+      class="divide-y overflow-hidden rounded-lg border bg-card"
     >
       <li
         v-for="(member, index) in board"
         :key="member.id"
         :data-changed="member.id === changed || undefined"
-        class="tw:flex tw:items-center tw:gap-4 tw:p-3 tw:data-changed:bg-signal/15 tw:data-changed:shadow-[inset_4px_0_0_var(--signal)] tw:sm:p-4"
+        class="flex items-center gap-4 p-3 data-changed:bg-signal/15 data-changed:shadow-[inset_4px_0_0_var(--signal)] sm:p-4"
       >
         <div
-          class="tw:grid tw:aspect-[5/6] tw:w-14 tw:shrink-0 tw:place-items-center tw:overflow-hidden tw:rounded-md tw:border tw:bg-muted"
+          class="grid aspect-[5/6] w-14 shrink-0 place-items-center overflow-hidden rounded-md border bg-muted"
         >
           <img
             v-if="member.photoUrl"
             :src="member.photoUrl"
             alt=""
-            class="tw:size-full tw:object-cover"
+            class="size-full object-cover"
           />
           <UserRound
             v-else
-            class="tw:size-6 tw:text-muted-foreground"
+            class="size-6 text-muted-foreground"
             stroke-width="1.5"
             aria-hidden="true"
           />
         </div>
 
-        <div class="tw:min-w-0 tw:flex-1">
-          <div class="tw:flex tw:flex-wrap tw:items-center tw:gap-2">
+        <div class="min-w-0 flex-1">
+          <div class="flex flex-wrap items-center gap-2">
             <NuxtLink
               :to="localePath(`/admin/board/${member.id}`)"
-              class="tw:font-bold tw:hover:underline tw:hover:underline-offset-4"
+              class="font-bold hover:underline hover:underline-offset-4"
             >
               {{ member.name }}
             </NuxtLink>
@@ -114,16 +114,16 @@
               {{ $t('admin.board.featured') }}
             </Badge>
           </div>
-          <p class="tw:text-sm tw:font-semibold tw:text-brand">
+          <p class="text-sm font-semibold text-brand">
             {{ titleOf(member) }}
           </p>
-          <p class="tw:truncate tw:text-sm tw:text-muted-foreground">
+          <p class="truncate text-sm text-muted-foreground">
             {{ member.email
             }}<template v-if="member.phone">, {{ member.phone }}</template>
           </p>
         </div>
 
-        <div class="tw:flex tw:shrink-0 tw:items-center tw:gap-1">
+        <div class="flex shrink-0 items-center gap-1">
           <Button
             variant="ghost"
             size="icon"
@@ -146,7 +146,7 @@
             as-child
             variant="ghost"
             size="icon"
-            class="tw:hidden tw:sm:inline-flex"
+            class="hidden sm:inline-flex"
           >
             <NuxtLink
               :to="localePath(`/admin/board/${member.id}`)"
@@ -158,7 +158,7 @@
           <Button
             variant="ghost"
             size="icon"
-            class="tw:text-destructive tw:hover:bg-destructive/10 tw:hover:text-destructive"
+            class="text-destructive hover:bg-destructive/10 hover:text-destructive"
             :disabled="busy"
             :aria-label="$t('admin.board.remove', { name: member.name })"
             @click="removing = member"
@@ -168,10 +168,7 @@
         </div>
       </li>
     </ol>
-    <p
-      v-else
-      class="tw:rounded-lg tw:border tw:bg-card tw:p-6 tw:text-muted-foreground"
-    >
+    <p v-else class="rounded-lg border bg-card p-6 text-muted-foreground">
       {{ $t('admin.board.empty') }}
     </p>
 

@@ -21,7 +21,7 @@
       featured: member.featured,
     }"
   />
-  <p v-else class="tw:text-muted-foreground">
+  <p v-else class="text-muted-foreground">
     {{ $t('admin.board.form.missing') }}
   </p>
 </template>

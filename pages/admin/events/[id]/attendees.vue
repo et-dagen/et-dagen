@@ -149,54 +149,54 @@
 </script>
 
 <template>
-  <div v-if="event" class="tw:flex tw:max-w-4xl tw:flex-col tw:gap-6">
+  <div v-if="event" class="flex max-w-4xl flex-col gap-6">
     <NuxtLink
       :to="localePath('/admin/events')"
-      class="tw:inline-flex tw:w-fit tw:items-center tw:gap-1 tw:text-sm tw:text-muted-foreground tw:hover:text-foreground"
+      class="inline-flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
     >
-      <ArrowLeft class="tw:size-4" aria-hidden="true" />
+      <ArrowLeft class="size-4" aria-hidden="true" />
       {{ $t('admin.events.name') }}
     </NuxtLink>
     <h1
-      class="tw:text-2xl tw:leading-8 tw:font-extrabold tw:tracking-tight tw:lg:text-[2rem] tw:lg:leading-10"
+      class="text-2xl leading-8 font-extrabold tracking-tight lg:text-[2rem] lg:leading-10"
     >
       {{ event.title }}
     </h1>
     <EventTabs :uid="uid" />
 
-    <p v-if="!event.capacity" class="tw:text-muted-foreground">
+    <p v-if="!event.capacity" class="text-muted-foreground">
       {{ $t('admin.attendees.no_signup') }}
     </p>
 
     <template v-else>
       <div
-        class="tw:flex tw:flex-col tw:gap-4 tw:sm:flex-row tw:sm:items-center tw:sm:justify-between"
+        class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
       >
-        <dl class="tw:flex tw:gap-6">
+        <dl class="flex gap-6">
           <div>
-            <dt class="tw:text-sm tw:text-muted-foreground">
+            <dt class="text-sm text-muted-foreground">
               {{ $t('admin.attendees.places') }}
             </dt>
-            <dd class="tw:text-xl tw:font-bold tw:tabular-nums">
+            <dd class="text-xl font-bold tabular-nums">
               {{ roster.attendees.length }}
-              <span class="tw:font-normal tw:text-muted-foreground">
+              <span class="font-normal text-muted-foreground">
                 / {{ event.capacity }}
               </span>
             </dd>
           </div>
           <div>
-            <dt class="tw:text-sm tw:text-muted-foreground">
+            <dt class="text-sm text-muted-foreground">
               {{ $t('admin.attendees.attended') }}
             </dt>
-            <dd class="tw:text-xl tw:font-bold tw:tabular-nums">
+            <dd class="text-xl font-bold tabular-nums">
               {{ attended }}
             </dd>
           </div>
           <div>
-            <dt class="tw:text-sm tw:text-muted-foreground">
+            <dt class="text-sm text-muted-foreground">
               {{ $t('admin.attendees.waiting') }}
             </dt>
-            <dd class="tw:text-xl tw:font-bold tw:tabular-nums">
+            <dd class="text-xl font-bold tabular-nums">
               {{ roster.queue.length }}
             </dd>
           </div>
@@ -210,14 +210,11 @@
       </div>
 
       <section
-        class="tw:flex tw:flex-col tw:gap-3 tw:rounded-lg tw:border tw:bg-card tw:p-4"
+        class="flex flex-col gap-3 rounded-lg border bg-card p-4"
         aria-labelledby="add-heading"
       >
-        <h2
-          id="add-heading"
-          class="tw:flex tw:items-center tw:gap-2 tw:font-bold"
-        >
-          <UserPlus class="tw:size-4" aria-hidden="true" />
+        <h2 id="add-heading" class="flex items-center gap-2 font-bold">
+          <UserPlus class="size-4" aria-hidden="true" />
           {{ $t('admin.attendees.add') }}
         </h2>
         <Input
@@ -226,31 +223,29 @@
           :placeholder="$t('admin.attendees.add_search')"
           :aria-label="$t('admin.attendees.add_search')"
         />
-        <p class="tw:text-sm tw:text-muted-foreground">
+        <p class="text-sm text-muted-foreground">
           {{ $t('admin.attendees.add_hint') }}
         </p>
         <ul
           v-if="lookup.trim()"
-          class="tw:divide-y tw:overflow-hidden tw:rounded-md tw:border"
+          class="divide-y overflow-hidden rounded-md border"
         >
           <li v-for="person in matches" :key="person.uid">
             <button
               type="button"
-              class="tw:flex tw:w-full tw:items-center tw:gap-3 tw:px-3 tw:py-2 tw:text-left tw:hover:bg-accent tw:disabled:opacity-50"
+              class="flex w-full items-center gap-3 px-3 py-2 text-left hover:bg-accent disabled:opacity-50"
               :disabled="busy !== null"
               @click="add(person)"
             >
               <Plus
-                class="tw:size-4 tw:shrink-0 tw:text-muted-foreground"
+                class="size-4 shrink-0 text-muted-foreground"
                 aria-hidden="true"
               />
-              <span class="tw:min-w-0">
-                <span class="tw:block tw:truncate tw:font-semibold">
+              <span class="min-w-0">
+                <span class="block truncate font-semibold">
                   {{ person.name || person.email }}
                 </span>
-                <span
-                  class="tw:block tw:truncate tw:text-sm tw:text-muted-foreground"
-                >
+                <span class="block truncate text-sm text-muted-foreground">
                   {{ person.email }}
                 </span>
               </span>
@@ -258,45 +253,40 @@
           </li>
           <li
             v-if="!matches.length"
-            class="tw:px-3 tw:py-2 tw:text-sm tw:text-muted-foreground"
+            class="px-3 py-2 text-sm text-muted-foreground"
           >
             {{ $t('form.picker.none') }}
           </li>
         </ul>
       </section>
 
-      <section
-        class="tw:flex tw:flex-col tw:gap-3"
-        aria-labelledby="list-heading"
-      >
+      <section class="flex flex-col gap-3" aria-labelledby="list-heading">
         <div
-          class="tw:flex tw:flex-col tw:gap-3 tw:lg:flex-row tw:lg:items-center tw:lg:justify-between"
+          class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between"
         >
-          <h2 id="list-heading" class="tw:text-lg tw:font-bold">
+          <h2 id="list-heading" class="text-lg font-bold">
             {{ $t('admin.attendees.list') }}
           </h2>
           <SearchField v-model="filter" :label="$t('admin.attendees.filter')" />
         </div>
-        <ul
-          class="tw:divide-y tw:overflow-hidden tw:rounded-lg tw:border tw:bg-card"
-        >
+        <ul class="divide-y overflow-hidden rounded-lg border bg-card">
           <li
             v-for="attendee in shown"
             :key="attendee.uid"
             :data-attended="isAttended(attendee) || undefined"
-            class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3 tw:data-attended:bg-plate/5"
+            class="flex items-center gap-3 px-4 py-3 data-attended:bg-plate/5"
           >
             <Checkbox
               :model-value="isAttended(attendee)"
               :aria-label="
                 $t('admin.attendees.mark_attended', { name: attendee.name })
               "
-              class="tw:size-5"
+              class="size-5"
               @update:model-value="(on) => setAttended(attendee, on === true)"
             />
-            <div class="tw:min-w-0 tw:flex-1">
-              <p class="tw:truncate tw:font-semibold">{{ attendee.name }}</p>
-              <p class="tw:truncate tw:text-sm tw:text-muted-foreground">
+            <div class="min-w-0 flex-1">
+              <p class="truncate font-semibold">{{ attendee.name }}</p>
+              <p class="truncate text-sm text-muted-foreground">
                 {{ detailsOf(attendee).join(' · ') }}
               </p>
             </div>
@@ -308,12 +298,12 @@
               "
               @click="removing = attendee"
             >
-              <Trash2 class="tw:text-destructive" aria-hidden="true" />
+              <Trash2 class="text-destructive" aria-hidden="true" />
             </Button>
           </li>
           <li
             v-if="!shown.length"
-            class="tw:px-4 tw:py-10 tw:text-center tw:text-muted-foreground"
+            class="px-4 py-10 text-center text-muted-foreground"
           >
             {{
               $t(
@@ -328,28 +318,26 @@
 
       <section
         v-if="roster.queue.length"
-        class="tw:flex tw:flex-col tw:gap-3"
+        class="flex flex-col gap-3"
         aria-labelledby="queue-heading"
       >
-        <h2 id="queue-heading" class="tw:text-lg tw:font-bold">
+        <h2 id="queue-heading" class="text-lg font-bold">
           {{ $t('admin.attendees.queue') }}
         </h2>
-        <ol
-          class="tw:divide-y tw:overflow-hidden tw:rounded-lg tw:border tw:bg-card"
-        >
+        <ol class="divide-y overflow-hidden rounded-lg border bg-card">
           <li
             v-for="(attendee, position) in roster.queue"
             :key="attendee.uid"
-            class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3"
+            class="flex items-center gap-3 px-4 py-3"
           >
             <span
-              class="tw:grid tw:size-6 tw:shrink-0 tw:place-items-center tw:rounded-sm tw:bg-muted tw:pt-0.5 tw:text-sm tw:font-bold tw:tabular-nums"
+              class="grid size-6 shrink-0 place-items-center rounded-sm bg-muted pt-0.5 text-sm font-bold tabular-nums"
             >
               {{ position + 1 }}
             </span>
-            <div class="tw:min-w-0 tw:flex-1">
-              <p class="tw:truncate tw:font-semibold">{{ attendee.name }}</p>
-              <p class="tw:truncate tw:text-sm tw:text-muted-foreground">
+            <div class="min-w-0 flex-1">
+              <p class="truncate font-semibold">{{ attendee.name }}</p>
+              <p class="truncate text-sm text-muted-foreground">
                 {{ detailsOf(attendee).join(' · ') }}
               </p>
             </div>
@@ -361,7 +349,7 @@
               "
               @click="removing = attendee"
             >
-              <Trash2 class="tw:text-destructive" aria-hidden="true" />
+              <Trash2 class="text-destructive" aria-hidden="true" />
             </Button>
           </li>
         </ol>
@@ -388,7 +376,7 @@
       @confirm="remove"
     />
   </div>
-  <p v-else class="tw:text-muted-foreground">
+  <p v-else class="text-muted-foreground">
     {{ $t('admin.events.form.missing') }}
   </p>
 </template>

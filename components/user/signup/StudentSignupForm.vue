@@ -71,10 +71,10 @@
   }, focusInvalid)
 
   const selectClass = [
-    'tw:h-11 tw:w-full tw:rounded-md tw:border tw:border-input tw:bg-card',
-    'tw:px-3 tw:text-base tw:outline-none tw:focus-visible:border-plate',
-    'tw:focus-visible:ring-3 tw:focus-visible:ring-plate/15',
-    'tw:disabled:opacity-50 tw:aria-invalid:border-destructive',
+    'h-11 w-full rounded-md border border-input bg-card',
+    'px-3 text-base outline-none focus-visible:border-plate',
+    'focus-visible:ring-3 focus-visible:ring-plate/15',
+    'disabled:opacity-50 aria-invalid:border-destructive',
   ].join(' ')
 </script>
 
@@ -82,18 +82,18 @@
   <form
     ref="formEl"
     novalidate
-    class="tw:flex tw:flex-col tw:gap-8 tw:rounded-lg tw:border tw:bg-card tw:p-6 tw:sm:p-8"
+    class="flex flex-col gap-8 rounded-lg border bg-card p-6 sm:p-8"
     @submit="submit"
   >
-    <div class="tw:flex tw:flex-col tw:gap-2">
-      <h1 class="tw:text-3xl tw:font-extrabold tw:tracking-tight">
+    <div class="flex flex-col gap-2">
+      <h1 class="text-3xl font-extrabold tracking-tight">
         {{ $t('signup.student.title') }}
       </h1>
-      <p class="tw:text-muted-foreground">{{ $t('signup.student.lead') }}</p>
+      <p class="text-muted-foreground">{{ $t('signup.student.lead') }}</p>
     </div>
 
-    <fieldset class="tw:flex tw:flex-col tw:gap-5">
-      <legend class="tw:mb-4 tw:font-extrabold">
+    <fieldset class="flex flex-col gap-5">
+      <legend class="mb-4 font-extrabold">
         {{ $t('signup.you') }}
       </legend>
       <TextField
@@ -122,11 +122,11 @@
       </FormField>
     </fieldset>
 
-    <fieldset class="tw:flex tw:flex-col tw:gap-5">
-      <legend class="tw:mb-4 tw:font-extrabold">
+    <fieldset class="flex flex-col gap-5">
+      <legend class="mb-4 font-extrabold">
         {{ $t('signup.studies') }}
       </legend>
-      <div class="tw:grid tw:gap-5 tw:sm:grid-cols-[minmax(0,1fr)_9rem]">
+      <div class="grid gap-5 sm:grid-cols-[minmax(0,1fr)_9rem]">
         <FormField v-slot="{ componentField }" name="studyProgram">
           <FormItem>
             <FormLabel>{{ $t('signup.programme') }}</FormLabel>
@@ -135,7 +135,7 @@
                 v-bind="componentField"
                 :class="[
                   selectClass,
-                  !form.values.studyProgram && 'tw:text-muted-foreground',
+                  !form.values.studyProgram && 'text-muted-foreground',
                 ]"
               >
                 <option value="" disabled selected hidden>
@@ -176,49 +176,49 @@
       </div>
     </fieldset>
 
-    <details class="tw:group tw:rounded-md tw:border tw:px-4 tw:py-3">
+    <details class="group rounded-md border px-4 py-3">
       <summary
-        class="tw:flex tw:cursor-pointer tw:list-none tw:items-center tw:gap-2 tw:rounded-sm tw:font-extrabold tw:[&::-webkit-details-marker]:hidden"
+        class="flex cursor-pointer list-none items-center gap-2 rounded-sm font-extrabold [&::-webkit-details-marker]:hidden"
       >
         <ChevronRight
-          class="tw:size-4 tw:text-muted-foreground tw:transition-transform tw:group-open:rotate-90 tw:motion-reduce:transition-none"
+          class="size-4 text-muted-foreground transition-transform group-open:rotate-90 motion-reduce:transition-none"
           aria-hidden="true"
         />
         {{ $t('signup.diet.title') }}
-        <span class="tw:font-normal tw:text-muted-foreground">
+        <span class="font-normal text-muted-foreground">
           {{ $t('signup.optional') }}
         </span>
       </summary>
-      <p class="tw:mt-2 tw:text-sm tw:text-muted-foreground">
+      <p class="mt-2 text-sm text-muted-foreground">
         {{ $t('signup.diet.lead') }}
       </p>
-      <ul class="tw:mt-4 tw:grid tw:grid-cols-2 tw:gap-x-4 tw:gap-y-3">
+      <ul class="mt-4 grid grid-cols-2 gap-x-4 gap-y-3">
         <li
           v-for="flag in dietaryFlags"
           :key="flag.name"
-          class="tw:flex tw:items-center tw:gap-2"
+          class="flex items-center gap-2"
         >
           <Checkbox
             :id="`diet-${flag.name}`"
             :model-value="diet.includes(flag.name)"
             @update:model-value="toggleDiet(flag.name)"
           />
-          <Label :for="`diet-${flag.name}`" class="tw:font-normal">
+          <Label :for="`diet-${flag.name}`" class="font-normal">
             {{ t(`dietary_restrictions.${flag.name}`) }}
           </Label>
         </li>
       </ul>
     </details>
 
-    <div class="tw:flex tw:flex-col tw:gap-3">
+    <div class="flex flex-col gap-3">
       <p
         v-if="error"
         role="alert"
-        class="tw:text-sm tw:font-semibold tw:text-destructive"
+        class="text-sm font-semibold text-destructive"
       >
         {{ error }}
       </p>
-      <Button type="submit" size="lg" class="tw:h-11" :disabled="pending">
+      <Button type="submit" size="lg" class="h-11" :disabled="pending">
         {{ $t(pending ? 'signup.pending' : 'signup.student.submit') }}
       </Button>
     </div>

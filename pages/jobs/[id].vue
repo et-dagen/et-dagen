@@ -57,48 +57,46 @@
 </script>
 
 <template>
-  <div class="et-ui tw:pb-24 tw:lg:pb-0">
+  <div class="et-ui pb-24 lg:pb-0">
     <div
       v-if="job"
-      class="tw:mx-auto tw:grid tw:max-w-6xl tw:gap-8 tw:px-4 tw:py-8 tw:lg:grid-cols-[minmax(0,1fr)_22rem] tw:lg:gap-12 tw:lg:px-8 tw:lg:py-12"
+      class="mx-auto grid max-w-6xl gap-8 px-4 py-8 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-12 lg:px-8 lg:py-12"
     >
-      <header class="tw:flex tw:flex-col tw:gap-5 tw:lg:col-span-2">
+      <header class="flex flex-col gap-5 lg:col-span-2">
         <NuxtLink
           :to="localePath('/jobs')"
-          class="tw:inline-flex tw:w-fit tw:items-center tw:gap-1 tw:text-sm tw:text-muted-foreground tw:hover:text-foreground"
+          class="inline-flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
         >
-          <ArrowLeft class="tw:size-4" aria-hidden="true" />
+          <ArrowLeft class="size-4" aria-hidden="true" />
           {{ $t('jobs.detail.all') }}
         </NuxtLink>
-        <div class="tw:flex tw:items-center tw:gap-3">
+        <div class="flex items-center gap-3">
           <CompanyLogo :src="company?.logo" :name="company?.name" size="lg" />
           <a
             v-if="company?.webpage"
             :href="company.webpage"
             target="_blank"
             rel="noopener noreferrer"
-            class="tw:font-semibold tw:underline tw:decoration-border tw:underline-offset-4 tw:hover:decoration-current"
+            class="font-semibold underline decoration-border underline-offset-4 hover:decoration-current"
           >
             {{ company.name }}
           </a>
-          <span v-else class="tw:font-semibold">{{ company?.name }}</span>
+          <span v-else class="font-semibold">{{ company?.name }}</span>
         </div>
         <h1
-          class="tw:max-w-4xl tw:text-3xl tw:leading-tight tw:font-extrabold tw:tracking-tight tw:text-balance tw:lg:text-[2.75rem]"
+          class="max-w-4xl text-3xl leading-tight font-extrabold tracking-tight text-balance lg:text-[2.75rem]"
         >
           {{ job.title }}
         </h1>
-        <dl
-          class="tw:flex tw:flex-wrap tw:gap-x-8 tw:gap-y-3 tw:border-t tw:pt-5"
-        >
-          <div v-if="job.jobType" class="tw:flex tw:items-center tw:gap-2">
+        <dl class="flex flex-wrap gap-x-8 gap-y-3 border-t pt-5">
+          <div v-if="job.jobType" class="flex items-center gap-2">
             <dt>
               <BriefcaseBusiness
-                class="tw:size-4 tw:text-muted-foreground"
+                class="size-4 text-muted-foreground"
                 :aria-label="$t('jobs.type')"
               />
             </dt>
-            <dd class="tw:font-medium">
+            <dd class="font-medium">
               {{
                 $t(
                   `admin.jobs.attributes.jobtype.${job.jobType.replace('-', '_')}`,
@@ -106,26 +104,26 @@
               }}
             </dd>
           </div>
-          <div v-if="job.location" class="tw:flex tw:items-center tw:gap-2">
+          <div v-if="job.location" class="flex items-center gap-2">
             <dt>
               <MapPin
-                class="tw:size-4 tw:text-muted-foreground"
+                class="size-4 text-muted-foreground"
                 :aria-label="$t('jobs.location')"
               />
             </dt>
-            <dd class="tw:font-medium">{{ job.location }}</dd>
+            <dd class="font-medium">{{ job.location }}</dd>
           </div>
           <div
             v-if="deadline.kind !== 'none'"
-            class="tw:flex tw:flex-wrap tw:items-center tw:gap-2 tw:lg:hidden"
+            class="flex flex-wrap items-center gap-2 lg:hidden"
           >
             <dt>
               <CalendarClock
-                class="tw:size-4 tw:text-muted-foreground"
+                class="size-4 text-muted-foreground"
                 :aria-label="$t('jobs.deadline')"
               />
             </dt>
-            <dd class="tw:font-medium">
+            <dd class="font-medium">
               <template v-if="dated">
                 {{ formatDeadline(job.deadline ?? undefined, locale) }}
               </template>
@@ -135,10 +133,10 @@
         </dl>
       </header>
 
-      <article class="tw:flex tw:min-w-0 tw:flex-col tw:gap-6">
+      <article class="flex min-w-0 flex-col gap-6">
         <p
           v-if="isLink"
-          class="tw:rounded-lg tw:border tw:bg-card tw:p-4 tw:text-muted-foreground"
+          class="rounded-lg border bg-card p-4 text-muted-foreground"
         >
           {{ $t('jobs.link_listing', { company: company?.name }) }}
         </p>
@@ -146,17 +144,15 @@
         <div v-if="job.description" class="et-prose" v-html="job.description" />
       </article>
 
-      <aside
-        class="tw:flex tw:flex-col tw:gap-8 tw:lg:sticky tw:lg:top-24 tw:lg:self-start"
-      >
+      <aside class="flex flex-col gap-8 lg:sticky lg:top-24 lg:self-start">
         <div
-          class="tw:hidden tw:flex-col tw:gap-4 tw:rounded-lg tw:border tw:bg-card tw:p-5 tw:lg:flex"
+          class="hidden flex-col gap-4 rounded-lg border bg-card p-5 lg:flex"
         >
           <div>
-            <p class="tw:text-sm tw:text-muted-foreground">
+            <p class="text-sm text-muted-foreground">
               {{ $t('jobs.deadline') }}
             </p>
-            <p class="tw:text-xl tw:font-bold">
+            <p class="text-xl font-bold">
               {{
                 dated
                   ? formatDeadline(job.deadline ?? undefined, locale)
@@ -169,7 +165,7 @@
             </p>
             <DeadlineNote v-if="dated" :state="deadline" />
           </div>
-          <Button v-if="canApply" as-child size="lg" class="tw:w-full">
+          <Button v-if="canApply" as-child size="lg" class="w-full">
             <a
               :href="job.applicationLink"
               target="_blank"
@@ -191,9 +187,9 @@
 
     <div
       v-else
-      class="tw:mx-auto tw:flex tw:max-w-6xl tw:flex-col tw:items-start tw:gap-4 tw:px-4 tw:py-16 tw:lg:px-8"
+      class="mx-auto flex max-w-6xl flex-col items-start gap-4 px-4 py-16 lg:px-8"
     >
-      <h1 class="tw:text-2xl tw:font-bold">{{ $t('jobs.detail.missing') }}</h1>
+      <h1 class="text-2xl font-bold">{{ $t('jobs.detail.missing') }}</h1>
       <Button as-child variant="outline">
         <NuxtLink :to="localePath('/jobs')">{{
           $t('jobs.detail.all')
@@ -204,9 +200,9 @@
     <!-- on phones the way to apply stays in reach while reading -->
     <div
       v-if="job && canApply"
-      class="tw:fixed tw:inset-x-0 tw:bottom-0 tw:z-10 tw:border-t tw:bg-card tw:px-4 tw:py-3 tw:shadow-[0_-4px_16px_rgb(28_29_33/0.08)] tw:lg:hidden"
+      class="fixed inset-x-0 bottom-0 z-10 border-t bg-card px-4 py-3 shadow-[0_-4px_16px_rgb(28_29_33/0.08)] lg:hidden"
     >
-      <Button as-child size="lg" class="tw:w-full">
+      <Button as-child size="lg" class="w-full">
         <a
           :href="job.applicationLink"
           target="_blank"

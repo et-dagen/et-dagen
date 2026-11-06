@@ -97,26 +97,22 @@
 </script>
 
 <template>
-  <form
-    class="tw:flex tw:max-w-3xl tw:flex-col tw:gap-6"
-    novalidate
-    @submit="submit"
-  >
+  <form class="flex max-w-3xl flex-col gap-6" novalidate @submit="submit">
     <NuxtLink
       :to="localePath('/admin/users')"
-      class="tw:inline-flex tw:w-fit tw:items-center tw:gap-1 tw:text-sm tw:text-muted-foreground tw:hover:text-foreground"
+      class="inline-flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
     >
-      <ArrowLeft class="tw:size-4" aria-hidden="true" />
+      <ArrowLeft class="size-4" aria-hidden="true" />
       {{ $t('admin.users.name') }}
     </NuxtLink>
     <h1
-      class="tw:text-2xl tw:leading-8 tw:font-extrabold tw:tracking-tight tw:lg:text-[2rem] tw:lg:leading-10"
+      class="text-2xl leading-8 font-extrabold tracking-tight lg:text-[2rem] lg:leading-10"
     >
       {{ $t('admin.users.form.edit_title') }}
     </h1>
 
     <section
-      class="tw:grid tw:gap-5 tw:rounded-lg tw:border tw:bg-card tw:p-4 tw:lg:grid-cols-2 tw:lg:p-6"
+      class="grid gap-5 rounded-lg border bg-card p-4 lg:grid-cols-2 lg:p-6"
     >
       <FormField v-slot="{ componentField }" name="name">
         <FormItem>
@@ -128,20 +124,20 @@
         </FormItem>
       </FormField>
 
-      <div class="tw:grid tw:content-start tw:gap-2">
+      <div class="grid content-start gap-2">
         <Label as="p">{{ $t('admin.users.form.email') }}</Label>
-        <p class="tw:flex tw:h-9 tw:items-center tw:truncate">{{ email }}</p>
-        <p class="tw:text-sm tw:text-muted-foreground">
+        <p class="flex h-9 items-center truncate">{{ email }}</p>
+        <p class="text-sm text-muted-foreground">
           {{ $t('admin.users.form.email_hint') }}
         </p>
       </div>
 
       <FormField v-slot="{ componentField }" name="userType">
-        <FormItem class="tw:lg:col-span-2">
+        <FormItem class="lg:col-span-2">
           <FormLabel>{{ $t('admin.users.form.role') }}</FormLabel>
           <Select v-bind="componentField">
             <FormControl>
-              <SelectTrigger class="tw:w-full tw:lg:w-1/2">
+              <SelectTrigger class="w-full lg:w-1/2">
                 <SelectValue />
               </SelectTrigger>
             </FormControl>
@@ -151,7 +147,7 @@
               </SelectItem>
             </SelectContent>
           </Select>
-          <p class="tw:text-sm tw:text-muted-foreground">
+          <p class="text-sm text-muted-foreground">
             {{ $t(`admin.users.form.role_hint.${role ?? 'basic'}`) }}
           </p>
           <FieldError />
@@ -163,11 +159,11 @@
         v-slot="{ componentField }"
         name="companyUID"
       >
-        <FormItem class="tw:lg:col-span-2">
+        <FormItem class="lg:col-span-2">
           <FormLabel>{{ $t('admin.users.form.company') }}</FormLabel>
           <Select v-bind="componentField">
             <FormControl>
-              <SelectTrigger class="tw:w-full">
+              <SelectTrigger class="w-full">
                 <SelectValue
                   :placeholder="$t('admin.events.form.choose_company')"
                 />
@@ -189,19 +185,19 @@
 
       <template v-else>
         <FormField v-slot="{ componentField }" name="studyProgram">
-          <FormItem class="tw:lg:col-span-2">
+          <FormItem class="lg:col-span-2">
             <FormLabel>
               {{ $t('admin.users.form.programme') }}
               <span
                 v-if="role === 'admin'"
-                class="tw:font-normal tw:text-muted-foreground"
+                class="font-normal text-muted-foreground"
               >
                 {{ $t('admin.users.form.optional') }}
               </span>
             </FormLabel>
             <Select v-bind="componentField">
               <FormControl>
-                <SelectTrigger class="tw:w-full">
+                <SelectTrigger class="w-full">
                   <SelectValue
                     :placeholder="$t('admin.users.form.choose_programme')"
                   />
@@ -222,12 +218,12 @@
         </FormField>
 
         <FormField v-slot="{ value, handleChange }" name="currentYear">
-          <FormItem class="tw:lg:col-span-2">
+          <FormItem class="lg:col-span-2">
             <FormLabel>{{ $t('admin.users.form.year') }}</FormLabel>
             <div
               role="radiogroup"
               :aria-label="$t('admin.users.form.year')"
-              class="tw:flex tw:flex-wrap tw:gap-2"
+              class="flex flex-wrap gap-2"
             >
               <button
                 v-for="year in yearsOf(student.studyProgram)"
@@ -235,7 +231,7 @@
                 type="button"
                 role="radio"
                 :aria-checked="Number(value) === year"
-                class="tw:inline-flex tw:h-9 tw:min-w-16 tw:items-center tw:justify-center tw:rounded-md tw:border tw:bg-card tw:px-3 tw:pt-0.5 tw:text-sm tw:font-semibold tw:hover:bg-accent tw:aria-checked:border-plate tw:aria-checked:bg-plate tw:aria-checked:text-plate-foreground"
+                class="inline-flex h-9 min-w-16 items-center justify-center rounded-md border bg-card px-3 pt-0.5 text-sm font-semibold hover:bg-accent aria-checked:border-plate aria-checked:bg-plate aria-checked:text-plate-foreground"
                 @click="handleChange(year)"
               >
                 {{ $t('company.admin.year', { n: year }) }}
@@ -251,16 +247,16 @@
         v-slot="{ value, handleChange }"
         name="withheld"
       >
-        <FormItem class="tw:lg:col-span-2">
+        <FormItem class="lg:col-span-2">
           <FormLabel>{{ $t('admin.users.form.access') }}</FormLabel>
-          <p class="tw:text-sm tw:text-muted-foreground">
+          <p class="text-sm text-muted-foreground">
             {{ $t('admin.users.form.access_hint') }}
           </p>
           <!-- ticked while the person keeps it; unticking withholds it -->
           <CheckGroup
             :model-value="kept((value as string[]) ?? [])"
             :options="entitlementOptions"
-            class="tw:flex tw:flex-col"
+            class="flex flex-col"
             @update:model-value="(keeps) => handleChange(withheldOf(keeps))"
           />
           <FieldError />
@@ -272,15 +268,15 @@
         v-slot="{ value, handleChange }"
         name="companyUIDs"
       >
-        <FormItem class="tw:lg:col-span-2">
+        <FormItem class="lg:col-span-2">
           <FormLabel>{{ $t('admin.users.form.companies') }}</FormLabel>
-          <p class="tw:text-sm tw:text-muted-foreground">
+          <p class="text-sm text-muted-foreground">
             {{ $t('admin.users.form.companies_hint') }}
           </p>
           <CheckGroup
             :model-value="(value as string[]) ?? []"
             :options="companyOptions"
-            class="tw:grid tw:max-h-64 tw:overflow-y-auto tw:sm:grid-cols-2"
+            class="grid max-h-64 overflow-y-auto sm:grid-cols-2"
             @update:model-value="handleChange"
           />
           <FieldError />
@@ -289,14 +285,14 @@
     </section>
 
     <section
-      class="tw:flex tw:flex-col tw:gap-4 tw:rounded-lg tw:border tw:bg-card tw:p-4 tw:lg:p-6"
+      class="flex flex-col gap-4 rounded-lg border bg-card p-4 lg:p-6"
       aria-labelledby="diet-heading"
     >
       <div>
-        <h2 id="diet-heading" class="tw:font-semibold">
+        <h2 id="diet-heading" class="font-semibold">
           {{ $t('dietary_restrictions.name') }}
         </h2>
-        <p class="tw:text-sm tw:text-muted-foreground">
+        <p class="text-sm text-muted-foreground">
           {{ $t('admin.users.form.diet_hint') }}
         </p>
       </div>
@@ -306,7 +302,7 @@
       />
     </section>
 
-    <div class="tw:flex tw:flex-wrap tw:gap-3">
+    <div class="flex flex-wrap gap-3">
       <Button type="submit" :disabled="saving">
         <Save aria-hidden="true" />
         {{ $t('admin.users.form.save') }}

@@ -108,10 +108,10 @@
   }
 
   const roleBadge: Record<Role, string> = {
-    admin: 'tw:border-transparent tw:bg-plate tw:text-plate-foreground',
-    coordinator: 'tw:border-transparent tw:bg-brand/10 tw:text-brand',
-    company: 'tw:border-border tw:bg-card tw:text-foreground',
-    basic: 'tw:border-transparent tw:bg-secondary tw:text-secondary-foreground',
+    admin: 'border-transparent bg-plate text-plate-foreground',
+    coordinator: 'border-transparent bg-brand/10 text-brand',
+    company: 'border-border bg-card text-foreground',
+    basic: 'border-transparent bg-secondary text-secondary-foreground',
   }
 </script>
 
@@ -136,10 +136,10 @@
 
     <template #table>
       <!-- table from md and up -->
-      <Table class="tw:hidden tw:md:table">
+      <Table class="hidden md:table">
         <TableHeader>
-          <TableRow class="tw:hover:bg-transparent">
-            <TableHead class="tw:w-12 tw:pl-4">
+          <TableRow class="hover:bg-transparent">
+            <TableHead class="w-12 pl-4">
               <SelectBox
                 :checked="selection.pageState.value"
                 :label="$t('admin.users.select_page')"
@@ -165,32 +165,32 @@
             :key="user.uid"
             :data-state="selection.has(user) ? 'selected' : undefined"
             :data-changed="user.uid === changed || undefined"
-            class="tw:data-[state=selected]:bg-brand/8 tw:data-changed:bg-signal/15 tw:data-changed:shadow-[inset_4px_0_0_var(--signal)]"
+            class="data-[state=selected]:bg-brand/8 data-changed:bg-signal/15 data-changed:shadow-[inset_4px_0_0_var(--signal)]"
           >
-            <TableCell class="tw:pl-4">
+            <TableCell class="pl-4">
               <SelectBox
                 :checked="selection.has(user)"
                 :label="$t('admin.users.select_row', { name: nameOf(user) })"
                 @change="(on) => selection.toggle(user, on)"
               />
             </TableCell>
-            <TableCell class="tw:font-semibold">
+            <TableCell class="font-semibold">
               <NuxtLink
                 :to="localePath(`/admin/users/${user.uid}`)"
-                class="tw:underline tw:decoration-border tw:decoration-1 tw:underline-offset-4 tw:hover:decoration-current"
+                class="underline decoration-border decoration-1 underline-offset-4 hover:decoration-current"
               >
                 {{ nameOf(user) }}
               </NuxtLink>
             </TableCell>
             <TableCell>
-              <Badge :class="roleBadge[roleOf(user)]" class="tw:rounded-[4px]">
+              <Badge :class="roleBadge[roleOf(user)]" class="rounded-[4px]">
                 {{ $t(`admin.users.role.${roleOf(user)}`) }}
               </Badge>
             </TableCell>
-            <TableCell class="tw:text-muted-foreground">
+            <TableCell class="text-muted-foreground">
               {{ user.email }}
             </TableCell>
-            <TableCell class="tw:text-muted-foreground">
+            <TableCell class="text-muted-foreground">
               {{ companyOf(user) }}
             </TableCell>
           </TableRow>
@@ -200,31 +200,31 @@
 
     <template #list>
       <!-- list on phones -->
-      <ul class="tw:divide-y tw:md:hidden">
+      <ul class="divide-y md:hidden">
         <li
           v-for="user in shown.rows"
           :key="user.uid"
           :data-changed="user.uid === changed || undefined"
-          class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3 tw:data-changed:bg-signal/15 tw:data-changed:shadow-[inset_4px_0_0_var(--signal)]"
+          class="flex items-center gap-3 px-4 py-3 data-changed:bg-signal/15 data-changed:shadow-[inset_4px_0_0_var(--signal)]"
         >
           <SelectBox
             :checked="selection.has(user)"
             :label="$t('admin.users.select_row', { name: nameOf(user) })"
-            class="tw:size-5"
+            class="size-5"
             @change="(on) => selection.toggle(user, on)"
           />
-          <div class="tw:min-w-0 tw:flex-1">
+          <div class="min-w-0 flex-1">
             <NuxtLink
               :to="localePath(`/admin/users/${user.uid}`)"
-              class="tw:block tw:truncate tw:font-semibold tw:underline tw:decoration-border tw:underline-offset-4"
+              class="block truncate font-semibold underline decoration-border underline-offset-4"
             >
               {{ nameOf(user) }}
             </NuxtLink>
-            <p class="tw:truncate tw:text-sm tw:text-muted-foreground">
+            <p class="truncate text-sm text-muted-foreground">
               {{ user.email }}
             </p>
           </div>
-          <Badge :class="roleBadge[roleOf(user)]" class="tw:rounded-[4px]">
+          <Badge :class="roleBadge[roleOf(user)]" class="rounded-[4px]">
             {{ $t(`admin.users.role.${roleOf(user)}`) }}
           </Badge>
         </li>

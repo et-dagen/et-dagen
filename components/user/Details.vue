@@ -86,10 +86,10 @@
 </script>
 
 <template>
-  <div class="tw:rounded-lg tw:border tw:bg-card">
-    <section aria-labelledby="profil-title" class="tw:p-5 tw:sm:px-6">
-      <div class="tw:flex tw:items-center tw:justify-between tw:gap-3">
-        <h3 id="profil-title" class="tw:font-extrabold">
+  <div class="rounded-lg border bg-card">
+    <section aria-labelledby="profil-title" class="p-5 sm:px-6">
+      <div class="flex items-center justify-between gap-3">
+        <h3 id="profil-title" class="font-extrabold">
           {{ $t('user.page.profile') }}
         </h3>
         <Button as-child variant="outline" size="sm">
@@ -99,21 +99,18 @@
           </NuxtLink>
         </Button>
       </div>
-      <p class="tw:mt-2 tw:text-lg tw:font-bold">{{ user?.name }}</p>
-      <p class="tw:text-sm tw:break-all tw:text-muted-foreground">
+      <p class="mt-2 text-lg font-bold">{{ user?.name }}</p>
+      <p class="text-sm break-all text-muted-foreground">
         {{ user?.email }}
       </p>
-      <p v-if="studies" class="tw:mt-1 tw:text-sm tw:text-muted-foreground">
+      <p v-if="studies" class="mt-1 text-sm text-muted-foreground">
         {{ studies }}
       </p>
     </section>
 
-    <section
-      aria-labelledby="allergier-title"
-      class="tw:border-t tw:p-5 tw:sm:px-6"
-    >
-      <div class="tw:flex tw:items-center tw:justify-between tw:gap-3">
-        <h3 id="allergier-title" class="tw:font-extrabold">
+    <section aria-labelledby="allergier-title" class="border-t p-5 sm:px-6">
+      <div class="flex items-center justify-between gap-3">
+        <h3 id="allergier-title" class="font-extrabold">
           {{ $t('user.page.allergies') }}
         </h3>
         <Button as-child variant="outline" size="sm">
@@ -123,29 +120,26 @@
           </NuxtLink>
         </Button>
       </div>
-      <ul
-        v-if="restrictions.length"
-        class="tw:mt-3 tw:flex tw:flex-wrap tw:gap-2"
-      >
+      <ul v-if="restrictions.length" class="mt-3 flex flex-wrap gap-2">
         <li
           v-for="restriction in restrictions"
           :key="restriction"
-          class="tw:rounded-full tw:border tw:px-3 tw:pt-1 tw:pb-0.5 tw:text-sm tw:font-bold"
+          class="rounded-full border px-3 pt-1 pb-0.5 text-sm font-bold"
         >
           {{ restrictionName(restriction) }}
         </li>
       </ul>
-      <p v-else class="tw:mt-2 tw:text-sm tw:text-muted-foreground">
+      <p v-else class="mt-2 text-sm text-muted-foreground">
         {{ $t('user.page.no_allergies') }}
       </p>
     </section>
 
-    <section aria-labelledby="cv-title" class="tw:border-t tw:p-5 tw:sm:px-6">
-      <div class="tw:flex tw:items-center tw:justify-between tw:gap-3">
-        <h3 id="cv-title" class="tw:font-extrabold">
+    <section aria-labelledby="cv-title" class="border-t p-5 sm:px-6">
+      <div class="flex items-center justify-between gap-3">
+        <h3 id="cv-title" class="font-extrabold">
           {{ $t('user.resume.resume') }}
         </h3>
-        <div class="tw:flex tw:gap-2">
+        <div class="flex gap-2">
           <Button
             variant="outline"
             size="sm"
@@ -163,9 +157,9 @@
                 {{ $t('user.page.remove') }}
               </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent class="tw:rounded-md tw:bg-card">
+            <AlertDialogContent class="rounded-md bg-card">
               <AlertDialogHeader>
-                <AlertDialogTitle class="tw:text-lg tw:font-bold">
+                <AlertDialogTitle class="text-lg font-bold">
                   {{ $t('user.page.resume_delete_title') }}
                 </AlertDialogTitle>
                 <AlertDialogDescription>
@@ -187,7 +181,7 @@
           ref="picker"
           type="file"
           accept="application/pdf"
-          class="tw:sr-only"
+          class="sr-only"
           tabindex="-1"
           aria-hidden="true"
           @change="upload"
@@ -198,19 +192,16 @@
         :href="`/api/v1/resume/file?userUID=${user.uid}`"
         target="_blank"
         rel="noopener"
-        class="tw:mt-3 tw:flex tw:min-w-0 tw:items-center tw:gap-2 tw:font-bold tw:underline tw:decoration-border tw:decoration-2 tw:underline-offset-4 tw:hover:decoration-brand"
+        class="mt-3 flex min-w-0 items-center gap-2 font-bold underline decoration-border decoration-2 underline-offset-4 hover:decoration-brand"
       >
-        <FileText
-          class="tw:size-5 tw:shrink-0 tw:text-brand"
-          aria-hidden="true"
-        />
-        <span class="tw:truncate">{{ fileName }}</span>
+        <FileText class="size-5 shrink-0 text-brand" aria-hidden="true" />
+        <span class="truncate">{{ fileName }}</span>
       </a>
-      <p v-else class="tw:mt-2 tw:text-sm tw:text-muted-foreground">
+      <p v-else class="mt-2 text-sm text-muted-foreground">
         {{ $t('user.page.no_resume') }}
       </p>
     </section>
 
-    <DeleteAccount class="tw:border-t tw:p-5 tw:sm:px-6" />
+    <DeleteAccount class="border-t p-5 sm:px-6" />
   </div>
 </template>

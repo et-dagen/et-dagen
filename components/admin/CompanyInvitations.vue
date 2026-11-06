@@ -68,11 +68,10 @@
   }
 
   const statusBadge: Record<InvitationStatus, string> = {
-    pending: 'tw:border-transparent tw:bg-plate tw:text-plate-foreground',
-    joined:
-      'tw:border-transparent tw:bg-secondary tw:text-secondary-foreground',
-    expired: 'tw:text-muted-foreground',
-    revoked: 'tw:text-muted-foreground',
+    pending: 'border-transparent bg-plate text-plate-foreground',
+    joined: 'border-transparent bg-secondary text-secondary-foreground',
+    expired: 'text-muted-foreground',
+    revoked: 'text-muted-foreground',
   }
 
   const detailOf = (invitation: ListedInvitation) => {
@@ -91,37 +90,31 @@
 <template>
   <section
     id="invitations"
-    class="tw:flex tw:max-w-3xl tw:scroll-mt-6 tw:flex-col tw:gap-5"
+    class="flex max-w-3xl scroll-mt-6 flex-col gap-5"
     aria-labelledby="invitations-title"
   >
-    <div class="tw:flex tw:flex-col tw:gap-1">
-      <h2 id="invitations-title" class="tw:text-xl tw:font-extrabold">
+    <div class="flex flex-col gap-1">
+      <h2 id="invitations-title" class="text-xl font-extrabold">
         {{ $t('admin.companies.invitations.title') }}
       </h2>
-      <p class="tw:max-w-[65ch] tw:text-muted-foreground">
+      <p class="max-w-[65ch] text-muted-foreground">
         {{ $t('admin.companies.invitations.lead') }}
       </p>
     </div>
 
-    <div
-      class="tw:flex tw:flex-col tw:gap-5 tw:rounded-lg tw:border tw:bg-card tw:p-4 tw:lg:p-6"
-    >
-      <form
-        novalidate
-        class="tw:flex tw:flex-col tw:gap-2"
-        @submit.prevent="invite"
-      >
+    <div class="flex flex-col gap-5 rounded-lg border bg-card p-4 lg:p-6">
+      <form novalidate class="flex flex-col gap-2" @submit.prevent="invite">
         <Label for="invite-email">
           {{ $t('admin.companies.invitations.email') }}
         </Label>
-        <div class="tw:flex tw:flex-col tw:gap-2 tw:sm:flex-row">
+        <div class="flex flex-col gap-2 sm:flex-row">
           <Input
             id="invite-email"
             v-model="email"
             type="email"
             autocomplete="off"
             inputmode="email"
-            class="tw:sm:max-w-sm"
+            class="sm:max-w-sm"
             :aria-invalid="!!error || undefined"
             :aria-describedby="error ? 'invite-error' : undefined"
           />
@@ -140,7 +133,7 @@
           v-if="error"
           id="invite-error"
           role="alert"
-          class="tw:text-sm tw:font-semibold tw:text-destructive"
+          class="text-sm font-semibold text-destructive"
         >
           {{ error }}
         </p>
@@ -149,25 +142,25 @@
       <div
         v-if="sent"
         role="status"
-        class="tw:flex tw:flex-col tw:gap-3 tw:rounded-md tw:bg-secondary tw:p-4"
+        class="flex flex-col gap-3 rounded-md bg-secondary p-4"
       >
-        <p class="tw:text-sm">
-          <span class="tw:font-semibold">
+        <p class="text-sm">
+          <span class="font-semibold">
             {{ $t('admin.companies.invitations.sent', { email: sent.email }) }}
           </span>
           {{ ' ' }}
           {{ $t('admin.companies.invitations.link_once') }}
         </p>
-        <div class="tw:flex tw:gap-2">
+        <div class="flex gap-2">
           <Input
             :model-value="sent.link"
             readonly
             :aria-label="$t('admin.companies.invitations.link')"
-            class="tw:bg-background tw:font-mono tw:text-xs"
+            class="bg-background font-mono text-xs"
             @focus="($event.target as HTMLInputElement).select()"
           />
           <Button variant="outline" @click="copy(sent.link)">
-            <Check v-if="copied" class="tw:text-plate" aria-hidden="true" />
+            <Check v-if="copied" class="text-plate" aria-hidden="true" />
             <Copy v-else aria-hidden="true" />
             {{
               $t(
@@ -180,35 +173,29 @@
         </div>
       </div>
 
-      <ul
-        v-if="invitations.length"
-        class="tw:-mx-4 tw:divide-y tw:border-t tw:lg:-mx-6"
-      >
+      <ul v-if="invitations.length" class="-mx-4 divide-y border-t lg:-mx-6">
         <li
           v-for="invitation in invitations"
           :key="invitation.id"
-          class="tw:grid tw:grid-cols-[minmax(0,1fr)_auto] tw:items-center tw:gap-x-3 tw:gap-y-1 tw:px-4 tw:py-3 tw:sm:grid-cols-[minmax(0,1fr)_auto_7rem] tw:lg:px-6"
+          class="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 px-4 py-3 sm:grid-cols-[minmax(0,1fr)_auto_7rem] lg:px-6"
         >
-          <div class="tw:flex tw:min-w-0 tw:flex-col">
-            <span class="tw:font-medium tw:break-all">
+          <div class="flex min-w-0 flex-col">
+            <span class="font-medium break-all">
               {{ invitation.email }}
             </span>
-            <span class="tw:text-sm tw:text-muted-foreground">
+            <span class="text-sm text-muted-foreground">
               {{ detailOf(invitation) }}
             </span>
           </div>
-          <Badge
-            class="tw:rounded-[4px]"
-            :class="statusBadge[invitation.status]"
-          >
+          <Badge class="rounded-[4px]" :class="statusBadge[invitation.status]">
             {{ $t(`admin.companies.invitations.status.${invitation.status}`) }}
           </Badge>
-          <div class="tw:col-span-2 tw:flex tw:sm:col-span-1 tw:sm:justify-end">
+          <div class="col-span-2 flex sm:col-span-1 sm:justify-end">
             <Button
               v-if="invitation.status === 'pending'"
               variant="ghost"
               size="sm"
-              class="tw:-ml-2.5 tw:sm:ml-0"
+              class="-ml-2.5 sm:ml-0"
               :disabled="revoking === invitation.id"
               :aria-label="
                 $t('admin.companies.invitations.revoke_label', {
@@ -223,7 +210,7 @@
           </div>
         </li>
       </ul>
-      <p v-else class="tw:text-sm tw:text-muted-foreground">
+      <p v-else class="text-sm text-muted-foreground">
         {{ $t('admin.companies.invitations.empty') }}
       </p>
     </div>

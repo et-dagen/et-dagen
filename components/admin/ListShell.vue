@@ -20,8 +20,8 @@
 </script>
 
 <template>
-  <div class="tw:flex tw:flex-col tw:gap-4">
-    <div class="tw:flex tw:flex-col tw:gap-3 tw:lg:flex-row tw:lg:items-center">
+  <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-3 lg:flex-row lg:items-center">
       <slot name="toolbar" />
     </div>
 
@@ -31,13 +31,13 @@
       @delete="$emit('delete')"
     />
 
-    <div class="tw:overflow-hidden tw:rounded-lg tw:border tw:bg-card">
+    <div class="overflow-hidden rounded-lg border bg-card">
       <slot name="table" />
       <slot name="list" />
 
       <p
         v-if="shown.rows.length === 0"
-        class="tw:px-4 tw:py-10 tw:text-center tw:text-muted-foreground"
+        class="px-4 py-10 text-center text-muted-foreground"
       >
         {{ empty }}
       </p>
