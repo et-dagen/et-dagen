@@ -2,10 +2,9 @@
   import { useCompanies } from '@/composables/useCompanies'
   import DeleteDialog from '@/components/admin/DeleteDialog.vue'
   import FilterChips from '@/components/admin/FilterChips.vue'
-  import Pager from '@/components/admin/Pager.vue'
+  import ListShell from '@/components/admin/ListShell.vue'
   import SearchField from '@/components/admin/SearchField.vue'
   import SelectBox from '@/components/admin/SelectBox.vue'
-  import SelectionBar from '@/components/admin/SelectionBar.vue'
   import SortButton from '@/components/admin/SortButton.vue'
   import { Badge } from '@/components/ui/badge'
   import {
@@ -16,8 +15,7 @@
     TableHeader,
     TableRow,
   } from '@/components/ui/table'
-  import { useSelection } from '@/composables/admin/useSelection'
-  import { useSort } from '@/composables/admin/useSort'
+  import { useListView } from '@/composables/admin/useListView'
   import { alertError, notify } from '@/composables/useAlerts'
   import {
     USER_TYPES as ROLES,
@@ -25,7 +23,6 @@
     type MembershipBody,
     type UserType as Role,
   } from '@/contracts/user'
-  import { pageOf, search, sortBy } from '@/lib/admin/listView'
   import type { User } from '~/models/User'
 
   /** A listed user; admins get stored roles and memberships with each one */
@@ -33,7 +30,6 @@
     access?: { roles: string[]; memberships: MembershipBody[] }
   }
 
-  const PAGE_SIZE = 25
   const COLUMNS = ['name', 'role', 'email', 'company'] as const
 
   const localePath = useLocalePath()
@@ -57,55 +53,39 @@
       .join(', ')
   const nameOf = (user: User) => user.name || user.email
 
-  const query = ref('')
-  const role = ref<Role | 'all'>('all')
   const {
-    sort,
+    query,
+    filter: role,
+    filterOptions: roleOptions,
+    page,
+    visible,
+    shown,
+    selection,
+    chosen,
     toggle: toggleSort,
     directionOf,
     ariaSort,
-  } = useSort<(typeof COLUMNS)[number]>('name')
-  const page = ref(1)
-
-  const roleOptions = computed(() =>
-    (['all', ...ROLES] as const).map((value) => ({
-      value,
-      label: t(`admin.users.filter.${value}`),
-      count: (users.value ?? []).filter(
-        (u) => value === 'all' || roleOf(u) === value,
-      ).length,
-    })),
-  )
-
-  const sortValue = {
-    name: (user: User) => user.name,
-    role: (user: User) => t(`admin.users.role.${roleOf(user)}`),
-    email: (user: User) => user.email,
-    company: companyOf,
-  }
-
-  const visible = computed(() => {
-    const inRole = (users.value ?? []).filter(
-      (user) => role.value === 'all' || roleOf(user) === role.value,
-    )
-    const found = search(inRole, query.value, (user) => [
-      user.name,
-      user.email,
-      companyOf(user),
-    ])
-    return sortBy(found, sortValue[sort.value.column], sort.value.direction)
+  } = useListView({
+    rows: computed(() => users.value ?? []),
+    keyOf: (user) => user.uid,
+    filter: {
+      values: ['all', ...ROLES] as const,
+      initial: 'all',
+      keeps: (user, value) => value === 'all' || roleOf(user) === value,
+      label: (value) => t(`admin.users.filter.${value}`),
+    },
+    searchIn: (user) => [user.name, user.email, companyOf(user)],
+    sortBy: {
+      name: (user) => user.name,
+      role: (user) => t(`admin.users.role.${roleOf(user)}`),
+      email: (user) => user.email,
+      company: companyOf,
+    },
+    sortFirst: 'name',
   })
-  const shown = computed(() => pageOf(visible.value, page.value, PAGE_SIZE))
-  watch([query, role, sort], () => (page.value = 1))
+  const selectedUsers = computed(chosen)
 
-  const selection = useSelection(
-    computed(() => shown.value.rows),
-    (user) => user.uid,
-  )
-  const selectedUsers = computed(() =>
-    (users.value ?? []).filter((user) => selection.has(user)),
-  )
-
+  // users go in one request, so a failure keeps the dialog and the selection
   const confirming = ref(false)
   const deleting = ref(false)
   const deleteSelected = async () => {
@@ -136,23 +116,25 @@
 </script>
 
 <template>
-  <div class="tw:flex tw:flex-col tw:gap-4">
-    <div class="tw:flex tw:flex-col tw:gap-3 tw:lg:flex-row tw:lg:items-center">
+  <ListShell
+    v-model:page="page"
+    :shown="shown"
+    :total="visible.length"
+    :selected="selection.selected.value.size"
+    :empty="$t('admin.users.empty')"
+    @clear="selection.clear"
+    @delete="confirming = true"
+  >
+    <template #toolbar>
       <SearchField v-model="query" :label="$t('admin.users.search')" />
       <FilterChips
         v-model="role"
         :label="$t('admin.users.columns.role')"
         :options="roleOptions"
       />
-    </div>
+    </template>
 
-    <SelectionBar
-      :count="selection.selected.value.size"
-      @clear="selection.clear"
-      @delete="confirming = true"
-    />
-
-    <div class="tw:overflow-hidden tw:rounded-lg tw:border tw:bg-card">
+    <template #table>
       <!-- table from md and up -->
       <Table class="tw:hidden tw:md:table">
         <TableHeader>
@@ -214,7 +196,9 @@
           </TableRow>
         </TableBody>
       </Table>
+    </template>
 
+    <template #list>
       <!-- list on phones -->
       <ul class="tw:divide-y tw:md:hidden">
         <li
@@ -245,16 +229,7 @@
           </Badge>
         </li>
       </ul>
-
-      <p
-        v-if="shown.rows.length === 0"
-        class="tw:px-4 tw:py-10 tw:text-center tw:text-muted-foreground"
-      >
-        {{ $t('admin.users.empty') }}
-      </p>
-
-      <Pager v-model="page" :shown="shown" :total="visible.length" />
-    </div>
+    </template>
 
     <DeleteDialog
       v-model:open="confirming"
@@ -271,5 +246,5 @@
       :loading="deleting"
       @confirm="deleteSelected"
     />
-  </div>
+  </ListShell>
 </template>
