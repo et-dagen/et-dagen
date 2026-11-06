@@ -1,8 +1,7 @@
 <script setup lang="ts">
   definePageMeta({
     layout: 'admin',
-    // route and all sub routes are protected
-    protected: true,
+    // the area protects this route and all sub routes
     area: 'admin',
 
     // there exists no /admin page, so redirect to /admin/companies

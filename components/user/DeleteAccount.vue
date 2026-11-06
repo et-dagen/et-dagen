@@ -1,5 +1,6 @@
 <script setup lang="ts">
   import { Trash2 } from '@lucide/vue'
+  import { deleteSignedInUser } from '@/composables/auth/session'
   import {
     AlertDialog,
     AlertDialogCancel,
