@@ -1,5 +1,10 @@
 <script setup lang="ts">
   import { useForm } from 'vee-validate'
+  import {
+    requestPasswordReset,
+    signInHere,
+    signOutHere,
+  } from '@/composables/auth/session'
   import FieldError from '@/components/form/FieldError.vue'
   import { Button } from '@/components/ui/button'
   import {
