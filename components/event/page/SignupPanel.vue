@@ -12,7 +12,7 @@
     AlertDialogTitle,
   } from '@/components/ui/alert-dialog'
   import { Button } from '@/components/ui/button'
-  import { alertError } from '@/composables/useAlerts'
+  import { alertError, notify } from '@/composables/useAlerts'
   import { Instant } from '@/domain/time'
   import { countdownOf, type SignupState } from '@/lib/eventPage'
   import { formatInstant } from '@/lib/time'
@@ -38,7 +38,6 @@
 
   const { t, locale } = useI18n()
   const localePath = useLocalePath()
-  const alerts = useAlertStore()
 
   const busy = ref(false)
   async function send(method: 'POST' | 'DELETE', done: string) {
@@ -48,7 +47,7 @@
         method,
         body: { eventUID: props.eventUid },
       })
-      alerts.alert(t(done), 'success')
+      notify(t(done), 'success')
       emit('changed')
     } catch (error) {
       alertError(error)

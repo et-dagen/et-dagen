@@ -187,6 +187,11 @@ export const ERRORS = {
     status: 400,
     message: "A job's deadline type must be 'date', 'asap' or 'rolling'",
   },
+  'job/invalid-type': {
+    status: 400,
+    message:
+      "A job's type must be 'full-time', 'graduate' or 'summer-internship'",
+  },
 } as const satisfies Record<string, ErrorSpec>
 
 export type ErrorCode = keyof typeof ERRORS

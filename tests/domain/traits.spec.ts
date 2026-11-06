@@ -69,9 +69,13 @@ describe('bounds over a capability', () => {
       uid: JobUid.parse('j1'),
       companyUid: CompanyUid.parse('c1'),
       description: 'Graduate role',
-      location: { name: 'Trondheim' },
+      location: 'Trondheim',
       title: 'Engineer',
       type: 'graduate',
+      listing: 'text',
+      applicationLink: '',
+      deadlineType: 'rolling',
+      deadline: null,
     }
 
     expect(summarise(job)).toBe('Graduate')
