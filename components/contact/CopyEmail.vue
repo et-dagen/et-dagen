@@ -30,13 +30,15 @@
 </script>
 
 <template>
-  <span class="inline-flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+  <span
+    class="tw:inline-flex tw:min-w-0 tw:flex-wrap tw:items-center tw:gap-x-2 tw:gap-y-1"
+  >
     <a
       :href="`mailto:${email}`"
-      class="min-w-0 font-semibold underline-offset-4 hover:underline"
+      class="tw:min-w-0 tw:font-semibold tw:underline-offset-4 tw:hover:underline"
     >
-      <span class="whitespace-nowrap">{{ parts[0] }}</span
-      ><wbr /><span class="whitespace-nowrap">{{ parts[1] }}</span>
+      <span class="tw:whitespace-nowrap">{{ parts[0] }}</span
+      ><wbr /><span class="tw:whitespace-nowrap">{{ parts[1] }}</span>
     </a>
     <Button
       v-if="labelled"
@@ -53,14 +55,14 @@
       v-else
       variant="ghost"
       size="icon"
-      class="size-8 shrink-0"
+      class="tw:size-8 tw:shrink-0"
       :aria-label="$t(copied ? 'contact.copied' : 'contact.copy', { email })"
       @click="copy"
     >
       <Check v-if="copied" aria-hidden="true" />
       <Copy v-else aria-hidden="true" />
     </Button>
-    <span class="sr-only" aria-live="polite">{{
+    <span class="tw:sr-only" aria-live="polite">{{
       copied ? $t('contact.copied', { email }) : ''
     }}</span>
   </span>

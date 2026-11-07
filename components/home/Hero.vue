@@ -14,53 +14,58 @@
 
 <template>
   <section
-    class="relative isolate overflow-hidden lg:min-h-[calc(100svh-4.25rem)]"
+    class="tw:relative tw:isolate tw:overflow-hidden tw:lg:min-h-[calc(100svh-4.25rem)]"
   >
     <!-- the logo's red shard, at the size of a direction sign -->
     <svg
       viewBox="0 0 1162 1441"
-      class="absolute top-4 -right-20 -z-10 h-64 w-auto sm:h-80 lg:top-[6%] lg:-right-[6%] lg:h-[88%]"
+      class="tw:absolute tw:top-4 tw:-right-20 tw:-z-10 tw:h-64 tw:w-auto tw:sm:h-80 tw:lg:top-[6%] tw:lg:-right-[6%] tw:lg:h-[88%]"
       aria-hidden="true"
     >
       <path d="M0 0 1046 431 1162 895 904 1441Z" fill="var(--brand)" />
     </svg>
 
     <div
-      class="mx-auto flex max-w-screen-2xl flex-col px-4 pt-44 lg:min-h-[inherit] pb-12 sm:pt-80 lg:px-8 lg:pt-[clamp(3rem,9vh,6rem)] lg:pb-14"
+      class="tw:mx-auto tw:flex tw:max-w-screen-2xl tw:flex-col tw:px-4 tw:pt-44 tw:lg:min-h-[inherit] tw:pb-12 tw:sm:pt-80 tw:lg:px-8 tw:lg:pt-[clamp(3rem,9vh,6rem)] tw:lg:pb-14"
     >
-      <h1 class="font-black tracking-[-0.04em]">
-        <span class="sr-only">E&amp;T-dagene: </span>
+      <h1 class="tw:font-black tw:tracking-[-0.04em]">
+        <span class="tw:sr-only">E&amp;T-dagene: </span>
         <template v-if="fair">
           <span
-            class="block text-[clamp(5.5rem,14vw,12rem)] leading-[0.9] tabular-nums"
+            class="tw:block tw:text-[clamp(5.5rem,14vw,12rem)] tw:leading-[0.9] tw:tabular-nums"
           >
             {{ fair.days }}
           </span>
           <span
-            class="block text-[clamp(2.75rem,7.5vw,6.5rem)] leading-[1.05] font-extrabold tracking-[-0.03em]"
+            class="tw:block tw:text-[clamp(2.75rem,7.5vw,6.5rem)] tw:leading-[1.05] tw:font-extrabold tw:tracking-[-0.03em]"
           >
             {{ fair.month }}
           </span>
         </template>
-        <span v-else class="block text-[clamp(3rem,9vw,7.5rem)] leading-none">
+        <span
+          v-else
+          class="tw:block tw:text-[clamp(3rem,9vw,7.5rem)] tw:leading-none"
+        >
           {{ $t('home.date_coming') }}
         </span>
       </h1>
 
       <p
-        class="mt-8 max-w-3xl text-lg leading-relaxed text-muted-foreground lg:text-xl"
+        class="tw:mt-8 tw:max-w-3xl tw:text-lg tw:leading-relaxed tw:text-muted-foreground tw:lg:text-xl"
       >
-        <strong class="font-bold text-foreground">
+        <strong class="tw:font-bold tw:text-foreground">
           {{ $t('home.place') }}
         </strong>
-        <span aria-hidden="true" class="mx-3 hidden sm:inline">·</span>
-        <span class="block sm:inline">{{ $t('home.slogan') }}</span>
+        <span aria-hidden="true" class="tw:mx-3 tw:hidden tw:sm:inline">·</span>
+        <span class="tw:block tw:sm:inline">{{ $t('home.slogan') }}</span>
       </p>
 
-      <div class="mt-10 flex flex-wrap items-center gap-x-8 gap-y-4">
+      <div
+        class="tw:mt-10 tw:flex tw:flex-wrap tw:items-center tw:gap-x-8 tw:gap-y-4"
+      >
         <Button
           as-child
-          class="h-13 px-7 text-lg font-bold active:translate-y-px"
+          class="tw:h-13 tw:px-7 tw:text-lg tw:font-bold tw:active:translate-y-px"
         >
           <NuxtLink :to="localePath('/programme')">
             {{ $t('home.sign_up') }}
@@ -69,7 +74,7 @@
         <a
           v-if="hasCompanies"
           href="#bedrifter"
-          class="text-lg font-bold underline decoration-border decoration-2 underline-offset-[6px] hover:decoration-brand"
+          class="tw:text-lg tw:font-bold tw:underline tw:decoration-border tw:decoration-2 tw:underline-offset-[6px] tw:hover:decoration-brand"
         >
           {{ $t(lastCompanies ? 'home.who_last' : 'home.who') }}
         </a>

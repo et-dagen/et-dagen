@@ -26,15 +26,17 @@
     v-bind="forwardedProps"
     :class="
       cn(
-        `focus:bg-accent focus:text-accent-foreground [&_svg:not([class*='text-'])]:text-muted-foreground relative flex w-full cursor-default items-center gap-2 rounded-sm py-1.5 pr-8 pl-2 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2`,
+        `tw:focus:bg-accent tw:focus:text-accent-foreground tw:[&_svg:not([class*='text-'])]:text-muted-foreground tw:relative tw:flex tw:w-full tw:cursor-default tw:items-center tw:gap-2 tw:rounded-sm tw:py-1.5 tw:pr-8 tw:pl-2 tw:text-sm tw:outline-hidden tw:select-none tw:data-[disabled]:pointer-events-none tw:data-[disabled]:opacity-50 tw:[&_svg]:pointer-events-none tw:[&_svg]:shrink-0 tw:[&_svg:not([class*='size-'])]:size-4 tw:*:[span]:last:flex tw:*:[span]:last:items-center tw:*:[span]:last:gap-2`,
         props.class,
       )
     "
   >
-    <span class="absolute right-2 flex size-3.5 items-center justify-center">
+    <span
+      class="tw:absolute tw:right-2 tw:flex tw:size-3.5 tw:items-center tw:justify-center"
+    >
       <SelectItemIndicator>
         <slot name="indicator-icon">
-          <Check class="size-4" />
+          <Check class="tw:size-4" />
         </slot>
       </SelectItemIndicator>
     </span>

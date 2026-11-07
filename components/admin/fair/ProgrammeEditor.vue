@@ -35,19 +35,19 @@
 
 <template>
   <form
-    class="flex flex-col gap-4 bg-muted/40 p-4"
+    class="tw:flex tw:flex-col tw:gap-4 tw:bg-muted/40 tw:p-4"
     @submit.prevent="save"
     @keydown.esc="emit('cancel')"
   >
-    <div class="grid gap-4 sm:grid-cols-[10rem_1fr_14rem]">
-      <div class="flex flex-col gap-2">
+    <div class="tw:grid tw:gap-4 tw:sm:grid-cols-[10rem_1fr_14rem]">
+      <div class="tw:flex tw:flex-col tw:gap-2">
         <Label :for="`${id}-code`">{{
           $t('admin.fair.programmes.code')
         }}</Label>
         <Input
           :id="`${id}-code`"
           v-model="code"
-          class="font-mono uppercase"
+          class="tw:font-mono tw:uppercase"
           :disabled="!!initial"
           required
           maxlength="20"
@@ -55,18 +55,18 @@
           spellcheck="false"
         />
       </div>
-      <div class="flex flex-col gap-2">
+      <div class="tw:flex tw:flex-col tw:gap-2">
         <Label :for="`${id}-name`">{{
           $t('admin.fair.programmes.name')
         }}</Label>
         <Input :id="`${id}-name`" v-model="name" required maxlength="120" />
       </div>
-      <div class="flex flex-col gap-2">
+      <div class="tw:flex tw:flex-col tw:gap-2">
         <Label :for="`${id}-degree`">
           {{ $t('admin.fair.programmes.degree') }}
         </Label>
         <Select v-model="degree">
-          <SelectTrigger :id="`${id}-degree`" class="w-full">
+          <SelectTrigger :id="`${id}-degree`" class="tw:w-full">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -77,7 +77,7 @@
         </Select>
       </div>
     </div>
-    <p class="text-sm text-muted-foreground">
+    <p class="tw:text-sm tw:text-muted-foreground">
       {{
         $t(
           initial
@@ -86,14 +86,14 @@
         )
       }}
     </p>
-    <div class="flex flex-wrap items-center gap-3">
-      <div class="flex items-center gap-2">
+    <div class="tw:flex tw:flex-wrap tw:items-center tw:gap-3">
+      <div class="tw:flex tw:items-center tw:gap-2">
         <Checkbox :id="`${id}-open`" v-model="open" />
-        <Label :for="`${id}-open`" class="font-normal">
+        <Label :for="`${id}-open`" class="tw:font-normal">
           {{ $t('admin.fair.programmes.open') }}
         </Label>
       </div>
-      <div class="flex gap-2 sm:ml-auto">
+      <div class="tw:flex tw:gap-2 tw:sm:ml-auto">
         <Button type="button" variant="ghost" @click="emit('cancel')">
           <X aria-hidden="true" />
           {{ $t('admin.fair.programmes.cancel') }}

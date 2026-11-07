@@ -16,7 +16,7 @@
   <AlertDialogTitle
     data-slot="alert-dialog-title"
     v-bind="delegatedProps"
-    :class="cn('text-lg font-semibold', props.class)"
+    :class="cn('tw:text-lg tw:font-semibold', props.class)"
   >
     <slot />
   </AlertDialogTitle>

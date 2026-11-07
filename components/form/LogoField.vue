@@ -20,23 +20,32 @@
 </script>
 
 <template>
-  <div class="flex items-center gap-4">
+  <div class="tw:flex tw:items-center tw:gap-4">
     <div
-      class="grid size-20 shrink-0 place-items-center overflow-hidden rounded-md border bg-white"
+      class="tw:grid tw:size-20 tw:shrink-0 tw:place-items-center tw:overflow-hidden tw:rounded-md tw:border tw:bg-white"
     >
-      <img v-if="shown" :src="shown" alt="" class="size-full object-contain" />
-      <ImageUp v-else class="size-6 text-muted-foreground" aria-hidden="true" />
+      <img
+        v-if="shown"
+        :src="shown"
+        alt=""
+        class="tw:size-full tw:object-contain"
+      />
+      <ImageUp
+        v-else
+        class="tw:size-6 tw:text-muted-foreground"
+        aria-hidden="true"
+      />
     </div>
-    <div class="flex flex-col gap-2">
+    <div class="tw:flex tw:flex-col tw:gap-2">
       <input
         ref="input"
         type="file"
         accept="image/png,image/jpeg,image/webp"
-        class="sr-only"
+        class="tw:sr-only"
         :aria-label="$t('admin.companies.form.logo_choose')"
         @change="choose"
       />
-      <div class="flex gap-2">
+      <div class="tw:flex tw:gap-2">
         <Button
           type="button"
           variant="outline"
@@ -63,7 +72,7 @@
           {{ $t('admin.companies.form.logo_undo') }}
         </Button>
       </div>
-      <p class="text-sm text-muted-foreground">
+      <p class="tw:text-sm tw:text-muted-foreground">
         {{ file ? file.name : $t('admin.companies.form.logo_hint') }}
       </p>
     </div>

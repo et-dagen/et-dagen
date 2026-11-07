@@ -26,12 +26,12 @@
   <span
     :class="
       {
-        sm: 'size-7 rounded-sm text-[11px]',
-        md: 'size-11 rounded-md p-1 text-sm',
-        lg: 'size-14 rounded-md p-1.5 text-lg',
+        sm: 'tw:size-7 tw:rounded-sm tw:text-[11px]',
+        md: 'tw:size-11 tw:rounded-md tw:p-1 tw:text-sm',
+        lg: 'tw:size-14 tw:rounded-md tw:p-1.5 tw:text-lg',
       }[size ?? 'sm']
     "
-    class="grid shrink-0 place-items-center overflow-hidden border bg-white font-bold text-plate"
+    class="tw:grid tw:shrink-0 tw:place-items-center tw:overflow-hidden tw:border tw:bg-white tw:font-bold tw:text-plate"
     aria-hidden="true"
   >
     <img
@@ -39,7 +39,7 @@
       :src="src"
       alt=""
       loading="lazy"
-      class="size-full object-contain"
+      class="tw:size-full tw:object-contain"
       @error="failed = true"
     />
     <template v-else>{{ initials }}</template>

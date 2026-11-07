@@ -8,10 +8,13 @@
 </script>
 
 <template>
-  <div data-slot="table-container" class="relative w-full overflow-auto">
+  <div
+    data-slot="table-container"
+    class="tw:relative tw:w-full tw:overflow-auto"
+  >
     <table
       data-slot="table"
-      :class="cn('w-full caption-bottom text-sm', props.class)"
+      :class="cn('tw:w-full tw:caption-bottom tw:text-sm', props.class)"
     >
       <slot />
     </table>

@@ -7,28 +7,31 @@
 <template>
   <span
     v-if="state.kind === 'open' && state.soon"
-    class="inline-flex items-center rounded-sm bg-signal px-2 pt-0.5 text-sm font-bold text-signal-foreground"
+    class="tw:inline-flex tw:items-center tw:rounded-sm tw:bg-signal tw:px-2 tw:pt-0.5 tw:text-sm tw:font-bold tw:text-signal-foreground"
   >
     {{ $t('jobs.detail.days_left', state.days) }}
   </span>
-  <span v-else-if="state.kind === 'open'" class="text-sm text-muted-foreground">
+  <span
+    v-else-if="state.kind === 'open'"
+    class="tw:text-sm tw:text-muted-foreground"
+  >
     {{ $t('jobs.detail.days_left', state.days) }}
   </span>
   <span
     v-else-if="state.kind === 'asap'"
-    class="inline-flex items-center rounded-sm bg-signal px-2 pt-0.5 text-sm font-bold text-signal-foreground"
+    class="tw:inline-flex tw:items-center tw:rounded-sm tw:bg-signal tw:px-2 tw:pt-0.5 tw:text-sm tw:font-bold tw:text-signal-foreground"
   >
     {{ $t('jobs.detail.asap') }}
   </span>
   <span
     v-else-if="state.kind === 'rolling' || state.kind === 'none'"
-    class="text-sm font-semibold"
+    class="tw:text-sm tw:font-semibold"
   >
     {{ $t('jobs.detail.rolling') }}
   </span>
   <span
     v-else-if="state.kind === 'passed'"
-    class="text-sm font-semibold text-destructive"
+    class="tw:text-sm tw:font-semibold tw:text-destructive"
   >
     {{ $t('jobs.detail.passed') }}
   </span>

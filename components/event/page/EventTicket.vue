@@ -27,31 +27,31 @@
 
 <template>
   <figure
-    class="flex items-center gap-4"
-    :class="!lead && 'border-t-2 border-dashed pt-4'"
+    class="tw:flex tw:items-center tw:gap-4"
+    :class="!lead && 'tw:border-t-2 tw:border-dashed tw:pt-4'"
   >
     <img
       v-if="qr"
       :src="qr"
       :alt="$t('events.page.ticket.qr_alt')"
-      class="size-28 shrink-0 rounded-sm bg-white p-1"
+      class="tw:size-28 tw:shrink-0 tw:rounded-sm tw:bg-white tw:p-1"
     />
-    <div v-else class="size-28 shrink-0 rounded-sm bg-muted" />
-    <figcaption class="flex min-w-0 flex-col gap-1">
-      <span class="font-bold">{{ title }}</span>
-      <span class="text-sm">{{ name }}</span>
+    <div v-else class="tw:size-28 tw:shrink-0 tw:rounded-sm tw:bg-muted" />
+    <figcaption class="tw:flex tw:min-w-0 tw:flex-col tw:gap-1">
+      <span class="tw:font-bold">{{ title }}</span>
+      <span class="tw:text-sm">{{ name }}</span>
       <span
-        class="text-sm whitespace-nowrap text-muted-foreground tabular-nums"
+        class="tw:text-sm tw:whitespace-nowrap tw:text-muted-foreground tw:tabular-nums"
       >
         {{ when }}
       </span>
       <span
         v-if="room"
-        class="w-fit rounded-sm bg-plate px-1.5 pt-0.5 text-sm font-extrabold text-plate-foreground"
+        class="tw:w-fit tw:rounded-sm tw:bg-plate tw:px-1.5 tw:pt-0.5 tw:text-sm tw:font-extrabold tw:text-plate-foreground"
       >
         {{ room }}
       </span>
-      <span class="text-sm">{{ $t('events.page.ticket.show') }}</span>
+      <span class="tw:text-sm">{{ $t('events.page.ticket.show') }}</span>
     </figcaption>
   </figure>
 </template>

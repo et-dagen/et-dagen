@@ -107,7 +107,7 @@
 
 <template>
   <section
-    class="flex flex-col gap-4 rounded-lg border bg-card p-5"
+    class="tw:flex tw:flex-col tw:gap-4 tw:rounded-lg tw:border tw:bg-card tw:p-5"
     aria-labelledby="signup-heading"
   >
     <EventTicket
@@ -117,7 +117,7 @@
     />
 
     <div>
-      <h2 id="signup-heading" class="text-xl font-bold">
+      <h2 id="signup-heading" class="tw:text-xl tw:font-bold">
         {{
           $t(
             `events.page.state.${state.kind}`,
@@ -127,7 +127,7 @@
       </h2>
       <p
         v-if="places.limit && (state.kind === 'open' || state.kind === 'full')"
-        class="text-sm text-muted-foreground tabular-nums"
+        class="tw:text-sm tw:text-muted-foreground tw:tabular-nums"
       >
         {{
           state.kind === 'full'
@@ -137,15 +137,18 @@
       </p>
     </div>
 
-    <p v-if="countdown" class="rounded-md bg-muted px-3 py-2 text-sm">
-      <span class="font-semibold">{{ countdown }}</span>
-      <span class="block text-muted-foreground">{{ opensAtText }}</span>
+    <p
+      v-if="countdown"
+      class="tw:rounded-md tw:bg-muted tw:px-3 tw:py-2 tw:text-sm"
+    >
+      <span class="tw:font-semibold">{{ countdown }}</span>
+      <span class="tw:block tw:text-muted-foreground">{{ opensAtText }}</span>
     </p>
 
     <Button
       v-if="state.kind === 'open' || state.kind === 'full'"
       size="lg"
-      class="w-full"
+      class="tw:w-full"
       :disabled="busy"
       @click="
         send(
@@ -168,13 +171,13 @@
       v-else-if="state.kind === 'sign-in'"
       as-child
       size="lg"
-      class="w-full"
+      class="tw:w-full"
     >
       <NuxtLink :to="localePath('/user/signin')">
         {{ $t('events.page.action.sign_in') }}
       </NuxtLink>
     </Button>
-    <p v-else-if="state.kind === 'not-eligible'" class="text-sm">
+    <p v-else-if="state.kind === 'not-eligible'" class="tw:text-sm">
       {{ $t('events.page.not_eligible') }}
     </p>
 
@@ -182,7 +185,7 @@
       <Button
         v-if="state.kind === 'registered' && !eventDay && ticket"
         variant="outline"
-        class="w-full"
+        class="tw:w-full"
         :aria-expanded="showTicket"
         @click="showTicket = !showTicket"
       >
@@ -194,7 +197,7 @@
       <EventTicket v-if="showTicket && ticket" v-bind="ticket" />
       <Button
         variant="ghost"
-        class="w-full text-destructive hover:bg-destructive/10 hover:text-destructive"
+        class="tw:w-full tw:text-destructive tw:hover:bg-destructive/10 tw:hover:text-destructive"
         :disabled="busy"
         @click="confirming = true"
       >
@@ -211,14 +214,14 @@
     <Button
       v-if="calendar && state.kind !== 'past'"
       variant="outline"
-      class="w-full"
+      class="tw:w-full"
       @click="downloadCalendar"
     >
       <CalendarPlus aria-hidden="true" />
       {{ $t('events.page.action.calendar') }}
     </Button>
 
-    <Button v-if="mayScan" as-child variant="ghost" class="w-full">
+    <Button v-if="mayScan" as-child variant="ghost" class="tw:w-full">
       <NuxtLink :to="localePath(`/event/${eventUid}/scan`)">
         <ScanLine aria-hidden="true" />
         {{ $t('event.page.attendants.scan') }}
@@ -226,9 +229,9 @@
     </Button>
 
     <AlertDialog v-model:open="confirming">
-      <AlertDialogContent class="rounded-md bg-card">
+      <AlertDialogContent class="tw:rounded-md tw:bg-card">
         <AlertDialogHeader>
-          <AlertDialogTitle class="text-lg font-bold">
+          <AlertDialogTitle class="tw:text-lg tw:font-bold">
             {{
               $t(
                 state.kind === 'queued'
@@ -252,7 +255,7 @@
             $t('events.page.confirm.keep')
           }}</AlertDialogCancel>
           <AlertDialogAction
-            class="bg-destructive text-white hover:bg-destructive/90"
+            class="tw:bg-destructive tw:text-white tw:hover:bg-destructive/90"
             @click="send('DELETE', 'events.page.done.cancelled')"
           >
             {{

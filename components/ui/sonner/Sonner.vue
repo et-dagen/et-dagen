@@ -16,7 +16,7 @@
 
 <template>
   <Sonner
-    :class="cn('toaster group', props.class)"
+    :class="cn('toaster tw:group', props.class)"
     :style="{
       '--normal-bg': 'var(--popover)',
       '--normal-text': 'var(--popover-foreground)',
@@ -26,24 +26,26 @@
     v-bind="props"
   >
     <template #success-icon>
-      <CircleCheckIcon class="size-4 text-plate dark:text-foreground" />
+      <CircleCheckIcon
+        class="tw:size-4 tw:text-plate tw:dark:text-foreground"
+      />
     </template>
     <template #info-icon>
-      <InfoIcon class="size-4 text-muted-foreground" />
+      <InfoIcon class="tw:size-4 tw:text-muted-foreground" />
     </template>
     <template #warning-icon>
-      <TriangleAlertIcon class="size-4 text-signal" />
+      <TriangleAlertIcon class="tw:size-4 tw:text-signal" />
     </template>
     <template #error-icon>
-      <OctagonXIcon class="size-4 text-destructive" />
+      <OctagonXIcon class="tw:size-4 tw:text-destructive" />
     </template>
     <template #loading-icon>
       <div>
-        <Loader2Icon class="size-4 animate-spin" />
+        <Loader2Icon class="tw:size-4 tw:animate-spin" />
       </div>
     </template>
     <template #close-icon>
-      <XIcon class="size-4" />
+      <XIcon class="tw:size-4" />
     </template>
   </Sonner>
 </template>

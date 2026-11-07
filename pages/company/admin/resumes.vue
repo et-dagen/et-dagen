@@ -75,30 +75,32 @@
 </script>
 
 <template>
-  <div class="flex flex-col gap-4">
+  <div class="tw:flex tw:flex-col tw:gap-4">
     <h1
-      class="mb-2 text-2xl leading-8 font-extrabold tracking-tight lg:text-[2rem] lg:leading-10"
+      class="tw:mb-2 tw:text-2xl tw:leading-8 tw:font-extrabold tw:tracking-tight tw:lg:text-[2rem] tw:lg:leading-10"
     >
       {{ $t('company.admin.resumes.name') }}
     </h1>
 
     <section
       v-if="!hasAccess"
-      class="flex max-w-2xl gap-4 rounded-lg border bg-card p-5"
+      class="tw:flex tw:max-w-2xl tw:gap-4 tw:rounded-lg tw:border tw:bg-card tw:p-5"
     >
-      <Lock class="mt-0.5 size-5 shrink-0" aria-hidden="true" />
+      <Lock class="tw:mt-0.5 tw:size-5 tw:shrink-0" aria-hidden="true" />
       <div>
-        <h2 class="font-bold">
+        <h2 class="tw:font-bold">
           {{ $t('company.admin.resumes.no_access_title') }}
         </h2>
-        <p class="mt-1 text-muted-foreground">
+        <p class="tw:mt-1 tw:text-muted-foreground">
           {{ $t('company.admin.resumes.no_access') }}
         </p>
       </div>
     </section>
 
     <template v-else>
-      <div class="flex flex-col gap-3 lg:flex-row lg:items-center">
+      <div
+        class="tw:flex tw:flex-col tw:gap-3 tw:lg:flex-row tw:lg:items-center"
+      >
         <SearchField
           v-model="query"
           :label="$t('company.admin.resumes.search')"
@@ -110,16 +112,16 @@
         />
       </div>
 
-      <div class="overflow-hidden rounded-lg border bg-card">
-        <ul class="divide-y">
+      <div class="tw:overflow-hidden tw:rounded-lg tw:border tw:bg-card">
+        <ul class="tw:divide-y">
           <li
             v-for="person in shown.rows"
             :key="person.uid"
-            class="flex items-center gap-3 px-4 py-3"
+            class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3"
           >
-            <div class="min-w-0 flex-1">
-              <p class="truncate font-semibold">{{ person.name }}</p>
-              <p class="truncate text-sm text-muted-foreground">
+            <div class="tw:min-w-0 tw:flex-1">
+              <p class="tw:truncate tw:font-semibold">{{ person.name }}</p>
+              <p class="tw:truncate tw:text-sm tw:text-muted-foreground">
                 {{ person.studyProgram }}
                 <template v-if="person.currentYear">
                   · {{ $t('company.admin.year', { n: person.currentYear }) }}
@@ -141,7 +143,7 @@
 
         <p
           v-if="shown.rows.length === 0"
-          class="px-4 py-10 text-center text-muted-foreground"
+          class="tw:px-4 tw:py-10 tw:text-center tw:text-muted-foreground"
         >
           {{ $t('company.admin.resumes.empty') }}
         </p>

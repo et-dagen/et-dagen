@@ -17,34 +17,36 @@
   const QUESTIONS = ['help', 'equipment'] as const
   const TIPS = ['talk', 'jobs', 'space', 'remembered', 'follow'] as const
 
-  const sectionHeading = 'text-2xl font-extrabold tracking-tight'
+  const sectionHeading = 'tw:text-2xl tw:font-extrabold tw:tracking-tight'
 </script>
 
 <template>
   <div class="et-ui">
     <div
-      class="mx-auto flex max-w-6xl flex-col gap-16 px-4 py-8 lg:gap-20 lg:px-8 lg:py-12"
+      class="tw:mx-auto tw:flex tw:max-w-6xl tw:flex-col tw:gap-16 tw:px-4 tw:py-8 tw:lg:gap-20 tw:lg:px-8 tw:lg:py-12"
     >
-      <div class="flex flex-col gap-10">
+      <div class="tw:flex tw:flex-col tw:gap-10">
         <header
-          class="grid items-end gap-8 lg:grid-cols-[minmax(0,1fr)_24rem] lg:gap-12"
+          class="tw:grid tw:items-end tw:gap-8 tw:lg:grid-cols-[minmax(0,1fr)_24rem] tw:lg:gap-12"
         >
-          <div class="flex flex-col gap-4">
+          <div class="tw:flex tw:flex-col tw:gap-4">
             <h1
-              class="max-w-3xl text-4xl leading-[1.08] font-extrabold tracking-tight text-balance lg:text-[2.875rem]"
+              class="tw:max-w-3xl tw:text-4xl tw:leading-[1.08] tw:font-extrabold tw:tracking-tight tw:text-balance tw:lg:text-[2.875rem]"
             >
               {{ $t('forcompanies.heading') }}
             </h1>
-            <p class="max-w-[60ch] text-lg text-muted-foreground">
+            <p class="tw:max-w-[60ch] tw:text-lg tw:text-muted-foreground">
               {{ $t('forcompanies.lead') }}
             </p>
           </div>
-          <div class="flex flex-col gap-3 rounded-lg border bg-card p-5">
+          <div
+            class="tw:flex tw:flex-col tw:gap-3 tw:rounded-lg tw:border tw:bg-card tw:p-5"
+          >
             <div>
-              <h2 class="font-extrabold">
+              <h2 class="tw:font-extrabold">
                 {{ $t('forcompanies.signup.title') }}
               </h2>
-              <p class="mt-1 text-sm text-muted-foreground">
+              <p class="tw:mt-1 tw:text-sm tw:text-muted-foreground">
                 {{ $t('forcompanies.signup.text') }}
               </p>
             </div>
@@ -52,7 +54,7 @@
           </div>
         </header>
 
-        <section aria-labelledby="day" class="flex flex-col gap-6">
+        <section aria-labelledby="day" class="tw:flex tw:flex-col tw:gap-6">
           <h2 id="day" :class="sectionHeading">
             {{ $t('forcompanies.day.heading') }}
           </h2>
@@ -61,13 +63,13 @@
 
         <nav
           :aria-label="$t('forcompanies.index.label')"
-          class="flex flex-wrap gap-x-6 gap-y-2 border-t pt-4 text-sm font-bold"
+          class="tw:flex tw:flex-wrap tw:gap-x-6 tw:gap-y-2 tw:border-t tw:pt-4 tw:text-sm tw:font-bold"
         >
           <a
             v-for="section in SECTIONS"
             :key="section"
             :href="`#${section}`"
-            class="text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+            class="tw:text-muted-foreground tw:underline-offset-4 tw:hover:text-foreground tw:hover:underline"
           >
             {{ $t(`forcompanies.index.${section}`) }}
           </a>
@@ -76,33 +78,33 @@
 
       <section
         aria-labelledby="audience"
-        class="grid scroll-mt-24 gap-8 lg:grid-cols-2 lg:gap-12"
+        class="tw:grid tw:scroll-mt-24 tw:gap-8 tw:lg:grid-cols-2 tw:lg:gap-12"
       >
-        <div class="flex flex-col gap-4">
+        <div class="tw:flex tw:flex-col tw:gap-4">
           <h2 id="audience" :class="sectionHeading">
             {{ $t('forcompanies.audience.heading') }}
           </h2>
-          <p class="max-w-[65ch] text-lg">
+          <p class="tw:max-w-[65ch] tw:text-lg">
             {{ $t('forcompanies.audience.intro') }}
           </p>
-          <p class="max-w-[65ch] text-muted-foreground">
+          <p class="tw:max-w-[65ch] tw:text-muted-foreground">
             {{ $t('forcompanies.audience.venue') }}
           </p>
-          <p class="max-w-[65ch] text-muted-foreground">
+          <p class="tw:max-w-[65ch] tw:text-muted-foreground">
             {{ $t('forcompanies.audience.promoted') }}
           </p>
         </div>
         <div
-          class="self-start rounded-lg bg-plate px-6 py-5 text-plate-foreground"
+          class="tw:self-start tw:rounded-lg tw:bg-plate tw:px-6 tw:py-5 tw:text-plate-foreground"
         >
-          <h3 class="font-bold text-plate-foreground/75">
+          <h3 class="tw:font-bold tw:text-plate-foreground/75">
             {{ $t('forcompanies.audience.fields') }}
           </h3>
-          <ul class="mt-2 divide-y divide-plate-foreground/15">
+          <ul class="tw:mt-2 tw:divide-y tw:divide-plate-foreground/15">
             <li
               v-for="field in FIELDS"
               :key="field"
-              class="py-2 text-lg leading-snug font-extrabold"
+              class="tw:py-2 tw:text-lg tw:leading-snug tw:font-extrabold"
             >
               {{ $t(`forcompanies.audience.field.${field}`) }}
             </li>
@@ -110,36 +112,36 @@
         </div>
       </section>
 
-      <section aria-labelledby="practical" class="scroll-mt-24">
+      <section aria-labelledby="practical" class="tw:scroll-mt-24">
         <h2 id="practical" :class="sectionHeading">
           {{ $t('forcompanies.practical.heading') }}
         </h2>
-        <dl class="mt-6 grid gap-8 md:grid-cols-2 lg:gap-12">
+        <dl class="tw:mt-6 tw:grid tw:gap-8 tw:md:grid-cols-2 tw:lg:gap-12">
           <div
             v-for="question in QUESTIONS"
             :key="question"
-            class="border-t-4 border-plate pt-4"
+            class="tw:border-t-4 tw:border-plate tw:pt-4"
           >
-            <dt class="text-lg font-extrabold">
+            <dt class="tw:text-lg tw:font-extrabold">
               {{ $t(`forcompanies.practical.${question}.q`) }}
             </dt>
-            <dd class="mt-2 text-muted-foreground">
+            <dd class="tw:mt-2 tw:text-muted-foreground">
               {{ $t(`forcompanies.practical.${question}.a`) }}
             </dd>
           </div>
         </dl>
       </section>
 
-      <section aria-labelledby="tips" class="scroll-mt-24">
+      <section aria-labelledby="tips" class="tw:scroll-mt-24">
         <h2 id="tips" :class="sectionHeading">
           {{ $t('forcompanies.tips.heading') }}
         </h2>
-        <ul class="mt-6 grid gap-x-12 gap-y-6 md:grid-cols-2">
-          <li v-for="tip in TIPS" :key="tip" class="max-w-[60ch]">
-            <h3 class="font-extrabold">
+        <ul class="tw:mt-6 tw:grid tw:gap-x-12 tw:gap-y-6 tw:md:grid-cols-2">
+          <li v-for="tip in TIPS" :key="tip" class="tw:max-w-[60ch]">
+            <h3 class="tw:font-extrabold">
               {{ $t(`forcompanies.tips.${tip}.title`) }}
             </h3>
-            <p class="mt-1 text-muted-foreground">
+            <p class="tw:mt-1 tw:text-muted-foreground">
               {{ $t(`forcompanies.tips.${tip}.text`) }}
             </p>
           </li>
@@ -148,17 +150,17 @@
 
       <section
         aria-labelledby="closing"
-        class="flex flex-col gap-5 rounded-lg border bg-card p-6 lg:flex-row lg:items-center lg:justify-between lg:p-8"
+        class="tw:flex tw:flex-col tw:gap-5 tw:rounded-lg tw:border tw:bg-card tw:p-6 tw:lg:flex-row tw:lg:items-center tw:lg:justify-between tw:lg:p-8"
       >
         <div>
           <h2 id="closing" :class="sectionHeading">
             {{ $t('forcompanies.closing.heading') }}
           </h2>
-          <p class="mt-2 text-muted-foreground">
+          <p class="tw:mt-2 tw:text-muted-foreground">
             {{ $t('forcompanies.closing.text') }}
           </p>
         </div>
-        <SignupActions class="lg:w-80 lg:shrink-0" />
+        <SignupActions class="tw:lg:w-80 tw:lg:shrink-0" />
       </section>
     </div>
   </div>

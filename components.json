@@ -7,7 +7,7 @@
     "css": "assets/css/admin.css",
     "baseColor": "neutral",
     "cssVariables": true,
-    "prefix": ""
+    "prefix": "tw"
   },
   "aliases": {
     "components": "@/components",

@@ -41,7 +41,7 @@
     <Button
       variant="ghost"
       size="icon"
-      class="size-11"
+      class="tw:size-11"
       :aria-label="$t('site.menu.open')"
       @click="sheet?.showModal()"
     >
@@ -49,31 +49,32 @@
     </Button>
     <dialog
       ref="sheet"
-      class="et-ui m-0 h-dvh max-h-none w-dvw max-w-none bg-card p-0 backdrop:bg-transparent"
+      class="et-ui tw:m-0 tw:h-dvh tw:max-h-none tw:w-dvw tw:max-w-none tw:bg-card tw:p-0 tw:backdrop:bg-transparent"
       :aria-label="$t('site.menu.label')"
       @click="closeOnLink"
     >
       <div
-        class="flex h-full flex-col px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))]"
+        class="tw:flex tw:h-full tw:flex-col tw:px-4 tw:pb-[max(1.25rem,env(safe-area-inset-bottom))]"
       >
         <!-- the bar's own lockup, so the close button takes the menu button's place -->
-        <div class="flex h-16 items-center justify-between">
-          <span class="flex items-center gap-2.5">
+        <div class="tw:flex tw:h-16 tw:items-center tw:justify-between">
+          <span class="tw:flex tw:items-center tw:gap-2.5">
             <img
               src="/images/logo-small.webp"
               alt=""
               width="26"
               height="30"
-              class="h-[30px] w-auto"
+              class="tw:h-[30px] tw:w-auto"
             />
-            <span class="text-xl font-extrabold tracking-tight text-brand"
+            <span
+              class="tw:text-xl tw:font-extrabold tw:tracking-tight tw:text-brand"
               >E&amp;T-dagene</span
             >
           </span>
           <Button
             variant="ghost"
             size="icon"
-            class="size-11"
+            class="tw:size-11"
             :aria-label="$t('site.menu.close')"
             @click="close"
           >
@@ -81,13 +82,13 @@
           </Button>
         </div>
 
-        <nav :aria-label="$t('site.menu.pages')" class="mt-4">
-          <ul class="flex flex-col gap-1">
+        <nav :aria-label="$t('site.menu.pages')" class="tw:mt-4">
+          <ul class="tw:flex tw:flex-col tw:gap-1">
             <li v-for="page in pages" :key="page.name">
               <NuxtLink
                 :to="localePath(page.route)"
                 :aria-current="page.route === current ? 'page' : undefined"
-                class="block py-2 text-3xl font-extrabold tracking-tight aria-[current=page]:text-brand"
+                class="tw:block tw:py-2 tw:text-3xl tw:font-extrabold tw:tracking-tight tw:aria-[current=page]:text-brand"
               >
                 {{ $t(`nav.${page.name}`) }}
               </NuxtLink>
@@ -95,33 +96,35 @@
           </ul>
         </nav>
 
-        <NextUpPill v-if="next" :next="next" large class="mt-6" />
+        <NextUpPill v-if="next" :next="next" large class="tw:mt-6" />
 
-        <div class="mt-auto flex flex-col gap-3 border-t pt-4">
+        <div
+          class="tw:mt-auto tw:flex tw:flex-col tw:gap-3 tw:border-t tw:pt-4"
+        >
           <template v-if="auth.isLoggedIn">
-            <p class="flex items-center gap-3 font-bold">
+            <p class="tw:flex tw:items-center tw:gap-3 tw:font-bold">
               <span
-                class="grid size-9 shrink-0 place-items-center rounded-full bg-plate text-sm font-extrabold text-plate-foreground"
+                class="tw:grid tw:size-9 tw:shrink-0 tw:place-items-center tw:rounded-full tw:bg-plate tw:text-sm tw:font-extrabold tw:text-plate-foreground"
                 aria-hidden="true"
               >
                 {{ initialsOf(auth.user?.name) || '?' }}
               </span>
               {{ auth.user?.name }}
             </p>
-            <ul class="flex flex-col gap-1">
+            <ul class="tw:flex tw:flex-col tw:gap-1">
               <li v-for="link in links" :key="link.route">
                 <NuxtLink
                   :to="localePath(link.route)"
-                  class="block py-1.5 text-lg font-semibold"
+                  class="tw:block tw:py-1.5 tw:text-lg tw:font-semibold"
                 >
                   {{ $t(link.label) }}
                 </NuxtLink>
               </li>
             </ul>
           </template>
-          <div class="flex items-center justify-between">
+          <div class="tw:flex tw:items-center tw:justify-between">
             <ul
-              class="flex items-center gap-4"
+              class="tw:flex tw:items-center tw:gap-4"
               :aria-label="$t('site.language.label')"
             >
               <li v-for="language in languages" :key="language.code">
@@ -129,14 +132,14 @@
                   v-if="language.code === locale"
                   :lang="language.lang"
                   aria-current="true"
-                  class="flex items-center gap-2 font-bold"
+                  class="tw:flex tw:items-center tw:gap-2 tw:font-bold"
                 >
                   <img
                     :src="language.flag"
                     alt=""
                     width="20"
                     height="15"
-                    class="h-[15px] w-5 rounded-[2px] object-cover"
+                    class="tw:h-[15px] tw:w-5 tw:rounded-[2px] tw:object-cover"
                   />
                   {{ language.name }}
                 </span>
@@ -144,14 +147,14 @@
                   v-else
                   :to="switchLocalePath(language.code)"
                   :lang="language.lang"
-                  class="flex items-center gap-2 text-muted-foreground underline underline-offset-4 hover:text-foreground"
+                  class="tw:flex tw:items-center tw:gap-2 tw:text-muted-foreground tw:underline tw:underline-offset-4 tw:hover:text-foreground"
                 >
                   <img
                     :src="language.flag"
                     alt=""
                     width="20"
                     height="15"
-                    class="h-[15px] w-5 rounded-[2px] object-cover"
+                    class="tw:h-[15px] tw:w-5 tw:rounded-[2px] tw:object-cover"
                   />
                   {{ language.name }}
                 </NuxtLink>

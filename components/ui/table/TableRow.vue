@@ -12,7 +12,7 @@
     data-slot="table-row"
     :class="
       cn(
-        'hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors',
+        'tw:hover:bg-muted/50 tw:data-[state=selected]:bg-muted tw:border-b tw:transition-colors',
         props.class,
       )
     "

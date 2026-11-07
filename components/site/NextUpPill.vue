@@ -39,32 +39,34 @@
   <NuxtLink
     :to="localePath(`/event/${next.uid}`)"
     :aria-label="label"
-    class="flex min-w-0 gap-2 border bg-background transition-colors hover:border-plate/40"
+    class="tw:flex tw:min-w-0 tw:gap-2 tw:border tw:bg-background tw:transition-colors tw:hover:border-plate/40"
     :class="
       large
-        ? 'flex-wrap items-center rounded-xl px-4 py-3 text-base'
-        : 'items-center rounded-full py-1.5 pr-3 pl-2.5 text-sm'
+        ? 'tw:flex-wrap tw:items-center tw:rounded-xl tw:px-4 tw:py-3 tw:text-base'
+        : 'tw:items-center tw:rounded-full tw:py-1.5 tw:pr-3 tw:pl-2.5 tw:text-sm'
     "
   >
     <span
-      class="size-2 shrink-0 rounded-full bg-brand"
-      :class="next.kind === 'now' && 'motion-safe:animate-pulse'"
+      class="tw:size-2 tw:shrink-0 tw:rounded-full tw:bg-brand"
+      :class="next.kind === 'now' && 'tw:motion-safe:animate-pulse'"
       aria-hidden="true"
     />
-    <span class="shrink-0 font-bold tabular-nums">
+    <span class="tw:shrink-0 tw:font-bold tw:tabular-nums">
       {{ heading }} {{ time }}
     </span>
     <!-- between lg and xl the bar has room for the time and the room, not the title -->
     <span
       :class="
-        large ? 'order-last basis-full' : 'min-w-0 truncate max-xl:hidden'
+        large
+          ? 'tw:order-last tw:basis-full'
+          : 'tw:min-w-0 tw:truncate tw:max-xl:hidden'
       "
     >
       {{ next.event.title }}
     </span>
     <span
       v-if="room"
-      class="shrink-0 rounded-sm bg-plate px-1.5 pt-0.5 text-xs font-extrabold text-plate-foreground"
+      class="tw:shrink-0 tw:rounded-sm tw:bg-plate tw:px-1.5 tw:pt-0.5 tw:text-xs tw:font-extrabold tw:text-plate-foreground"
     >
       {{ room }}
     </span>

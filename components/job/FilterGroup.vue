@@ -14,22 +14,24 @@
 </script>
 
 <template>
-  <fieldset class="flex flex-col gap-2">
-    <legend class="mb-2 text-sm font-semibold text-muted-foreground">
+  <fieldset class="tw:flex tw:flex-col tw:gap-2">
+    <legend
+      class="tw:mb-2 tw:text-sm tw:font-semibold tw:text-muted-foreground"
+    >
       {{ label }}
     </legend>
-    <div class="flex flex-wrap gap-2">
+    <div class="tw:flex tw:flex-wrap tw:gap-2">
       <button
         v-for="option in options"
         :key="option.value"
         type="button"
         :aria-pressed="chosen.includes(option.value)"
         :disabled="option.count === 0 && !chosen.includes(option.value)"
-        class="inline-flex h-9 items-center gap-2 rounded-md border bg-card px-3 pt-0.5 text-sm font-semibold transition-colors hover:bg-accent active:translate-y-px disabled:opacity-40 aria-pressed:border-plate aria-pressed:bg-plate aria-pressed:text-plate-foreground"
+        class="tw:inline-flex tw:h-9 tw:items-center tw:gap-2 tw:rounded-md tw:border tw:bg-card tw:px-3 tw:pt-0.5 tw:text-sm tw:font-semibold tw:transition-colors tw:hover:bg-accent tw:active:translate-y-px tw:disabled:opacity-40 tw:aria-pressed:border-plate tw:aria-pressed:bg-plate tw:aria-pressed:text-plate-foreground"
         @click="toggle(option.value)"
       >
         {{ option.label }}
-        <span class="font-normal tabular-nums opacity-70">
+        <span class="tw:font-normal tw:tabular-nums tw:opacity-70">
           {{ option.count }}
         </span>
       </button>

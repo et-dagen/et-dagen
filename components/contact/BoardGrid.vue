@@ -14,31 +14,36 @@
 </script>
 
 <template>
-  <section aria-labelledby="board-heading" class="flex flex-col gap-4">
-    <h2 id="board-heading" class="text-2xl font-extrabold tracking-tight">
+  <section aria-labelledby="board-heading" class="tw:flex tw:flex-col tw:gap-4">
+    <h2
+      id="board-heading"
+      class="tw:text-2xl tw:font-extrabold tw:tracking-tight"
+    >
       {{ $t('contact.board') }}
     </h2>
-    <ul class="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 lg:grid-cols-5">
+    <ul
+      class="tw:grid tw:grid-cols-2 tw:gap-x-4 tw:gap-y-6 tw:sm:grid-cols-3 tw:lg:grid-cols-5"
+    >
       <li
         v-for="member in board"
         :key="member.id"
         :aria-current="member.id === answering ? 'true' : undefined"
-        class="group flex min-w-0 flex-col gap-1"
+        class="tw:group tw:flex tw:min-w-0 tw:flex-col tw:gap-1"
       >
         <Portrait
           :src="member.photoUrl"
           :name="member.name"
-          class="mb-2 outline-3 outline-offset-3 outline-transparent transition-[outline-color] duration-200 group-aria-[current=true]:outline-brand"
+          class="tw:mb-2 tw:outline-3 tw:outline-offset-3 tw:outline-transparent tw:transition-[outline-color] tw:duration-200 tw:group-aria-[current=true]:outline-brand"
         />
-        <p class="text-sm font-bold text-brand">
+        <p class="tw:text-sm tw:font-bold tw:text-brand">
           {{ titleOf(member) }}
         </p>
-        <p class="font-extrabold leading-snug">{{ member.name }}</p>
-        <CopyEmail :email="member.email" class="text-sm" />
+        <p class="tw:font-extrabold tw:leading-snug">{{ member.name }}</p>
+        <CopyEmail :email="member.email" class="tw:text-sm" />
         <a
           v-if="member.phone"
           :href="`tel:${member.phone.replace(/\s/g, '')}`"
-          class="text-sm text-muted-foreground tabular-nums hover:text-foreground"
+          class="tw:text-sm tw:text-muted-foreground tw:tabular-nums tw:hover:text-foreground"
         >
           {{ member.phone }}
         </a>

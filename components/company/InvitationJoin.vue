@@ -128,12 +128,14 @@
 </script>
 
 <template>
-  <div class="flex flex-col gap-8 rounded-lg border bg-card p-6 sm:p-8">
-    <div class="flex flex-col gap-2">
-      <h1 class="text-3xl font-extrabold tracking-tight">
+  <div
+    class="tw:flex tw:flex-col tw:gap-8 tw:rounded-lg tw:border tw:bg-card tw:p-6 tw:sm:p-8"
+  >
+    <div class="tw:flex tw:flex-col tw:gap-2">
+      <h1 class="tw:text-3xl tw:font-extrabold tw:tracking-tight">
         {{ $t('invitation.join.title', { company }) }}
       </h1>
-      <p class="text-muted-foreground">
+      <p class="tw:text-muted-foreground">
         {{
           $t('invitation.join.lead', {
             company,
@@ -143,34 +145,39 @@
       </p>
     </div>
 
-    <dl class="flex flex-col gap-1">
-      <dt class="text-sm font-medium">
+    <dl class="tw:flex tw:flex-col tw:gap-1">
+      <dt class="tw:text-sm tw:font-medium">
         {{ $t('invitation.join.address') }}
       </dt>
-      <dd class="break-all text-lg font-semibold">
+      <dd class="tw:break-all tw:text-lg tw:font-semibold">
         {{ invitation.email }}
       </dd>
     </dl>
 
     <!-- signed in with the invited address: one click -->
-    <div v-if="invitedHere" class="flex flex-col gap-3">
-      <p class="text-muted-foreground">
+    <div v-if="invitedHere" class="tw:flex tw:flex-col tw:gap-3">
+      <p class="tw:text-muted-foreground">
         {{ $t('invitation.join.signed_in') }}
       </p>
-      <Button size="lg" class="h-11" :disabled="pending" @click="joinSignedIn">
+      <Button
+        size="lg"
+        class="tw:h-11"
+        :disabled="pending"
+        @click="joinSignedIn"
+      >
         {{ $t('invitation.join.join', { company }) }}
       </Button>
     </div>
 
     <!-- signed in as someone else: the invitation belongs to another account -->
-    <div v-else-if="signedInAs" class="flex flex-col gap-3">
+    <div v-else-if="signedInAs" class="tw:flex tw:flex-col tw:gap-3">
       <p>
         {{ $t('invitation.join.other_account', { email: signedInAs }) }}
       </p>
       <Button
         variant="outline"
         size="lg"
-        class="h-11"
+        class="tw:h-11"
         :disabled="pending"
         @click="run(signOutHere)"
       >
@@ -182,7 +189,7 @@
       v-else-if="mode === 'open'"
       ref="formEl"
       novalidate
-      class="flex flex-col gap-5"
+      class="tw:flex tw:flex-col tw:gap-5"
       @submit="openAccount"
     >
       <!-- the address, for password managers that save the pair -->
@@ -194,7 +201,7 @@
         readonly
         tabindex="-1"
         aria-hidden="true"
-        class="sr-only"
+        class="tw:sr-only"
       />
       <FormField v-slot="{ componentField }" name="name">
         <FormItem>
@@ -222,21 +229,21 @@
       <p
         v-if="error"
         role="alert"
-        class="text-sm font-semibold text-destructive"
+        class="tw:text-sm tw:font-semibold tw:text-destructive"
       >
         {{ error }}
       </p>
-      <Button type="submit" size="lg" class="h-11" :disabled="pending">
+      <Button type="submit" size="lg" class="tw:h-11" :disabled="pending">
         {{ $t(pending ? 'signup.pending' : 'invitation.join.open') }}
       </Button>
-      <p class="text-sm">
-        <span class="text-muted-foreground">
+      <p class="tw:text-sm">
+        <span class="tw:text-muted-foreground">
           {{ $t('invitation.join.have_account') }}
         </span>
         {{ ' ' }}
         <button
           type="button"
-          class="font-bold text-brand underline-offset-4 hover:underline"
+          class="tw:font-bold tw:text-brand tw:underline-offset-4 tw:hover:underline"
           @click="switchTo('sign-in')"
         >
           {{ $t('invitation.join.sign_in_instead') }}
@@ -247,7 +254,7 @@
     <form
       v-else
       novalidate
-      class="flex flex-col gap-5"
+      class="tw:flex tw:flex-col tw:gap-5"
       @submit.prevent="signInAndJoin"
     >
       <input
@@ -258,12 +265,12 @@
         readonly
         tabindex="-1"
         aria-hidden="true"
-        class="sr-only"
+        class="tw:sr-only"
       />
-      <p v-if="notice" role="status" class="text-sm font-semibold">
+      <p v-if="notice" role="status" class="tw:text-sm tw:font-semibold">
         {{ notice }}
       </p>
-      <div class="flex flex-col gap-2">
+      <div class="tw:flex tw:flex-col tw:gap-2">
         <Label for="join-password">{{ $t('signin.password') }}</Label>
         <Input
           id="join-password"
@@ -279,30 +286,30 @@
           v-if="error"
           id="join-error"
           role="alert"
-          class="text-sm font-semibold text-destructive"
+          class="tw:text-sm tw:font-semibold tw:text-destructive"
         >
           {{ error }}
         </p>
         <button
           type="button"
-          class="w-fit text-sm font-semibold underline underline-offset-4 hover:text-brand"
+          class="tw:w-fit tw:text-sm tw:font-semibold tw:underline tw:underline-offset-4 tw:hover:text-brand"
           :disabled="pending"
           @click="forgot"
         >
           {{ $t('invitation.join.forgot') }}
         </button>
       </div>
-      <Button type="submit" size="lg" class="h-11" :disabled="pending">
+      <Button type="submit" size="lg" class="tw:h-11" :disabled="pending">
         {{ $t('invitation.join.sign_in_and_join', { company }) }}
       </Button>
-      <p class="text-sm">
-        <span class="text-muted-foreground">
+      <p class="tw:text-sm">
+        <span class="tw:text-muted-foreground">
           {{ $t('invitation.join.no_account') }}
         </span>
         {{ ' ' }}
         <button
           type="button"
-          class="font-bold text-brand underline-offset-4 hover:underline"
+          class="tw:font-bold tw:text-brand tw:underline-offset-4 tw:hover:underline"
           @click="switchTo('open')"
         >
           {{ $t('invitation.join.open_instead') }}
@@ -313,7 +320,7 @@
     <p
       v-if="(invitedHere || signedInAs) && error"
       role="alert"
-      class="-mt-4 text-sm font-semibold text-destructive"
+      class="tw:-mt-4 tw:text-sm tw:font-semibold tw:text-destructive"
     >
       {{ error }}
     </p>

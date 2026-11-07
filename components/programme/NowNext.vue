@@ -41,28 +41,33 @@
 <template>
   <section
     v-if="now.length || next"
-    class="grid overflow-hidden rounded-lg text-white sm:grid-cols-2"
+    class="tw:grid tw:overflow-hidden tw:rounded-lg tw:text-white tw:sm:grid-cols-2"
     :aria-label="$t('programme.band.label')"
   >
-    <div v-if="now.length" class="flex flex-col gap-1 bg-plate p-5">
-      <p class="text-sm font-semibold opacity-80">
+    <div
+      v-if="now.length"
+      class="tw:flex tw:flex-col tw:gap-1 tw:bg-plate tw:p-5"
+    >
+      <p class="tw:text-sm tw:font-semibold tw:opacity-80">
         {{ $t('programme.band.now') }}
       </p>
       <NuxtLink
         v-for="event in now"
         :key="event.uid"
         :to="localePath(`/event/${event.uid}`)"
-        class="text-xl leading-snug font-extrabold hover:underline"
+        class="tw:text-xl tw:leading-snug tw:font-extrabold tw:hover:underline"
       >
         {{ event.title }}
       </NuxtLink>
-      <p class="flex flex-wrap items-center gap-x-2 text-sm opacity-95">
+      <p
+        class="tw:flex tw:flex-wrap tw:items-center tw:gap-x-2 tw:text-sm tw:opacity-95"
+      >
         <span>{{
           $t('programme.band.until', { time: hhmm(now[0]?.date?.end) })
         }}</span>
         <span
           v-if="placeOf(now[0]?.location?.name).code"
-          class="rounded-sm bg-white px-1.5 pt-0.5 text-xs font-extrabold text-plate"
+          class="tw:rounded-sm tw:bg-white tw:px-1.5 tw:pt-0.5 tw:text-xs tw:font-extrabold tw:text-plate"
         >
           {{ placeOf(now[0]?.location?.name).code }}
         </span>
@@ -73,26 +78,28 @@
     </div>
     <div
       v-if="next"
-      class="flex flex-col gap-1 bg-brand p-5"
-      :class="!now.length && 'sm:col-span-2'"
+      class="tw:flex tw:flex-col tw:gap-1 tw:bg-brand tw:p-5"
+      :class="!now.length && 'tw:sm:col-span-2'"
     >
-      <p class="text-sm font-semibold opacity-80">
+      <p class="tw:text-sm tw:font-semibold tw:opacity-80">
         {{ $t('programme.band.next') }}
       </p>
       <NuxtLink
         :to="localePath(`/event/${next.uid}`)"
-        class="text-xl leading-snug font-extrabold hover:underline"
+        class="tw:text-xl tw:leading-snug tw:font-extrabold tw:hover:underline"
       >
         {{ next.title }}
       </NuxtLink>
-      <p class="flex flex-wrap items-center gap-x-2 text-sm opacity-95">
-        <span class="font-semibold tabular-nums">{{
+      <p
+        class="tw:flex tw:flex-wrap tw:items-center tw:gap-x-2 tw:text-sm tw:opacity-95"
+      >
+        <span class="tw:font-semibold tw:tabular-nums">{{
           hhmm(next.date?.start)
         }}</span>
         <span>{{ startsIn }}</span>
         <span
           v-if="placeOf(next.location?.name).code"
-          class="rounded-sm bg-white px-1.5 pt-0.5 text-xs font-extrabold text-plate"
+          class="tw:rounded-sm tw:bg-white tw:px-1.5 tw:pt-0.5 tw:text-xs tw:font-extrabold tw:text-plate"
         >
           {{ placeOf(next.location?.name).code }}
         </span>

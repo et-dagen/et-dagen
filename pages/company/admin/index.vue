@@ -62,10 +62,12 @@
 </script>
 
 <template>
-  <div class="flex flex-col gap-4">
-    <div class="mb-2 flex flex-wrap items-center justify-between gap-3">
+  <div class="tw:flex tw:flex-col tw:gap-4">
+    <div
+      class="tw:mb-2 tw:flex tw:flex-wrap tw:items-center tw:justify-between tw:gap-3"
+    >
       <h1
-        class="text-2xl leading-8 font-extrabold tracking-tight lg:text-[2rem] lg:leading-10"
+        class="tw:text-2xl tw:leading-8 tw:font-extrabold tw:tracking-tight tw:lg:text-[2rem] tw:lg:leading-10"
       >
         {{ $t('company.admin.events.name') }}
       </h1>
@@ -87,7 +89,7 @@
 
     <p
       v-if="!ordered.length"
-      class="rounded-lg border bg-card px-4 py-10 text-center text-muted-foreground"
+      class="tw:rounded-lg tw:border tw:bg-card tw:px-4 tw:py-10 tw:text-center tw:text-muted-foreground"
     >
       {{ $t('company.admin.events.empty') }}
     </p>

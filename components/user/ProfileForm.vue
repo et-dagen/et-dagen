@@ -67,20 +67,24 @@
 </script>
 
 <template>
-  <form class="flex max-w-3xl flex-col gap-6" novalidate @submit="submit">
+  <form
+    class="tw:flex tw:max-w-3xl tw:flex-col tw:gap-6"
+    novalidate
+    @submit="submit"
+  >
     <NuxtLink
       :to="localePath('/user')"
-      class="inline-flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+      class="tw:inline-flex tw:w-fit tw:items-center tw:gap-1 tw:text-sm tw:text-muted-foreground tw:hover:text-foreground"
     >
-      <ArrowLeft class="size-4" aria-hidden="true" />
+      <ArrowLeft class="tw:size-4" aria-hidden="true" />
       {{ $t('user.profile.back') }}
     </NuxtLink>
-    <h1 class="text-4xl font-black tracking-tight">
+    <h1 class="tw:text-4xl tw:font-black tw:tracking-tight">
       {{ $t('user.profile.title') }}
     </h1>
 
     <section
-      class="grid gap-5 rounded-lg border bg-card p-5 lg:grid-cols-2 lg:p-6"
+      class="tw:grid tw:gap-5 tw:rounded-lg tw:border tw:bg-card tw:p-5 tw:lg:grid-cols-2 tw:lg:p-6"
     >
       <FormField v-slot="{ componentField }" name="name">
         <FormItem>
@@ -92,32 +96,32 @@
         </FormItem>
       </FormField>
 
-      <div class="grid content-start gap-2">
+      <div class="tw:grid tw:content-start tw:gap-2">
         <Label as="p">{{ $t('user.profile.email') }}</Label>
-        <p class="flex h-9 items-center truncate">
+        <p class="tw:flex tw:h-9 tw:items-center tw:truncate">
           {{ user.email }}
         </p>
-        <p class="text-sm text-muted-foreground">
+        <p class="tw:text-sm tw:text-muted-foreground">
           {{ $t('user.profile.email_hint') }}
         </p>
       </div>
 
       <template v-if="student">
-        <div class="grid content-start gap-2 lg:col-span-2">
+        <div class="tw:grid tw:content-start tw:gap-2 tw:lg:col-span-2">
           <Label as="p">{{ $t('user.profile.programme') }}</Label>
-          <p class="font-semibold">{{ nameOf(user.studyProgram) || '–' }}</p>
-          <p class="text-sm text-muted-foreground">
+          <p class="tw:font-semibold">{{ nameOf(user.studyProgram) || '–' }}</p>
+          <p class="tw:text-sm tw:text-muted-foreground">
             {{ $t('user.profile.programme_hint') }}
           </p>
         </div>
 
         <FormField v-slot="{ value, handleChange }" name="currentYear">
-          <FormItem class="lg:col-span-2">
+          <FormItem class="tw:lg:col-span-2">
             <FormLabel>{{ $t('user.profile.year') }}</FormLabel>
             <div
               role="radiogroup"
               :aria-label="$t('user.profile.year')"
-              class="flex flex-wrap gap-2"
+              class="tw:flex tw:flex-wrap tw:gap-2"
             >
               <button
                 v-for="year in years"
@@ -125,7 +129,7 @@
                 type="button"
                 role="radio"
                 :aria-checked="Number(value) === year"
-                class="inline-flex h-9 min-w-16 items-center justify-center rounded-md border bg-card px-3 pt-0.5 text-sm font-semibold hover:bg-accent aria-checked:border-plate aria-checked:bg-plate aria-checked:text-plate-foreground"
+                class="tw:inline-flex tw:h-9 tw:min-w-16 tw:items-center tw:justify-center tw:rounded-md tw:border tw:bg-card tw:px-3 tw:pt-0.5 tw:text-sm tw:font-semibold tw:hover:bg-accent tw:aria-checked:border-plate tw:aria-checked:bg-plate tw:aria-checked:text-plate-foreground"
                 @click="handleChange(year)"
               >
                 {{ $t('company.admin.year', { n: year }) }}
@@ -139,21 +143,21 @@
 
     <section
       id="allergier"
-      class="flex scroll-mt-24 flex-col gap-4 rounded-lg border bg-card p-5 lg:p-6"
+      class="tw:flex tw:scroll-mt-24 tw:flex-col tw:gap-4 tw:rounded-lg tw:border tw:bg-card tw:p-5 tw:lg:p-6"
       aria-labelledby="diet-heading"
     >
       <div>
-        <h2 id="diet-heading" class="font-bold">
+        <h2 id="diet-heading" class="tw:font-bold">
           {{ $t('dietary_restrictions.name') }}
         </h2>
-        <p class="text-sm text-muted-foreground">
+        <p class="tw:text-sm tw:text-muted-foreground">
           {{ $t('user.profile.diet_hint') }}
         </p>
       </div>
       <DietField v-model="diet" :other-label="$t('user.profile.diet_other')" />
     </section>
 
-    <div class="flex flex-wrap gap-3">
+    <div class="tw:flex tw:flex-wrap tw:gap-3">
       <Button type="submit" :disabled="saving">
         <Save aria-hidden="true" />
         {{ $t('user.profile.save') }}

@@ -20,11 +20,14 @@
     data-slot="select-scroll-up-button"
     v-bind="forwardedProps"
     :class="
-      cn('flex cursor-default items-center justify-center py-1', props.class)
+      cn(
+        'tw:flex tw:cursor-default tw:items-center tw:justify-center tw:py-1',
+        props.class,
+      )
     "
   >
     <slot>
-      <ChevronUp class="size-4" />
+      <ChevronUp class="tw:size-4" />
     </slot>
   </SelectScrollUpButton>
 </template>

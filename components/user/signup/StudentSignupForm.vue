@@ -64,10 +64,10 @@
   }, focusInvalid)
 
   const selectClass = [
-    'h-11 w-full rounded-md border border-input bg-card',
-    'px-3 text-base outline-none focus-visible:border-plate',
-    'focus-visible:ring-3 focus-visible:ring-plate/15',
-    'disabled:opacity-50 aria-invalid:border-destructive',
+    'tw:h-11 tw:w-full tw:rounded-md tw:border tw:border-input tw:bg-card',
+    'tw:px-3 tw:text-base tw:outline-none tw:focus-visible:border-plate',
+    'tw:focus-visible:ring-3 tw:focus-visible:ring-plate/15',
+    'tw:disabled:opacity-50 tw:aria-invalid:border-destructive',
   ].join(' ')
 </script>
 
@@ -75,18 +75,18 @@
   <form
     ref="formEl"
     novalidate
-    class="flex flex-col gap-8 rounded-lg border bg-card p-6 sm:p-8"
+    class="tw:flex tw:flex-col tw:gap-8 tw:rounded-lg tw:border tw:bg-card tw:p-6 tw:sm:p-8"
     @submit="submit"
   >
-    <div class="flex flex-col gap-2">
-      <h1 class="text-3xl font-extrabold tracking-tight">
+    <div class="tw:flex tw:flex-col tw:gap-2">
+      <h1 class="tw:text-3xl tw:font-extrabold tw:tracking-tight">
         {{ $t('signup.student.title') }}
       </h1>
-      <p class="text-muted-foreground">{{ $t('signup.student.lead') }}</p>
+      <p class="tw:text-muted-foreground">{{ $t('signup.student.lead') }}</p>
     </div>
 
-    <fieldset class="flex flex-col gap-5">
-      <legend class="mb-4 font-extrabold">
+    <fieldset class="tw:flex tw:flex-col tw:gap-5">
+      <legend class="tw:mb-4 tw:font-extrabold">
         {{ $t('signup.you') }}
       </legend>
       <TextField
@@ -115,11 +115,11 @@
       </FormField>
     </fieldset>
 
-    <fieldset class="flex flex-col gap-5">
-      <legend class="mb-4 font-extrabold">
+    <fieldset class="tw:flex tw:flex-col tw:gap-5">
+      <legend class="tw:mb-4 tw:font-extrabold">
         {{ $t('signup.studies') }}
       </legend>
-      <div class="grid gap-5 sm:grid-cols-[minmax(0,1fr)_9rem]">
+      <div class="tw:grid tw:gap-5 tw:sm:grid-cols-[minmax(0,1fr)_9rem]">
         <FormField v-slot="{ componentField }" name="studyProgram">
           <FormItem>
             <FormLabel>{{ $t('signup.programme') }}</FormLabel>
@@ -128,7 +128,7 @@
                 v-bind="componentField"
                 :class="[
                   selectClass,
-                  !form.values.studyProgram && 'text-muted-foreground',
+                  !form.values.studyProgram && 'tw:text-muted-foreground',
                 ]"
               >
                 <option value="" disabled selected hidden>
@@ -169,23 +169,23 @@
       </div>
     </fieldset>
 
-    <details class="group rounded-md border px-4 py-3">
+    <details class="tw:group tw:rounded-md tw:border tw:px-4 tw:py-3">
       <summary
-        class="flex cursor-pointer list-none items-center gap-2 rounded-sm font-extrabold [&::-webkit-details-marker]:hidden"
+        class="tw:flex tw:cursor-pointer tw:list-none tw:items-center tw:gap-2 tw:rounded-sm tw:font-extrabold tw:[&::-webkit-details-marker]:hidden"
       >
         <ChevronRight
-          class="size-4 text-muted-foreground transition-transform group-open:rotate-90 motion-reduce:transition-none"
+          class="tw:size-4 tw:text-muted-foreground tw:transition-transform tw:group-open:rotate-90 tw:motion-reduce:transition-none"
           aria-hidden="true"
         />
         {{ $t('signup.diet.title') }}
-        <span class="font-normal text-muted-foreground">
+        <span class="tw:font-normal tw:text-muted-foreground">
           {{ $t('signup.optional') }}
         </span>
       </summary>
-      <p class="mt-2 text-sm text-muted-foreground">
+      <p class="tw:mt-2 tw:text-sm tw:text-muted-foreground">
         {{ $t('signup.diet.lead') }}
       </p>
-      <div class="mt-4 flex flex-col gap-4">
+      <div class="tw:mt-4 tw:flex tw:flex-col tw:gap-4">
         <DietField
           v-model="diet"
           :other-label="$t('user.profile.diet_other')"
@@ -193,15 +193,15 @@
       </div>
     </details>
 
-    <div class="flex flex-col gap-3">
+    <div class="tw:flex tw:flex-col tw:gap-3">
       <p
         v-if="error"
         role="alert"
-        class="text-sm font-semibold text-destructive"
+        class="tw:text-sm tw:font-semibold tw:text-destructive"
       >
         {{ error }}
       </p>
-      <Button type="submit" size="lg" class="h-11" :disabled="pending">
+      <Button type="submit" size="lg" class="tw:h-11" :disabled="pending">
         {{ $t(pending ? 'signup.pending' : 'signup.student.submit') }}
       </Button>
     </div>

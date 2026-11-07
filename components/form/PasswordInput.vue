@@ -10,25 +10,25 @@
 
 <template>
   <!-- typed once, so the toggle lets people check what they typed -->
-  <div class="relative">
+  <div class="tw:relative">
     <Input
       v-bind="$attrs"
       v-model="value"
       :type="shown ? 'text' : 'password'"
       autocomplete="new-password"
-      class="h-11 pr-20"
+      class="tw:h-11 tw:pr-20"
     />
     <Button
       type="button"
       variant="ghost"
       size="sm"
-      class="absolute inset-y-1 right-1 h-auto"
+      class="tw:absolute tw:inset-y-1 tw:right-1 tw:h-auto"
       @click="shown = !shown"
     >
       <EyeOff v-if="shown" aria-hidden="true" />
       <Eye v-else aria-hidden="true" />
       {{ $t(shown ? 'signup.hide' : 'signup.show') }}
-      <span class="sr-only">{{ $t('signup.the_password') }}</span>
+      <span class="tw:sr-only">{{ $t('signup.the_password') }}</span>
     </Button>
   </div>
 </template>

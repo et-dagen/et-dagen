@@ -29,7 +29,9 @@
 
 <template>
   <div class="et-ui">
-    <div class="mx-auto flex max-w-lg flex-col gap-6 px-4 py-10 lg:py-16">
+    <div
+      class="tw:mx-auto tw:flex tw:max-w-lg tw:flex-col tw:gap-6 tw:px-4 tw:py-10 tw:lg:py-16"
+    >
       <InvitationJoin
         v-if="invitation && !closed"
         :token="token"
@@ -37,18 +39,18 @@
       />
       <div
         v-else
-        class="flex flex-col gap-6 rounded-lg border bg-card p-6 sm:p-8"
+        class="tw:flex tw:flex-col tw:gap-6 tw:rounded-lg tw:border tw:bg-card tw:p-6 tw:sm:p-8"
       >
-        <div class="flex flex-col gap-2">
-          <h1 class="text-3xl font-extrabold tracking-tight">
+        <div class="tw:flex tw:flex-col tw:gap-2">
+          <h1 class="tw:text-3xl tw:font-extrabold tw:tracking-tight">
             {{ $t(`invitation.closed.${closed}.title`) }}
           </h1>
-          <p class="text-muted-foreground">
+          <p class="tw:text-muted-foreground">
             {{ $t(`invitation.closed.${closed}.text`) }}
           </p>
         </div>
-        <div class="flex flex-wrap gap-3">
-          <Button v-if="closed === 'joined'" as-child size="lg" class="h-11">
+        <div class="tw:flex tw:flex-wrap tw:gap-3">
+          <Button v-if="closed === 'joined'" as-child size="lg" class="tw:h-11">
             <NuxtLink :to="localePath('/user/signin')">
               {{ $t('signup.sign_in') }}
             </NuxtLink>
@@ -56,7 +58,7 @@
           <Button
             as-child
             size="lg"
-            class="h-11"
+            class="tw:h-11"
             :variant="closed === 'joined' ? 'outline' : 'default'"
           >
             <NuxtLink :to="localePath('/contact')">

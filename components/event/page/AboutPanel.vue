@@ -8,7 +8,7 @@
 </script>
 
 <template>
-  <div class="flex flex-col gap-6">
+  <div class="tw:flex tw:flex-col tw:gap-6">
     <!-- the API cleans descriptions before they reach the page -->
     <!-- eslint-disable vue/no-v-html -->
     <div v-if="event.description" class="et-prose" v-html="event.description" />
@@ -22,7 +22,7 @@
       rel="noopener noreferrer"
       tabindex="-1"
       aria-hidden="true"
-      class="block h-72 overflow-hidden rounded-lg border bg-card"
+      class="tw:block tw:h-72 tw:overflow-hidden tw:rounded-lg tw:border tw:bg-card"
     >
       <iframe
         :src="mapEmbed"
@@ -30,7 +30,7 @@
         loading="lazy"
         referrerpolicy="no-referrer"
         tabindex="-1"
-        class="pointer-events-none block size-full"
+        class="tw:pointer-events-none tw:block tw:size-full"
       />
     </a>
     <a
@@ -38,11 +38,11 @@
       :href="event.location.map"
       target="_blank"
       rel="noopener noreferrer"
-      class="inline-flex w-fit items-center gap-2 font-semibold underline decoration-border underline-offset-4"
+      class="tw:inline-flex tw:w-fit tw:items-center tw:gap-2 tw:font-semibold tw:underline tw:decoration-border tw:underline-offset-4"
     >
-      <MapPin class="size-4" aria-hidden="true" />
+      <MapPin class="tw:size-4" aria-hidden="true" />
       {{ $t('events.page.open_map') }}
-      <ExternalLink class="size-3.5" aria-hidden="true" />
+      <ExternalLink class="tw:size-3.5" aria-hidden="true" />
     </a>
   </div>
 </template>

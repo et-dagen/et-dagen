@@ -48,23 +48,25 @@
 </script>
 
 <template>
-  <div class="et-ui bg-background text-foreground">
-    <div class="mx-auto max-w-screen-xl px-4 py-10 lg:px-8 lg:py-14">
-      <h1 class="text-4xl font-black tracking-tight lg:text-5xl">
+  <div class="et-ui tw:bg-background tw:text-foreground">
+    <div
+      class="tw:mx-auto tw:max-w-screen-xl tw:px-4 tw:py-10 tw:lg:px-8 tw:lg:py-14"
+    >
+      <h1 class="tw:text-4xl tw:font-black tw:tracking-tight tw:lg:text-5xl">
         {{ $t('user.page.hello', { name: firstNameOf(auth.user?.name) }) }}
       </h1>
 
       <!-- events on the left, the user's own information on the right; a phone stacks them ticket first -->
       <div
-        class="mt-8 grid items-start gap-x-10 gap-y-14 lg:grid-cols-[minmax(0,1fr)_24rem]"
+        class="tw:mt-8 tw:grid tw:items-start tw:gap-x-10 tw:gap-y-14 tw:lg:grid-cols-[minmax(0,1fr)_24rem]"
       >
-        <section aria-labelledby="arrangementer-title" class="min-w-0">
+        <section aria-labelledby="arrangementer-title" class="tw:min-w-0">
           <div
-            class="flex min-h-10 flex-wrap items-center justify-between gap-3"
+            class="tw:flex tw:min-h-10 tw:flex-wrap tw:items-center tw:justify-between tw:gap-3"
           >
             <h2
               id="arrangementer-title"
-              class="text-2xl font-extrabold tracking-tight"
+              class="tw:text-2xl tw:font-extrabold tw:tracking-tight"
             >
               {{ $t('user.page.events') }}
             </h2>
@@ -79,11 +81,11 @@
           <div
             v-if="failed"
             role="alert"
-            class="mt-4 flex flex-wrap items-center justify-between gap-4 rounded-lg border bg-card p-5"
+            class="tw:mt-4 tw:flex tw:flex-wrap tw:items-center tw:justify-between tw:gap-4 tw:rounded-lg tw:border tw:bg-card tw:p-5"
           >
             <div>
-              <p class="font-bold">{{ $t('user.page.load_failed') }}</p>
-              <p class="mt-1 text-sm text-muted-foreground">
+              <p class="tw:font-bold">{{ $t('user.page.load_failed') }}</p>
+              <p class="tw:mt-1 tw:text-sm tw:text-muted-foreground">
                 {{ $t('user.page.load_failed_hint') }}
               </p>
             </div>
@@ -98,49 +100,52 @@
               :row="ticket"
               :holder="auth.user.name ?? ''"
               :uid="auth.user.uid"
-              class="mt-4"
+              class="tw:mt-4"
             />
             <div
               v-else
-              class="mt-4 rounded-lg border border-dashed bg-card px-6 py-10 text-center"
+              class="tw:mt-4 tw:rounded-lg tw:border tw:border-dashed tw:bg-card tw:px-6 tw:py-10 tw:text-center"
             >
-              <p class="text-lg font-bold">
+              <p class="tw:text-lg tw:font-bold">
                 {{ $t('user.page.no_ticket') }}
               </p>
-              <p class="mt-1 text-muted-foreground">
+              <p class="tw:mt-1 tw:text-muted-foreground">
                 {{ $t('user.page.no_ticket_hint') }}
               </p>
             </div>
 
-            <div class="mt-5 rounded-lg border bg-card">
+            <div class="tw:mt-5 tw:rounded-lg tw:border tw:bg-card">
               <h3
-                class="flex items-center gap-3 border-b px-5 py-4 text-lg font-extrabold sm:px-6"
+                class="tw:flex tw:items-center tw:gap-3 tw:border-b tw:px-5 tw:py-4 tw:text-lg tw:font-extrabold tw:sm:px-6"
               >
                 {{ $t('user.page.sign_ups') }}
                 <span
-                  class="grid min-w-7 place-items-center rounded-full bg-plate px-2 pt-0.5 text-sm text-plate-foreground"
+                  class="tw:grid tw:min-w-7 tw:place-items-center tw:rounded-full tw:bg-plate tw:px-2 tw:pt-0.5 tw:text-sm tw:text-plate-foreground"
                 >
                   {{ rows.length }}
                 </span>
               </h3>
               <SignUps v-if="rows.length" :rows="rows" @withdrawn="refresh()" />
-              <p v-else class="px-5 py-4 text-muted-foreground sm:px-6">
+              <p
+                v-else
+                class="tw:px-5 tw:py-4 tw:text-muted-foreground tw:sm:px-6"
+              >
                 {{ $t('user.page.no_sign_ups') }}
               </p>
             </div>
           </template>
         </section>
 
-        <section aria-labelledby="informasjon-title" class="min-w-0">
-          <div class="flex min-h-10 items-center">
+        <section aria-labelledby="informasjon-title" class="tw:min-w-0">
+          <div class="tw:flex tw:min-h-10 tw:items-center">
             <h2
               id="informasjon-title"
-              class="text-2xl font-extrabold tracking-tight"
+              class="tw:text-2xl tw:font-extrabold tw:tracking-tight"
             >
               {{ $t('user.page.information') }}
             </h2>
           </div>
-          <UserDetails class="mt-4" />
+          <UserDetails class="tw:mt-4" />
         </section>
       </div>
     </div>

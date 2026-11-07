@@ -15,18 +15,18 @@
 </script>
 
 <template>
-  <div class="flex flex-col gap-4">
+  <div class="tw:flex tw:flex-col tw:gap-4">
     <ul
       v-if="jobs.length"
-      class="divide-y divide-border overflow-hidden rounded-lg border bg-card"
+      class="tw:divide-y tw:divide-border tw:overflow-hidden tw:rounded-lg tw:border tw:bg-card"
     >
       <li v-for="job in jobs" :key="job.uid">
         <NuxtLink
           :to="localePath(`/jobs/${job.uid}`)"
-          class="flex items-center justify-between gap-4 px-4 py-3 hover:bg-accent/60"
+          class="tw:flex tw:items-center tw:justify-between tw:gap-4 tw:px-4 tw:py-3 tw:hover:bg-accent/60"
         >
-          <span class="font-semibold">{{ job.title }}</span>
-          <span class="flex shrink-0 items-center gap-2 text-sm">
+          <span class="tw:font-semibold">{{ job.title }}</span>
+          <span class="tw:flex tw:shrink-0 tw:items-center tw:gap-2 tw:text-sm">
             <template v-if="job.state.kind === 'open'">
               {{ formatDeadline(job.deadline ?? undefined, locale) }}
             </template>
@@ -35,7 +35,7 @@
         </NuxtLink>
       </li>
     </ul>
-    <p v-else class="text-muted-foreground">
+    <p v-else class="tw:text-muted-foreground">
       {{ $t('events.page.no_jobs') }}
     </p>
     <a
@@ -43,10 +43,10 @@
       :href="company.webpage"
       target="_blank"
       rel="noopener noreferrer"
-      class="inline-flex w-fit items-center gap-1 font-semibold underline decoration-border underline-offset-4"
+      class="tw:inline-flex tw:w-fit tw:items-center tw:gap-1 tw:font-semibold tw:underline tw:decoration-border tw:underline-offset-4"
     >
       {{ $t('events.page.website', { company: company.name }) }}
-      <ExternalLink class="size-3.5" aria-hidden="true" />
+      <ExternalLink class="tw:size-3.5" aria-hidden="true" />
     </a>
   </div>
 </template>

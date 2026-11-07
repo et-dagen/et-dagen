@@ -23,13 +23,13 @@
     <TableCell
       :class="
         cn(
-          'p-4 whitespace-nowrap align-middle text-sm text-foreground',
+          'tw:p-4 tw:whitespace-nowrap tw:align-middle tw:text-sm tw:text-foreground',
           props.class,
         )
       "
       v-bind="delegatedProps"
     >
-      <div class="flex items-center justify-center py-10">
+      <div class="tw:flex tw:items-center tw:justify-center tw:py-10">
         <slot />
       </div>
     </TableCell>

@@ -99,10 +99,12 @@
   })
 
   const typeBadge: Record<Type, string> = {
-    'main-partner': 'border-transparent bg-brand text-brand-foreground',
-    partner: 'border-transparent bg-plate text-plate-foreground',
-    sponsor: 'border-transparent bg-secondary text-secondary-foreground',
-    old: 'text-muted-foreground',
+    'main-partner':
+      'tw:border-transparent tw:bg-brand tw:text-brand-foreground',
+    partner: 'tw:border-transparent tw:bg-plate tw:text-plate-foreground',
+    sponsor:
+      'tw:border-transparent tw:bg-secondary tw:text-secondary-foreground',
+    old: 'tw:text-muted-foreground',
   }
 
   // what the delete dialog is about: one row from its menu, or the selection
@@ -144,7 +146,7 @@
         :label="$t('admin.companies.columns.type')"
         :options="showOptions"
       />
-      <Button as-child class="h-10 lg:ml-auto">
+      <Button as-child class="tw:h-10 tw:lg:ml-auto">
         <NuxtLink :to="localePath('/admin/companies/new')">
           <Plus aria-hidden="true" />
           {{ $t('admin.companies.create') }}
@@ -154,10 +156,10 @@
 
     <template #table>
       <!-- table from lg and up -->
-      <Table class="hidden lg:table">
+      <Table class="tw:hidden tw:lg:table">
         <TableHeader>
-          <TableRow class="hover:bg-transparent">
-            <TableHead class="w-12 pl-4">
+          <TableRow class="tw:hover:bg-transparent">
+            <TableHead class="tw:w-12 tw:pl-4">
               <SelectBox
                 :checked="selection.pageState.value"
                 :label="$t('admin.companies.select_page')"
@@ -175,7 +177,7 @@
                 @toggle="toggleSort(column)"
               />
             </TableHead>
-            <TableHead class="w-12" />
+            <TableHead class="tw:w-12" />
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -184,47 +186,47 @@
             :key="row.uid"
             :data-state="selection.has(row) ? 'selected' : undefined"
             :data-changed="row.uid === changed || undefined"
-            class="data-[state=selected]:bg-brand/8 data-changed:bg-signal/15 data-changed:shadow-[inset_4px_0_0_var(--signal)]"
+            class="tw:data-[state=selected]:bg-brand/8 tw:data-changed:bg-signal/15 tw:data-changed:shadow-[inset_4px_0_0_var(--signal)]"
           >
-            <TableCell class="pl-4">
+            <TableCell class="tw:pl-4">
               <SelectBox
                 :checked="selection.has(row)"
                 :label="$t('admin.companies.select_row', { name: row.name })"
                 @change="(on) => selection.toggle(row, on)"
               />
             </TableCell>
-            <TableCell class="font-semibold">
-              <span class="flex items-center gap-3">
+            <TableCell class="tw:font-semibold">
+              <span class="tw:flex tw:items-center tw:gap-3">
                 <CompanyLogo :src="row.logo" :name="row.name" />
                 <NuxtLink
                   :to="localePath(`/admin/companies/${row.uid}`)"
-                  class="underline decoration-border decoration-1 underline-offset-4 hover:decoration-current"
+                  class="tw:underline tw:decoration-border tw:decoration-1 tw:underline-offset-4 tw:hover:decoration-current"
                 >
                   {{ row.name }}
                 </NuxtLink>
               </span>
             </TableCell>
             <TableCell>
-              <Badge class="rounded-[4px]" :class="typeBadge[typeOf(row)]">
+              <Badge class="tw:rounded-[4px]" :class="typeBadge[typeOf(row)]">
                 {{ $t(`admin.companies.type.${typeKey(typeOf(row))}`) }}
               </Badge>
             </TableCell>
             <TableCell>
               {{ $t(`admin.companies.cv.${resumesOf(row) ? 'yes' : 'no'}`) }}
             </TableCell>
-            <TableCell class="text-muted-foreground">
+            <TableCell class="tw:text-muted-foreground">
               <a
                 v-if="row.webpage"
                 :href="row.webpage"
                 target="_blank"
                 rel="noopener"
-                class="inline-flex items-center gap-1 hover:text-foreground"
+                class="tw:inline-flex tw:items-center tw:gap-1 tw:hover:text-foreground"
               >
                 {{ siteLabel(row.webpage) }}
-                <ExternalLink class="size-3.5" aria-hidden="true" />
+                <ExternalLink class="tw:size-3.5" aria-hidden="true" />
               </a>
             </TableCell>
-            <TableCell class="pr-4">
+            <TableCell class="tw:pr-4">
               <DropdownMenu>
                 <DropdownMenuTrigger as-child>
                   <Button
@@ -259,7 +261,7 @@
                     variant="destructive"
                     @select="askDelete([row])"
                   >
-                    <Trash2 aria-hidden="true" class="text-destructive" />
+                    <Trash2 aria-hidden="true" class="tw:text-destructive" />
                     {{ $t('admin.companies.actions.delete') }}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -272,27 +274,30 @@
 
     <template #list>
       <!-- list below lg -->
-      <ul class="divide-y lg:hidden">
+      <ul class="tw:divide-y tw:lg:hidden">
         <li
           v-for="row in shown.rows"
           :key="row.uid"
-          class="flex items-start gap-3 px-4 py-3"
+          class="tw:flex tw:items-start tw:gap-3 tw:px-4 tw:py-3"
         >
           <SelectBox
             :checked="selection.has(row)"
             :label="$t('admin.companies.select_row', { name: row.name })"
-            class="mt-1 size-5"
+            class="tw:mt-1 tw:size-5"
             @change="(on) => selection.toggle(row, on)"
           />
-          <div class="min-w-0 flex-1">
+          <div class="tw:min-w-0 tw:flex-1">
             <NuxtLink
               :to="localePath(`/admin/companies/${row.uid}`)"
-              class="block truncate font-semibold underline decoration-border underline-offset-4"
+              class="tw:block tw:truncate tw:font-semibold tw:underline tw:decoration-border tw:underline-offset-4"
             >
               {{ row.name }}
             </NuxtLink>
           </div>
-          <Badge class="shrink-0 rounded-[4px]" :class="typeBadge[typeOf(row)]">
+          <Badge
+            class="tw:shrink-0 tw:rounded-[4px]"
+            :class="typeBadge[typeOf(row)]"
+          >
             {{ $t(`admin.companies.type.${typeKey(typeOf(row))}`) }}
           </Badge>
         </li>
