@@ -93,6 +93,8 @@ export type Permissions = {
   }
   image: { dataType: undefined; action: 'upload' }
   board: { dataType: undefined; action: 'manage' }
+  /** The fair's dates and the study programmes students choose from */
+  fair: { dataType: undefined; action: 'manage' }
   /** The admin dashboard: the journal and the daily tallies */
   activity: { dataType: undefined; action: 'read' }
 }
@@ -118,7 +120,7 @@ export type PermissionCheck<K extends keyof Permissions> =
  * The nesting is what buys compile-time safety: `hasPermission(s, 'job', 'markAttended', …)` does
  * not type-check, because `markAttended` is not in `job`'s action union.
  *
- * A predicate leaf is skipped when `data` is missing, so `image` and `board` — whose `dataType` is
+ * A predicate leaf is skipped when `data` is missing, so `image`, `board` and `fair` — whose `dataType` is
  * `undefined` — must use boolean leaves only.
  */
 export type RolesWithPermissions = {

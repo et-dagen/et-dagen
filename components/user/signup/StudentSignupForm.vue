@@ -4,13 +4,13 @@
   import { getErrorAlertContext } from '@/composables/useAlerts'
   import { registerUser } from '@/composables/auth/registration'
   import { useProgrammes } from '@/composables/useProgrammes'
+  import DietField from '@/components/form/DietField.vue'
   import PasswordInput from '@/components/form/PasswordInput.vue'
   import TextField from '@/components/form/TextField.vue'
   import { useFocusInvalid } from '@/composables/useFocusInvalid'
   import { typedSchemaOf } from '@/lib/forms/zodSchema'
   import FieldError from '@/components/form/FieldError.vue'
   import { Button } from '@/components/ui/button'
-  import { Checkbox } from '@/components/ui/checkbox'
   import {
     FormControl,
     FormDescription,
@@ -18,12 +18,9 @@
     FormItem,
     FormLabel,
   } from '@/components/ui/form'
-  import { Label } from '@/components/ui/label'
   import { StudentSignup } from '@/contracts/user'
-  import { dietaryFlags } from '~/config/app.config'
 
-  const { t } = useI18n()
-  const { programmes, yearsOf } = await useProgrammes()
+  const { open: programmes, yearsOf, labelOf } = await useProgrammes()
 
   const form = useForm({
     validationSchema: typedSchemaOf(StudentSignup),
@@ -38,14 +35,10 @@
     }
   })
 
-  const diet = computed(() => form.values.dietaryRestrictions ?? [])
-  const toggleDiet = (flag: string) =>
-    form.setFieldValue(
-      'dietaryRestrictions',
-      diet.value.includes(flag)
-        ? diet.value.filter((d) => d !== flag)
-        : [...diet.value, flag],
-    )
+  const diet = computed({
+    get: () => form.values.dietaryRestrictions ?? [],
+    set: (value: string[]) => form.setFieldValue('dietaryRestrictions', value),
+  })
 
   // after a refused submit, the cursor goes to the first field to fix
   const formEl = ref<HTMLFormElement | null>(null)
@@ -143,10 +136,10 @@
                 </option>
                 <option
                   v-for="programme in programmes"
-                  :key="programme.name"
-                  :value="programme.name"
+                  :key="programme.code"
+                  :value="programme.code"
                 >
-                  {{ programme.name }}
+                  {{ labelOf(programme) }}
                 </option>
               </select>
             </FormControl>
@@ -192,22 +185,12 @@
       <p class="mt-2 text-sm text-muted-foreground">
         {{ $t('signup.diet.lead') }}
       </p>
-      <ul class="mt-4 grid grid-cols-2 gap-x-4 gap-y-3">
-        <li
-          v-for="flag in dietaryFlags"
-          :key="flag.name"
-          class="flex items-center gap-2"
-        >
-          <Checkbox
-            :id="`diet-${flag.name}`"
-            :model-value="diet.includes(flag.name)"
-            @update:model-value="toggleDiet(flag.name)"
-          />
-          <Label :for="`diet-${flag.name}`" class="font-normal">
-            {{ t(`dietary_restrictions.${flag.name}`) }}
-          </Label>
-        </li>
-      </ul>
+      <div class="mt-4 flex flex-col gap-4">
+        <DietField
+          v-model="diet"
+          :other-label="$t('user.profile.diet_other')"
+        />
+      </div>
     </details>
 
     <div class="flex flex-col gap-3">

@@ -2,7 +2,10 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { subjectOf } from '@/tests/server/api/support/subject'
 import type { JobRepository } from '@/application/jobs/jobRepository'
 import { JobUid } from '@/domain/business/job'
+import { UserUid } from '@/domain/user'
 import { memoryJobRepository } from '@/server/adapters/memory/jobRepository'
+import { memoryResumeIndex } from '@/server/adapters/memory/resumeIndex'
+import { memoryUserDirectory } from '@/server/adapters/memory/userDirectory'
 
 // The handlers run as plain functions, with the request and the database faked.
 let stored: Record<string, unknown> = {}
@@ -122,14 +125,34 @@ describe('PUT /api/v1/company', () => {
 })
 
 describe('GET /api/v1/resume?scope=all', () => {
+  const student = UserUid.parse('student')
+  beforeEach(() => {
+    vi.doMock('@/server/composition', () => ({
+      resumes: memoryResumeIndex(
+        { student: 'file' },
+        { student: { name: 'Kari', studyProgram: 'MTEL', currentYear: 3 } },
+      ),
+      users: memoryUserDirectory(
+        [student],
+        new Map([[student, { name: 'Kari N', email: 'kari@example.com' }]]),
+      ),
+    }))
+  })
+
   it('gives a company without résumé access only its own record', async () => {
     expect(await call('resume', company)).toEqual(company)
   })
 
-  it('lists résumés for a company with résumé access', async () => {
+  it('lists résumés for a company with résumé access, with only what the list shows', async () => {
     companies.ours.cvAccess = true
     expect(await call('resume', company)).toEqual([
-      expect.objectContaining({ uid: 'student' }),
+      {
+        uid: 'student',
+        name: 'Kari',
+        email: 'kari@example.com',
+        studyProgram: 'MTEL',
+        currentYear: 3,
+      },
     ])
   })
 

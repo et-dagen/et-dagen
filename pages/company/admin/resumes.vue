@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { FileText, Lock } from '@lucide/vue'
   import { useAuthStore } from '@/stores/authStore'
+  import { useProgrammes } from '@/composables/useProgrammes'
   import FilterChips from '@/components/admin/FilterChips.vue'
   import Pager from '@/components/admin/Pager.vue'
   import SearchField from '@/components/admin/SearchField.vue'
@@ -14,10 +15,9 @@
 
   interface Person {
     uid: string
-    name?: string
-    studyProgram?: string
-    currentYear?: string | number
-    resume?: string
+    name: string | null
+    studyProgram: string | null
+    currentYear: number | null
   }
   const YEARS = ['1', '2', '3', '4', '5'] as const
   type Year = 'all' | (typeof YEARS)[number]
@@ -25,13 +25,20 @@
 
   const { t } = useI18n()
   const auth = useAuthStore()
-  const { data: people } = await useFetch<Person[]>('/api/v1/user', {
-    query: { scope: 'all' },
-  })
   const hasAccess = computed(() => auth.can('resume', 'read', { scope: 'all' }))
+  // without access the endpoint answers with the caller's own record, so ask only with access
+  const { data: people } = await useFetch<Person[]>('/api/v1/resume', {
+    query: { scope: 'all' },
+    immediate: hasAccess.value,
+  })
 
-  const withResume = computed(() =>
-    (people.value ?? []).filter((person) => person.resume),
+  const { nameOf } = await useProgrammes()
+  // the programme's name, whether the profile stored its code or, before codes, its name
+  const listed = computed(() =>
+    (people.value ?? []).map((person) => ({
+      ...person,
+      studyProgram: nameOf(person.studyProgram) || null,
+    })),
   )
   const query = ref('')
   const year = ref<Year>('all')
@@ -45,16 +52,15 @@
         value === 'all'
           ? t('company.admin.resumes.all')
           : t('company.admin.year', { n: value }),
-      count: withResume.value.filter(
-        (p) => value === 'all' || yearOf(p) === value,
-      ).length,
+      count: listed.value.filter((p) => value === 'all' || yearOf(p) === value)
+        .length,
     })),
   )
 
   const visible = computed(() =>
     sortBy(
       search(
-        withResume.value.filter(
+        listed.value.filter(
           (p) => year.value === 'all' || yearOf(p) === year.value,
         ),
         query.value,

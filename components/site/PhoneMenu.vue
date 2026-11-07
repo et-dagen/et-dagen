@@ -25,6 +25,10 @@
   const sheet = ref<HTMLDialogElement | null>(null)
   const close = () => sheet.value?.close()
   watch(() => useRoute().fullPath, close)
+  // a link to the page already open changes no route, so a tap on any link closes the menu too
+  const closeOnLink = (event: MouseEvent) => {
+    if (event.target instanceof Element && event.target.closest('a')) close()
+  }
 
   async function signOut() {
     close()
@@ -47,6 +51,7 @@
       ref="sheet"
       class="et-ui m-0 h-dvh max-h-none w-dvw max-w-none bg-card p-0 backdrop:bg-transparent"
       :aria-label="$t('site.menu.label')"
+      @click="closeOnLink"
     >
       <div
         class="flex h-full flex-col px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))]"

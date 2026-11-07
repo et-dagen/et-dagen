@@ -55,12 +55,18 @@
       ? 'company.admin.events.name'
       : 'admin.events.name',
   )
-  const { programmes: listed } = await useProgrammes()
-  const programmes = computed(() => listed.value.map(({ name }) => name!))
+  const { programmes: listed, nameOf, codeOf } = await useProgrammes()
+  const programmes = computed(() => listed.value.map(({ code }) => code))
 
   const { form, submit, saving } = useResourceForm({
     schema: EventInput,
-    initial: props.initial,
+    // an event from before codes stores names; pick the programmes they name
+    initial: {
+      ...props.initial,
+      ...(Array.isArray(props.initial.programmes) && {
+        programmes: (props.initial.programmes as string[]).map(codeOf),
+      }),
+    },
     back: props.panel,
     saved: () =>
       t(props.uid ? 'admin.events.form.updated' : 'admin.events.form.created'),
@@ -277,6 +283,7 @@
             <SearchPicker
               :model-value="value ?? []"
               :options="programmes"
+              :label-of="nameOf"
               :placeholder="$t('admin.events.form.programmes_search')"
               @update:model-value="handleChange"
             />

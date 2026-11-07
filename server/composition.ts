@@ -16,9 +16,11 @@ import { rtdbCompanyRepository } from './adapters/rtdb/companyRepository'
 import { sharpImageProcessor } from './adapters/sharp/imageProcessor'
 import { firebaseUserDirectory } from './adapters/firebase/userDirectory'
 import { rtdbEventRepository } from './adapters/rtdb/eventRepository'
+import { rtdbFairInfoRepository } from './adapters/rtdb/fairInfoRepository'
 import { rtdbFileRepository } from './adapters/rtdb/fileRepository'
 import { rtdbInvitationRepository } from './adapters/rtdb/invitationRepository'
 import { rtdbJobRepository } from './adapters/rtdb/jobRepository'
+import { rtdbProgrammeRepository } from './adapters/rtdb/programmeRepository'
 import { rtdbResumeIndex } from './adapters/rtdb/resumeIndex'
 import { rtdbStandMapIndex } from './adapters/rtdb/standMapIndex'
 import { rtdbUserRepository } from './adapters/rtdb/userRepository'
@@ -38,6 +40,8 @@ export const resumes = rtdbResumeIndex(db)
 export const board = rtdbBoardRepository(db)
 export const invitations = rtdbInvitationRepository(db)
 export const jobs = rtdbJobRepository(db)
+export const programmes = rtdbProgrammeRepository(db)
+export const fair = rtdbFairInfoRepository(db)
 export const newAccounts = firebaseNewAccounts(auth, db)
 export const images = sharpImageProcessor()
 export const activity = rtdbActivityLog(db)
