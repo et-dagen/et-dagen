@@ -721,6 +721,48 @@
         "created": "The board member is added.",
         "updated": "Your changes are saved."
       }
+    },
+    "fair": {
+      "name": "The fair",
+      "dates": {
+        "title": "Dates",
+        "intro": "When the fair starts and ends, in Norwegian time. The front page shows the days.",
+        "start": "Starts",
+        "end": "Ends",
+        "save": "Save dates",
+        "saved": "The dates are saved."
+      },
+      "programmes": {
+        "title": "Study programmes",
+        "intro": "The programmes students choose from. A closed programme is not offered at sign-up, but the students who have it keep it.",
+        "add": "New programme",
+        "name": "Name",
+        "degree": "Degree",
+        "open": "Open to new students",
+        "closed": "Closed",
+        "save": "Save",
+        "cancel": "Cancel",
+        "edit": "Edit {name}",
+        "remove": "Delete {name}",
+        "added": "{name} is added.",
+        "updated": "{name} is saved.",
+        "removed": "{name} is deleted.",
+        "empty": "No programmes here.",
+        "filter": {
+          "label": "Show",
+          "all": "All",
+          "open": "Open",
+          "closed": "Closed"
+        },
+        "confirm": {
+          "title": "Delete the programme?",
+          "text": "This only works while no student has it. If it is no longer offered, close it instead.",
+          "action": "Delete"
+        },
+        "code": "Code",
+        "code_hint": "Unique, such as MTEL or BIELEKTRO. It cannot be changed later, since students and events point at it.",
+        "code_kept": "The code stays. Students and events point at it, so they see the new name."
+      }
     }
   },
   "dietary_restrictions": {
