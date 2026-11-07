@@ -2,6 +2,7 @@
   import { ChevronDown, Copy, Pencil } from '@lucide/vue'
   import { useAuthStore } from '@/stores/authStore'
   import { notify } from '@/composables/useAlerts'
+  import { useProgrammes } from '@/composables/useProgrammes'
   import { Badge } from '@/components/ui/badge'
   import { Button } from '@/components/ui/button'
   import { attendantsOf } from '@/lib/company/attendants'
@@ -26,6 +27,7 @@
     people: readonly Person[]
   }>()
 
+  const { nameOf } = await useProgrammes()
   const localePath = useLocalePath()
   const auth = useAuthStore()
   // coordinators edit their companies' events; company users only see them
@@ -176,7 +178,7 @@
             >
               <span class="font-semibold">{{ person.name }}</span>
               <span class="text-muted-foreground">
-                {{ person.studyProgram }}
+                {{ nameOf(person.studyProgram) }}
                 <template v-if="person.currentYear">
                   · {{ $t('company.admin.year', { n: person.currentYear }) }}
                 </template>

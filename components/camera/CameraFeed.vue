@@ -36,6 +36,11 @@
       console.warn('Camera has already been started')
       return
     }
+    // browsers offer the camera only on secure pages (https, or localhost)
+    if (!navigator.mediaDevices?.getUserMedia) {
+      emit('error', new DOMException('No camera on this page', 'SecurityError'))
+      return
+    }
     isStarting.value = true
     try {
       stream = await navigator.mediaDevices.getUserMedia({

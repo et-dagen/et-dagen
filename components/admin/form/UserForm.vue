@@ -42,7 +42,12 @@
       .map(([value, company]) => ({ value, label: company.name ?? value }))
       .sort((a, b) => a.label.localeCompare(b.label, 'nb')),
   )
-  const { programmes, yearsOf: offeredBy } = await useProgrammes()
+  const {
+    programmes,
+    yearsOf: offeredBy,
+    codeOf,
+    labelOf,
+  } = await useProgrammes()
   // before a programme is chosen, the admin may still pick any year
   const yearsOf = (name: unknown) => (name ? offeredBy(name) : STUDY_YEARS)
 
@@ -62,7 +67,13 @@
 
   const { form, submit, saving } = useResourceForm({
     schema: UserInput,
-    initial: props.initial,
+    // a profile from before codes stores the name; select the programme it names
+    initial: {
+      ...props.initial,
+      ...('studyProgram' in props.initial && {
+        studyProgram: codeOf(props.initial.studyProgram as string),
+      }),
+    },
     back: '/admin/users',
     saved: () => t('admin.users.form.updated'),
     save: async (values) => {
@@ -206,10 +217,10 @@
               <SelectContent>
                 <SelectItem
                   v-for="programme in programmes"
-                  :key="programme.name"
-                  :value="programme.name!"
+                  :key="programme.code"
+                  :value="programme.code"
                 >
-                  {{ programme.name }}
+                  {{ labelOf(programme) }}
                 </SelectItem>
               </SelectContent>
             </Select>

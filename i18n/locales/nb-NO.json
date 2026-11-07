@@ -38,27 +38,6 @@
   "user": {
     "sign_in": "Logg inn",
     "sign_out": "Logg ut",
-    "register": {
-      "title": "Registrer bruker",
-      "full_name": "Fullt navn",
-      "first_name": "Fornavn",
-      "last_name": "Etternavn",
-      "email": "E-post",
-      "password": "Passord",
-      "password_confirmation": "Bekreft passord",
-      "study_program": "Studieprogram",
-      "year": "Årstrinn",
-      "user_type": {
-        "student": "Studentbruker",
-        "company": "Bedriftsbruker"
-      },
-      "dietary_restrictions": {
-        "name": "Allergener og restriksjoner",
-        "other": "Andre restriksjoner",
-        "norestrictions": "Nei, jeg har ingen restriksjoner",
-        "restrictions": "Jeg har allergener og/eller restriksjoner"
-      }
-    },
     "resume": {
       "resume": "CV"
     },
@@ -150,7 +129,9 @@
       "off": "Kameraet er av",
       "done": "Oppmøte registrert",
       "camera_denied": "Gi nettleseren tilgang til kameraet for å skanne.",
-      "camera_failed": "Fant ikke noe kamera å skanne med."
+      "camera_failed": "Fant ikke noe kamera å skanne med.",
+      "camera_insecure": "Kameraet virker bare på en sikker side (https).",
+      "camera_busy": "En annen app bruker kameraet. Lukk den og prøv igjen."
     }
   },
   "contact": {
@@ -275,34 +256,6 @@
           "not-found": "Bruker ble ikke funnet",
           "doesnt-exists": "Brukeren eksisterer ikke",
           "missing-programme": "Studieprogram mangler"
-        }
-      }
-    },
-    "error": {
-      "default": "Oi! Noe gikk galt.",
-      "form": {
-        "missing_email": "Epost ikke oppgitt",
-        "invalid": "Skjemaet er ikke gyldig"
-      },
-      "event": {
-        "event_doesnt_exist": "Arrangementet finnes ikke",
-        "register": {
-          "requirements_not_met": "Arrangementet er begrenset til et annet studieprogram eller årstrinn",
-          "event_is_full": "Arrangementet er fullt",
-          "already_registered": "Du er allerede påmeldt dette arrangementet",
-          "user_not_registered": "Du er ikke påmeldt dette arrangementet",
-          "registration_unnecessary": "Påmelding er ikke nødvendig for dette arrangementet",
-          "non_admin_user": "Dette krever administratorrettigheter",
-          "closed": "Ikke åpent for registrering",
-          "end_time_before_start_time": "Arrangementet kan ikke avslutte før det har startet"
-        }
-      },
-      "company": {
-        "edit": {
-          "created": "Bedriften ble ikke opprettet",
-          "modified": "Oppdatering misslykket",
-          "modified_logo": "Logo ble ikke oppdatert",
-          "deleted_logo": "Logo ble ikke slettet"
         }
       }
     },
@@ -672,6 +625,8 @@
     "shell": {
       "navigation": "Adminpaneler",
       "back": "Til etdagene.no",
+      "more": "Mer",
+      "close": "Lukk",
       "tag": {
         "admin": "ADMIN",
         "company": "BEDRIFT"
@@ -769,6 +724,48 @@
         "save": "Lagre",
         "created": "Styremedlemmet er lagt til.",
         "updated": "Endringene er lagret."
+      }
+    },
+    "fair": {
+      "name": "Messen",
+      "dates": {
+        "title": "Datoer",
+        "intro": "Når messen starter og slutter, i norsk tid. Forsiden viser dagene.",
+        "start": "Starter",
+        "end": "Slutter",
+        "save": "Lagre datoer",
+        "saved": "Datoene er lagret."
+      },
+      "programmes": {
+        "title": "Studieprogram",
+        "intro": "Programmene studentene velger fra. Et stengt program tilbys ikke ved registrering, men studentene som har det, beholder det.",
+        "add": "Nytt studieprogram",
+        "name": "Navn",
+        "degree": "Grad",
+        "open": "Åpent for nye studenter",
+        "closed": "Stengt",
+        "save": "Lagre",
+        "cancel": "Avbryt",
+        "edit": "Rediger {name}",
+        "remove": "Slett {name}",
+        "added": "{name} er lagt til.",
+        "updated": "{name} er lagret.",
+        "removed": "{name} er slettet.",
+        "empty": "Ingen studieprogram her.",
+        "filter": {
+          "label": "Vis",
+          "all": "Alle",
+          "open": "Åpne",
+          "closed": "Stengte"
+        },
+        "confirm": {
+          "title": "Slette studieprogrammet?",
+          "text": "Det går bare så lenge ingen studenter har det. Tilbys det ikke lenger, steng det i stedet.",
+          "action": "Slett"
+        },
+        "code": "Kode",
+        "code_hint": "Unik, for eksempel MTELSYS eller BIDATA. Den kan ikke endres senere, fordi studenter og arrangementer peker på den.",
+        "code_kept": "Koden står fast. Studenter og arrangementer peker på den, så de ser det nye navnet."
       }
     }
   },
@@ -975,6 +972,17 @@
       "weak-password": "Passordet må ha minst 8 tegn, med minst 3 bokstaver og 3 tall.",
       "account-exists": "Denne adressen har allerede en konto. Logg inn for å bli med.",
       "invalid-request": "Velg en bedrift og skriv inn en gyldig e-postadresse."
+    },
+    "programme": {
+      "not-found": "Fant ikke studieprogrammet.",
+      "invalid-name": "Fyll inn et navn på høyst 120 tegn.",
+      "invalid-degree": "Velg bachelor, master eller integrert master.",
+      "in-use": "Studenter har dette studieprogrammet. Steng det i stedet, så tilbys det ikke lenger ved registrering.",
+      "invalid-code": "Fyll inn en kode: en bokstav, så bokstaver og tall, 2 til 20 i alt.",
+      "code-taken": "Et annet studieprogram har allerede denne koden."
+    },
+    "fair": {
+      "invalid-dates": "Fyll inn når messen starter og slutter, med slutten etter starten."
     }
   },
   "form": {
@@ -1018,7 +1026,6 @@
       "where": "Hvor",
       "signup": "Påmelding",
       "places": "{taken} av {limit} plasser",
-      "map_title": "Kart over {place}",
       "open_map": "Åpne kart",
       "privacy": "Navnene på de påmeldte vises ikke her.",
       "years": "Årstrinn",
@@ -1265,5 +1272,10 @@
         "text": "Kontoen for denne invitasjonen er klar. Logg inn for å komme til bedriftssiden."
       }
     }
+  },
+  "degree": {
+    "bachelor": "Bachelor",
+    "master": "Master",
+    "integrated": "Integrert master"
   }
 }

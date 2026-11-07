@@ -2,6 +2,7 @@
   import { FileText, Pencil, Upload } from '@lucide/vue'
   import DeleteAccount from '@/components/user/DeleteAccount.vue'
   import { alertError, notify } from '@/composables/useAlerts'
+  import { useProgrammes } from '@/composables/useProgrammes'
   import { useAuthStore } from '@/stores/authStore'
   import {
     AlertDialog,
@@ -27,9 +28,10 @@
   )
   const restrictionName = (value: string) => dietLabel(value, t)
 
+  const { nameOf } = await useProgrammes()
   const studies = computed(() =>
     [
-      user.value?.studyProgram,
+      nameOf(user.value?.studyProgram),
       user.value?.currentYear &&
         t('user.page.year', { n: user.value.currentYear }),
     ]

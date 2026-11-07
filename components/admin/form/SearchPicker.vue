@@ -3,11 +3,16 @@
   import { Input } from '@/components/ui/input'
   import { search } from '@/lib/admin/listView'
 
+  type Labeller = (option: string) => string
+
   const props = defineProps<{
     options: readonly string[]
     /** What the search field asks for, also its accessible name */
     placeholder: string
+    /** How an option reads, when it is stored as a code */
+    labelOf?: Labeller
   }>()
+  const label = (option: string) => props.labelOf?.(option) ?? option
   const chosen = defineModel<string[]>({ default: () => [] })
 
   // never more than this many suggestions, however long the list of options is
@@ -18,7 +23,7 @@
       ? search(
           props.options.filter((option) => !chosen.value.includes(option)),
           query.value,
-          (option) => [option],
+          (option) => [label(option), option],
         ).slice(0, SHOWN)
       : [],
   )
@@ -40,11 +45,11 @@
         :key="option"
         class="inline-flex items-center gap-1 rounded-md bg-plate py-1 pr-1 pl-2.5 text-sm text-plate-foreground"
       >
-        {{ option }}
+        {{ label(option) }}
         <button
           type="button"
           class="grid size-6 place-items-center rounded-sm hover:bg-white/15"
-          :aria-label="$t('form.picker.remove', { option })"
+          :aria-label="$t('form.picker.remove', { option: label(option) })"
           @click="remove(option)"
         >
           <X class="size-3.5" aria-hidden="true" />
@@ -79,7 +84,7 @@
           @click="add(option)"
         >
           <Plus class="size-4 text-muted-foreground" aria-hidden="true" />
-          {{ option }}
+          {{ label(option) }}
         </button>
       </li>
       <li

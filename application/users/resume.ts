@@ -3,6 +3,7 @@ import {
   uploadFile,
   type FileDependencies,
 } from '@/application/files/uploadFile'
+import type { UserDirectory } from '@/application/users/userDirectory'
 import type { ResumeIndex } from '@/application/users/resumeIndex'
 import { authorize } from '@/domain/authorization/authorize'
 import type { Subject } from '@/domain/authorization/subject'
@@ -134,4 +135,40 @@ export async function removeResume(
   if (found.file) await removeFile(found.file, deps)
   else await deps.storage.remove(found.path)
   await deps.resumes.set(owner, null)
+}
+
+/** A résumé as a company finds it: who it belongs to, and what they study */
+export interface ResumeListing {
+  uid: UserUid
+  name: string | null
+  email: string | null
+  studyProgram: string | null
+  currentYear: number | null
+}
+
+/**
+ * Everyone with a résumé and an account, with only what the résumé list shows
+ *
+ * @throws AppError `auth/signed-out` or `auth/forbidden`
+ */
+export async function listResumes(
+  deps: { resumes: ResumeIndex; users: UserDirectory },
+  { subject, now }: { subject: Subject | undefined; now: ISO8601String },
+): Promise<ResumeListing[]> {
+  authorize(subject, 'resume', 'read', { scope: 'all' }, { now })
+  const holders = await deps.resumes.holders()
+  const contacts = await deps.users.contacts(holders.map(({ uid }) => uid))
+  return holders.flatMap((holder) => {
+    const contact = contacts.get(holder.uid)
+    if (!contact) return []
+    return [
+      {
+        uid: holder.uid,
+        name: holder.name ?? contact.name,
+        email: contact.email,
+        studyProgram: holder.studyProgram,
+        currentYear: holder.currentYear,
+      },
+    ]
+  })
 }

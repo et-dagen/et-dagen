@@ -1,5 +1,11 @@
 import type { UserUid } from '@/domain/user'
 
+/** How to reach an account's owner */
+export interface Contact {
+  name: string | null
+  email: string | null
+}
+
 /**
  * Who has an account
  *
@@ -9,6 +15,9 @@ import type { UserUid } from '@/domain/user'
  */
 export interface UserDirectory {
   exists(uid: UserUid): Promise<boolean>
+
+  /** The name and email of each account that exists; missing accounts are left out */
+  contacts(uids: readonly UserUid[]): Promise<Map<UserUid, Contact>>
 
   /** Delete the accounts. Accounts that are already gone count as deleted. */
   remove(users: readonly UserUid[]): Promise<void>

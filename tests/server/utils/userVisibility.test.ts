@@ -93,15 +93,15 @@ describe('visibleUsers for a company', () => {
     }
   })
 
-  it('adds everyone with a résumé when it has résumé access', () => {
+  it('lists no one else with résumé access, as résumés have their own list', () => {
     const visible = visibleUsers(
       subjectOf(rep, partner(true)),
       users,
       events,
       env,
     )
-    expect(uids(visible)).toEqual(['attending', 'queued', 'with-resume'])
-    expect(visible[2]).toHaveProperty('resume')
+    expect(uids(visible)).toEqual(['attending', 'queued'])
+    expect(visible.some((u) => 'resume' in u)).toBe(false)
   })
 })
 
