@@ -29,6 +29,7 @@
       title: 'site.footer.organisation',
       links: [
         { label: 'site.footer.contact', to: '/contact' },
+        { label: 'site.footer.privacy', to: '/privacy' },
         { name: 'MTELSYS', href: 'https://www.ntnu.no/studier/mtelsys' },
         { name: 'GitHub', href: 'https://github.com/et-dagen' },
       ],
