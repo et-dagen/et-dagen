@@ -1,0 +1,222 @@
+[
+  {
+    "code": "BIAIS",
+    "name": "Automatisering og intelligente systemer, Bachelor",
+    "type": "bachelor"
+  },
+  {
+    "code": "BIBYGG",
+    "name": "Byggingeniør, Bachelor",
+    "type": "bachelor"
+  },
+  {
+    "code": "BIDATA",
+    "name": "Dataingeniør, Bachelor",
+    "type": "bachelor"
+  },
+  {
+    "code": "BIELDIG",
+    "name": "Elektrifisering og digitalisering, Bachelor",
+    "type": "bachelor"
+  },
+  {
+    "code": "BIELSYS",
+    "name": "Elektronisk systemingeniør, Bachelor",
+    "type": "bachelor"
+  },
+  {
+    "code": "BIFLY",
+    "name": "Flyingeniør, Bachelor",
+    "type": "bachelor"
+  },
+  {
+    "code": "BIFOREN",
+    "name": "Fornybar energi, ingeniør, Bachelor",
+    "type": "bachelor"
+  },
+  {
+    "code": "BIHAV",
+    "name": "Havbruksingeniør, Bachelor",
+    "type": "bachelor"
+  },
+  {
+    "code": "FTHINGKJ",
+    "name": "Kjemiingeniør, Bachelor",
+    "type": "bachelor"
+  },
+  {
+    "code": "FTHINGLOG",
+    "name": "Logisikkingeniør, Bachelor",
+    "type": "bachelor"
+  },
+  {
+    "code": "BIMASKIN",
+    "name": "Maskiningeniør, Bachelor",
+    "type": "bachelor"
+  },
+  {
+    "code": "FTHINGMAT",
+    "name": "Materialteknologi, Bachelor",
+    "type": "bachelor"
+  },
+  {
+    "code": "BDIGSEC",
+    "name": "Digital infrastruktur og cybersikkerhet, Bachelor",
+    "type": "bachelor"
+  },
+  {
+    "code": "ITBAINFO",
+    "name": "Informasjonsbehandling, Bachelor",
+    "type": "bachelor"
+  },
+  {
+    "code": "BIT",
+    "name": "Informatikk, Bachelor",
+    "type": "bachelor"
+  },
+  {
+    "code": "MSCOMEMA",
+    "name": "Costal and Marine engineering and Management, Master 2 år",
+    "type": "master"
+  },
+  {
+    "code": "MSCCE",
+    "name": "Cold Climate Engineering, Master 2 år",
+    "type": "master"
+  },
+  {
+    "code": "MIDT",
+    "name": "Datateknologi, Master 2 år",
+    "type": "master"
+  },
+  {
+    "code": "MSELPOWER",
+    "name": "Electric Power Engineering, Master 2 år",
+    "type": "master"
+  },
+  {
+    "code": "MSECS",
+    "name": "Embedded Computing Systems, Master 2 år",
+    "type": "master"
+  },
+  {
+    "code": "MIENERG",
+    "name": "Energi og miljø, Master 2 år",
+    "type": "master"
+  },
+  {
+    "code": "MIIK",
+    "name": "Industriell kybernetikk, Master 2 år",
+    "type": "master"
+  },
+  {
+    "code": "MITK",
+    "name": "Kybernetikk og robotikk, Master 2 år",
+    "type": "master"
+  },
+  {
+    "code": "MIMART",
+    "name": "Marin teknikk, Master 2 år",
+    "type": "master"
+  },
+  {
+    "code": "MSMIR",
+    "name": "Marine and Maritime Intelligent Robotics, Master 2 år",
+    "type": "master"
+  },
+  {
+    "code": "MSNMME",
+    "name": "Maritime Engineering, Master 2 år",
+    "type": "master"
+  },
+  {
+    "code": "MSMT",
+    "name": "Material Science and Engineering, Master 2 år",
+    "type": "master"
+  },
+  {
+    "code": "MIENTRE",
+    "name": "NTNU Entreprenørskolen, Master 2 år",
+    "type": "master"
+  },
+  {
+    "code": "MIPROD",
+    "name": "Produktutvikling og produksjon, Master 2 år",
+    "type": "master"
+  },
+  {
+    "code": "MSSECCLO",
+    "name": "Security and Cloud Computing, Master 2 år",
+    "type": "master"
+  },
+  {
+    "code": "MSSE",
+    "name": "Sustainable Energy, Master 2 år",
+    "type": "master"
+  },
+  {
+    "code": "MTBYGG",
+    "name": "Bygg og miljøteknikk, Master 5 år",
+    "type": "integrated"
+  },
+  {
+    "code": "MTKOM",
+    "name": "Cybersikkerhet og datakommunikasjon, Master 5 år",
+    "type": "integrated"
+  },
+  {
+    "code": "MTDT",
+    "name": "Datateknologi, Master 5 år",
+    "type": "integrated"
+  },
+  {
+    "code": "MTELSYS",
+    "name": "Elektronisk systemdesign og innovasjon, Master 5 år",
+    "type": "integrated"
+  },
+  {
+    "code": "MTENERG",
+    "name": "Energi og miljø, Master 5 år",
+    "type": "integrated"
+  },
+  {
+    "code": "MTFYMA",
+    "name": "Fysikk og matematikk, Master 5 år",
+    "type": "integrated"
+  },
+  {
+    "code": "MTIØT",
+    "name": "Industriell økonomi og teknologiledelse, Master 5 år",
+    "type": "integrated"
+  },
+  {
+    "code": "MTING",
+    "name": "Ingeniørvitenskap og IKT, Master 5 år",
+    "type": "integrated"
+  },
+  {
+    "code": "MTTK",
+    "name": "Kybernetikk og robotikk, Master 5 år",
+    "type": "integrated"
+  },
+  {
+    "code": "MTMART",
+    "name": "Marin teknikk, Master 5 år",
+    "type": "integrated"
+  },
+  {
+    "code": "MTMASKIN",
+    "name": "Maskin- og energiteknologi, Master 5 år",
+    "type": "integrated"
+  },
+  {
+    "code": "MTMT",
+    "name": "Materialteknologi, Master 5 år",
+    "type": "integrated"
+  },
+  {
+    "code": "MSELSYS",
+    "name": "Electronic Systems Design, Master 2 år",
+    "type": "master"
+  }
+]
