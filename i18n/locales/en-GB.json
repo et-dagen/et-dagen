@@ -38,27 +38,6 @@
   "user": {
     "sign_in": "Sign in",
     "sign_out": "Sign out",
-    "register": {
-      "title": "Register user",
-      "full_name": "Full name",
-      "first_name": "First name",
-      "last_name": "Last name",
-      "email": "E-mail",
-      "password": "Password",
-      "password_confirmation": "Confirm password",
-      "study_program": "Study Programme",
-      "year": "Current year",
-      "user_type": {
-        "student": "Student user",
-        "company": "Company user"
-      },
-      "dietary_restrictions": {
-        "name": "Allergens and restrictions",
-        "other": "Other restrictions",
-        "norestrictions": "No, I have no dietary restrictions",
-        "restrictions": "Yes, I have allergies and/or restrictions"
-      }
-    },
     "resume": {
       "resume": "resume"
     },
@@ -275,35 +254,6 @@
           "not-found": "User not found",
           "doesnt-exists": "User doesn't exist",
           "missing-programme": "studyProgram missing"
-        }
-      }
-    },
-    "error": {
-      "default": "An error occurred",
-      "form": {
-        "missing_email": "Email input is missing",
-        "invalid": "Invalid form"
-      },
-      "event": {
-        "event_doesnt_exist": "Event doesn't exist",
-        "missing_event_id": "Missing event id",
-        "register": {
-          "requirements_not_met": "This event is limited to certain study programmes and years",
-          "event_is_full": "Event is full",
-          "already_registered": "You are already registered for this event",
-          "user_not_registered": "You are not registered for this event",
-          "registration_unnecessary": "Registration is not necessary for this event",
-          "non_admin_user": "This requires admin privileges",
-          "closed": "Registration is closed",
-          "end_time_before_start_time": "Events cannot end before they start"
-        }
-      },
-      "company": {
-        "edit": {
-          "created": "Creation failed",
-          "modified": "Modification failed",
-          "modified_logo": "Logo modification failed",
-          "deleted_logo": "Logo deletion failed"
         }
       }
     },
