@@ -167,7 +167,18 @@ describe('résumés', () => {
     const withAccess = await contactFor('acme')
     const without = await contactFor('globex')
 
-    expect(Array.isArray((await list(withAccess.token)).body)).toBe(true)
+    const listed = (await list(withAccess.token)).body as object[]
+    expect(listed).toEqual([
+      expect.objectContaining({ uid: owner.uid, email: expect.any(String) }),
+    ])
+    // only what the résumé list shows
+    expect(Object.keys(listed[0]).sort()).toEqual([
+      'currentYear',
+      'email',
+      'name',
+      'studyProgram',
+      'uid',
+    ])
     expect((await list(without.token)).body).toMatchObject({
       companyUID: 'globex',
     })

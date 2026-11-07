@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  listResumes,
   openResume,
   removeResume,
   uploadResume,
@@ -12,6 +13,7 @@ import { UserUid, type Role } from '@/domain/user'
 import { memoryFileRepository } from '@/server/adapters/memory/fileRepository'
 import { memoryFileStorage } from '@/server/adapters/memory/fileStorage'
 import { memoryResumeIndex } from '@/server/adapters/memory/resumeIndex'
+import { memoryUserDirectory } from '@/server/adapters/memory/userDirectory'
 
 const kari = UserUid.parse('kari')
 const now = Instant.parse('2026-11-05T10:00:00.000Z')
@@ -158,5 +160,51 @@ describe('removeResume', () => {
       await codeOf(removeResume(deps, { subject: owner, now, owner: kari })),
     ).toBe('resume/not-found')
     expect(deps.storage.files.has('users/ola/cv.pdf')).toBe(true)
+  })
+})
+
+describe('listResumes', () => {
+  const ola = UserUid.parse('ola')
+  const deps = {
+    resumes: memoryResumeIndex(
+      { kari: 'file-1', ola: 'file-2', gone: 'file-3' },
+      { kari: { name: 'Kari', studyProgram: 'MTEL', currentYear: 3 } },
+    ),
+    users: memoryUserDirectory(
+      [kari, ola],
+      new Map([
+        [kari, { name: 'Kari N', email: 'kari@example.com' }],
+        [ola, { name: 'Ola', email: 'ola@example.com' }],
+      ]),
+    ),
+  }
+
+  it('lists each résumé with an account, the profile name first', async () => {
+    const admin = subject('boss', ['admin'])
+    expect(await listResumes(deps, { subject: admin, now })).toEqual([
+      {
+        uid: kari,
+        name: 'Kari',
+        email: 'kari@example.com',
+        studyProgram: 'MTEL',
+        currentYear: 3,
+      },
+      {
+        uid: ola,
+        name: 'Ola',
+        email: 'ola@example.com',
+        studyProgram: null,
+        currentYear: null,
+      },
+    ])
+  })
+
+  it('refuses a student and a signed-out caller', async () => {
+    expect(await codeOf(listResumes(deps, { subject: owner, now }))).toBe(
+      'auth/forbidden',
+    )
+    expect(await codeOf(listResumes(deps, { subject: undefined, now }))).toBe(
+      'auth/signed-out',
+    )
   })
 })
