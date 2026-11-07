@@ -20,7 +20,7 @@
   } from '@/components/ui/form'
   import { StudentSignup } from '@/contracts/user'
 
-  const { programmes, yearsOf } = await useProgrammes()
+  const { open: programmes, yearsOf, labelOf } = await useProgrammes()
 
   const form = useForm({
     validationSchema: typedSchemaOf(StudentSignup),
@@ -136,10 +136,10 @@
                 </option>
                 <option
                   v-for="programme in programmes"
-                  :key="programme.name"
-                  :value="programme.name"
+                  :key="programme.code"
+                  :value="programme.code"
                 >
-                  {{ programme.name }}
+                  {{ labelOf(programme) }}
                 </option>
               </select>
             </FormControl>

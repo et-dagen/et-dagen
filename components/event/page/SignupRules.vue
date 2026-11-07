@@ -1,4 +1,5 @@
 <script setup lang="ts">
+  import { useProgrammes } from '@/composables/useProgrammes'
   import { formatWhen } from '@/lib/time'
   import type { PublicEvent } from '@/lib/eventPage'
 
@@ -9,6 +10,7 @@
   }>()
 
   const { locale } = useI18n()
+  const { nameOf } = await useProgrammes()
   const requirements = computed(() => props.event.registration?.requirements)
   const windowText = (value: string | null | undefined) =>
     formatWhen(value ?? undefined, locale.value)
@@ -55,7 +57,7 @@
         <dd class="mt-1">
           <ul class="flex flex-col gap-1">
             <li v-for="programme in requirements.programmes" :key="programme">
-              {{ programme }}
+              {{ nameOf(programme) }}
             </li>
           </ul>
         </dd>

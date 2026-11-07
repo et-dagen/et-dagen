@@ -1227,5 +1227,10 @@
         "text": "Kontoen for denne invitasjonen er klar. Logg inn for å komme til bedriftssiden."
       }
     }
+  },
+  "degree": {
+    "bachelor": "Bachelor",
+    "master": "Master",
+    "integrated": "Integrert master"
   }
 }

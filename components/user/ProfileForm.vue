@@ -25,7 +25,7 @@
   const student = !(auth.currentSubject?.roles.includes('company') ?? false)
   const user = auth.user!
 
-  const { yearsOf } = await useProgrammes()
+  const { yearsOf, nameOf } = await useProgrammes()
   // a student without a programme on record may still pick any year
   const years = computed(() =>
     user.studyProgram ? yearsOf(user.studyProgram) : STUDY_YEARS,
@@ -105,7 +105,7 @@
       <template v-if="student">
         <div class="grid content-start gap-2 lg:col-span-2">
           <Label as="p">{{ $t('user.profile.programme') }}</Label>
-          <p class="font-semibold">{{ user.studyProgram || '–' }}</p>
+          <p class="font-semibold">{{ nameOf(user.studyProgram) || '–' }}</p>
           <p class="text-sm text-muted-foreground">
             {{ $t('user.profile.programme_hint') }}
           </p>
