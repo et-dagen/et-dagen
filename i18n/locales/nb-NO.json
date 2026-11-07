@@ -38,27 +38,6 @@
   "user": {
     "sign_in": "Logg inn",
     "sign_out": "Logg ut",
-    "register": {
-      "title": "Registrer bruker",
-      "full_name": "Fullt navn",
-      "first_name": "Fornavn",
-      "last_name": "Etternavn",
-      "email": "E-post",
-      "password": "Passord",
-      "password_confirmation": "Bekreft passord",
-      "study_program": "Studieprogram",
-      "year": "Årstrinn",
-      "user_type": {
-        "student": "Studentbruker",
-        "company": "Bedriftsbruker"
-      },
-      "dietary_restrictions": {
-        "name": "Allergener og restriksjoner",
-        "other": "Andre restriksjoner",
-        "norestrictions": "Nei, jeg har ingen restriksjoner",
-        "restrictions": "Jeg har allergener og/eller restriksjoner"
-      }
-    },
     "resume": {
       "resume": "CV"
     },
@@ -275,34 +254,6 @@
           "not-found": "Bruker ble ikke funnet",
           "doesnt-exists": "Brukeren eksisterer ikke",
           "missing-programme": "Studieprogram mangler"
-        }
-      }
-    },
-    "error": {
-      "default": "Oi! Noe gikk galt.",
-      "form": {
-        "missing_email": "Epost ikke oppgitt",
-        "invalid": "Skjemaet er ikke gyldig"
-      },
-      "event": {
-        "event_doesnt_exist": "Arrangementet finnes ikke",
-        "register": {
-          "requirements_not_met": "Arrangementet er begrenset til et annet studieprogram eller årstrinn",
-          "event_is_full": "Arrangementet er fullt",
-          "already_registered": "Du er allerede påmeldt dette arrangementet",
-          "user_not_registered": "Du er ikke påmeldt dette arrangementet",
-          "registration_unnecessary": "Påmelding er ikke nødvendig for dette arrangementet",
-          "non_admin_user": "Dette krever administratorrettigheter",
-          "closed": "Ikke åpent for registrering",
-          "end_time_before_start_time": "Arrangementet kan ikke avslutte før det har startet"
-        }
-      },
-      "company": {
-        "edit": {
-          "created": "Bedriften ble ikke opprettet",
-          "modified": "Oppdatering misslykket",
-          "modified_logo": "Logo ble ikke oppdatert",
-          "deleted_logo": "Logo ble ikke slettet"
         }
       }
     },
