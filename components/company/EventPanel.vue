@@ -5,7 +5,7 @@
   import { useProgrammes } from '@/composables/useProgrammes'
   import { Badge } from '@/components/ui/badge'
   import { Button } from '@/components/ui/button'
-  import { attendantsOf, dietaryCounts } from '@/lib/company/attendants'
+  import { attendantsOf } from '@/lib/company/attendants'
   import { Instant } from '@/domain/time'
   import { eventStatus, placeOf, type EventRow } from '@/lib/events'
   import { dietLabel } from '@/lib/forms/diet'
@@ -42,9 +42,7 @@
     attendantsOf(props.event.attendants, props.people),
   )
   const diets = computed(() =>
-    Object.entries(dietaryCounts(attendants.value)).sort(
-      ([, a], [, b]) => b - a,
-    ),
+    Object.entries(props.event.diets ?? {}).sort(([, a], [, b]) => b - a),
   )
   const status = computed(() => eventStatus(props.event, Instant.now()))
   const place = computed(() => placeOf(props.event.location?.name))
@@ -132,7 +130,7 @@
       </span>
     </div>
 
-    <!-- dietary needs as counts only: catering does not need names -->
+    <!-- counts for every viewer; only coordinators get each person's needs, in the list below -->
     <section v-if="event.capacity" class="border-t px-4 py-3 lg:px-5">
       <h3 class="text-sm font-semibold">
         {{ $t('company.admin.events.diets') }}
@@ -187,6 +185,12 @@
               </span>
               <span class="break-all text-muted-foreground">
                 {{ person.email }}
+              </span>
+              <span
+                v-if="person.dietaryRestrictions?.length"
+                class="sm:col-span-3"
+              >
+                {{ person.dietaryRestrictions.map(dietName).join(', ') }}
               </span>
             </li>
           </ul>

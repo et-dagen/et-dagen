@@ -11,6 +11,8 @@ export interface EventRow {
   location?: { name?: string; map?: string }
   attendants?: Record<string, unknown>
   queue?: Record<string, string>
+  /** How many attendants have each dietary restriction */
+  diets?: Record<string, number>
 }
 
 /**

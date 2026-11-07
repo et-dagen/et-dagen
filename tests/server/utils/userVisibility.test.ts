@@ -77,6 +77,12 @@ describe('visibleUsers for a company', () => {
     ])
   })
 
+  it('gets dietary needs only as counts, never per person', () => {
+    for (const u of visibleUsers(viewer, users, events, env)) {
+      expect(u).not.toHaveProperty('dietaryRestrictions')
+    }
+  })
+
   it('never includes résumé links without résumé access', () => {
     const withAttendingResume = users.map((u) =>
       u.uid === 'attending' ? { ...u, resume: 'link' } : u,
@@ -117,6 +123,18 @@ describe('visibleUsers for a coordinator', () => {
       'email',
     )
     expect(visible.some((u) => 'resume' in u)).toBe(false)
+  })
+
+  it('sees what each person on their events needs to eat, to order the food', () => {
+    const visible = visibleUsers(viewer, users, events, env)
+
+    expect(visible.find((u) => u.uid === 'attending')).toHaveProperty(
+      'dietaryRestrictions',
+      ['gluten'],
+    )
+    expect(visible.find((u) => u.uid === 'elsewhere')).not.toHaveProperty(
+      'dietaryRestrictions',
+    )
   })
 })
 

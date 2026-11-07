@@ -155,6 +155,27 @@ describe('GET /api/v1/company/events', () => {
     }
   })
 
+  it("counts the dietary needs of each event's attendants", async () => {
+    await seed('users', {
+      ada: { dietaryRestrictions: ['vegan', 'gluten'] },
+      bo: { dietaryRestrictions: ['vegan'] },
+      cy: { name: 'Cy' },
+    })
+    const attending = { attended: false }
+    await seed('events/talk/attendants', {
+      ada: attending,
+      bo: attending,
+      cy: attending,
+    })
+    const { token } = await contactFor('acme')
+
+    const response = await list(token, 'acme')
+
+    expect(response.body).toMatchObject({
+      talk: { diets: { vegan: 2, gluten: 1 } },
+    })
+  })
+
   it('lists every company for an admin', async () => {
     const { token } = await admin()
 
