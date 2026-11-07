@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { ArrowLeft, Plus, ScanLine, Trash2, UserPlus } from '@lucide/vue'
   import { alertError, notify } from '@/composables/useAlerts'
+  import { useProgrammes } from '@/composables/useProgrammes'
   import DeleteDialog from '@/components/admin/DeleteDialog.vue'
   import EventTabs from '@/components/admin/EventTabs.vue'
   import SearchField from '@/components/admin/SearchField.vue'
@@ -35,8 +36,16 @@
   const { data: users } = await useFetch<Person[]>('/api/v1/user', {
     query: { scope: 'all' },
   })
+  const { nameOf } = await useProgrammes()
+  // people show their programme's name, whether they stored its code or, before codes, its name
   const people = computed(
-    () => new Map((users.value ?? []).map((person) => [person.uid, person])),
+    () =>
+      new Map(
+        (users.value ?? []).map((person) => [
+          person.uid,
+          { ...person, studyProgram: nameOf(person.studyProgram) || null },
+        ]),
+      ),
   )
   const roster = computed(() => rosterOf(event.value ?? {}, people.value))
   const attended = computed(

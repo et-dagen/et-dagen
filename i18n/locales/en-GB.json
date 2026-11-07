@@ -38,27 +38,6 @@
   "user": {
     "sign_in": "Sign in",
     "sign_out": "Sign out",
-    "register": {
-      "title": "Register user",
-      "full_name": "Full name",
-      "first_name": "First name",
-      "last_name": "Last name",
-      "email": "E-mail",
-      "password": "Password",
-      "password_confirmation": "Confirm password",
-      "study_program": "Study Programme",
-      "year": "Current year",
-      "user_type": {
-        "student": "Student user",
-        "company": "Company user"
-      },
-      "dietary_restrictions": {
-        "name": "Allergens and restrictions",
-        "other": "Other restrictions",
-        "norestrictions": "No, I have no dietary restrictions",
-        "restrictions": "Yes, I have allergies and/or restrictions"
-      }
-    },
     "resume": {
       "resume": "resume"
     },
@@ -150,7 +129,9 @@
       "off": "The camera is off",
       "done": "Attendance registered",
       "camera_denied": "Allow the browser to use the camera to scan.",
-      "camera_failed": "Found no camera to scan with."
+      "camera_failed": "Found no camera to scan with.",
+      "camera_insecure": "The camera works only on a secure page (https).",
+      "camera_busy": "Another app is using the camera. Close it and try again."
     }
   },
   "contact": {
@@ -275,35 +256,6 @@
           "not-found": "User not found",
           "doesnt-exists": "User doesn't exist",
           "missing-programme": "studyProgram missing"
-        }
-      }
-    },
-    "error": {
-      "default": "An error occurred",
-      "form": {
-        "missing_email": "Email input is missing",
-        "invalid": "Invalid form"
-      },
-      "event": {
-        "event_doesnt_exist": "Event doesn't exist",
-        "missing_event_id": "Missing event id",
-        "register": {
-          "requirements_not_met": "This event is limited to certain study programmes and years",
-          "event_is_full": "Event is full",
-          "already_registered": "You are already registered for this event",
-          "user_not_registered": "You are not registered for this event",
-          "registration_unnecessary": "Registration is not necessary for this event",
-          "non_admin_user": "This requires admin privileges",
-          "closed": "Registration is closed",
-          "end_time_before_start_time": "Events cannot end before they start"
-        }
-      },
-      "company": {
-        "edit": {
-          "created": "Creation failed",
-          "modified": "Modification failed",
-          "modified_logo": "Logo modification failed",
-          "deleted_logo": "Logo deletion failed"
         }
       }
     },
@@ -673,6 +625,8 @@
     "shell": {
       "navigation": "Admin panels",
       "back": "Back to etdagene.no",
+      "more": "More",
+      "close": "Close",
       "tag": {
         "admin": "ADMIN",
         "company": "COMPANY"
@@ -770,6 +724,48 @@
         "save": "Save",
         "created": "The board member is added.",
         "updated": "Your changes are saved."
+      }
+    },
+    "fair": {
+      "name": "The fair",
+      "dates": {
+        "title": "Dates",
+        "intro": "When the fair starts and ends, in Norwegian time. The front page shows the days.",
+        "start": "Starts",
+        "end": "Ends",
+        "save": "Save dates",
+        "saved": "The dates are saved."
+      },
+      "programmes": {
+        "title": "Study programmes",
+        "intro": "The programmes students choose from. A closed programme is not offered at sign-up, but the students who have it keep it.",
+        "add": "New programme",
+        "name": "Name",
+        "degree": "Degree",
+        "open": "Open to new students",
+        "closed": "Closed",
+        "save": "Save",
+        "cancel": "Cancel",
+        "edit": "Edit {name}",
+        "remove": "Delete {name}",
+        "added": "{name} is added.",
+        "updated": "{name} is saved.",
+        "removed": "{name} is deleted.",
+        "empty": "No programmes here.",
+        "filter": {
+          "label": "Show",
+          "all": "All",
+          "open": "Open",
+          "closed": "Closed"
+        },
+        "confirm": {
+          "title": "Delete the programme?",
+          "text": "This only works while no student has it. If it is no longer offered, close it instead.",
+          "action": "Delete"
+        },
+        "code": "Code",
+        "code_hint": "Unique, such as MTELSYS or BIDATA. It cannot be changed later, since students and events point at it.",
+        "code_kept": "The code stays. Students and events point at it, so they see the new name."
       }
     }
   },
@@ -976,6 +972,17 @@
       "weak-password": "The password needs at least 8 characters, with at least 3 letters and 3 digits.",
       "account-exists": "This address already has an account. Sign in to join.",
       "invalid-request": "Choose a company and enter a valid email address."
+    },
+    "programme": {
+      "not-found": "This programme was not found.",
+      "invalid-name": "Fill in a name of at most 120 characters.",
+      "invalid-degree": "Choose bachelor, master or integrated master.",
+      "in-use": "Students have this programme. Close it instead, so it is no longer offered at sign-up.",
+      "invalid-code": "Fill in a code: a letter, then letters and digits, 2 to 20 in all.",
+      "code-taken": "Another programme already has this code."
+    },
+    "fair": {
+      "invalid-dates": "Fill in when the fair starts and ends, with the end after the start."
     }
   },
   "form": {
@@ -1019,7 +1026,6 @@
       "where": "Where",
       "signup": "Sign-up",
       "places": "{taken} of {limit} places",
-      "map_title": "Map of {place}",
       "open_map": "Open map",
       "privacy": "The names of those signed up are not shown here.",
       "years": "Years",
@@ -1387,5 +1393,10 @@
         "text": "The account for this invitation is ready. Sign in to reach the company page."
       }
     }
+  },
+  "degree": {
+    "bachelor": "Bachelor",
+    "master": "Master",
+    "integrated": "Integrated master"
   }
 }
