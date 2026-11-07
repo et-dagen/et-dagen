@@ -20,5 +20,10 @@ export function memoryInvitationRepository(): InvitationRepository {
           .filter((i) => i.company === company)
           .sort((a, b) => b.createdAt.localeCompare(a.createdAt)),
       ),
+    all: () => Promise.resolve([...invitations.values()]),
+    remove: (ids) => {
+      for (const id of ids) invitations.delete(id)
+      return Promise.resolve()
+    },
   }
 }

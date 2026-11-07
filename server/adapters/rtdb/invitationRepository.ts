@@ -68,7 +68,9 @@ const all = (value: unknown) =>
  * The queries use `once`, which filters on the client when the rules have no `.indexOn` for
  * `tokenHash` and `company`; `get` would refuse. Adding both to the rules makes them indexed.
  */
-export function rtdbInvitationRepository(db: Database): InvitationRepository {
+export function rtdbInvitationRepository(
+  db: Pick<Database, 'ref'>,
+): InvitationRepository {
   const invitations = () => db.ref('invitations')
   return {
     save: async (invitation) => {
@@ -93,6 +95,13 @@ export function rtdbInvitationRepository(db: Database): InvitationRepository {
         .once('value')
       return all(snapshot.val()).sort((a, b) =>
         b.createdAt.localeCompare(a.createdAt),
+      )
+    },
+    all: async () => all((await invitations().once('value')).val()),
+    remove: async (ids) => {
+      if (ids.length === 0) return
+      await invitations().update(
+        Object.fromEntries(ids.map((id) => [id, null])),
       )
     },
   }

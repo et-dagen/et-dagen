@@ -2,6 +2,12 @@ import { describe, expect, it } from 'vitest'
 import type { StoredEvent } from '@/application/events/eventRepository'
 import { eraseUsers } from '@/application/users/erasure'
 import { CompanyUid } from '@/domain/business/company'
+import {
+  InvitationId,
+  type Invitation,
+  type TokenHash,
+} from '@/domain/business/invitation'
+import { EmailAddress } from '@/domain/email'
 import { EventUid } from '@/domain/event/event'
 import { Duration } from '@/domain/time/duration'
 import { Instant } from '@/domain/time/instant'
@@ -9,6 +15,7 @@ import { FileId, type StoredFile } from '@/domain/files/file'
 import { UserUid } from '@/domain/user'
 import { memoryEventRepository } from '@/server/adapters/memory/eventRepository'
 import { memoryFileRepository } from '@/server/adapters/memory/fileRepository'
+import { memoryInvitationRepository } from '@/server/adapters/memory/invitationRepository'
 import { memoryUserStore } from '@/server/adapters/memory/userStore'
 
 const now = Instant.parse('2026-08-05T10:00:00.000Z')
@@ -36,6 +43,7 @@ function setup() {
       file('logo', { kind: 'company', uid: CompanyUid.parse('company') }, gone),
     ]),
     events: memoryEventRepository([workshop]),
+    invitations: memoryInvitationRepository(),
     profiles: memoryUserStore([gone, kept]),
     accounts: memoryUserStore([gone, kept]),
   }
@@ -105,5 +113,28 @@ describe('eraseUsers', () => {
     await eraseUsers(ports, [gone], now)
     expect(ports.accounts.has(gone)).toBe(false)
     expect(profiles.has(gone)).toBe(false)
+  })
+
+  it('removes the invitations they joined by, and keeps the ones others joined by', async () => {
+    const ports = setup()
+    const joinedBy = (uid: UserUid): Invitation => ({
+      id: InvitationId.random(),
+      company: CompanyUid.parse('company'),
+      email: EmailAddress.parse(`${uid}@company.no`),
+      tokenHash: `hash-${uid}` as TokenHash,
+      invitedBy: UserUid.parse('admin'),
+      createdAt: now,
+      expiresAt: now,
+      revokedAt: null,
+      redeemed: { by: uid, at: now },
+    })
+    const theirs = joinedBy(gone)
+    const others = joinedBy(kept)
+    await ports.invitations.save(theirs)
+    await ports.invitations.save(others)
+
+    await eraseUsers(ports, [gone], now)
+
+    expect(await ports.invitations.all()).toEqual([others])
   })
 })

@@ -15,4 +15,8 @@ export interface InvitationRepository {
   byToken(hash: TokenHash): Promise<Invitation | null>
   /** The company's invitations, newest first */
   forCompany(company: CompanyUid): Promise<Invitation[]>
+  /** Every invitation, in no set order */
+  all(): Promise<Invitation[]>
+  /** Delete these invitations; ids that do not exist are ignored */
+  remove(ids: readonly InvitationId[]): Promise<void>
 }

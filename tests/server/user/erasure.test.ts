@@ -58,6 +58,19 @@ function fakeDatabase(tree: Tree) {
 const now = Instant.parse('2026-10-22T12:00:00.000Z')
 const RESUME = '0b0c4f5e-8d1a-4c2b-9e3f-1a2b3c4d5e6f'
 const LOGO = '1c1d5a6f-9e2b-4d3c-8f4a-2b3c4d5e6f70'
+const JOINED = '2d2e6b7a-af3c-4e4d-9a5b-3c4d5e6f7081'
+const OTHER = '3e3f7c8b-b04d-4f5e-8b6c-4d5e6f708192'
+
+const invitation = (redeemedBy: string) => ({
+  company: 'company',
+  email: `${redeemedBy}@company.no`,
+  tokenHash: `hash-${redeemedBy}`,
+  invitedBy: 'admin',
+  createdAt: '2026-10-01T10:00:00.000Z',
+  expiresAt: '2026-10-15T10:00:00.000Z',
+  redeemedBy,
+  redeemedAt: '2026-10-02T10:00:00.000Z',
+})
 
 function setup() {
   const record = (ownerKey: string, kind: string) => ({
@@ -71,6 +84,10 @@ function setup() {
   })
   const db = fakeDatabase({
     users: { gone: { name: 'Gone' }, kept: { name: 'Kept' } },
+    invitations: {
+      [JOINED]: invitation('gone'),
+      [OTHER]: invitation('kept'),
+    },
     files: {
       [RESUME]: record('user:gone', 'resume'),
       [LOGO]: record('company:company', 'logo'),
@@ -110,7 +127,7 @@ function setup() {
 }
 
 describe('eraseUsers', () => {
-  it('deletes the résumé files and their records, the profile and the account', async () => {
+  it('deletes their files, records, invitation joined by, profile and account', async () => {
     const { db, files, auth } = setup()
     await eraseUsers(
       { db: db as never, files, auth: auth as never },
@@ -122,6 +139,7 @@ describe('eraseUsers', () => {
     expect(Object.keys(db.tree.files as Tree)).toEqual([LOGO])
     expect(((db.tree.files as Tree)[LOGO] as Tree).uploader).toBeUndefined()
     expect(db.tree.users).toEqual({ kept: { name: 'Kept' } })
+    expect(Object.keys(db.tree.invitations as Tree)).toEqual([OTHER])
     expect(auth.deleteUsers).toHaveBeenCalledWith(['gone'])
   })
 

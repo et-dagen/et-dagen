@@ -113,6 +113,7 @@ export default defineNuxtConfig({
     // Times are the server's, UTC in production
     scheduledTasks: {
       '0 3 * * *': ['users:retention'],
+      '30 3 * * *': ['invitations:prune'],
       // 1 June, a few months after the fair; see nextFairFrom in domain/authorization/affiliation
       '0 4 1 6 *': ['companies:tier-reset'],
     },
