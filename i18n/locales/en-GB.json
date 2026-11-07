@@ -1227,5 +1227,10 @@
         "text": "The account for this invitation is ready. Sign in to reach the company page."
       }
     }
+  },
+  "degree": {
+    "bachelor": "Bachelor",
+    "master": "Master",
+    "integrated": "Integrated master"
   }
 }

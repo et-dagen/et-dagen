@@ -1,6 +1,7 @@
 <script setup lang="ts">
   import { FileText, Lock } from '@lucide/vue'
   import { useAuthStore } from '@/stores/authStore'
+  import { useProgrammes } from '@/composables/useProgrammes'
   import FilterChips from '@/components/admin/FilterChips.vue'
   import Pager from '@/components/admin/Pager.vue'
   import SearchField from '@/components/admin/SearchField.vue'
@@ -31,7 +32,14 @@
     immediate: hasAccess.value,
   })
 
-  const listed = computed(() => people.value ?? [])
+  const { nameOf } = await useProgrammes()
+  // the programme's name, whether the profile stored its code or, before codes, its name
+  const listed = computed(() =>
+    (people.value ?? []).map((person) => ({
+      ...person,
+      studyProgram: nameOf(person.studyProgram) || null,
+    })),
+  )
   const query = ref('')
   const year = ref<Year>('all')
   const page = ref(1)
