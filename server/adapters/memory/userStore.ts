@@ -20,6 +20,14 @@ export function memoryUserStore(
   const users = new Set(uids)
   return {
     exists: (uid) => Promise.resolve(users.has(uid)),
+    contacts: (asked) =>
+      Promise.resolve(
+        new Map(
+          asked
+            .filter((uid) => users.has(uid))
+            .map((uid) => [uid, { name: null, email: null }]),
+        ),
+      ),
     find: (uid) =>
       Promise.resolve((users.has(uid) && profiles.get(uid)) || null),
     remove: (removed) => {
