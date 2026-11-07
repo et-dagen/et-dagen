@@ -9,6 +9,7 @@ describe('ProgrammeCode.tryParse', () => {
   it('reads a code in capitals', () => {
     expect(ProgrammeCode.tryParse(' mtel ')).toBe('MTEL')
     expect(ProgrammeCode.tryParse('BIELEKTRO2')).toBe('BIELEKTRO2')
+    expect(ProgrammeCode.tryParse('mtiøt')).toBe('MTIØT')
   })
 
   it('refuses codes that do not start with a letter, are too short or carry other signs', () => {

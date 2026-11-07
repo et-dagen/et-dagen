@@ -1,7 +1,7 @@
 import type { Brand } from '@/domain/brand'
 
 /**
- * A study programme's code, such as `MTEL` or `BIELEKTRO`: unique, and the programme's key
+ * A study programme's code, as NTNU gives it (`MTELSYS`, `MTIØT`): unique, and the programme's key
  *
  * @remarks
  * Names may repeat (a bachelor and a master can share one), so students and events point at a
@@ -11,7 +11,7 @@ import type { Brand } from '@/domain/brand'
  */
 export type ProgrammeCode = Brand<string, 'ProgrammeCode'>
 
-const CODE = /^[A-Z][A-Z0-9]{1,19}$/
+const CODE = /^[A-ZÆØÅ][A-ZÆØÅ0-9]{1,19}$/
 
 export const ProgrammeCode = {
   /** A stored key; @throws RangeError when it is empty */
@@ -19,7 +19,7 @@ export const ProgrammeCode = {
     if (value.length === 0) throw new RangeError('Programme code is empty')
     return value as ProgrammeCode
   },
-  /** A new code: a letter, then letters and digits, 2 to 20 in all; read in capitals */
+  /** A new code: a letter, then letters (Æ, Ø and Å too) and digits, 2 to 20 in all; read in capitals */
   tryParse: (value: string): ProgrammeCode | null => {
     const code = value.trim().toUpperCase()
     return CODE.test(code) ? (code as ProgrammeCode) : null
