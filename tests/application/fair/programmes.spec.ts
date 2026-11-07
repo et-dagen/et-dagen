@@ -9,7 +9,7 @@ import {
 import type { Subject } from '@/domain/authorization/subject'
 import { AppError } from '@/domain/errors'
 import { WallClock } from '@/domain/fair/dates'
-import { ProgrammeId, type Programme } from '@/domain/fair/programme'
+import { ProgrammeCode, type Programme } from '@/domain/fair/programme'
 import { Instant } from '@/domain/time'
 import { UserUid, type Role } from '@/domain/user'
 import { memoryFairInfoRepository } from '@/server/adapters/memory/fairInfoRepository'
@@ -25,19 +25,18 @@ const admin = subject('admin')
 const now = Instant.parse('2026-11-07T10:00:00.000Z')
 
 const mtel: Programme = {
-  id: ProgrammeId.parse('0'),
-  name: 'MTEL',
+  code: ProgrammeCode.parse('MTEL'),
+  name: 'Elektronikk',
   degree: 'integrated',
   open: true,
 }
 const bel: Programme = {
-  id: ProgrammeId.parse('1'),
-  name: 'Elektroingeniør',
+  code: ProgrammeCode.parse('BELEKTRONIKK'),
+  name: 'Elektronikk',
   degree: 'bachelor',
   open: true,
 }
-const setup = () =>
-  memoryProgrammeRepository([mtel, bel], { ada: 'MTEL', bo: 'Elektroingeniør' })
+const setup = () => memoryProgrammeRepository([mtel, bel], { ada: 'MTEL' })
 
 const codeOf = (promise: Promise<unknown>) =>
   promise.then(
@@ -46,44 +45,51 @@ const codeOf = (promise: Promise<unknown>) =>
   )
 
 describe('listProgrammes', () => {
-  it('lists every programme by name', async () => {
+  it('lists every programme by name, then code', async () => {
     const programmes = setup()
     expect(
-      (await listProgrammes({ programmes })).map((programme) => programme.name),
-    ).toEqual(['Elektroingeniør', 'MTEL'])
+      (await listProgrammes({ programmes })).map((programme) => programme.code),
+    ).toEqual(['BELEKTRONIKK', 'MTEL'])
   })
 })
 
 describe('addProgramme', () => {
-  it('adds a programme with a new id', async () => {
+  const kyb: Programme = {
+    code: ProgrammeCode.parse('MTTK'),
+    name: 'Kybernetikk',
+    degree: 'master',
+    open: true,
+  }
+
+  it('adds a programme, even with a name another one has', async () => {
     const programmes = setup()
-    const input = { name: 'Kybernetikk', degree: 'master', open: true } as const
-
-    const added = await addProgramme(
-      { programmes },
-      { subject: admin, now, input },
-    )
-
-    expect(added).toMatchObject(input)
-    expect(await programmes.find(added.id)).toEqual(added)
-  })
-
-  it('refuses a name another programme has, whatever its case', async () => {
-    const input = { name: 'mtel', degree: 'master', open: true } as const
+    const twin = { ...kyb, name: 'Elektronikk' }
     expect(
-      await codeOf(
-        addProgramme({ programmes: setup() }, { subject: admin, now, input }),
+      await addProgramme(
+        { programmes },
+        { subject: admin, now, programme: twin },
       ),
-    ).toBe('programme/name-taken')
+    ).toEqual(twin)
+    expect(await programmes.find(twin.code)).toEqual(twin)
   })
 
-  it('refuses anyone but an admin', async () => {
-    const input = { name: 'Kybernetikk', degree: 'master', open: true } as const
+  it('refuses a code another programme has', async () => {
     expect(
       await codeOf(
         addProgramme(
           { programmes: setup() },
-          { subject: subject('coordinator'), now, input },
+          { subject: admin, now, programme: { ...kyb, code: mtel.code } },
+        ),
+      ),
+    ).toBe('programme/code-taken')
+  })
+
+  it('refuses anyone but an admin', async () => {
+    expect(
+      await codeOf(
+        addProgramme(
+          { programmes: setup() },
+          { subject: subject('coordinator'), now, programme: kyb },
         ),
       ),
     ).toBe('auth/forbidden')
@@ -91,48 +97,37 @@ describe('addProgramme', () => {
 })
 
 describe('updateProgramme', () => {
-  it('closes a programme without touching its students', async () => {
+  it('renames and closes a programme, keeping its code', async () => {
     const programmes = setup()
-    const result = await updateProgramme(
-      { programmes },
-      { subject: admin, now, id: mtel.id, input: { ...mtel, open: false } },
-    )
-    expect(result).toEqual({ programme: { ...mtel, open: false }, moved: 0 })
-    expect(programmes.programmeOf('ada')).toBe('MTEL')
-  })
-
-  it('moves the students along when the name changes', async () => {
-    const programmes = setup()
-    const input = {
-      name: 'Elektronikk',
+    const details = {
+      name: 'Elektronisk systemdesign',
       degree: 'integrated',
-      open: true,
+      open: false,
     } as const
 
-    const { moved } = await updateProgramme(
-      { programmes },
-      { subject: admin, now, id: mtel.id, input },
-    )
-
-    expect(moved).toBe(1)
-    expect(programmes.programmeOf('ada')).toBe('Elektronikk')
+    expect(
+      await updateProgramme(
+        { programmes },
+        { subject: admin, now, code: mtel.code, details },
+      ),
+    ).toEqual({ code: mtel.code, ...details })
+    expect(await programmes.find(mtel.code)).toEqual({
+      code: mtel.code,
+      ...details,
+    })
   })
 
-  it("refuses another programme's name and an unknown id", async () => {
-    const programmes = setup()
+  it('refuses an unknown code', async () => {
     expect(
       await codeOf(
         updateProgramme(
-          { programmes },
-          { subject: admin, now, id: mtel.id, input: { ...bel } },
-        ),
-      ),
-    ).toBe('programme/name-taken')
-    expect(
-      await codeOf(
-        updateProgramme(
-          { programmes },
-          { subject: admin, now, id: ProgrammeId.parse('9'), input: mtel },
+          { programmes: setup() },
+          {
+            subject: admin,
+            now,
+            code: ProgrammeCode.parse('NOPE'),
+            details: mtel,
+          },
         ),
       ),
     ).toBe('programme/not-found')
@@ -141,9 +136,12 @@ describe('updateProgramme', () => {
 
 describe('removeProgramme', () => {
   it('deletes a programme no student has', async () => {
-    const programmes = memoryProgrammeRepository([mtel])
-    await removeProgramme({ programmes }, { subject: admin, now, id: mtel.id })
-    expect(await programmes.all()).toEqual([])
+    const programmes = setup()
+    await removeProgramme(
+      { programmes },
+      { subject: admin, now, code: bel.code },
+    )
+    expect(await programmes.find(bel.code)).toBeNull()
   })
 
   it('refuses while a student has it', async () => {
@@ -151,7 +149,7 @@ describe('removeProgramme', () => {
       await codeOf(
         removeProgramme(
           { programmes: setup() },
-          { subject: admin, now, id: mtel.id },
+          { subject: admin, now, code: mtel.code },
         ),
       ),
     ).toBe('programme/in-use')

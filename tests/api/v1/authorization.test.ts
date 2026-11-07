@@ -13,7 +13,7 @@ const member = {
   email: 'ada@et-dagen.no',
 }
 
-const programme = { name: 'MTEL', degree: 'integrated' }
+const programme = { code: 'MTEL', name: 'Elektronikk', degree: 'integrated' }
 const dates = { start: '2027-02-09T11:00', end: '2027-02-10T10:00' }
 
 // each with a valid body, so the refusal is about who asks

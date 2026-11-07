@@ -931,8 +931,9 @@
       "not-found": "This programme was not found.",
       "invalid-name": "Fill in a name of at most 120 characters.",
       "invalid-degree": "Choose bachelor, master or integrated master.",
-      "name-taken": "Another programme already has this name.",
-      "in-use": "Students have this programme. Close it instead, so it is no longer offered at sign-up."
+      "in-use": "Students have this programme. Close it instead, so it is no longer offered at sign-up.",
+      "invalid-code": "Fill in a code: a letter, then letters and digits, 2 to 20 in all.",
+      "code-taken": "Another programme already has this code."
     },
     "fair": {
       "invalid-dates": "Fill in when the fair starts and ends, with the end after the start."

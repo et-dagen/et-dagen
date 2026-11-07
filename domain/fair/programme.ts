@@ -1,22 +1,29 @@
 import type { Brand } from '@/domain/brand'
-import { UUIDv4 } from '@/domain/uuid'
 
 /**
- * Identifies a study programme in the list
+ * A study programme's code, such as `MTEL` or `BIELEKTRO`: unique, and the programme's key
  *
  * @remarks
- * Programmes stored before the admin page have the keys "0", "1", ...; new ones get a random UUID.
- * Students store the programme's name, not this id.
+ * Names may repeat (a bachelor and a master can share one), so students and events point at a
+ * programme by its code. Codes do not change. Programmes stored before codes have the keys "0",
+ * "1", ... until they are given codes, so `parse` takes any stored key; new codes go through
+ * {@link ProgrammeCode.tryParse}.
  */
-export type ProgrammeId = Brand<string, 'ProgrammeId'>
+export type ProgrammeCode = Brand<string, 'ProgrammeCode'>
 
-export const ProgrammeId = {
-  /** @throws RangeError when the value is empty */
-  parse: (value: string): ProgrammeId => {
-    if (value.length === 0) throw new RangeError('Programme id is empty')
-    return value as ProgrammeId
+const CODE = /^[A-Z][A-Z0-9]{1,19}$/
+
+export const ProgrammeCode = {
+  /** A stored key; @throws RangeError when it is empty */
+  parse: (value: string): ProgrammeCode => {
+    if (value.length === 0) throw new RangeError('Programme code is empty')
+    return value as ProgrammeCode
   },
-  random: (): ProgrammeId => UUIDv4.random() as string as ProgrammeId,
+  /** A new code: a letter, then letters and digits, 2 to 20 in all; read in capitals */
+  tryParse: (value: string): ProgrammeCode | null => {
+    const code = value.trim().toUpperCase()
+    return CODE.test(code) ? (code as ProgrammeCode) : null
+  },
 }
 
 /**
@@ -31,7 +38,7 @@ export type Degree = (typeof DEGREES)[number]
 
 /** A study programme students choose from */
 export interface Programme {
-  id: ProgrammeId
+  code: ProgrammeCode
   name: string
   degree: Degree
   /**
@@ -44,19 +51,20 @@ export interface Programme {
   open: boolean
 }
 
-/** What an admin fills in for a programme */
-export type ProgrammeInput = Omit<Programme, 'id'>
+/** What an admin may change about a programme; the code stays */
+export type ProgrammeDetails = Omit<Programme, 'code'>
 
 export type ProgrammeInputProblem =
+  | 'programme/invalid-code'
   | 'programme/invalid-name'
   | 'programme/invalid-degree'
 
 const MAX_NAME = 120
 
 /** A programme's details from a request, or the first problem with them */
-export function checkedProgrammeInput(
+export function checkedProgrammeDetails(
   raw: unknown,
-): ProgrammeInput | { problem: ProgrammeInputProblem } {
+): ProgrammeDetails | { problem: ProgrammeInputProblem } {
   const body = (raw ?? {}) as Record<string, unknown>
   const name =
     typeof body.name === 'string' ? body.name.trim().replace(/\s+/g, ' ') : ''
@@ -69,6 +77,14 @@ export function checkedProgrammeInput(
   return { name, degree: body.degree as Degree, open: body.open !== false }
 }
 
-/** Whether two names would read as the same programme in a list */
-export const sameName = (a: string, b: string) =>
-  a.localeCompare(b, 'nb', { sensitivity: 'base' }) === 0
+/** A new programme from a request: a code and its details, or the first problem */
+export function checkedNewProgramme(
+  raw: unknown,
+): Programme | { problem: ProgrammeInputProblem } {
+  const body = (raw ?? {}) as Record<string, unknown>
+  const code =
+    typeof body.code === 'string' ? ProgrammeCode.tryParse(body.code) : null
+  if (!code) return { problem: 'programme/invalid-code' }
+  const details = checkedProgrammeDetails(raw)
+  return 'problem' in details ? details : { code, ...details }
+}

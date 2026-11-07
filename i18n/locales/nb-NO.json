@@ -931,8 +931,9 @@
       "not-found": "Fant ikke studieprogrammet.",
       "invalid-name": "Fyll inn et navn på høyst 120 tegn.",
       "invalid-degree": "Velg bachelor, master eller integrert master.",
-      "name-taken": "Et annet studieprogram har allerede dette navnet.",
-      "in-use": "Studenter har dette studieprogrammet. Steng det i stedet, så tilbys det ikke lenger ved registrering."
+      "in-use": "Studenter har dette studieprogrammet. Steng det i stedet, så tilbys det ikke lenger ved registrering.",
+      "invalid-code": "Fyll inn en kode: en bokstav, så bokstaver og tall, 2 til 20 i alt.",
+      "code-taken": "Et annet studieprogram har allerede denne koden."
     },
     "fair": {
       "invalid-dates": "Fyll inn når messen starter og slutter, med slutten etter starten."

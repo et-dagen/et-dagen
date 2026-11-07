@@ -1,41 +1,30 @@
 import type { ProgrammeRepository } from '@/application/fair/programmeRepository'
 import type { Programme } from '@/domain/fair/programme'
 
-/**
- * Programmes in a map, and each student's programme by uid, for tests
- *
- * @remarks
- * `programmeOf` is not part of the port; tests use it to see where a rename moved a student.
- */
+/** Programmes in a map, and what each student stored as their programme, for tests */
 export function memoryProgrammeRepository(
   seed: readonly Programme[] = [],
   students: Readonly<Record<string, string>> = {},
-): ProgrammeRepository & { programmeOf(uid: string): string | undefined } {
-  const programmes = new Map(seed.map((programme) => [programme.id, programme]))
-  const chosen = new Map(Object.entries(students))
-  const on = (name: string) =>
-    [...chosen]
-      .filter(([, programme]) => programme === name)
-      .map(([uid]) => uid)
-
+): ProgrammeRepository {
+  const programmes = new Map(
+    seed.map((programme) => [programme.code, programme]),
+  )
   return {
     all: () => Promise.resolve([...programmes.values()]),
-    find: (id) => Promise.resolve(programmes.get(id) ?? null),
+    find: (code) => Promise.resolve(programmes.get(code) ?? null),
     save: (programme) => {
-      programmes.set(programme.id, programme)
+      programmes.set(programme.code, programme)
       return Promise.resolve()
     },
-    rename: (programme, from) => {
-      const moving = on(from)
-      programmes.set(programme.id, programme)
-      for (const uid of moving) chosen.set(uid, programme.name)
-      return Promise.resolve(moving.length)
-    },
-    students: (name) => Promise.resolve(on(name).length),
-    remove: (id) => {
-      programmes.delete(id)
+    students: ({ code, name }) =>
+      Promise.resolve(
+        Object.values(students).filter(
+          (chosen) => chosen === code || chosen === name,
+        ).length,
+      ),
+    remove: (code) => {
+      programmes.delete(code)
       return Promise.resolve()
     },
-    programmeOf: (uid) => chosen.get(uid),
   }
 }

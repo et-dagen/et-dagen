@@ -13,64 +13,71 @@ import {
 beforeEach(resetEmulators)
 
 describe('study programmes', () => {
-  it('adds, renames, closes and deletes a programme', async () => {
+  it('adds, renames, closes and deletes a programme by code', async () => {
     const admin = await createUser({ userType: 'admin' })
-    const student = await createUser({
+    await createUser({
       userType: 'student',
       studyProgram: 'MTEL',
       currentYear: 3,
     })
-    await seed('studyProgrammes', { 0: { name: 'MTEL', type: 'integrated' } })
+    await seed('studyProgrammes', {
+      MTEL: { name: 'Elektronikk', type: 'integrated' },
+    })
 
     const added = await api('/api/v1/programme', {
       method: 'POST',
-      body: { name: 'Kybernetikk', degree: 'master' },
+      body: { code: 'belektronikk', name: 'Elektronikk', degree: 'bachelor' },
       token: admin.token,
     })
     expect(added).toMatchObject({
       status: 201,
-      body: { name: 'Kybernetikk', degree: 'master', open: true },
+      body: { code: 'BELEKTRONIKK', name: 'Elektronikk', open: true },
     })
 
-    const renamed = await api('/api/v1/programme/0', {
-      method: 'PUT',
-      body: { name: 'Elektronikk', degree: 'integrated', open: false },
-      token: admin.token,
-    })
-    expect(renamed).toMatchObject({ status: 200, body: { moved: 1 } })
-    expect(await read(`users/${student.uid}/studyProgram`)).toBe('Elektronikk')
-    expect(await read('studyProgrammes/0')).toEqual({
-      name: 'Elektronikk',
+    expect(
+      await api('/api/v1/programme/MTEL', {
+        method: 'PUT',
+        body: {
+          name: 'Elektronisk systemdesign',
+          degree: 'integrated',
+          open: false,
+        },
+        token: admin.token,
+      }),
+    ).toMatchObject({ status: 200, body: { code: 'MTEL', open: false } })
+    expect(await read('studyProgrammes/MTEL')).toEqual({
+      name: 'Elektronisk systemdesign',
       type: 'integrated',
       closed: true,
     })
 
-    const id = (added.body as { id: string }).id
     expect(
-      await api(`/api/v1/programme/${id}`, {
+      await api('/api/v1/programme/BELEKTRONIKK', {
         method: 'DELETE',
         token: admin.token,
       }),
     ).toMatchObject({ status: 204 })
     expect(
-      await api('/api/v1/programme/0', {
+      await api('/api/v1/programme/MTEL', {
         method: 'DELETE',
         token: admin.token,
       }),
     ).toMatchObject({ status: 409, body: { code: 'programme/in-use' } })
   })
 
-  it('refuses a name that is taken', async () => {
+  it('refuses a code that is taken', async () => {
     const admin = await createUser({ userType: 'admin' })
-    await seed('studyProgrammes', { 0: { name: 'MTEL', type: 'integrated' } })
+    await seed('studyProgrammes', {
+      MTEL: { name: 'Elektronikk', type: 'integrated' },
+    })
 
     expect(
       await api('/api/v1/programme', {
         method: 'POST',
-        body: { name: 'mtel', degree: 'master' },
+        body: { code: 'mtel', name: 'Noe annet', degree: 'master' },
         token: admin.token,
       }),
-    ).toMatchObject({ status: 409, body: { code: 'programme/name-taken' } })
+    ).toMatchObject({ status: 409, body: { code: 'programme/code-taken' } })
   })
 })
 

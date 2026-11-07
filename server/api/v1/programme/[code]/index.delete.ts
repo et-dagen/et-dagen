@@ -1,11 +1,11 @@
-// DELETE /api/v1/programme/:id
+// DELETE /api/v1/programme/:code
 // endpoint for deleting a study programme no student has
 import { defineEventHandler, sendNoContent } from 'h3'
 import { defineRouteMeta } from 'nitropack/runtime'
 import { removeProgramme } from '@/application/fair/programmes'
 import { Instant } from '@/domain/time'
 import { programmes } from '@/server/composition'
-import { programmeIdOf } from '@/server/fair/programmeId'
+import { programmeCodeOf } from '@/server/fair/programmeCode'
 import { setResourceContext } from '@/server/utils/wideEventHelpers'
 
 defineRouteMeta({
@@ -21,9 +21,9 @@ defineRouteMeta({
 
 export default defineEventHandler(async (event) => {
   const { subject } = event.context
-  const id = programmeIdOf(event)
-  setResourceContext(event, 'programme', id, 'delete', 'Delete a programme')
+  const code = programmeCodeOf(event)
+  setResourceContext(event, 'programme', code, 'delete', 'Delete a programme')
 
-  await removeProgramme({ programmes }, { subject, now: Instant.now(), id })
+  await removeProgramme({ programmes }, { subject, now: Instant.now(), code })
   return sendNoContent(event)
 })

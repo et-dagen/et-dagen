@@ -2,27 +2,22 @@
  * What every {@link ProgrammeRepository} adapter must do
  *
  * An adapter's test file calls {@link describeProgrammeRepository} with a factory that seeds the
- * given programmes and students, and a probe that reads a student's programme back, since the
- * port itself cannot.
+ * given programmes, and what each student stored as their programme.
  */
 import { describe, expect, it } from 'vitest'
 import type { ProgrammeRepository } from '@/application/fair/programmeRepository'
-import { ProgrammeId, type Programme } from '@/domain/fair/programme'
-
-export interface SeededProgrammes {
-  programmes: ProgrammeRepository
-  programmeOf(uid: string): Promise<string | undefined>
-}
+import { ProgrammeCode, type Programme } from '@/domain/fair/programme'
 
 const mtel: Programme = {
-  id: ProgrammeId.parse('0'),
-  name: 'MTEL',
+  code: ProgrammeCode.parse('MTEL'),
+  name: 'Elektronikk',
   degree: 'integrated',
   open: true,
 }
+// a bachelor may share a master's name
 const bel: Programme = {
-  id: ProgrammeId.parse('1'),
-  name: 'Elektroingeniør',
+  code: ProgrammeCode.parse('BELEKTRONIKK'),
+  name: 'Elektronikk',
   degree: 'bachelor',
   open: true,
 }
@@ -32,54 +27,38 @@ export function describeProgrammeRepository(
   make: (
     seed: readonly Programme[],
     students: Record<string, string>,
-  ) => Promise<SeededProgrammes> | SeededProgrammes,
+  ) => Promise<ProgrammeRepository> | ProgrammeRepository,
 ) {
   describe(`${adapter} ProgrammeRepository`, () => {
-    it('saves, finds, lists and removes programmes', async () => {
-      const { programmes } = await make([mtel], {})
-      const added = { ...bel, id: ProgrammeId.random() }
+    it('saves, finds, lists and removes programmes by code', async () => {
+      const programmes = await make([mtel], {})
 
-      await programmes.save(added)
+      await programmes.save(bel)
       await programmes.save({ ...mtel, open: false })
 
-      expect(await programmes.find(added.id)).toEqual(added)
-      expect(await programmes.find(mtel.id)).toEqual({ ...mtel, open: false })
+      expect(await programmes.find(bel.code)).toEqual(bel)
+      expect(await programmes.find(mtel.code)).toEqual({ ...mtel, open: false })
       expect(await programmes.all()).toHaveLength(2)
 
-      await programmes.remove(added.id)
-      await programmes.remove(added.id)
-      expect(await programmes.find(added.id)).toBeNull()
+      await programmes.remove(bel.code)
+      await programmes.remove(bel.code)
+      expect(await programmes.find(bel.code)).toBeNull()
     })
 
-    it('renames a programme and moves its students, leaving the others', async () => {
-      const { programmes, programmeOf } = await make([mtel, bel], {
+    it("counts students by the programme's code, and by its name from before codes", async () => {
+      const programmes = await make([mtel], {
         ada: 'MTEL',
-        bo: 'MTEL',
-        cy: 'Elektroingeniør',
+        bo: 'Elektronikk',
+        cy: 'BIELEKTRO',
       })
-
-      const moved = await programmes.rename(
-        { ...mtel, name: 'Elektronisk systemdesign og innovasjon' },
-        'MTEL',
-      )
-
-      expect(moved).toBe(2)
-      expect(await programmeOf('ada')).toBe(
-        'Elektronisk systemdesign og innovasjon',
-      )
-      expect(await programmeOf('cy')).toBe('Elektroingeniør')
-      expect((await programmes.find(mtel.id))?.name).toBe(
-        'Elektronisk systemdesign og innovasjon',
-      )
-    })
-
-    it('counts the students on a programme by name', async () => {
-      const { programmes } = await make([mtel, bel], {
-        ada: 'MTEL',
-        bo: 'MTEL',
-      })
-      expect(await programmes.students('MTEL')).toBe(2)
-      expect(await programmes.students('Elektroingeniør')).toBe(0)
+      expect(await programmes.students(mtel)).toBe(2)
+      expect(
+        await programmes.students({
+          ...mtel,
+          code: ProgrammeCode.parse('X1'),
+          name: 'Y',
+        }),
+      ).toBe(0)
     })
   })
 }

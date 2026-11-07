@@ -1,21 +1,20 @@
-import type { Programme, ProgrammeId } from '@/domain/fair/programme'
+import type { Programme, ProgrammeCode } from '@/domain/fair/programme'
 
 /** The study programmes students choose from */
 export interface ProgrammeRepository {
   /** Every programme, open or closed */
   all(): Promise<Programme[]>
-  /** null when no programme has this id */
-  find(id: ProgrammeId): Promise<Programme | null>
-  /** Add the programme, or replace the one with its id */
+  /** null when no programme has this code */
+  find(code: ProgrammeCode): Promise<Programme | null>
+  /** Add the programme, or replace the one with its code */
   save(programme: Programme): Promise<void>
   /**
-   * Save the programme under its new name and move every student on the old name to it, at once
+   * How many students have the programme
    *
-   * @returns how many students moved
+   * @remarks
+   * Counts students who stored its code, and those who stored its name before codes.
    */
-  rename(programme: Programme, from: string): Promise<number>
-  /** How many students have the programme, by name */
-  students(name: string): Promise<number>
+  students(programme: Programme): Promise<number>
   /** Removing a programme that does not exist is not an error */
-  remove(id: ProgrammeId): Promise<void>
+  remove(code: ProgrammeCode): Promise<void>
 }

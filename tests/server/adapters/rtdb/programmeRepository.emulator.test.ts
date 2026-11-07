@@ -30,8 +30,8 @@ describe.skipIf(!host)('Realtime Database emulator', () => {
       .ref('studyProgrammes')
       .set(
         Object.fromEntries(
-          seed.map(({ id, name, degree, open }) => [
-            id,
+          seed.map(({ code, name, degree, open }) => [
+            code,
             { name, type: degree, ...(!open && { closed: true }) },
           ]),
         ),
@@ -46,12 +46,7 @@ describe.skipIf(!host)('Realtime Database emulator', () => {
           ]),
         ),
       )
-    return {
-      programmes: rtdbProgrammeRepository(db),
-      programmeOf: async (uid) =>
-        (await db.ref(`users/${uid}/studyProgram`).once('value')).val() ??
-        undefined,
-    }
+    return rtdbProgrammeRepository(db)
   })
 
   it('reads bare names and unknown types as programmes offering every year', async () => {
