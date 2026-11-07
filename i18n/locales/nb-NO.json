@@ -760,7 +760,7 @@
           "action": "Slett"
         },
         "code": "Kode",
-        "code_hint": "Unik, for eksempel MTEL eller BIELEKTRO. Den kan ikke endres senere, fordi studenter og arrangementer peker på den.",
+        "code_hint": "Unik, for eksempel MTELSYS eller BIDATA. Den kan ikke endres senere, fordi studenter og arrangementer peker på den.",
         "code_kept": "Koden står fast. Studenter og arrangementer peker på den, så de ser det nye navnet."
       }
     }

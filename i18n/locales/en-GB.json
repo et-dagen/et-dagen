@@ -760,7 +760,7 @@
           "action": "Delete"
         },
         "code": "Code",
-        "code_hint": "Unique, such as MTEL or BIELEKTRO. It cannot be changed later, since students and events point at it.",
+        "code_hint": "Unique, such as MTELSYS or BIDATA. It cannot be changed later, since students and events point at it.",
         "code_kept": "The code stays. Students and events point at it, so they see the new name."
       }
     }
