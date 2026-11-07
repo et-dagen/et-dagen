@@ -71,7 +71,7 @@ export default defineNuxtConfig({
     scan: false,
   },
 
-  css: ['@/assets/css/admin.css'],
+  css: ['@/assets/scss/main.scss', '@/assets/css/admin.css'],
 
   vite: {
     plugins: [tailwindcss()],
@@ -83,6 +83,7 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/i18n',
     '@pinia/nuxt',
+    'vuetify-nuxt-module',
     '@vueuse/nuxt',
     // Server code imports what it uses (#583). Last, because modules add their server
     // auto-imports in `nitro:config`.
@@ -94,9 +95,9 @@ export default defineNuxtConfig({
   ],
 
   routeRules: {
-    // The page for companies was served at /faq before it got its own name
-    '/faq': { redirect: { to: '/for-companies', statusCode: 301 } },
-    '/en/faq': { redirect: { to: '/en/for-companies', statusCode: 301 } },
+    // The page for companies is the FAQ again
+    '/for-companies': { redirect: { to: '/faq', statusCode: 301 } },
+    '/en/for-companies': { redirect: { to: '/en/faq', statusCode: 301 } },
     // logos and graphics change rarely; a day in the browser, revalidated in the background after
     '/images/**': {
       headers: {
@@ -130,6 +131,11 @@ export default defineNuxtConfig({
       // route enumerating the API.
       production: process.env.DOCS_BUILD === 'true' ? 'prerender' : false,
     },
+  },
+
+  // the public pages; the admin and company panels are built on shadcn-vue
+  vuetify: {
+    vuetifyOptions: './config/vuetify/vuetify.config.ts',
   },
 
   i18n: {
