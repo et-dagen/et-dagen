@@ -13,7 +13,18 @@ const member = {
   email: 'ada@et-dagen.no',
 }
 
-const request = (method: string, path: string, token?: string) =>
+const programme = { name: 'MTEL', degree: 'integrated' }
+const dates = { start: '2027-02-09T11:00', end: '2027-02-10T10:00' }
+
+// each with a valid body, so the refusal is about who asks
+const ENDPOINTS = [
+  ['POST', '/api/v1/board', member],
+  ['POST', '/api/v1/programme', programme],
+  ['PUT', '/api/v1/generalInfo', dates],
+  ['DELETE', '/api/v1/image/standmap/2026-02-10', member],
+] as const
+
+const request = (method: string, path: string, body: object, token?: string) =>
   fetch(`http://127.0.0.1:${API_PORT}${path}`, {
     method,
     headers: {
@@ -21,33 +32,31 @@ const request = (method: string, path: string, token?: string) =>
       'content-type': 'application/json',
       ...(token && { authorization: `Bearer ${token}` }),
     },
-    body: JSON.stringify(member),
+    body: JSON.stringify(body),
   })
-
-const ENDPOINTS = [
-  ['POST', '/api/v1/board'],
-  ['DELETE', '/api/v1/image/standmap/2026-02-10'],
-] as const
 
 beforeEach(resetEmulators)
 
 describe('authorization refusals', () => {
   it.each(ENDPOINTS)(
     '%s %s answers 401 when signed out',
-    async (method, path) => {
-      const response = await request(method, path)
+    async (method, path, body) => {
+      const response = await request(method, path, body)
 
       expect(response.status).toBe(401)
       expect(await response.json()).toMatchObject({ code: 'auth/signed-out' })
     },
   )
 
-  it.each(ENDPOINTS)('%s %s answers 403 to a student', async (method, path) => {
-    const { token } = await createUser(student)
+  it.each(ENDPOINTS)(
+    '%s %s answers 403 to a student',
+    async (method, path, body) => {
+      const { token } = await createUser(student)
 
-    const response = await request(method, path, token)
+      const response = await request(method, path, body, token)
 
-    expect(response.status).toBe(403)
-    expect(await response.json()).toMatchObject({ code: 'auth/forbidden' })
-  })
+      expect(response.status).toBe(403)
+      expect(await response.json()).toMatchObject({ code: 'auth/forbidden' })
+    },
+  )
 })

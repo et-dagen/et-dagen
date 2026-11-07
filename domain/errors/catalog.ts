@@ -126,6 +126,28 @@ export const ERRORS = {
     message:
       'Send a known tier and overrides as known entitlements set to true or false',
   },
+  'programme/not-found': { status: 404, message: 'No programme has this id' },
+  'programme/invalid-name': {
+    status: 400,
+    message: 'A programme needs a name of at most 120 characters',
+  },
+  'programme/invalid-degree': {
+    status: 400,
+    message: 'A programme is a bachelor, a master or an integrated master',
+  },
+  'programme/name-taken': {
+    status: 409,
+    message: 'Another programme has this name',
+  },
+  'programme/in-use': {
+    status: 409,
+    message: 'Students have this programme; close it instead of deleting it',
+  },
+  'fair/invalid-dates': {
+    status: 400,
+    message:
+      'The fair needs a start and an end, as YYYY-MM-DDTHH:mm, ending after it starts',
+  },
   'board/invalid-name': {
     status: 400,
     message: 'A board member needs a name of at most 120 characters',
