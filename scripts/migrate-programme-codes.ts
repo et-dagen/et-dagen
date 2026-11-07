@@ -1,13 +1,13 @@
 /**
- * Key the study programmes by their NTNU code, and point students and events at the code
+ * Key the study programmes by their NTNU code and name, and point students and events at the code
  *
  * Before codes, programmes were stored under the keys "0", "1", ..., and students and events stored
- * a programme's name. This looks each programme up in a list of codes by its name and degree,
- * moves it to `studyProgrammes/<code>`, and rewrites `users/<uid>/studyProgram` and each event's
- * `registration/requirements/programmes` from the old key or name to the code. A programme the
- * list does not know keeps its key, and a student or an event whose programme is not found keeps
- * what it has; both are listed. Programmes already keyed by their code are left alone, so the
- * script can run again. Dry run unless `--apply` is passed; `--apply` needs `--backup <file>`,
+ * a programme's name. This looks each programme up in a list of codes by the name it was stored
+ * with and its degree, moves it to `studyProgrammes/<code>` under NTNU's name, and rewrites
+ * `users/<uid>/studyProgram` and each event's `registration/requirements/programmes` from the old
+ * key or name to the code. A programme the list does not know keeps its key, and a student or an
+ * event whose programme is not found keeps what it has; both are listed. A programme already
+ * keyed by its code only gets NTNU's name, so the script can run again. Dry run unless `--apply` is passed; `--apply` needs `--backup <file>`,
  * where it first writes everything it is about to change.
  *
  *   bun --env-file=.env scripts/migrate-programme-codes.ts
@@ -26,8 +26,11 @@ import { ProgrammeCode } from '@/domain/fair/programme'
 
 interface Coded {
   code: string
-  name: string
   type: string
+  /** NTNU's name for the programme, which it is stored under */
+  name: string
+  /** The name it was stored with before codes, to find it by */
+  stored: string
 }
 type StoredProgramme = { name?: string; type?: string } | string | null
 type StoredUser = { studyProgram?: unknown } | null
@@ -80,9 +83,10 @@ for (const { code } of coded) {
     throw new Error(`Not a programme code: ${code}`)
   }
 }
-const codeOf = new Map(
-  coded.map((row) => [`${row.type}|${clean(row.name)}`, row.code]),
+const byStoredName = new Map(
+  coded.map((row) => [`${row.type}|${clean(row.stored)}`, row]),
 )
+const byCode = new Map(coded.map((row) => [row.code, row]))
 
 const programmes = await read<StoredProgramme>('studyProgrammes')
 const users = await read<StoredUser>('users')
@@ -99,26 +103,33 @@ const change = (path: string, was: unknown, next: unknown) => {
 const toCode = new Map<string, string>()
 const codes = new Set<string>()
 const unknown: string[] = []
+let renamed = 0
 for (const [key, record] of Object.entries(programmes)) {
   const fields = typeof record === 'string' ? { name: record } : record
   if (!fields?.name) continue
-  const code = codeOf.get(
-    `${fields.type ?? 'integrated'}|${clean(fields.name)}`,
-  )
-  if (!code) {
+  const row =
+    byCode.get(key) ??
+    byStoredName.get(`${fields.type ?? 'integrated'}|${clean(fields.name)}`)
+  if (!row) {
     unknown.push(`${key}: ${fields.name} (${fields.type ?? 'no type'})`)
     codes.add(key)
     continue
   }
+  const { code } = row
   if (codes.has(code))
     throw new Error(`Two programmes would get the code ${code}`)
   codes.add(code)
-  toCode.set(key, code)
-  toCode.set(fields.name, code)
-  toCode.set(clean(fields.name), code)
-  if (key === code) continue
-  change(`studyProgrammes/${code}`, null, record)
-  change(`studyProgrammes/${key}`, record, null)
+  for (const value of [key, fields.name, clean(fields.name)]) {
+    toCode.set(value, code)
+  }
+  const next = { ...fields, name: row.name, type: row.type }
+  if (key !== code) {
+    change(`studyProgrammes/${code}`, null, next)
+    change(`studyProgrammes/${key}`, record, null)
+  } else if (fields.name !== row.name) {
+    change(`studyProgrammes/${code}/name`, fields.name, row.name)
+    renamed++
+  }
 }
 const recode = (value: unknown) =>
   typeof value === 'string' && !codes.has(value) ? toCode.get(value) : undefined
@@ -148,11 +159,11 @@ for (const [id, event] of Object.entries(events)) {
 }
 
 const moved = Object.keys(update).filter(
-  (path) => path.startsWith('studyProgrammes/') && update[path] !== null,
+  (path) => /^studyProgrammes\/[^/]+$/.test(path) && update[path] !== null,
 ).length
 console.log(
-  `${moved} programmes to key by code, ${students} students and ` +
-    `${eventsMoved} events to point at codes.`,
+  `${moved} programmes to key by code and name, ${renamed} to rename, ${students} students ` +
+    `and ${eventsMoved} events to point at codes.`,
 )
 for (const line of unknown)
   console.log(`programme not in the list, keeps its key: ${line}`)
