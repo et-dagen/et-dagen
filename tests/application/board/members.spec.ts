@@ -28,6 +28,7 @@ const now = Instant.parse('2026-10-25T10:00:00.000Z')
 
 /** Stands in for sharp: anything starting with "IMG" is a picture */
 const images: ImageProcessor = {
+  shrink: () => Promise.resolve(null),
   fit: (bytes, size) =>
     Promise.resolve(
       new TextDecoder().decode(bytes).startsWith('IMG')

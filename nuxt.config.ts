@@ -84,7 +84,6 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     '@pinia/nuxt',
     '@vueuse/nuxt',
-    '@nuxt/image',
     // Server code imports what it uses (#583). Last, because modules add their server
     // auto-imports in `nitro:config`.
     (_, nuxt) => {
@@ -159,17 +158,6 @@ export default defineNuxtConfig({
     detectBrowserLanguage: false,
     // the site has no v-t directives; set explicitly, since the default is deprecated
     bundle: { optimizeTranslationDirective: false },
-  },
-
-  image: {
-    inject: true,
-    screens: {
-      xs: 599,
-      sm: 959,
-      md: 1279,
-      lg: 1919,
-      xl: 2559,
-    },
   },
 
   // enable nuxt devtools

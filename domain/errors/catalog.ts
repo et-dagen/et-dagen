@@ -53,6 +53,10 @@ export const ERRORS = {
     message: 'Send the stand map as the multipart part named file',
   },
   'standmap/not-found': { status: 404, message: 'This day has no stand map' },
+  'standmap/unreadable-image': {
+    status: 415,
+    message: 'The stand map could not be read as a picture',
+  },
   'mail/send-failed': {
     status: 503,
     message: 'The mail provider refused the message or could not be reached',

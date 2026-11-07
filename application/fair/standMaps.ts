@@ -1,4 +1,5 @@
 import type { StandMapIndex } from '@/application/fair/standMapIndex'
+import type { ImageProcessor } from '@/application/files/imageProcessor'
 import {
   removeFile,
   uploadFile,
@@ -8,11 +9,13 @@ import { authorize } from '@/domain/authorization/authorize'
 import type { Subject } from '@/domain/authorization/subject'
 import { fail } from '@/domain/errors'
 import type { FairDay } from '@/domain/fair/day'
-import { storagePathOf, type StoredFile } from '@/domain/files/file'
+import { STAND_MAP } from '@/domain/fair/standMap'
+import { FILE_RULES, storagePathOf, type StoredFile } from '@/domain/files/file'
 import type { ISO8601String } from '@/domain/time'
 
 export interface StandMapDependencies extends FileDependencies {
   standMaps: StandMapIndex
+  images: ImageProcessor
 }
 
 /** A fair day's stand map as the programme and the admin show it */
@@ -50,13 +53,14 @@ export async function listStandMaps(
 }
 
 /**
- * Store a day's stand map, replacing the one it had
+ * Store a day's stand map, scaled down to {@link STAND_MAP}, replacing the one it had
  *
  * @remarks
  * The old map is removed only after the day points at the new one, so a failed upload leaves the
- * day with the map it had.
+ * day with the map it had. The map keeps the name it was uploaded with.
  *
- * @throws AppError `auth/signed-out`, `auth/forbidden`, or the `file/*` codes of {@link uploadFile}
+ * @throws AppError `auth/signed-out`, `auth/forbidden`, `standmap/unreadable-image`, or the
+ *   `file/*` codes of {@link uploadFile}
  */
 export async function putStandMap(
   deps: StandMapDependencies,
@@ -71,6 +75,20 @@ export async function putStandMap(
 ): Promise<StandMap> {
   authorize(request.subject, 'image', 'upload', undefined, { now: request.now })
 
+  if (
+    !(FILE_RULES.standmap.types as readonly string[]).includes(
+      request.contentType,
+    )
+  ) {
+    throw fail('file/unsupported-type')
+  }
+  if (request.bytes.byteLength === 0) throw fail('file/empty')
+  if (request.bytes.byteLength > FILE_RULES.standmap.maxBytes) {
+    throw fail('file/too-large')
+  }
+  const shrunk = await deps.images.shrink(request.bytes, STAND_MAP)
+  if (!shrunk) throw fail('standmap/unreadable-image')
+
   const previous = (await deps.standMaps.all()).get(request.day)
   const file = await uploadFile(
     {
@@ -78,8 +96,8 @@ export async function putStandMap(
       owner: { kind: 'fair' },
       uploader: request.subject.uid,
       name: request.name,
-      contentType: request.contentType,
-      bytes: request.bytes,
+      contentType: shrunk.contentType,
+      bytes: shrunk.bytes,
     },
     deps,
   )
