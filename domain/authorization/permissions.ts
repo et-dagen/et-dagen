@@ -95,6 +95,8 @@ export type Permissions = {
   board: { dataType: undefined; action: 'manage' }
   /** The fair's dates and the study programmes students choose from */
   fair: { dataType: undefined; action: 'manage' }
+  /** The admin dashboard: the journal and the daily tallies */
+  activity: { dataType: undefined; action: 'read' }
 }
 
 /**

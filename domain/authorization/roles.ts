@@ -84,6 +84,7 @@ export const ROLES = {
     },
     invitation: { create: true, list: true, revoke: true },
     image: { upload: true },
+    activity: { read: true },
     board: { manage: true },
     fair: { manage: true },
   },

@@ -7,6 +7,7 @@
  */
 import { useRuntimeConfig } from 'nitropack/runtime'
 import { firebaseFileStorage } from './adapters/firebase/fileStorage'
+import { rtdbActivityLog } from './adapters/rtdb/activityLog'
 import { firebaseNewAccounts } from './adapters/firebase/newAccounts'
 import { rtdbAccessRepository } from './adapters/rtdb/accessRepository'
 import { rtdbAffiliationRepository } from './adapters/rtdb/affiliationRepository'
@@ -43,6 +44,8 @@ export const programmes = rtdbProgrammeRepository(db)
 export const fair = rtdbFairInfoRepository(db)
 export const newAccounts = firebaseNewAccounts(auth, db)
 export const images = sharpImageProcessor()
+export const activity = rtdbActivityLog(db)
+
 export const mailer = mailerFor(
   useRuntimeConfig(),
   process.env.NODE_ENV === 'production',
