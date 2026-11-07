@@ -26,6 +26,15 @@ export type TokenHash = Brand<string, 'TokenHash'>
 export const INVITATION_LIFETIME = Duration.fromSeconds(14 * 24 * 60 * 60)
 
 /**
+ * How long an invitation is kept after it stops working
+ *
+ * @remarks
+ * Long enough for the admin to see who joined lately. After that the membership says who is a
+ * contact, and the invitee's address has no use left, so it goes (#585).
+ */
+export const INVITATION_KEPT = Duration.fromDays(90)
+
+/**
  * An email address asked to join a company as one of its contacts
  *
  * @remarks
@@ -55,3 +64,16 @@ export function statusOf(
   if (invitation.revokedAt) return 'revoked'
   return Instant.compare(now, invitation.expiresAt) >= 0 ? 'expired' : 'pending'
 }
+
+/** When an invitation stopped working: when it was used, revoked or ran out */
+export const endedAt = (
+  invitation: Pick<Invitation, 'expiresAt' | 'revokedAt' | 'redeemed'>,
+): ISO8601String =>
+  invitation.redeemed?.at ?? invitation.revokedAt ?? invitation.expiresAt
+
+/** Whether an invitation has been kept for {@link INVITATION_KEPT} since it stopped working */
+export const isPastKeeping = (
+  invitation: Pick<Invitation, 'expiresAt' | 'revokedAt' | 'redeemed'>,
+  now: ISO8601String,
+): boolean =>
+  Instant.compare(now, Instant.add(endedAt(invitation), INVITATION_KEPT)) >= 0
