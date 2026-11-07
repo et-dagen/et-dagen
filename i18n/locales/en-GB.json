@@ -121,15 +121,11 @@
     "register": {
       "title": "Register user",
       "full_name": "Full name",
-      "first_name": "First name",
-      "last_name": "Last name",
       "email": "E-mail",
       "password": "Password",
       "password_confirmation": "Confirm password",
       "study_program": "Study Programme",
       "year": "Current year",
-      "registration_code": "Registration code",
-      "code_hint": "Contact us to recieve a registration code",
       "user_type": {
         "student": "Student user",
         "company": "Company user"
@@ -142,9 +138,6 @@
       }
     },
     "login": {
-      "email": "E-mail",
-      "password": "Password",
-      "remember": "Remember me",
       "forgot": "Forgot password?"
     }
   },
@@ -157,18 +150,7 @@
     },
     "form": {
       "general": {
-        "equal_password": "Passwords must match",
-        "required": "This field is required",
-        "email": "Invalid email address"
-      },
-      "password": {
-        "length": "The password must be at least 8 characters long.",
-        "letters": "The password must contain at least 3 letters.",
-        "numbers": "The password must contain at least 3 numbers.",
-        "special": "The password must contain at least 1 special character.",
-        "uppercase": "The password must contain at least 1 uppercase letter.",
-        "required": "Password is required",
-        "confirmed": "Passwords must match"
+        "equal_password": "Passwords must match"
       }
     },
     "page_not_found": {
@@ -183,8 +165,7 @@
         "name": "Registration",
         "attendants": "Attendants",
         "nocapacity": "No capacity limit",
-        "registered": "You are registered",
-        "attended": "Attended"
+        "registered": "You are registered"
       },
       "details": {
         "name": "Details",
@@ -222,14 +203,7 @@
     "board": "The board",
     "positions": {
       "business": "Business relations manager",
-      "logistics": "Logistics manager",
-      "head": "Manager",
-      "deputyHead": "Deputy manager",
-      "IT": "IT manager",
-      "finance": "Finance manager",
-      "spons": "Sponsorship manager",
-      "marketing": "Marketing manager",
-      "travel": "Travel manager"
+      "logistics": "Logistics manager"
     },
     "question": "What is it about?",
     "organisation": "The organisation",
@@ -295,30 +269,6 @@
         "save": "Save the profile",
         "saved": "The profile is saved",
         "none": "You have no company to edit."
-      },
-      "title": "Company Admin",
-      "dietaryrestrictions": "Allergies and Restrictions",
-      "attendants": "Attendants",
-      "copiedemail": "Email copied!",
-      "user": {
-        "attributes": {
-          "name": "Name",
-          "studyprogramme": "Programme",
-          "currentyear": "Year",
-          "email": "Email"
-        }
-      },
-      "cvAccess_restriction": "CV access is restricted",
-      "event": "Events",
-      "resume": "Resumes",
-      "noResumes": "No resumes matches the search criteria",
-      "filterTypes": {
-        "name": "Year"
-      },
-      "filterOrder": {
-        "name": "Order",
-        "descending": "Descending",
-        "ascending": "Ascending"
       }
     },
     "main_partner": "Main partner in 2026",
@@ -386,11 +336,7 @@
     },
     "success": {
       "user": {
-        "deleted": "Your account has been deleted",
-        "edit": "User updated"
-      },
-      "firebase": {
-        "reset_password": "Password reset email sent"
+        "deleted": "Your account has been deleted"
       },
       "event": {
         "register": {
@@ -398,59 +344,14 @@
           "opt_out": "Successfully opted out of event",
           "queue": "Successfully registered to event queue",
           "opt_out_queue": "Successfully opted out of event queue"
-        },
-        "edit": {
-          "created": "Successfully created event",
-          "modified": "Successfully modified event",
-          "deleted_logo": "Successfully deleted logo"
-        }
-      },
-      "company": {
-        "edit": {
-          "created": "Company created",
-          "modified": "Comapny modified",
-          "deleted_logo": "Logo deleted"
-        }
-      },
-      "job": {
-        "edit": {
-          "modified": "Job updated",
-          "created": "Job created"
         }
       }
     },
     "close_alert": "Close",
-    "default_message": "Oops! Something went wrong.",
     "error": {
-      "default": "An error occurred",
       "form": {
         "missing_email": "Email input is missing",
         "invalid": "Invalid form"
-      },
-      "server": {
-        "invalid_registration_code": "Invalid registration code"
-      },
-      "event": {
-        "event_doesnt_exist": "Event doesn't exist",
-        "missing_event_id": "Missing event id",
-        "register": {
-          "requirements_not_met": "This event is limited to certain study programmes and years",
-          "event_is_full": "Event is full",
-          "already_registered": "You are already registered for this event",
-          "user_not_registered": "You are not registered for this event",
-          "registration_unnecessary": "Registration is not necessary for this event",
-          "non_admin_user": "This requires admin privileges",
-          "closed": "Registration is closed",
-          "end_time_before_start_time": "Events cannot end before they start"
-        }
-      },
-      "company": {
-        "edit": {
-          "created": "Creation failed",
-          "modified": "Modification failed",
-          "modified_logo": "Logo modification failed",
-          "deleted_logo": "Logo deletion failed"
-        }
       }
     }
   },
@@ -1229,23 +1130,7 @@
       "contactus": "If you do have any questions, or wish to participate, please contact us at: bedriftansvarlig{'@'}et-dagen.no"
     },
     "faq": {
-      "heading": "FAQ",
-      "questions": {
-        "q1": "What we offer",
-        "q2": "How can I sign my company up?",
-        "q3": "What events do the E&T days help me organise?",
-        "q4": "Tips to succeed at the E&T days",
-        "q5": "Arrival by car",
-        "q6": "Extra equipment"
-      },
-      "answers": {
-        "a1": "-CV database: An online service, helping engineering students and companies get in contact. Students can easily register their CV and job/internship applications with you, and you can announce open positions. As a participating company, you get one full year of access to the CV-database. -Interviews: We arrange for rooms that can be used for interviews during E&T-dagene and the day after. -Company presentations: This is a great opportunity to inform about and inspire students to pursue your company. We arrange auditoriums and promotions ahead of the presentation. -Company quick-fire presentations: A series of short company presentations, where all participating companies get to present themselves and the summer jobs they advertise. -Contact person: You will be provided a contact person specific to your company. This person will be available to you the entire duration of the career fairs. -Food and drink: We arrange for food and drinks for all participants from your company, and a separate break room.",
-        "a2": "Please contact us directly at bedriftansvarlig{'@'}et-dagen.no for more information on signup and prices.",
-        "a3": "We help organise the stand, company presentations and interviews/speedinterviews.",
-        "a4": "1 Be engaged and approachable. An open body language and genuine interest make it more inviting for students to engage with you, and help you attract good candidates. 2 Recruitment and job advertisements. Many of the students visiting E&T-dagene are on the lookout for a summer job, an internship or a permanent job at your company. Do you have open job advertisements? Make them easy to find on your stand! Clear QR-codes on the stand lower the boundaries for potential applicants, and make it easier to apply after visiting your stand. 3 Take up some space! Students are drawn to stands that can be seen and heard. Make sure your stand doesn’t appear closed off. Open surfaces invite conversation. The more approachable and lively the stand, the more stop by. 4 Make the stand memorable. A small giveaway, a good conversation or a fun activity can be the thing that makes the students remember your stand among the others afterwards. 5 After-the-fact followup. If you meet especially motivated students, encourage them to stay in touch with your company. This can be valuable for future recruitment.",
-        "a5": "The closest point of arrival by car/taxi is on the south end of Frimerket; the field behind the main building.",
-        "a6": "Outside of what is included in your package, extra stand equipment can be ordered. E.g. extra tables, coffee or displays. Contact bedriftansvarlig{'@'}et-dagen.no."
-      }
+      "heading": "FAQ"
     }
   },
   "errors": {
@@ -1670,98 +1555,6 @@
     }
   },
   "edit": {
-    "jobs": {
-      "create": {
-        "title": "Create Job",
-        "action": "Create"
-      },
-      "edit": {
-        "title": "Edit Job",
-        "action": "Save"
-      },
-      "cancel": "Cancel",
-      "attributes": {
-        "title": "Job Title",
-        "company": "Company",
-        "description": "Job Description",
-        "deadline": "Application Deadline",
-        "application_link": "Job advertisement link",
-        "jobtype": {
-          "name": "Job Type",
-          "full_time": "Full-time",
-          "graduate": "Gratuate position",
-          "summer_internship": "Summer Internship"
-        },
-        "location": "Job Location"
-      }
-    },
-    "event": {
-      "create": {
-        "title": "Create Event",
-        "action": "Create"
-      },
-      "edit": {
-        "title": "Edit Event",
-        "action": "Save"
-      },
-      "cancel": "Cancel",
-      "attributes": {
-        "title": "Title",
-        "company": "Company",
-        "capacity": "Capacity",
-        "description": "Description",
-        "location": {
-          "name": "Name of Place",
-          "map": "Map Link"
-        },
-        "date": {
-          "start": "Start Date",
-          "end": "End Date"
-        },
-        "registration": {
-          "start": "Registration starts",
-          "end": "Registration ends",
-          "limit": "Limit registration",
-          "requirements": {
-            "programmes": "Limit to study programmes",
-            "years": "Limit to years"
-          }
-        },
-        "attendants": "Registered users",
-        "user_id": "User ID",
-        "sign_up": "Sign up"
-      }
-    },
-    "company": {
-      "create": {
-        "title": "Create Company",
-        "action": "Create"
-      },
-      "edit": {
-        "title": "Edit Company",
-        "action": "Save"
-      },
-      "unlink_logo": "Unlink Logo",
-      "cancel": "Cancel",
-      "attributes": {
-        "name": "Company Name",
-        "description": "Description",
-        "logo": "Logo",
-        "webpage": "webpage",
-        "cvAccess": {
-          "name": "CV access",
-          "yes": "Yes",
-          "no": "No"
-        },
-        "type": {
-          "name": "Company Type",
-          "main_partner": "Main Partner",
-          "partner": "Partner",
-          "sponsor": "Sponsor",
-          "old": "Old"
-        }
-      }
-    },
     "user": {
       "title": "Edit User",
       "save": "Save",
@@ -1769,13 +1562,6 @@
       "attributes": {
         "name": "Name",
         "email": "E-mail",
-        "type": {
-          "name": "User type",
-          "admin": "Administrator",
-          "company": "Comany",
-          "basic": "Basic"
-        },
-        "studyprogram": "Study programme",
         "currentyear": "Current year"
       }
     }
@@ -1801,17 +1587,5 @@
     "thursday": "Thursday",
     "friday": "Friday",
     "saturday": "Saturday"
-  },
-  "formattext": {
-    "bold": "Bold",
-    "italic": "Italic",
-    "strikethrough": "Strikethrough",
-    "paragraph": "Paragraph",
-    "heading": "Heading",
-    "bulletlist": "Bullet list",
-    "numberedlist": "Numbered list",
-    "linebreak": "Line break",
-    "undo": "Undo",
-    "redo": "Redo"
   }
 }

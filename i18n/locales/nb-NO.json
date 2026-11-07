@@ -121,15 +121,11 @@
     "register": {
       "title": "Registrer bruker",
       "full_name": "Fullt navn",
-      "first_name": "Fornavn",
-      "last_name": "Etternavn",
       "email": "E-post",
       "password": "Passord",
       "password_confirmation": "Bekreft passord",
       "study_program": "Studieprogram",
       "year": "Årstrinn",
-      "registration_code": "Registreringskode",
-      "code_hint": "Ta kontakt for a motta en registreringskode",
       "user_type": {
         "student": "Studentbruker",
         "company": "Bedriftsbruker"
@@ -142,9 +138,6 @@
       }
     },
     "login": {
-      "email": "E-post",
-      "password": "Passord",
-      "remember": "Husk meg",
       "forgot": "Glemt passord?"
     }
   },
@@ -157,18 +150,7 @@
     },
     "form": {
       "general": {
-        "equal_password": "Passordene må være like",
-        "required": "Dette feltet er påkrevd",
-        "email": "Ugyldig e-postadresse"
-      },
-      "password": {
-        "length": "Passordet må være minst 8 tegn langt.",
-        "letters": "Passordet må inneholde minst 3 bokstaver.",
-        "numbers": "Passordet må inneholde minst 3 tall.",
-        "special": "Passordet må inneholde minst 1 spesialtegn.",
-        "uppercase": "Passordet må inneholde minst 1 stor bokstav.",
-        "required": "Passord er påkrevd",
-        "confirmed": "Passordene må være like"
+        "equal_password": "Passordene må være like"
       }
     },
     "page_not_found": {
@@ -183,8 +165,7 @@
         "name": "Påmelding",
         "attendants": "Påmeldte",
         "nocapacity": "Ingen kapasitetsbegrensning",
-        "registered": "Du er påmeldt",
-        "attended": "Deltok"
+        "registered": "Du er påmeldt"
       },
       "details": {
         "name": "Detaljer",
@@ -222,14 +203,7 @@
     "board": "Styret",
     "positions": {
       "business": "Bedriftansvarlig",
-      "logistics": "Logistikkansvarlig",
-      "head": "Leder",
-      "deputyHead": "Nestleder",
-      "IT": "IT-ansvarlig",
-      "finance": "Økonomiansvarlig",
-      "spons": "Sponsoransvarlig",
-      "marketing": "Markedsføringsansvarlig",
-      "travel": "Turansvarlig"
+      "logistics": "Logistikkansvarlig"
     },
     "question": "Hva gjelder det?",
     "organisation": "Organisasjonen",
@@ -295,30 +269,6 @@
         "save": "Lagre profilen",
         "saved": "Profilen er lagret",
         "none": "Du har ingen bedrift å redigere."
-      },
-      "title": "Bedriftsadministrasjon",
-      "dietaryrestrictions": "Allergener og restriksjoner",
-      "attendants": "Påmeldte deltakere",
-      "copiedemail": "Epost kopiert!",
-      "user": {
-        "attributes": {
-          "name": "Navn",
-          "studyprogramme": "Studieprogram",
-          "currentyear": "År",
-          "email": "Epost"
-        }
-      },
-      "cvAccess_restriction": "CV tilgang er begrenset",
-      "event": "Arrangement",
-      "resume": "CV",
-      "noResumes": "Ingen CVer matcher søket",
-      "filterTypes": {
-        "name": "Årstrinn"
-      },
-      "filterOrder": {
-        "name": "Rekkefølge",
-        "descending": "Synkende",
-        "ascending": "Stigende"
       }
     },
     "main_partner": "Hovedpartner i 2026",
@@ -386,11 +336,7 @@
     },
     "success": {
       "user": {
-        "deleted": "Brukeren din er slettet",
-        "edit": "Brukeren ble oppdatert"
-      },
-      "firebase": {
-        "reset_password": "Epost for tilbakestilling av passord er sendt"
+        "deleted": "Brukeren din er slettet"
       },
       "event": {
         "register": {
@@ -398,57 +344,14 @@
           "opt_out": "Du har meldt deg av dette arrangementet",
           "queue": "Du er nå på venteliste for dette arrangementet",
           "opt_out_queue": "Du har meldt deg køen av dette arrangementet"
-        },
-        "edit": {
-          "created": "Arrangement opprettet",
-          "modified": "Arrangement oppdatert"
-        }
-      },
-      "company": {
-        "edit": {
-          "created": "Bedrift opprettet",
-          "modified": "Bedrift oppdatert",
-          "deleted_logo": "Logo slettet"
-        }
-      },
-      "job": {
-        "edit": {
-          "modified": "Jobb oppdatert",
-          "created": "Jobb opprettet"
         }
       }
     },
     "close_alert": "Lukk",
-    "default_message": "Oi! Noe gikk galt.",
     "error": {
-      "default": "Oi! Noe gikk galt.",
       "form": {
         "missing_email": "Epost ikke oppgitt",
         "invalid": "Skjemaet er ikke gyldig"
-      },
-      "server": {
-        "invalid_registration_code": "Ugyldig registreringskode"
-      },
-      "event": {
-        "event_doesnt_exist": "Arrangementet finnes ikke",
-        "register": {
-          "requirements_not_met": "Arrangementet er begrenset til et annet studieprogram eller årstrinn",
-          "event_is_full": "Arrangementet er fullt",
-          "already_registered": "Du er allerede påmeldt dette arrangementet",
-          "user_not_registered": "Du er ikke påmeldt dette arrangementet",
-          "registration_unnecessary": "Påmelding er ikke nødvendig for dette arrangementet",
-          "non_admin_user": "Dette krever administratorrettigheter",
-          "closed": "Ikke åpent for registrering",
-          "end_time_before_start_time": "Arrangementet kan ikke avslutte før det har startet"
-        }
-      },
-      "company": {
-        "edit": {
-          "created": "Bedriften ble ikke opprettet",
-          "modified": "Oppdatering misslykket",
-          "modified_logo": "Logo ble ikke oppdatert",
-          "deleted_logo": "Logo ble ikke slettet"
-        }
       }
     }
   },
@@ -1228,23 +1131,7 @@
       "contactus": "Har du spørsmål, eller ønsker å delta, kontakt oss på:"
     },
     "faq": {
-      "heading": "Ofte stilte spørsmål",
-      "questions": {
-        "q1": "Hva vi tilbyr",
-        "q2": "Hvordan kan jeg melde på min bedrift?",
-        "q3": "Hva hjelper E&T-dagene meg med å arrangere?",
-        "q4": "Standtips",
-        "q5": "Hvordan kommer vi oss til lokalene?",
-        "q6": "Bestilling av ekstra utstyr"
-      },
-      "answers": {
-        "a1": "-CV-database: En nettbasert tjeneste som hjelper sivilingeniør-studenter og bedrifter med å komme i kontakt med hverandre. Studenter kan enkelt registrere CV og søknad hos dere, og dere kan lyse ut ledige stillinger. Alle bedrifter som deltar på E&T-dagene har ett års tilgang til CV-databasen. -Intervjurom: Vi stiller med egne rom til intervjuer under E&T-dagene, og dagen etterpå. -Bedriftspresentasjon: En mulighet til å informere og vekke interesse hos studentene. Vi stiller med auditorium og promotering i forkant. -Speedbedpress: En rekke korte bedriftspresentasjoner der de deltagende bedriftene informerer om seg selv og sommerjobbene de utlyser. -Kontaktperson: Vi stiller med en egen kontaktperson til hver bedrift, som er tilgjengelig under hele programmet. -Mat og Drikke: Vi stiller med mat og drikke til bedriftene, samt et oppholdsrom. ",
-        "a2": "Kontakt oss direkte på bedriftansvarlig{'@'}et-dagen.no for informasjon om påmelding og priser!",
-        "a3": "Vi hjelper dere med å ordne stand, og med å arrangere bedriftspresentasjon og intervjuer/speedintervjuer.",
-        "a4": "1 Vær engasjert og kontaktsøkende. Et åpent kroppsspråk og ekte interesse gjør det lettere for studenter å ta kontakt. Still spørsmål, lytt aktivt og inviter til dialog. Det skaper gode samtaler og et positivt førsteinntrykk. 2 Stillingsannonser/Rekruttering. Mange av studentene er på jakt etter sommerjobb, internship eller fast stilling. Karrieredager gir en unik mulighet til å møte potensielle søkere ansikt til ansikt og vise hva dere ser etter i kandidater. Har dere stillingsannonser ute? Gjør dem enkle å finne! Tydelige QR-koder på stand senker friksjonen og gjør det lettere å søke i etterkant. En synlig og ryddig søknadsvei gjør også standen mer attraktiv å besøke. 3 Ta plass! Studenter tiltrekkes av stands som synes og høres. Sørg for at standen ikke føles lukket! Åpne flater inviterer til samtale. Jo mer tilgjengelig og levende standen oppleves, desto flere stopper opp. 4 Gjør standen minneverdig. En liten giveaway, en god samtale eller en morsom aktivitet kan være det som gjør at studentene husker nettopp dere etter at dagene er over. 5 Følg opp i etterkant. Om dere møter spesielt interesserte studenter, oppmuntre til videre kontakt. Det lille ekstra steget kan gi store rekrutteringsgevinster.",
-        "a5": "Nærmeste ankomst med bil er på sørsiden av frimerket; gressplenen rett bak Hovedbygget.",
-        "a6": "Utover det som er inkludert i kontrakten kan det bestilles ekstrautstyr som for eksempel ekstra bord, ståbord, kaffe eller TV-skjermer. Kontakt oss på bedriftansvarlig{'@'}et-dagen.no."
-      }
+      "heading": "Ofte stilte spørsmål"
     }
   },
   "errors": {
@@ -1669,98 +1556,10 @@
     }
   },
   "edit": {
-    "jobs": {
-      "create": {
-        "title": "Opprett stillingsannonse",
-        "action": "Opprett"
-      },
-      "edit": {
-        "title": "Rediger stillingsannonse",
-        "action": "Lagre"
-      },
-      "cancel": "Avbryt",
-      "attributes": {
-        "title": "Stillingstittel",
-        "company": "Bedrift",
-        "description": "Stillingsbeskrivelse",
-        "deadline": "Søknadsfrist",
-        "application_link": "Link til annonse",
-        "jobtype": {
-          "name": "Stillingstype",
-          "full_time": "Fulltid",
-          "graduate": "Gratuate",
-          "summer_internship": "Sommerjobb"
-        },
-        "location": "Sted"
-      }
-    },
     "event": {
-      "create": {
-        "title": "Opprett arrangement",
-        "action": "Opprett"
-      },
-      "edit": {
-        "title": "Rediger arrangement",
-        "action": "Lagre"
-      },
-      "cancel": "Avbryt",
       "attributes": {
-        "title": "Tittel",
-        "company": "Bedrift",
-        "capacity": "Kapasitet",
-        "description": "Beskrivelse",
-        "location": {
-          "name": "Stedsnavn",
-          "map": "Kartlink"
-        },
-        "date": {
-          "start": "Startdato",
-          "end": "Sluttdato"
-        },
-        "registration": {
-          "start": "Påmelding åpner",
-          "end": "Påmelding stenger",
-          "limit": "Begrens påmelding",
-          "requirements": {
-            "programmes": "Begrens til studieprogram",
-            "years": "Begrens til årstrinn"
-          }
-        },
         "signupstart": "Påmelding åpner",
-        "optoutdeadline": "Avmeldingsfrist",
-        "attendants": "Påmeldte deltakere",
-        "user_id": "Brukerid",
-        "sign_up": "Meld på"
-      }
-    },
-    "company": {
-      "create": {
-        "title": "Opprett bedrift",
-        "action": "Opprett"
-      },
-      "edit": {
-        "title": "Rediger bedrift",
-        "action": "Lagre"
-      },
-      "unlink_logo": "Frakoble logo",
-      "cancel": "Avbryt",
-      "attributes": {
-        "name": "Navn",
-        "description": "Beskrivelse",
-        "logo": "Logo",
-        "webpage": "Nettside",
-        "cvAccess": {
-          "name": "CV tilgang",
-          "yes": "Ja",
-          "no": "Nei"
-        },
-        "type": {
-          "name": "Bedriftstype",
-          "main_partner": "Hovedsponsor",
-          "partner": "Partner",
-          "sponsor": "Sponsor",
-          "old": "Gammel"
-        }
+        "optoutdeadline": "Avmeldingsfrist"
       }
     },
     "user": {
@@ -1770,13 +1569,6 @@
       "attributes": {
         "name": "Navn",
         "email": "Epost",
-        "type": {
-          "name": "Brukertype",
-          "admin": "Administrator",
-          "company": "Bedrift",
-          "basic": "Basis"
-        },
-        "studyprogram": "Studieprogram",
         "currentyear": "Studieår"
       }
     }
@@ -1802,17 +1594,5 @@
     "thursday": "Torsdag",
     "friday": "Fredag",
     "saturday": "Lørdag"
-  },
-  "formattext": {
-    "bold": "Bold",
-    "italic": "Italic",
-    "strikethrough": "Strikethrough",
-    "paragraph": "Paragraph",
-    "heading": "Heading",
-    "bulletlist": "Bullet list",
-    "numberedlist": "Numbered list",
-    "linebreak": "Line break",
-    "undo": "Undo",
-    "redo": "Redo"
   }
 }
