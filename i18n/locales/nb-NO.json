@@ -623,6 +623,8 @@
     "shell": {
       "navigation": "Adminpaneler",
       "back": "Til etdagene.no",
+      "more": "Mer",
+      "close": "Lukk",
       "tag": {
         "admin": "ADMIN",
         "company": "BEDRIFT"
