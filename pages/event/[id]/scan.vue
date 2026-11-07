@@ -56,15 +56,16 @@
     markAttended(code.data)
   }
 
+  // what the browser's error means for whoever holds the phone
+  const cameraProblems: Record<string, string> = {
+    NotAllowedError: 'event.scan.camera_denied',
+    SecurityError: 'event.scan.camera_insecure',
+    NotReadableError: 'event.scan.camera_busy',
+    AbortError: 'event.scan.camera_busy',
+  }
+
   function onCameraError(error: Error) {
-    notify(
-      t(
-        error.name === 'NotAllowedError'
-          ? 'event.scan.camera_denied'
-          : 'event.scan.camera_failed',
-      ),
-      'error',
-    )
+    notify(t(cameraProblems[error.name] ?? 'event.scan.camera_failed'), 'error')
   }
 </script>
 
