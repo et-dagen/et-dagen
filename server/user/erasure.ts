@@ -18,6 +18,7 @@ import {
 import { rtdbEventRepository } from '@/server/adapters/rtdb/eventRepository'
 import { rtdbFileRepository } from '@/server/adapters/rtdb/fileRepository'
 import { rtdbInvitationRepository } from '@/server/adapters/rtdb/invitationRepository'
+import { rtdbRetentionNotices } from '@/server/adapters/rtdb/retentionNotices'
 import { rtdbUserRepository } from '@/server/adapters/rtdb/userRepository'
 
 export const eraseUsers = (
@@ -36,6 +37,7 @@ export const eraseUsers = (
       events: rtdbEventRepository(stores.db),
       invitations: rtdbInvitationRepository(stores.db),
       profiles: rtdbUserRepository(stores.db),
+      notices: rtdbRetentionNotices(stores.db),
       accounts: firebaseUserDirectory(stores.auth),
     },
     uids.map((uid) => UserUid.parse(uid)),

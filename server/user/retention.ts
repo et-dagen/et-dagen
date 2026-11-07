@@ -1,5 +1,5 @@
 /**
- * Erases users who have been inactive for longer than the retention period (#585)
+ * Warns, then erases, users who have been inactive for longer than the retention period (#585)
  *
  * @remarks
  * Activity is the latest of the times Firebase Auth records for an account: created, signed in
@@ -8,8 +8,16 @@
  */
 import type { Auth, UserRecord } from 'firebase-admin/auth'
 import { eraseUsers } from './erasure'
+import type { Mailer } from '@/application/mail/mailer'
+import {
+  warnBeforeErasure,
+  type RetainedAccount,
+} from '@/application/users/retentionNotice'
+import { EmailAddress } from '@/domain/email'
 import { isPastRetention } from '@/domain/retention'
 import { Instant } from '@/domain/time'
+import { UserUid } from '@/domain/user'
+import { rtdbRetentionNotices } from '@/server/adapters/rtdb/retentionNotices'
 
 /** Keeps the parallel Storage and database calls of one erasure run small */
 const BATCH_SIZE = 100
@@ -28,33 +36,54 @@ export function lastActive({
   return Instant.of(new Date(Math.max(...times)))
 }
 
-/** The uids of every account past the retention limit, read a page at a time */
-export async function inactiveUids(
+/** Every account, with its address and last activity, read a page at a time */
+export async function retainedAccounts(
   auth: Pick<Auth, 'listUsers'>,
-  now: Instant,
-): Promise<string[]> {
-  const uids: string[] = []
+): Promise<RetainedAccount[]> {
+  const accounts: RetainedAccount[] = []
   let pageToken: string | undefined
   do {
     const page = await auth.listUsers(1000, pageToken)
     for (const user of page.users) {
-      if (isPastRetention(lastActive(user), now)) uids.push(user.uid)
+      accounts.push({
+        uid: UserUid.parse(user.uid),
+        email: user.email ? EmailAddress.tryParse(user.email) : null,
+        lastActive: lastActive(user),
+      })
     }
     pageToken = page.pageToken
   } while (pageToken)
-  return uids
+  return accounts
 }
 
-/** @returns how many users were erased */
-export async function eraseInactiveUsers(
+/**
+ * Warn the users due for a notice, then erase those past the limit
+ *
+ * @param stores.mailer null when the site cannot send mail; erasure then runs without warnings
+ * @returns counts only, so the log never holds who was warned or erased
+ */
+export async function runRetention(
   stores: Parameters<typeof eraseUsers>[0] & {
     auth: Pick<Auth, 'deleteUsers' | 'listUsers'>
+    mailer: Mailer | null
   },
   now: Instant = Instant.now(),
-): Promise<number> {
-  const uids = await inactiveUids(stores.auth, now)
+): Promise<{ notified: number; notifyFailed: number; erased: number }> {
+  const accounts = await retainedAccounts(stores.auth)
+
+  const { notified, failed } = stores.mailer
+    ? await warnBeforeErasure(
+        { mailer: stores.mailer, notices: rtdbRetentionNotices(stores.db) },
+        accounts,
+        now,
+      )
+    : { notified: 0, failed: 0 }
+
+  const uids = accounts
+    .filter((account) => isPastRetention(account.lastActive, now))
+    .map((account) => account.uid)
   for (let start = 0; start < uids.length; start += BATCH_SIZE) {
     await eraseUsers(stores, uids.slice(start, start + BATCH_SIZE), now)
   }
-  return uids.length
+  return { notified, notifyFailed: failed, erased: uids.length }
 }

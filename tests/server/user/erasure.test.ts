@@ -88,6 +88,10 @@ function setup() {
       [JOINED]: invitation('gone'),
       [OTHER]: invitation('kept'),
     },
+    retention: {
+      gone: '2026-10-01T03:00:00.000Z',
+      kept: '2026-10-01T03:00:00.000Z',
+    },
     files: {
       [RESUME]: record('user:gone', 'resume'),
       [LOGO]: record('company:company', 'logo'),
@@ -127,7 +131,7 @@ function setup() {
 }
 
 describe('eraseUsers', () => {
-  it('deletes their files, records, invitation joined by, profile and account', async () => {
+  it('deletes files, records, invitation joined by, profile, warnings, account', async () => {
     const { db, files, auth } = setup()
     await eraseUsers(
       { db: db as never, files, auth: auth as never },
@@ -140,6 +144,7 @@ describe('eraseUsers', () => {
     expect(((db.tree.files as Tree)[LOGO] as Tree).uploader).toBeUndefined()
     expect(db.tree.users).toEqual({ kept: { name: 'Kept' } })
     expect(Object.keys(db.tree.invitations as Tree)).toEqual([OTHER])
+    expect(db.tree.retention).toEqual({ kept: '2026-10-01T03:00:00.000Z' })
     expect(auth.deleteUsers).toHaveBeenCalledWith(['gone'])
   })
 
