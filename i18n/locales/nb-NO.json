@@ -926,6 +926,17 @@
       "weak-password": "Passordet må ha minst 8 tegn, med minst 3 bokstaver og 3 tall.",
       "account-exists": "Denne adressen har allerede en konto. Logg inn for å bli med.",
       "invalid-request": "Velg en bedrift og skriv inn en gyldig e-postadresse."
+    },
+    "programme": {
+      "not-found": "Fant ikke studieprogrammet.",
+      "invalid-name": "Fyll inn et navn på høyst 120 tegn.",
+      "invalid-degree": "Velg bachelor, master eller integrert master.",
+      "in-use": "Studenter har dette studieprogrammet. Steng det i stedet, så tilbys det ikke lenger ved registrering.",
+      "invalid-code": "Fyll inn en kode: en bokstav, så bokstaver og tall, 2 til 20 i alt.",
+      "code-taken": "Et annet studieprogram har allerede denne koden."
+    },
+    "fair": {
+      "invalid-dates": "Fyll inn når messen starter og slutter, med slutten etter starten."
     }
   },
   "form": {
