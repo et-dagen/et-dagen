@@ -2,16 +2,19 @@
  * What every {@link ResumeIndex} adapter must do
  *
  * An adapter's test file calls {@link describeResumeIndex} with a factory that seeds the given
- * references, so the suite runs once per adapter.
+ * references, and the profile fields of those users, so the suite runs once per adapter.
  */
 import { describe, expect, it } from 'vitest'
-import type { ResumeIndex } from '@/application/users/resumeIndex'
+import type { ResumeHolder, ResumeIndex } from '@/application/users/resumeIndex'
 import { FileId } from '@/domain/files/file'
 import { UserUid } from '@/domain/user'
 
 export function describeResumeIndex(
   adapter: string,
-  make: (seed?: Record<string, string>) => Promise<ResumeIndex> | ResumeIndex,
+  make: (
+    seed?: Record<string, string>,
+    profiles?: Record<string, Omit<ResumeHolder, 'uid'>>,
+  ) => Promise<ResumeIndex> | ResumeIndex,
 ) {
   describe(`${adapter} ResumeIndex`, () => {
     const kari = UserUid.parse('kari')
@@ -37,6 +40,19 @@ export function describeResumeIndex(
       const resumes = await make({ kari: '' })
       expect(await resumes.of(kari)).toBeNull()
       expect(await resumes.of(UserUid.parse('ola'))).toBeNull()
+    })
+
+    it('lists the users with a résumé, with their name, study programme and year', async () => {
+      const resumes = await make(
+        { kari: FileId.random(), ola: '' },
+        {
+          kari: { name: 'Kari', studyProgram: 'MTEL', currentYear: 3 },
+          ola: { name: 'Ola', studyProgram: 'BIELEKTRO', currentYear: 1 },
+        },
+      )
+      expect(await resumes.holders()).toEqual([
+        { uid: kari, name: 'Kari', studyProgram: 'MTEL', currentYear: 3 },
+      ])
     })
   })
 }

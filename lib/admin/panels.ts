@@ -2,6 +2,7 @@ import {
   Activity,
   BriefcaseBusiness,
   Building2,
+  CalendarCog,
   CalendarDays,
   FileText,
   IdCard,
@@ -56,6 +57,13 @@ export const ADMIN_PANELS: readonly Panel[] = [
     route: '/admin/users',
     label: 'admin.users.name',
     icon: Users,
+    count: null,
+  },
+  {
+    name: 'fair',
+    route: '/admin/fair',
+    label: 'admin.fair.name',
+    icon: CalendarCog,
     count: null,
   },
   {
@@ -126,6 +134,21 @@ export const panelsFor = (
   (isAdmin ? ADMIN_PANELS : COMPANY_PANELS).filter(
     (panel) => !panel.area || allows(panel.area),
   )
+
+/** How many tabs a phone's bottom bar holds */
+export const PHONE_TABS = 5
+
+/**
+ * The panels a phone shows as tabs, and those behind a "More" tab once they do not all fit
+ *
+ * @remarks
+ * A bar that scrolls sideways hides its last panels without saying so, so the last tab opens a
+ * list of the rest instead.
+ */
+export const phoneTabs = <T>(panels: readonly T[], slots = PHONE_TABS) =>
+  panels.length <= slots
+    ? { tabs: panels, more: [] as readonly T[] }
+    : { tabs: panels.slice(0, slots - 1), more: panels.slice(slots - 1) }
 
 /** Whether a panel is where the user is: its own page or, unless exact, a page below it */
 export const isActivePanel = (

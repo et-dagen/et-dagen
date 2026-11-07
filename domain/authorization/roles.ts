@@ -86,6 +86,7 @@ export const ROLES = {
     image: { upload: true },
     activity: { read: true },
     board: { manage: true },
+    fair: { manage: true },
   },
 
   company: {

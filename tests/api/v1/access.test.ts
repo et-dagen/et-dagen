@@ -58,9 +58,10 @@ describe('PUT /api/v1/user/access', () => {
       await createUser({ userType: 'company', companyUID: 'globex' }),
       await createUser({ userType: 'company', companyUID: 'globex' }),
     ]
+    // without access the list answers with the caller's own record
     const resumes = (token: string) =>
-      api('/api/v1/user?scope=all', { token }).then((r) =>
-        (r.body as { resume?: string }[]).some((u) => 'resume' in u),
+      api('/api/v1/resume?scope=all', { token }).then(
+        (r) => Array.isArray(r.body) && r.body.length > 0,
       )
     await createUser({ ...student, resume: 'resumes/someone.pdf' })
 

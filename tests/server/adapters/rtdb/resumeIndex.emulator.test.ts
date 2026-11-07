@@ -22,14 +22,21 @@ describe.skipIf(!host)('Realtime Database emulator', () => {
     ),
   )
 
-  describeResumeIndex('rtdb', async (seed = {}) => {
+  describeResumeIndex('rtdb', async (seed = {}, profiles = {}) => {
+    const stored = (uid: string, resume: string) => {
+      const profile = profiles[uid]
+      // v1 stored some study years as strings
+      return profile
+        ? { ...profile, currentYear: String(profile.currentYear), resume }
+        : { name: uid, resume }
+    }
     await db
       .ref('users')
       .set(
         Object.fromEntries(
           Object.entries(seed).map(([uid, resume]) => [
             uid,
-            { name: uid, resume },
+            stored(uid, resume),
           ]),
         ),
       )

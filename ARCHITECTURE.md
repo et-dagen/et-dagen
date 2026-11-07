@@ -26,7 +26,7 @@ Firebase Admin SDK: Realtime Database, Cloud Storage, Auth
 - Handlers mix request parsing, rules, authorization and storage calls in one function.
   That is what the migration removes.
 - Realtime Database nodes: `users`, `companies`, `events` (with `attendants` and `queue`), `jobs`,
-  `registrationCodes`, `studyProgrammes`, `generalInfo`. The stored data has drifted from the types
+  `studyProgrammes`, `generalInfo`. The stored data has drifted from the types
   in `models/` (#543); treat what is stored as untrusted and parse it.
 
 ## Target: hexagonal architecture

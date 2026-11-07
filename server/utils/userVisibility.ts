@@ -33,8 +33,8 @@ const pick = (user: StoredUser, fields: readonly string[]) =>
  *
  * @remarks
  * - Admins (`user.list`) see everyone in full.
- * - A company user sees the attendants and queue of the events they may manage, and, with
- *   résumé access, every user with a résumé, résumé link included.
+ * - A company user sees the attendants and queue of the events they may manage. Résumés are
+ *   listed by `GET /api/v1/resume?scope=all`.
  * - Anyone else sees themselves in full, and the name and study programme of users registered
  *   for an event, which the event page lists. A coordinator also sees the people on the events
  *   they manage as a company user does, but no résumés.
@@ -61,17 +61,9 @@ export function visibleUsers(
   )
 
   if (subject.roles.includes('company')) {
-    const resumes = hasPermission(
-      subject,
-      'resume',
-      'read',
-      { scope: 'all' },
-      env,
-    )
-    const fields = resumes ? [...COMPANY_FIELDS, 'resume'] : COMPANY_FIELDS
     return users
-      .filter((u) => related.has(u.uid) || (resumes && u.resume))
-      .map((u) => pick(u, fields))
+      .filter((u) => related.has(u.uid))
+      .map((u) => pick(u, COMPANY_FIELDS))
   }
 
   const attendants = new Set(

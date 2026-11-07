@@ -23,7 +23,7 @@ export const eraseUsers = (
   stores: {
     db: Pick<Database, 'ref'>
     files: Bucket
-    auth: Pick<Auth, 'getUser' | 'deleteUsers'>
+    auth: Pick<Auth, 'getUser' | 'getUsers' | 'deleteUsers'>
   },
   uids: readonly string[],
   now: Instant = Instant.now(),

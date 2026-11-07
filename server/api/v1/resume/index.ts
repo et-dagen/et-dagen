@@ -3,47 +3,25 @@
 
 import { createError, defineEventHandler, getQuery } from 'h3'
 import { defineRouteMeta } from 'nitropack/runtime'
+import { listResumes } from '@/application/users/resume'
 import { hasPermission } from '@/domain/authorization/hasPermission'
 import { Instant } from '@/domain/time'
-import { auth, db } from '@/server/utils/firebase'
+import { resumes, users } from '@/server/composition'
 import {
   addEventContext,
   setErrorContext,
   setLogImportance,
   setResourceContext,
-  withDbTiming,
 } from '@/server/utils/wideEventHelpers'
-import formatFirebaseUser from '@/server/utils/formatFirebaseUser'
-
-const isValidFirebaseStorageLink = async (link: string): Promise<boolean> => {
-  // check if link is a string
-  if (typeof link !== 'string') return false
-
-  // check if link is a firebase storage link
-  const isFirebaseLink =
-    link.startsWith('https://firebasestorage.googleapis.com/v0/b/') &&
-    link.includes('o/') &&
-    link.includes('resumes%2F') &&
-    link.includes('?alt=media')
-
-  if (!isFirebaseLink) return false
-
-  // verify if the link is actually saved in the storage database
-  try {
-    const response = await fetch(link, { method: 'HEAD' })
-    return response.ok
-  } catch (error) {
-    return false
-  }
-}
 
 defineRouteMeta({
   openAPI: {
     tags: ['Resume'],
     summary: 'List user resumes',
     description:
-      'Returns the calling user by default. scope=all lists every user holding a resume and ' +
-      'requires admin or a company account with CV access.',
+      'Returns the calling user by default. scope=all lists every user holding a resume, with ' +
+      'their uid, name, email, study programme and year, and requires admin or a company ' +
+      'account with CV access.',
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],
     parameters: [
       {
@@ -99,37 +77,20 @@ export default defineEventHandler(async (event) => {
 
   // without the right to read every résumé, the caller gets their own record
   const all = { scope: 'all' } as const
+  const now = Instant.now()
   if (
     scope !== 'all' ||
-    !hasPermission(subject, 'resume', 'read', all, { now: Instant.now() })
+    !hasPermission(subject, 'resume', 'read', all, { now })
   )
     return user
 
   // listing other users' personal data is kept for the audit trail
   setLogImportance(event, 'warn')
 
-  // reference to users
-  const usersRef = db.ref('users')
-
-  // get all users from db
-  const snapshot = await withDbTiming(event, 'users', 'read', () =>
-    usersRef.once('value'),
-  )
-  const dbUsers = snapshot.val()
-
-  // get the first 1000 users from firebase auth
-  const firebaseUsers = await auth.listUsers()
-
-  // combine users from db and firebase auth
-  const users = firebaseUsers.users
-    .map((firebaseUser) => ({
-      ...formatFirebaseUser(firebaseUser),
-      ...dbUsers[firebaseUser.uid],
-    }))
-    .filter((user) => user.resume && isValidFirebaseStorageLink(user.resume))
+  const listed = await listResumes({ resumes, users }, { subject, now })
 
   // Add result metadata to wide event
-  addEventContext(event, 'result_count', users.length)
+  addEventContext(event, 'result_count', listed.length)
 
-  return users
+  return listed
 })
