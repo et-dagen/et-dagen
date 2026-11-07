@@ -63,6 +63,7 @@ describe('phoneTabs', () => {
       'fair',
       'standmaps',
       'board',
+      'activity',
     ])
   })
 })

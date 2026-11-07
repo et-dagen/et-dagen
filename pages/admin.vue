@@ -20,7 +20,7 @@
   const panel = computed(() => name.value.replace('admin-', ''))
   // list pages get the panel's title here; create and edit pages carry their own
   const isList = computed(() =>
-    /^admin-(companies|events|jobs|users|standmaps|board|fair)$/.test(
+    /^admin-(companies|events|jobs|users|fair|standmaps|board|activity)$/.test(
       name.value,
     ),
   )
