@@ -6,7 +6,7 @@ import { putStandMap } from '@/application/fair/standMaps'
 import { fail } from '@/domain/errors'
 import { FairDay } from '@/domain/fair/day'
 import { Instant } from '@/domain/time'
-import { fileStorage, files, standMaps } from '@/server/composition'
+import { fileStorage, files, images, standMaps } from '@/server/composition'
 import {
   addEventContext,
   setResourceContext,
@@ -18,8 +18,8 @@ defineRouteMeta({
     summary: "Upload a fair day's stand map",
     description:
       'Admin only. Multipart with the image in the part named `file` (PNG, JPEG or WebP, at most ' +
-      '10 MB). Replaces the map the day had. `day` is `YYYY-MM-DD`. Answers with the stored map ' +
-      'as `{ day, name, url }`.',
+      '10 MB), stored as WebP scaled down to fit 3000 × 3000. Replaces the map the day had. ' +
+      '`day` is `YYYY-MM-DD`. Answers with the stored map as `{ day, name, url }`.',
     security: [{ bearerAuth: [] }, { cookieAuth: [] }],
   },
 })
@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
   addEventContext(event, 'file_size', part.data.byteLength)
 
   return putStandMap(
-    { files, storage: fileStorage, standMaps, now: Instant.now },
+    { files, storage: fileStorage, standMaps, images, now: Instant.now },
     {
       subject,
       now: Instant.now(),

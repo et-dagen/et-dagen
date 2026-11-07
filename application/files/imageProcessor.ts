@@ -25,4 +25,14 @@ export interface ImageProcessor {
     bytes: Uint8Array,
     size: { maxSide: number },
   ): Promise<{ bytes: Uint8Array; contentType: 'image/webp' } | null>
+
+  /**
+   * Scale down to fit a square of `maxSide`, never up, and encode as WebP
+   *
+   * @returns null when the bytes are not a picture the processor can read
+   */
+  shrink(
+    bytes: Uint8Array,
+    size: { maxSide: number },
+  ): Promise<{ bytes: Uint8Array; contentType: 'image/webp' } | null>
 }

@@ -948,7 +948,8 @@
     "standmap": {
       "invalid-day": "Choose a valid date.",
       "missing-file": "Choose an image to upload.",
-      "not-found": "This day has no stand map."
+      "not-found": "This day has no stand map.",
+      "unreadable-image": "The map could not be read. Try another image."
     },
     "board": {
       "not-found": "This board member was not found.",
