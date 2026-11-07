@@ -129,7 +129,9 @@
       "off": "The camera is off",
       "done": "Attendance registered",
       "camera_denied": "Allow the browser to use the camera to scan.",
-      "camera_failed": "Found no camera to scan with."
+      "camera_failed": "Found no camera to scan with.",
+      "camera_insecure": "The camera works only on a secure page (https).",
+      "camera_busy": "Another app is using the camera. Close it and try again."
     }
   },
   "contact": {

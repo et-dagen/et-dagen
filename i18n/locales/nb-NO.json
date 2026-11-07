@@ -129,7 +129,9 @@
       "off": "Kameraet er av",
       "done": "Oppmøte registrert",
       "camera_denied": "Gi nettleseren tilgang til kameraet for å skanne.",
-      "camera_failed": "Fant ikke noe kamera å skanne med."
+      "camera_failed": "Fant ikke noe kamera å skanne med.",
+      "camera_insecure": "Kameraet virker bare på en sikker side (https).",
+      "camera_busy": "En annen app bruker kameraet. Lukk den og prøv igjen."
     }
   },
   "contact": {
