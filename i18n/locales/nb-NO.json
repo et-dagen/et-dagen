@@ -948,7 +948,8 @@
     "standmap": {
       "invalid-day": "Velg en gyldig dato.",
       "missing-file": "Velg et bilde å laste opp.",
-      "not-found": "Denne dagen har ikke noe standkart."
+      "not-found": "Denne dagen har ikke noe standkart.",
+      "unreadable-image": "Kartet kunne ikke leses. Prøv et annet bilde."
     },
     "board": {
       "not-found": "Fant ikke dette styremedlemmet.",

@@ -21,6 +21,7 @@ const subject = (role: Role): Subject => ({
 
 /** Stands in for sharp: anything starting with "IMG" is a picture */
 const images: ImageProcessor = {
+  shrink: () => Promise.resolve(null),
   fit: () => Promise.resolve(null),
   trim: (bytes, { maxSide }) =>
     Promise.resolve(

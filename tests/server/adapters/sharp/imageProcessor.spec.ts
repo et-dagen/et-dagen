@@ -87,4 +87,30 @@ describe('sharpImageProcessor', () => {
     expect(meta.width).toBe(1200)
     expect(meta.height).toBe(400)
   })
+
+  it('scales a large map down to fit the side, and leaves a small one its size', async () => {
+    const map = (width: number, height: number) =>
+      sharp({ create: { width, height, channels: 3, background: '#f0f0f0' } })
+        .png()
+        .toBuffer()
+        .then((buffer) => new Uint8Array(buffer))
+
+    const large = await sharpImageProcessor().shrink(await map(6000, 4000), {
+      maxSide: 3000,
+    })
+    const small = await sharpImageProcessor().shrink(await map(1200, 800), {
+      maxSide: 3000,
+    })
+
+    expect(large?.contentType).toBe('image/webp')
+    expect(await sharp(large!.bytes).metadata()).toMatchObject({
+      format: 'webp',
+      width: 3000,
+      height: 2000,
+    })
+    expect(await sharp(small!.bytes).metadata()).toMatchObject({
+      width: 1200,
+      height: 800,
+    })
+  })
 })

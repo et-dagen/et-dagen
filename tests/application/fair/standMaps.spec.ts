@@ -4,8 +4,11 @@ import {
   putStandMap,
   removeStandMap,
 } from '@/application/fair/standMaps'
+import type { ImageProcessor } from '@/application/files/imageProcessor'
 import type { Subject } from '@/domain/authorization/subject'
 import { FairDay } from '@/domain/fair/day'
+import { STAND_MAP } from '@/domain/fair/standMap'
+import { FILE_RULES } from '@/domain/files/file'
 import { Instant } from '@/domain/time'
 import { UserUid, type Role } from '@/domain/user'
 import { memoryFileRepository } from '@/server/adapters/memory/fileRepository'
@@ -22,12 +25,28 @@ const admin = subject('admin')
 const now = Instant.parse('2026-10-25T10:00:00.000Z')
 const tuesday = FairDay.parse('2026-11-03')
 
+/** Stands in for sharp: anything starting with "IMG" is a picture */
+const images: ImageProcessor = {
+  fit: () => Promise.resolve(null),
+  trim: () => Promise.resolve(null),
+  shrink: (bytes, { maxSide }) =>
+    Promise.resolve(
+      new TextDecoder().decode(bytes).startsWith('IMG')
+        ? {
+            bytes: new TextEncoder().encode(`WEBP ${maxSide}`),
+            contentType: 'image/webp',
+          }
+        : null,
+    ),
+}
+
 const setup = () => {
   const storage = memoryFileStorage()
   return {
     files: memoryFileRepository(),
     storage,
     standMaps: memoryStandMapIndex(),
+    images,
     now: () => Instant.parse('2026-10-25T10:00:00.000Z'),
   }
 }
@@ -35,11 +54,11 @@ const setup = () => {
 const png = (name = 'kart.png') => ({
   name,
   contentType: 'image/png',
-  bytes: new Uint8Array([1, 2, 3]),
+  bytes: new TextEncoder().encode('IMG'),
 })
 
 describe('putStandMap', () => {
-  it('stores the map as a fair file and lists it under its day', async () => {
+  it('stores the map shrunk to WebP as a fair file and lists it under its day', async () => {
     const deps = setup()
     const map = await putStandMap(deps, {
       subject: admin,
@@ -49,8 +68,42 @@ describe('putStandMap', () => {
     })
 
     expect(map).toMatchObject({ day: tuesday, name: 'kart.png' })
-    expect(map.url).toMatch(/^memory:\/\/fair\/standmaps\/.+\.png$/)
+    expect(map.url).toMatch(/^memory:\/\/fair\/standmaps\/.+\.webp$/)
+    expect(
+      new TextDecoder().decode(
+        deps.storage.files.get(map.url.replace('memory://', ''))?.bytes,
+      ),
+    ).toBe(`WEBP ${STAND_MAP.maxSide}`)
     expect(await listStandMaps(deps)).toEqual([map])
+  })
+
+  it('refuses a map it cannot read or over the size limit, and keeps the old one', async () => {
+    const deps = setup()
+    const kept = await putStandMap(deps, {
+      subject: admin,
+      now,
+      day: tuesday,
+      ...png(),
+    })
+    await expect(
+      putStandMap(deps, {
+        subject: admin,
+        now,
+        day: tuesday,
+        ...png(),
+        bytes: new TextEncoder().encode('not a picture'),
+      }),
+    ).rejects.toMatchObject({ code: 'standmap/unreadable-image' })
+    await expect(
+      putStandMap(deps, {
+        subject: admin,
+        now,
+        day: tuesday,
+        ...png(),
+        bytes: new Uint8Array(FILE_RULES.standmap.maxBytes + 1),
+      }),
+    ).rejects.toMatchObject({ code: 'file/too-large' })
+    expect(await listStandMaps(deps)).toEqual([kept])
   })
 
   it('replaces the day’s map and removes the old file', async () => {

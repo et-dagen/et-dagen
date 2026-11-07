@@ -1,5 +1,6 @@
 import type { EventRepository } from '@/application/events/eventRepository'
 import type { FileRepository } from '@/application/files/fileRepository'
+import type { InvitationRepository } from '@/application/invitations/invitationRepository'
 import type { RetentionNotices } from '@/application/users/retentionNotices'
 import type { UserDirectory } from '@/application/users/userDirectory'
 import type { UserFiles } from '@/application/users/userFiles'
@@ -12,6 +13,8 @@ export interface ErasurePorts {
   /** The records of files, which name their owner and who uploaded them */
   records: Pick<FileRepository, 'ofOwner' | 'remove' | 'clearUploader'>
   events: Pick<EventRepository, 'removeUsers'>
+  /** Invitations name who joined by them */
+  invitations: Pick<InvitationRepository, 'all' | 'remove'>
   profiles: UserRepository
   notices: Pick<RetentionNotices, 'remove'>
   accounts: UserDirectory
@@ -19,7 +22,8 @@ export interface ErasurePorts {
 
 /**
  * Remove everything stored about users: their files and the records of them, their place on
- * every event, their profile, the warnings sent to them and their account
+ * every event, the invitations they joined by, their profile, the warnings sent to them and
+ * their account
  *
  * @remarks
  * Every step can run again after a failure without harm, and the account goes last: while it
@@ -39,6 +43,11 @@ export async function eraseUsers(
     await ports.records.clearUploader(uid)
   }
   await ports.events.removeUsers(users, now)
+  const erased = new Set<string>(users)
+  const joinedBy = (await ports.invitations.all()).filter(
+    (invitation) => invitation.redeemed && erased.has(invitation.redeemed.by),
+  )
+  await ports.invitations.remove(joinedBy.map((invitation) => invitation.id))
   await ports.profiles.remove(users)
   await ports.notices.remove(users)
   await ports.accounts.remove(users)

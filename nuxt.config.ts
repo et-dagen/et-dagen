@@ -84,7 +84,6 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     '@pinia/nuxt',
     '@vueuse/nuxt',
-    '@nuxt/image',
     // Server code imports what it uses (#583). Last, because modules add their server
     // auto-imports in `nitro:config`.
     (_, nuxt) => {
@@ -114,6 +113,7 @@ export default defineNuxtConfig({
     // Times are the server's, UTC in production
     scheduledTasks: {
       '0 3 * * *': ['users:retention'],
+      '30 3 * * *': ['invitations:prune'],
       // 1 June, a few months after the fair; see nextFairFrom in domain/authorization/affiliation
       '0 4 1 6 *': ['companies:tier-reset'],
     },
@@ -159,17 +159,6 @@ export default defineNuxtConfig({
     detectBrowserLanguage: false,
     // the site has no v-t directives; set explicitly, since the default is deprecated
     bundle: { optimizeTranslationDirective: false },
-  },
-
-  image: {
-    inject: true,
-    screens: {
-      xs: 599,
-      sm: 959,
-      md: 1279,
-      lg: 1919,
-      xl: 2559,
-    },
   },
 
   // enable nuxt devtools

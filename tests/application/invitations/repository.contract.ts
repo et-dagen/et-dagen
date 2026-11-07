@@ -77,5 +77,21 @@ export function describeInvitationRepository(
       expect(await invitations.find(joined.id)).toEqual(joined)
       expect(await invitations.find(revoked.id)).toEqual(revoked)
     })
+
+    it('lists every invitation and removes the ones asked for', async () => {
+      const invitations = await make()
+      const kept = invitation('2026-10-01T10:00:00.000Z')
+      const gone = invitation('2026-10-02T10:00:00.000Z', {
+        company: CompanyUid.parse('globex'),
+      })
+      await invitations.save(kept)
+      await invitations.save(gone)
+
+      await invitations.remove([gone.id, InvitationId.random()])
+      await invitations.remove([])
+
+      expect(await invitations.all()).toEqual([kept])
+      expect(await invitations.find(gone.id)).toBeNull()
+    })
   })
 }
