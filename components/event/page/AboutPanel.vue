@@ -13,16 +13,28 @@
     <!-- eslint-disable vue/no-v-html -->
     <div v-if="event.description" class="et-prose" v-html="event.description" />
     <!-- eslint-enable vue/no-v-html -->
-    <iframe
-      v-if="mapEmbed"
-      :src="mapEmbed"
-      :title="$t('events.page.map_title', { place: event.location?.name })"
-      loading="lazy"
-      referrerpolicy="no-referrer"
-      class="h-72 w-full rounded-lg border bg-card"
-    />
+    <!-- the map is a picture of the place; a tap opens MazeMap, so the map never traps a scroll.
+         The link below says the same for keyboards and screen readers. -->
     <a
-      v-else-if="event.location?.map"
+      v-if="mapEmbed"
+      :href="event.location?.map"
+      target="_blank"
+      rel="noopener noreferrer"
+      tabindex="-1"
+      aria-hidden="true"
+      class="block h-72 overflow-hidden rounded-lg border bg-card"
+    >
+      <iframe
+        :src="mapEmbed"
+        title=""
+        loading="lazy"
+        referrerpolicy="no-referrer"
+        tabindex="-1"
+        class="pointer-events-none block size-full"
+      />
+    </a>
+    <a
+      v-if="event.location?.map"
       :href="event.location.map"
       target="_blank"
       rel="noopener noreferrer"
