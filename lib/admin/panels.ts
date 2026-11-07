@@ -1,6 +1,7 @@
 import {
   BriefcaseBusiness,
   Building2,
+  CalendarCog,
   CalendarDays,
   FileText,
   IdCard,
@@ -69,6 +70,13 @@ export const ADMIN_PANELS: readonly Panel[] = [
     route: '/admin/board',
     label: 'admin.board.name',
     icon: IdCard,
+    count: null,
+  },
+  {
+    name: 'fair',
+    route: '/admin/fair',
+    label: 'admin.fair.name',
+    icon: CalendarCog,
     count: null,
   },
 ]
