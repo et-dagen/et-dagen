@@ -1,5 +1,6 @@
 import type { EventRepository } from '@/application/events/eventRepository'
 import type { FileRepository } from '@/application/files/fileRepository'
+import type { RetentionNotices } from '@/application/users/retentionNotices'
 import type { UserDirectory } from '@/application/users/userDirectory'
 import type { UserFiles } from '@/application/users/userFiles'
 import type { UserRepository } from '@/application/users/userRepository'
@@ -12,12 +13,13 @@ export interface ErasurePorts {
   records: Pick<FileRepository, 'ofOwner' | 'remove' | 'clearUploader'>
   events: Pick<EventRepository, 'removeUsers'>
   profiles: UserRepository
+  notices: Pick<RetentionNotices, 'remove'>
   accounts: UserDirectory
 }
 
 /**
  * Remove everything stored about users: their files and the records of them, their place on
- * every event, their profile and their account
+ * every event, their profile, the warnings sent to them and their account
  *
  * @remarks
  * Every step can run again after a failure without harm, and the account goes last: while it
@@ -38,5 +40,6 @@ export async function eraseUsers(
   }
   await ports.events.removeUsers(users, now)
   await ports.profiles.remove(users)
+  await ports.notices.remove(users)
   await ports.accounts.remove(users)
 }

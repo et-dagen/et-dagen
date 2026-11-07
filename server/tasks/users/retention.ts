@@ -1,5 +1,6 @@
-import { defineTask } from 'nitropack/runtime'
-import { eraseInactiveUsers } from '@/server/user/retention'
+import { defineTask, useRuntimeConfig } from 'nitropack/runtime'
+import { mailer } from '@/server/composition'
+import { runRetention } from '@/server/user/retention'
 import { auth, db, storage } from '@/server/utils/firebase'
 import {
   createWideEvent,
@@ -7,11 +8,17 @@ import {
   logWideEvent,
 } from '@/server/utils/logger'
 
-/** Runs every night from `nitro.scheduledTasks`; logs one wide event with counts only */
+/**
+ * Runs every night from `nitro.scheduledTasks`; logs one wide event with counts only
+ *
+ * @remarks
+ * Without SMTP settings nobody can be warned, so the run only erases, as it did before warnings.
+ */
 export default defineTask({
   meta: {
     name: 'users:retention',
-    description: 'Erase users inactive for more than three years',
+    description:
+      'Warn users 30 days ahead, then erase those inactive for three years',
   },
   async run() {
     const started = Date.now()
@@ -24,13 +31,16 @@ export default defineTask({
     wideEvent.resource = { type: 'users', action: 'retention' }
 
     try {
-      const erased = await eraseInactiveUsers({
+      const counts = await runRetention({
         db,
         files: storage.bucket(),
         auth,
+        mailer: useRuntimeConfig().smtpHost ? mailer : null,
       })
-      wideEvent.erased_count = erased
-      return { result: { erased } }
+      wideEvent.notified_count = counts.notified
+      wideEvent.notify_failed_count = counts.notifyFailed
+      wideEvent.erased_count = counts.erased
+      return { result: counts }
     } catch (error) {
       wideEvent.outcome = 'error'
       wideEvent.error = {

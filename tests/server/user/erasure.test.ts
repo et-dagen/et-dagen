@@ -71,6 +71,10 @@ function setup() {
   })
   const db = fakeDatabase({
     users: { gone: { name: 'Gone' }, kept: { name: 'Kept' } },
+    retention: {
+      gone: '2026-10-01T03:00:00.000Z',
+      kept: '2026-10-01T03:00:00.000Z',
+    },
     files: {
       [RESUME]: record('user:gone', 'resume'),
       [LOGO]: record('company:company', 'logo'),
@@ -110,7 +114,7 @@ function setup() {
 }
 
 describe('eraseUsers', () => {
-  it('deletes the résumé files and their records, the profile and the account', async () => {
+  it('deletes the files and their records, the profile, warnings and account', async () => {
     const { db, files, auth } = setup()
     await eraseUsers(
       { db: db as never, files, auth: auth as never },
@@ -122,6 +126,7 @@ describe('eraseUsers', () => {
     expect(Object.keys(db.tree.files as Tree)).toEqual([LOGO])
     expect(((db.tree.files as Tree)[LOGO] as Tree).uploader).toBeUndefined()
     expect(db.tree.users).toEqual({ kept: { name: 'Kept' } })
+    expect(db.tree.retention).toEqual({ kept: '2026-10-01T03:00:00.000Z' })
     expect(auth.deleteUsers).toHaveBeenCalledWith(['gone'])
   })
 

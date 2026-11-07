@@ -9,6 +9,7 @@ import { FileId, type StoredFile } from '@/domain/files/file'
 import { UserUid } from '@/domain/user'
 import { memoryEventRepository } from '@/server/adapters/memory/eventRepository'
 import { memoryFileRepository } from '@/server/adapters/memory/fileRepository'
+import { memoryRetentionNotices } from '@/server/adapters/memory/retentionNotices'
 import { memoryUserStore } from '@/server/adapters/memory/userStore'
 
 const now = Instant.parse('2026-08-05T10:00:00.000Z')
@@ -37,6 +38,10 @@ function setup() {
     ]),
     events: memoryEventRepository([workshop]),
     profiles: memoryUserStore([gone, kept]),
+    notices: memoryRetentionNotices([
+      [gone, now],
+      [kept, now],
+    ]),
     accounts: memoryUserStore([gone, kept]),
   }
   return ports
@@ -71,6 +76,13 @@ describe('eraseUsers', () => {
     }
     const found = await ports.events.find(workshop.event.uid)
     expect([...(found?.roster.attendants.keys() ?? [])]).toEqual([kept])
+  })
+
+  it('forgets the warnings sent to them', async () => {
+    const ports = setup()
+    await eraseUsers(ports, [gone], now)
+
+    expect(await ports.notices.all()).toEqual(new Map([[kept, now]]))
   })
 
   it('removes the records of their files, but not of what they uploaded for others', async () => {
