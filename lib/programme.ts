@@ -78,26 +78,7 @@ export function initialDay(
   )
 }
 
-/** Whether an event has finished by now, so the timeline can fade it */
-export function isOver(event: EventRow, now: ISO8601String): boolean {
-  const end = instantOf(event.date?.end) ?? instantOf(event.date?.start)
-  return !!end && Date.parse(end) < Date.parse(now)
-}
-
 /** Each day's stand map, from the list the stand map endpoint returns */
 export const standMapsByDay = (
   maps: readonly { date: string; url: string }[] | null | undefined,
 ) => new Map((maps ?? []).map((map) => [map.date, map.url]))
-
-/**
- * The days to list: today and later, or every day when nothing is coming up, so the page shows
- * last year's programme until the next one is published
- */
-export function upcomingDays(
-  days: readonly ProgrammeDay[],
-  now: ISO8601String,
-): ProgrammeDay[] {
-  const today = osloDay(now)
-  const coming = days.filter((day) => day.date >= today)
-  return coming.length ? coming : [...days]
-}

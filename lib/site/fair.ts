@@ -1,16 +1,9 @@
-import { eventStatus, isUpcoming, type EventRow } from '@/lib/events'
 import { instantOf } from '@/lib/time'
-import { Instant, type ISO8601String } from '@/domain/time'
+import type { ISO8601String } from '@/domain/time'
 
 /** `generalInfo` as the landing page reads it; the fair's days as Oslo wall-clock times */
 export interface GeneralInfo {
   date?: { start?: string; end?: string }
-}
-
-/** The fair's days as the landing page sets them: "9.–10." over "februar 2027" */
-export interface FairDays {
-  days: string
-  month: string
 }
 
 const part = (
@@ -23,64 +16,54 @@ const part = (
     .find((p) => p.type !== 'literal')?.value ?? ''
 
 /**
- * The fair's days, split so the day numbers can be set larger than the month
+ * The fair's days as the banner sets them, such as "9. - 10. februar"
  *
  * @remarks
- * Norwegian writes ordinal days with a point ("9.–10."); English does not ("9–10"). A fair that
- * crosses a month names the first month with its day.
+ * The first month is named only when the fair crosses one.
  *
- * @returns null when no dates are set or the fair is over, so the page can say the date is coming
+ * @returns null when no dates are set
  */
-export function fairDays(
+export function fairDateLine(
   info: GeneralInfo | null | undefined,
   locale: string,
-  now: ISO8601String,
-): FairDays | null {
+): string | null {
   const start = instantOf(info?.date?.start)
   const end = instantOf(info?.date?.end) ?? start
-  if (!start || !end || Instant.compare(end, now) < 0) return null
+  if (!start || !end) return null
 
-  const dot = /^(nb|nn|no)\b/.test(locale) ? '.' : ''
-  const day = (at: ISO8601String) =>
-    `${part(at, locale, { day: 'numeric' })}${dot}`
+  const day = (at: ISO8601String) => part(at, locale, { day: 'numeric' })
   const month = (at: ISO8601String) => part(at, locale, { month: 'long' })
-  const year = part(end, locale, { year: 'numeric' })
-
-  const first = day(start)
-  const last = day(end)
-  const days =
-    first === last && month(start) === month(end)
-      ? first
-      : month(start) === month(end)
-        ? `${first}–${last}`
-        : `${first} ${month(start)}–${last}`
-  return { days, month: `${month(end)} ${year}` }
+  const year = (at: ISO8601String) => part(at, locale, { year: 'numeric' })
+  const sameMonth = month(start) === month(end) && year(start) === year(end)
+  return [
+    `${day(start)}.`,
+    sameMonth ? '' : month(start),
+    '-',
+    `${day(end)}.`,
+    month(end),
+  ]
+    .filter(Boolean)
+    .join(' ')
 }
 
-export interface Upcoming {
-  uid: string
-  event: EventRow
+/** Whole days, hours, minutes and seconds */
+export interface Countdown {
+  days: number
+  hours: number
+  minutes: number
+  seconds: number
 }
 
-/** The next events that have not finished, soonest first, for the landing page's short list */
-export function upcoming(
-  events: Record<string, EventRow> | null | undefined,
-  now: ISO8601String,
-  limit: number,
-): Upcoming[] {
-  return Object.entries(events ?? {})
-    .flatMap(([uid, event]) => {
-      const start = instantOf(event.date?.start)
-      return start && isUpcoming(event, now) ? [{ uid, event, start }] : []
-    })
-    .sort((a, b) => Instant.compare(a.start, b.start))
-    .slice(0, limit)
-    .map(({ uid, event }) => ({ uid, event }))
-}
-
-/** Free places left, or null when the event takes no sign-ups */
-export function placesLeft(event: EventRow, now: ISO8601String): number | null {
-  const status = eventStatus(event, now)
-  if (status.kind !== 'open') return null
-  return (event.capacity ?? 0) - Object.keys(event.attendants ?? {}).length
+/** How long until `at`, rounded down to the second; all zero once it has passed */
+export function timeUntil(at: ISO8601String, now: ISO8601String): Countdown {
+  const total = Math.max(
+    0,
+    Math.floor((Date.parse(at) - Date.parse(now)) / 1000),
+  )
+  return {
+    days: Math.floor(total / 86_400),
+    hours: Math.floor((total % 86_400) / 3600),
+    minutes: Math.floor((total % 3600) / 60),
+    seconds: total % 60,
+  }
 }

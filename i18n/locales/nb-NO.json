@@ -151,11 +151,9 @@
   "error": {
     "page": {
       "missing_title": "Denne siden finnes ikke",
-      "missing_text": "Det finnes ingenting på {path}. Adressen kan være skrevet feil, eller siden kan ha flyttet.",
       "failed_title": "Noe gikk galt",
-      "failed_text": "Siden kunne ikke vises. Prøv igjen om litt, og ta kontakt med oss hvis det fortsetter.",
-      "home": "Til forsiden",
-      "elsewhere": "Eller gå til"
+      "oh_no": "Å nei!",
+      "status": "Feil {code}"
     },
     "form": {
       "general": {

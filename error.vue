@@ -1,7 +1,6 @@
 <script setup lang="ts">
   import type { NuxtError } from '#app'
-  import { ArrowRight, House } from '@lucide/vue'
-  import { Button } from '@/components/ui/button'
+  import Alert from '@/components/common/Alert.vue'
 
   const props = defineProps<{ error: NuxtError }>()
 
@@ -10,74 +9,61 @@
   const route = useRoute()
 
   const missing = computed(() => props.error.statusCode === 404)
-  const title = computed(() =>
-    t(missing.value ? 'error.page.missing_title' : 'error.page.failed_title'),
-  )
-  useHead({ title })
+  useHead({
+    title: computed(() =>
+      t(missing.value ? 'error.page.missing_title' : 'error.page.failed_title'),
+    ),
+  })
 
-  const elsewhere = [
-    { label: 'nav.programme', to: '/programme' },
-    { label: 'nav.jobs', to: '/jobs' },
-    { label: 'nav.contact', to: '/contact' },
-  ]
+  // the address without its locale prefix, as the visitor typed it
+  const path = computed(() => {
+    const slug = route.params.slug
+    if (Array.isArray(slug)) return `/${slug.join('/')}`
+    return slug ? `/${slug}` : route.path
+  })
+
+  const home = () => clearError({ redirect: localePath('/') })
 </script>
 
 <template>
-  <NuxtLayout>
-    <div
-      class="tw:mx-auto tw:flex tw:max-w-6xl tw:flex-col tw:items-start tw:gap-8 tw:px-4 tw:py-8 tw:lg:px-8 tw:lg:py-12"
-    >
-      <!-- the code on a plate, as the rooms are signed in Elbygget -->
-      <p
-        class="tw:rounded-md tw:bg-plate tw:px-4 tw:pt-2 tw:pb-1 tw:text-5xl tw:font-black tw:tabular-nums tw:text-plate-foreground tw:lg:text-6xl"
-      >
-        {{ error.statusCode }}
-      </p>
-
-      <div class="tw:flex tw:max-w-prose tw:flex-col tw:gap-3">
-        <h1
-          class="tw:text-3xl tw:font-extrabold tw:tracking-tight tw:text-balance tw:lg:text-[2.5rem]"
-        >
-          {{ title }}
-        </h1>
-        <p v-if="missing" class="tw:text-lg tw:text-muted-foreground">
-          <i18n-t keypath="error.page.missing_text" scope="global">
-            <template #path>
-              <span class="tw:font-semibold tw:break-all tw:text-foreground">
-                {{ route.path }}
-              </span>
-            </template>
-          </i18n-t>
-        </p>
-        <p v-else class="tw:text-lg tw:text-muted-foreground">
-          {{ $t('error.page.failed_text') }}
-        </p>
+  <!-- error.vue replaces app.vue, so it brings its own app and layout -->
+  <VApp>
+    <Alert />
+    <NuxtLayout>
+      <div v-if="missing" class="d-flex h-screen mt-10 justify-center">
+        <VSheet class="text-center">
+          <h1 class="text-h1 pb-9">404</h1>
+          <h5 class="text-h5 py-3 break-text">
+            {{ $t('error.page_not_found.page_doesnt_exist') }}: {{ path }}
+          </h5>
+          <VBtn @click="home">
+            {{ $t('error.page_not_found.navigate_front_page') }}
+          </VBtn>
+        </VSheet>
       </div>
-
-      <Button as-child size="lg">
-        <NuxtLink :to="localePath('/')">
-          <House aria-hidden="true" />
-          {{ $t('error.page.home') }}
-        </NuxtLink>
-      </Button>
-
-      <nav
-        :aria-label="$t('error.page.elsewhere')"
-        class="tw:flex tw:w-full tw:flex-col tw:gap-3 tw:border-t tw:pt-6"
-      >
-        <p class="tw:text-sm tw:font-bold">{{ $t('error.page.elsewhere') }}</p>
-        <ul class="tw:flex tw:flex-wrap tw:gap-x-8 tw:gap-y-2">
-          <li v-for="link in elsewhere" :key="link.to">
-            <NuxtLink
-              :to="localePath(link.to)"
-              class="tw:inline-flex tw:items-center tw:gap-1 tw:font-semibold tw:underline tw:decoration-border tw:decoration-2 tw:underline-offset-4 tw:hover:decoration-brand"
-            >
-              {{ $t(link.label) }}
-              <ArrowRight class="tw:size-4" aria-hidden="true" />
-            </NuxtLink>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </NuxtLayout>
+      <div v-else class="d-flex h-screen justify-center">
+        <VSheet class="text-center mt-10">
+          <h1 class="text-orange text-h1 font-weight-bold pb-3">
+            {{ $t('error.page.oh_no') }}
+          </h1>
+          <h4 class="text-h4 pb-1">
+            {{ $t('error.page.status', { code: error.statusCode }) }}
+          </h4>
+          <h5 class="text-h5 pb-2 break-text">
+            {{ error.message }}
+          </h5>
+          <VBtn @click="home">
+            {{ $t('error.page_not_found.navigate_front_page') }}
+          </VBtn>
+        </VSheet>
+      </div>
+    </NuxtLayout>
+  </VApp>
 </template>
+
+<style scoped>
+  .break-text {
+    max-width: 90vw;
+    word-wrap: break-word;
+  }
+</style>

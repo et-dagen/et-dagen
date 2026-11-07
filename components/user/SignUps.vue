@@ -3,18 +3,6 @@
   import { placeOf } from '@/lib/events'
   import { formatWhen } from '@/lib/time'
   import type { SignUpRow } from '@/lib/user/signUps'
-  import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-  } from '@/components/ui/alert-dialog'
-  import { Button } from '@/components/ui/button'
 
   defineProps<{ rows: SignUpRow[] }>()
   const emit = defineEmits<{ withdrawn: [] }>()
@@ -22,18 +10,26 @@
   const { locale, t } = useI18n()
   const localePath = useLocalePath()
 
-  const when = (row: SignUpRow) =>
-    formatWhen(row.event.date?.start, locale.value, {
-      weekday: 'short',
-      day: 'numeric',
-      month: 'short',
-      hour: '2-digit',
-      minute: '2-digit',
-    })
+  const subtitle = (row: SignUpRow) =>
+    [
+      formatWhen(row.event.date?.start, locale.value, {
+        weekday: 'short',
+        day: 'numeric',
+        month: 'short',
+        hour: '2-digit',
+        minute: '2-digit',
+      }),
+      placeOf(row.event.location?.name).code,
+    ]
+      .filter(Boolean)
+      .join(' · ')
 
-  const busy = ref<string | null>(null)
-  const withdraw = async (row: SignUpRow) => {
-    busy.value = row.eventUID
+  const asked = ref<SignUpRow | null>(null)
+  const busy = ref(false)
+  const withdraw = async () => {
+    const row = asked.value
+    if (!row) return
+    busy.value = true
     try {
       await $fetch('/api/v1/event/register', {
         method: 'DELETE',
@@ -43,86 +39,85 @@
         t('user.page.withdrawn', { title: row.event.title ?? '' }),
         'success',
       )
+      asked.value = null
       emit('withdrawn')
     } catch (error) {
       alertError(error)
     } finally {
-      busy.value = null
+      busy.value = false
     }
   }
 </script>
 
 <template>
-  <ul>
-    <li
-      v-for="row in rows"
-      :key="row.eventUID"
-      class="tw:grid tw:grid-cols-[minmax(0,1fr)_auto] tw:items-center tw:gap-x-4 tw:gap-y-3 tw:border-t tw:px-5 tw:py-4 tw:first:border-t-0 tw:sm:grid-cols-[minmax(0,1fr)_12rem_auto] tw:sm:gap-x-6 tw:sm:px-6"
-    >
-      <div class="tw:col-span-2 tw:min-w-0 tw:sm:col-span-1">
+  <VList lines="two" class="py-0">
+    <VListItem v-for="row in rows" :key="row.eventUID" class="px-0">
+      <VListItemTitle>
         <NuxtLink
           :to="localePath(`/event/${row.eventUID}`)"
-          class="tw:font-bold tw:hover:underline tw:hover:decoration-brand tw:hover:decoration-2 tw:hover:underline-offset-4"
+          class="text-primary font-weight-bold"
         >
           {{ row.event.title }}
         </NuxtLink>
-        <p
-          class="tw:mt-1 tw:flex tw:flex-wrap tw:items-center tw:gap-2 tw:text-sm tw:text-muted-foreground"
+      </VListItemTitle>
+      <VListItemSubtitle class="signup__when">
+        {{ subtitle(row) }}
+      </VListItemSubtitle>
+      <VChip
+        size="small"
+        class="mt-1"
+        :color="row.status === 'attending' ? 'success' : 'warning'"
+      >
+        {{
+          row.status === 'attending'
+            ? $t('user.page.attending')
+            : $t('user.page.queued', { n: row.position })
+        }}
+      </VChip>
+      <template #append>
+        <VBtn
+          size="small"
+          variant="outlined"
+          color="error"
+          @click="asked = row"
         >
-          <span class="tw:first-letter:uppercase">{{ when(row) }}</span>
-          <span
-            v-if="placeOf(row.event.location?.name).code"
-            class="tw:rounded tw:bg-plate tw:px-1.5 tw:pt-0.5 tw:text-xs tw:font-extrabold tw:text-plate-foreground"
-          >
-            {{ placeOf(row.event.location?.name).code }}
-          </span>
-        </p>
-      </div>
+          {{ $t('user.page.withdraw') }}
+        </VBtn>
+      </template>
+    </VListItem>
+  </VList>
 
-      <span
-        v-if="row.status === 'attending'"
-        class="tw:inline-flex tw:items-center tw:gap-2 tw:justify-self-start tw:rounded-full tw:bg-muted tw:px-3 tw:pt-1 tw:pb-0.5 tw:text-sm tw:font-bold tw:text-plate"
-      >
-        <span
-          class="tw:size-2 tw:rounded-full tw:bg-plate"
-          aria-hidden="true"
-        />
-        {{ $t('user.page.attending') }}
-      </span>
-      <span
-        v-else
-        class="tw:justify-self-start tw:rounded-full tw:bg-signal tw:px-3 tw:pt-1 tw:pb-0.5 tw:text-sm tw:font-bold tw:text-signal-foreground"
-      >
-        {{ $t('user.page.queued', { n: row.position }) }}
-      </span>
-
-      <AlertDialog>
-        <AlertDialogTrigger as-child>
-          <Button variant="outline" :disabled="busy === row.eventUID">
-            {{ $t('user.page.withdraw') }}
-          </Button>
-        </AlertDialogTrigger>
-        <AlertDialogContent class="tw:rounded-md tw:bg-card">
-          <AlertDialogHeader>
-            <AlertDialogTitle class="tw:text-lg tw:font-bold">
-              {{ $t('user.page.withdraw_title', { title: row.event.title }) }}
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              {{
-                row.status === 'attending'
-                  ? $t('user.page.withdraw_place')
-                  : $t('user.page.withdraw_queue')
-              }}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>{{ $t('user.page.keep') }}</AlertDialogCancel>
-            <AlertDialogAction @click="withdraw(row)">
-              {{ $t('user.page.withdraw') }}
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </li>
-  </ul>
+  <VDialog
+    :model-value="!!asked"
+    max-width="500"
+    @update:model-value="asked = null"
+  >
+    <VCard v-if="asked">
+      <VCardTitle class="text-wrap">
+        {{ $t('user.page.withdraw_title', { title: asked.event.title }) }}
+      </VCardTitle>
+      <VCardText>
+        {{
+          asked.status === 'attending'
+            ? $t('user.page.withdraw_place')
+            : $t('user.page.withdraw_queue')
+        }}
+      </VCardText>
+      <VCardActions>
+        <VSpacer />
+        <VBtn size="default" :disabled="busy" @click="asked = null">
+          {{ $t('user.page.keep') }}
+        </VBtn>
+        <VBtn size="default" color="error" :loading="busy" @click="withdraw">
+          {{ $t('user.page.withdraw') }}
+        </VBtn>
+      </VCardActions>
+    </VCard>
+  </VDialog>
 </template>
+
+<style scoped lang="scss">
+  .signup__when::first-letter {
+    text-transform: uppercase;
+  }
+</style>

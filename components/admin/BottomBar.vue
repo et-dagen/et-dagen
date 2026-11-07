@@ -33,8 +33,9 @@
   }
 
   const tab = [
-    'tw:group tw:flex tw:h-14 tw:w-full tw:min-w-14 tw:flex-col tw:items-center tw:justify-center tw:gap-1',
-    'tw:rounded-md tw:px-1.5 tw:text-xs tw:font-semibold tw:data-[active=true]:bg-white',
+    'tw:group tw:flex tw:h-14 tw:w-full tw:min-w-14 tw:flex-col tw:items-center',
+    'tw:justify-center tw:gap-1 tw:rounded-md tw:px-1.5 tw:text-xs tw:font-semibold',
+    'tw:data-[active=true]:bg-white',
   ]
 </script>
 

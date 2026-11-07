@@ -1,9 +1,9 @@
 /*
- * Styles for the pages built on shadcn-vue (the admin panel first)
+ * Styles for the pages built on shadcn-vue (the admin and company panels)
  *
- * Every Tailwind class carries the tw: prefix (tw:bg-primary), a habit from when Vuetify defined
- * classes with the same names, and Tailwind's preflight is left out. Pages sit inside `.et-admin`
- * (admin) or `.et-ui` (public),
+ * Tailwind's preflight is left out, so the Vuetify pages keep their look, and every Tailwind class
+ * carries the tw: prefix (tw:bg-primary), because Vuetify defines classes with the same names and
+ * !important (bg-primary, border, rounded-lg). Pages sit inside `.et-admin` (admin) or `.et-ui`,
  * which get the base styles preflight would have given; so do shadcn-vue components (`[data-slot]`), because menus and dialogs render at the end of <body>.
  * The palette sits on :root for the same reason.
  * Every colour comes from the palette below: change it here and every page follows.

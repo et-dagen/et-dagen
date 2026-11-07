@@ -22,17 +22,22 @@ const byName = (a: Company, b: Company) =>
  * Only companies with a logo are shown: the landing page sets companies as logo plates, and an
  * empty plate reads as a fault. Former companies (`prior`) are left out, except that after the
  * yearly reset, when no company has a tier, the last fair's companies show by the tier they had.
+ * Each tier is sorted by name, unless `order` is `'stored'`, which keeps the order the
+ * companies were given in.
  */
 export function lineupOf(
   companies: Record<string, Company> | null | undefined,
+  { order = 'name' }: { order?: 'name' | 'stored' } = {},
 ): Lineup {
   const shown = Object.values(companies ?? {}).filter((c) => !!c.logo)
   const by = (
     tierOf: (c: Company) => Relationship | undefined,
     last: boolean,
   ) => {
-    const tier = (name: Relationship) =>
-      shown.filter((c) => tierOf(c) === name).sort(byName)
+    const tier = (name: Relationship) => {
+      const listed = shown.filter((c) => tierOf(c) === name)
+      return order === 'name' ? listed.sort(byName) : listed
+    }
     return {
       mainPartner: tier('mainPartner')[0] ?? null,
       partners: tier('partner'),
@@ -44,15 +49,4 @@ export function lineupOf(
   const empty =
     !current.mainPartner && !current.partners.length && !current.sponsors.length
   return empty ? by((c) => c.formerTier, true) : current
-}
-
-/**
- * Empty cells that close a logo wall's last row
- *
- * @remarks
- * The wall draws its grid lines through the gaps between cells, so a short last row would leave
- * a hole of bare line colour. `taken` counts cells, with the main partner's tile as several.
- */
-export function fillerCount(taken: number, columns: number): number {
-  return (columns - (taken % columns)) % columns
 }

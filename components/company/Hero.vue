@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import type { PropType } from 'vue'
+
   export interface CompanyInfo {
     name: string
     description: string
@@ -16,12 +18,13 @@
 
 <template>
   <div>
-    <VCard class="companyWrapper pa-6" variant="flat" rounded="lg" border>
+    <VCard class="companyWrapper" variant="flat">
       <VRow no-gutters>
         <!-- Company logo -->
         <VCol cols="12" lg="7" class="d-flex justify-center pr-lg-3">
-          <NuxtImg
+          <img
             class="companyImage"
+            alt=""
             :src="content.logo"
             @click="
               navigateTo(content.webpage, {

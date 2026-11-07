@@ -1,25 +1,12 @@
 <script setup lang="ts">
-  import { useForm } from 'vee-validate'
-  import { getErrorAlertContext } from '@/composables/useAlerts'
+  import { useField, useForm } from 'vee-validate'
+  import { alertError, notify } from '@/composables/useAlerts'
   import { useAuthStore } from '@/stores/authStore'
   import {
     requestPasswordReset,
     signInHere,
     signOutHere,
   } from '@/composables/auth/session'
-  import FieldError from '@/components/form/FieldError.vue'
-  import { Button } from '@/components/ui/button'
-  import {
-    FormControl,
-    FormDescription,
-    FormField,
-    FormItem,
-    FormLabel,
-  } from '@/components/ui/form'
-  import { Input } from '@/components/ui/input'
-  import { Label } from '@/components/ui/label'
-  import PasswordInput from '@/components/form/PasswordInput.vue'
-  import { useFocusInvalid } from '@/composables/useFocusInvalid'
   import { InvitationAccept } from '@/contracts/user'
   import { EmailAddress, sameAccount } from '@/domain/email'
   import { typedSchemaOf } from '@/lib/forms/zodSchema'
@@ -45,8 +32,7 @@
   // someone without an account opens one; someone with one signs in
   const mode = ref<'open' | 'sign-in'>('open')
   const pending = ref(false)
-  const error = ref('')
-  const notice = ref('')
+  const showPassword = ref(false)
 
   const redeem = (body?: InvitationAccept) =>
     $fetch(`/api/v1/invitation/${props.token}`, { method: 'POST', body })
@@ -60,47 +46,55 @@
 
   async function run(step: () => Promise<void>) {
     pending.value = true
-    error.value = ''
-    notice.value = ''
     try {
       await step()
     } catch (cause) {
-      error.value = getErrorAlertContext(cause).message
+      alertError(cause)
     } finally {
       pending.value = false
     }
   }
 
   const form = useForm({ validationSchema: typedSchemaOf(InvitationAccept) })
-  const formEl = ref<HTMLFormElement | null>(null)
-  const focusInvalid = useFocusInvalid(formEl)
+  const { value: name, errorMessage: nameError } = useField<string>('name')
+  const { value: newPassword, errorMessage: newPasswordError } =
+    useField<string>('password')
+  // the contract's messages are keys under form.errors
+  const shown = (key?: string) => (key ? t(`form.errors.${key}`) : undefined)
 
-  const openAccount = form.handleSubmit(async (account) => {
-    pending.value = true
-    error.value = ''
-    try {
-      await redeem(account)
-      await signInHere(props.invitation.email, account.password)
-      await joined()
-    } catch (cause) {
-      const code = (cause as { data?: { code?: string } }).data?.code
-      if (code === 'invitation/account-exists') {
-        mode.value = 'sign-in'
-        notice.value = t('invitation.join.has_account')
-      } else {
-        error.value = getErrorAlertContext(cause).message
+  const openAccount = form.handleSubmit(
+    async (account) => {
+      pending.value = true
+      try {
+        await redeem(account)
+        await signInHere(props.invitation.email, account.password)
+        await joined()
+      } catch (cause) {
+        const code = (cause as { data?: { code?: string } }).data?.code
+        if (code === 'invitation/account-exists') {
+          mode.value = 'sign-in'
+          notify(t('invitation.join.has_account'), 'info')
+        } else {
+          alertError(cause)
+        }
+      } finally {
+        pending.value = false
       }
-    } finally {
-      pending.value = false
-    }
-  }, focusInvalid)
+    },
+    ({ errors }) =>
+      document
+        .getElementById(errors.name ? 'join-name' : 'join-new-password')
+        ?.focus(),
+  )
 
   const password = ref('')
+  const passwordError = ref<string>()
   function signInAndJoin() {
     if (!password.value) {
-      error.value = t('errors.auth.missing-password')
+      passwordError.value = t('errors.auth.missing-password')
       return document.getElementById('join-password')?.focus()
     }
+    passwordError.value = undefined
     return run(async () => {
       await signInHere(props.invitation.email, password.value)
       await redeem()
@@ -117,212 +111,252 @@
   const forgot = () =>
     run(async () => {
       await requestPasswordReset(props.invitation.email).catch(() => {})
-      notice.value = t('signin.reset_sent', { email: props.invitation.email })
+      notify(
+        t('signin.reset_sent', { email: props.invitation.email }),
+        'success',
+      )
     })
-
-  function switchTo(next: 'open' | 'sign-in') {
-    mode.value = next
-    error.value = ''
-    notice.value = ''
-  }
 </script>
 
 <template>
-  <div
-    class="tw:flex tw:flex-col tw:gap-8 tw:rounded-lg tw:border tw:bg-card tw:p-6 tw:sm:p-8"
-  >
-    <div class="tw:flex tw:flex-col tw:gap-2">
-      <h1 class="tw:text-3xl tw:font-extrabold tw:tracking-tight">
-        {{ $t('invitation.join.title', { company }) }}
-      </h1>
-      <p class="tw:text-muted-foreground">
-        {{
-          $t('invitation.join.lead', {
-            company,
-            day: dayOf(invitation.expiresAt, locale),
-          })
-        }}
-      </p>
-    </div>
-
-    <dl class="tw:flex tw:flex-col tw:gap-1">
-      <dt class="tw:text-sm tw:font-medium">
-        {{ $t('invitation.join.address') }}
-      </dt>
-      <dd class="tw:break-all tw:text-lg tw:font-semibold">
-        {{ invitation.email }}
-      </dd>
-    </dl>
+  <div class="ma-10">
+    <h4 class="text-center pt-4 pb-7">
+      {{ $t('invitation.join.title', { company }) }}
+    </h4>
+    <VContainer>
+      <VRow>
+        <p class="text-center">
+          {{
+            $t('invitation.join.lead', {
+              company,
+              day: dayOf(invitation.expiresAt, locale),
+            })
+          }}
+        </p>
+      </VRow>
+      <VRow>
+        <VTextField
+          :model-value="invitation.email"
+          :label="$t('invitation.join.address')"
+          variant="outlined"
+          readonly
+          hide-details
+        />
+      </VRow>
+    </VContainer>
 
     <!-- signed in with the invited address: one click -->
-    <div v-if="invitedHere" class="tw:flex tw:flex-col tw:gap-3">
-      <p class="tw:text-muted-foreground">
-        {{ $t('invitation.join.signed_in') }}
-      </p>
-      <Button
-        size="lg"
-        class="tw:h-11"
-        :disabled="pending"
-        @click="joinSignedIn"
-      >
-        {{ $t('invitation.join.join', { company }) }}
-      </Button>
-    </div>
+    <VContainer v-if="invitedHere">
+      <VRow>
+        <p>{{ $t('invitation.join.signed_in') }}</p>
+      </VRow>
+      <VRow>
+        <VBtn
+          color="success"
+          class="btn"
+          :loading="pending"
+          @click="joinSignedIn"
+        >
+          {{ $t('invitation.join.join', { company }) }}
+        </VBtn>
+      </VRow>
+    </VContainer>
 
     <!-- signed in as someone else: the invitation belongs to another account -->
-    <div v-else-if="signedInAs" class="tw:flex tw:flex-col tw:gap-3">
-      <p>
-        {{ $t('invitation.join.other_account', { email: signedInAs }) }}
-      </p>
-      <Button
-        variant="outline"
-        size="lg"
-        class="tw:h-11"
-        :disabled="pending"
-        @click="run(signOutHere)"
-      >
-        {{ $t('invitation.join.sign_out') }}
-      </Button>
-    </div>
-
-    <form
-      v-else-if="mode === 'open'"
-      ref="formEl"
-      novalidate
-      class="tw:flex tw:flex-col tw:gap-5"
-      @submit="openAccount"
-    >
-      <!-- the address, for password managers that save the pair -->
-      <input
-        type="email"
-        name="username"
-        autocomplete="username"
-        :value="invitation.email"
-        readonly
-        tabindex="-1"
-        aria-hidden="true"
-        class="tw:sr-only"
-      />
-      <FormField v-slot="{ componentField }" name="name">
-        <FormItem>
-          <FormLabel>{{ $t('signup.name') }}</FormLabel>
-          <FormControl>
-            <Input
-              v-bind="componentField"
-              autocomplete="name"
-              variant="public"
-            />
-          </FormControl>
-          <FieldError />
-        </FormItem>
-      </FormField>
-      <FormField v-slot="{ componentField }" name="password">
-        <FormItem>
-          <FormLabel>{{ $t('invitation.join.new_password') }}</FormLabel>
-          <FormControl>
-            <PasswordInput v-bind="componentField" variant="public" />
-          </FormControl>
-          <FormDescription>{{ $t('signup.password_hint') }}</FormDescription>
-          <FieldError />
-        </FormItem>
-      </FormField>
-      <p
-        v-if="error"
-        role="alert"
-        class="tw:text-sm tw:font-semibold tw:text-destructive"
-      >
-        {{ error }}
-      </p>
-      <Button type="submit" size="lg" class="tw:h-11" :disabled="pending">
-        {{ $t(pending ? 'signup.pending' : 'invitation.join.open') }}
-      </Button>
-      <p class="tw:text-sm">
-        <span class="tw:text-muted-foreground">
-          {{ $t('invitation.join.have_account') }}
-        </span>
-        {{ ' ' }}
-        <button
-          type="button"
-          class="tw:font-bold tw:text-brand tw:underline-offset-4 tw:hover:underline"
-          @click="switchTo('sign-in')"
-        >
-          {{ $t('invitation.join.sign_in_instead') }}
-        </button>
-      </p>
-    </form>
-
-    <form
-      v-else
-      novalidate
-      class="tw:flex tw:flex-col tw:gap-5"
-      @submit.prevent="signInAndJoin"
-    >
-      <input
-        type="email"
-        name="username"
-        autocomplete="username"
-        :value="invitation.email"
-        readonly
-        tabindex="-1"
-        aria-hidden="true"
-        class="tw:sr-only"
-      />
-      <p v-if="notice" role="status" class="tw:text-sm tw:font-semibold">
-        {{ notice }}
-      </p>
-      <div class="tw:flex tw:flex-col tw:gap-2">
-        <Label for="join-password">{{ $t('signin.password') }}</Label>
-        <Input
-          id="join-password"
-          v-model="password"
-          type="password"
-          name="password"
-          autocomplete="current-password"
-          variant="public"
-          :aria-invalid="!!error || undefined"
-          :aria-describedby="error ? 'join-error' : undefined"
-        />
-        <p
-          v-if="error"
-          id="join-error"
-          role="alert"
-          class="tw:text-sm tw:font-semibold tw:text-destructive"
-        >
-          {{ error }}
+    <VContainer v-else-if="signedInAs">
+      <VRow>
+        <p>
+          {{ $t('invitation.join.other_account', { email: signedInAs }) }}
         </p>
-        <button
-          type="button"
-          class="tw:w-fit tw:text-sm tw:font-semibold tw:underline tw:underline-offset-4 tw:hover:text-brand"
-          :disabled="pending"
-          @click="forgot"
+      </VRow>
+      <VRow>
+        <VBtn
+          color="primary"
+          variant="outlined"
+          class="btn"
+          :loading="pending"
+          @click="run(signOutHere)"
         >
-          {{ $t('invitation.join.forgot') }}
-        </button>
-      </div>
-      <Button type="submit" size="lg" class="tw:h-11" :disabled="pending">
-        {{ $t('invitation.join.sign_in_and_join', { company }) }}
-      </Button>
-      <p class="tw:text-sm">
-        <span class="tw:text-muted-foreground">
-          {{ $t('invitation.join.no_account') }}
-        </span>
-        {{ ' ' }}
-        <button
-          type="button"
-          class="tw:font-bold tw:text-brand tw:underline-offset-4 tw:hover:underline"
-          @click="switchTo('open')"
-        >
-          {{ $t('invitation.join.open_instead') }}
-        </button>
-      </p>
-    </form>
+          {{ $t('invitation.join.sign_out') }}
+        </VBtn>
+      </VRow>
+    </VContainer>
 
-    <p
-      v-if="(invitedHere || signedInAs) && error"
-      role="alert"
-      class="tw:-mt-4 tw:text-sm tw:font-semibold tw:text-destructive"
-    >
-      {{ error }}
-    </p>
+    <VForm v-else-if="mode === 'open'" novalidate @submit.prevent="openAccount">
+      <VContainer>
+        <!-- the address, for password managers that save the pair -->
+        <input
+          type="email"
+          name="username"
+          autocomplete="username"
+          :value="invitation.email"
+          readonly
+          tabindex="-1"
+          aria-hidden="true"
+          class="d-sr-only"
+        />
+        <VRow>
+          <VTextField
+            id="join-name"
+            v-model="name"
+            :label="$t('signup.name')"
+            name="name"
+            autocomplete="name"
+            variant="outlined"
+            :error-messages="shown(nameError)"
+          />
+        </VRow>
+        <VRow>
+          <VTextField
+            id="join-new-password"
+            v-model="newPassword"
+            :label="$t('invitation.join.new_password')"
+            name="password"
+            autocomplete="new-password"
+            variant="outlined"
+            :type="showPassword ? 'text' : 'password'"
+            :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            :hint="$t('signup.password_hint')"
+            persistent-hint
+            :error-messages="shown(newPasswordError)"
+            @click:append-inner="showPassword = !showPassword"
+          />
+        </VRow>
+      </VContainer>
+      <VContainer>
+        <VRow>
+          <VBtn color="success" type="submit" class="btn" :loading="pending">
+            {{ $t('invitation.join.open') }}
+          </VBtn>
+        </VRow>
+      </VContainer>
+      <VContainer class="my-0 pt-2">
+        <VRow class="mt-0">
+          <span class="question">{{ $t('invitation.join.have_account') }}</span>
+        </VRow>
+        <VRow class="mt-0">
+          <VBtn
+            color="primary"
+            variant="outlined"
+            class="btn"
+            :disabled="pending"
+            @click="mode = 'sign-in'"
+          >
+            {{ $t('invitation.join.sign_in_instead') }}
+          </VBtn>
+        </VRow>
+      </VContainer>
+    </VForm>
+
+    <VForm v-else novalidate @submit.prevent="signInAndJoin">
+      <VContainer>
+        <input
+          type="email"
+          name="username"
+          autocomplete="username"
+          :value="invitation.email"
+          readonly
+          tabindex="-1"
+          aria-hidden="true"
+          class="d-sr-only"
+        />
+        <VRow>
+          <VTextField
+            id="join-password"
+            v-model="password"
+            :label="$t('signin.password')"
+            name="password"
+            autocomplete="current-password"
+            variant="outlined"
+            :type="showPassword ? 'text' : 'password'"
+            :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+            :error-messages="passwordError"
+            @click:append-inner="showPassword = !showPassword"
+          />
+        </VRow>
+      </VContainer>
+      <VContainer>
+        <VRow>
+          <VBtn color="success" type="submit" class="btn" :loading="pending">
+            {{ $t('invitation.join.sign_in_and_join', { company }) }}
+          </VBtn>
+        </VRow>
+      </VContainer>
+      <VContainer class="my-0 pt-2">
+        <VRow class="mt-0">
+          <button
+            type="button"
+            class="forgot"
+            :disabled="pending"
+            @click="forgot"
+          >
+            {{ $t('invitation.join.forgot') }}
+          </button>
+        </VRow>
+        <VRow class="mt-0">
+          <span class="question">{{ $t('invitation.join.no_account') }}</span>
+        </VRow>
+        <VRow class="mt-0">
+          <VBtn
+            color="primary"
+            variant="outlined"
+            class="btn"
+            :disabled="pending"
+            @click="mode = 'open'"
+          >
+            {{ $t('invitation.join.open_instead') }}
+          </VBtn>
+        </VRow>
+      </VContainer>
+    </VForm>
   </div>
 </template>
+
+<style scoped lang="scss">
+  @use 'sass:map';
+  @use 'vuetify/settings';
+
+  .v-container {
+    max-width: 26rem;
+    margin-block: 0.5rem;
+  }
+
+  .v-row {
+    justify-content: center;
+    padding-block: 0.5rem;
+  }
+
+  // a company's name can make a label longer than the old buttons were wide
+  .btn {
+    min-width: 60%;
+    max-width: 100%;
+    height: auto;
+    min-height: 52px;
+
+    :deep(.v-btn__content) {
+      white-space: normal;
+    }
+  }
+
+  .question {
+    margin: 0.4rem auto 0;
+    text-align: center;
+  }
+
+  .forgot {
+    margin: 0.4rem auto;
+    font-weight: 600;
+    font-style: italic;
+    font-size: 1.1rem;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
+    .btn {
+      width: 100%;
+    }
+  }
+</style>

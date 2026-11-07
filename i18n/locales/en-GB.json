@@ -151,11 +151,9 @@
   "error": {
     "page": {
       "missing_title": "This page does not exist",
-      "missing_text": "There is nothing at {path}. The address may be mistyped, or the page may have moved.",
       "failed_title": "Something went wrong",
-      "failed_text": "The page could not be shown. Try again in a moment, and contact us if it keeps happening.",
-      "home": "Go to the front page",
-      "elsewhere": "Or go to"
+      "oh_no": "Oh no!",
+      "status": "Error {code}"
     },
     "form": {
       "general": {

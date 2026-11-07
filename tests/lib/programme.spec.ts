@@ -2,11 +2,9 @@ import { describe, expect, it } from 'vitest'
 import { Instant } from '@/domain/time'
 import {
   initialDay,
-  isOver,
   nowAndNext,
   programmeDays,
   standMapsByDay,
-  upcomingDays,
 } from '@/lib/programme'
 
 const events = {
@@ -71,35 +69,11 @@ describe('initialDay', () => {
   })
 })
 
-describe('isOver', () => {
-  it('compares the end with now', () => {
-    expect(isOver(events.kick, Instant.parse('2026-11-03T14:00:00.000Z'))).toBe(
-      true,
-    )
-    expect(isOver(events.talk, Instant.parse('2026-11-03T14:00:00.000Z'))).toBe(
-      false,
-    )
-  })
-})
-
 describe('standMapsByDay', () => {
   it('keys the stand maps by date', () => {
     expect(
       standMapsByDay([{ date: '2026-11-04', url: 'u' }]).get('2026-11-04'),
     ).toBe('u')
     expect(standMapsByDay(null).size).toBe(0)
-  })
-})
-
-describe('upcomingDays', () => {
-  it('lists today and later, or everything when nothing is coming up', () => {
-    expect(
-      upcomingDays(days, Instant.parse('2026-11-04T08:00:00.000Z')).map(
-        (d) => d.date,
-      ),
-    ).toEqual(['2026-11-04'])
-    expect(
-      upcomingDays(days, Instant.parse('2026-12-01T08:00:00.000Z')),
-    ).toHaveLength(2)
   })
 })
