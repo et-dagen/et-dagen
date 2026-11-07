@@ -625,6 +625,8 @@
     "shell": {
       "navigation": "Admin panels",
       "back": "Back to etdagene.no",
+      "more": "More",
+      "close": "Close",
       "tag": {
         "admin": "ADMIN",
         "company": "COMPANY"

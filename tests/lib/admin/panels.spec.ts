@@ -4,6 +4,7 @@ import {
   COMPANY_PANELS,
   isActivePanel,
   panelsFor,
+  phoneTabs,
 } from '@/lib/admin/panels'
 
 const names = (panels: readonly { name: string }[]) => panels.map((p) => p.name)
@@ -40,5 +41,28 @@ describe('isActivePanel', () => {
     expect(at('/company/admin')).toBe(true)
     expect(at('/company/admin/events/new')).toBe(true)
     expect(at('/company/admin/resumes')).toBe(false)
+  })
+})
+
+describe('phoneTabs', () => {
+  it('shows every panel as a tab while they fit', () => {
+    expect(phoneTabs(['a', 'b', 'c', 'd', 'e'])).toEqual({
+      tabs: ['a', 'b', 'c', 'd', 'e'],
+      more: [],
+    })
+  })
+
+  it('keeps one tab for the rest once they do not', () => {
+    expect(names(phoneTabs(ADMIN_PANELS).tabs)).toEqual([
+      'companies',
+      'events',
+      'jobs',
+      'users',
+    ])
+    expect(names(phoneTabs(ADMIN_PANELS).more)).toEqual([
+      'fair',
+      'standmaps',
+      'board',
+    ])
   })
 })
