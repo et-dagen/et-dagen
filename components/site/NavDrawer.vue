@@ -1,5 +1,14 @@
 <script setup lang="ts">
-  import { useDisplay } from 'vuetify'
+  import { X } from '@lucide/vue'
+  import { useMediaQuery } from '@vueuse/core'
+  import { Button } from '@/components/ui/button'
+  import { Separator } from '@/components/ui/separator'
+  import {
+    Sheet,
+    SheetClose,
+    SheetContent,
+    SheetTitle,
+  } from '@/components/ui/sheet'
   import NavButton from '@/components/site/NavButton.vue'
   import LocaleSwitcher from '@/components/site/LocaleSwitcher.vue'
   import UserStateButton from '@/components/site/SignInOutButton.vue'
@@ -9,103 +18,74 @@
 
   const auth = useAuthStore()
   const drawer = useNavDrawer()
-  const { mobile } = useDisplay()
+  const wide = useMediaQuery('(min-width: 1280px)')
 
-  // close navigation drawer when leaving mobile breakpiont
-  watch(mobile, () => (drawer.value = false))
+  // the menu only exists on phones and tablets; close it when the window grows past them
+  watch(wide, () => (drawer.value = false))
 </script>
 
 <template>
-  <VNavigationDrawer
-    location="right"
-    temporary
-    :elevation="5"
-    class="pa-4 d-flex d-lg-none"
-    :model-value="drawer"
-    @update:model-value="(value) => (drawer = value)"
-  >
-    <!-- close vertical nav -->
-    <template v-if="drawer" #prepend>
-      <VBtn
-        icon="mdi-window-close"
-        size="large"
-        variant="text"
-        @click="drawer = false"
-      ></VBtn>
-    </template>
-
-    <div
-      v-if="drawer"
-      class="d-flex flex-column justify-end mt-4"
-      style="gap: 1rem"
+  <Sheet v-model:open="drawer">
+    <!-- the last child is the sheet's own close button; this menu keeps its close button on the left -->
+    <SheetContent
+      side="right"
+      :aria-describedby="undefined"
+      class="nav-drawer et-ui tw:w-full tw:gap-0 tw:p-4 tw:sm:max-w-none tw:min-[600px]:w-[400px] tw:[&>button:last-child]:hidden"
     >
-      <NavButton
-        v-for="(route, index) in routes"
-        :key="index"
-        size="large"
-        :route="route"
-      />
-    </div>
+      <SheetTitle class="tw:sr-only">{{ $t('nav.menu') }}</SheetTitle>
 
-    <template v-if="drawer" #append>
-      <div class="d-flex flex-column justify-end" style="gap: 1rem">
-        <!-- nav btn to user page -->
+      <SheetClose as-child>
+        <Button
+          variant="ghost"
+          :aria-label="$t('nav.close_menu')"
+          class="tw:size-14 tw:rounded-full tw:hover:bg-black/4"
+        >
+          <X class="tw:size-6" aria-hidden="true" />
+        </Button>
+      </SheetClose>
+
+      <nav class="tw:mt-4 tw:flex tw:flex-1 tw:flex-col tw:gap-4">
+        <NavButton
+          v-for="(route, index) in routes"
+          :key="index"
+          size="lg"
+          :route="route"
+        />
+      </nav>
+
+      <div class="tw:flex tw:flex-col tw:gap-4">
         <NavButton
           v-if="auth.isLoggedIn"
-          size="large"
-          :route="{
-            name: 'user',
-            route: '/user',
-          }"
+          size="lg"
+          :route="{ name: 'user', route: '/user' }"
         />
-
         <NavButton
           v-if="auth.allows('company')"
-          size="large"
-          :route="{
-            name: 'company',
-            route: '/company/admin',
-          }"
+          size="lg"
+          :route="{ name: 'company', route: '/company/admin' }"
         />
-
-        <!-- navigate to admin page -->
         <NavButton
           v-if="auth.allows('admin')"
-          size="large"
-          :route="{
-            name: 'admin',
-            route: '/admin',
-          }"
+          size="lg"
+          :route="{ name: 'admin', route: '/admin' }"
         />
       </div>
 
-      <!-- divider -->
-      <VDivider class="my-4" />
+      <Separator
+        class="tw:my-4 tw:bg-black/12 tw:data-[orientation=horizontal]:h-0.5"
+      />
 
-      <div w-100 class="d-flex justify-space-between">
-        <!-- sign out btn -->
+      <div class="tw:flex tw:justify-between">
         <UserStateButton />
-
-        <!-- the locale switcher will go here -->
         <LocaleSwitcher />
       </div>
-    </template>
-  </VNavigationDrawer>
+    </SheetContent>
+  </Sheet>
 </template>
 
-<style lang="scss">
-  @use 'sass:map';
-  @use 'vuetify/settings';
-
-  .v-navigation-drawer--active {
-    width: 400px !important;
-
-    @media #{map.get(settings.$display-breakpoints, "xs")} {
-      width: 100vw !important;
-    }
-  }
-
-  .v-navigation-drawer {
-    transition: 0.3s !important;
+<style>
+  /* the light scrim Vuetify's drawer had */
+  [data-slot='sheet-overlay']:has(+ .nav-drawer) {
+    background: rgb(0 0 0 / 0.32);
   }
 </style>

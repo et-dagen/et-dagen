@@ -9,7 +9,10 @@
     "user": "My profile",
     "program_nav": "SEE PROGRAMME",
     "company": "Company",
-    "faq": "For companies"
+    "faq": "For companies",
+    "menu": "Menu",
+    "close_menu": "Close the menu",
+    "account": "Account"
   },
   "home": {
     "date_coming": "The date is coming soon",
@@ -124,6 +127,7 @@
       "email": "E-mail",
       "password": "Password",
       "password_confirmation": "Confirm password",
+      "show_password": "Show the password",
       "study_program": "Study Programme",
       "year": "Current year",
       "user_type": {
@@ -347,7 +351,6 @@
         }
       }
     },
-    "close_alert": "Close",
     "error": {
       "form": {
         "missing_email": "Email input is missing",
@@ -1489,7 +1492,8 @@
       "forgot": "Forgot your password?",
       "sign_in_and_join": "Sign in and join {company}",
       "no_account": "No account yet?",
-      "open_instead": "Create one"
+      "open_instead": "Create one",
+      "show_password": "Show password"
     },
     "closed": {
       "missing": {

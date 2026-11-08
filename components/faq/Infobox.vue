@@ -1,14 +1,20 @@
 <template>
-  <div class="infobox">
+  <div class="tw:mb-5">
     <button
-      class="infobox-title"
-      :class="{ 'infobox-title-selected': isOpen }"
+      type="button"
+      class="tw:w-full tw:cursor-pointer tw:p-3 tw:text-left tw:font-[550] tw:transition-all tw:duration-200 tw:hover:pt-2.5 tw:hover:pb-3.5 tw:hover:text-[#913331]"
+      :class="
+        isOpen
+          ? 'tw:border-0'
+          : 'tw:border-b-2 tw:border-[#aeaeae] tw:hover:border-[#7a7a7a]'
+      "
+      :aria-expanded="isOpen"
       @click="isOpen = !isOpen"
     >
       {{ title }}
     </button>
 
-    <div v-show="isOpen" class="infobox-content">
+    <div v-show="isOpen" class="tw:border-b-2 tw:border-brand tw:p-[15px]">
       <slot />
     </div>
   </div>
@@ -26,37 +32,3 @@
 
   const isOpen = ref(false)
 </script>
-
-<style scoped>
-  .infobox {
-    margin-bottom: 20px;
-  }
-
-  .infobox-title {
-    text-align: left;
-    font-weight: 550;
-    border-bottom: 2px solid rgb(var(--v-theme-neutral-lighten-3));
-
-    width: 100%;
-    padding: 12px;
-
-    transition: 200ms;
-  }
-
-  .infobox-title:hover {
-    color: rgb(var(--v-theme-primary-darken-1));
-    border-color: rgb(var(--v-theme-neutral-lighten-1));
-
-    padding-bottom: 14px;
-    padding-top: 10px;
-  }
-  .infobox-title-selected {
-    border: none;
-  }
-
-  .infobox-content {
-    padding: 15px;
-    border-bottom: 2px solid;
-    border-color: rgb(var(--v-theme-primary));
-  }
-</style>

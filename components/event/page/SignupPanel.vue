@@ -1,5 +1,22 @@
 <script setup lang="ts">
+  import {
+    Camera,
+    CalendarClock,
+    CalendarPlus,
+    CircleCheck,
+    LoaderCircle,
+    LogIn,
+  } from '@lucide/vue'
   import EventTicket from '@/components/event/page/EventTicket.vue'
+  import { Button } from '@/components/ui/button'
+  import { Card, CardTitle } from '@/components/ui/card'
+  import {
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    DialogTrigger,
+  } from '@/components/ui/dialog'
+  import { Separator } from '@/components/ui/separator'
   import { alertError, notify } from '@/composables/useAlerts'
   import { Instant } from '@/domain/time'
   import { countdownOf, type SignupState } from '@/lib/eventPage'
@@ -65,6 +82,13 @@
     ['not-open', 'closed', 'past'].includes(props.state.kind),
   )
 
+  // a disabled sign-up button greys out instead of fading, so it reads as unavailable
+  const signUpClass = [
+    'tw:h-11 tw:w-full tw:rounded-[4px] tw:bg-[#2BA84A] tw:px-6 tw:text-lg',
+    'tw:tracking-[0.0892857em] tw:text-white tw:hover:bg-[#2BA84A]/90',
+    'tw:disabled:bg-black/12 tw:disabled:text-black/26 tw:disabled:opacity-100',
+  ]
+
   function downloadCalendar() {
     if (!props.calendar) return
     const url = URL.createObjectURL(
@@ -80,21 +104,27 @@
 </script>
 
 <template>
-  <div class="attendant-container">
-    <VCard class="attendants elevation-4" color="primary" rounded="lg">
-      <VCardTitle class="attendants__title">
+  <div class="tw:flex tw:flex-col tw:gap-4">
+    <Card
+      class="tw:gap-0 tw:rounded-lg tw:border-0 tw:bg-brand tw:py-0 tw:text-sm tw:leading-[1.425] tw:tracking-[0.0178571em] tw:text-white tw:shadow-[0_2px_4px_-1px_rgba(0,0,0,0.2),0_4px_5px_0_rgba(0,0,0,0.14),0_1px_10px_0_rgba(0,0,0,0.12)]"
+    >
+      <CardTitle
+        class="tw:truncate tw:px-4 tw:py-2 tw:text-xl tw:leading-8 tw:font-medium tw:tracking-[0.0125em]"
+      >
         {{ $t('event.page.attendants.name') }}
-      </VCardTitle>
+      </CardTitle>
 
-      <VCardText
+      <div
         v-if="places.limit"
-        class="attendants__count d-flex justify-space-between flex-wrap"
+        class="tw:flex tw:flex-wrap tw:justify-between tw:px-4 tw:pb-4"
       >
         <span>
-          <strong>{{ $t('event.page.attendants.attendants') }}: </strong>
+          <strong class="tw:font-bold"
+            >{{ $t('event.page.attendants.attendants') }}:
+          </strong>
           {{ places.taken }} / {{ places.limit }}
 
-          <strong style="margin-left: 10px">
+          <strong class="tw:ml-2.5 tw:font-bold">
             {{ $t('event.page.queue.name') }}:
           </strong>
           {{ places.waiting }}
@@ -102,129 +132,127 @@
 
         <span v-if="state.kind === 'registered'">
           {{ $t('event.page.attendants.registered') }}
-          <VIcon style="margin-bottom: 2px">mdi-check-circle</VIcon>
+          <CircleCheck
+            class="tw:inline tw:size-5 tw:align-[-5px] tw:fill-white tw:text-brand"
+          />
         </span>
 
         <div v-if="state.kind === 'queued'">
           {{ $t('event.page.queue.position') }}:
           {{ state.position }}
         </div>
-      </VCardText>
+      </div>
 
-      <VCardText v-else>
+      <div v-else class="tw:px-4 tw:pb-4">
         {{ $t('event.page.attendants.nocapacity') }}
-      </VCardText>
+      </div>
 
-      <VCardText
+      <div
         v-if="requirements.years.length"
-        class="reg__year py-0 pb-5 d-flex flex-wrap"
+        class="tw:flex tw:flex-wrap tw:px-4 tw:pb-5"
       >
-        <strong class="mr-2">{{ $t('event.page.details.reg_year') }}: </strong>
-        <span
-          v-for="year in requirements.years"
-          :key="year"
-          class="comma-separated"
-          >{{ year }}</span
-        >
-      </VCardText>
+        <strong class="tw:mr-2 tw:font-bold"
+          >{{ $t('event.page.details.reg_year') }}:
+        </strong>
+        <span>{{ requirements.years.join(', ') }}</span>
+      </div>
 
-      <VCardText
+      <div
         v-if="requirements.programmes.length"
-        class="reg__programme py-0 pb-5 d-flex flex-wrap flex-column"
+        class="tw:flex tw:flex-col tw:px-4 tw:pb-5"
       >
-        <strong class="mr-2"
+        <strong class="tw:mr-2 tw:font-bold"
           >{{ $t('event.page.details.reg_programme') }}:
         </strong>
-        <VDivider />
-        <ul class="ml-6 mt-2">
+        <Separator
+          class="tw:bg-white/12 tw:data-[orientation=horizontal]:h-0.5"
+        />
+        <ul class="tw:mt-2 tw:ml-6 tw:list-disc">
           <li
             v-for="programme in requirements.programmes"
             :key="programme"
-            class="py-1 px-2"
+            class="tw:px-2 tw:py-1"
           >
             {{ programme }}
           </li>
         </ul>
-      </VCardText>
-    </VCard>
+      </div>
+    </Card>
 
-    <VBtn
+    <Button
       v-if="state.kind === 'sign-in'"
-      rounded="lg"
-      variant="text"
-      class="text-primary px-4 py-2 d-flex justify-center align-center login"
-      prepend-icon="mdi-login"
-      :to="localePath('/user/signin')"
+      as-child
+      variant="ghost"
+      class="tw:h-[52px] tw:rounded-lg tw:px-4 tw:text-base tw:tracking-[0.0892857em] tw:text-brand tw:hover:bg-brand/5 tw:hover:text-brand"
     >
-      {{ $t('program.event.sign_in_to_register') }}
-    </VBtn>
+      <NuxtLink :to="localePath('/user/signin')">
+        <LogIn class="tw:size-5" />
+        {{ $t('program.event.sign_in_to_register') }}
+      </NuxtLink>
+    </Button>
 
     <EventTicket
       v-if="ticketUid && state.kind === 'registered'"
       :uid="ticketUid"
     />
 
-    <VBtn
+    <Button
       v-if="mayScan"
-      variant="tonal"
-      append-icon="mdi-camera"
-      :to="localePath(`/event/${eventUid}/scan`)"
+      as-child
+      variant="secondary"
+      class="tw:h-[52px] tw:rounded-[4px] tw:bg-black/10 tw:px-6 tw:text-lg tw:tracking-[0.0892857em] tw:text-black/87 tw:hover:bg-black/15"
     >
-      {{ $t('event.page.attendants.scan') }}
-    </VBtn>
+      <NuxtLink :to="localePath(`/event/${eventUid}/scan`)">
+        {{ $t('event.page.attendants.scan') }}
+        <Camera class="tw:size-5" />
+      </NuxtLink>
+    </Button>
 
     <div
       v-if="closed"
-      class="text-primary px-4 py-2 d-flex flex-column justify-center align-center"
+      class="tw:flex tw:flex-col tw:items-center tw:justify-center tw:px-4 tw:py-2 tw:text-brand"
     >
-      <span class="d-flex align-center">
-        <VIcon class="pr-3">mdi-calendar-clock</VIcon>
+      <span class="tw:flex tw:items-center">
+        <CalendarClock class="tw:mr-3 tw:size-6" />
         {{ $t('program.event.registration_closed') }}
       </span>
       <span v-if="countdown">{{ countdown }}</span>
     </div>
 
-    <VBtn
+    <Button
       v-if="state.kind === 'open' || state.kind === 'not-eligible'"
-      color="success"
-      :loading="busy"
-      block
-      variant="flat"
-      density="comfortable"
-      :disabled="state.kind === 'not-eligible'"
+      :class="signUpClass"
+      :disabled="busy || state.kind === 'not-eligible'"
       @click.stop="send('POST', 'alert.success.event.register.sign_up')"
     >
-      {{ $t('program.event.sign_up') }}
-    </VBtn>
+      <LoaderCircle v-if="busy" class="tw:size-6 tw:animate-spin" />
+      <template v-else>{{ $t('program.event.sign_up') }}</template>
+    </Button>
 
-    <VBtn
+    <Button
       v-else-if="state.kind === 'full'"
-      color="success"
-      :loading="busy"
-      block
-      variant="flat"
-      density="comfortable"
+      :class="signUpClass"
+      :disabled="busy"
       @click.stop="send('POST', 'alert.success.event.register.queue')"
     >
-      {{ $t('program.event.enqueue') }}
-    </VBtn>
+      <LoaderCircle v-if="busy" class="tw:size-6 tw:animate-spin" />
+      <template v-else>{{ $t('program.event.enqueue') }}</template>
+    </Button>
 
-    <p v-if="state.kind === 'not-eligible'" class="text-body-2 text-center">
+    <p
+      v-if="state.kind === 'not-eligible'"
+      class="tw:text-center tw:text-sm tw:leading-[1.425] tw:tracking-[0.0178571em]"
+    >
       {{ $t('events.page.not_eligible') }}
     </p>
 
-    <VDialog
+    <Dialog
       v-if="state.kind === 'registered' || state.kind === 'queued'"
-      v-model="confirming"
-      width="500"
+      v-model:open="confirming"
     >
-      <template #activator="{ props: activator }">
-        <VBtn
-          v-bind="activator"
-          color="primary"
-          block
-          variant="tonal"
-          density="comfortable"
+      <DialogTrigger as-child>
+        <Button
+          class="tw:h-11 tw:w-full tw:rounded-[4px] tw:bg-brand/12 tw:px-6 tw:text-lg tw:tracking-[0.0892857em] tw:text-brand tw:hover:bg-brand/20"
         >
           {{
             $t(
@@ -233,16 +261,21 @@
                 : 'program.event.opt_out.queue',
             )
           }}
-        </VBtn>
-      </template>
-      <VCard rounded="lg" class="text-center pa-6">
-        <h6>{{ $t('program.event.opt_out.confirmtext') }}</h6>
-        <div class="d-flex justify-center flex-wrap mt-6" style="gap: 1.5rem">
-          <VBtn
-            size="large"
-            variant="outlined"
-            color="primary"
-            :loading="busy"
+        </Button>
+      </DialogTrigger>
+      <DialogContent
+        :show-close-button="false"
+        :aria-describedby="undefined"
+        class="tw:gap-0 tw:rounded-lg tw:border-0 tw:p-6 tw:text-center tw:sm:max-w-[500px]"
+      >
+        <DialogTitle class="tw:text-xl tw:leading-normal tw:font-normal">
+          {{ $t('program.event.opt_out.confirmtext') }}
+        </DialogTitle>
+        <div class="tw:mt-6 tw:flex tw:flex-wrap tw:justify-center tw:gap-6">
+          <Button
+            variant="outline"
+            class="tw:h-11 tw:rounded-[4px] tw:border-brand tw:bg-transparent tw:px-5 tw:text-base tw:tracking-[0.0892857em] tw:text-brand tw:shadow-none tw:hover:bg-brand/5 tw:hover:text-brand"
+            :disabled="busy"
             @click="
               send(
                 'DELETE',
@@ -252,45 +285,29 @@
               )
             "
           >
-            {{ $t('program.event.opt_out.confirm') }}
-          </VBtn>
-          <VBtn size="large" flat color="success" @click="confirming = false">
+            <LoaderCircle v-if="busy" class="tw:size-5 tw:animate-spin" />
+            <template v-else>{{
+              $t('program.event.opt_out.confirm')
+            }}</template>
+          </Button>
+          <Button
+            class="tw:h-11 tw:rounded-[4px] tw:bg-[#2BA84A] tw:px-5 tw:text-base tw:tracking-[0.0892857em] tw:text-white tw:hover:bg-[#2BA84A]/90"
+            @click="confirming = false"
+          >
             {{ $t('program.event.opt_out.abort') }}
-          </VBtn>
+          </Button>
         </div>
-      </VCard>
-    </VDialog>
+      </DialogContent>
+    </Dialog>
 
-    <VBtn
+    <Button
       v-if="calendar && state.kind !== 'past'"
-      rounded="lg"
-      variant="text"
-      class="text-primary"
-      prepend-icon="mdi-calendar-plus"
+      variant="ghost"
+      class="tw:h-[52px] tw:rounded-lg tw:px-6 tw:text-lg tw:tracking-[0.0892857em] tw:text-brand tw:hover:bg-brand/5 tw:hover:text-brand"
       @click="downloadCalendar"
     >
+      <CalendarPlus class="tw:size-5" />
       {{ $t('events.page.action.calendar') }}
-    </VBtn>
+    </Button>
   </div>
 </template>
-
-<style scoped lang="scss">
-  .attendant-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .login {
-    font-size: 1rem;
-  }
-
-  .comma-separated {
-    &::after {
-      content: ',\00a0';
-    }
-    &:last-child::after {
-      content: '';
-    }
-  }
-</style>

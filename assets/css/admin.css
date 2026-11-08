@@ -46,6 +46,13 @@
   --font: 'Overpass Variable', ui-sans-serif, system-ui, sans-serif;
 }
 
+/* The public pages keep Vuetify's look: its font stack, white ground and 87% black text */
+.et-ui {
+  --font: Roboto, sans-serif;
+  --background: #ffffff;
+  --foreground: #212121;
+}
+
 /* The site is light only. Nothing sets .dark, so the dark: classes shadcn-vue ships stay inert */
 @custom-variant dark (&:where(.dark, .dark *));
 

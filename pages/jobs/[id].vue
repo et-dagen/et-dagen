@@ -1,7 +1,10 @@
 <script setup lang="ts">
+  import { ExternalLink, Pencil } from '@lucide/vue'
   import { useCompanies } from '@/composables/useCompanies'
   import { useDeadlineLabel } from '@/composables/useDeadlineLabel'
   import FairEvents from '@/components/job/FairEvents.vue'
+  import { Button } from '@/components/ui/button'
+  import { Card, CardContent, CardTitle } from '@/components/ui/card'
   import { Instant } from '@/domain/time'
   import type { EventRow } from '@/lib/events'
   import { deadlineState, fairEventsOf, type StoredJob } from '@/lib/jobs'
@@ -40,76 +43,89 @@
   const canEdit = computed(() => auth.can('job', 'update', undefined))
 
   useHead(() => ({ title: job.value?.title }))
+
+  const cardClass =
+    'tw:gap-0 tw:rounded-lg tw:border-0 tw:py-0 tw:shadow-md tw:self-start'
+  const titleClass =
+    'tw:px-4 tw:py-2 tw:text-xl tw:leading-8 tw:font-medium tw:tracking-[0.0125em]'
+  const textClass = 'tw:px-4 tw:text-sm tw:leading-5 tw:tracking-[0.0178em]'
 </script>
 
 <template>
-  <VContainer v-if="job" class="container">
-    <!-- company logo -->
-    <VCard
-      class="d-flex justify-center align-center pa-4 image-container"
-      flat
-      rounded="lg"
+  <div
+    v-if="job"
+    class="tw:mx-auto tw:grid tw:w-screen tw:max-w-[420px] tw:grid-cols-1 tw:gap-4 tw:p-4 tw:[grid-template-areas:'image'_'details'_'attendants'_'description'] tw:min-[960px]:max-w-[750px] tw:min-[1280px]:max-w-[1080px] tw:min-[1280px]:grid-cols-[1fr_3fr] tw:min-[1280px]:[grid-template-areas:'details_image'_'attendants_description']"
+  >
+    <div
+      class="tw:flex tw:max-h-[300px] tw:items-center tw:justify-center tw:rounded-lg tw:bg-white tw:p-4 tw:[grid-area:image]"
     >
       <img
-        class="image"
+        class="tw:max-h-full tw:max-w-full tw:object-contain"
         :src="company?.logo || '/images/logo_long.png'"
         :alt="company?.name ?? 'E&T-dagene'"
       />
-    </VCard>
+    </div>
 
-    <!-- job description -->
-    <VCard class="description elevation-4" rounded="lg">
-      <VCardTitle class="description__title">{{ job.title }}</VCardTitle>
-      <VCardText v-if="isLink" :class="{ 'pb-0': job.description }">
+    <Card :class="[cardClass, 'tw:[grid-area:description]']">
+      <CardTitle :class="titleClass">{{ job.title }}</CardTitle>
+      <CardContent
+        v-if="isLink"
+        :class="[textClass, job.description ? 'tw:pb-0' : 'tw:pb-4']"
+      >
         {{ $t('jobs.link_listing', { company: company?.name }) }}
-      </VCardText>
-      <!-- eslint-disable vue/no-v-text-v-html-on-component vue/no-v-html -->
-      <VCardText
+      </CardContent>
+      <!-- eslint-disable vue/no-v-html -->
+      <div
         v-if="job.description"
-        class="description__text"
+        :class="[
+          textClass,
+          'job-description tw:px-4 tw:pb-4 tw:whitespace-pre-line',
+          isLink && 'tw:pt-4',
+        ]"
         v-html="job.description"
       />
       <!-- eslint-enable -->
-    </VCard>
+    </Card>
 
-    <!-- job details -->
-    <VCard class="details elevation-4" rounded="lg">
-      <!-- edit job -->
-      <VBtn
+    <Card :class="[cardClass, 'tw:relative tw:[grid-area:details]']">
+      <Button
         v-if="canEdit"
-        class="edit-event"
-        variant="text"
-        icon="mdi-pencil"
-        size="small"
-        color="primary"
-        :to="localePath(`/admin/jobs/${uid}`)"
-      />
+        as-child
+        variant="ghost"
+        size="icon-sm"
+        class="tw:absolute tw:top-2 tw:right-2 tw:rounded-full tw:text-brand tw:hover:text-brand"
+      >
+        <NuxtLink
+          :to="localePath(`/admin/jobs/${uid}`)"
+          :aria-label="$t('admin.jobs.actions.edit')"
+        >
+          <Pencil />
+        </NuxtLink>
+      </Button>
 
-      <VCardTitle class="details__title">
-        {{ $t('jobs.details') }}
-      </VCardTitle>
+      <CardTitle :class="titleClass">{{ $t('jobs.details') }}</CardTitle>
 
-      <VCardText class="pt-5 pb-5">
+      <CardContent :class="[textClass, 'tw:py-5']">
         <strong>{{ $t('jobs.deadline') }}:</strong>
         {{ deadlineLabel(deadline, job.deadline) }}
-        <span v-if="deadline.kind === 'passed'" class="text-error">
+        <span v-if="deadline.kind === 'passed'" class="tw:text-[#cc3000]">
           ({{ $t('jobs.detail.passed') }})
         </span>
-      </VCardText>
+      </CardContent>
 
-      <VCardText v-if="job.jobType" class="py-0 pb-5">
+      <CardContent v-if="job.jobType" :class="[textClass, 'tw:pb-5']">
         <strong>{{ $t('jobs.type') }}:</strong>
         {{
           $t(`admin.jobs.attributes.jobtype.${job.jobType.replace('-', '_')}`)
         }}
-      </VCardText>
+      </CardContent>
 
-      <VCardText class="py-0 pb-5">
+      <CardContent :class="[textClass, 'tw:pb-5']">
         <strong>{{ $t('jobs.location') }}:</strong>
         {{ job.location }}
-      </VCardText>
+      </CardContent>
 
-      <VCardText class="py-0 pb-5">
+      <CardContent :class="[textClass, 'tw:pb-5']">
         <strong>{{ $t('jobs.company') }}: </strong>
         <a
           v-if="company?.webpage"
@@ -118,27 +134,28 @@
           rel="noopener noreferrer"
         >
           {{ company.name }}
-          <VIcon size="xsmall" color="primary">mdi-open-in-new</VIcon>
+          <ExternalLink
+            class="tw:inline tw:size-3 tw:align-[-1px] tw:text-brand"
+          />
         </a>
         <span v-else>{{ company?.name ?? 'E&T-dagene' }}</span>
-      </VCardText>
-    </VCard>
+      </CardContent>
+    </Card>
 
-    <!-- apply for job, and the company's events at the fair -->
-    <div class="attendant-container">
-      <div v-if="canApply">
-        <VBtn
-          color="primary"
-          block
-          :ripple="true"
-          density="comfortable"
+    <div class="tw:flex tw:flex-col tw:gap-4 tw:[grid-area:attendants]">
+      <Button
+        v-if="canApply"
+        as-child
+        class="tw:h-11 tw:w-full tw:rounded tw:bg-brand tw:px-6 tw:text-lg tw:tracking-[0.0892em] tw:text-white tw:shadow-md tw:hover:bg-brand/90"
+      >
+        <a
           :href="job.applicationLink"
           target="_blank"
           rel="noopener noreferrer"
         >
           {{ $t('jobs.apply') }}!
-        </VBtn>
-      </div>
+        </a>
+      </Button>
       <FairEvents
         v-if="fair.length"
         :company="company?.name ?? ''"
@@ -146,84 +163,38 @@
         :deadline="job.deadline"
       />
     </div>
-  </VContainer>
+  </div>
 
-  <h4 v-else class="font-weight-bold text-center my-10">
+  <h4
+    v-else
+    class="tw:my-10 tw:text-center tw:text-[2.125rem] tw:leading-[1.175] tw:font-bold tw:tracking-[0.0073em]"
+  >
     {{ $t('jobs.detail.missing') }}
   </h4>
 </template>
 
-<style scoped lang="scss">
-  @use 'sass:map';
-  @use 'vuetify/settings';
+<style scoped>
+  .job-description :deep(ul) {
+    list-style: disc;
+  }
 
-  .container {
-    display: grid;
-    width: 100vw;
-    grid-template-columns: 1fr 3fr;
-    gap: 1rem;
-    grid-template-areas: 'details image' 'attendants description';
+  .job-description :deep(ol) {
+    list-style: decimal;
+  }
 
-    .image-container {
-      max-height: 300px;
+  .job-description :deep(li) {
+    list-style-position: inside;
 
-      .image {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-      }
+    p {
+      display: inline;
     }
+  }
 
-    .description {
-      grid-area: description;
+  .job-description :deep(h5) {
+    font-size: 1.15rem;
+  }
 
-      :deep(li) {
-        list-style-position: inside;
-        p {
-          display: inline;
-        }
-      }
-
-      :deep(h5) {
-        font-size: 1.15rem;
-      }
-
-      :deep(h6) {
-        font-size: 1.05rem;
-      }
-
-      &__text {
-        white-space: pre-line;
-      }
-    }
-    .details {
-      grid-area: details;
-
-      .edit-event {
-        position: absolute;
-        right: 0.5rem;
-        top: 0.5rem;
-      }
-    }
-
-    .attendant-container {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    @media #{map.get(settings.$display-breakpoints, 'lg-and-up')} {
-      max-width: 1080px;
-    }
-
-    @media #{map.get(settings.$display-breakpoints, 'md-and-down')} {
-      max-width: 750px;
-      grid-template-areas: 'image' 'details' 'attendants' 'description';
-      grid-template-columns: 1fr;
-    }
-
-    @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
-      max-width: 420px;
-    }
+  .job-description :deep(h6) {
+    font-size: 1.05rem;
   }
 </style>

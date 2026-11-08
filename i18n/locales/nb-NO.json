@@ -9,7 +9,10 @@
     "user": "Min profil",
     "program_nav": "SE PROGRAM",
     "company": "Bedrift",
-    "faq": "For bedrifter"
+    "faq": "For bedrifter",
+    "menu": "Meny",
+    "close_menu": "Lukk menyen",
+    "account": "Konto"
   },
   "home": {
     "date_coming": "Datoen kommer snart",
@@ -124,6 +127,7 @@
       "email": "E-post",
       "password": "Passord",
       "password_confirmation": "Bekreft passord",
+      "show_password": "Vis passordet",
       "study_program": "Studieprogram",
       "year": "Årstrinn",
       "user_type": {
@@ -347,7 +351,6 @@
         }
       }
     },
-    "close_alert": "Lukk",
     "error": {
       "form": {
         "missing_email": "Epost ikke oppgitt",
@@ -1490,7 +1493,8 @@
       "forgot": "Glemt passordet?",
       "sign_in_and_join": "Logg inn og bli med i {company}",
       "no_account": "Ingen konto ennå?",
-      "open_instead": "Lag en"
+      "open_instead": "Lag en",
+      "show_password": "Vis passordet"
     },
     "closed": {
       "missing": {

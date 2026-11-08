@@ -18,12 +18,15 @@
 
 <template>
   <div>
-    <VCard class="companyWrapper" variant="flat">
-      <VRow no-gutters>
-        <!-- Company logo -->
-        <VCol cols="12" lg="7" class="d-flex justify-center pr-lg-3">
+    <div
+      class="tw:max-h-screen tw:w-[90vw] tw:bg-white tw:min-[960px]:w-[70vw]"
+    >
+      <div class="tw:flex tw:flex-wrap">
+        <div
+          class="tw:flex tw:w-full tw:justify-center tw:min-[1280px]:w-7/12 tw:min-[1280px]:pr-3"
+        >
           <img
-            class="companyImage"
+            class="tw:max-h-full tw:max-w-full tw:cursor-pointer tw:object-contain tw:transition-transform tw:duration-200 tw:ease-[cubic-bezier(0.25,0.46,0.45,0.94)] tw:hover:scale-[1.03]"
             alt=""
             :src="content.logo"
             @click="
@@ -33,12 +36,13 @@
               })
             "
           />
-        </VCol>
+        </div>
 
-        <!-- Company name and description -->
-        <VCol cols="12" lg="5" class="pt-lg-0 pt-3 pl-lg-3 companyHero">
+        <div
+          class="tw:w-full tw:pt-3 tw:min-[1280px]:w-5/12 tw:min-[1280px]:pt-0 tw:min-[1280px]:pl-3"
+        >
           <h3
-            class="text-h5 font-weight-bold clicker d-inline-block"
+            class="tw:inline-block tw:cursor-pointer tw:text-2xl tw:leading-[1.333] tw:font-bold tw:hover:underline"
             @click="
               navigateTo(content.webpage, {
                 external: true,
@@ -48,62 +52,13 @@
           >
             {{ content.name }}
           </h3>
-          <p class="pt-1 pt-lg-3">{{ content.description }}</p>
-        </VCol>
-      </VRow>
-    </VCard>
+          <p
+            class="tw:line-clamp-12 tw:pt-1 tw:min-[960px]:line-clamp-8 tw:min-[1280px]:line-clamp-6 tw:min-[1280px]:pt-3"
+          >
+            {{ content.description }}
+          </p>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
-
-<style setup lang="scss">
-  @use 'sass:map';
-  @use 'vuetify/settings';
-
-  .companyWrapper {
-    max-height: 100vh;
-    width: 70vw;
-
-    @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
-      width: 90vw;
-    }
-  }
-
-  .companyHero {
-    > p {
-      display: -webkit-box;
-      overflow: hidden;
-      // // -webkit-line-clamp: 5;
-      text-overflow: ellipsis;
-      -webkit-box-orient: vertical;
-
-      @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
-        -webkit-line-clamp: 12;
-      }
-      @media #{map.get(settings.$display-breakpoints, 'md')} {
-        -webkit-line-clamp: 8;
-      }
-      @media #{map.get(settings.$display-breakpoints, 'lg-and-up')} {
-        -webkit-line-clamp: 6;
-      }
-    }
-  }
-
-  .clicker:hover {
-    cursor: pointer;
-    text-decoration: underline;
-  }
-
-  .companyImage {
-    color: transparent;
-    background-color: transparent;
-    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    cursor: pointer;
-    max-width: 100%;
-    object-fit: contain;
-    max-height: 100%;
-
-    &:hover {
-      transform: scale(1.03);
-    }
-  }
-</style>

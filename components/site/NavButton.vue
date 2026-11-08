@@ -1,15 +1,16 @@
 <script setup lang="ts">
+  import { Button } from '@/components/ui/button'
   import { useNavDrawer } from '@/composables/useNavDrawer'
 
   export interface NavRoute {
     name: string
     route: string
-    icon?: string
   }
 
-  withDefaults(defineProps<{ route: NavRoute; active?: boolean }>(), {
-    active: true,
-  })
+  withDefaults(
+    defineProps<{ route: NavRoute; active?: boolean; size?: 'lg' | 'xl' }>(),
+    { active: true, size: 'xl' },
+  )
 
   const localePath = useLocalePath()
   const { locale, defaultLocale } = useI18n()
@@ -25,12 +26,17 @@
 </script>
 
 <template>
-  <VBtn
-    color="black"
-    variant="text"
-    :rounded="!route.icon ? 'lg' : undefined"
-    :active="active && currentRouteName === route.name"
-    :icon="route.icon"
+  <Button
+    variant="ghost"
+    class="tw:rounded-lg tw:font-medium tw:tracking-[0.0892em] tw:text-black tw:transition-colors tw:duration-400 tw:hover:bg-black/4"
+    :class="[
+      size === 'xl'
+        ? 'tw:h-[52px] tw:px-6 tw:text-lg'
+        : 'tw:h-11 tw:px-5 tw:text-base',
+      active &&
+        currentRouteName === route.name &&
+        'tw:bg-brand tw:text-white tw:hover:bg-brand',
+    ]"
     @click="
       () => {
         drawer = false
@@ -38,8 +44,6 @@
       }
     "
   >
-    <template v-if="!route.icon" #default>
-      {{ $t(`nav.${route.name}`) }}
-    </template>
-  </VBtn>
+    {{ $t(`nav.${route.name}`) }}
+  </Button>
 </template>

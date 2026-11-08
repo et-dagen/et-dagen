@@ -1,46 +1,7 @@
 <template>
-  <!--container serves as the grid-->
-  <div class="grid-container">
-    <!--all items are placed at the slot position-->
-    <slot class="cards" />
+  <div
+    class="tw:mx-auto tw:flex tw:max-w-[65vw] tw:flex-wrap tw:justify-center tw:gap-x-4 tw:gap-y-6 tw:*:min-w-[150px] tw:min-[600px]:max-w-[600px] tw:min-[600px]:gap-x-12 tw:min-[600px]:gap-y-16 tw:min-[600px]:*:min-w-[188px] tw:min-[960px]:max-w-[1000px] tw:min-[960px]:*:min-w-[284px]"
+  >
+    <slot />
   </div>
-  <!-- eslint-disable-next-line vue/comment-directive -->
 </template>
-
-<style lang="scss">
-  //include statement for @media
-  @use 'sass:map';
-  @use 'vuetify/settings';
-
-  .grid-container {
-    margin-inline: auto;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 4rem 3rem !important;
-
-    // Set different max-widths for different screen sizes
-    @media #{map.get(settings.$display-breakpoints, 'md-and-up')} {
-      max-width: 1000px;
-
-      > * {
-        min-width: 284px;
-      }
-    }
-
-    @media #{map.get(settings.$display-breakpoints, 'sm')} {
-      max-width: 600px;
-      > * {
-        min-width: 188px;
-      }
-    }
-
-    @media #{map.get(settings.$display-breakpoints, 'xs')} {
-      max-width: 65vw;
-      gap: 1.5rem 1rem !important;
-      > * {
-        min-width: 150px;
-      }
-    }
-  }
-</style>

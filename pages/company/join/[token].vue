@@ -1,5 +1,7 @@
 <script setup lang="ts">
   import InvitationJoin from '@/components/company/InvitationJoin.vue'
+  import JoinButton from '@/components/company/JoinButton.vue'
+  import JoinColumn from '@/components/company/JoinColumn.vue'
   import type { InvitationPreview } from '@/lib/invitations'
 
   const route = useRoute()
@@ -32,58 +34,31 @@
     :token="token"
     :invitation="invitation"
   />
-  <div v-else class="ma-10">
-    <h4 class="text-center pt-4 pb-7">
+  <div v-else class="tw:m-10">
+    <h4
+      class="tw:pt-4 tw:pb-7 tw:text-center tw:text-[2.125rem] tw:leading-[1.175] tw:font-normal tw:tracking-[0.0073529412em]"
+    >
       {{ $t(`invitation.closed.${closed}.title`) }}
     </h4>
-    <VContainer>
-      <VRow>
-        <p class="text-center">
-          {{ $t(`invitation.closed.${closed}.text`) }}
-        </p>
-      </VRow>
-    </VContainer>
-    <VContainer>
-      <VRow v-if="closed === 'joined'">
-        <VBtn color="success" class="btn" :to="localePath('/user/signin')">
-          {{ $t('signup.sign_in') }}
-        </VBtn>
-      </VRow>
-      <VRow>
-        <VBtn
-          color="primary"
-          class="btn"
-          :variant="closed === 'joined' ? 'outlined' : 'elevated'"
-          :to="localePath('/contact')"
-        >
-          {{ $t('signup.company.contact') }}
-        </VBtn>
-      </VRow>
-    </VContainer>
+    <JoinColumn>
+      <p class="tw:text-center">
+        {{ $t(`invitation.closed.${closed}.text`) }}
+      </p>
+    </JoinColumn>
+    <JoinColumn>
+      <JoinButton
+        v-if="closed === 'joined'"
+        tone="success"
+        :to="localePath('/user/signin')"
+      >
+        {{ $t('signup.sign_in') }}
+      </JoinButton>
+      <JoinButton
+        :tone="closed === 'joined' ? 'outline' : 'brand'"
+        :to="localePath('/contact')"
+      >
+        {{ $t('signup.company.contact') }}
+      </JoinButton>
+    </JoinColumn>
   </div>
 </template>
-
-<style scoped lang="scss">
-  @use 'sass:map';
-  @use 'vuetify/settings';
-
-  .v-container {
-    max-width: 26rem;
-    margin-block: 0.5rem;
-  }
-
-  .v-row {
-    justify-content: center;
-    padding-block: 0.5rem;
-  }
-
-  .btn {
-    width: 60%;
-  }
-
-  @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
-    .btn {
-      width: 100%;
-    }
-  }
-</style>

@@ -68,18 +68,23 @@
 </script>
 
 <template>
-  <div class="page">
-    <header class="header">
-      <h2 class="event-title" :title="eventTitle">
+  <div
+    class="tw:mx-auto tw:max-w-[480px] tw:p-4 tw:pb-[env(safe-area-inset-bottom)]"
+  >
+    <header class="tw:mb-3">
+      <h2
+        class="tw:text-center tw:text-base tw:leading-snug tw:font-semibold tw:break-words tw:text-[#111] tw:[overflow-wrap:anywhere]"
+        :title="eventTitle"
+      >
         {{ eventTitle }}
       </h2>
     </header>
 
-    <div class="scanner-section">
-      <div class="scanner-card">
+    <div class="tw:flex tw:flex-col tw:items-center tw:gap-3">
+      <div class="tw:flex tw:justify-center tw:p-3 tw:md:p-4">
         <CameraFeed
           ref="camera"
-          class="camera"
+          class="tw:aspect-square tw:w-full tw:max-w-[360px] tw:overflow-hidden tw:rounded-[10px]"
           :callback-interval="100"
           :width="400"
           :height="400"
@@ -89,7 +94,7 @@
       </div>
 
       <CameraButton
-        class="camera-button"
+        class="tw:mt-1"
         :is-starting="isCameraStarting"
         :is-running="isCameraRunning"
         :aria-label="
@@ -100,76 +105,11 @@
 
       <p
         role="status"
-        class="font-weight-bold text-center"
-        :class="outcome?.ok ? 'text-success' : 'text-error'"
+        class="tw:text-center tw:font-bold"
+        :class="outcome?.ok ? 'tw:text-[#2BA84A]' : 'tw:text-[#cc3000]'"
       >
         {{ outcome?.text }}
       </p>
     </div>
   </div>
 </template>
-
-<style scoped>
-  .page {
-    padding: 1rem;
-    padding-bottom: env(safe-area-inset-bottom);
-    max-width: 480px;
-    margin: 0 auto;
-  }
-
-  .header {
-    margin-bottom: 0.75rem;
-  }
-
-  .event-title {
-    font-size: 1rem;
-    font-weight: 500;
-    line-height: 1.3;
-    text-align: center;
-    color: #111;
-
-    word-break: break-word;
-    overflow-wrap: anywhere;
-
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .scanner-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .scanner-card {
-    padding: 0.75rem;
-
-    display: flex;
-    justify-content: center;
-  }
-
-  .camera {
-    width: 100%;
-    max-width: 360px;
-    aspect-ratio: 1 / 1;
-
-    border-radius: 10px;
-    overflow: hidden;
-  }
-
-  .camera-button {
-    margin-top: 0.25rem;
-  }
-
-  @media (min-width: 768px) {
-    .event-title {
-      font-size: 1.15rem;
-    }
-
-    .scanner-card {
-      padding: 1rem;
-    }
-  }
-</style>

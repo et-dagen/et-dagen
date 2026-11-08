@@ -19,14 +19,7 @@
 </script>
 
 <template>
-  <span class="qr-wrapper">
+  <span class="tw:flex tw:justify-center">
     <img v-if="qr" :src="qr" :alt="$t('events.page.ticket.qr_alt')" />
   </span>
 </template>
-
-<style scoped lang="scss">
-  .qr-wrapper {
-    display: flex;
-    justify-content: center;
-  }
-</style>

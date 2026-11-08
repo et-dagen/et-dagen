@@ -1,4 +1,8 @@
 <script setup lang="ts">
+  import { Trash } from '@lucide/vue'
+  import EmailInput from '@/components/form/EmailInput.vue'
+  import ConfirmDialog from '@/components/user/ConfirmDialog.vue'
+  import FormButton from '@/components/user/FormButton.vue'
   import { alertError, notify } from '@/composables/useAlerts'
   import { useAuthStore } from '@/stores/authStore'
   import { deleteSignedInUser } from '@/composables/auth/session'
@@ -34,53 +38,49 @@
 
 <template>
   <div>
-    <h6>{{ $t('user.delete.title') }}</h6>
-    <p class="my-2">{{ $t('user.delete.description') }}</p>
+    <h6 class="tw:text-xl tw:leading-8 tw:font-medium tw:tracking-[0.0125em]">
+      {{ $t('user.delete.title') }}
+    </h6>
+    <p class="tw:my-2">{{ $t('user.delete.description') }}</p>
 
-    <VDialog v-model="open" max-width="500">
-      <template #activator="{ props }">
-        <VBtn
-          v-bind="props"
-          color="error"
-          variant="outlined"
-          prepend-icon="mdi-delete"
+    <FormButton look="outlined" tone="error" @click="open = true">
+      <Trash aria-hidden="true" class="tw:size-6" />
+      {{ $t('user.delete.title') }}
+    </FormButton>
+
+    <ConfirmDialog
+      v-model:open="open"
+      :title="$t('user.delete.dialog_title')"
+      :text="$t('user.delete.dialog_text')"
+    >
+      <div class="tw:mt-4">
+        <EmailInput
+          v-model="confirmation"
+          autocomplete="off"
+          :label="$t('user.delete.confirm_label')"
+          :placeholder="auth.user?.email"
+        />
+      </div>
+      <template #actions>
+        <FormButton
+          size="default"
+          look="text"
+          :disabled="loading"
+          @click="open = false"
         >
-          {{ $t('user.delete.title') }}
-        </VBtn>
+          {{ $t('user.delete.abort') }}
+        </FormButton>
+        <FormButton
+          size="default"
+          look="flat"
+          tone="error"
+          :disabled="!confirmed"
+          :loading="loading"
+          @click="deleteAccount"
+        >
+          {{ $t('user.delete.confirm') }}
+        </FormButton>
       </template>
-
-      <VCard>
-        <VCardTitle class="text-wrap">
-          {{ $t('user.delete.dialog_title') }}
-        </VCardTitle>
-        <VCardText>
-          <p class="mb-4">{{ $t('user.delete.dialog_text') }}</p>
-          <VTextField
-            v-model="confirmation"
-            variant="outlined"
-            type="email"
-            autocomplete="off"
-            :label="$t('user.delete.confirm_label')"
-            :placeholder="auth.user?.email"
-          />
-        </VCardText>
-        <VCardActions>
-          <VSpacer />
-          <VBtn size="default" :disabled="loading" @click="open = false">
-            {{ $t('user.delete.abort') }}
-          </VBtn>
-          <VBtn
-            size="default"
-            color="error"
-            variant="flat"
-            :disabled="!confirmed"
-            :loading="loading"
-            @click="deleteAccount"
-          >
-            {{ $t('user.delete.confirm') }}
-          </VBtn>
-        </VCardActions>
-      </VCard>
-    </VDialog>
+    </ConfirmDialog>
   </div>
 </template>

@@ -1,10 +1,17 @@
 <template>
   <button
-    class="camera-btn"
-    :class="{ 'camera-btn--on': props.isStarting || props.isRunning }"
+    type="button"
+    class="tw:relative tw:m-1 tw:size-16 tw:cursor-pointer tw:rounded-full tw:border-0 tw:bg-transparent tw:p-0 tw:after:absolute tw:after:-inset-1 tw:after:rounded-full tw:after:border-[3px] tw:after:border-solid tw:after:border-[#e53935] tw:after:content-['']"
     @click="$emit('toggle')"
   >
-    <span class="camera-inner"></span>
+    <span
+      class="tw:absolute tw:inset-0 tw:bg-[#e53935] tw:transition-[border-radius,scale] tw:duration-500 tw:ease-[ease]"
+      :class="
+        props.isStarting || props.isRunning
+          ? 'tw:scale-50 tw:rounded-[10%]'
+          : 'tw:rounded-full'
+      "
+    ></span>
   </button>
 </template>
 
@@ -20,37 +27,3 @@
 
   defineEmits<CameraButtonEmits>()
 </script>
-
-<style scoped>
-  .camera-btn {
-    margin: 4px;
-    position: relative;
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    cursor: pointer;
-  }
-
-  .camera-btn::after {
-    content: '';
-    position: absolute;
-    inset: -4px;
-    border-radius: 50%;
-    border: 3px solid #e53935;
-  }
-
-  .camera-inner {
-    position: absolute;
-    inset: 0;
-    border-radius: 50%;
-    background: #e53935;
-    transition:
-      border-radius 0.5s ease,
-      scale 0.5s ease;
-  }
-
-  .camera-btn--on .camera-inner {
-    border-radius: 10%;
-    scale: 0.5;
-  }
-</style>

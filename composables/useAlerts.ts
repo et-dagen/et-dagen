@@ -1,20 +1,12 @@
-import { ref } from 'vue'
 import { toast } from 'vue-sonner'
 import { errorFeedback, UNKNOWN } from '@/lib/errors/feedback'
 
 export type NoticeType = 'success' | 'info' | 'warning' | 'error'
 
-/** The notice the public pages show in a Vuetify snackbar */
-export const snackbar = ref<{ message: string; type?: NoticeType } | null>(null)
-
-/** Whether notices show as toasts (the admin and company panels) or in the snackbar; set by Alert */
-export const noticeStyle = ref<'toast' | 'snackbar'>('snackbar')
-
-/** Short feedback after an action; notices only exist in the browser */
+/** Short feedback after an action, as a toast; notices only exist in the browser */
 export const notify = (message: string, type?: NoticeType) => {
   if (import.meta.server) return
-  if (noticeStyle.value === 'snackbar') snackbar.value = { message, type }
-  else if (type) toast[type](message)
+  if (type) toast[type](message)
   else toast(message)
 }
 
