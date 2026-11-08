@@ -38,35 +38,6 @@
     />
 
     <template #append>
-      <!-- company admin nav -->
-      <NavButton
-        v-if="auth.allows('company')"
-        :route="{
-          name: 'company',
-          route: '/company/admin',
-        }"
-        class="mx-2 d-none d-lg-flex"
-      />
-
-      <!-- admin nav button -->
-      <NavButton
-        v-if="auth.allows('admin')"
-        :route="{
-          name: 'admin',
-          route: '/admin',
-        }"
-        class="mx-2 d-none d-lg-flex"
-      />
-
-      <!-- divider -->
-      <VDivider
-        v-if="auth.allows('admin') || auth.allows('company')"
-        vertical
-        inset
-        length="75%"
-        class="my-4 mx-2 d-none d-lg-flex"
-      />
-
       <!-- the locale switcher will go here -->
       <LocaleSwitcher class="mx-2 d-none d-lg-flex" />
 

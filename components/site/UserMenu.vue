@@ -1,6 +1,9 @@
 <script setup lang="ts">
   import NavButton from '@/components/site/NavButton.vue'
   import StateButton from '@/components/site/SignInOutButton.vue'
+  import { useAuthStore } from '@/stores/authStore'
+
+  const auth = useAuthStore()
 </script>
 
 <template>
@@ -24,6 +27,26 @@
         :active="false"
         class="mb-2"
         variant="text"
+      />
+
+      <!-- the panels sit here, so the app bar keeps room for the pages on a laptop -->
+      <NavButton
+        v-if="auth.allows('company')"
+        :route="{
+          name: 'company',
+          route: '/company/admin',
+        }"
+        :active="false"
+        class="mb-2"
+      />
+      <NavButton
+        v-if="auth.allows('admin')"
+        :route="{
+          name: 'admin',
+          route: '/admin',
+        }"
+        :active="false"
+        class="mb-2"
       />
 
       <!-- sign out btn -->
