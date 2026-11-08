@@ -71,7 +71,7 @@ export default defineNuxtConfig({
     scan: false,
   },
 
-  css: ['@/assets/scss/main.scss', '@/assets/css/admin.css'],
+  css: ['@/assets/css/admin.css'],
 
   vite: {
     plugins: [tailwindcss()],
@@ -83,7 +83,6 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/i18n',
     '@pinia/nuxt',
-    'vuetify-nuxt-module',
     '@vueuse/nuxt',
     // Server code imports what it uses (#583). Last, because modules add their server
     // auto-imports in `nitro:config`.
@@ -131,11 +130,6 @@ export default defineNuxtConfig({
       // route enumerating the API.
       production: process.env.DOCS_BUILD === 'true' ? 'prerender' : false,
     },
-  },
-
-  // the public pages; the admin and company panels are built on shadcn-vue
-  vuetify: {
-    vuetifyOptions: './config/vuetify/vuetify.config.ts',
   },
 
   i18n: {

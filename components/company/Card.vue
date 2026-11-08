@@ -8,11 +8,9 @@
 </script>
 
 <template>
-  <VCard
-    class="card pa-2 d-flex"
-    height="100"
-    variant="flat"
-    width="150"
+  <button
+    type="button"
+    class="tw:relative tw:flex tw:h-[100px] tw:w-[150px] tw:cursor-pointer tw:rounded tw:bg-transparent tw:p-2 tw:transition-transform tw:duration-200 tw:ease-[cubic-bezier(0.25,0.46,0.45,0.94)] tw:outline-none tw:hover:scale-105 tw:focus-visible:ring-2 tw:focus-visible:ring-ring/50"
     @click="
       navigateTo(content.webpage, {
         external: true,
@@ -20,33 +18,9 @@
       })
     "
   >
-    <img :src="content.logo" />
-  </VCard>
+    <img
+      class="tw:absolute tw:inset-0 tw:m-auto tw:max-h-full tw:max-w-full tw:object-contain"
+      :src="content.logo"
+    />
+  </button>
 </template>
-
-<style scoped lang="scss">
-  @use 'vuetify/settings';
-
-  img {
-    object-fit: contain;
-    position: absolute;
-    margin: auto;
-    right: 0;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    max-width: 100%;
-    object-fit: contain;
-    max-height: 100%;
-  }
-
-  .card {
-    color: transparent;
-    background-color: transparent;
-    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-
-    &:hover {
-      transform: scale(1.05);
-    }
-  }
-</style>

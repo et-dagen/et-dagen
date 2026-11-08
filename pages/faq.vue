@@ -4,12 +4,16 @@
 
 /* TODO: Add translation for the text*/
 <template>
-  <div class="container">
-    <div class="info-page">
-      <div class="titlewrapper my-16">
-        <h3>{{ $t('forcompanies.about.heading') }}</h3>
+  <div
+    class="tw:mx-auto tw:w-auto tw:px-[30px] tw:min-[768px]:w-[750px] tw:min-[960px]:w-[930px]"
+  >
+    <div>
+      <div class="tw:my-16 tw:flex tw:items-center tw:justify-center">
+        <h3 class="tw:text-[3rem] tw:leading-[1.05] tw:font-normal">
+          {{ $t('forcompanies.about.heading') }}
+        </h3>
       </div>
-      <div class="aboutwrapper">
+      <div>
         <p>{{ $t('forcompanies.about.p1') }}</p>
         <br />
         <br />
@@ -23,14 +27,20 @@
         <br />
         <em
           >{{ $t('forcompanies.about.contactus') }}
-          <a href="mailto:bedriftansvarlig@et-dagen.no"
+          <a
+            class="tw:text-[#913331]"
+            href="mailto:bedriftansvarlig@et-dagen.no"
             >bedriftansvarlig@et-dagen.no</a
           ></em
         >
       </div>
       <div>
-        <div class="subheading">
-          <h4>{{ $t('forcompanies.faq.heading') }}</h4>
+        <div class="tw:mt-[30px] tw:mb-5">
+          <h4
+            class="tw:text-[2.125rem] tw:leading-[1.175] tw:font-normal tw:tracking-[0.0073529412em]"
+          >
+            {{ $t('forcompanies.faq.heading') }}
+          </h4>
         </div>
 
         <Infobox title="Hva vi tilbyr">
@@ -138,7 +148,9 @@
             Utover det som er inkludert i kontrakten kan det bestilles
             ekstrautstyr som for eksempel ekstra bord, ståbord, kaffe eller
             TV-skjermer. Kontakt oss på
-            <a href="mailto:bedriftansvarlig@et-dagen.no"
+            <a
+              class="tw:text-[#913331]"
+              href="mailto:bedriftansvarlig@et-dagen.no"
               >bedriftansvarlig@et-dagen.no</a
             >.
           </p>
@@ -149,45 +161,13 @@
 </template>
 
 <style scoped>
-  a {
-    color: rgb(var(--v-theme-primary-darken-1)) !important;
+  ul {
+    list-style: disc;
+  }
+  ol {
+    list-style: decimal;
   }
   li {
-    margin: 20px;
-    margin-top: 0;
-  }
-  .info-page {
-    font-family: 'Roboto', sans-serif;
-  }
-  .container {
-    margin: 0 auto;
-    padding: 0 30px;
-    width: auto;
-  }
-  @media (min-width: 768px) {
-    .container {
-      width: 750px;
-    }
-  }
-  @media (min-width: 960px) {
-    .container {
-      width: 930px;
-    }
-  }
-  .title {
-    font-weight: bold;
-    text-align: center;
-  }
-  .subheading {
-    margin-top: 30px;
-    margin-bottom: 20px;
-  }
-  .titlewrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .textwrapper {
-    padding-bottom: 15px;
+    margin: 0 20px 20px;
   }
 </style>

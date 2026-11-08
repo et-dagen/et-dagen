@@ -1,5 +1,8 @@
 <script setup lang="ts">
   import { useField, useForm } from 'vee-validate'
+  import JoinButton from '@/components/company/JoinButton.vue'
+  import JoinColumn from '@/components/company/JoinColumn.vue'
+  import JoinField from '@/components/company/JoinField.vue'
   import { alertError, notify } from '@/composables/useAlerts'
   import { useAuthStore } from '@/stores/authStore'
   import {
@@ -119,71 +122,50 @@
 </script>
 
 <template>
-  <div class="ma-10">
-    <h4 class="text-center pt-4 pb-7">
+  <div class="tw:m-10">
+    <h4
+      class="tw:pt-4 tw:pb-7 tw:text-center tw:text-[2.125rem] tw:leading-[1.175] tw:font-normal tw:tracking-[0.0073529412em]"
+    >
       {{ $t('invitation.join.title', { company }) }}
     </h4>
-    <VContainer>
-      <VRow>
-        <p class="text-center">
-          {{
-            $t('invitation.join.lead', {
-              company,
-              day: dayOf(invitation.expiresAt, locale),
-            })
-          }}
-        </p>
-      </VRow>
-      <VRow>
-        <VTextField
-          :model-value="invitation.email"
-          :label="$t('invitation.join.address')"
-          variant="outlined"
-          readonly
-          hide-details
-        />
-      </VRow>
-    </VContainer>
+    <JoinColumn>
+      <p class="tw:text-center">
+        {{
+          $t('invitation.join.lead', {
+            company,
+            day: dayOf(invitation.expiresAt, locale),
+          })
+        }}
+      </p>
+      <JoinField
+        id="join-address"
+        :model-value="invitation.email"
+        :label="$t('invitation.join.address')"
+        readonly
+        hide-details
+      />
+    </JoinColumn>
 
     <!-- signed in with the invited address: one click -->
-    <VContainer v-if="invitedHere">
-      <VRow>
-        <p>{{ $t('invitation.join.signed_in') }}</p>
-      </VRow>
-      <VRow>
-        <VBtn
-          color="success"
-          class="btn"
-          :loading="pending"
-          @click="joinSignedIn"
-        >
-          {{ $t('invitation.join.join', { company }) }}
-        </VBtn>
-      </VRow>
-    </VContainer>
+    <JoinColumn v-if="invitedHere">
+      <p>{{ $t('invitation.join.signed_in') }}</p>
+      <JoinButton tone="success" :loading="pending" @click="joinSignedIn">
+        {{ $t('invitation.join.join', { company }) }}
+      </JoinButton>
+    </JoinColumn>
 
     <!-- signed in as someone else: the invitation belongs to another account -->
-    <VContainer v-else-if="signedInAs">
-      <VRow>
-        <p>
-          {{ $t('invitation.join.other_account', { email: signedInAs }) }}
-        </p>
-      </VRow>
-      <VRow>
-        <VBtn
-          color="primary"
-          variant="outlined"
-          class="btn"
-          :loading="pending"
-          @click="run(signOutHere)"
-        >
-          {{ $t('invitation.join.sign_out') }}
-        </VBtn>
-      </VRow>
-    </VContainer>
+    <JoinColumn v-else-if="signedInAs">
+      <p>
+        {{ $t('invitation.join.other_account', { email: signedInAs }) }}
+      </p>
+      <JoinButton tone="outline" :loading="pending" @click="run(signOutHere)">
+        {{ $t('invitation.join.sign_out') }}
+      </JoinButton>
+    </JoinColumn>
 
-    <VForm v-else-if="mode === 'open'" novalidate @submit.prevent="openAccount">
-      <VContainer>
+    <form v-else-if="mode === 'open'" novalidate @submit.prevent="openAccount">
+      <JoinColumn>
         <!-- the address, for password managers that save the pair -->
         <input
           type="email"
@@ -193,63 +175,49 @@
           readonly
           tabindex="-1"
           aria-hidden="true"
-          class="d-sr-only"
+          class="tw:sr-only"
         />
-        <VRow>
-          <VTextField
-            id="join-name"
-            v-model="name"
-            :label="$t('signup.name')"
-            name="name"
-            autocomplete="name"
-            variant="outlined"
-            :error-messages="shown(nameError)"
-          />
-        </VRow>
-        <VRow>
-          <VTextField
-            id="join-new-password"
-            v-model="newPassword"
-            :label="$t('invitation.join.new_password')"
-            name="password"
-            autocomplete="new-password"
-            variant="outlined"
-            :type="showPassword ? 'text' : 'password'"
-            :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-            :hint="$t('signup.password_hint')"
-            persistent-hint
-            :error-messages="shown(newPasswordError)"
-            @click:append-inner="showPassword = !showPassword"
-          />
-        </VRow>
-      </VContainer>
-      <VContainer>
-        <VRow>
-          <VBtn color="success" type="submit" class="btn" :loading="pending">
-            {{ $t('invitation.join.open') }}
-          </VBtn>
-        </VRow>
-      </VContainer>
-      <VContainer class="my-0 pt-2">
-        <VRow class="mt-0">
-          <span class="question">{{ $t('invitation.join.have_account') }}</span>
-        </VRow>
-        <VRow class="mt-0">
-          <VBtn
-            color="primary"
-            variant="outlined"
-            class="btn"
-            :disabled="pending"
-            @click="mode = 'sign-in'"
-          >
-            {{ $t('invitation.join.sign_in_instead') }}
-          </VBtn>
-        </VRow>
-      </VContainer>
-    </VForm>
+        <JoinField
+          id="join-name"
+          v-model="name"
+          :label="$t('signup.name')"
+          name="name"
+          autocomplete="name"
+          :error="shown(nameError)"
+        />
+        <JoinField
+          id="join-new-password"
+          v-model="newPassword"
+          v-model:revealed="showPassword"
+          password
+          :label="$t('invitation.join.new_password')"
+          name="password"
+          autocomplete="new-password"
+          :hint="$t('signup.password_hint')"
+          :error="shown(newPasswordError)"
+        />
+      </JoinColumn>
+      <JoinColumn>
+        <JoinButton tone="success" type="submit" :loading="pending">
+          {{ $t('invitation.join.open') }}
+        </JoinButton>
+      </JoinColumn>
+      <JoinColumn tight>
+        <span class="tw:mt-[0.4rem] tw:text-center">
+          {{ $t('invitation.join.have_account') }}
+        </span>
+        <JoinButton
+          tone="outline"
+          :disabled="pending"
+          @click="mode = 'sign-in'"
+        >
+          {{ $t('invitation.join.sign_in_instead') }}
+        </JoinButton>
+      </JoinColumn>
+    </form>
 
-    <VForm v-else novalidate @submit.prevent="signInAndJoin">
-      <VContainer>
+    <form v-else novalidate @submit.prevent="signInAndJoin">
+      <JoinColumn>
         <input
           type="email"
           name="username"
@@ -258,105 +226,40 @@
           readonly
           tabindex="-1"
           aria-hidden="true"
-          class="d-sr-only"
+          class="tw:sr-only"
         />
-        <VRow>
-          <VTextField
-            id="join-password"
-            v-model="password"
-            :label="$t('signin.password')"
-            name="password"
-            autocomplete="current-password"
-            variant="outlined"
-            :type="showPassword ? 'text' : 'password'"
-            :append-inner-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-            :error-messages="passwordError"
-            @click:append-inner="showPassword = !showPassword"
-          />
-        </VRow>
-      </VContainer>
-      <VContainer>
-        <VRow>
-          <VBtn color="success" type="submit" class="btn" :loading="pending">
-            {{ $t('invitation.join.sign_in_and_join', { company }) }}
-          </VBtn>
-        </VRow>
-      </VContainer>
-      <VContainer class="my-0 pt-2">
-        <VRow class="mt-0">
-          <button
-            type="button"
-            class="forgot"
-            :disabled="pending"
-            @click="forgot"
-          >
-            {{ $t('invitation.join.forgot') }}
-          </button>
-        </VRow>
-        <VRow class="mt-0">
-          <span class="question">{{ $t('invitation.join.no_account') }}</span>
-        </VRow>
-        <VRow class="mt-0">
-          <VBtn
-            color="primary"
-            variant="outlined"
-            class="btn"
-            :disabled="pending"
-            @click="mode = 'open'"
-          >
-            {{ $t('invitation.join.open_instead') }}
-          </VBtn>
-        </VRow>
-      </VContainer>
-    </VForm>
+        <JoinField
+          id="join-password"
+          v-model="password"
+          v-model:revealed="showPassword"
+          password
+          :label="$t('signin.password')"
+          name="password"
+          autocomplete="current-password"
+          :error="passwordError"
+        />
+      </JoinColumn>
+      <JoinColumn>
+        <JoinButton tone="success" type="submit" :loading="pending">
+          {{ $t('invitation.join.sign_in_and_join', { company }) }}
+        </JoinButton>
+      </JoinColumn>
+      <JoinColumn tight>
+        <button
+          type="button"
+          class="tw:my-[0.4rem] tw:text-[1.1rem] tw:font-semibold tw:italic tw:hover:underline tw:disabled:opacity-50"
+          :disabled="pending"
+          @click="forgot"
+        >
+          {{ $t('invitation.join.forgot') }}
+        </button>
+        <span class="tw:mt-[0.4rem] tw:text-center">
+          {{ $t('invitation.join.no_account') }}
+        </span>
+        <JoinButton tone="outline" :disabled="pending" @click="mode = 'open'">
+          {{ $t('invitation.join.open_instead') }}
+        </JoinButton>
+      </JoinColumn>
+    </form>
   </div>
 </template>
-
-<style scoped lang="scss">
-  @use 'sass:map';
-  @use 'vuetify/settings';
-
-  .v-container {
-    max-width: 26rem;
-    margin-block: 0.5rem;
-  }
-
-  .v-row {
-    justify-content: center;
-    padding-block: 0.5rem;
-  }
-
-  // a company's name can make a label longer than the old buttons were wide
-  .btn {
-    min-width: 60%;
-    max-width: 100%;
-    height: auto;
-    min-height: 52px;
-
-    :deep(.v-btn__content) {
-      white-space: normal;
-    }
-  }
-
-  .question {
-    margin: 0.4rem auto 0;
-    text-align: center;
-  }
-
-  .forgot {
-    margin: 0.4rem auto;
-    font-weight: 600;
-    font-style: italic;
-    font-size: 1.1rem;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-
-  @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
-    .btn {
-      width: 100%;
-    }
-  }
-</style>

@@ -6,10 +6,9 @@
 </script>
 
 <template>
-  <VApp>
+  <NuxtLayout>
+    <!-- teleports itself to <body> -->
     <Alert />
-    <NuxtLayout>
-      <NuxtPage :keepalive="{ include: 'Programme' }" />
-    </NuxtLayout>
-  </VApp>
+    <NuxtPage :keepalive="{ include: 'Programme' }" />
+  </NuxtLayout>
 </template>

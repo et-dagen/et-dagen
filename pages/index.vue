@@ -4,6 +4,7 @@
   import CompanyCard from '@/components/company/Card.vue'
   import CompanyHero from '@/components/company/Hero.vue'
   import CommonGrid from '@/components/common/Grid.vue'
+  import { Separator } from '@/components/ui/separator'
   import { useCompanies } from '@/composables/useCompanies'
   import { lineupOf } from '@/lib/site/companies'
   import { fairDateLine, type GeneralInfo } from '@/lib/site/fair'
@@ -22,7 +23,7 @@
 </script>
 
 <template>
-  <div class="ma-10">
+  <div class="tw:m-10 tw:text-black/87">
     <Banner
       :content="{
         caption: $t('home.banner.slogan'),
@@ -30,22 +31,26 @@
         image: '/images/banner_graphics.png',
         title: 'Elektronikk & Teknologidagene',
       }"
-      class="my-4 my-xxl-16 d-flex justify-center"
+      class="tw:my-4 tw:flex tw:justify-center tw:min-[2560px]:my-16"
     />
 
-    <CountDown :start="start" class="mb-5" />
+    <CountDown :start="start" class="tw:mb-5" />
 
-    <p v-if="lineup.last" class="text-h6 text-center pt-10">
+    <p
+      v-if="lineup.last"
+      class="tw:pt-10 tw:text-center tw:text-xl tw:leading-8 tw:font-medium tw:tracking-[0.0125em]"
+    >
       {{ $t('home.companies_last') }}
     </p>
 
-    <div v-if="lineup.mainPartner" class="py-10">
-      <h2 class="text-h4 text-md-h3 text-center pt-10 pb-4 font-weight-bold">
+    <div v-if="lineup.mainPartner" class="tw:py-10">
+      <h2
+        class="tw:pt-10 tw:pb-4 tw:text-center tw:text-[2.125rem] tw:leading-[1.175] tw:font-bold tw:tracking-[0.0073em] tw:min-[960px]:text-5xl tw:min-[960px]:leading-[1.05] tw:min-[960px]:tracking-normal"
+      >
         {{ $t('company.main_partner') }}
       </h2>
-      <VDivider
-        class="pb-lg-8 pb-3 mx-auto"
-        style="width: 100%; max-width: 1000px"
+      <Separator
+        class="tw:mx-auto tw:mb-3 tw:max-w-[1000px] tw:bg-black/10 tw:data-[orientation=horizontal]:h-0.5 tw:min-[1280px]:mb-8"
       />
       <CompanyHero
         :content="{
@@ -54,17 +59,18 @@
           logo: lineup.mainPartner.logo ?? '',
           webpage: lineup.mainPartner.webpage ?? '',
         }"
-        class="my-3 d-flex justify-center"
+        class="tw:mb-3 tw:flex tw:justify-center tw:pt-3"
       />
     </div>
 
-    <div v-if="lineup.partners.length" class="py-10">
-      <h2 class="text-h3 text-center pt-10 pb-4 font-weight-bold">
+    <div v-if="lineup.partners.length" class="tw:py-10">
+      <h2
+        class="tw:pt-10 tw:pb-4 tw:text-center tw:text-5xl tw:leading-[1.05] tw:font-bold"
+      >
         {{ $t('company.partners') }}
       </h2>
-      <VDivider
-        class="pb-lg-8 pb-3 mx-auto"
-        style="width: 100%; max-width: 1000px"
+      <Separator
+        class="tw:mx-auto tw:mb-3 tw:max-w-[1000px] tw:bg-black/10 tw:data-[orientation=horizontal]:h-0.5 tw:min-[1280px]:mb-8"
       />
       <CommonGrid>
         <CompanyCard
@@ -78,13 +84,14 @@
       </CommonGrid>
     </div>
 
-    <div v-if="lineup.sponsors.length" class="pt-10">
-      <h2 class="text-h3 text-center pt-10 pb-4 font-weight-bold">
+    <div v-if="lineup.sponsors.length" class="tw:pt-10">
+      <h2
+        class="tw:pt-10 tw:pb-4 tw:text-center tw:text-5xl tw:leading-[1.05] tw:font-bold"
+      >
         {{ $t('company.sponsors') }}
       </h2>
-      <VDivider
-        class="pb-lg-8 pb-3 mx-auto"
-        style="width: 100%; max-width: 1000px"
+      <Separator
+        class="tw:mx-auto tw:mb-3 tw:max-w-[1000px] tw:bg-black/10 tw:data-[orientation=horizontal]:h-0.5 tw:min-[1280px]:mb-8"
       />
       <CommonGrid>
         <CompanyCard

@@ -1,5 +1,8 @@
 <script setup lang="ts">
-  import CommonModal from '@/components/common/Modal.vue'
+  import { Clock, MapPin, User, Users } from '@lucide/vue'
+  import StandMap from '@/components/programme/StandMap.vue'
+  import { Card } from '@/components/ui/card'
+  import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
   import { Instant } from '@/domain/time'
   import { companyName, type ListedCompanies } from '@/lib/companies'
   import {
@@ -84,286 +87,188 @@
   const selectedStandMap = computed(() =>
     selectedDate.value ? (props.maps.get(selectedDate.value) ?? null) : null,
   )
-
-  const showStandMap = ref(false)
 </script>
 
 <template>
-  <div class="timeline-container">
-    <!-- Date selection tabs -->
-    <VContainer>
-      <VTabs v-model="selectedDate" fixed-tabs color="primary" class="tabs">
-        <VTab
+  <div
+    class="tw:mx-auto tw:w-full tw:p-4 tw:min-[960px]:max-w-[900px] tw:min-[1280px]:max-w-[1200px] tw:min-[1920px]:max-w-[1800px]"
+  >
+    <Tabs
+      :model-value="selectedDate ?? undefined"
+      @update:model-value="(date) => (selectedDate = String(date))"
+    >
+      <TabsList
+        class="tw:h-12 tw:w-full tw:rounded-none tw:bg-transparent tw:p-0"
+      >
+        <TabsTrigger
           v-for="day in days"
           :key="day.date"
           :value="day.date"
-          :class="{ 'v-tab--selected': selectedDate === day.date }"
+          class="tw:relative tw:h-12 tw:max-w-[300px] tw:min-w-[90px] tw:rounded-none tw:border-0 tw:px-4 tw:text-sm tw:font-medium tw:tracking-[0.0892em] tw:text-black/87 tw:after:absolute tw:after:inset-x-0 tw:after:bottom-0 tw:after:h-0.5 tw:after:bg-brand tw:after:opacity-0 tw:hover:bg-black/4 tw:data-[state=active]:bg-[#C33C3B]/8 tw:data-[state=active]:text-brand tw:data-[state=active]:shadow-none tw:data-[state=active]:after:opacity-100"
         >
           {{ tabLabel(day.date) }}
-        </VTab>
-      </VTabs>
-    </VContainer>
+        </TabsTrigger>
+      </TabsList>
+    </Tabs>
 
-    <!--View standmap button-->
-    <VContainer
+    <div
       v-if="selectedDate && selectedStandMap"
-      class="d-flex justify-center"
+      class="tw:mt-8 tw:flex tw:justify-center"
     >
-      <VBtn
-        class="w-75 standmap-button"
-        max-width="600"
-        color="accent"
-        @click="showStandMap = true"
-      >
-        <VIcon class="mx-3">mdi-map</VIcon>
-        {{ $t('program.standmap') }}:
-        {{ weekday(selectedDate) }}
-      </VBtn>
-    </VContainer>
+      <StandMap :url="selectedStandMap" :day="weekday(selectedDate)" />
+    </div>
 
-    <!--Standmap-->
-    <CommonModal
-      v-if="showStandMap && selectedDate && selectedStandMap"
-      @close-modal="showStandMap = false"
-    >
-      <img
-        :src="selectedStandMap"
-        :alt="$t('programme.map.title', { day: weekday(selectedDate) })"
-        class="w-75 standmap"
-      />
-    </CommonModal>
-
-    <!-- Timeline container -->
-    <VContainer>
-      <div v-if="selectedEvents" class="container">
-        <div v-for="event in selectedEvents" :key="event.uid" class="card__div">
-          <!-- Event card timestamp and date -->
-          <div class="card__timestamp">
-            <span class="date text-primary bold">
-              {{ numericDate(event.date?.start) }}
-            </span>
-            <br />
-            <span class="time bold">
-              {{ hhmm(event.date?.start) }}
-            </span>
-          </div>
-
-          <!-- Event card -->
-          <VCard
-            elevation="2"
-            class="card mb-4"
-            variant="flat"
-            :ripple="false"
-            @click="() => navigateTo(localePath(`/event/${event.uid}`))"
+    <ol v-if="selectedEvents" class="timeline tw:mt-8">
+      <li v-for="event in selectedEvents" :key="event.uid" class="entry">
+        <div class="entry__time tw:text-right tw:font-bold">
+          <span
+            class="tw:block tw:text-[1.2rem] tw:leading-[1.333] tw:text-brand tw:min-[960px]:text-2xl"
           >
-            <template #title> {{ event.title }} </template>
+            {{ numericDate(event.date?.start) }}
+          </span>
+          <span
+            class="tw:block tw:text-[1.4rem] tw:leading-[1.175] tw:tracking-[0.0074em] tw:min-[960px]:text-[2.125rem]"
+          >
+            {{ hhmm(event.date?.start) }}
+          </span>
+        </div>
 
-            <!-- Display company name if found -->
-            <template #subtitle>
-              {{ companyName(companies, event.companyUID) || 'E&T-dagene' }}
-            </template>
+        <NuxtLink
+          :to="localePath(`/event/${event.uid}`)"
+          class="entry__card tw:group tw:mb-4 tw:block tw:rounded-[4px] tw:outline-none tw:focus-visible:ring-2 tw:focus-visible:ring-ring"
+        >
+          <Card
+            class="tw:gap-0 tw:rounded-[4px] tw:border-0 tw:py-0 tw:text-black/87 tw:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),0_2px_2px_0_rgba(0,0,0,0.14),0_1px_5px_0_rgba(0,0,0,0.12)] tw:transition-colors tw:group-hover:bg-[#f5f5f5]"
+          >
+            <div class="tw:px-4 tw:py-2.5">
+              <div
+                class="tw:truncate tw:text-xl tw:leading-8 tw:font-medium tw:tracking-[0.0125em]"
+              >
+                {{ event.title }}
+              </div>
+              <div
+                class="tw:truncate tw:pb-1 tw:text-sm tw:leading-[1.425] tw:tracking-[0.0178em] tw:opacity-60"
+              >
+                {{ companyName(companies, event.companyUID) || 'E&T-dagene' }}
+              </div>
+            </div>
 
-            <template #text>
-              <!-- Event location -->
-              <span class="card__location mb-2">
-                <VIcon color="primary">mdi-map-marker</VIcon>
+            <div
+              class="tw:px-4 tw:pb-4 tw:text-sm tw:leading-[1.425] tw:tracking-[0.0178em] tw:[&>span]:mb-2 tw:[&>span]:flex tw:[&>span]:items-center tw:[&>span]:gap-2"
+            >
+              <span>
+                <MapPin class="tw:size-[21px] tw:text-brand" />
                 {{ event.location?.name }}
               </span>
-
-              <!-- Event start and end time -->
-              <span class="card__timeinterval mb-2">
-                <VIcon color="primary">mdi-clock</VIcon>
-                <span>
-                  {{ hhmm(event.date?.start) }} -
-                  {{ hhmm(event.date?.end) }}
-                </span>
+              <span>
+                <Clock class="tw:size-[21px] tw:text-brand" />
+                {{ hhmm(event.date?.start) }} - {{ hhmm(event.date?.end) }}
               </span>
-
-              <!-- Event capacity -->
-              <span v-if="event.capacity" class="card__attendees mb-2">
-                <VIcon v-if="attendants(event) >= 3" color="primary">
-                  mdi-account-group
-                </VIcon>
-                <VIcon v-else color="primary">mdi-account</VIcon>
-
-                <span>{{ attendants(event) }} / {{ event.capacity }}</span>
+              <span v-if="event.capacity">
+                <Users
+                  v-if="attendants(event) >= 3"
+                  class="tw:size-[21px] tw:text-brand"
+                />
+                <User v-else class="tw:size-[21px] tw:text-brand" />
+                {{ attendants(event) }} / {{ event.capacity }}
               </span>
-            </template>
-          </VCard>
-        </div>
-      </div>
-    </VContainer>
+            </div>
+          </Card>
+        </NuxtLink>
+      </li>
+    </ol>
   </div>
 </template>
 
-<style scoped lang="scss">
-  @use 'sass:map';
-  @use 'vuetify/settings';
-
-  // Vuetify's text-h* classes, without their !important font size, so phones can shrink them
-  @mixin heading($name) {
-    $style: map.get(settings.$typography, $name);
-    font-family: map.get($style, 'font-family');
-    font-size: map.get($style, 'size');
-    line-height: map.get($style, 'line-height');
-    letter-spacing: map.get($style, 'letter-spacing');
-  }
-
-  .date {
-    @include heading('h5');
-  }
-
-  .time {
-    @include heading('h4');
-  }
-
-  .container {
+<style scoped>
+  .timeline {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
-    max-width: 100vw;
   }
 
-  .timeline-container {
-    width: 95vw;
-    margin: 0 auto; /* Center the container horizontally */
+  .entry {
+    position: relative;
   }
 
-  .v-tab {
-    max-width: 600px;
+  .entry__time {
+    position: absolute;
+    left: -9.125rem;
+    top: 10px;
   }
 
-  .bold {
-    font-weight: bold;
-  }
-
-  .v-tab--selected {
-    background: rgba(var(--v-theme-accent), 0.08);
-  }
-
-  .standmap-button {
-    min-width: fit-content;
-  }
-
-  .standmap {
-    object-fit: contain;
-  }
-
-  .card {
+  .entry__card {
+    position: relative;
     width: 600px;
+  }
 
-    &__timestamp {
-      position: absolute;
-      left: -9rem - 0.125rem;
-      top: 10px;
-      text-align: right;
+  /* the line down to the next event */
+  .entry::before {
+    content: '';
+    position: absolute;
+    left: -1.5rem;
+    top: 15px;
+    height: calc(100% + 0.5rem);
+    border-left: 4px solid #000;
+  }
+
+  .entry:last-child::before {
+    display: none;
+  }
+
+  /* the dot at the event's start */
+  .entry::after {
+    --dot: 1.5rem;
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: calc(-1.5rem - var(--dot) / 2 + 0.125rem);
+    width: var(--dot);
+    height: var(--dot);
+    border: 2px solid #000;
+    border-radius: 50%;
+    background: #121212;
+  }
+
+  @media (max-width: 959.98px) {
+    .entry__card {
+      left: -0.75rem;
     }
 
-    &__div {
-      position: relative;
-
-      &::before {
-        // Node line
-        display: inline-block;
-        content: '';
-        position: absolute;
-        left: -1.5rem;
-        top: 15px;
-        border-left: 4px solid #000;
-        height: calc(100% + 0.5rem);
-      }
-
-      &::after {
-        // Node circle
-        $node-width: 1.5rem;
-        content: '';
-        display: inline-block;
-        position: absolute;
-        top: 15px;
-        left: -1.5rem - calc($node-width / 2) + 0.125rem;
-        width: $node-width;
-        height: $node-width;
-        border: 2px solid #000;
-        border-radius: 50%;
-        margin-top: 0px;
-        background-color: rgb(var(--v-theme-neutral));
-      }
-
-      &:last-child {
-        &::before {
-          // Node line
-          display: none;
-        }
-      }
+    .entry__time {
+      left: -6.825rem;
     }
 
-    &__location,
-    &__timeinterval,
-    &__attendees {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 0.5rem;
+    .entry::before {
+      left: -1.8rem;
+    }
+
+    .entry::after {
+      --dot: 1rem;
+      left: calc(-1.8rem - var(--dot) / 2 + 0.125rem);
     }
   }
 
-  @media #{map.get(settings.$display-breakpoints, 'xs')} {
-    .container {
+  @media (max-width: 599.98px) {
+    .timeline {
       transform: translateX(6.5rem);
       width: 60vw;
+    }
 
-      .v-card {
-        width: 60vw;
-      }
+    .entry__card {
+      width: 60vw;
     }
   }
 
-  @media #{map.get(settings.$display-breakpoints, 'sm')} {
-    .container {
+  @media (min-width: 600px) and (max-width: 959.98px) {
+    .timeline {
       transform: translateX(9rem);
       width: fit-content;
     }
 
-    .card {
+    .entry__card {
       width: 50vw;
-    }
-  }
-
-  @media #{map.get(settings.$display-breakpoints, 'xs')}, #{map.get(settings.$display-breakpoints, 'sm')} {
-    .card {
-      left: -0.75rem;
-
-      &__timestamp {
-        left: -6.7rem - 0.125rem;
-      }
-
-      &__div {
-        &::before {
-          // Node line
-          left: -1.8rem;
-        }
-
-        &::after {
-          // Node circle
-          $node-width: 1rem;
-          left: -1.8rem - calc($node-width / 2) + 0.125rem;
-          width: $node-width;
-          height: $node-width;
-        }
-      }
-    }
-
-    .date {
-      font-size: 1.2rem;
-    }
-
-    .time {
-      font-size: 1.4rem;
-    }
-
-    .tabs {
-      width: 100%;
     }
   }
 </style>

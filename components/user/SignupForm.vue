@@ -3,7 +3,14 @@
   import EmailInput from '@/components/form/EmailInput.vue'
   import SelectInput from '@/components/form/SelectInput.vue'
   import TextInput from '@/components/form/TextInput.vue'
+  import {
+    Tabs,
+    TabsContent,
+    TabsList,
+    TabsTrigger,
+  } from '@/components/ui/tabs'
   import DietInput from '@/components/user/DietInput.vue'
+  import FormButton from '@/components/user/FormButton.vue'
   import PasswordInput from '@/components/user/PasswordInput.vue'
   import { alertError, notify } from '@/composables/useAlerts'
   import { registerUser } from '@/composables/auth/registration'
@@ -30,11 +37,11 @@
   })
 
   // the contract's messages are keys under form.errors
-  const vuetifyProps = (state: { errors: string[] }) => ({
+  const fieldProps = (state: { errors: string[] }) => ({
     'error-messages': state.errors.map((error) => t(`form.errors.${error}`)),
   })
   const field = <K extends keyof StudentSignup>(name: K) =>
-    form.defineField(name, { props: vuetifyProps })
+    form.defineField(name, { props: fieldProps })
 
   const [name, nameProps] = field('name')
   const [email, emailProps] = field('email')
@@ -61,6 +68,15 @@
   )
 
   const userType = ref<'student' | 'company'>('student')
+  const BUTTON =
+    'tw:mx-[20%] tw:w-[60%] tw:max-[960px]:mx-0 tw:max-[960px]:w-full'
+  const TAB = [
+    'tw:h-full tw:rounded-none tw:border-0 tw:border-b-2 tw:border-transparent',
+    'tw:text-sm tw:font-medium tw:tracking-[0.0892em] tw:text-black/87 tw:hover:bg-black/4',
+    'tw:max-[960px]:text-base tw:data-[state=active]:shadow-none',
+    'tw:data-[state=active]:border-brand tw:data-[state=active]:bg-[#C33C3B]/8',
+    'tw:data-[state=active]:text-brand',
+  ]
   const isRegistering = ref<boolean>(false)
 
   const register = form.handleSubmit(
@@ -89,9 +105,9 @@
 </script>
 
 <template>
-  <VForm @submit.prevent="submit">
-    <VContainer>
-      <VRow>
+  <form class="tw:mx-auto tw:max-w-[26rem]" novalidate @submit.prevent="submit">
+    <div class="tw:px-1 tw:pt-1">
+      <div class="tw:py-[0.6rem]">
         <TextInput
           v-model="name"
           v-bind="nameProps"
@@ -100,35 +116,41 @@
             label: $t('user.register.full_name'),
           }"
         />
-      </VRow>
-      <VRow>
+      </div>
+      <div class="tw:py-[0.6rem]">
         <EmailInput v-model="email" v-bind="emailProps" autocomplete="email" />
-      </VRow>
-      <VRow>
+      </div>
+      <div class="tw:py-[0.6rem]">
         <PasswordInput
           v-model="password"
           v-bind="passwordProps"
           autocomplete="new-password"
         />
-      </VRow>
-      <VRow>
+      </div>
+      <div class="tw:py-[0.6rem]">
         <PasswordInput
           v-model="passwordConfirmation"
           :error-messages="confirmErrors"
           autocomplete="new-password"
           confirm-password
         />
-      </VRow>
+      </div>
       <DietInput v-model="dietaryRestrictions" />
-    </VContainer>
-    <VContainer class="px-0">
-      <VTabs v-model="userType" fixed-tabs color="primary" class="tabs">
-        <VTab value="student">{{ $t('user.register.user_type.student') }}</VTab>
-        <VTab value="company">{{ $t('user.register.user_type.company') }}</VTab>
-      </VTabs>
-      <VCardText class="px-0">
-        <VWindow v-model="userType">
-          <VWindowItem value="student">
+    </div>
+    <Tabs v-model="userType" class="tw:mt-5 tw:gap-0">
+      <TabsList
+        class="tw:h-12 tw:w-full tw:rounded-none tw:bg-transparent tw:p-0"
+      >
+        <TabsTrigger value="student" :class="TAB">
+          {{ $t('user.register.user_type.student') }}
+        </TabsTrigger>
+        <TabsTrigger value="company" :class="TAB">
+          {{ $t('user.register.user_type.company') }}
+        </TabsTrigger>
+      </TabsList>
+      <TabsContent value="student" class="tw:py-4">
+        <div class="tw:py-[0.6rem]">
+          <div class="tw:py-[0.6rem]">
             <SelectInput
               v-model="studyProgram"
               v-bind="studyProgramProps"
@@ -137,6 +159,8 @@
                 options: programmeOptions,
               }"
             />
+          </div>
+          <div class="tw:py-[0.6rem]">
             <SelectInput
               v-model="currentYear"
               v-bind="currentYearProps"
@@ -145,69 +169,37 @@
                 options: years,
               }"
             />
-          </VWindowItem>
-
-          <VWindowItem value="company">
-            <p>{{ $t('signup.company.lead') }}</p>
-            <VBtn
-              color="primary"
-              variant="outlined"
-              class="btn--submit mt-4"
-              :to="localePath('/company/join')"
-            >
+          </div>
+        </div>
+      </TabsContent>
+      <TabsContent value="company" class="tw:py-4">
+        <div class="tw:py-[0.6rem]">
+          <p
+            class="tw:text-sm tw:leading-[1.375rem] tw:tracking-[0.0178571429em]"
+          >
+            {{ $t('signup.company.lead') }}
+          </p>
+          <FormButton
+            as-child
+            tone="brand"
+            look="outlined"
+            :class="['tw:mt-4', BUTTON]"
+          >
+            <NuxtLink :to="localePath('/company/join')">
               {{ $t('signup.join_company') }}
-            </VBtn>
-          </VWindowItem>
-        </VWindow>
-      </VCardText>
-      <VBtn
-        v-if="userType === 'student'"
-        color="success"
-        type="submit"
-        class="btn--submit"
-        :loading="isRegistering"
-      >
-        {{ $t('user.sign_up') }}
-      </VBtn>
-    </VContainer>
-  </VForm>
+            </NuxtLink>
+          </FormButton>
+        </div>
+      </TabsContent>
+    </Tabs>
+    <FormButton
+      v-if="userType === 'student'"
+      tone="success"
+      type="submit"
+      :loading="isRegistering"
+      :class="BUTTON"
+    >
+      {{ $t('user.sign_up') }}
+    </FormButton>
+  </form>
 </template>
-
-<style scoped lang="scss">
-  @use 'sass:map';
-  @use 'vuetify/settings';
-
-  .v-container {
-    max-width: 26rem;
-  }
-
-  .v-row {
-    padding-block: 0.6rem;
-  }
-
-  .v-tab--selected {
-    background: rgba(var(--v-theme-accent), 0.08);
-  }
-
-  .v-window__container {
-    div {
-      padding-block: 0.6rem;
-    }
-  }
-
-  .btn--submit {
-    width: 60%;
-    margin-inline: 20%;
-  }
-
-  @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
-    .v-tab {
-      font-size: 1rem;
-    }
-
-    .btn--submit {
-      width: 100%;
-      margin: 0;
-    }
-  }
-</style>

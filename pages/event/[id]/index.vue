@@ -1,10 +1,13 @@
 <script setup lang="ts">
+  import { ArrowLeft, ExternalLink, Pencil } from '@lucide/vue'
   import { useAuthStore } from '@/stores/authStore'
   import { useCompanies } from '@/composables/useCompanies'
   import { useProgrammes } from '@/composables/useProgrammes'
   import AboutPanel from '@/components/event/page/AboutPanel.vue'
   import CompanyJobs from '@/components/event/page/CompanyJobs.vue'
   import SignupPanel from '@/components/event/page/SignupPanel.vue'
+  import { Button } from '@/components/ui/button'
+  import { Card, CardTitle } from '@/components/ui/card'
   import { Instant } from '@/domain/time'
   import { companyOf } from '@/lib/auth/companyOf'
   import {
@@ -97,101 +100,120 @@
 </script>
 
 <template>
-  <VContainer v-if="event && state" class="container">
+  <div
+    v-if="event && state"
+    class="tw:mx-auto tw:grid tw:w-full tw:max-w-[420px] tw:grid-cols-1 tw:gap-4 tw:p-4 tw:[grid-template-areas:'image'_'details'_'attendants'_'description'] tw:min-[960px]:max-w-[750px] tw:min-[1280px]:max-w-[1080px] tw:min-[1280px]:grid-cols-[1.1fr_3fr] tw:min-[1280px]:[grid-template-areas:'details_image'_'attendants_description']"
+  >
     <!-- company logo -->
-    <VCard
-      class="d-flex justify-center align-center pa-4 image-container"
-      flat
-      rounded="lg"
+    <Card
+      class="tw:max-h-[300px] tw:flex-row tw:items-center tw:justify-center tw:gap-0 tw:rounded-lg tw:border-0 tw:p-4 tw:shadow-none tw:[grid-area:image]"
     >
       <img
-        class="image"
+        class="tw:max-h-full tw:max-w-full tw:object-contain"
         :src="company?.logo || '/images/logo_long.png'"
         :alt="company?.name ?? 'E&T-dagene'"
       />
-    </VCard>
+    </Card>
 
-    <!-- event description, and the company's open jobs -->
-    <div class="description-column">
+    <!-- event description, and the company's open jobs; min-width lets a long title end in an ellipsis -->
+    <div
+      class="tw:flex tw:min-w-0 tw:flex-col tw:gap-4 tw:[grid-area:description]"
+    >
       <AboutPanel :event="event" />
       <CompanyJobs v-if="companyJobs.length" :jobs="companyJobs" />
     </div>
 
     <!-- event details -->
-    <VCard class="details elevation-4" rounded="lg">
-      <VBtn
+    <Card
+      class="tw:relative tw:gap-0 tw:rounded-lg tw:border-0 tw:py-0 tw:text-sm tw:leading-[1.425] tw:tracking-[0.0178571em] tw:shadow-[0_2px_4px_-1px_rgba(0,0,0,0.2),0_4px_5px_0_rgba(0,0,0,0.14),0_1px_10px_0_rgba(0,0,0,0.12)] tw:[grid-area:details]"
+    >
+      <Button
         v-if="auth.allows('admin')"
-        class="edit-event"
-        variant="text"
-        icon="mdi-pencil"
-        size="small"
-        color="primary"
-        :to="localePath(`/admin/events/${uid}`)"
-      />
+        as-child
+        variant="ghost"
+        size="icon"
+        class="tw:absolute tw:top-2 tw:right-2 tw:size-10 tw:rounded-full tw:text-brand tw:hover:bg-brand/10 tw:hover:text-brand"
+      >
+        <NuxtLink :to="localePath(`/admin/events/${uid}`)">
+          <Pencil class="tw:size-[18px]" />
+        </NuxtLink>
+      </Button>
 
-      <VCardTitle class="details__title">
+      <CardTitle
+        class="tw:truncate tw:px-4 tw:py-2 tw:text-xl tw:leading-8 tw:font-medium tw:tracking-[0.0125em]"
+      >
         {{ $t('event.page.details.name') }}
-      </VCardTitle>
+      </CardTitle>
 
-      <VCardText class="details__from pt-2 pb-0">
-        <strong>{{ $t('event.page.details.from') }}:</strong>
+      <div class="tw:px-4 tw:pt-2">
+        <strong class="tw:font-bold"
+          >{{ $t('event.page.details.from') }}:</strong
+        >
         {{ dayMonthTime(event.date?.start) }}
-      </VCardText>
+      </div>
 
-      <VCardText class="details__to py-0 pb-5">
-        <strong>{{ $t('event.page.details.to') }}:</strong>
+      <div class="tw:px-4 tw:pb-5">
+        <strong class="tw:font-bold">{{ $t('event.page.details.to') }}:</strong>
         {{ dayMonthTime(event.date?.end) }}
-      </VCardText>
+      </div>
 
-      <VCardText
-        v-if="hasCapacity"
-        class="details__from py-0 pb-0 d-flex flex-wrap"
-      >
-        <strong class="mr-2">{{ $t('event.page.details.reg_start') }}: </strong>
+      <div v-if="hasCapacity" class="tw:flex tw:flex-wrap tw:px-4">
+        <strong class="tw:mr-2 tw:font-bold"
+          >{{ $t('event.page.details.reg_start') }}:
+        </strong>
         <span>{{ dayMonthTime(event.registration?.start) }}</span>
-      </VCardText>
+      </div>
 
-      <VCardText
-        v-if="hasCapacity"
-        class="details__to py-0 pb-5 d-flex flex-wrap"
-      >
-        <strong class="mr-2">{{ $t('event.page.details.reg_end') }}: </strong>
+      <div v-if="hasCapacity" class="tw:flex tw:flex-wrap tw:px-4 tw:pb-5">
+        <strong class="tw:mr-2 tw:font-bold"
+          >{{ $t('event.page.details.reg_end') }}:
+        </strong>
         <span>{{ dayMonthTime(event.registration?.end) }}</span>
-      </VCardText>
+      </div>
 
-      <VCardText class="details__location py-0 pb-5">
-        <strong>{{ $t('event.page.details.location') }}: </strong>
+      <div class="tw:px-4 tw:pb-5">
+        <strong class="tw:font-bold"
+          >{{ $t('event.page.details.location') }}:
+        </strong>
         <a
           v-if="event.location?.map"
           :href="event.location.map"
-          class="link"
+          class="tw:text-inherit tw:no-underline"
           target="_blank"
           rel="noopener noreferrer"
         >
           {{ event.location.name }}
-          <VIcon size="x-small" color="primary">mdi-open-in-new</VIcon>
+          <ExternalLink
+            class="tw:inline tw:size-3 tw:align-baseline tw:text-brand"
+          />
         </a>
         <span v-else>{{ event.location?.name }}</span>
-      </VCardText>
+      </div>
 
-      <VCardText class="details__host py-0 pb-5">
-        <strong>{{ $t('event.page.details.host') }}: </strong>
+      <div class="tw:px-4 tw:pb-5">
+        <strong class="tw:font-bold"
+          >{{ $t('event.page.details.host') }}:
+        </strong>
         <a
           v-if="company"
           :href="company.webpage ?? undefined"
+          class="tw:text-inherit tw:no-underline"
           target="_blank"
           rel="noopener noreferrer"
         >
           {{ company.name }}
-          <VIcon size="x-small" color="primary">mdi-open-in-new</VIcon>
+          <ExternalLink
+            class="tw:inline tw:size-3 tw:align-baseline tw:text-brand"
+          />
         </a>
         <span v-else>{{ 'E&T-dagene' }}</span>
-      </VCardText>
-    </VCard>
+      </div>
+    </Card>
 
     <!-- event registration; it depends on who is signed in and the clock, so it draws in the browser -->
     <ClientOnly>
       <SignupPanel
+        class="tw:[grid-area:attendants]"
         :event-uid="uid"
         :state="state"
         :places="places"
@@ -201,79 +223,25 @@
         :may-scan="mayScan"
         @changed="changed"
       />
-      <template #fallback><div /></template>
+      <template #fallback><div class="tw:[grid-area:attendants]" /></template>
     </ClientOnly>
-  </VContainer>
+  </div>
 
-  <VContainer v-else class="missing">
-    <h1 class="text-h4 my-4">{{ $t('events.page.missing') }}</h1>
-    <VBtn
-      variant="text"
-      color="primary"
-      prepend-icon="mdi-arrow-left"
-      :to="localePath('/programme')"
+  <div v-else class="tw:mx-auto tw:w-full tw:max-w-[1080px] tw:p-4">
+    <h1
+      class="tw:my-4 tw:text-[2.125rem] tw:leading-[1.175] tw:tracking-[0.0073529em]"
     >
-      {{ $t('events.page.back') }}
-    </VBtn>
-  </VContainer>
+      {{ $t('events.page.missing') }}
+    </h1>
+    <Button
+      as-child
+      variant="ghost"
+      class="tw:h-[52px] tw:rounded-[4px] tw:px-6 tw:text-lg tw:tracking-[0.0892857em] tw:text-brand tw:hover:bg-brand/5 tw:hover:text-brand"
+    >
+      <NuxtLink :to="localePath('/programme')">
+        <ArrowLeft class="tw:size-5" />
+        {{ $t('events.page.back') }}
+      </NuxtLink>
+    </Button>
+  </div>
 </template>
-
-<style scoped lang="scss">
-  @use 'sass:map';
-  @use 'vuetify/settings';
-
-  .container {
-    display: grid;
-    width: 100vw;
-    grid-template-columns: 1.1fr 3fr;
-    gap: 1rem;
-    grid-template-areas: 'details image' 'attendants description';
-
-    .image-container {
-      max-height: 300px;
-
-      .image {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-      }
-    }
-
-    .description-column {
-      grid-area: description;
-      // lets the card shrink, so a long title ends in an ellipsis as it did in the grid before
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .details {
-      grid-area: details;
-
-      .edit-event {
-        position: absolute;
-        right: 0.5rem;
-        top: 0.5rem;
-      }
-    }
-
-    @media #{map.get(settings.$display-breakpoints, 'lg-and-up')} {
-      max-width: 1080px;
-    }
-
-    @media #{map.get(settings.$display-breakpoints, 'md-and-down')} {
-      max-width: 750px;
-      grid-template-areas: 'image' 'details' 'attendants' 'description';
-      grid-template-columns: 1fr;
-    }
-
-    @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
-      max-width: 420px;
-    }
-  }
-
-  .missing {
-    max-width: 1080px;
-  }
-</style>

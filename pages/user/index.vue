@@ -1,10 +1,15 @@
 <script setup lang="ts">
+  import { CircleX, SquarePen, User } from '@lucide/vue'
+  import { Card } from '@/components/ui/card'
+  import { Separator } from '@/components/ui/separator'
   import DeleteAccount from '@/components/user/DeleteAccount.vue'
+  import DietIcon from '@/components/user/DietIcon.vue'
+  import FileField from '@/components/user/FileField.vue'
+  import FormButton from '@/components/user/FormButton.vue'
   import SignUps from '@/components/user/SignUps.vue'
   import Ticket from '@/components/user/Ticket.vue'
   import { alertError, notify } from '@/composables/useAlerts'
   import { useProgrammes } from '@/composables/useProgrammes'
-  import { dietaryFlags } from '@/config/app.config'
   import { Instant } from '@/domain/time'
   import type { EventRow } from '@/lib/events'
   import { dietLabel } from '@/lib/forms/diet'
@@ -30,10 +35,6 @@
   const restrictions = computed<string[]>(() =>
     Object.values(user.value?.dietaryRestrictions ?? {}),
   )
-  // a restriction typed by hand has no icon of its own
-  const dietaryIcon = (restriction: string) =>
-    dietaryFlags.find((flag) => flag.name === restriction)?.icon ??
-    'mdi-food-variant'
 
   const [
     { data: signUps, error: signUpsError, refresh: refreshSignUps },
@@ -60,9 +61,15 @@
   }
 
   const resumeFile = ref<File | File[] | null>(null)
+  const chosenName = computed(
+    () =>
+      (Array.isArray(resumeFile.value) ? resumeFile.value[0] : resumeFile.value)
+        ?.name,
+  )
   const uploadResume = async (chosen: File | File[] | null) => {
     const file = Array.isArray(chosen) ? chosen[0] : chosen
     if (!file || !auth.user) return
+    resumeFile.value = file
     const body = new FormData()
     body.append('file', file)
     body.append('userUID', auth.user.uid)
@@ -95,147 +102,144 @@
   }
 
   const getFileName = (url: string) => url.split('/').pop()?.split('?')[0] ?? ''
+
+  const H6 = 'tw:text-xl tw:leading-8 tw:font-medium tw:tracking-[0.0125em]'
+  const DIVIDER =
+    'tw:my-2 tw:bg-black/12 tw:data-[orientation=horizontal]:h-0.5'
 </script>
 
 <template>
-  <VContainer class="d-flex justify-center align-center mt-16">
-    <VCard class="pa-4" style="width: 800px; max-width: 90vw" elevation="4">
-      <VRow class="d-flex justify-center h-100 ma-0">
-        <VCol
-          cols="12"
-          lg="4"
-          class="d-flex flex-column justify-between align-center"
+  <div class="tw:mt-16 tw:flex tw:items-center tw:justify-center tw:p-4">
+    <Card
+      class="tw:block tw:w-[800px] tw:max-w-[90vw] tw:rounded tw:border-0 tw:p-4 tw:shadow-[0_2px_4px_-1px_rgba(0,0,0,0.2),0_4px_5px_0_rgba(0,0,0,0.14),0_1px_10px_0_rgba(0,0,0,0.12)]"
+    >
+      <div class="tw:flex tw:h-full tw:flex-wrap tw:justify-center">
+        <div
+          class="tw:flex tw:w-full tw:flex-col tw:items-center tw:justify-between tw:p-3 tw:min-[1280px]:w-1/3"
         >
-          <VIcon size="50" class="my-8" color="primary">mdi-account</VIcon>
-          <h6>{{ user?.name }}</h6>
-          <span class="text-neutral-lighten-2">{{ user?.email }}</span>
+          <User
+            aria-hidden="true"
+            class="tw:my-8 tw:size-[50px] tw:fill-current tw:text-brand"
+          />
+          <h6 :class="H6">{{ user?.name }}</h6>
+          <span class="tw:text-[#949494]">{{ user?.email }}</span>
           <NuxtLink
             :to="localePath('/user/edit')"
             :aria-label="$t('edit.user.title')"
-            class="mt-4"
+            class="tw:mt-4 tw:text-brand"
           >
-            <VIcon size="x-large" variant="plain" color="primary">
-              mdi-pencil-box
-            </VIcon>
+            <SquarePen aria-hidden="true" class="tw:size-9" />
           </NuxtLink>
-        </VCol>
-        <VCol v-if="!isCompany" cols="12" lg="8">
-          <h6>{{ $t('user.information.title') }}</h6>
-          <VDivider class="my-2" />
-          <p class="my-2">
+        </div>
+        <div v-if="!isCompany" class="tw:w-full tw:p-3 tw:min-[1280px]:w-2/3">
+          <h6 :class="H6">{{ $t('user.information.title') }}</h6>
+          <Separator :class="DIVIDER" />
+          <p class="tw:my-2">
             <strong>{{ $t('user.information.studyprogramme') }}: </strong>
             {{ nameOf(user?.studyProgram) }}
           </p>
-          <p class="my-2">
+          <p class="tw:my-2">
             <strong>{{ $t('user.information.currentyear') }}: </strong>
             {{ user?.currentYear }}
           </p>
 
-          <div v-if="restrictions.length" class="mt-4">
-            <p class="mb-2">
+          <div v-if="restrictions.length" class="tw:mt-4">
+            <p class="tw:mb-2">
               <strong>
                 {{ $t('user.information.dietaryrestrictions') }}:
               </strong>
             </p>
-            <ul class="allergies d-flex flex-column">
+            <ul
+              class="tw:flex tw:max-h-[150px] tw:flex-col tw:flex-wrap tw:gap-[5px] tw:overflow-y-auto"
+            >
               <li
                 v-for="restriction in restrictions"
                 :key="restriction"
-                class="d-flex align-center"
+                class="tw:flex tw:w-1/2 tw:items-center"
               >
-                <span>
-                  <VIcon size="small" color="primary" class="mr-2">
-                    {{ dietaryIcon(restriction) }}
-                  </VIcon>
+                <span class="tw:inline-flex tw:items-center">
+                  <DietIcon
+                    :restriction="restriction"
+                    class="tw:mr-2 tw:size-5 tw:text-brand"
+                  />
                   {{ dietLabel(restriction, t) }}
                 </span>
               </li>
             </ul>
           </div>
-          <div class="pt-5">
-            <h6>{{ $t('user.resume.resume') }}</h6>
-            <VDivider class="my-2" />
-            <p v-if="user?.resume" class="my-2">
+          <div class="tw:pt-5">
+            <h6 :class="H6">{{ $t('user.resume.resume') }}</h6>
+            <Separator :class="DIVIDER" />
+            <p v-if="user?.resume" class="tw:my-2">
               <strong>{{ $t('user.resume.your_resume') }}: </strong>
               <a
                 :href="`/api/v1/resume/file?userUID=${user.uid}`"
                 target="_blank"
                 rel="noopener"
-                class="text-blue"
+                class="tw:text-[#2196F3]"
                 >{{ getFileName(user.resume) }}</a
               >
             </p>
-            <VRow no-gutters>
-              <VCol cols="12" :sm="user?.resume ? 7 : 12">
-                <VFileInput
-                  v-model="resumeFile"
-                  :active="!!user?.resume"
+            <div class="tw:flex tw:flex-wrap">
+              <div
+                :class="['tw:w-full', user?.resume && 'tw:min-[600px]:w-7/12']"
+              >
+                <FileField
                   accept="application/pdf"
                   :label="$t('user.resume.upload_resume')"
-                  base-color="standard"
-                  color="standard"
-                  @update:model-value="uploadResume"
+                  :active="!!user?.resume"
+                  :file-name="chosenName"
+                  @choose="uploadResume"
                 />
-              </VCol>
-              <VCol
+              </div>
+              <div
                 v-if="user?.resume"
-                cols="12"
-                sm="5"
-                class="d-flex justify-center"
+                class="tw:flex tw:w-full tw:justify-center tw:min-[600px]:w-5/12"
               >
-                <VBtn color="error" @click="deleteResume">{{
-                  $t('user.resume.delete_resume')
-                }}</VBtn>
-              </VCol>
-            </VRow>
+                <FormButton tone="error" @click="deleteResume">
+                  {{ $t('user.resume.delete_resume') }}
+                </FormButton>
+              </div>
+            </div>
           </div>
-        </VCol>
-        <VCol cols="12">
-          <h6>{{ $t('user.information.events') }}</h6>
-          <VDivider class="my-2" />
-          <VAlert
+        </div>
+        <div class="tw:w-full tw:p-3">
+          <h6 :class="H6">{{ $t('user.information.events') }}</h6>
+          <Separator :class="DIVIDER" />
+          <div
             v-if="failed"
-            type="error"
-            variant="tonal"
-            class="my-2"
-            :title="$t('user.page.load_failed')"
-            :text="$t('user.page.load_failed_hint')"
+            role="alert"
+            class="tw:my-2 tw:flex tw:max-w-[600px] tw:items-start tw:gap-4 tw:rounded tw:bg-[#cc3000]/12 tw:p-4 tw:text-[#cc3000]"
           >
-            <template #append>
-              <VBtn
-                size="small"
-                variant="outlined"
-                :loading="retrying"
-                @click="refresh()"
+            <CircleX aria-hidden="true" class="tw:size-7 tw:shrink-0" />
+            <div class="tw:flex-1">
+              <p
+                class="tw:text-xl tw:leading-7 tw:font-medium tw:tracking-[0.0125em]"
               >
-                {{ $t('user.page.retry') }}
-              </VBtn>
-            </template>
-          </VAlert>
+                {{ $t('user.page.load_failed') }}
+              </p>
+              <p>{{ $t('user.page.load_failed_hint') }}</p>
+            </div>
+            <FormButton
+              size="small"
+              look="outlined"
+              tone="error"
+              :loading="retrying"
+              @click="refresh()"
+            >
+              {{ $t('user.page.retry') }}
+            </FormButton>
+          </div>
           <template v-else>
             <Ticket v-if="ticket && user" :row="ticket" :uid="user.uid" />
             <SignUps v-if="rows.length" :rows="rows" @withdrawn="refresh()" />
-            <p v-else class="my-2">{{ $t('user.page.no_sign_ups') }}</p>
+            <p v-else class="tw:my-2">{{ $t('user.page.no_sign_ups') }}</p>
           </template>
-        </VCol>
-        <VCol cols="12">
+        </div>
+        <div class="tw:w-full tw:p-3">
           <DeleteAccount />
-        </VCol>
-      </VRow>
-    </VCard>
-  </VContainer>
+        </div>
+      </div>
+    </Card>
+  </div>
 </template>
-
-<style scoped lang="scss">
-  .allergies {
-    flex-wrap: wrap;
-    list-style: none;
-    max-height: 150px;
-    gap: 5px;
-    overflow-y: auto;
-
-    li {
-      width: 50%;
-    }
-  }
-</style>

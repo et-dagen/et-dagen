@@ -1,4 +1,6 @@
 <script setup lang="ts">
+  import { CirclePlay, Clock } from '@lucide/vue'
+  import { Card } from '@/components/ui/card'
   import type { ProgrammeEvent } from '@/lib/programme'
 
   const props = defineProps<{
@@ -38,75 +40,49 @@
 </script>
 
 <template>
-  <VContainer v-if="now.length || next" class="d-flex justify-center">
-    <VCard
-      tag="section"
-      elevation="2"
-      variant="flat"
-      class="now-next"
+  <div
+    v-if="now.length || next"
+    class="tw:mx-auto tw:flex tw:w-full tw:justify-center tw:p-4 tw:min-[960px]:max-w-[900px] tw:min-[1280px]:max-w-[1200px] tw:min-[1920px]:max-w-[1800px]"
+  >
+    <Card
+      role="region"
       :aria-label="$t('programme.band.label')"
+      class="tw:w-[600px] tw:max-w-full tw:gap-2 tw:rounded-[4px] tw:border-0 tw:p-4 tw:text-sm tw:leading-[1.425] tw:tracking-[0.0178em] tw:text-black/87 tw:shadow-[0_3px_1px_-2px_rgba(0,0,0,0.2),0_2px_2px_0_rgba(0,0,0,0.14),0_1px_5px_0_rgba(0,0,0,0.12)]"
     >
-      <VCardText>
-        <div v-for="event in now" :key="event.uid" class="now-next__row">
-          <VIcon color="primary">mdi-play-circle</VIcon>
+      <div v-for="event in now" :key="event.uid" class="tw:flex tw:gap-2">
+        <CirclePlay class="tw:size-[21px] tw:shrink-0 tw:text-brand" />
+        <span>
+          <span class="tw:mr-1 tw:font-bold"
+            >{{ $t('programme.band.now') }}:</span
+          >
+          <NuxtLink
+            :to="localePath(`/event/${event.uid}`)"
+            class="tw:mr-1 tw:font-bold tw:text-brand"
+          >
+            {{ event.title }}
+          </NuxtLink>
           <span>
-            <span class="bold">{{ $t('programme.band.now') }}:</span>
-            <NuxtLink
-              :to="localePath(`/event/${event.uid}`)"
-              class="now-next__link text-primary"
-            >
-              {{ event.title }}
-            </NuxtLink>
-            <span>
-              {{ $t('programme.band.until', { time: hhmm(event.date?.end) }) }}
-            </span>
-            <span v-if="event.location?.name">
-              · {{ event.location.name }}
-            </span>
+            {{ $t('programme.band.until', { time: hhmm(event.date?.end) }) }}
           </span>
-        </div>
-        <div v-if="next" class="now-next__row">
-          <VIcon color="primary">mdi-clock</VIcon>
-          <span>
-            <span class="bold">{{ $t('programme.band.next') }}:</span>
-            <NuxtLink
-              :to="localePath(`/event/${next.uid}`)"
-              class="now-next__link text-primary"
-            >
-              {{ next.title }}
-            </NuxtLink>
-            <span>{{ hhmm(next.date?.start) }}, {{ startsIn }}</span>
-            <span v-if="next.location?.name"> · {{ next.location.name }} </span>
-          </span>
-        </div>
-      </VCardText>
-    </VCard>
-  </VContainer>
+          <span v-if="event.location?.name"> · {{ event.location.name }} </span>
+        </span>
+      </div>
+      <div v-if="next" class="tw:flex tw:gap-2">
+        <Clock class="tw:size-[21px] tw:shrink-0 tw:text-brand" />
+        <span>
+          <span class="tw:mr-1 tw:font-bold"
+            >{{ $t('programme.band.next') }}:</span
+          >
+          <NuxtLink
+            :to="localePath(`/event/${next.uid}`)"
+            class="tw:mr-1 tw:font-bold tw:text-brand"
+          >
+            {{ next.title }}
+          </NuxtLink>
+          <span>{{ hhmm(next.date?.start) }}, {{ startsIn }}</span>
+          <span v-if="next.location?.name"> · {{ next.location.name }} </span>
+        </span>
+      </div>
+    </Card>
+  </div>
 </template>
-
-<style scoped lang="scss">
-  .now-next {
-    width: 600px;
-    max-width: 100%;
-
-    &__row {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.5rem;
-
-      & + & {
-        margin-top: 0.5rem;
-      }
-    }
-
-    &__link {
-      font-weight: bold;
-      margin-right: 0.25rem;
-    }
-  }
-
-  .bold {
-    font-weight: bold;
-    margin-right: 0.25rem;
-  }
-</style>

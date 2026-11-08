@@ -1,5 +1,12 @@
 <script setup lang="ts">
   import type { LocaleObject } from '@nuxtjs/i18n'
+  import { Button } from '@/components/ui/button'
+  import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+  } from '@/components/ui/dropdown-menu'
 
   const { locale, locales } = useI18n()
 
@@ -22,33 +29,34 @@
 
 <template>
   <div>
-    <VMenu transition="slide-y-transition" location="bottom right">
-      <!-- activator btn -->
-      <template #activator="{ props }">
-        <VBtn v-bind="props" rounded="lg" variant="text">
-          <!-- dependent on current locale-->
-          <template #prepend>
-            <img width="30" :src="`/images/flags/${currentLocale?.code}.svg`" />
-          </template>
+    <DropdownMenu>
+      <DropdownMenuTrigger as-child>
+        <Button
+          variant="ghost"
+          class="tw:h-[52px] tw:gap-3.5 tw:rounded-lg tw:pr-6 tw:pl-[18px] tw:text-lg tw:font-medium tw:tracking-[0.0892em] tw:transition-colors tw:duration-400 tw:hover:bg-black/4 tw:data-[state=open]:bg-black/12"
+        >
+          <img width="30" :src="`/images/flags/${currentLocale?.code}.svg`" />
           {{ currentLocale?.code?.toUpperCase() }}
-        </VBtn>
-      </template>
+        </Button>
+      </DropdownMenuTrigger>
 
-      <VCard class="d-flex flex-column my-2 pa-2" rounded="lg" :elevation="3">
-        <!-- buttons for locales -->
-        <VBtn
+      <DropdownMenuContent
+        align="end"
+        :side-offset="8"
+        class="et-ui tw:flex tw:min-w-0 tw:flex-col tw:rounded-lg tw:border-0 tw:p-2 tw:shadow-[0_3px_3px_-2px_rgba(0,0,0,.2),0_3px_4px_0_rgba(0,0,0,.14),0_1px_8px_0_rgba(0,0,0,.12)]"
+      >
+        <DropdownMenuItem
           v-for="language in availableLocales"
           :key="language.code"
-          :active="false"
-          variant="text"
-          :to="switchLocalePath(language.code)"
+          as-child
+          class="tw:h-[52px] tw:cursor-pointer tw:gap-3.5 tw:rounded-sm tw:pr-6 tw:pl-[18px] tw:text-lg tw:font-medium tw:tracking-[0.0892em] tw:focus:bg-black/4"
         >
-          <template #prepend>
-            <VImg width="30" :src="`/images/flags/${language.code}.svg`" />
-          </template>
-          {{ language.name }}
-        </VBtn>
-      </VCard>
-    </VMenu>
+          <NuxtLink :to="switchLocalePath(language.code)">
+            <img width="30" :src="`/images/flags/${language.code}.svg`" />
+            {{ language.name }}
+          </NuxtLink>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   </div>
 </template>

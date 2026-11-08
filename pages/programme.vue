@@ -32,8 +32,12 @@
 </script>
 
 <template>
-  <div class="container">
-    <h4 class="text-center pt-4 pb-7">{{ $t('program.title') }}</h4>
+  <div class="tw:mx-auto tw:max-w-[95vw]">
+    <h4
+      class="tw:pt-4 tw:pb-7 tw:text-center tw:text-[2.125rem] tw:leading-[1.175] tw:font-normal tw:tracking-[0.0074em]"
+    >
+      {{ $t('program.title') }}
+    </h4>
     <!-- now and next depend on the clock, so they draw in the browser -->
     <ClientOnly>
       <NowNext :now="band.now" :next="band.next" />
@@ -41,10 +45,3 @@
     <Timeline :days="days" :maps="standMaps" :companies="companies" />
   </div>
 </template>
-
-<style scoped>
-  .container {
-    max-width: 95vw;
-    margin: 0 auto;
-  }
-</style>

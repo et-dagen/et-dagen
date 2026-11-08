@@ -8,7 +8,7 @@
 </script>
 
 <template>
-  <VContainer>
+  <div class="tw:mx-auto tw:w-full tw:p-4">
     <EditForm />
-  </VContainer>
+  </div>
 </template>

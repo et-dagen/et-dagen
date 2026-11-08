@@ -3,8 +3,12 @@
 </script>
 
 <template>
-  <div class="ma-10">
-    <h4 class="text-center pt-4 pb-7">{{ $t('user.sign_in') }}</h4>
+  <div class="tw:m-10">
+    <h4
+      class="tw:pt-4 tw:pb-7 tw:text-center tw:text-[2.125rem] tw:leading-10 tw:font-normal tw:tracking-[0.0073529412em]"
+    >
+      {{ $t('user.sign_in') }}
+    </h4>
     <SigninForm />
   </div>
 </template>

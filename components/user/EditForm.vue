@@ -3,6 +3,7 @@
   import SelectInput from '@/components/form/SelectInput.vue'
   import TextInput from '@/components/form/TextInput.vue'
   import DietInput from '@/components/user/DietInput.vue'
+  import FormButton from '@/components/user/FormButton.vue'
   import { useResourceForm } from '@/composables/admin/useResourceForm'
   import { useProgrammes } from '@/composables/useProgrammes'
   import { profileInput, toV1Profile } from '@/contracts/profile'
@@ -53,27 +54,26 @@
   })
 
   // the contract's messages are keys under form.errors
-  const vuetifyProps = (state: { errors: string[] }) => ({
+  const fieldProps = (state: { errors: string[] }) => ({
     'error-messages': state.errors.map((error) => t(`form.errors.${error}`)),
   })
-  const [name, nameProps] = form.defineField('name', { props: vuetifyProps })
+  const [name, nameProps] = form.defineField('name', { props: fieldProps })
   const [currentYear, currentYearProps] = form.defineField('currentYear', {
-    props: vuetifyProps,
+    props: fieldProps,
   })
   const [dietaryRestrictions] = form.defineField('dietaryRestrictions')
 </script>
 
 <template>
-  <!-- Header -->
-  <h4 class="text-sm-h3 text-h4 font-weight-bold text-center pt-16 pb-4">
+  <h4
+    class="tw:pt-16 tw:pb-4 tw:text-center tw:text-[2.125rem] tw:leading-10 tw:font-bold tw:tracking-[0.0073529412em] tw:min-[600px]:text-5xl tw:min-[600px]:leading-[3.125rem] tw:min-[600px]:tracking-normal"
+  >
     {{ $t('edit.user.title') }}
   </h4>
 
-  <!-- Edit Form -->
-  <VForm @submit.prevent="submit">
-    <VContainer>
-      <!-- Name -->
-      <VRow>
+  <form novalidate @submit.prevent="submit">
+    <div class="tw:mx-auto tw:max-w-[50rem] tw:px-1 tw:pt-1">
+      <div class="tw:py-[0.6rem]">
         <TextInput
           v-model="name"
           v-bind="nameProps"
@@ -82,10 +82,10 @@
             label: $t('edit.user.attributes.name'),
           }"
         />
-      </VRow>
+      </div>
 
       <!-- email: the sign-in, changed only by an admin -->
-      <VRow>
+      <div class="tw:py-[0.6rem]">
         <EmailInput
           :model-value="user.email"
           :label="$t('edit.user.attributes.email')"
@@ -93,10 +93,9 @@
           persistent-hint
           readonly
         />
-      </VRow>
+      </div>
 
-      <!-- current year -->
-      <VRow v-if="student">
+      <div v-if="student" class="tw:py-[0.6rem]">
         <SelectInput
           v-model="currentYear"
           v-bind="currentYearProps"
@@ -105,43 +104,32 @@
             options: years,
           }"
         />
-      </VRow>
+      </div>
 
-      <!-- dietary restrictions -->
       <DietInput v-model="dietaryRestrictions" />
-    </VContainer>
+    </div>
 
-    <!-- Actions -->
-    <VContainer>
-      <VRow justify="center">
-        <VCol cols="6">
-          <VBtn block variant="outlined" color="error" @click="router.back()">
-            {{ $t('edit.user.cancel') }}
-          </VBtn>
-        </VCol>
-        <VCol cols="6">
-          <VBtn
-            block
-            variant="flat"
-            color="success"
-            type="submit"
-            :disabled="!form.meta.value.dirty"
-            :loading="saving"
-          >
-            {{ $t('edit.user.save') }}
-          </VBtn>
-        </VCol>
-      </VRow>
-    </VContainer>
-  </VForm>
+    <div
+      class="tw:mx-auto tw:grid tw:max-w-[50rem] tw:grid-cols-2 tw:gap-6 tw:p-4"
+    >
+      <FormButton
+        tone="error"
+        look="outlined"
+        class="tw:w-full"
+        @click="router.back()"
+      >
+        {{ $t('edit.user.cancel') }}
+      </FormButton>
+      <FormButton
+        tone="success"
+        look="flat"
+        type="submit"
+        class="tw:w-full"
+        :disabled="!form.meta.value.dirty"
+        :loading="saving"
+      >
+        {{ $t('edit.user.save') }}
+      </FormButton>
+    </div>
+  </form>
 </template>
-
-<style scoped lang="scss">
-  .v-container {
-    max-width: 50rem;
-  }
-
-  .v-row {
-    padding-block: 0.6rem;
-  }
-</style>

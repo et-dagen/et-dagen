@@ -1,5 +1,7 @@
 <script setup lang="ts">
   import type { PropType } from 'vue'
+  import { User } from '@lucide/vue'
+  import { Card } from '@/components/ui/card'
   import type { CardContent } from '@/components/contact/Card.vue'
 
   defineProps({
@@ -11,83 +13,48 @@
 </script>
 
 <template>
-  <VCard flat class="card">
+  <Card
+    class="tw:m-0 tw:max-w-[250px] tw:min-w-[200px] tw:items-center tw:gap-0 tw:rounded-[4px] tw:border-0 tw:p-3 tw:text-center tw:shadow-none"
+  >
     <img
       v-if="content.image"
-      class="card__image"
+      class="tw:aspect-[1/1.2] tw:w-full tw:rounded-[12px] tw:object-cover tw:p-1.5"
       :src="content.image"
       :alt="content.name"
       loading="lazy"
     />
-    <div v-else class="card__image card__placeholder">
-      <VIcon size="64">mdi-account</VIcon>
+    <div
+      v-else
+      class="tw:grid tw:aspect-[1/1.2] tw:w-full tw:place-items-center tw:rounded-[12px] tw:bg-[#F5F5F5] tw:bg-clip-content tw:p-1.5"
+    >
+      <User class="tw:size-16" />
     </div>
-    <span class="text-primary semibold">{{ content.position }}</span>
-    <span class="card__name bold">{{ content.name }}</span>
-    <div class="actions d-flex flex-column">
+    <span
+      class="tw:text-[0.9rem] tw:leading-normal tw:font-semibold tw:text-brand"
+    >
+      {{ content.position }}
+    </span>
+    <span class="tw:text-[1.1rem] tw:leading-normal tw:font-bold">
+      {{ content.name }}
+    </span>
+    <div class="tw:flex tw:flex-col tw:gap-1">
       <p>
-        <a :href="`mailto:${content.email}`" class="text-accent bold">
+        <a
+          :href="`mailto:${content.email}`"
+          class="tw:text-[0.9rem] tw:font-bold tw:text-[#C33C3B]"
+        >
           {{ content.email }}
         </a>
       </p>
       <p>
         <a
           v-if="content.phone"
+          class="tw:text-[0.9rem]"
           :href="`tel:${content.phone.replace(/\s/g, '')}`"
         >
           {{ content.phone }}
         </a>
       </p>
     </div>
-  </VCard>
+  </Card>
 </template>
-
-<style scoped lang="scss">
-  .semibold {
-    font-weight: 600;
-  }
-
-  .bold {
-    font-weight: bold;
-  }
-
-  .card {
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    max-width: 250px;
-    min-width: 200px;
-    padding: 12px;
-
-    &__image {
-      width: 100%;
-      padding: 6px;
-      border-radius: 12px;
-      aspect-ratio: 1 / 1.2;
-      object-fit: cover;
-    }
-
-    &__placeholder {
-      display: grid;
-      place-items: center;
-      background: rgb(var(--v-theme-neutral-lighten-4));
-      background-clip: content-box;
-    }
-
-    .actions {
-      gap: 0.25rem;
-    }
-
-    span,
-    a {
-      font-size: 0.9rem;
-      color: var(--color-text-neutral);
-    }
-
-    .card__name {
-      font-size: 1.1rem;
-    }
-  }
-</style>

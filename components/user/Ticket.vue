@@ -1,5 +1,7 @@
 <script setup lang="ts">
+  import { MapPin } from '@lucide/vue'
   import * as qrcode from 'qrcode'
+  import { Card } from '@/components/ui/card'
   import { placeOf } from '@/lib/events'
   import { formatWhen } from '@/lib/time'
   import type { SignUpRow } from '@/lib/user/signUps'
@@ -29,37 +31,33 @@
 </script>
 
 <template>
-  <VCard
-    variant="outlined"
-    class="d-flex flex-column flex-sm-row align-center pa-4 my-2"
+  <Card
+    class="tw:my-2 tw:flex-col tw:items-center tw:gap-0 tw:rounded tw:border tw:border-black/12 tw:p-4 tw:shadow-none tw:min-[600px]:flex-row"
   >
-    <img v-if="qr" :src="qr" :alt="$t('user.page.qr')" class="ticket__qr" />
-    <div class="ml-sm-6 mt-4 mt-sm-0">
+    <img
+      v-if="qr"
+      :src="qr"
+      :alt="$t('user.page.qr')"
+      class="tw:size-[140px]"
+    />
+    <div class="tw:mt-4 tw:min-[600px]:mt-0 tw:min-[600px]:ml-6">
       <NuxtLink
         :to="localePath(`/event/${row.eventUID}`)"
-        class="text-primary font-weight-bold"
+        class="tw:font-bold tw:text-brand"
       >
         {{ row.event.title }}
       </NuxtLink>
-      <p class="ticket__when my-1">{{ when }}</p>
-      <p v-if="place.code || place.name" class="my-1">
-        <VIcon size="small" color="primary" class="mr-1">mdi-map-marker</VIcon>
+      <p class="tw:my-1 tw:first-letter:uppercase">{{ when }}</p>
+      <p v-if="place.code || place.name" class="tw:my-1">
+        <MapPin
+          aria-hidden="true"
+          class="tw:mr-1 tw:inline tw:size-5 tw:align-[-4px] tw:text-brand"
+        />
         {{ [place.code, place.name].filter(Boolean).join(' · ') }}
       </p>
-      <p class="text-neutral-lighten-1 my-1">
+      <p class="tw:my-1 tw:text-[#7a7a7a]">
         {{ $t('user.page.show_code') }}
       </p>
     </div>
-  </VCard>
+  </Card>
 </template>
-
-<style scoped lang="scss">
-  .ticket__qr {
-    width: 140px;
-    height: 140px;
-  }
-
-  .ticket__when::first-letter {
-    text-transform: uppercase;
-  }
-</style>

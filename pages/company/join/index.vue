@@ -1,73 +1,36 @@
 <script setup lang="ts">
+  import JoinButton from '@/components/company/JoinButton.vue'
+  import JoinColumn from '@/components/company/JoinColumn.vue'
+
   const localePath = useLocalePath()
 </script>
 
 <template>
-  <div class="ma-10">
-    <h4 class="text-center pt-4 pb-7">{{ $t('signup.company.title') }}</h4>
-    <VContainer>
-      <VRow>
-        <p class="text-center">{{ $t('signup.company.lead') }}</p>
-      </VRow>
-    </VContainer>
-    <VContainer>
-      <VRow>
-        <p class="no-invitation">{{ $t('signup.company.no_invitation') }}</p>
-      </VRow>
-      <VRow>
-        <VBtn color="primary" class="btn" :to="localePath('/contact')">
-          {{ $t('signup.company.contact') }}
-        </VBtn>
-      </VRow>
-    </VContainer>
-    <VContainer class="my-0 pt-2">
-      <VRow class="mt-0">
-        <p class="have-account">
-          {{ $t('signup.have_account') }}
-          <NuxtLink :to="localePath('/user/signin')" class="sign-in">
-            {{ $t('signup.sign_in') }}
-          </NuxtLink>
-        </p>
-      </VRow>
-    </VContainer>
+  <div class="tw:m-10">
+    <h4
+      class="tw:pt-4 tw:pb-7 tw:text-center tw:text-[2.125rem] tw:leading-[1.175] tw:font-normal tw:tracking-[0.0073529412em]"
+    >
+      {{ $t('signup.company.title') }}
+    </h4>
+    <JoinColumn>
+      <p class="tw:text-center">{{ $t('signup.company.lead') }}</p>
+    </JoinColumn>
+    <JoinColumn>
+      <p class="tw:font-semibold">{{ $t('signup.company.no_invitation') }}</p>
+      <JoinButton :to="localePath('/contact')">
+        {{ $t('signup.company.contact') }}
+      </JoinButton>
+    </JoinColumn>
+    <JoinColumn tight>
+      <p class="tw:my-[0.4rem] tw:text-center">
+        {{ $t('signup.have_account') }}
+        <NuxtLink
+          :to="localePath('/user/signin')"
+          class="tw:font-semibold tw:italic"
+        >
+          {{ $t('signup.sign_in') }}
+        </NuxtLink>
+      </p>
+    </JoinColumn>
   </div>
 </template>
-
-<style scoped lang="scss">
-  @use 'sass:map';
-  @use 'vuetify/settings';
-
-  .v-container {
-    max-width: 26rem;
-    margin-block: 0.5rem;
-  }
-
-  .v-row {
-    justify-content: center;
-    padding-block: 0.5rem;
-  }
-
-  .no-invitation {
-    font-weight: 600;
-  }
-
-  .have-account {
-    margin: 0.4rem auto;
-    text-align: center;
-  }
-
-  .sign-in {
-    font-weight: 600;
-    font-style: italic;
-  }
-
-  .btn {
-    width: 60%;
-  }
-
-  @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
-    .btn {
-      width: 100%;
-    }
-  }
-</style>
