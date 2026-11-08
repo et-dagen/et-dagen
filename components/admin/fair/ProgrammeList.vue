@@ -86,18 +86,21 @@
 </script>
 
 <template>
-  <section aria-labelledby="fair-programmes" class="flex flex-col gap-4">
-    <div class="flex flex-col gap-3 sm:flex-row sm:items-end">
+  <section
+    aria-labelledby="fair-programmes"
+    class="tw:flex tw:flex-col tw:gap-4"
+  >
+    <div class="tw:flex tw:flex-col tw:gap-3 tw:sm:flex-row tw:sm:items-end">
       <div>
-        <h2 id="fair-programmes" class="text-lg font-bold">
+        <h2 id="fair-programmes" class="tw:text-lg tw:font-bold">
           {{ $t('admin.fair.programmes.title') }}
         </h2>
-        <p class="max-w-2xl text-sm text-muted-foreground">
+        <p class="tw:max-w-2xl tw:text-sm tw:text-muted-foreground">
           {{ $t('admin.fair.programmes.intro') }}
         </p>
       </div>
       <Button
-        class="h-10 shrink-0 sm:ml-auto"
+        class="tw:h-10 tw:shrink-0 tw:sm:ml-auto"
         :disabled="editing === 'new'"
         @click="editing = 'new'"
       >
@@ -112,14 +115,16 @@
       :options="filters"
     />
 
-    <div class="divide-y overflow-hidden rounded-lg border bg-card">
+    <div
+      class="tw:divide-y tw:overflow-hidden tw:rounded-lg tw:border tw:bg-card"
+    >
       <ProgrammeEditor
         v-if="editing === 'new'"
         :busy="busy"
         @save="add"
         @cancel="editing = null"
       />
-      <ul class="divide-y">
+      <ul class="tw:divide-y">
         <li v-for="row in visible" :key="row.code">
           <ProgrammeEditor
             v-if="editing === row.code"
@@ -128,23 +133,23 @@
             @save="update"
             @cancel="editing = null"
           />
-          <div v-else class="flex items-center gap-3 px-4 py-3">
-            <div class="min-w-0 flex-1">
+          <div v-else class="tw:flex tw:items-center tw:gap-3 tw:px-4 tw:py-3">
+            <div class="tw:min-w-0 tw:flex-1">
               <p
-                class="font-semibold"
-                :class="!row.open && 'text-muted-foreground'"
+                class="tw:font-semibold"
+                :class="!row.open && 'tw:text-muted-foreground'"
               >
                 {{ row.name }}
               </p>
-              <p class="text-sm text-muted-foreground">
-                <span class="font-mono">{{ row.code }}</span
+              <p class="tw:text-sm tw:text-muted-foreground">
+                <span class="tw:font-mono">{{ row.code }}</span
                 >{{ ` · ${$t(`degree.${row.degree}`)}` }}
               </p>
             </div>
             <Badge v-if="!row.open" variant="secondary">
               {{ $t('admin.fair.programmes.closed') }}
             </Badge>
-            <div class="flex shrink-0 items-center gap-1">
+            <div class="tw:flex tw:shrink-0 tw:items-center tw:gap-1">
               <Button
                 variant="ghost"
                 size="icon"
@@ -159,7 +164,7 @@
               <Button
                 variant="ghost"
                 size="icon"
-                class="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                class="tw:text-destructive tw:hover:bg-destructive/10 tw:hover:text-destructive"
                 :disabled="busy"
                 :aria-label="
                   $t('admin.fair.programmes.remove', { name: row.name })
@@ -174,7 +179,7 @@
       </ul>
       <p
         v-if="visible.length === 0 && editing !== 'new'"
-        class="p-6 text-muted-foreground"
+        class="tw:p-6 tw:text-muted-foreground"
       >
         {{ $t('admin.fair.programmes.empty') }}
       </p>

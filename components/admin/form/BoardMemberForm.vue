@@ -66,30 +66,36 @@
 </script>
 
 <template>
-  <form class="flex max-w-3xl flex-col gap-6" novalidate @submit="submit">
+  <form
+    class="tw:flex tw:max-w-3xl tw:flex-col tw:gap-6"
+    novalidate
+    @submit="submit"
+  >
     <NuxtLink
       :to="localePath('/admin/board')"
-      class="inline-flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+      class="tw:inline-flex tw:w-fit tw:items-center tw:gap-1 tw:text-sm tw:text-muted-foreground tw:hover:text-foreground"
     >
-      <ArrowLeft class="size-4" aria-hidden="true" />
+      <ArrowLeft class="tw:size-4" aria-hidden="true" />
       {{ $t('admin.board.name') }}
     </NuxtLink>
     <h1
-      class="text-2xl leading-8 font-extrabold tracking-tight lg:text-[2rem] lg:leading-10"
+      class="tw:text-2xl tw:leading-8 tw:font-extrabold tw:tracking-tight tw:lg:text-[2rem] tw:lg:leading-10"
     >
       {{
         $t(id ? 'admin.board.form.edit_title' : 'admin.board.form.new_title')
       }}
     </h1>
 
-    <div class="grid gap-5 rounded-lg border bg-card p-4 lg:grid-cols-2 lg:p-6">
-      <div class="flex flex-col gap-2 lg:col-span-2">
+    <div
+      class="tw:grid tw:gap-5 tw:rounded-lg tw:border tw:bg-card tw:p-4 tw:lg:grid-cols-2 tw:lg:p-6"
+    >
+      <div class="tw:flex tw:flex-col tw:gap-2 tw:lg:col-span-2">
         <Label>{{ $t('admin.board.form.photo') }}</Label>
         <PortraitField v-model="photoFile" :current="photo" />
       </div>
 
       <FormField v-slot="{ componentField }" name="name">
-        <FormItem class="lg:col-span-2">
+        <FormItem class="tw:lg:col-span-2">
           <FormLabel>{{ $t('admin.board.form.name') }}</FormLabel>
           <FormControl>
             <Input v-bind="componentField" autocomplete="off" />
@@ -148,17 +154,17 @@
         name="featured"
         type="checkbox"
       >
-        <FormItem class="flex items-start gap-3 lg:col-span-2">
+        <FormItem class="tw:flex tw:items-start tw:gap-3 tw:lg:col-span-2">
           <FormControl>
             <Checkbox
               :model-value="value"
-              class="mt-0.5"
+              class="tw:mt-0.5"
               @update:model-value="handleChange"
             />
           </FormControl>
           <div>
             <FormLabel>{{ $t('admin.board.form.featured') }}</FormLabel>
-            <p class="text-sm text-muted-foreground">
+            <p class="tw:text-sm tw:text-muted-foreground">
               {{ $t('admin.board.form.featured_hint') }}
             </p>
           </div>
@@ -166,7 +172,7 @@
       </FormField>
     </div>
 
-    <div class="flex flex-wrap gap-3">
+    <div class="tw:flex tw:flex-wrap tw:gap-3">
       <Button type="submit" :disabled="saving">
         <Save aria-hidden="true" />
         {{ $t(id ? 'admin.board.form.save' : 'admin.board.form.create') }}

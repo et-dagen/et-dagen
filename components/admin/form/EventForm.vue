@@ -97,24 +97,24 @@
 </script>
 
 <template>
-  <p v-if="!allowed" class="text-muted-foreground">
+  <p v-if="!allowed" class="tw:text-muted-foreground">
     {{ $t('admin.events.form.missing') }}
   </p>
   <form
     v-else
-    class="flex max-w-3xl flex-col gap-6"
+    class="tw:flex tw:max-w-3xl tw:flex-col tw:gap-6"
     novalidate
     @submit="submit"
   >
     <NuxtLink
       :to="localePath(panel)"
-      class="inline-flex w-fit items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+      class="tw:inline-flex tw:w-fit tw:items-center tw:gap-1 tw:text-sm tw:text-muted-foreground tw:hover:text-foreground"
     >
-      <ArrowLeft class="size-4" aria-hidden="true" />
+      <ArrowLeft class="tw:size-4" aria-hidden="true" />
       {{ $t(panelName) }}
     </NuxtLink>
     <h1
-      class="text-2xl leading-8 font-extrabold tracking-tight lg:text-[2rem] lg:leading-10"
+      class="tw:text-2xl tw:leading-8 tw:font-extrabold tw:tracking-tight tw:lg:text-[2rem] tw:lg:leading-10"
     >
       {{
         uid ? String(initial.title ?? '') : $t('admin.events.form.new_title')
@@ -126,20 +126,20 @@
     />
 
     <section
-      class="grid gap-5 rounded-lg border bg-card p-4 lg:grid-cols-2 lg:p-6"
+      class="tw:grid tw:gap-5 tw:rounded-lg tw:border tw:bg-card tw:p-4 tw:lg:grid-cols-2 tw:lg:p-6"
     >
       <TextField
         name="title"
         :label="$t('admin.events.form.title')"
-        class="lg:col-span-2"
+        class="tw:lg:col-span-2"
       />
 
       <FormField v-slot="{ componentField }" name="companyUID">
-        <FormItem class="lg:col-span-2">
+        <FormItem class="tw:lg:col-span-2">
           <FormLabel>{{ $t('admin.events.form.company') }}</FormLabel>
           <Select v-bind="componentField">
             <FormControl>
-              <SelectTrigger class="w-full">
+              <SelectTrigger class="tw:w-full">
                 <SelectValue
                   :placeholder="$t('admin.events.form.choose_company')"
                 />
@@ -176,7 +176,7 @@
           <FormControl>
             <Input v-bind="componentField" placeholder="EL5, Elektrobygget" />
           </FormControl>
-          <p class="text-sm text-muted-foreground">
+          <p class="tw:text-sm tw:text-muted-foreground">
             {{ $t('admin.events.form.place_hint') }}
           </p>
           <FieldError />
@@ -194,7 +194,7 @@
         v-slot="{ value, handleChange, errorMessage }"
         name="description"
       >
-        <FormItem class="lg:col-span-2">
+        <FormItem class="tw:lg:col-span-2">
           <FormLabel>{{ $t('admin.events.form.description') }}</FormLabel>
           <FormControl>
             <RichText
@@ -209,20 +209,20 @@
     </section>
 
     <section
-      class="grid gap-5 rounded-lg border bg-card p-4 lg:grid-cols-2 lg:p-6"
+      class="tw:grid tw:gap-5 tw:rounded-lg tw:border tw:bg-card tw:p-4 tw:lg:grid-cols-2 tw:lg:p-6"
     >
       <FormField v-slot="{ value, handleChange }" name="signup" type="checkbox">
-        <FormItem class="flex items-start gap-3 lg:col-span-2">
+        <FormItem class="tw:flex tw:items-start tw:gap-3 tw:lg:col-span-2">
           <FormControl>
             <Checkbox
               :model-value="value"
-              class="mt-0.5"
+              class="tw:mt-0.5"
               @update:model-value="handleChange"
             />
           </FormControl>
           <div>
             <FormLabel>{{ $t('admin.events.form.signup') }}</FormLabel>
-            <p class="text-sm text-muted-foreground">
+            <p class="tw:text-sm tw:text-muted-foreground">
               {{ $t('admin.events.form.signup_hint') }}
             </p>
           </div>
@@ -231,13 +231,13 @@
 
       <template v-if="signup">
         <FormField v-slot="{ componentField }" name="capacity">
-          <FormItem class="lg:col-span-2">
+          <FormItem class="tw:lg:col-span-2">
             <FormLabel>{{ $t('admin.events.form.capacity') }}</FormLabel>
             <FormControl>
               <Input
                 type="number"
                 min="1"
-                class="max-w-40"
+                class="tw:max-w-40"
                 v-bind="componentField"
               />
             </FormControl>
@@ -257,28 +257,28 @@
         />
 
         <FormField v-slot="{ value, handleChange }" name="years">
-          <FormItem class="lg:col-span-2">
+          <FormItem class="tw:lg:col-span-2">
             <FormLabel>{{ $t('admin.events.form.years') }}</FormLabel>
-            <div class="flex flex-wrap gap-2">
+            <div class="tw:flex tw:flex-wrap tw:gap-2">
               <button
                 v-for="year in STUDY_YEARS"
                 :key="year"
                 type="button"
                 :aria-pressed="(value ?? []).includes(year)"
-                class="inline-flex h-9 min-w-16 items-center justify-center rounded-md border bg-card px-3 pt-0.5 text-sm font-semibold hover:bg-accent aria-pressed:border-plate aria-pressed:bg-plate aria-pressed:text-plate-foreground"
+                class="tw:inline-flex tw:h-9 tw:min-w-16 tw:items-center tw:justify-center tw:rounded-md tw:border tw:bg-card tw:px-3 tw:pt-0.5 tw:text-sm tw:font-semibold tw:hover:bg-accent tw:aria-pressed:border-plate tw:aria-pressed:bg-plate tw:aria-pressed:text-plate-foreground"
                 @click="handleChange(toggle(value, year))"
               >
                 {{ $t('company.admin.year', { n: year }) }}
               </button>
             </div>
-            <p class="text-sm text-muted-foreground">
+            <p class="tw:text-sm tw:text-muted-foreground">
               {{ $t('admin.events.form.requirements_hint') }}
             </p>
           </FormItem>
         </FormField>
 
         <FormField v-slot="{ value, handleChange }" name="programmes">
-          <FormItem class="lg:col-span-2">
+          <FormItem class="tw:lg:col-span-2">
             <FormLabel>{{ $t('admin.events.form.programmes') }}</FormLabel>
             <SearchPicker
               :model-value="value ?? []"
@@ -292,7 +292,7 @@
       </template>
     </section>
 
-    <div class="flex flex-wrap gap-3">
+    <div class="tw:flex tw:flex-wrap tw:gap-3">
       <Button type="submit" :disabled="saving">
         <Save aria-hidden="true" />
         {{ $t(uid ? 'admin.events.form.save' : 'admin.events.form.create') }}

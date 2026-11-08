@@ -1,6 +1,5 @@
 <script setup lang="ts">
   import InvitationJoin from '@/components/company/InvitationJoin.vue'
-  import { Button } from '@/components/ui/button'
   import type { InvitationPreview } from '@/lib/invitations'
 
   const route = useRoute()
@@ -28,43 +27,63 @@
 </script>
 
 <template>
-  <div class="et-ui">
-    <div class="mx-auto flex max-w-lg flex-col gap-6 px-4 py-10 lg:py-16">
-      <InvitationJoin
-        v-if="invitation && !closed"
-        :token="token"
-        :invitation="invitation"
-      />
-      <div
-        v-else
-        class="flex flex-col gap-6 rounded-lg border bg-card p-6 sm:p-8"
-      >
-        <div class="flex flex-col gap-2">
-          <h1 class="text-3xl font-extrabold tracking-tight">
-            {{ $t(`invitation.closed.${closed}.title`) }}
-          </h1>
-          <p class="text-muted-foreground">
-            {{ $t(`invitation.closed.${closed}.text`) }}
-          </p>
-        </div>
-        <div class="flex flex-wrap gap-3">
-          <Button v-if="closed === 'joined'" as-child size="lg" class="h-11">
-            <NuxtLink :to="localePath('/user/signin')">
-              {{ $t('signup.sign_in') }}
-            </NuxtLink>
-          </Button>
-          <Button
-            as-child
-            size="lg"
-            class="h-11"
-            :variant="closed === 'joined' ? 'outline' : 'default'"
-          >
-            <NuxtLink :to="localePath('/contact')">
-              {{ $t('signup.company.contact') }}
-            </NuxtLink>
-          </Button>
-        </div>
-      </div>
-    </div>
+  <InvitationJoin
+    v-if="invitation && !closed"
+    :token="token"
+    :invitation="invitation"
+  />
+  <div v-else class="ma-10">
+    <h4 class="text-center pt-4 pb-7">
+      {{ $t(`invitation.closed.${closed}.title`) }}
+    </h4>
+    <VContainer>
+      <VRow>
+        <p class="text-center">
+          {{ $t(`invitation.closed.${closed}.text`) }}
+        </p>
+      </VRow>
+    </VContainer>
+    <VContainer>
+      <VRow v-if="closed === 'joined'">
+        <VBtn color="success" class="btn" :to="localePath('/user/signin')">
+          {{ $t('signup.sign_in') }}
+        </VBtn>
+      </VRow>
+      <VRow>
+        <VBtn
+          color="primary"
+          class="btn"
+          :variant="closed === 'joined' ? 'outlined' : 'elevated'"
+          :to="localePath('/contact')"
+        >
+          {{ $t('signup.company.contact') }}
+        </VBtn>
+      </VRow>
+    </VContainer>
   </div>
 </template>
+
+<style scoped lang="scss">
+  @use 'sass:map';
+  @use 'vuetify/settings';
+
+  .v-container {
+    max-width: 26rem;
+    margin-block: 0.5rem;
+  }
+
+  .v-row {
+    justify-content: center;
+    padding-block: 0.5rem;
+  }
+
+  .btn {
+    width: 60%;
+  }
+
+  @media #{map.get(settings.$display-breakpoints, 'sm-and-down')} {
+    .btn {
+      width: 100%;
+    }
+  }
+</style>

@@ -14,7 +14,7 @@
 </script>
 
 <template>
-  <div class="flex max-w-4xl flex-col gap-8">
+  <div class="tw:flex tw:max-w-4xl tw:flex-col tw:gap-8">
     <FairDates :start="info?.date?.start" :end="info?.date?.end" />
     <ProgrammeList :rows="rows" @changed="refresh" />
   </div>

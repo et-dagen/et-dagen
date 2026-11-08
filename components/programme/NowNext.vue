@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import { placeOf } from '@/lib/events'
   import type { ProgrammeEvent } from '@/lib/programme'
 
   const props = defineProps<{
@@ -39,64 +38,75 @@
 </script>
 
 <template>
-  <section
-    v-if="now.length || next"
-    class="grid overflow-hidden rounded-lg text-white sm:grid-cols-2"
-    :aria-label="$t('programme.band.label')"
-  >
-    <div v-if="now.length" class="flex flex-col gap-1 bg-plate p-5">
-      <p class="text-sm font-semibold opacity-80">
-        {{ $t('programme.band.now') }}
-      </p>
-      <NuxtLink
-        v-for="event in now"
-        :key="event.uid"
-        :to="localePath(`/event/${event.uid}`)"
-        class="text-xl leading-snug font-extrabold hover:underline"
-      >
-        {{ event.title }}
-      </NuxtLink>
-      <p class="flex flex-wrap items-center gap-x-2 text-sm opacity-95">
-        <span>{{
-          $t('programme.band.until', { time: hhmm(now[0]?.date?.end) })
-        }}</span>
-        <span
-          v-if="placeOf(now[0]?.location?.name).code"
-          class="rounded-sm bg-white px-1.5 pt-0.5 text-xs font-extrabold text-plate"
-        >
-          {{ placeOf(now[0]?.location?.name).code }}
-        </span>
-        <span v-else-if="now[0]?.location?.name">{{
-          now[0].location.name
-        }}</span>
-      </p>
-    </div>
-    <div
-      v-if="next"
-      class="flex flex-col gap-1 bg-brand p-5"
-      :class="!now.length && 'sm:col-span-2'"
+  <VContainer v-if="now.length || next" class="d-flex justify-center">
+    <VCard
+      tag="section"
+      elevation="2"
+      variant="flat"
+      class="now-next"
+      :aria-label="$t('programme.band.label')"
     >
-      <p class="text-sm font-semibold opacity-80">
-        {{ $t('programme.band.next') }}
-      </p>
-      <NuxtLink
-        :to="localePath(`/event/${next.uid}`)"
-        class="text-xl leading-snug font-extrabold hover:underline"
-      >
-        {{ next.title }}
-      </NuxtLink>
-      <p class="flex flex-wrap items-center gap-x-2 text-sm opacity-95">
-        <span class="font-semibold tabular-nums">{{
-          hhmm(next.date?.start)
-        }}</span>
-        <span>{{ startsIn }}</span>
-        <span
-          v-if="placeOf(next.location?.name).code"
-          class="rounded-sm bg-white px-1.5 pt-0.5 text-xs font-extrabold text-plate"
-        >
-          {{ placeOf(next.location?.name).code }}
-        </span>
-      </p>
-    </div>
-  </section>
+      <VCardText>
+        <div v-for="event in now" :key="event.uid" class="now-next__row">
+          <VIcon color="primary">mdi-play-circle</VIcon>
+          <span>
+            <span class="bold">{{ $t('programme.band.now') }}:</span>
+            <NuxtLink
+              :to="localePath(`/event/${event.uid}`)"
+              class="now-next__link text-primary"
+            >
+              {{ event.title }}
+            </NuxtLink>
+            <span>
+              {{ $t('programme.band.until', { time: hhmm(event.date?.end) }) }}
+            </span>
+            <span v-if="event.location?.name">
+              · {{ event.location.name }}
+            </span>
+          </span>
+        </div>
+        <div v-if="next" class="now-next__row">
+          <VIcon color="primary">mdi-clock</VIcon>
+          <span>
+            <span class="bold">{{ $t('programme.band.next') }}:</span>
+            <NuxtLink
+              :to="localePath(`/event/${next.uid}`)"
+              class="now-next__link text-primary"
+            >
+              {{ next.title }}
+            </NuxtLink>
+            <span>{{ hhmm(next.date?.start) }}, {{ startsIn }}</span>
+            <span v-if="next.location?.name"> · {{ next.location.name }} </span>
+          </span>
+        </div>
+      </VCardText>
+    </VCard>
+  </VContainer>
 </template>
+
+<style scoped lang="scss">
+  .now-next {
+    width: 600px;
+    max-width: 100%;
+
+    &__row {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+
+      & + & {
+        margin-top: 0.5rem;
+      }
+    }
+
+    &__link {
+      font-weight: bold;
+      margin-right: 0.25rem;
+    }
+  }
+
+  .bold {
+    font-weight: bold;
+    margin-right: 0.25rem;
+  }
+</style>

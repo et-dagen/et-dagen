@@ -29,24 +29,24 @@
 
 <template>
   <AlertDialog v-model:open="open">
-    <AlertDialogContent class="rounded-md">
+    <AlertDialogContent class="tw:rounded-md">
       <AlertDialogHeader>
-        <AlertDialogTitle class="text-lg font-bold">
+        <AlertDialogTitle class="tw:text-lg tw:font-bold">
           {{ title }}
         </AlertDialogTitle>
-        <AlertDialogDescription class="text-muted-foreground">
+        <AlertDialogDescription class="tw:text-muted-foreground">
           {{ description }}
         </AlertDialogDescription>
       </AlertDialogHeader>
 
-      <ul class="rounded-md border bg-card py-1 text-sm">
-        <li v-for="item in listed" :key="item.key" class="px-3 py-1.5">
-          <span class="font-semibold">{{ item.label }}</span>
-          <span v-if="item.detail" class="text-muted-foreground">
+      <ul class="tw:rounded-md tw:border tw:bg-card tw:py-1 tw:text-sm">
+        <li v-for="item in listed" :key="item.key" class="tw:px-3 tw:py-1.5">
+          <span class="tw:font-semibold">{{ item.label }}</span>
+          <span v-if="item.detail" class="tw:text-muted-foreground">
             · {{ item.detail }}
           </span>
         </li>
-        <li v-if="rest > 0" class="px-3 py-1.5 text-muted-foreground">
+        <li v-if="rest > 0" class="tw:px-3 tw:py-1.5 tw:text-muted-foreground">
           {{ $t('admin.list.more', { n: rest }) }}
         </li>
       </ul>

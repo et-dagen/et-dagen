@@ -20,11 +20,14 @@
     data-slot="select-scroll-down-button"
     v-bind="forwardedProps"
     :class="
-      cn('flex cursor-default items-center justify-center py-1', props.class)
+      cn(
+        'tw:flex tw:cursor-default tw:items-center tw:justify-center tw:py-1',
+        props.class,
+      )
     "
   >
     <slot>
-      <ChevronDown class="size-4" />
+      <ChevronDown class="tw:size-4" />
     </slot>
   </SelectScrollDownButton>
 </template>

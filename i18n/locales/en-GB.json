@@ -8,7 +8,8 @@
     "admin": "Admin",
     "user": "My profile",
     "program_nav": "SEE PROGRAMME",
-    "company": "Company"
+    "company": "Company",
+    "faq": "For companies"
   },
   "home": {
     "date_coming": "The date is coming soon",
@@ -33,13 +34,19 @@
     "companies_last": "Who came last time",
     "partners": "Partners",
     "sponsors": "Sponsors",
-    "join": "Want your company here?"
+    "join": "Want your company here?",
+    "banner": {
+      "slogan": "Explore your future workplace"
+    }
   },
   "user": {
     "sign_in": "Sign in",
     "sign_out": "Sign out",
     "resume": {
-      "resume": "resume"
+      "resume": "resume",
+      "upload_resume": "Upload resume",
+      "your_resume": "Your resume",
+      "delete_resume": "Delete resume"
     },
     "delete": {
       "title": "Delete my account",
@@ -102,22 +109,78 @@
       "save": "Save",
       "cancel": "Cancel",
       "saved": "Your profile is saved"
+    },
+    "sign_up": "Register user",
+    "information": {
+      "title": "Information",
+      "studyprogramme": "Study Programme",
+      "currentyear": "Current Year",
+      "dietaryrestrictions": "Allergies and Restrictions",
+      "events": "My Events"
+    },
+    "register": {
+      "title": "Register user",
+      "full_name": "Full name",
+      "email": "E-mail",
+      "password": "Password",
+      "password_confirmation": "Confirm password",
+      "study_program": "Study Programme",
+      "year": "Current year",
+      "user_type": {
+        "student": "Student user",
+        "company": "Company user"
+      },
+      "dietary_restrictions": {
+        "name": "Allergens and restrictions",
+        "other": "Other restrictions",
+        "norestrictions": "No, I have no dietary restrictions",
+        "restrictions": "Yes, I have allergies and/or restrictions"
+      }
+    },
+    "login": {
+      "forgot": "Forgot password?"
     }
   },
   "error": {
     "page": {
       "missing_title": "This page does not exist",
-      "missing_text": "There is nothing at {path}. The address may be mistyped, or the page may have moved.",
       "failed_title": "Something went wrong",
-      "failed_text": "The page could not be shown. Try again in a moment, and contact us if it keeps happening.",
-      "home": "Go to the front page",
-      "elsewhere": "Or go to"
+      "oh_no": "Oh no!",
+      "status": "Error {code}"
+    },
+    "form": {
+      "general": {
+        "equal_password": "Passwords must match"
+      }
+    },
+    "page_not_found": {
+      "page_doesnt_exist": "This page doesn't exist",
+      "navigate_front_page": "Back to front page"
     }
   },
   "event": {
     "page": {
       "attendants": {
-        "scan": "Scan attendants"
+        "scan": "Scan attendants",
+        "name": "Registration",
+        "attendants": "Attendants",
+        "nocapacity": "No capacity limit",
+        "registered": "You are registered"
+      },
+      "details": {
+        "name": "Details",
+        "from": "From",
+        "to": "To",
+        "reg_start": "Registration start",
+        "reg_end": "Registration end",
+        "reg_programme": "Study programmes",
+        "reg_year": "Year",
+        "location": "Location",
+        "host": "Organiser"
+      },
+      "queue": {
+        "name": "Queue",
+        "position": "Position in queue"
       }
     },
     "scan": {
@@ -132,7 +195,8 @@
       "camera_failed": "Found no camera to scan with.",
       "camera_insecure": "The camera works only on a secure page (https).",
       "camera_busy": "Another app is using the camera. Close it and try again."
-    }
+    },
+    "take_off": "The event is taking off in"
   },
   "contact": {
     "title": "Contact us",
@@ -206,7 +270,10 @@
         "saved": "The profile is saved",
         "none": "You have no company to edit."
       }
-    }
+    },
+    "main_partner": "Main partner in 2026",
+    "partners": "Partners 2026",
+    "sponsors": "Sponsors 2026"
   },
   "alert": {
     "api": {
@@ -226,7 +293,9 @@
         },
         "company": {
           "not-found": "Company not found",
-          "missing-name-or-webpage": "Missing name or webpage"
+          "missing-name-or-webpage": "Missing name or webpage",
+          "require-company-uid": "Company users must spesify companyUID",
+          "missing-name-webpage-type": "Missing name, webpage or type"
         },
         "event": {
           "not-found": "Event doesn't exist",
@@ -244,7 +313,8 @@
             "event-is-full": "Event is full",
             "not-owner": "Cannot register other users",
             "forbidden": "You can't sign up for this event."
-          }
+          },
+          "not-owner": "Cannot modify other companies' events"
         },
         "job": {
           "not-found": "Job not found",
@@ -255,13 +325,33 @@
         "user": {
           "not-found": "User not found",
           "doesnt-exists": "User doesn't exist",
-          "missing-programme": "studyProgram missing"
+          "missing-programme": "studyProgram missing",
+          "invalid-code": "Invalid registration code"
+        },
+        "code": {
+          "not-found": "Code not found",
+          "missing-company-uid": "companyUID missing"
         }
       }
     },
     "success": {
       "user": {
         "deleted": "Your account has been deleted"
+      },
+      "event": {
+        "register": {
+          "sign_up": "Successfully registered to event",
+          "opt_out": "Successfully opted out of event",
+          "queue": "Successfully registered to event queue",
+          "opt_out_queue": "Successfully opted out of event queue"
+        }
+      }
+    },
+    "close_alert": "Close",
+    "error": {
+      "form": {
+        "missing_email": "Email input is missing",
+        "invalid": "Invalid form"
       }
     }
   },
@@ -305,7 +395,14 @@
       "empty": "There are no open jobs right now.",
       "meet": "Meet them {day}",
       "show": "Show no jobs | Show 1 job | Show {n} jobs"
-    }
+    },
+    "title": "Job Advertisements",
+    "jobTypes": "Job Types",
+    "search": "Search",
+    "company": "Company",
+    "details": "Job Details",
+    "apply": "Apply here",
+    "no_jobs": "Could not find any job advertisements ⚠️"
   },
   "admin": {
     "companies": {
@@ -437,7 +534,10 @@
         "title": "Delete {n} event? | Delete {n} events?",
         "text": "The event and its sign-ups are deleted for good. This cannot be undone. | The events and their sign-ups are deleted for good. This cannot be undone.",
         "confirm": "Delete {n} event | Delete {n} events",
-        "done": "{n} event deleted | {n} events deleted"
+        "done": "{n} event deleted | {n} events deleted",
+        "selected": "Delete selected",
+        "confirmtext": "Are you sure you want to delete the selected users?",
+        "abort": "No, abort"
       },
       "form": {
         "new_title": "New event",
@@ -469,7 +569,33 @@
         "label": "The event",
         "details": "Details",
         "attendees": "Signed up"
-      }
+      },
+      "edit": "Edit event",
+      "attendant_emails": "Attendant emails",
+      "pagesize": "Events per page",
+      "dates": "Date",
+      "filtertypes": {
+        "name": "Filter type",
+        "updated": "Last modified",
+        "company": "Company"
+      },
+      "filterorder": {
+        "name": "Order",
+        "descending": "Descending",
+        "ascending": "Ascending"
+      },
+      "selectall": "Select all",
+      "attributes": {
+        "select": "Select",
+        "title": "Title",
+        "company": "Company",
+        "location": "Location",
+        "date": "Date",
+        "time": "Time",
+        "capacity": "Capacity"
+      },
+      "copied": "Copied UID!",
+      "overview": "Event Overview"
     },
     "jobs": {
       "name": "Jobs",
@@ -507,7 +633,10 @@
         "title": "Delete {n} job? | Delete {n} jobs?",
         "text": "The job listing is deleted for good. This cannot be undone. | The job listings are deleted for good. This cannot be undone.",
         "confirm": "Delete {n} job | Delete {n} jobs",
-        "done": "{n} job deleted | {n} jobs deleted"
+        "done": "{n} job deleted | {n} jobs deleted",
+        "selected": "Delete selected",
+        "confirmtext": "Are you sure you want to delete the selected jobs?",
+        "abort": "No, abort"
       },
       "attributes": {
         "jobtype": {
@@ -515,7 +644,14 @@
           "full_time": "Full-time",
           "graduate": "Graduate",
           "summer_internship": "Summer internship"
-        }
+        },
+        "select": "Velg",
+        "title": "Title",
+        "description": "Description",
+        "company": "Company",
+        "location": "Location",
+        "deadline": "Deadline",
+        "code": "Jobb Code"
       },
       "form": {
         "new_title": "New job",
@@ -556,7 +692,21 @@
           "rolling": "Rolling"
         },
         "rolling_hint": "Applications are handled as they come in until the job is filled."
-      }
+      },
+      "edit": "Edit Jobs",
+      "pagesize": "Jobs per page",
+      "filtertypes": {
+        "name": "Filter type",
+        "updated": "Last modified",
+        "jobtitle": "Job Title"
+      },
+      "filterorder": {
+        "name": "Order",
+        "descending": "Descending",
+        "ascending": "Ascending"
+      },
+      "selectall": "Select all",
+      "copied": "UID kopiert!"
     },
     "users": {
       "name": "Users",
@@ -587,7 +737,10 @@
         "title": "Delete {n} user? | Delete {n} users?",
         "text": "The account, profile, CV and sign-ups are deleted for good. Places on upcoming events pass to the next in the queue. This cannot be undone. | The accounts, profiles, CVs and sign-ups are deleted for good. Places on upcoming events pass to the next in the queue. This cannot be undone.",
         "confirm": "Delete {n} user | Delete {n} users",
-        "done": "{n} user deleted | {n} users deleted"
+        "done": "{n} user deleted | {n} users deleted",
+        "selected": "Delete selected",
+        "confirmtext": "Are you sure you want to delete the selected users?",
+        "abort": "No, abort"
       },
       "form": {
         "edit_title": "Edit user",
@@ -620,7 +773,35 @@
           "job_manage": "Post and edit jobs",
           "profile_manage": "Edit the company profile"
         }
-      }
+      },
+      "pagesize": "Users per page",
+      "usertypes": {
+        "name": "User types",
+        "admin": "Admins",
+        "company": "Companies",
+        "basic": "Basic"
+      },
+      "filtertypes": {
+        "name": "Sort by",
+        "updated": "Last modified",
+        "currentyear": "Year"
+      },
+      "filterorder": {
+        "name": "Order",
+        "descending": "Descending",
+        "ascending": "Ascending"
+      },
+      "selectall": "Select all",
+      "attributes": {
+        "select": "Select",
+        "name": "Name",
+        "usertype": "User type",
+        "email": "Email",
+        "year": "Year",
+        "program": "Study programme",
+        "company": "Company"
+      },
+      "copied": "UID copied!"
     },
     "shell": {
       "navigation": "Admin panels",
@@ -767,6 +948,51 @@
         "code_hint": "Unique, such as MTELSYS or BIDATA. It cannot be changed later, since students and events point at it.",
         "code_kept": "The code stays. Students and events point at it, so they see the new name."
       }
+    },
+    "categories": "Categories",
+    "company": {
+      "name": "Companies",
+      "edit": "Edit companies",
+      "pagesize": "Companies per page",
+      "filtertypes": {
+        "name": "Filter type",
+        "updated": "Last modified",
+        "companyname": "Company name"
+      },
+      "filterorder": {
+        "name": "Order",
+        "descending": "Descending",
+        "ascending": "Ascending"
+      },
+      "selectall": "Select all",
+      "delete": {
+        "selected": "Delete selected",
+        "confirmtext": "Are you sure you want to delete the selected users?",
+        "confirm": "Yes, delete them",
+        "abort": "No, abort"
+      },
+      "attributes": {
+        "select": "Select",
+        "name": "Name",
+        "logo": "Logo",
+        "webpage": "Webpage",
+        "type": {
+          "name": "Type",
+          "main_partner": "Main partner",
+          "partner": "Partner",
+          "sponsor": "Sponsor",
+          "old": "Old"
+        },
+        "code": "Code",
+        "cvAccess": {
+          "name": "CV access",
+          "yes": "Yes",
+          "no": "No"
+        }
+      },
+      "copied": "Copied UID!",
+      "copiedcode": "Copied registration code!",
+      "createcode": "Create code"
     }
   },
   "dietary_restrictions": {
@@ -895,6 +1121,16 @@
     "closing": {
       "heading": "Questions, or ready to take part?",
       "text": "Our corporate relations contact answers everything about sign-up, prices and equipment."
+    },
+    "about": {
+      "heading": "About E&T-dagene",
+      "p1": "The Electronics- and technology days is a yearly career fair hosted by students from Electronic Systems design and Innovation, NTNU. ELSYS is a study programme combining among other things physics, electronics, signal processing and circuit design, where students early on in their studies are faced with projects and real-world problem solving.",
+      "p2": "As a participating company at the E&T days, you will get a unique opportunity to meet highly motivated and enthusiastic masters engineering students, with a wide variety of specialties within electronic engineering. ELSYS has specialties within signal processing, machine learning, acoustics, radiosystems, both analog and digital electronics- and systems design, space systems and quantum technology.",
+      "p3": "The E&T days are promoted to students ahead of the fair, and the venue is Glassgården (in EL-bygget at NTNU Gløshaugen), which lies connected to one of the three largest auditoriums at Gløshaugen, as well as many other lecture- and reading halls. Glassgården is therefore one of the most well-fitting locations on Gløshaugen to attract students, and you will be able to meet students from among others; ELSYS, Cybernetics and Robotics, and Energy-studies.",
+      "contactus": "If you do have any questions, or wish to participate, please contact us at: bedriftansvarlig{'@'}et-dagen.no"
+    },
+    "faq": {
+      "heading": "FAQ"
     }
   },
   "errors": {
@@ -1278,5 +1514,78 @@
     "bachelor": "Bachelor",
     "master": "Master",
     "integrated": "Integrated master"
+  },
+  "datetime": {
+    "months": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    },
+    "times": {
+      "days": "Days",
+      "hours": "Hours",
+      "minutes": "Minutes",
+      "seconds": "Seconds"
+    }
+  },
+  "program": {
+    "title": "Programme",
+    "standmap": "Stand Map",
+    "event": {
+      "sign_up": "Sign up",
+      "enqueue": "Enqueue",
+      "opt_out": {
+        "name": "Opt out",
+        "queue": "Opt out of queue",
+        "confirmtext": "Are you sure you want to opt out?",
+        "confirm": "Yes, remove me",
+        "abort": "No, abort"
+      },
+      "sign_in_to_register": "Sign in to register",
+      "registration_closed": "Registration is not open"
+    }
+  },
+  "edit": {
+    "user": {
+      "title": "Edit User",
+      "save": "Save",
+      "cancel": "Cancel",
+      "attributes": {
+        "name": "Name",
+        "email": "E-mail",
+        "currentyear": "Current year"
+      }
+    }
+  },
+  "footer": {
+    "header": {
+      "resources": "Resources",
+      "organisation": "Organisation",
+      "some": "Follow us",
+      "join": "Wish to join us?"
+    },
+    "link": {
+      "contact": "Contact Us",
+      "program": "Programme",
+      "jobs": "Jobs"
+    }
+  },
+  "weekday": {
+    "sunday": "Sunday",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday"
   }
 }

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-  import { ExternalLink, MapPin } from '@lucide/vue'
   import { mapEmbedOf, type PublicEvent } from '@/lib/eventPage'
 
   const props = defineProps<{ event: PublicEvent }>()
@@ -8,41 +7,70 @@
 </script>
 
 <template>
-  <div class="flex flex-col gap-6">
+  <VCard class="description elevation-4" rounded="lg">
+    <VCardTitle class="description__title">{{ event.title }}</VCardTitle>
     <!-- the API cleans descriptions before they reach the page -->
-    <!-- eslint-disable vue/no-v-html -->
-    <div v-if="event.description" class="et-prose" v-html="event.description" />
-    <!-- eslint-enable vue/no-v-html -->
+    <!-- eslint-disable vue/no-v-text-v-html-on-component vue/no-v-html -->
+    <VCardText class="description__text mb-3" v-html="event.description" />
+    <!-- eslint-enable -->
     <!-- the map is a picture of the place; a tap opens MazeMap, so the map never traps a scroll.
-         The link below says the same for keyboards and screen readers. -->
-    <a
-      v-if="mapEmbed"
-      :href="event.location?.map"
-      target="_blank"
-      rel="noopener noreferrer"
-      tabindex="-1"
-      aria-hidden="true"
-      class="block h-72 overflow-hidden rounded-lg border bg-card"
-    >
-      <iframe
-        :src="mapEmbed"
-        title=""
-        loading="lazy"
-        referrerpolicy="no-referrer"
+         The location link in the details says the same for keyboards and screen readers. -->
+    <VCardText v-if="mapEmbed" class="pt-0">
+      <a
+        :href="event.location?.map ?? undefined"
+        target="_blank"
+        rel="noopener noreferrer"
         tabindex="-1"
-        class="pointer-events-none block size-full"
-      />
-    </a>
-    <a
-      v-if="event.location?.map"
-      :href="event.location.map"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="inline-flex w-fit items-center gap-2 font-semibold underline decoration-border underline-offset-4"
-    >
-      <MapPin class="size-4" aria-hidden="true" />
-      {{ $t('events.page.open_map') }}
-      <ExternalLink class="size-3.5" aria-hidden="true" />
-    </a>
-  </div>
+        aria-hidden="true"
+        class="map"
+      >
+        <iframe
+          :src="mapEmbed"
+          title=""
+          loading="lazy"
+          referrerpolicy="no-referrer"
+          tabindex="-1"
+        />
+      </a>
+    </VCardText>
+  </VCard>
 </template>
+
+<style scoped lang="scss">
+  .description {
+    :deep(li) {
+      list-style-position: inside;
+
+      p {
+        display: inline;
+      }
+    }
+
+    :deep(h5) {
+      font-size: 1.15rem !important;
+    }
+
+    :deep(h6) {
+      font-size: 1.05rem !important;
+    }
+
+    &__text {
+      white-space: pre-line;
+    }
+  }
+
+  .map {
+    display: block;
+    height: 18rem;
+    overflow: hidden;
+    border-radius: 8px;
+
+    iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      pointer-events: none;
+    }
+  }
+</style>

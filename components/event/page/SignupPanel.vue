@@ -1,45 +1,28 @@
 <script setup lang="ts">
-  import { CalendarPlus, ScanLine, Ticket } from '@lucide/vue'
   import EventTicket from '@/components/event/page/EventTicket.vue'
-  import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-  } from '@/components/ui/alert-dialog'
-  import { Button } from '@/components/ui/button'
   import { alertError, notify } from '@/composables/useAlerts'
   import { Instant } from '@/domain/time'
   import { countdownOf, type SignupState } from '@/lib/eventPage'
-  import { formatInstant } from '@/lib/time'
 
   const props = defineProps<{
     eventUid: string
     state: SignupState
     places: { taken: number; limit: number | null; waiting: number }
-    /** Whether today is the event's day, when the ticket comes first */
-    eventDay: boolean
+    /** Who may sign up; programmes by name, empty when anyone may */
+    requirements: { years: number[]; programmes: string[] }
     calendar: string | null
-    ticket: {
-      uid: string
-      name: string
-      title: string
-      when: string
-      room: string | null
-    } | null
+    /** The signed-in user's uid, which their ticket's code carries */
+    ticketUid: string | null
     /** Whether the viewer takes attendance at this event */
     mayScan: boolean
   }>()
   const emit = defineEmits<{ changed: [] }>()
 
-  const { t, locale } = useI18n()
+  const { t } = useI18n()
   const localePath = useLocalePath()
 
   const busy = ref(false)
+  const confirming = ref(false)
   async function send(method: 'POST' | 'DELETE', done: string) {
     busy.value = true
     try {
@@ -53,10 +36,11 @@
       alertError(error)
     } finally {
       busy.value = false
+      confirming.value = false
     }
   }
 
-  // the countdown ticks each minute, and the page refreshes the moment sign-up opens
+  // the countdown ticks while the page is open, and the page refreshes the moment sign-up opens
   const now = ref(Date.now())
   let timer: ReturnType<typeof setInterval> | undefined
   onMounted(() => {
@@ -76,20 +60,10 @@
     if (days > 0) return t('events.page.countdown.days', { days, hours })
     return t('events.page.countdown.hours', { hours, minutes })
   })
-  const opensAtText = computed(() =>
-    props.state.kind === 'not-open' && props.state.opensAt
-      ? formatInstant(props.state.opensAt, locale.value, {
-          weekday: 'short',
-          day: 'numeric',
-          month: 'short',
-          hour: '2-digit',
-          minute: '2-digit',
-        })
-      : '',
-  )
 
-  const showTicket = ref(false)
-  const confirming = ref(false)
+  const closed = computed(() =>
+    ['not-open', 'closed', 'past'].includes(props.state.kind),
+  )
 
   function downloadCalendar() {
     if (!props.calendar) return
@@ -106,165 +80,217 @@
 </script>
 
 <template>
-  <section
-    class="flex flex-col gap-4 rounded-lg border bg-card p-5"
-    aria-labelledby="signup-heading"
-  >
+  <div class="attendant-container">
+    <VCard class="attendants elevation-4" color="primary" rounded="lg">
+      <VCardTitle class="attendants__title">
+        {{ $t('event.page.attendants.name') }}
+      </VCardTitle>
+
+      <VCardText
+        v-if="places.limit"
+        class="attendants__count d-flex justify-space-between flex-wrap"
+      >
+        <span>
+          <strong>{{ $t('event.page.attendants.attendants') }}: </strong>
+          {{ places.taken }} / {{ places.limit }}
+
+          <strong style="margin-left: 10px">
+            {{ $t('event.page.queue.name') }}:
+          </strong>
+          {{ places.waiting }}
+        </span>
+
+        <span v-if="state.kind === 'registered'">
+          {{ $t('event.page.attendants.registered') }}
+          <VIcon style="margin-bottom: 2px">mdi-check-circle</VIcon>
+        </span>
+
+        <div v-if="state.kind === 'queued'">
+          {{ $t('event.page.queue.position') }}:
+          {{ state.position }}
+        </div>
+      </VCardText>
+
+      <VCardText v-else>
+        {{ $t('event.page.attendants.nocapacity') }}
+      </VCardText>
+
+      <VCardText
+        v-if="requirements.years.length"
+        class="reg__year py-0 pb-5 d-flex flex-wrap"
+      >
+        <strong class="mr-2">{{ $t('event.page.details.reg_year') }}: </strong>
+        <span
+          v-for="year in requirements.years"
+          :key="year"
+          class="comma-separated"
+          >{{ year }}</span
+        >
+      </VCardText>
+
+      <VCardText
+        v-if="requirements.programmes.length"
+        class="reg__programme py-0 pb-5 d-flex flex-wrap flex-column"
+      >
+        <strong class="mr-2"
+          >{{ $t('event.page.details.reg_programme') }}:
+        </strong>
+        <VDivider />
+        <ul class="ml-6 mt-2">
+          <li
+            v-for="programme in requirements.programmes"
+            :key="programme"
+            class="py-1 px-2"
+          >
+            {{ programme }}
+          </li>
+        </ul>
+      </VCardText>
+    </VCard>
+
+    <VBtn
+      v-if="state.kind === 'sign-in'"
+      rounded="lg"
+      variant="text"
+      class="text-primary px-4 py-2 d-flex justify-center align-center login"
+      prepend-icon="mdi-login"
+      :to="localePath('/user/signin')"
+    >
+      {{ $t('program.event.sign_in_to_register') }}
+    </VBtn>
+
     <EventTicket
-      v-if="ticket && state.kind === 'registered' && eventDay"
-      v-bind="ticket"
-      lead
+      v-if="ticketUid && state.kind === 'registered'"
+      :uid="ticketUid"
     />
 
-    <div>
-      <h2 id="signup-heading" class="text-xl font-bold">
-        {{
-          $t(
-            `events.page.state.${state.kind}`,
-            state.kind === 'queued' ? { n: state.position } : {},
-          )
-        }}
-      </h2>
-      <p
-        v-if="places.limit && (state.kind === 'open' || state.kind === 'full')"
-        class="text-sm text-muted-foreground tabular-nums"
-      >
-        {{
-          state.kind === 'full'
-            ? $t('events.page.waiting_count', places.waiting)
-            : $t('events.page.left', places.limit - places.taken)
-        }}
-      </p>
+    <VBtn
+      v-if="mayScan"
+      variant="tonal"
+      append-icon="mdi-camera"
+      :to="localePath(`/event/${eventUid}/scan`)"
+    >
+      {{ $t('event.page.attendants.scan') }}
+    </VBtn>
+
+    <div
+      v-if="closed"
+      class="text-primary px-4 py-2 d-flex flex-column justify-center align-center"
+    >
+      <span class="d-flex align-center">
+        <VIcon class="pr-3">mdi-calendar-clock</VIcon>
+        {{ $t('program.event.registration_closed') }}
+      </span>
+      <span v-if="countdown">{{ countdown }}</span>
     </div>
 
-    <p v-if="countdown" class="rounded-md bg-muted px-3 py-2 text-sm">
-      <span class="font-semibold">{{ countdown }}</span>
-      <span class="block text-muted-foreground">{{ opensAtText }}</span>
-    </p>
+    <VBtn
+      v-if="state.kind === 'open' || state.kind === 'not-eligible'"
+      color="success"
+      :loading="busy"
+      block
+      variant="flat"
+      density="comfortable"
+      :disabled="state.kind === 'not-eligible'"
+      @click.stop="send('POST', 'alert.success.event.register.sign_up')"
+    >
+      {{ $t('program.event.sign_up') }}
+    </VBtn>
 
-    <Button
-      v-if="state.kind === 'open' || state.kind === 'full'"
-      size="lg"
-      class="w-full"
-      :disabled="busy"
-      @click="
-        send(
-          'POST',
-          state.kind === 'open'
-            ? 'events.page.done.registered'
-            : 'events.page.done.queued',
-        )
-      "
+    <VBtn
+      v-else-if="state.kind === 'full'"
+      color="success"
+      :loading="busy"
+      block
+      variant="flat"
+      density="comfortable"
+      @click.stop="send('POST', 'alert.success.event.register.queue')"
     >
-      {{
-        $t(
-          state.kind === 'open'
-            ? 'events.page.action.register'
-            : 'events.page.action.queue',
-        )
-      }}
-    </Button>
-    <Button
-      v-else-if="state.kind === 'sign-in'"
-      as-child
-      size="lg"
-      class="w-full"
-    >
-      <NuxtLink :to="localePath('/user/signin')">
-        {{ $t('events.page.action.sign_in') }}
-      </NuxtLink>
-    </Button>
-    <p v-else-if="state.kind === 'not-eligible'" class="text-sm">
+      {{ $t('program.event.enqueue') }}
+    </VBtn>
+
+    <p v-if="state.kind === 'not-eligible'" class="text-body-2 text-center">
       {{ $t('events.page.not_eligible') }}
     </p>
 
-    <template v-if="state.kind === 'registered' || state.kind === 'queued'">
-      <Button
-        v-if="state.kind === 'registered' && !eventDay && ticket"
-        variant="outline"
-        class="w-full"
-        :aria-expanded="showTicket"
-        @click="showTicket = !showTicket"
-      >
-        <Ticket aria-hidden="true" />
-        {{
-          $t(showTicket ? 'events.page.ticket.hide' : 'events.page.ticket.open')
-        }}
-      </Button>
-      <EventTicket v-if="showTicket && ticket" v-bind="ticket" />
-      <Button
-        variant="ghost"
-        class="w-full text-destructive hover:bg-destructive/10 hover:text-destructive"
-        :disabled="busy"
-        @click="confirming = true"
-      >
-        {{
-          $t(
-            state.kind === 'registered'
-              ? 'events.page.action.cancel'
-              : 'events.page.action.leave_queue',
-          )
-        }}
-      </Button>
-    </template>
+    <VDialog
+      v-if="state.kind === 'registered' || state.kind === 'queued'"
+      v-model="confirming"
+      width="500"
+    >
+      <template #activator="{ props: activator }">
+        <VBtn
+          v-bind="activator"
+          color="primary"
+          block
+          variant="tonal"
+          density="comfortable"
+        >
+          {{
+            $t(
+              state.kind === 'registered'
+                ? 'program.event.opt_out.name'
+                : 'program.event.opt_out.queue',
+            )
+          }}
+        </VBtn>
+      </template>
+      <VCard rounded="lg" class="text-center pa-6">
+        <h6>{{ $t('program.event.opt_out.confirmtext') }}</h6>
+        <div class="d-flex justify-center flex-wrap mt-6" style="gap: 1.5rem">
+          <VBtn
+            size="large"
+            variant="outlined"
+            color="primary"
+            :loading="busy"
+            @click="
+              send(
+                'DELETE',
+                state.kind === 'registered'
+                  ? 'alert.success.event.register.opt_out'
+                  : 'alert.success.event.register.opt_out_queue',
+              )
+            "
+          >
+            {{ $t('program.event.opt_out.confirm') }}
+          </VBtn>
+          <VBtn size="large" flat color="success" @click="confirming = false">
+            {{ $t('program.event.opt_out.abort') }}
+          </VBtn>
+        </div>
+      </VCard>
+    </VDialog>
 
-    <Button
+    <VBtn
       v-if="calendar && state.kind !== 'past'"
-      variant="outline"
-      class="w-full"
+      rounded="lg"
+      variant="text"
+      class="text-primary"
+      prepend-icon="mdi-calendar-plus"
       @click="downloadCalendar"
     >
-      <CalendarPlus aria-hidden="true" />
       {{ $t('events.page.action.calendar') }}
-    </Button>
-
-    <Button v-if="mayScan" as-child variant="ghost" class="w-full">
-      <NuxtLink :to="localePath(`/event/${eventUid}/scan`)">
-        <ScanLine aria-hidden="true" />
-        {{ $t('event.page.attendants.scan') }}
-      </NuxtLink>
-    </Button>
-
-    <AlertDialog v-model:open="confirming">
-      <AlertDialogContent class="rounded-md bg-card">
-        <AlertDialogHeader>
-          <AlertDialogTitle class="text-lg font-bold">
-            {{
-              $t(
-                state.kind === 'queued'
-                  ? 'events.page.confirm.queue_title'
-                  : 'events.page.confirm.title',
-              )
-            }}
-          </AlertDialogTitle>
-          <AlertDialogDescription>
-            {{
-              $t(
-                state.kind === 'queued'
-                  ? 'events.page.confirm.queue_text'
-                  : 'events.page.confirm.text',
-              )
-            }}
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <AlertDialogFooter>
-          <AlertDialogCancel>{{
-            $t('events.page.confirm.keep')
-          }}</AlertDialogCancel>
-          <AlertDialogAction
-            class="bg-destructive text-white hover:bg-destructive/90"
-            @click="send('DELETE', 'events.page.done.cancelled')"
-          >
-            {{
-              $t(
-                state.kind === 'queued'
-                  ? 'events.page.action.leave_queue'
-                  : 'events.page.action.cancel',
-              )
-            }}
-          </AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
-  </section>
+    </VBtn>
+  </div>
 </template>
+
+<style scoped lang="scss">
+  .attendant-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .login {
+    font-size: 1rem;
+  }
+
+  .comma-separated {
+    &::after {
+      content: ',\00a0';
+    }
+    &:last-child::after {
+      content: '';
+    }
+  }
+</style>

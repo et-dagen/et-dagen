@@ -10,7 +10,7 @@
 <template>
   <caption
     data-slot="table-caption"
-    :class="cn('text-muted-foreground mt-4 text-sm', props.class)"
+    :class="cn('tw:text-muted-foreground tw:mt-4 tw:text-sm', props.class)"
   >
     <slot />
   </caption>

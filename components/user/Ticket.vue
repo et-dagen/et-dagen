@@ -4,7 +4,7 @@
   import { formatWhen } from '@/lib/time'
   import type { SignUpRow } from '@/lib/user/signUps'
 
-  const props = defineProps<{ row: SignUpRow; holder: string; uid: string }>()
+  const props = defineProps<{ row: SignUpRow; uid: string }>()
 
   const { locale } = useI18n()
   const localePath = useLocalePath()
@@ -17,15 +17,11 @@
   })
 
   const place = computed(() => placeOf(props.row.event.location?.name))
-  const day = computed(() =>
+  const when = computed(() =>
     formatWhen(props.row.event.date?.start, locale.value, {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
-    }),
-  )
-  const time = computed(() =>
-    formatWhen(props.row.event.date?.start, locale.value, {
       hour: '2-digit',
       minute: '2-digit',
     }),
@@ -33,72 +29,37 @@
 </script>
 
 <template>
-  <article
-    class="relative grid overflow-hidden rounded-lg border bg-card sm:grid-cols-[13rem_minmax(0,1fr)]"
+  <VCard
+    variant="outlined"
+    class="d-flex flex-column flex-sm-row align-center pa-4 my-2"
   >
-    <div
-      class="flex flex-col items-center justify-center gap-4 bg-plate p-6 text-plate-foreground"
-    >
-      <div class="size-40 rounded-md bg-white p-3">
-        <img v-if="qr" :src="qr" :alt="$t('user.page.qr')" class="size-full" />
-      </div>
-      <p class="font-bold">{{ $t('user.page.show_code') }}</p>
-    </div>
-
-    <div
-      class="relative flex flex-col border-dashed border-foreground/30 p-6 max-sm:border-t-2 sm:border-l-2 lg:p-8"
-    >
-      <!-- the tear line's notches, cut out of the ticket's edge -->
-      <span
-        v-for="side in [
-          'max-sm:-left-3 sm:-top-3',
-          'max-sm:-right-3 sm:-bottom-3',
-        ]"
-        :key="side"
-        aria-hidden="true"
-        class="absolute size-6 rounded-full border bg-background max-sm:-top-3 sm:-left-3"
-        :class="side"
-      />
-      <h3 class="text-xl leading-snug font-extrabold lg:text-2xl">
-        <NuxtLink
-          :to="localePath(`/event/${row.eventUID}`)"
-          class="hover:underline hover:decoration-brand hover:decoration-2 hover:underline-offset-4"
-        >
-          {{ row.event.title }}
-        </NuxtLink>
-      </h3>
-      <p
-        class="mt-2 font-semibold text-muted-foreground first-letter:uppercase"
+    <img v-if="qr" :src="qr" :alt="$t('user.page.qr')" class="ticket__qr" />
+    <div class="ml-sm-6 mt-4 mt-sm-0">
+      <NuxtLink
+        :to="localePath(`/event/${row.eventUID}`)"
+        class="text-primary font-weight-bold"
       >
-        {{ day }}
+        {{ row.event.title }}
+      </NuxtLink>
+      <p class="ticket__when my-1">{{ when }}</p>
+      <p v-if="place.code || place.name" class="my-1">
+        <VIcon size="small" color="primary" class="mr-1">mdi-map-marker</VIcon>
+        {{ [place.code, place.name].filter(Boolean).join(' · ') }}
       </p>
-      <div class="mt-1 flex flex-wrap items-center gap-x-5 gap-y-2">
-        <span
-          class="text-6xl font-black tracking-[-0.04em] tabular-nums lg:text-7xl"
-        >
-          {{ time }}
-        </span>
-        <span v-if="place.code || place.name" class="flex flex-col gap-1">
-          <span
-            v-if="place.code"
-            class="self-start rounded-md bg-plate px-3 pt-1.5 pb-1 text-3xl font-black text-plate-foreground"
-          >
-            {{ place.code }}
-          </span>
-          <span class="font-semibold text-muted-foreground">
-            {{ place.name }}
-          </span>
-        </span>
-      </div>
-      <div class="mt-6 flex flex-wrap items-center gap-3 pt-2 sm:mt-auto">
-        <span class="font-bold">{{ holder }}</span>
-        <span
-          class="inline-flex items-center gap-2 rounded-full bg-muted px-3 pt-1 pb-0.5 text-sm font-bold text-plate"
-        >
-          <span class="size-2 rounded-full bg-plate" aria-hidden="true" />
-          {{ $t('user.page.attending') }}
-        </span>
-      </div>
+      <p class="text-neutral-lighten-1 my-1">
+        {{ $t('user.page.show_code') }}
+      </p>
     </div>
-  </article>
+  </VCard>
 </template>
+
+<style scoped lang="scss">
+  .ticket__qr {
+    width: 140px;
+    height: 140px;
+  }
+
+  .ticket__when::first-letter {
+    text-transform: uppercase;
+  }
+</style>

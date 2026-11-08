@@ -8,7 +8,8 @@
     "admin": "Admin",
     "user": "Min profil",
     "program_nav": "SE PROGRAM",
-    "company": "Bedrift"
+    "company": "Bedrift",
+    "faq": "For bedrifter"
   },
   "home": {
     "date_coming": "Datoen kommer snart",
@@ -33,13 +34,19 @@
     "companies_last": "Hvem kom sist",
     "partners": "Partnere",
     "sponsors": "Sponsorer",
-    "join": "Vil bedriften deres stå her?"
+    "join": "Vil bedriften deres stå her?",
+    "banner": {
+      "slogan": "Få et innblikk i din fremtidige arbeidsplass"
+    }
   },
   "user": {
     "sign_in": "Logg inn",
     "sign_out": "Logg ut",
     "resume": {
-      "resume": "CV"
+      "resume": "CV",
+      "upload_resume": "Last opp CV",
+      "your_resume": "Din CV",
+      "delete_resume": "Slett CV"
     },
     "delete": {
       "title": "Slett brukeren min",
@@ -102,22 +109,78 @@
       "save": "Lagre",
       "cancel": "Avbryt",
       "saved": "Profilen er lagret"
+    },
+    "sign_up": "Registrer bruker",
+    "information": {
+      "title": "Informasjon",
+      "studyprogramme": "Studieprogram",
+      "currentyear": "Årstrinn",
+      "dietaryrestrictions": "Allergener og restriksjoner",
+      "events": "Mine arrangementer"
+    },
+    "register": {
+      "title": "Registrer bruker",
+      "full_name": "Fullt navn",
+      "email": "E-post",
+      "password": "Passord",
+      "password_confirmation": "Bekreft passord",
+      "study_program": "Studieprogram",
+      "year": "Årstrinn",
+      "user_type": {
+        "student": "Studentbruker",
+        "company": "Bedriftsbruker"
+      },
+      "dietary_restrictions": {
+        "name": "Allergener og restriksjoner",
+        "other": "Andre restriksjoner",
+        "norestrictions": "Nei, jeg har ingen restriksjoner",
+        "restrictions": "Jeg har allergener og/eller restriksjoner"
+      }
+    },
+    "login": {
+      "forgot": "Glemt passord?"
     }
   },
   "error": {
     "page": {
       "missing_title": "Denne siden finnes ikke",
-      "missing_text": "Det finnes ingenting på {path}. Adressen kan være skrevet feil, eller siden kan ha flyttet.",
       "failed_title": "Noe gikk galt",
-      "failed_text": "Siden kunne ikke vises. Prøv igjen om litt, og ta kontakt med oss hvis det fortsetter.",
-      "home": "Til forsiden",
-      "elsewhere": "Eller gå til"
+      "oh_no": "Å nei!",
+      "status": "Feil {code}"
+    },
+    "form": {
+      "general": {
+        "equal_password": "Passordene må være like"
+      }
+    },
+    "page_not_found": {
+      "page_doesnt_exist": "Denne siden finnes ikke",
+      "navigate_front_page": "Tilbake til forsiden"
     }
   },
   "event": {
     "page": {
       "attendants": {
-        "scan": "Skann påmeldte"
+        "scan": "Skann påmeldte",
+        "name": "Påmelding",
+        "attendants": "Påmeldte",
+        "nocapacity": "Ingen kapasitetsbegrensning",
+        "registered": "Du er påmeldt"
+      },
+      "details": {
+        "name": "Detaljer",
+        "from": "Fra",
+        "to": "Til",
+        "reg_start": "Påmeldingsstart",
+        "reg_end": "Påmeldingsslutt",
+        "reg_programme": "Studieprogram",
+        "reg_year": "Årstrinn",
+        "location": "Sted",
+        "host": "Arrangør"
+      },
+      "queue": {
+        "name": "Venteliste",
+        "position": "Plassering i køen"
       }
     },
     "scan": {
@@ -132,7 +195,8 @@
       "camera_failed": "Fant ikke noe kamera å skanne med.",
       "camera_insecure": "Kameraet virker bare på en sikker side (https).",
       "camera_busy": "En annen app bruker kameraet. Lukk den og prøv igjen."
-    }
+    },
+    "take_off": "Arrangementet tar av om"
   },
   "contact": {
     "title": "Kontakt oss",
@@ -206,7 +270,10 @@
         "saved": "Profilen er lagret",
         "none": "Du har ingen bedrift å redigere."
       }
-    }
+    },
+    "main_partner": "Hovedpartner i 2026",
+    "partners": "Partnere 2026",
+    "sponsors": "Sponsorer 2026"
   },
   "alert": {
     "api": {
@@ -226,7 +293,9 @@
         },
         "company": {
           "not-found": "Bedriften ble ikke funnet",
-          "missing-name-or-webpage": "Mangler navn eller nettside"
+          "missing-name-or-webpage": "Mangler navn eller nettside",
+          "require-company-uid": "Bedriftsbrukere må oppgi companyUID",
+          "missing-name-webpage-type": "Mangler navn, nettside eller type"
         },
         "event": {
           "not-found": "Arrangementer eksisterer ikke",
@@ -244,7 +313,8 @@
             "event-is-full": "Arrangementet er fullt",
             "not-owner": "Kan ikke endre på andre brukere",
             "forbidden": "Du kan ikke melde deg på dette arrangementet."
-          }
+          },
+          "not-owner": "Kan ikke endre på andre bedrifters arrangementer"
         },
         "job": {
           "not-found": "Annonse ble ikke funnet",
@@ -255,13 +325,33 @@
         "user": {
           "not-found": "Bruker ble ikke funnet",
           "doesnt-exists": "Brukeren eksisterer ikke",
-          "missing-programme": "Studieprogram mangler"
+          "missing-programme": "Studieprogram mangler",
+          "invalid-code": "Ugyldig registreringskode"
+        },
+        "code": {
+          "not-found": "Koden ble ikke funnet",
+          "missing-company-uid": "Bedrifts-UID mangler"
         }
       }
     },
     "success": {
       "user": {
         "deleted": "Brukeren din er slettet"
+      },
+      "event": {
+        "register": {
+          "sign_up": "Du er påmeldt dette arrangementet",
+          "opt_out": "Du har meldt deg av dette arrangementet",
+          "queue": "Du er nå på venteliste for dette arrangementet",
+          "opt_out_queue": "Du har meldt deg køen av dette arrangementet"
+        }
+      }
+    },
+    "close_alert": "Lukk",
+    "error": {
+      "form": {
+        "missing_email": "Epost ikke oppgitt",
+        "invalid": "Skjemaet er ikke gyldig"
       }
     }
   },
@@ -305,7 +395,14 @@
       "empty": "Det er ingen ledige stillinger akkurat nå.",
       "meet": "Møt dem {day}",
       "show": "Vis ingen stillinger | Vis 1 stilling | Vis {n} stillinger"
-    }
+    },
+    "title": "Stillingsannonser",
+    "jobTypes": "Jobbtyper",
+    "search": "Søk",
+    "company": "Bedrift",
+    "details": "Stillingsdetaljer",
+    "apply": "Søk her",
+    "no_jobs": "Fant ingen stillingsannonser ⚠️"
   },
   "admin": {
     "companies": {
@@ -437,7 +534,10 @@
         "title": "Slette {n} arrangement? | Slette {n} arrangementer?",
         "text": "Arrangementet og påmeldingene til det slettes for godt. Dette kan ikke angres. | Arrangementene og påmeldingene til dem slettes for godt. Dette kan ikke angres.",
         "confirm": "Slett {n} arrangement | Slett {n} arrangementer",
-        "done": "{n} arrangement slettet | {n} arrangementer slettet"
+        "done": "{n} arrangement slettet | {n} arrangementer slettet",
+        "selected": "Slett valgte",
+        "confirmtext": "Er du sikker på at du vil slette de valgte brukerne?",
+        "abort": "Nei, avbryt"
       },
       "form": {
         "new_title": "Nytt arrangement",
@@ -469,7 +569,33 @@
         "label": "Arrangementet",
         "details": "Detaljer",
         "attendees": "Påmeldte"
-      }
+      },
+      "edit": "Rediger",
+      "attendant_emails": "Deltaker-e-poster",
+      "pagesize": "Arrangementer per side",
+      "dates": "Dato",
+      "filtertypes": {
+        "name": "Filtertype",
+        "updated": "Sist modifisert",
+        "company": "Bedrift"
+      },
+      "filterorder": {
+        "name": "Rekkefølge",
+        "descending": "Synkende",
+        "ascending": "Stigende"
+      },
+      "selectall": "Velg alle",
+      "attributes": {
+        "select": "Velg",
+        "title": "Tittel",
+        "company": "Bedrift",
+        "location": "Sted",
+        "date": "Dato",
+        "time": "Tid",
+        "capacity": "Kapasitet"
+      },
+      "copied": "UID kopiert!",
+      "overview": "Eventoversikt"
     },
     "jobs": {
       "name": "Jobber",
@@ -507,15 +633,26 @@
         "title": "Slette {n} stilling? | Slette {n} stillinger?",
         "text": "Stillingsannonsen slettes for godt. Dette kan ikke angres. | Stillingsannonsene slettes for godt. Dette kan ikke angres.",
         "confirm": "Slett {n} stilling | Slett {n} stillinger",
-        "done": "{n} stilling slettet | {n} stillinger slettet"
+        "done": "{n} stilling slettet | {n} stillinger slettet",
+        "selected": "Slett valgte",
+        "confirmtext": "Er du sikker på at du vil slette de valgte jobbene?",
+        "abort": "Nei, avbryt"
       },
       "attributes": {
         "jobtype": {
           "name": "Jobbtype",
           "full_time": "Fulltid",
           "graduate": "Graduate",
-          "summer_internship": "Sommerjobb"
-        }
+          "summer_internship": "Sommerjobb",
+          "part_time": "Deltid"
+        },
+        "select": "Velg",
+        "title": "Tittel",
+        "description": "Beskrivelse",
+        "company": "Bedrift",
+        "location": "Sted",
+        "deadline": "Søkefrist",
+        "code": "Jobbkode"
       },
       "form": {
         "new_title": "Ny stilling",
@@ -556,7 +693,21 @@
           "rolling": "Løpende"
         },
         "rolling_hint": "Søknader behandles fortløpende til stillingen er besatt."
-      }
+      },
+      "edit": "Rediger",
+      "pagesize": "Jobber per side",
+      "filtertypes": {
+        "name": "Filtertype",
+        "updated": "Sist modifisert",
+        "jobtitle": "Stillingstittel"
+      },
+      "filterorder": {
+        "name": "Rekkefølge",
+        "descending": "Synkende",
+        "ascending": "Stigende"
+      },
+      "selectall": "Velg alle",
+      "copied": "UID kopiert!"
     },
     "users": {
       "name": "Brukere",
@@ -587,7 +738,10 @@
         "title": "Slette {n} bruker? | Slette {n} brukere?",
         "text": "Kontoen, profilen, CV-en og påmeldingene slettes for godt. Plassene på kommende arrangementer går videre til de neste i køen. Dette kan ikke angres. | Kontoene, profilene, CV-ene og påmeldingene slettes for godt. Plassene på kommende arrangementer går videre til de neste i køen. Dette kan ikke angres.",
         "confirm": "Slett {n} bruker | Slett {n} brukere",
-        "done": "{n} bruker slettet | {n} brukere slettet"
+        "done": "{n} bruker slettet | {n} brukere slettet",
+        "selected": "Slett valgte",
+        "confirmtext": "Er du sikker på at du vil slette de valgte brukerne?",
+        "abort": "Nei, avbryt"
       },
       "form": {
         "edit_title": "Rediger bruker",
@@ -620,7 +774,35 @@
           "job_manage": "Legge ut og endre stillinger",
           "profile_manage": "Endre bedriftsprofilen"
         }
-      }
+      },
+      "pagesize": "Brukere per side",
+      "usertypes": {
+        "name": "Brukertyper",
+        "admin": "Administratorer",
+        "company": "Bedrifter",
+        "basic": "Basis"
+      },
+      "filtertypes": {
+        "name": "Sorter etter",
+        "updated": "Sist modifisert",
+        "currentyear": "År"
+      },
+      "filterorder": {
+        "name": "Rekkefølge",
+        "descending": "Synkende",
+        "ascending": "Stigende"
+      },
+      "selectall": "Velg alle",
+      "attributes": {
+        "select": "Velg",
+        "name": "Navn",
+        "usertype": "Brukertype",
+        "email": "Epost",
+        "year": "År",
+        "program": "Studieprogram",
+        "company": "Bedrift"
+      },
+      "copied": "UID kopiert!"
     },
     "shell": {
       "navigation": "Adminpaneler",
@@ -767,6 +949,51 @@
         "code_hint": "Unik, for eksempel MTELSYS eller BIDATA. Den kan ikke endres senere, fordi studenter og arrangementer peker på den.",
         "code_kept": "Koden står fast. Studenter og arrangementer peker på den, så de ser det nye navnet."
       }
+    },
+    "categories": "Kategorier",
+    "company": {
+      "name": "Bedrifter",
+      "edit": "Rediger",
+      "pagesize": "Bedrifter per side",
+      "filtertypes": {
+        "name": "Filtertype",
+        "updated": "Sist modifisert",
+        "companyname": "Bedriftsnavn"
+      },
+      "filterorder": {
+        "name": "Rekkefølge",
+        "descending": "Synkende",
+        "ascending": "Stigende"
+      },
+      "selectall": "Velg alle",
+      "delete": {
+        "selected": "Slett valgte",
+        "confirmtext": "Er du sikker på at du vil slette de valgte bedriftene?",
+        "confirm": "Ja, slett dem",
+        "abort": "Nei, avbryt"
+      },
+      "attributes": {
+        "select": "Velg",
+        "name": "Navn",
+        "logo": "Logo",
+        "webpage": "Nettside",
+        "type": {
+          "name": "Type",
+          "main_partner": "Hovedpartner",
+          "partner": "Partner",
+          "sponsor": "Sponsor",
+          "old": "Gammel"
+        },
+        "code": "Kode",
+        "cvAccess": {
+          "name": "CV tilgang",
+          "yes": "Ja",
+          "no": "Nei"
+        }
+      },
+      "copied": "UID kopiert!",
+      "copiedcode": "Kode kopiert!",
+      "createcode": "Opprett kode"
     }
   },
   "dietary_restrictions": {
@@ -895,6 +1122,16 @@
     "closing": {
       "heading": "Spørsmål, eller klare til å være med?",
       "text": "Bedriftansvarlig svarer på alt om påmelding, priser og utstyr."
+    },
+    "about": {
+      "heading": "Om E&T-dagene",
+      "p1": "Elektronikk- og Teknologi-dagene er en bedriftsdag som arrangeres årlig av studenter på Elektronisk Systemdesign og Innivasjon ved NTNU. ELSYS er et studie som kombinerer bl.a. elektronikk, kretsdesign, fysikk og signalbehandling gjennom praktisk og prosjektrettet arbeid allerede tidlig i studiet.",
+      "p2": "Som bedrift på E&T-dagene vil du få en unik mulighet til å møte motiverte og ivrige sivilingeniørstudenter med et bredt spekter av kompetanse. ELSYS har retninger innen signalbehandling, maskinlæring, akustikk, radiosystemer, både analogt og digitalt systemdesign, romsystemer og kvanteteknologi.",
+      "p3": "E&T-dagene promoteres godt i forkant, og lokalet er glassgården (EL-bygget på NTNU Gløshaugen), som ligger tilknyttet et av de tre største auditoriene på Gløshaugen, samt flere forelesnings- og lesesaler. Glassgården er derfor et av områdene på campus med størst gjennomfart, og her vil dere møte studenter fra bl.a. ELSYS, Kybernetikk, og Energi og miljø. ",
+      "contactus": "Har du spørsmål, eller ønsker å delta, kontakt oss på:"
+    },
+    "faq": {
+      "heading": "Ofte stilte spørsmål"
     }
   },
   "errors": {
@@ -1278,5 +1515,84 @@
     "bachelor": "Bachelor",
     "master": "Master",
     "integrated": "Integrert master"
+  },
+  "datetime": {
+    "months": {
+      "january": "januar",
+      "february": "februar",
+      "march": "mars",
+      "april": "april",
+      "may": "mai",
+      "june": "juni",
+      "july": "juli",
+      "august": "august",
+      "september": "september",
+      "october": "oktober",
+      "november": "november",
+      "december": "desember"
+    },
+    "times": {
+      "days": "Dager",
+      "hours": "Timer",
+      "minutes": "Minutter",
+      "seconds": "Sekunder"
+    }
+  },
+  "program": {
+    "title": "Program",
+    "standmap": "Se standkart",
+    "event": {
+      "sign_up": "Meld meg på",
+      "enqueue": "Meld meg på venteliste",
+      "opt_out": {
+        "name": "Trekk påmelding",
+        "queue": "Trekk køplass",
+        "confirmtext": "Er du sikker på at du vil melde deg av?",
+        "confirm": "Ja, meld meg av",
+        "abort": "Nei, avbryt"
+      },
+      "sign_in_to_register": "Logg inn for å melde deg på",
+      "registration_closed": "Ikke åpent for påmelding"
+    }
+  },
+  "edit": {
+    "event": {
+      "attributes": {
+        "signupstart": "Påmelding åpner",
+        "optoutdeadline": "Avmeldingsfrist"
+      }
+    },
+    "user": {
+      "title": "Rediger bruker",
+      "save": "Lagre",
+      "cancel": "Avbryt",
+      "attributes": {
+        "name": "Navn",
+        "email": "Epost",
+        "currentyear": "Studieår"
+      }
+    }
+  },
+  "footer": {
+    "header": {
+      "resources": "Ressurser",
+      "organisation": "Organisasjon",
+      "some": "Følg oss",
+      "join": "Vil dere delta?"
+    },
+    "link": {
+      "contact": "Kontakt oss",
+      "program": "Program",
+      "jobs": "Jobber"
+    }
+  },
+  "weekday": {
+    "sunday": "Søndag",
+    "monday": "Mandag",
+    "tuesday": "Tirsdag",
+    "wednesday": "Onsdag",
+    "thursday": "Torsdag",
+    "friday": "Fredag",
+    "saturday": "Lørdag"
   }
 }

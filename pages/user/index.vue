@@ -1,18 +1,15 @@
 <script setup lang="ts">
-  import { CalendarDays, RotateCw } from '@lucide/vue'
-  import UserDetails from '@/components/user/Details.vue'
+  import DeleteAccount from '@/components/user/DeleteAccount.vue'
   import SignUps from '@/components/user/SignUps.vue'
   import Ticket from '@/components/user/Ticket.vue'
-  import { useAuthStore } from '@/stores/authStore'
+  import { alertError, notify } from '@/composables/useAlerts'
+  import { useProgrammes } from '@/composables/useProgrammes'
+  import { dietaryFlags } from '@/config/app.config'
   import { Instant } from '@/domain/time'
   import type { EventRow } from '@/lib/events'
-  import {
-    firstNameOf,
-    signUpRows,
-    ticketOf,
-    type SignUp,
-  } from '@/lib/user/signUps'
-  import { Button } from '@/components/ui/button'
+  import { dietLabel } from '@/lib/forms/diet'
+  import { signUpRows, ticketOf, type SignUp } from '@/lib/user/signUps'
+  import { useAuthStore } from '@/stores/authStore'
 
   definePageMeta({
     // route is protected
@@ -21,6 +18,22 @@
 
   const auth = useAuthStore()
   const localePath = useLocalePath()
+  const { t } = useI18n()
+
+  const user = computed(() => auth.user)
+  // a company contact has no study programme, year or CV
+  const isCompany = computed(
+    () => auth.currentSubject?.roles.includes('company') ?? false,
+  )
+  const { nameOf } = await useProgrammes()
+
+  const restrictions = computed<string[]>(() =>
+    Object.values(user.value?.dietaryRestrictions ?? {}),
+  )
+  // a restriction typed by hand has no icon of its own
+  const dietaryIcon = (restriction: string) =>
+    dietaryFlags.find((flag) => flag.name === restriction)?.icon ??
+    'mdi-food-variant'
 
   const [
     { data: signUps, error: signUpsError, refresh: refreshSignUps },
@@ -45,104 +58,184 @@
     await Promise.all([refreshSignUps(), refreshEvents()])
     retrying.value = false
   }
+
+  const resumeFile = ref<File | File[] | null>(null)
+  const uploadResume = async (chosen: File | File[] | null) => {
+    const file = Array.isArray(chosen) ? chosen[0] : chosen
+    if (!file || !auth.user) return
+    const body = new FormData()
+    body.append('file', file)
+    body.append('userUID', auth.user.uid)
+    try {
+      const link = await $fetch<string>('/api/v1/resume', {
+        method: 'POST',
+        body,
+      })
+      auth.user = { ...auth.user, resume: link }
+      notify(t('user.page.resume_uploaded'), 'success')
+    } catch (error) {
+      alertError(error)
+    } finally {
+      resumeFile.value = null
+    }
+  }
+
+  const deleteResume = async () => {
+    if (!auth.user) return
+    try {
+      await $fetch('/api/v1/resume', {
+        method: 'DELETE',
+        body: { userUID: auth.user.uid },
+      })
+      auth.user = { ...auth.user, resume: '' }
+      notify(t('user.page.resume_deleted'), 'success')
+    } catch (error) {
+      alertError(error)
+    }
+  }
+
+  const getFileName = (url: string) => url.split('/').pop()?.split('?')[0] ?? ''
 </script>
 
 <template>
-  <div class="et-ui bg-background text-foreground">
-    <div class="mx-auto max-w-screen-xl px-4 py-10 lg:px-8 lg:py-14">
-      <h1 class="text-4xl font-black tracking-tight lg:text-5xl">
-        {{ $t('user.page.hello', { name: firstNameOf(auth.user?.name) }) }}
-      </h1>
-
-      <!-- events on the left, the user's own information on the right; a phone stacks them ticket first -->
-      <div
-        class="mt-8 grid items-start gap-x-10 gap-y-14 lg:grid-cols-[minmax(0,1fr)_24rem]"
-      >
-        <section aria-labelledby="arrangementer-title" class="min-w-0">
-          <div
-            class="flex min-h-10 flex-wrap items-center justify-between gap-3"
+  <VContainer class="d-flex justify-center align-center mt-16">
+    <VCard class="pa-4" style="width: 800px; max-width: 90vw" elevation="4">
+      <VRow class="d-flex justify-center h-100 ma-0">
+        <VCol
+          cols="12"
+          lg="4"
+          class="d-flex flex-column justify-between align-center"
+        >
+          <VIcon size="50" class="my-8" color="primary">mdi-account</VIcon>
+          <h6>{{ user?.name }}</h6>
+          <span class="text-neutral-lighten-2">{{ user?.email }}</span>
+          <NuxtLink
+            :to="localePath('/user/edit')"
+            :aria-label="$t('edit.user.title')"
+            class="mt-4"
           >
-            <h2
-              id="arrangementer-title"
-              class="text-2xl font-extrabold tracking-tight"
-            >
-              {{ $t('user.page.events') }}
-            </h2>
-            <Button as-child variant="outline">
-              <NuxtLink :to="localePath('/programme')">
-                <CalendarDays aria-hidden="true" />
-                {{ $t('user.page.programme') }}
-              </NuxtLink>
-            </Button>
-          </div>
+            <VIcon size="x-large" variant="plain" color="primary">
+              mdi-pencil-box
+            </VIcon>
+          </NuxtLink>
+        </VCol>
+        <VCol v-if="!isCompany" cols="12" lg="8">
+          <h6>{{ $t('user.information.title') }}</h6>
+          <VDivider class="my-2" />
+          <p class="my-2">
+            <strong>{{ $t('user.information.studyprogramme') }}: </strong>
+            {{ nameOf(user?.studyProgram) }}
+          </p>
+          <p class="my-2">
+            <strong>{{ $t('user.information.currentyear') }}: </strong>
+            {{ user?.currentYear }}
+          </p>
 
-          <div
-            v-if="failed"
-            role="alert"
-            class="mt-4 flex flex-wrap items-center justify-between gap-4 rounded-lg border bg-card p-5"
-          >
-            <div>
-              <p class="font-bold">{{ $t('user.page.load_failed') }}</p>
-              <p class="mt-1 text-sm text-muted-foreground">
-                {{ $t('user.page.load_failed_hint') }}
-              </p>
-            </div>
-            <Button variant="outline" :disabled="retrying" @click="refresh()">
-              <RotateCw aria-hidden="true" />
-              {{ $t('user.page.retry') }}
-            </Button>
-          </div>
-          <template v-else>
-            <Ticket
-              v-if="ticket && auth.user"
-              :row="ticket"
-              :holder="auth.user.name ?? ''"
-              :uid="auth.user.uid"
-              class="mt-4"
-            />
-            <div
-              v-else
-              class="mt-4 rounded-lg border border-dashed bg-card px-6 py-10 text-center"
-            >
-              <p class="text-lg font-bold">
-                {{ $t('user.page.no_ticket') }}
-              </p>
-              <p class="mt-1 text-muted-foreground">
-                {{ $t('user.page.no_ticket_hint') }}
-              </p>
-            </div>
-
-            <div class="mt-5 rounded-lg border bg-card">
-              <h3
-                class="flex items-center gap-3 border-b px-5 py-4 text-lg font-extrabold sm:px-6"
+          <div v-if="restrictions.length" class="mt-4">
+            <p class="mb-2">
+              <strong>
+                {{ $t('user.information.dietaryrestrictions') }}:
+              </strong>
+            </p>
+            <ul class="allergies d-flex flex-column">
+              <li
+                v-for="restriction in restrictions"
+                :key="restriction"
+                class="d-flex align-center"
               >
-                {{ $t('user.page.sign_ups') }}
-                <span
-                  class="grid min-w-7 place-items-center rounded-full bg-plate px-2 pt-0.5 text-sm text-plate-foreground"
-                >
-                  {{ rows.length }}
+                <span>
+                  <VIcon size="small" color="primary" class="mr-2">
+                    {{ dietaryIcon(restriction) }}
+                  </VIcon>
+                  {{ dietLabel(restriction, t) }}
                 </span>
-              </h3>
-              <SignUps v-if="rows.length" :rows="rows" @withdrawn="refresh()" />
-              <p v-else class="px-5 py-4 text-muted-foreground sm:px-6">
-                {{ $t('user.page.no_sign_ups') }}
-              </p>
-            </div>
-          </template>
-        </section>
-
-        <section aria-labelledby="informasjon-title" class="min-w-0">
-          <div class="flex min-h-10 items-center">
-            <h2
-              id="informasjon-title"
-              class="text-2xl font-extrabold tracking-tight"
-            >
-              {{ $t('user.page.information') }}
-            </h2>
+              </li>
+            </ul>
           </div>
-          <UserDetails class="mt-4" />
-        </section>
-      </div>
-    </div>
-  </div>
+          <div class="pt-5">
+            <h6>{{ $t('user.resume.resume') }}</h6>
+            <VDivider class="my-2" />
+            <p v-if="user?.resume" class="my-2">
+              <strong>{{ $t('user.resume.your_resume') }}: </strong>
+              <a
+                :href="`/api/v1/resume/file?userUID=${user.uid}`"
+                target="_blank"
+                rel="noopener"
+                class="text-blue"
+                >{{ getFileName(user.resume) }}</a
+              >
+            </p>
+            <VRow no-gutters>
+              <VCol cols="12" :sm="user?.resume ? 7 : 12">
+                <VFileInput
+                  v-model="resumeFile"
+                  :active="!!user?.resume"
+                  accept="application/pdf"
+                  :label="$t('user.resume.upload_resume')"
+                  base-color="standard"
+                  color="standard"
+                  @update:model-value="uploadResume"
+                />
+              </VCol>
+              <VCol
+                v-if="user?.resume"
+                cols="12"
+                sm="5"
+                class="d-flex justify-center"
+              >
+                <VBtn color="error" @click="deleteResume">{{
+                  $t('user.resume.delete_resume')
+                }}</VBtn>
+              </VCol>
+            </VRow>
+          </div>
+        </VCol>
+        <VCol cols="12">
+          <h6>{{ $t('user.information.events') }}</h6>
+          <VDivider class="my-2" />
+          <VAlert
+            v-if="failed"
+            type="error"
+            variant="tonal"
+            class="my-2"
+            :title="$t('user.page.load_failed')"
+            :text="$t('user.page.load_failed_hint')"
+          >
+            <template #append>
+              <VBtn
+                size="small"
+                variant="outlined"
+                :loading="retrying"
+                @click="refresh()"
+              >
+                {{ $t('user.page.retry') }}
+              </VBtn>
+            </template>
+          </VAlert>
+          <template v-else>
+            <Ticket v-if="ticket && user" :row="ticket" :uid="user.uid" />
+            <SignUps v-if="rows.length" :rows="rows" @withdrawn="refresh()" />
+            <p v-else class="my-2">{{ $t('user.page.no_sign_ups') }}</p>
+          </template>
+        </VCol>
+        <VCol cols="12">
+          <DeleteAccount />
+        </VCol>
+      </VRow>
+    </VCard>
+  </VContainer>
 </template>
+
+<style scoped lang="scss">
+  .allergies {
+    flex-wrap: wrap;
+    list-style: none;
+    max-height: 150px;
+    gap: 5px;
+    overflow-y: auto;
+
+    li {
+      width: 50%;
+    }
+  }
+</style>

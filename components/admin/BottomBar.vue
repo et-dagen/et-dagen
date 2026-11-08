@@ -33,19 +33,20 @@
   }
 
   const tab = [
-    'group flex h-14 w-full min-w-14 flex-col items-center justify-center gap-1',
-    'rounded-md px-1.5 text-xs font-semibold data-[active=true]:bg-white',
+    'tw:group tw:flex tw:h-14 tw:w-full tw:min-w-14 tw:flex-col tw:items-center',
+    'tw:justify-center tw:gap-1 tw:rounded-md tw:px-1.5 tw:text-xs tw:font-semibold',
+    'tw:data-[active=true]:bg-white',
   ]
 </script>
 
 <template>
   <nav
     :aria-label="$t('admin.shell.navigation')"
-    class="fixed inset-x-0 bottom-0 z-10 bg-brand px-2 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] text-brand-foreground"
+    class="tw:fixed tw:inset-x-0 tw:bottom-0 tw:z-10 tw:bg-brand tw:px-2 tw:pt-2 tw:pb-[max(0.5rem,env(safe-area-inset-bottom))] tw:text-brand-foreground"
   >
     <!-- a tab is never narrower than its name; the panels that do not fit go behind "More" -->
     <ul
-      class="grid auto-cols-[minmax(max-content,1fr)] grid-flow-col gap-1 overflow-x-auto [scrollbar-width:none]"
+      class="tw:grid tw:auto-cols-[minmax(max-content,1fr)] tw:grid-flow-col tw:gap-1 tw:overflow-x-auto tw:[scrollbar-width:none]"
     >
       <li v-for="panel in tabs" :key="panel.name">
         <NuxtLink
@@ -56,11 +57,11 @@
         >
           <component
             :is="panel.icon"
-            class="size-5 group-data-[active=true]:text-brand"
+            class="tw:size-5 tw:group-data-[active=true]:text-brand"
             stroke-width="1.5"
             aria-hidden="true"
           />
-          <span class="group-data-[active=true]:text-brand">
+          <span class="tw:group-data-[active=true]:text-brand">
             {{ $t(panel.label) }}
           </span>
         </NuxtLink>
@@ -74,11 +75,11 @@
           @click="sheet?.showModal()"
         >
           <Ellipsis
-            class="size-5 group-data-[active=true]:text-brand"
+            class="tw:size-5 tw:group-data-[active=true]:text-brand"
             stroke-width="1.5"
             aria-hidden="true"
           />
-          <span class="group-data-[active=true]:text-brand">
+          <span class="tw:group-data-[active=true]:text-brand">
             {{ $t('admin.shell.more') }}
           </span>
         </button>
@@ -89,32 +90,34 @@
       v-if="more.length"
       ref="sheet"
       :aria-label="$t('admin.shell.more')"
-      class="m-0 mt-auto max-h-none w-full max-w-none rounded-t-xl bg-card p-0 text-foreground backdrop:bg-black/40"
+      class="tw:m-0 tw:mt-auto tw:max-h-none tw:w-full tw:max-w-none tw:rounded-t-xl tw:bg-card tw:p-0 tw:text-foreground tw:backdrop:bg-black/40"
       @click="onSheetClick"
     >
-      <div class="px-4 pt-2 pb-[max(1rem,env(safe-area-inset-bottom))]">
-        <div class="flex items-center justify-between">
-          <p class="font-bold">{{ $t('admin.shell.more') }}</p>
+      <div
+        class="tw:px-4 tw:pt-2 tw:pb-[max(1rem,env(safe-area-inset-bottom))]"
+      >
+        <div class="tw:flex tw:items-center tw:justify-between">
+          <p class="tw:font-bold">{{ $t('admin.shell.more') }}</p>
           <Button
             variant="ghost"
             size="icon"
-            class="-mr-2 size-11"
+            class="tw:-mr-2 tw:size-11"
             :aria-label="$t('admin.shell.close')"
             @click="close"
           >
             <X aria-hidden="true" />
           </Button>
         </div>
-        <ul class="flex flex-col gap-1">
+        <ul class="tw:flex tw:flex-col tw:gap-1">
           <li v-for="panel in more" :key="panel.name">
             <NuxtLink
               :to="localePath(panel.route)"
               :aria-current="isActive(panel) ? 'page' : undefined"
-              class="flex h-12 items-center gap-3 rounded-md px-3 font-semibold aria-[current=page]:bg-brand aria-[current=page]:text-brand-foreground"
+              class="tw:flex tw:h-12 tw:items-center tw:gap-3 tw:rounded-md tw:px-3 tw:font-semibold tw:aria-[current=page]:bg-brand tw:aria-[current=page]:text-brand-foreground"
             >
               <component
                 :is="panel.icon"
-                class="size-5"
+                class="tw:size-5"
                 stroke-width="1.5"
                 aria-hidden="true"
               />

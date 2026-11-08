@@ -1,15 +1,28 @@
 <script setup lang="ts">
-  import SiteFooter from '@/components/site/Footer.vue'
-  import SiteHeader from '@/components/site/Header.vue'
+  import NavHorizontal from '@/components/site/NavBar.vue'
+  import NavVertical from '@/components/site/NavDrawer.vue'
+  import Footer from '@/components/site/Footer.vue'
 </script>
 
 <template>
-  <div class="et-ui flex min-h-dvh flex-col">
-    <SiteHeader />
-    <!-- the space and height Vuetify's VMain gave every page, which the pages were designed with -->
-    <main id="main" class="min-h-screen flex-1 pt-[90px]">
+  <div class="main">
+    <!-- navigation menu -->
+    <NavVertical />
+    <NavHorizontal />
+
+    <!-- main content -->
+    <VMain id="main" style="min-height: 100vh">
       <slot />
-    </main>
-    <SiteFooter />
+    </VMain>
+
+    <Footer />
   </div>
 </template>
+
+<style scoped lang="scss">
+  .main {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+</style>

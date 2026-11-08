@@ -18,7 +18,7 @@
     :initial="eventFormOf(event)"
     :panel="panel"
   />
-  <p v-else class="text-muted-foreground">
+  <p v-else class="tw:text-muted-foreground">
     {{ $t('admin.events.form.missing') }}
   </p>
 </template>

@@ -1,42 +1,101 @@
 <script setup lang="ts">
-  import Companies from '@/components/home/Companies.vue'
-  import Hero from '@/components/home/Hero.vue'
-  import Upcoming from '@/components/home/Upcoming.vue'
+  import Banner from '@/components/home/Banner.vue'
+  import CountDown from '@/components/home/CountDown.vue'
+  import CompanyCard from '@/components/company/Card.vue'
+  import CompanyHero from '@/components/company/Hero.vue'
+  import CommonGrid from '@/components/common/Grid.vue'
   import { useCompanies } from '@/composables/useCompanies'
-  import { Instant } from '@/domain/time'
-  import type { EventRow } from '@/lib/events'
   import { lineupOf } from '@/lib/site/companies'
-  import { fairDays, upcoming, type GeneralInfo } from '@/lib/site/fair'
+  import { fairDateLine, type GeneralInfo } from '@/lib/site/fair'
+  import { instantOf } from '@/lib/time'
 
   const { locale } = useI18n()
 
-  const [{ data: companies }, { data: info }, { data: events }] =
-    await Promise.all([
-      useCompanies(),
-      useFetch<GeneralInfo>('/api/v1/generalInfo'),
-      useFetch<Record<string, EventRow>>('/api/v1/event'),
-    ])
+  const [{ data: companies }, { data: info }] = await Promise.all([
+    useCompanies(),
+    useFetch<GeneralInfo>('/api/v1/generalInfo'),
+  ])
 
-  const now = Instant.now()
-  const lineup = computed(() => lineupOf(companies.value))
-  const fair = computed(() => fairDays(info.value, locale.value, now))
-  const next = computed(() => upcoming(events.value, now, 5))
-  const hasCompanies = computed(
-    () =>
-      !!lineup.value.mainPartner ||
-      lineup.value.partners.length > 0 ||
-      lineup.value.sponsors.length > 0,
-  )
+  const lineup = computed(() => lineupOf(companies.value, { order: 'stored' }))
+  const dates = computed(() => fairDateLine(info.value, locale.value))
+  const start = computed(() => instantOf(info.value?.date?.start))
 </script>
 
 <template>
-  <div class="et-ui bg-background text-foreground">
-    <Hero
-      :fair="fair"
-      :has-companies="hasCompanies"
-      :last-companies="lineup.last"
+  <div class="ma-10">
+    <Banner
+      :content="{
+        caption: $t('home.banner.slogan'),
+        dates,
+        image: '/images/banner_graphics.png',
+        title: 'Elektronikk & Teknologidagene',
+      }"
+      class="my-4 my-xxl-16 d-flex justify-center"
     />
-    <Upcoming v-if="next.length" :events="next" :now="now" />
-    <Companies v-if="hasCompanies" v-bind="lineup" />
+
+    <CountDown :start="start" class="mb-5" />
+
+    <p v-if="lineup.last" class="text-h6 text-center pt-10">
+      {{ $t('home.companies_last') }}
+    </p>
+
+    <div v-if="lineup.mainPartner" class="py-10">
+      <h2 class="text-h4 text-md-h3 text-center pt-10 pb-4 font-weight-bold">
+        {{ $t('company.main_partner') }}
+      </h2>
+      <VDivider
+        class="pb-lg-8 pb-3 mx-auto"
+        style="width: 100%; max-width: 1000px"
+      />
+      <CompanyHero
+        :content="{
+          name: lineup.mainPartner.name ?? '',
+          description: lineup.mainPartner.description ?? '',
+          logo: lineup.mainPartner.logo ?? '',
+          webpage: lineup.mainPartner.webpage ?? '',
+        }"
+        class="my-3 d-flex justify-center"
+      />
+    </div>
+
+    <div v-if="lineup.partners.length" class="py-10">
+      <h2 class="text-h3 text-center pt-10 pb-4 font-weight-bold">
+        {{ $t('company.partners') }}
+      </h2>
+      <VDivider
+        class="pb-lg-8 pb-3 mx-auto"
+        style="width: 100%; max-width: 1000px"
+      />
+      <CommonGrid>
+        <CompanyCard
+          v-for="partner in lineup.partners"
+          :key="partner.name"
+          :content="{
+            logo: partner.logo ?? '',
+            webpage: partner.webpage ?? '',
+          }"
+        />
+      </CommonGrid>
+    </div>
+
+    <div v-if="lineup.sponsors.length" class="pt-10">
+      <h2 class="text-h3 text-center pt-10 pb-4 font-weight-bold">
+        {{ $t('company.sponsors') }}
+      </h2>
+      <VDivider
+        class="pb-lg-8 pb-3 mx-auto"
+        style="width: 100%; max-width: 1000px"
+      />
+      <CommonGrid>
+        <CompanyCard
+          v-for="sponsor in lineup.sponsors"
+          :key="sponsor.name"
+          :content="{
+            logo: sponsor.logo ?? '',
+            webpage: sponsor.webpage ?? '',
+          }"
+        />
+      </CommonGrid>
+    </div>
   </div>
 </template>

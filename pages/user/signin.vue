@@ -1,13 +1,10 @@
 <script setup lang="ts">
-  import AccountPaths from '@/components/user/signin/AccountPaths.vue'
-  import SigninSteps from '@/components/user/signin/SigninSteps.vue'
+  import SigninForm from '@/components/user/SigninForm.vue'
 </script>
 
 <template>
-  <div class="et-ui">
-    <div class="mx-auto flex max-w-md flex-col gap-8 px-4 py-10 lg:py-16">
-      <SigninSteps />
-      <AccountPaths />
-    </div>
+  <div class="ma-10">
+    <h4 class="text-center pt-4 pb-7">{{ $t('user.sign_in') }}</h4>
+    <SigninForm />
   </div>
 </template>

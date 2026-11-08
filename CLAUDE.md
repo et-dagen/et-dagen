@@ -80,11 +80,14 @@ The target layout, and how to place code while both shapes exist, is in `ARCHITE
   `companyUID` or `cvAccess` in a handler; the subject carries roles and entitlements.
   The client asks the same table through the auth store (`can`, `canForSome`), and a protected
   page names its area in `definePageMeta({ area })` (`lib/auth/areas.ts`).
-- **UI** uses shadcn-vue components from `components/ui`, Tailwind classes and Lucide icons.
-  Pages sit inside `.et-ui` (public) or `.et-admin`, which carry the base
-  styles (`assets/css/admin.css`). Forms validate through `typedSchemaOf` (`lib/forms/zodSchema.ts`),
+- **UI**: the public pages use Vuetify components and MDI icons; their look is the IT group's
+  call, so change it only when they ask. The admin and company panels use shadcn-vue components
+  from `components/ui`, Tailwind classes with the `tw:` prefix (Vuetify defines classes with the
+  same names, such as `border` and `bg-primary`) and Lucide icons. Panel pages sit inside
+  `.et-admin`, which carries the base styles (`assets/css/admin.css`). Forms validate through `typedSchemaOf` (`lib/forms/zodSchema.ts`),
   since `@vee-validate/zod` supports only zod 3. After `bunx shadcn-vue add`, check
-  the result: the CLI may import `cn` from a `cn`
+  the result: the CLI leaves class lists in template strings unprefixed, sometimes prefixes plain
+  string values such as `'popper'`, imports `cn` from a `cn`
   package instead of `@/lib/utils`, and may bump dependencies such as `@vueuse/core`. Do not use
   `!important` (or Tailwind's `!` suffix); fix the conflicting rule instead.
 - **Translations**: user-facing text goes in both `i18n/locales/en-GB.json` and `nb-NO.json`.

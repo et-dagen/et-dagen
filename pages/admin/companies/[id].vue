@@ -18,7 +18,7 @@
 </script>
 
 <template>
-  <div v-if="company" class="flex flex-col gap-12">
+  <div v-if="company" class="tw:flex tw:flex-col tw:gap-12">
     <CompanyForm
       :uid="uid"
       :logo="company.logo"
@@ -33,7 +33,7 @@
     />
     <CompanyInvitations :company-uid="uid" />
   </div>
-  <p v-else class="text-muted-foreground">
+  <p v-else class="tw:text-muted-foreground">
     {{ $t('admin.companies.form.missing') }}
   </p>
 </template>

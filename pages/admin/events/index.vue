@@ -115,15 +115,15 @@
   }
   const statusBadge = (status: EventStatus) =>
     ({
-      past: 'border-transparent bg-secondary text-muted-foreground',
-      'no-registration': 'text-muted-foreground',
-      'not-open': 'text-foreground',
-      open: 'border-transparent bg-plate/12 text-plate',
+      past: 'tw:border-transparent tw:bg-secondary tw:text-muted-foreground',
+      'no-registration': 'tw:text-muted-foreground',
+      'not-open': 'tw:text-foreground',
+      open: 'tw:border-transparent tw:bg-plate/12 tw:text-plate',
       full:
         status.kind === 'full' && status.queued > 0
-          ? 'border-transparent bg-signal text-signal-foreground'
-          : 'border-transparent bg-foreground text-background',
-      closed: 'text-muted-foreground',
+          ? 'tw:border-transparent tw:bg-signal tw:text-signal-foreground'
+          : 'tw:border-transparent tw:bg-foreground tw:text-background',
+      closed: 'tw:text-muted-foreground',
     })[status.kind]
 
   const copyEmails = async (row: Row) => {
@@ -182,7 +182,7 @@
         :label="$t('admin.events.columns.date')"
         :options="whenOptions"
       />
-      <Button as-child class="h-10 lg:ml-auto">
+      <Button as-child class="tw:h-10 tw:lg:ml-auto">
         <NuxtLink :to="localePath('/admin/events/new')">
           <Plus aria-hidden="true" />
           {{ $t('admin.events.create') }}
@@ -192,10 +192,10 @@
 
     <template #table>
       <!-- table from lg and up -->
-      <Table class="hidden lg:table">
+      <Table class="tw:hidden tw:lg:table">
         <TableHeader>
-          <TableRow class="hover:bg-transparent">
-            <TableHead class="w-12 pl-4">
+          <TableRow class="tw:hover:bg-transparent">
+            <TableHead class="tw:w-12 tw:pl-4">
               <SelectBox
                 :checked="selection.pageState.value"
                 :label="$t('admin.events.select_page')"
@@ -213,7 +213,7 @@
                 @toggle="toggleSort(column)"
               />
             </TableHead>
-            <TableHead class="w-12" />
+            <TableHead class="tw:w-12" />
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -222,71 +222,71 @@
             :key="row.uid"
             :data-state="selection.has(row) ? 'selected' : undefined"
             :data-changed="row.uid === changed || undefined"
-            class="data-[state=selected]:bg-brand/8 data-changed:bg-signal/15 data-changed:shadow-[inset_4px_0_0_var(--signal)]"
+            class="tw:data-[state=selected]:bg-brand/8 tw:data-changed:bg-signal/15 tw:data-changed:shadow-[inset_4px_0_0_var(--signal)]"
           >
-            <TableCell class="pl-4">
+            <TableCell class="tw:pl-4">
               <SelectBox
                 :checked="selection.has(row)"
                 :label="$t('admin.events.select_row', { name: row.title })"
                 @change="(on) => selection.toggle(row, on)"
               />
             </TableCell>
-            <TableCell class="max-w-80 truncate font-semibold">
+            <TableCell class="tw:max-w-80 tw:truncate tw:font-semibold">
               <NuxtLink
                 :to="localePath(`/admin/events/${row.uid}`)"
-                class="underline decoration-border decoration-1 underline-offset-4 hover:decoration-current"
+                class="tw:underline tw:decoration-border tw:decoration-1 tw:underline-offset-4 tw:hover:decoration-current"
               >
                 {{ row.title }}
               </NuxtLink>
             </TableCell>
-            <TableCell class="text-muted-foreground">
+            <TableCell class="tw:text-muted-foreground">
               {{ companyOf(row) }}
             </TableCell>
-            <TableCell class="whitespace-nowrap">
+            <TableCell class="tw:whitespace-nowrap">
               {{ formatStart(row, localeProperties.language ?? 'nb-NO') }}
             </TableCell>
             <TableCell>
               <span
                 v-if="placeOf(row.location?.name).code"
-                class="mr-2 inline-flex h-6 min-w-10 items-center justify-center rounded-[3px] bg-plate px-2 pt-0.5 text-xs font-extrabold tracking-wider text-plate-foreground shadow-[inset_0_0_0_2px_var(--plate),inset_0_0_0_3px_rgb(255_255_255/0.45)]"
+                class="tw:mr-2 tw:inline-flex tw:h-6 tw:min-w-10 tw:items-center tw:justify-center tw:rounded-[3px] tw:bg-plate tw:px-2 tw:pt-0.5 tw:text-xs tw:font-extrabold tw:tracking-wider tw:text-plate-foreground tw:shadow-[inset_0_0_0_2px_var(--plate),inset_0_0_0_3px_rgb(255_255_255/0.45)]"
               >
                 {{ placeOf(row.location?.name).code }}
               </span>
-              <span class="text-muted-foreground">
+              <span class="tw:text-muted-foreground">
                 {{ placeOf(row.location?.name).name }}
               </span>
             </TableCell>
             <TableCell>
               <template v-if="row.capacity">
-                <span class="font-semibold tabular-nums">
+                <span class="tw:font-semibold tw:tabular-nums">
                   {{ attendeesOf(row) }}
                 </span>
-                <span class="text-muted-foreground tabular-nums">
+                <span class="tw:text-muted-foreground tw:tabular-nums">
                   / {{ row.capacity }}
                 </span>
                 <span
-                  class="mt-1 block h-1 w-16 overflow-hidden rounded-full bg-secondary"
+                  class="tw:mt-1 tw:block tw:h-1 tw:w-16 tw:overflow-hidden tw:rounded-full tw:bg-secondary"
                 >
                   <span
-                    class="block h-full bg-plate"
+                    class="tw:block tw:h-full tw:bg-plate"
                     :style="{
                       width: `${Math.min(100, (attendeesOf(row) / row.capacity) * 100)}%`,
                     }"
                   />
                 </span>
               </template>
-              <span v-else class="text-muted-foreground">–</span>
+              <span v-else class="tw:text-muted-foreground">–</span>
             </TableCell>
             <TableCell>
               <Badge
                 variant="outline"
-                class="rounded-[4px]"
+                class="tw:rounded-[4px]"
                 :class="statusBadge(statusOf(row))"
               >
                 {{ statusLabel(statusOf(row)) }}
               </Badge>
             </TableCell>
-            <TableCell class="pr-4">
+            <TableCell class="tw:pr-4">
               <DropdownMenu>
                 <DropdownMenuTrigger as-child>
                   <Button
@@ -318,7 +318,7 @@
                     variant="destructive"
                     @select="askDelete([row])"
                   >
-                    <Trash2 aria-hidden="true" class="text-destructive" />
+                    <Trash2 aria-hidden="true" class="tw:text-destructive" />
                     {{ $t('admin.events.actions.delete') }}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -331,33 +331,33 @@
 
     <template #list>
       <!-- list below lg -->
-      <ul class="divide-y lg:hidden">
+      <ul class="tw:divide-y tw:lg:hidden">
         <li
           v-for="row in shown.rows"
           :key="row.uid"
-          class="flex items-start gap-3 px-4 py-3"
+          class="tw:flex tw:items-start tw:gap-3 tw:px-4 tw:py-3"
         >
           <SelectBox
             :checked="selection.has(row)"
             :label="$t('admin.events.select_row', { name: row.title })"
-            class="mt-1 size-5"
+            class="tw:mt-1 tw:size-5"
             @change="(on) => selection.toggle(row, on)"
           />
-          <div class="min-w-0 flex-1">
+          <div class="tw:min-w-0 tw:flex-1">
             <NuxtLink
               :to="localePath(`/admin/events/${row.uid}`)"
-              class="block truncate font-semibold underline decoration-border underline-offset-4"
+              class="tw:block tw:truncate tw:font-semibold tw:underline tw:decoration-border tw:underline-offset-4"
             >
               {{ row.title }}
             </NuxtLink>
-            <p class="truncate text-sm text-muted-foreground">
+            <p class="tw:truncate tw:text-sm tw:text-muted-foreground">
               {{ formatStart(row, localeProperties.language ?? 'nb-NO') }}
               · {{ row.location?.name }}
             </p>
           </div>
           <Badge
             variant="outline"
-            class="shrink-0 rounded-[4px]"
+            class="tw:shrink-0 tw:rounded-[4px]"
             :class="statusBadge(statusOf(row))"
           >
             {{ statusLabel(statusOf(row)) }}

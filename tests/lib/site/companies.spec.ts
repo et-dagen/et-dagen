@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { fillerCount, lineupOf } from '@/lib/site/companies'
+import { lineupOf } from '@/lib/site/companies'
 
 describe('lineupOf', () => {
   const logo = 'https://example.com/logo.png'
@@ -18,6 +18,20 @@ describe('lineupOf', () => {
       'Nordic Semiconductor',
     ])
     expect(lineup.sponsors.map((c) => c.name)).toEqual(['Rockheim'])
+  })
+
+  it('keeps the given order when asked to', () => {
+    const lineup = lineupOf(
+      {
+        b: { name: 'Nordic Semiconductor', logo, tier: 'partner' },
+        c: { name: 'ABB', logo, tier: 'partner' },
+      },
+      { order: 'stored' },
+    )
+    expect(lineup.partners.map((c) => c.name)).toEqual([
+      'Nordic Semiconductor',
+      'ABB',
+    ])
   })
 
   it('leaves out companies without a logo', () => {
@@ -51,17 +65,5 @@ describe('lineupOf', () => {
 
   it('copes with no companies', () => {
     expect(lineupOf(null).partners).toEqual([])
-  })
-})
-
-describe('fillerCount', () => {
-  it('closes a short last row', () => {
-    expect(fillerCount(4 + 16, 6)).toBe(4)
-    expect(fillerCount(3, 2)).toBe(1)
-  })
-
-  it('adds nothing to a full row', () => {
-    expect(fillerCount(12, 6)).toBe(0)
-    expect(fillerCount(0, 4)).toBe(0)
   })
 })

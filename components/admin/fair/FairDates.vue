@@ -32,25 +32,25 @@
 <template>
   <section
     aria-labelledby="fair-dates"
-    class="flex flex-col gap-4 rounded-lg border bg-card p-5 lg:p-6"
+    class="tw:flex tw:flex-col tw:gap-4 tw:rounded-lg tw:border tw:bg-card tw:p-5 tw:lg:p-6"
   >
     <div>
-      <h2 id="fair-dates" class="text-lg font-bold">
+      <h2 id="fair-dates" class="tw:text-lg tw:font-bold">
         {{ $t('admin.fair.dates.title') }}
       </h2>
-      <p class="text-sm text-muted-foreground">
+      <p class="tw:text-sm tw:text-muted-foreground">
         {{ $t('admin.fair.dates.intro') }}
       </p>
     </div>
     <form
-      class="grid gap-4 sm:grid-cols-[1fr_1fr_auto] sm:items-end"
+      class="tw:grid tw:gap-4 tw:sm:grid-cols-[1fr_1fr_auto] tw:sm:items-end"
       @submit.prevent="save"
     >
-      <div class="flex flex-col gap-2">
+      <div class="tw:flex tw:flex-col tw:gap-2">
         <Label for="fair-start">{{ $t('admin.fair.dates.start') }}</Label>
         <Input id="fair-start" v-model="start" type="datetime-local" required />
       </div>
-      <div class="flex flex-col gap-2">
+      <div class="tw:flex tw:flex-col tw:gap-2">
         <Label for="fair-end">{{ $t('admin.fair.dates.end') }}</Label>
         <Input
           id="fair-end"
@@ -60,7 +60,7 @@
           required
         />
       </div>
-      <Button type="submit" class="h-10" :disabled="saving">
+      <Button type="submit" class="tw:h-10" :disabled="saving">
         <Save aria-hidden="true" />
         {{ $t('admin.fair.dates.save') }}
       </Button>

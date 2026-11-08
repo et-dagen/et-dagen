@@ -7,17 +7,24 @@
 </script>
 
 <template>
-  <div role="group" :aria-label="label" class="flex gap-2 overflow-x-auto">
+  <div
+    role="group"
+    :aria-label="label"
+    class="tw:flex tw:gap-2 tw:overflow-x-auto"
+  >
     <button
       v-for="option in options"
       :key="option.value"
       type="button"
       :aria-pressed="chosen === option.value"
-      class="inline-flex h-9 shrink-0 items-center gap-2 rounded-md border bg-card px-3 pt-0.5 text-sm font-semibold transition-colors hover:bg-accent aria-pressed:border-plate aria-pressed:bg-plate aria-pressed:text-plate-foreground"
+      class="tw:inline-flex tw:h-9 tw:shrink-0 tw:items-center tw:gap-2 tw:rounded-md tw:border tw:bg-card tw:px-3 tw:pt-0.5 tw:text-sm tw:font-semibold tw:transition-colors tw:hover:bg-accent tw:aria-pressed:border-plate tw:aria-pressed:bg-plate tw:aria-pressed:text-plate-foreground"
       @click="chosen = option.value"
     >
       {{ option.label }}
-      <span v-if="option.count != null" class="text-xs font-normal opacity-70">
+      <span
+        v-if="option.count != null"
+        class="tw:text-xs tw:font-normal tw:opacity-70"
+      >
         {{ option.count }}
       </span>
     </button>
